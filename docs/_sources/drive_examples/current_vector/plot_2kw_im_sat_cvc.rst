@@ -113,7 +113,7 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-60
+.. GENERATED FROM PYTHON SOURCE LINES 48-62
 
 .. code-block:: Python
 
@@ -123,8 +123,10 @@ Configure the control system.
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
     # est_par = par  # Uncomment this line to use the perfectly known machine model
-    cfg = control.CurrentVectorControllerCfg(psi_s_nom=base.psi, i_s_max=1.5 * base.i)
-    vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
+    cfg = control.CurrentVectorControllerCfg(
+        psi_s_nom=base.psi, i_s_max=1.5 * base.i, sensorless=True
+    )
+    vector_ctrl = control.CurrentVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
     # speed_ctrl = control.PIController(k_p=1, k_i=1)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
@@ -136,11 +138,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-71
+.. GENERATED FROM PYTHON SOURCE LINES 64-73
 
 .. code-block:: Python
 
@@ -160,11 +162,11 @@ Speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-73
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-78
+.. GENERATED FROM PYTHON SOURCE LINES 75-80
 
 .. code-block:: Python
 
@@ -185,7 +187,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-84
+.. GENERATED FROM PYTHON SOURCE LINES 81-86
 
 .. rubric:: References
 
@@ -196,7 +198,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.143 seconds)
+   **Total running time of the script:** (0 minutes 5.233 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_sat_cvc.py:

@@ -31,10 +31,11 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # %%
 # Configure the control system.
 
+cfg = control.CurrentVectorControllerCfg(i_max=1.5 * base.i, L=0.2 * base.L)
+inner_ctrl = control.CurrentVectorController(cfg)
 dc_bus_voltage_ctrl = control.DCBusVoltageController(
     C_dc=1e-3, alpha_dc=2 * np.pi * 30, p_max=base.p
 )
-inner_ctrl = control.CurrentVectorController(i_max=1.5 * base.i, L=0.2 * base.L)
 ctrl = control.GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl)
 
 # %%

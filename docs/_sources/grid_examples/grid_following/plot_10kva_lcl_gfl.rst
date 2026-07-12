@@ -85,14 +85,15 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 33-41
 
 .. code-block:: Python
 
 
-    inner_ctrl = control.CurrentVectorController(
+    cfg = control.CurrentVectorControllerCfg(
         i_max=1.5 * base.i, L=0.073 * base.L, T_s=100e-6
     )
+    inner_ctrl = control.CurrentVectorController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
@@ -103,11 +104,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set external references.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-47
+.. GENERATED FROM PYTHON SOURCE LINES 43-48
 
 .. code-block:: Python
 
@@ -123,11 +124,11 @@ Set external references.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-53
+.. GENERATED FROM PYTHON SOURCE LINES 50-54
 
 .. code-block:: Python
 
@@ -142,11 +143,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-58
+.. GENERATED FROM PYTHON SOURCE LINES 56-59
 
 .. code-block:: Python
 
@@ -180,7 +181,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.518 seconds)
+   **Total running time of the script:** (0 minutes 1.485 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_lcl_gfl.py:

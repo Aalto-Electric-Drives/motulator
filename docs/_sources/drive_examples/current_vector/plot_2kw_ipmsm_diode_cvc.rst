@@ -86,14 +86,16 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-41
+.. GENERATED FROM PYTHON SOURCE LINES 34-43
 
 .. code-block:: Python
 
 
     est_par = par  # Assume accurate model parameter estimates
-    cfg = control.CurrentVectorControllerCfg(i_s_max=1.5 * base.i, alpha_o=2 * pi * 100)
-    vector_ctrl = control.CurrentVectorController(est_par, cfg, T_s=250e-6)
+    cfg = control.CurrentVectorControllerCfg(
+        i_s_max=1.5 * base.i, alpha_o=2 * pi * 100, T_s=250e-6
+    )
+    vector_ctrl = control.CurrentVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
@@ -104,11 +106,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-49
 
 .. code-block:: Python
 
@@ -123,11 +125,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-55
+.. GENERATED FROM PYTHON SOURCE LINES 51-57
 
 .. code-block:: Python
 
@@ -149,12 +151,12 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-58
+.. GENERATED FROM PYTHON SOURCE LINES 58-60
 
 Plot also the stator voltage and currents as well as the DC-bus and grid-side
 quantities.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-61
+.. GENERATED FROM PYTHON SOURCE LINES 60-63
 
 .. code-block:: Python
 
@@ -188,7 +190,7 @@ quantities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.046 seconds)
+   **Total running time of the script:** (0 minutes 11.104 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py:

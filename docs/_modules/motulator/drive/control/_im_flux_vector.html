@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._im_flux_vector &#8212; motulator 0.7.3 documentation</title>
+    <title>motulator.drive.control._im_flux_vector &#8212; motulator 0.7.4 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
+    <script src="../../../../_static/documentation_options.js?v=444dcb17"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -134,7 +134,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.3 documentation</p>
+    <p class="title logo__title">motulator 0.7.4 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -408,8 +408,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">sign</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._im_observers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ObserverOutputs</span><span class="p">,</span>
-    <span class="n">create_sensored_observer</span><span class="p">,</span>
-    <span class="n">create_sensorless_observer</span><span class="p">,</span>
+    <span class="n">create_speed_flux_observer</span><span class="p">,</span>
     <span class="n">create_vhz_observer</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -644,8 +643,8 @@
 <span class="sd">    alpha_i : float, optional</span>
 <span class="sd">        Integral action bandwidth (rad/s), defaults to `alpha_tau`.</span>
 <span class="sd">    alpha_o : float, optional</span>
-<span class="sd">        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise</span>
-<span class="sd">        2*pi*30, keeping the default speed observer gain the same.</span>
+<span class="sd">        Speed estimation poles (rad/s). If `None`, the default depends on the operation</span>
+<span class="sd">        mode and the inertia `J`.</span>
 <span class="sd">    k_o : Callable[[float], complex], optional</span>
 <span class="sd">        Observer gain as a function of the rotor angular speed.</span>
 <span class="sd">    alpha_c : float, optional</span>
@@ -659,6 +658,10 @@
 <span class="sd">    J : float, optional</span>
 <span class="sd">        Inertia (kgm²). Defaults to None, meaning the mechanical system model is not</span>
 <span class="sd">        used in speed estimation.</span>
+<span class="sd">    sensorless : bool, optional</span>
+<span class="sd">        If True, sensorless control is used, defaults to True.</span>
+<span class="sd">    T_s : float, optional</span>
+<span class="sd">        Sampling period (s), defaults to 125e-6.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -674,12 +677,15 @@
     <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
     <span class="n">k_b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
     <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set alpha_o default based on J value.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set alpha_o default based on J value and operation mode.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># To keep the speed observer gain k_w the same</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">60</span>
+            <span class="c1"># Note: If J is not given, alpha_o is halved to keep the default speed</span>
+            <span class="c1"># observer gain k_w the same.</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">60</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">alpha</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span></div>
 
 
@@ -700,10 +706,6 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    cfg : FluxVectorControllerCfg</span>
 <span class="sd">        Flux-vector control configuration.</span>
-<span class="sd">    sensorless : bool, optional</span>
-<span class="sd">        If True, sensorless control is used, defaults to True.</span>
-<span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period (s), defaults to 125e-6.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -717,8 +719,6 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
         <span class="n">cfg</span><span class="p">:</span> <span class="n">FluxVectorControllerCfg</span><span class="p">,</span>
-        <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span> <span class="o">=</span> <span class="n">ReferenceGenerator</span><span class="p">(</span>
             <span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">psi_s_nom</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">tau_M_max</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_u</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_b</span>
@@ -728,13 +728,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span> <span class="o">=</span> <span class="n">FluxTorqueController</span><span class="p">(</span>
             <span class="n">par</span><span class="p">,</span> <span class="n">alpha_psi</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_tau</span><span class="p">,</span> <span class="n">alpha_i</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_s_max</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">sensorless</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">create_sensorless_observer</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">J</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">create_sensored_observer</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">sensorless</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">create_speed_flux_observer</span><span class="p">(</span>
+            <span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">J</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
 
 <div class="viewcode-block" id="FluxVectorController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController.get_feedback">[docs]</a>
@@ -810,6 +808,8 @@
 <span class="sd">        Voltage utilization factor, defaults to 0.9.</span>
 <span class="sd">    k_b : float, optional</span>
 <span class="sd">        Breakdown torque margin, defaults to 0.9.</span>
+<span class="sd">    T_s : float, optional</span>
+<span class="sd">        Sampling period (s), defaults to 250e-6.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -820,7 +820,8 @@
     <span class="n">alpha_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">1</span>
     <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
-    <span class="n">k_b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span></div>
+    <span class="n">k_b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">250e-6</span></div>
 
 
 
@@ -839,8 +840,6 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    cfg : ObserverBasedVHzControllerCfg</span>
 <span class="sd">        Observer-based V/Hz controller configuration.</span>
-<span class="sd">    T_s : float, optional</span>
-<span class="sd">        Sampling period (s), defaults to 250e-6.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -848,8 +847,8 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
         <span class="n">cfg</span><span class="p">:</span> <span class="n">ObserverBasedVHzControllerCfg</span><span class="p">,</span>
-        <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">250e-6</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm_mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MPE&quot;</span><span class="p">,</span> <span class="s2">&quot;MME&quot;</span><span class="p">,</span> <span class="s2">&quot;six_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;MME&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span> <span class="o">=</span> <span class="n">ReferenceGenerator</span><span class="p">(</span>
             <span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">psi_s_nom</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_u</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_b</span>
@@ -860,7 +859,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">create_vhz_observer</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_lpf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Low-pass-filtered torque estimate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
         <span class="c1"># Configurations for pure open-loop V/Hz control</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">==</span> <span class="n">inf</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">psi_s_nom</span>

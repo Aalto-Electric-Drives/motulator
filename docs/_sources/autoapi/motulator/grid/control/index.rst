@@ -35,11 +35,14 @@ Classes
    motulator.grid.control.CurrentController
    motulator.grid.control.CurrentLimiter
    motulator.grid.control.CurrentVectorController
+   motulator.grid.control.CurrentVectorControllerCfg
    motulator.grid.control.DCBusVoltageController
    motulator.grid.control.GridConverterControlSystem
    motulator.grid.control.ObserverBasedGridFormingController
+   motulator.grid.control.ObserverBasedGridFormingControllerCfg
    motulator.grid.control.PLL
    motulator.grid.control.PowerSynchronizationController
+   motulator.grid.control.PowerSynchronizationControllerCfg
 
 
 Package Contents
@@ -109,28 +112,13 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentVectorController(i_max, L, alpha_c = 2 * pi * 400, alpha_i = None, u_nom = sqrt(2 / 3) * 400, w_nom = 2 * pi * 50, alpha_pll = 2 * pi * 20, T_s = 0.000125)
+.. py:class:: CurrentVectorController(cfg)
 
    
    Current-vector grid-following controller.
 
-   :param i_max: Maximum current (A), peak value.
-   :type i_max: float
-   :param L: Filter inductance (H).
-   :type L: float
-   :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*400.
-   :type alpha_c: float, optional
-   :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
-   :type alpha_i: float, optional
-   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
-                 `sqrt(2/3)*400`.
-   :type u_nom: float, optional
-   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
-   :type w_nom: float, optional
-   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s), defaults to 2*pi*20.
-   :type alpha_pll: float, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
+   :param cfg: Configuration parameters.
+   :type cfg: CurrentVectorControllerCfg
 
 
 
@@ -244,6 +232,45 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: CurrentVectorControllerCfg
+
+   
+   Configuration for current-vector grid-following controller.
+
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param L: Filter inductance (H).
+   :type L: float
+   :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*400.
+   :type alpha_c: float, optional
+   :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
+   :type alpha_i: float | None, optional
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
+   :type u_nom: float, optional
+   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_nom: float, optional
+   :param alpha_pll: PLL frequency-tracking bandwidth (rad/s), defaults to 2*pi*20.
+   :type alpha_pll: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: DCBusVoltageController(C_dc, alpha_dc, p_max = inf)
 
@@ -577,7 +604,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedGridFormingController(i_max, L, R = 0.0, R_a = None, k_v = None, alpha_o = 2 * pi * 50, alpha_c = 2 * pi * 400, u_nom = sqrt(2 / 3) * 400, w_nom = 2 * pi * 50, T_s = 0.000125)
+.. py:class:: ObserverBasedGridFormingController(cfg)
 
    
    Disturbance-observer-based grid-forming controller.
@@ -585,25 +612,8 @@ Package Contents
    This implements the RFPSC-type grid-forming mode of the control method described in
    [#Nur2024]_. Transparent current control is also implemented.
 
-   :param i_max: Maximum current (A), peak value.
-   :type i_max: float
-   :param L: Total inductance (H).
-   :type L: float
-   :param R: Total series resistance (Ω), defaults to 0.
-   :type R: float, optional
-   :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
-   :type R_a: float, optional
-   :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
-   :type k_v: float, optional
-   :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
-   :type alpha_o: float, optional
-   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
-   :type alpha_c: float, optional
-   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
-                 `sqrt(2/3)*400`.
-   :type u_nom: float, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
+   :param cfg: Grid-forming control configuration.
+   :type cfg: ObserverBasedGridFormingControllerCfg
 
    .. rubric:: Notes
 
@@ -730,6 +740,50 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: ObserverBasedGridFormingControllerCfg
+
+   
+   Disturbance-observer-based grid-forming controller configuration.
+
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param L: Total inductance estimate (H).
+   :type L: float
+   :param R: Total series resistance estimate (Ω), defaults to 0.
+   :type R: float, optional
+   :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
+   :type R_a: float, optional
+   :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
+   :type k_v: float, optional
+   :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
+   :type alpha_o: float, optional
+   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
+   :type alpha_c: float, optional
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
+                 `sqrt(2/3)*400`.
+   :type u_nom: float, optional
+   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_nom: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: PLL(u_nom, w_nom, alpha_pll)
 
    
@@ -810,27 +864,15 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PowerSynchronizationController(u_nom, w_nom, i_max, R = 0.0, R_a = None, w_b = 2 * pi * 5, T_s = 0.000125)
+.. py:class:: PowerSynchronizationController(cfg)
 
    
    Reference-feedforward power-synchronization controller.
 
    This implements the reference-feedforward power-synchronization control [#Har2020]_.
 
-   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value.
-   :type u_nom: float
-   :param w_nom: Nominal grid angular frequency (rad/s).
-   :type w_nom: float
-   :param i_max: Maximum current (A), peak value.
-   :type i_max: float
-   :param R: Total series resistance (Ω), defaults to 0.
-   :type R: float, optional
-   :param R_a: Active resistance (Ω), defaults to 0.25*u_nom/i_max.
-   :type R_a: float, optional
-   :param w_b: Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
-   :type w_b: float, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
+   :param cfg: Configuration object.
+   :type cfg: PowerSynchronizationControllerCfg
 
    .. rubric:: References
 
@@ -950,4 +992,41 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: PowerSynchronizationControllerCfg
+
+   
+   Configuration for the reference-feedforward power-synchronization controller.
+
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value.
+   :type u_nom: float
+   :param w_nom: Nominal grid angular frequency (rad/s).
+   :type w_nom: float
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param R: Total series resistance (Ω), defaults to 0.
+   :type R: float, optional
+   :param R_a: Active resistance (Ω), defaults to ``0.25*u_nom/i_max``.
+   :type R_a: float | None, optional
+   :param w_b: Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
+   :type w_b: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 

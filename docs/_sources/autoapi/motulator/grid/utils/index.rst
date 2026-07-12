@@ -214,9 +214,9 @@ Package Contents
    :param multiprocess: If set to True, multiprocessing.Pool() is used to run the identification using
                         all available CPU cores in the system. Defaults to True.
    :type multiprocess: bool, optional
-   :param filename: If given, the identification result is saved in */data/{date}_{time}_{filename}
-                    where * is the project root directory, defaults to None. The file format is set
-                    by the `filetype` parameter.
+   :param filename: If given, the identification result is saved in
+                    ``data/{date}_{time}_{filename}`` (relative to the project root directory),
+                    defaults to None. The file format is set by the `filetype` parameter.
    :type filename: str | None, optional
    :param filetype: The filetype for saving identification results, defaults to "csv". Valid options
                     are:

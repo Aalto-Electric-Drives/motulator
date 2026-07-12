@@ -81,15 +81,16 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-36
+.. GENERATED FROM PYTHON SOURCE LINES 29-37
 
 .. code-block:: Python
 
 
     # Control configuration parameters
-    inner_ctrl = control.PowerSynchronizationController(
+    cfg = control.PowerSynchronizationControllerCfg(
         u_nom=base.u, w_nom=base.w, i_max=1.3 * base.i, R=0.05 * base.Z, R_a=0.2 * base.Z
     )
+    inner_ctrl = control.PowerSynchronizationController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
@@ -99,11 +100,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-38
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-47
+.. GENERATED FROM PYTHON SOURCE LINES 39-48
 
 .. code-block:: Python
 
@@ -123,11 +124,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-54
+.. GENERATED FROM PYTHON SOURCE LINES 50-55
 
 .. code-block:: Python
 
@@ -163,7 +164,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.038 seconds)
+   **Total running time of the script:** (0 minutes 4.897 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_rfpsc_gfm.py:

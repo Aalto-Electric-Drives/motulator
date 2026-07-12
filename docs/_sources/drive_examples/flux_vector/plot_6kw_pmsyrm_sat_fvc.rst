@@ -240,9 +240,9 @@ load-torque disturbance estimation provides integral action.
         n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
     )
     cfg = control.FluxVectorControllerCfg(
-        i_s_max=2 * base.i, J=0.05, alpha_i=0, alpha_o=2 * np.pi * 8
+        i_s_max=2 * base.i, J=0.05, alpha_i=0, alpha_o=2 * np.pi * 8, sensorless=True
     )
-    vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+    vector_ctrl = control.FluxVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
@@ -366,7 +366,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 33.802 seconds)
+   **Total running time of the script:** (0 minutes 32.973 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:

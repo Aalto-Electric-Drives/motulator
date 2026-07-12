@@ -108,12 +108,12 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-58
+.. GENERATED FROM PYTHON SOURCE LINES 43-59
 
 .. code-block:: Python
 
 
-    inner_ctrl = control.ObserverBasedGridFormingController(
+    cfg = control.ObserverBasedGridFormingControllerCfg(
         i_max=1.3 * base.i,
         L=0.35 * base.L,
         R=0.05 * base.Z,
@@ -122,6 +122,7 @@ Configure the control system.
         w_nom=base.w,
         T_s=identification_cfg.T_s,
     )
+    inner_ctrl = control.ObserverBasedGridFormingController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
     ctrl.set_power_ref(0.5 * base.p)
@@ -134,11 +135,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 61-65
 
 .. code-block:: Python
 
@@ -180,7 +181,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 29.133 seconds)
+   **Total running time of the script:** (5 minutes 23.819 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_13kva_do_gfm_identification.py:

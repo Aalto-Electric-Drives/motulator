@@ -59,8 +59,10 @@ mdl = model.Drive(machine, mechanics, converter)
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map, i_s_dq_fcn=fem_curr_map
 )
-cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042)
-vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
+cfg = control.CurrentVectorControllerCfg(
+    i_s_max=2 * base.i, J=2 * 0.0042, sensorless=True
+)
+vector_ctrl = control.CurrentVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=2 * 0.0042, alpha_s=2 * pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

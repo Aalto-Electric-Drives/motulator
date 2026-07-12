@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.control.sm &#8212; motulator 0.7.3 documentation</title>
+    <title>motulator.drive.control.sm &#8212; motulator 0.7.4 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../../_static/documentation_options.js?v=d15849c6"></script>
+    <script src="../../../../../_static/documentation_options.js?v=444dcb17"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.3 documentation</p>
+    <p class="title logo__title">motulator 0.7.4 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -671,15 +671,13 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">CurrentVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">CurrentVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController" title="Link to this definition">#</a></dt>
 <dd><p>Current vector controller for synchronous machine drives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorControllerCfg" title="motulator.drive.control.sm.CurrentVectorControllerCfg"><em>CurrentVectorControllerCfg</em></a>) – Current-vector control configuration.</p></li>
-<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, sensorless control is used, defaults to True.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -766,12 +764,14 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 2*pi*50/3, keeping the default speed observer gain the same.</p></li>
 <li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed.</p></li>
 <li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – PM-flux estimation gain as a function of the rotor angular speed.</p></li>
-<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite>.</p></li>
+<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite> elsewhere.</p></li>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.9.</p></li>
-<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
 used in speed estimation.</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, sensorless control is used, defaults to True.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -823,7 +823,7 @@ adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
-<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Mechanical rotor speed (rad/s), either measured or estimated.</p></li>
+<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Mechanical rotor speed (rad/s), typically from the speed observer.</p></li>
 <li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Measured mechanical rotor angle (rad), used only in sensored mode.</p></li>
 </ul>
 </dd>
@@ -857,7 +857,7 @@ adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.FluxVectorController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#FluxVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxVectorController" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#FluxVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxVectorController" title="Link to this definition">#</a></dt>
 <dd><p>Flux-vector controller of synchronous machine drives.</p>
 <p>This class implements a variant of flux-vector control. Rotor coordinates and
 decoupling between the stator flux and torque channels are used according to
@@ -869,8 +869,6 @@ into account <a class="footnote-reference brackets" href="#var2022" id="id6" rol
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.FluxVectorControllerCfg" title="motulator.drive.control.sm.FluxVectorControllerCfg"><em>FluxVectorControllerCfg</em></a>) – Flux-vector control configuration.</p></li>
-<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, sensorless control is used, defaults to True.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -975,18 +973,20 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum stator current (A).</p></li>
 <li><p><strong>alpha_tau</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Torque-control bandwidth (rad/s), defaults to 2*pi*100.</p></li>
-<li><p><strong>alpha_psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s), defaults to <cite>alpha_tau</cite>.</p></li>
-<li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Integral-action bandwidth (rad/s), defaults to <cite>alpha_tau</cite>.</p></li>
-<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Speed estimation poles (rad/s). Defaults to 2*pi*50 if <cite>J</cite> is None, otherwise
+<li><p><strong>alpha_psi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s), defaults to <cite>alpha_tau</cite>.</p></li>
+<li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Integral-action bandwidth (rad/s), defaults to <cite>alpha_tau</cite>.</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Speed estimation poles (rad/s). Defaults to 2*pi*50 if <cite>J</cite> is None, otherwise
 2*pi*50/3, keeping the default speed observer gain the same.</p></li>
-<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed.</p></li>
-<li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – PM-flux estimation gain as a function of the rotor angular speed.</p></li>
-<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite>.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed.</p></li>
+<li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – PM-flux estimation gain as a function of the rotor angular speed.</p></li>
+<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Minimum stator flux (Vs). If None, defaults to <cite>par.psi_f</cite> elsewhere.</p></li>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.85.</p></li>
-<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
+<li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
 used in speed estimation.</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, sensorless control is used, defaults to True.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -994,7 +994,7 @@ used in speed estimation.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.ObserverBasedVHzController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00025</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#ObserverBasedVHzController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#ObserverBasedVHzController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="Link to this definition">#</a></dt>
 <dd><p>Observer-based V/Hz controller for synchronous machine drives.</p>
 <p>This class implements sensorless observer-based V/Hz control. Rotor coordinates and
 decoupling between the stator flux and torque channels are used <a class="footnote-reference brackets" href="#tii2025a" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
@@ -1003,7 +1003,6 @@ decoupling between the stator flux and torque channels are used <a class="footno
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzControllerCfg" title="motulator.drive.control.sm.ObserverBasedVHzControllerCfg"><em>ObserverBasedVHzControllerCfg</em></a>) – Observer-based V/Hz control configuration.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 250e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1087,8 +1086,9 @@ decoupling between the stator flux and torque channels are used <a class="footno
 <li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.9.</p></li>
-<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite>.</p></li>
+<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite> elsewhere.</p></li>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 250e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1328,7 +1328,7 @@ algorithm. This is less efficient, but may be convenient in some special cases.<
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SignalInjectionController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">SignalInjectionController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_inj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.000125</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_signal_inj.html#SignalInjectionController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SignalInjectionController" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">SignalInjectionController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_inj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">250</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_signal_inj.html#SignalInjectionController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SignalInjectionController" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control._sm_current_vector.CurrentVectorController</span></code></p>
 <p>Sensorless controller with signal injection for synchronous machine drives.</p>
 <p>This class implements a square-wave signal injection for low-speed operation
@@ -1342,7 +1342,6 @@ otherwise the phase-locked loop is used.</p>
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorControllerCfg" title="motulator.drive.control.sm.CurrentVectorControllerCfg"><em>CurrentVectorControllerCfg</em></a>) – Current-vector control configuration.</p></li>
 <li><p><strong>U_inj</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Injected voltage amplitude (V), defaults to 250.</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1422,20 +1421,22 @@ desired closed-loop bandwidth and the rotor inertia estimate.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SpeedFluxObserver">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">SpeedFluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">SpeedFluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver" title="Link to this definition">#</a></dt>
 <dd><p>Flux observer with speed estimation.</p>
-<p>This observer estimates the stator flux linkage, the rotor angle, and rotor speed.
-The observer gain decouples the electrical and mechanical dynamics and allows
-placing the poles of the corresponding linearized estimation error dynamics. If the
-inertia of the mechanical system is provided, the observer also estimates the load
-torque, to avoid the lag in the speed estimate.</p>
+<p>This observer estimates the stator flux linkage, rotor angle, and rotor speed. The
+observer gain decouples the electrical and mechanical dynamics and allows placing
+the poles of the corresponding linearized estimation error dynamics. If the inertia
+of the mechanical system is provided, the observer also estimates the load torque,
+to avoid the lag in the speed estimate. In sensored mode, the rotor speed is
+estimated from the measured rotor angle.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Speed-estimation pole location (rad/s).</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Speed-estimation pole (rad/s).</p></li>
 <li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Observer gain as a function of the rotor angular speed.</p></li>
 <li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – PM-flux estimation gain (V) as a function of the rotor angular speed.</p></li>
+<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, sensorless mode is used.</p></li>
 <li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Inertia of the mechanical system (kgm²). Defaults to None, which means the
 mechanical system model is not used.</p></li>
 </ul>
@@ -1443,19 +1444,21 @@ mechanical system model is not used.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SpeedFluxObserver.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute the feedback signals for the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
-<li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
-<li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
+<li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
+<li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Measured mechanical rotor angle (rad), used only in sensored mode.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs">ObserverOutputs</a></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – Estimated feedback signals for the control system.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs">ObserverOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>

@@ -85,15 +85,16 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-40
+.. GENERATED FROM PYTHON SOURCE LINES 33-41
 
 .. code-block:: Python
 
 
+    cfg = control.CurrentVectorControllerCfg(i_max=1.5 * base.i, L=0.2 * base.L)
+    inner_ctrl = control.CurrentVectorController(cfg)
     dc_bus_voltage_ctrl = control.DCBusVoltageController(
         C_dc=1e-3, alpha_dc=2 * np.pi * 30, p_max=base.p
     )
-    inner_ctrl = control.CurrentVectorController(i_max=1.5 * base.i, L=0.2 * base.L)
     ctrl = control.GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl)
 
 
@@ -103,11 +104,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-50
+.. GENERATED FROM PYTHON SOURCE LINES 43-51
 
 .. code-block:: Python
 
@@ -126,11 +127,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-57
+.. GENERATED FROM PYTHON SOURCE LINES 53-58
 
 .. code-block:: Python
 
@@ -166,7 +167,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.121 seconds)
+   **Total running time of the script:** (0 minutes 1.063 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py:

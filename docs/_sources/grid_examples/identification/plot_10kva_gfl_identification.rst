@@ -108,14 +108,15 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-53
+.. GENERATED FROM PYTHON SOURCE LINES 43-54
 
 .. code-block:: Python
 
 
-    inner_ctrl = control.CurrentVectorController(
+    cfg = control.CurrentVectorControllerCfg(
         i_max=1.5 * base.i, L=0.2 * base.L, T_s=identification_cfg.T_s
     )
+    inner_ctrl = control.CurrentVectorController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
     # Set the references
@@ -129,11 +130,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-59
+.. GENERATED FROM PYTHON SOURCE LINES 56-60
 
 .. code-block:: Python
 
@@ -175,7 +176,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 36.860 seconds)
+   **Total running time of the script:** (5 minutes 31.151 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_10kva_gfl_identification.py:

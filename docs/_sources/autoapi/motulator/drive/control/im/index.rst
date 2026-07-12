@@ -192,7 +192,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: CurrentVectorController(par, cfg, sensorless = True, T_s = 0.000125)
+.. py:class:: CurrentVectorController(par, cfg)
 
    
    Current-vector controller for induction machine drives.
@@ -201,10 +201,6 @@ Module Contents
    :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param cfg: Current-vector controller configuration.
    :type cfg: CurrentVectorControllerCfg
-   :param sensorless: If True, sensorless control is used, defaults to True.
-   :type sensorless: bool, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
 
 
 
@@ -345,7 +341,11 @@ Module Contents
    :type k_fw: float, optional
    :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
              used in speed estimation.
-   :type J: float, optional
+   :type J: float | None, optional
+   :param sensorless: If True, sensorless control is used, defaults to True.
+   :type sensorless: bool, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
 
 
@@ -420,8 +420,8 @@ Module Contents
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
-      :param w_M: Rotor speed (mechanical rad/s), either measured or estimated.
-      :type w_M: float, optional
+      :param w_M: Rotor speed (mechanical rad/s), typically from the speed observer.
+      :type w_M: float
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
@@ -468,7 +468,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: FluxVectorController(par, cfg, sensorless = True, T_s = 0.000125)
+.. py:class:: FluxVectorController(par, cfg)
 
    
    Flux-vector controller for induction machine drives.
@@ -480,10 +480,6 @@ Module Contents
    :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param cfg: Flux-vector control configuration.
    :type cfg: FluxVectorControllerCfg
-   :param sensorless: If True, sensorless control is used, defaults to True.
-   :type sensorless: bool, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
 
    .. rubric:: References
 
@@ -619,8 +615,8 @@ Module Contents
    :type alpha_psi: float, optional
    :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_tau`.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
-                   2*pi*30, keeping the default speed observer gain the same.
+   :param alpha_o: Speed estimation poles (rad/s). If `None`, the default depends on the operation
+                   mode and the inertia `J`.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
@@ -635,6 +631,10 @@ Module Contents
    :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
              used in speed estimation.
    :type J: float, optional
+   :param sensorless: If True, sensorless control is used, defaults to True.
+   :type sensorless: bool, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
 
 
@@ -764,7 +764,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ObserverBasedVHzController(par, cfg, T_s = 0.00025)
+.. py:class:: ObserverBasedVHzController(par, cfg)
 
    
    Observer-based V/Hz controller for induction machine drives.
@@ -776,8 +776,6 @@ Module Contents
    :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param cfg: Observer-based V/Hz controller configuration.
    :type cfg: ObserverBasedVHzControllerCfg
-   :param T_s: Sampling period (s), defaults to 250e-6.
-   :type T_s: float, optional
 
 
 
@@ -913,6 +911,8 @@ Module Contents
    :type k_u: float, optional
    :param k_b: Breakdown torque margin, defaults to 0.9.
    :type k_b: float, optional
+   :param T_s: Sampling period (s), defaults to 250e-6.
+   :type T_s: float, optional
 
 
 
@@ -1135,23 +1135,26 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, k_o1, k_o2, alpha_o, J = None)
+.. py:class:: SpeedFluxObserver(par, alpha_o, k_o1, k_o2, sensorless, J = None)
 
    
    Flux observer with speed estimation.
 
    This class implements a reduced-order flux observer for induction machines with
    speed estimation. If the inertia of the mechanical system is provided, the observer
-   also estimates the load torque, to avoid the lag in the speed estimate.
+   also estimates the load torque, to avoid the lag in the speed estimate. In sensored
+   mode, the measured rotor speed is filtered.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :param alpha_o: Speed estimation pole (rad/s).
+   :type alpha_o: float
    :param k_o1: Observer gains as functions of the electrical angular speed of the rotor.
    :type k_o1: Callable[[float], complex]
    :param k_o2: Observer gains as functions of the electrical angular speed of the rotor.
    :type k_o2: Callable[[float], complex]
-   :param alpha_o: Speed estimation pole (rad/s).
-   :type alpha_o: float
+   :param sensorless: If True, sensorless mode is used.
+   :type sensorless: bool
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
@@ -1182,8 +1185,10 @@ Module Contents
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
+      :param w_M_meas: Measured mechanical rotor speed (rad/s), used only in sensored mode.
+      :type w_M_meas: float, optional
 
-      :returns: **out** -- Estimated feedback signals for the control system, including speed estimate.
+      :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
 
 

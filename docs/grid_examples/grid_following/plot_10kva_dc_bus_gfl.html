@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>10-kVA, DC bus, GFL &#8212; motulator 0.7.3 documentation</title>
+    <title>10-kVA, DC bus, GFL &#8212; motulator 0.7.4 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=d15849c6"></script>
+    <script src="../../_static/documentation_options.js?v=444dcb17"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.3 documentation</p>
+    <p class="title logo__title">motulator 0.7.4 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -473,10 +473,11 @@ reference generator, and a PI-type current controller.</p>
 </pre></div>
 </div>
 <p>Configure the control system.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">dc_bus_voltage_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">DCBusVoltageController</span><span class="p">(</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControllerCfg</span><span class="p">(</span><span class="n">i_max</span><span class="o">=</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+<span class="n">inner_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorController</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+<span class="n">dc_bus_voltage_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">DCBusVoltageController</span><span class="p">(</span>
     <span class="n">C_dc</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">alpha_dc</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">30</span><span class="p">,</span> <span class="n">p_max</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">p</span>
 <span class="p">)</span>
-<span class="n">inner_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorController</span><span class="p">(</span><span class="n">i_max</span><span class="o">=</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">GridConverterControlSystem</span></a><span class="p">(</span><span class="n">inner_ctrl</span><span class="p">,</span> <span class="n">dc_bus_voltage_ctrl</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -500,7 +501,7 @@ reference generator, and a PI-type current controller.</p>
 <li><img src="../../_images/sphx_glr_plot_10kva_dc_bus_gfl_001.png" srcset="../../_images/sphx_glr_plot_10kva_dc_bus_gfl_001.png" alt="plot 10kva dc bus gfl" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_10kva_dc_bus_gfl_002.png" srcset="../../_images/sphx_glr_plot_10kva_dc_bus_gfl_002.png" alt="plot 10kva dc bus gfl" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.121 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.063 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-grid-following-plot-10kva-dc-bus-gfl-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/3c1aa2bc86612a47b0422c3fa286b6a5/plot_10kva_dc_bus_gfl.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_10kva_dc_bus_gfl.ipynb</span></code></a></p>

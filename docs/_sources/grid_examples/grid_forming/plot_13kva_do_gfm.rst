@@ -83,12 +83,12 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-42
+.. GENERATED FROM PYTHON SOURCE LINES 31-43
 
 .. code-block:: Python
 
 
-    inner_ctrl = control.ObserverBasedGridFormingController(
+    cfg = control.ObserverBasedGridFormingControllerCfg(
         i_max=1.3 * base.i,
         L=0.35 * base.L,
         R=0.05 * base.Z,
@@ -96,6 +96,7 @@ Configure the control system.
         u_nom=base.u,
         w_nom=base.w,
     )
+    inner_ctrl = control.ObserverBasedGridFormingController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
@@ -105,11 +106,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 44-45
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-59
+.. GENERATED FROM PYTHON SOURCE LINES 45-60
 
 .. code-block:: Python
 
@@ -135,11 +136,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-66
+.. GENERATED FROM PYTHON SOURCE LINES 62-67
 
 .. code-block:: Python
 
@@ -175,7 +176,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.938 seconds)
+   **Total running time of the script:** (0 minutes 4.865 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm.py:

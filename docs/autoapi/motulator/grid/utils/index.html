@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.grid.utils &#8212; motulator 0.7.3 documentation</title>
+    <title>motulator.grid.utils &#8212; motulator 0.7.4 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
+    <script src="../../../../_static/documentation_options.js?v=444dcb17"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,7 +135,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.3 documentation</p>
+    <p class="title logo__title">motulator 0.7.4 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -627,9 +627,9 @@ sampling period, defaults to 10.</p></li>
 vectors, defaults to 1.</p></li>
 <li><p><strong>multiprocess</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to True, multiprocessing.Pool() is used to run the identification using
 all available CPU cores in the system. Defaults to True.</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If given, the identification result is saved in <a href="#id1"><span class="problematic" id="id2">*</span></a>/data/{date}_{time}_{filename}
-where * is the project root directory, defaults to None. The file format is set
-by the <cite>filetype</cite> parameter.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If given, the identification result is saved in
+<code class="docutils literal notranslate"><span class="pre">data/{date}_{time}_{filename}</span></code> (relative to the project root directory),
+defaults to None. The file format is set by the <cite>filetype</cite> parameter.</p></li>
 <li><p><strong>filetype</strong> (<em>Literal</em><em>[</em><em>&quot;csv&quot;</em><em>, </em><em>&quot;mat&quot;</em><em>]</em><em>, </em><em>optional</em>) – The filetype for saving identification results, defaults to “csv”. Valid options
 are:
 - “csv”: save results in .csv-format

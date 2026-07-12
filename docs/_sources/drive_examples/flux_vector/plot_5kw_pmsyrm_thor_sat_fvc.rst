@@ -190,7 +190,7 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-89
+.. GENERATED FROM PYTHON SOURCE LINES 77-91
 
 .. code-block:: Python
 
@@ -201,8 +201,10 @@ Configure the control system.
         n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map
     )
     # Since the inertia `J` is provided, the mechanical-model-based speed observer is used
-    cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042, alpha_i=0)
-    vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+    cfg = control.FluxVectorControllerCfg(
+        i_s_max=2 * base.i, J=2 * 0.0042, alpha_i=0, sensorless=True
+    )
+    vector_ctrl = control.FluxVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=2 * 0.0042, alpha_s=2 * np.pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
@@ -213,11 +215,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-91
+.. GENERATED FROM PYTHON SOURCE LINES 92-93
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-94
+.. GENERATED FROM PYTHON SOURCE LINES 93-96
 
 .. code-block:: Python
 
@@ -231,11 +233,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 97-98
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-102
 
 .. code-block:: Python
 
@@ -258,7 +260,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.344 seconds)
+   **Total running time of the script:** (0 minutes 22.106 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py:

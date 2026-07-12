@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.control._gfm_observer &#8212; motulator 0.7.3 documentation</title>
+    <title>motulator.grid.control._gfm_observer &#8212; motulator 0.7.4 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../../_static/documentation_options.js?v=d15849c6"></script>
+    <script src="../../../../_static/documentation_options.js?v=444dcb17"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -134,7 +134,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.3 documentation</p>
+    <p class="title logo__title">motulator 0.7.4 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -401,6 +401,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -504,23 +505,21 @@
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<div class="viewcode-block" id="ObserverBasedGridFormingController">
-<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ObserverBasedGridFormingController</span><span class="p">:</span>
+<div class="viewcode-block" id="ObserverBasedGridFormingControllerCfg">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingControllerCfg">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObserverBasedGridFormingControllerCfg</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Disturbance-observer-based grid-forming controller.</span>
-
-<span class="sd">    This implements the RFPSC-type grid-forming mode of the control method described in</span>
-<span class="sd">    [#Nur2024]_. Transparent current control is also implemented.</span>
+<span class="sd">    Disturbance-observer-based grid-forming controller configuration.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    i_max : float</span>
 <span class="sd">        Maximum current (A), peak value.</span>
 <span class="sd">    L : float</span>
-<span class="sd">        Total inductance (H).</span>
+<span class="sd">        Total inductance estimate (H).</span>
 <span class="sd">    R : float, optional</span>
-<span class="sd">        Total series resistance (Ω), defaults to 0.</span>
+<span class="sd">        Total series resistance estimate (Ω), defaults to 0.</span>
 <span class="sd">    R_a : float, optional</span>
 <span class="sd">        Active resistance (Ω), defaults to `0.25*u_nom/i_max`.</span>
 <span class="sd">    k_v : float, optional</span>
@@ -532,8 +531,45 @@
 <span class="sd">    u_nom : float, optional</span>
 <span class="sd">        Nominal grid voltage (V), line-to-neutral peak value, defaults to</span>
 <span class="sd">        `sqrt(2/3)*400`.</span>
+<span class="sd">    w_nom : float, optional</span>
+<span class="sd">        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s), defaults to 125e-6.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
+    <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span>
+    <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">400</span>
+    <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_nom</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_nom</span></div>
+
+
+
+<div class="viewcode-block" id="ObserverBasedGridFormingController">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObserverBasedGridFormingController</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disturbance-observer-based grid-forming controller.</span>
+
+<span class="sd">    This implements the RFPSC-type grid-forming mode of the control method described in</span>
+<span class="sd">    [#Nur2024]_. Transparent current control is also implemented.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : ObserverBasedGridFormingControllerCfg</span>
+<span class="sd">        Grid-forming control configuration.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -549,26 +585,15 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">L</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span><span class="p">,</span>
-        <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">400</span><span class="p">,</span>
-        <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span><span class="n">u_nom</span><span class="o">=</span><span class="n">u_nom</span><span class="p">,</span> <span class="n">w_nom</span><span class="o">=</span><span class="n">w_nom</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">L</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">R</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="n">alpha_o</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">i_max</span><span class="p">)</span>
-        <span class="c1"># Initialize gains</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">u_nom</span> <span class="o">/</span> <span class="n">i_max</span> <span class="k">if</span> <span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">R_a</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">alpha_o</span> <span class="o">/</span> <span class="n">w_nom</span> <span class="k">if</span> <span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_v</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="n">alpha_c</span> <span class="o">*</span> <span class="n">L</span>  <span class="c1"># Current control gain</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">T_s</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">ObserverBasedGridFormingControllerCfg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span>
+            <span class="n">u_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">,</span> <span class="n">w_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="p">)</span>  <span class="c1"># Resolved in the configuration&#39;s __post_init__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
 
 <div class="viewcode-block" id="ObserverBasedGridFormingController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.get_feedback">[docs]</a>

@@ -91,7 +91,7 @@ is used. The parameters are based on the measured data of a 2.2-kW machine [#Qu2
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-55
+.. GENERATED FROM PYTHON SOURCE LINES 39-56
 
 .. code-block:: Python
 
@@ -105,8 +105,9 @@ Configure the control system.
         i_s_max=1.5 * base.i,
         J=0.015,  # Inertia estimate enables the speed observer
         alpha_i=0,  # Integral action is not necessary with the speed observer
+        sensorless=True,
     )
-    vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+    vector_ctrl = control.FluxVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
@@ -118,11 +119,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-57
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-61
+.. GENERATED FROM PYTHON SOURCE LINES 58-62
 
 .. code-block:: Python
 
@@ -137,11 +138,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-68
+.. GENERATED FROM PYTHON SOURCE LINES 64-69
 
 .. code-block:: Python
 
@@ -162,7 +163,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-74
+.. GENERATED FROM PYTHON SOURCE LINES 70-75
 
 .. rubric:: References
 
@@ -173,7 +174,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.713 seconds)
+   **Total running time of the script:** (0 minutes 5.727 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py:

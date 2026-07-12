@@ -115,7 +115,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: CurrentVectorController(par, cfg, sensorless = True, T_s = 0.000125)
+.. py:class:: CurrentVectorController(par, cfg)
 
    
    Current vector controller for synchronous machine drives.
@@ -124,10 +124,6 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param cfg: Current-vector control configuration.
    :type cfg: CurrentVectorControllerCfg
-   :param sensorless: If True, sensorless control is used, defaults to True.
-   :type sensorless: bool, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
 
 
 
@@ -260,7 +256,7 @@ Module Contents
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
    :type k_f: Callable[[float], float], optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
    :type psi_s_min: float, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -270,7 +266,11 @@ Module Contents
    :type k_mtpv: float, optional
    :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
              used in speed estimation.
-   :type J: float, optional
+   :type J: float | None, optional
+   :param sensorless: If True, sensorless control is used, defaults to True.
+   :type sensorless: bool, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
 
 
@@ -349,7 +349,7 @@ Module Contents
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
-      :param w_M: Mechanical rotor speed (rad/s), either measured or estimated.
+      :param w_M: Mechanical rotor speed (rad/s), typically from the speed observer.
       :type w_M: float
       :param theta_M_meas: Measured mechanical rotor angle (rad), used only in sensored mode.
       :type theta_M_meas: float, optional
@@ -399,7 +399,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: FluxVectorController(par, cfg, sensorless = True, T_s = 0.000125)
+.. py:class:: FluxVectorController(par, cfg)
 
    
    Flux-vector controller of synchronous machine drives.
@@ -414,10 +414,6 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param cfg: Flux-vector control configuration.
    :type cfg: FluxVectorControllerCfg
-   :param sensorless: If True, sensorless control is used, defaults to True.
-   :type sensorless: bool, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
 
    .. rubric:: References
 
@@ -557,18 +553,18 @@ Module Contents
    :param alpha_tau: Torque-control bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_tau: float, optional
    :param alpha_psi: Flux-control bandwidth (rad/s), defaults to `alpha_tau`.
-   :type alpha_psi: float, optional
+   :type alpha_psi: float | None, optional
    :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_tau`.
-   :type alpha_i: float, optional
+   :type alpha_i: float | None, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
                    2*pi*50/3, keeping the default speed observer gain the same.
-   :type alpha_o: float, optional
+   :type alpha_o: float | None, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], float], optional
+   :type k_o: Callable[[float], float] | None, optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
-   :type k_f: Callable[[float], float], optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`.
-   :type psi_s_min: float, optional
+   :type k_f: Callable[[float], float] | None, optional
+   :param psi_s_min: Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere.
+   :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
@@ -577,7 +573,11 @@ Module Contents
    :type k_mtpv: float, optional
    :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
              used in speed estimation.
-   :type J: float, optional
+   :type J: float | None, optional
+   :param sensorless: If True, sensorless control is used, defaults to True.
+   :type sensorless: bool, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
 
 
 
@@ -596,7 +596,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: ObserverBasedVHzController(par, cfg, T_s = 0.00025)
+.. py:class:: ObserverBasedVHzController(par, cfg)
 
    
    Observer-based V/Hz controller for synchronous machine drives.
@@ -608,8 +608,6 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param cfg: Observer-based V/Hz control configuration.
    :type cfg: ObserverBasedVHzControllerCfg
-   :param T_s: Sampling period (s), defaults to 250e-6.
-   :type T_s: float, optional
 
 
 
@@ -745,10 +743,12 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
    :type k_mtpv: float, optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`.
-   :type psi_s_min: float, optional
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
+   :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
+   :param T_s: Sampling period (s), defaults to 250e-6.
+   :type T_s: float, optional
 
 
 
@@ -1141,7 +1141,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SignalInjectionController(par, cfg, U_inj = 250, T_s = 0.000125)
+.. py:class:: SignalInjectionController(par, cfg, U_inj = 250)
 
    Bases: :py:obj:`motulator.drive.control._sm_current_vector.CurrentVectorController`
 
@@ -1161,8 +1161,6 @@ Module Contents
    :type cfg: CurrentVectorControllerCfg
    :param U_inj: Injected voltage amplitude (V), defaults to 250.
    :type U_inj: float, optional
-   :param T_s: Sampling period (s), defaults to 125e-6.
-   :type T_s: float, optional
 
    .. rubric:: References
 
@@ -1281,25 +1279,28 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, J = None)
+.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, sensorless, J = None)
 
    
    Flux observer with speed estimation.
 
-   This observer estimates the stator flux linkage, the rotor angle, and rotor speed.
-   The observer gain decouples the electrical and mechanical dynamics and allows
-   placing the poles of the corresponding linearized estimation error dynamics. If the
-   inertia of the mechanical system is provided, the observer also estimates the load
-   torque, to avoid the lag in the speed estimate.
+   This observer estimates the stator flux linkage, rotor angle, and rotor speed. The
+   observer gain decouples the electrical and mechanical dynamics and allows placing
+   the poles of the corresponding linearized estimation error dynamics. If the inertia
+   of the mechanical system is provided, the observer also estimates the load torque,
+   to avoid the lag in the speed estimate. In sensored mode, the rotor speed is
+   estimated from the measured rotor angle.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param alpha_o: Speed-estimation pole location (rad/s).
+   :param alpha_o: Speed-estimation pole (rad/s).
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
    :type k_f: Callable[[float], float], optional
+   :param sensorless: If True, sensorless mode is used.
+   :type sensorless: bool
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
@@ -1321,11 +1322,20 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M_meas = None, theta_M_meas = None)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, theta_M_meas = None)
 
       
       Compute the feedback signals for the control system.
 
+      :param u_s_ab: Stator voltage (V) in stator coordinates.
+      :type u_s_ab: complex
+      :param i_s_ab: Stator current (A) in stator coordinates.
+      :type i_s_ab: complex
+      :param theta_M_meas: Measured mechanical rotor angle (rad), used only in sensored mode.
+      :type theta_M_meas: float, optional
+
+      :returns: **out** -- Estimated feedback signals for the control system.
+      :rtype: ObserverOutputs
 
 
 

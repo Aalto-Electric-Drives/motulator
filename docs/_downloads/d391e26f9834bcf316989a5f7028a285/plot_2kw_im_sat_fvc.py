@@ -46,8 +46,9 @@ cfg = control.FluxVectorControllerCfg(
     i_s_max=1.5 * base.i,
     J=0.015,  # Inertia estimate enables the speed observer
     alpha_i=0,  # Integral action is not necessary with the speed observer
+    sensorless=True,
 )
-vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+vector_ctrl = control.FluxVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

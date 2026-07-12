@@ -140,7 +140,7 @@ Configure the system model.
 Configure the control system. Since the inertia estimate `J` is provided in
 `CurrentVectorControllerCfg`, the mechanical-model-based speed observer is used.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-68
+.. GENERATED FROM PYTHON SOURCE LINES 58-70
 
 .. code-block:: Python
 
@@ -148,8 +148,10 @@ Configure the control system. Since the inertia estimate `J` is provided in
     est_par = control.SaturatedSynchronousMachinePars(
         n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map, i_s_dq_fcn=fem_curr_map
     )
-    cfg = control.CurrentVectorControllerCfg(i_s_max=2 * base.i, J=2 * 0.0042)
-    vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
+    cfg = control.CurrentVectorControllerCfg(
+        i_s_max=2 * base.i, J=2 * 0.0042, sensorless=True
+    )
+    vector_ctrl = control.CurrentVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=2 * 0.0042, alpha_s=2 * pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
@@ -161,11 +163,11 @@ Configure the control system. Since the inertia estimate `J` is provided in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Plot control characteristics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-79
+.. GENERATED FROM PYTHON SOURCE LINES 72-81
 
 .. code-block:: Python
 
@@ -216,11 +218,11 @@ Plot control characteristics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-81
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-85
+.. GENERATED FROM PYTHON SOURCE LINES 83-87
 
 .. code-block:: Python
 
@@ -235,11 +237,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 88-89
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-92
+.. GENERATED FROM PYTHON SOURCE LINES 89-94
 
 .. code-block:: Python
 
@@ -260,7 +262,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-98
+.. GENERATED FROM PYTHON SOURCE LINES 95-100
 
 .. rubric:: References
 
@@ -271,7 +273,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 36.877 seconds)
+   **Total running time of the script:** (0 minutes 36.017 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py:

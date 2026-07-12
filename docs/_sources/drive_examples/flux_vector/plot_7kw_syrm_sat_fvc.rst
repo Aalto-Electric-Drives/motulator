@@ -88,7 +88,7 @@ Configure the system model.
 
 Configure the control system, including the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-57
+.. GENERATED FROM PYTHON SOURCE LINES 36-59
 
 .. code-block:: Python
 
@@ -108,8 +108,10 @@ Configure the control system, including the saturation model.
     )
 
     # Configure the controller
-    cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, psi_s_min=0.5 * base.psi)
-    vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+    cfg = control.FluxVectorControllerCfg(
+        i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, sensorless=True
+    )
+    vector_ctrl = control.FluxVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
@@ -137,11 +139,11 @@ Configure the control system, including the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Plot control characteristics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-68
+.. GENERATED FROM PYTHON SOURCE LINES 61-70
 
 .. code-block:: Python
 
@@ -192,11 +194,11 @@ Plot control characteristics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-74
+.. GENERATED FROM PYTHON SOURCE LINES 72-76
 
 .. code-block:: Python
 
@@ -211,11 +213,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-80
+.. GENERATED FROM PYTHON SOURCE LINES 78-82
 
 .. code-block:: Python
 
@@ -238,7 +240,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.268 seconds)
+   **Total running time of the script:** (0 minutes 20.886 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py:

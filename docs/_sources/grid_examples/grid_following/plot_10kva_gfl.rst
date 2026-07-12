@@ -83,12 +83,13 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-35
+.. GENERATED FROM PYTHON SOURCE LINES 31-36
 
 .. code-block:: Python
 
 
-    inner_ctrl = control.CurrentVectorController(i_max=1.5 * base.i, L=0.2 * base.L)
+    cfg = control.CurrentVectorControllerCfg(i_max=1.5 * base.i, L=0.2 * base.L)
+    inner_ctrl = control.CurrentVectorController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
@@ -98,11 +99,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-37
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-48
+.. GENERATED FROM PYTHON SOURCE LINES 38-49
 
 .. code-block:: Python
 
@@ -124,11 +125,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-59
+.. GENERATED FROM PYTHON SOURCE LINES 51-60
 
 .. code-block:: Python
 
@@ -168,7 +169,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.033 seconds)
+   **Total running time of the script:** (0 minutes 0.965 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_gfl.py:
