@@ -3,6 +3,7 @@
 from cmath import exp, phase
 from dataclasses import dataclass
 from math import pi, sqrt
+from typing import cast
 
 import numpy as np
 
@@ -106,21 +107,19 @@ class References:
     u_dc: float | None = None
 
 
-class ObserverBasedGridFormingController:
+@dataclass
+class ObserverBasedGridFormingControllerCfg:
     """
-    Disturbance-observer-based grid-forming controller.
-
-    This implements the RFPSC-type grid-forming mode of the control method described in
-    [#Nur2024]_. Transparent current control is also implemented.
+    Disturbance-observer-based grid-forming controller configuration.
 
     Parameters
     ----------
     i_max : float
         Maximum current (A), peak value.
     L : float
-        Total inductance (H).
+        Total inductance estimate (H).
     R : float, optional
-        Total series resistance (Ω), defaults to 0.
+        Total series resistance estimate (Ω), defaults to 0.
     R_a : float, optional
         Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
     k_v : float, optional
@@ -132,8 +131,42 @@ class ObserverBasedGridFormingController:
     u_nom : float, optional
         Nominal grid voltage (V), line-to-neutral peak value, defaults to
         `sqrt(2/3)*400`.
+    w_nom : float, optional
+        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
+
+    """
+
+    i_max: float
+    L: float
+    R: float = 0.0
+    R_a: float | None = None
+    k_v: float | None = None
+    alpha_o: float = 2 * pi * 50
+    alpha_c: float = 2 * pi * 400
+    u_nom: float = sqrt(2 / 3) * 400
+    w_nom: float = 2 * pi * 50
+    T_s: float = 125e-6
+
+    def __post_init__(self) -> None:
+        if self.R_a is None:
+            self.R_a = 0.25 * self.u_nom / self.i_max
+        if self.k_v is None:
+            self.k_v = self.alpha_o / self.w_nom
+
+
+class ObserverBasedGridFormingController:
+    """
+    Disturbance-observer-based grid-forming controller.
+
+    This implements the RFPSC-type grid-forming mode of the control method described in
+    [#Nur2024]_. Transparent current control is also implemented.
+
+    Parameters
+    ----------
+    cfg : ObserverBasedGridFormingControllerCfg
+        Grid-forming control configuration.
 
     Notes
     -----
@@ -149,26 +182,15 @@ class ObserverBasedGridFormingController:
 
     """
 
-    def __init__(
-        self,
-        i_max: float,
-        L: float,
-        R: float = 0.0,
-        R_a: float | None = None,
-        k_v: float | None = None,
-        alpha_o: float = 2 * pi * 50,
-        alpha_c: float = 2 * pi * 400,
-        u_nom: float = sqrt(2 / 3) * 400,
-        w_nom: float = 2 * pi * 50,
-        T_s: float = 125e-6,
-    ) -> None:
-        self.observer = Observer(u_nom=u_nom, w_nom=w_nom, L=L, R=R, alpha_o=alpha_o)
-        self.current_limiter = CurrentLimiter(i_max)
-        # Initialize gains
-        self.R_a = 0.25 * u_nom / i_max if R_a is None else R_a
-        self.k_v = alpha_o / w_nom if k_v is None else k_v
-        self.k_c = alpha_c * L  # Current control gain
-        self.T_s: float = T_s
+    def __init__(self, cfg: ObserverBasedGridFormingControllerCfg) -> None:
+        self.observer = Observer(
+            u_nom=cfg.u_nom, w_nom=cfg.w_nom, L=cfg.L, R=cfg.R, alpha_o=cfg.alpha_o
+        )
+        self.current_limiter = CurrentLimiter(cfg.i_max)
+        self.R_a = cast(float, cfg.R_a)  # Resolved in the configuration's __post_init__
+        self.k_v = cast(float, cfg.k_v)
+        self.k_c = cfg.alpha_c * cfg.L  # Current control gain
+        self.T_s: float = cfg.T_s
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""

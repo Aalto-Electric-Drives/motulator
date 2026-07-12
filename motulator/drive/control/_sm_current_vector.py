@@ -2,14 +2,13 @@
 
 from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable
+from typing import Callable, cast
 
 from motulator.common.control import ComplexPIController
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
-    create_sensored_observer,
-    create_sensorless_observer,
+    create_speed_flux_observer,
 )
 from motulator.drive.control._sm_reference_gen import ReferenceGenerator
 from motulator.drive.utils._parameters import (
@@ -99,16 +98,20 @@ class CurrentVectorControllerCfg:
     k_f : Callable[[float], float], optional
         PM-flux estimation gain as a function of the rotor angular speed.
     psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`.
+        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
         MTPV margin, defaults to 0.9.
-    J : float, optional
+    J : float | None, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
         used in speed estimation.
+    sensorless : bool, optional
+        If True, sensorless control is used, defaults to True.
+    T_s : float, optional
+        Sampling period (s), defaults to 125e-6.
 
     """
 
@@ -123,6 +126,8 @@ class CurrentVectorControllerCfg:
     k_u: float = 0.9
     k_mtpv: float = 0.9
     J: float | None = None
+    sensorless: bool = True
+    T_s: float = 125e-6
 
     def __post_init__(self) -> None:
         """Set alpha_o default based on J value."""
@@ -143,10 +148,6 @@ class CurrentVectorController:
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector control configuration.
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
-    T_s : float, optional
-        Sampling period (s), defaults to 125e-6.
 
     """
 
@@ -154,24 +155,16 @@ class CurrentVectorController:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: CurrentVectorControllerCfg,
-        sensorless: bool = True,
-        T_s: float = 125e-6,
     ) -> None:
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
         )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
-        assert cfg.alpha_o is not None
-        if sensorless:
-            self.observer = create_sensorless_observer(
-                par, cfg.alpha_o, cfg.k_o, cfg.k_f, cfg.J
-            )
-        else:
-            self.observer = create_sensored_observer(
-                par, 2 * cfg.alpha_o, cfg.k_o, cfg.k_f
-            )
-        self.sensorless = sensorless
-        self.T_s = T_s
+        self.observer = create_speed_flux_observer(
+            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
+        )
+        self.sensorless = cfg.sensorless
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self,
@@ -181,7 +174,7 @@ class CurrentVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        return self.observer.compute_output(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
+        return self.observer.compute_output(u_s_ab, i_s_ab, theta_M_meas)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""

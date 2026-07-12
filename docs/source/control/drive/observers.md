@@ -1,6 +1,35 @@
 # Observers
 
-Observers estimate the internal state of electrical machines. In this document, we describe the observer design for induction and synchronous machines, including both sensored and sensorless designs. The observer designs allow to take the magnetic saturation into account.
+Observers estimate the internal state of electrical machines. We first present a generic rotor speed observer used in both induction and synchronous machine drives (both sensored and sensorless). Then, we describe the flux observer designs for induction and synchronous machines. These designs cover both sensored and sensorless drives and account for magnetic saturation.
+
+## Speed Observer
+
+The rotor speed observer described below is available in the {class}`motulator.drive.control.im.SpeedObserver` and {class}`motulator.drive.control.sm.SpeedObserver` classes for induction machines and synchronous machines, respectively.
+
+The rotor speed can be estimated (or filtered in sensored drives) using a disturbance observer structure {cite}`Fra1997`. The starting point is the mechanical model \[see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`\], in which the load torque is considered as a quasi-constant disturbance. The resulting speed observer is
+
+```{math}
+---
+label: speed_obs
+---
+    \frac{\D \hatomegaM}{\D t} &= \frac{1}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
+    \frac{\D\hattauL}{\D t} &= -\kotau\varepsilon
+```
+
+where $\hatomegaM$ is the estimated (or filtered in sensored drives) speed, $\hattauM$ is the electromagnetic torque estimate, $\hattauL$ is the load torque estimate, and $\koomega$ and $\kotau$ are the observer gains. The error signal $\varepsilon$ depends on the machine type and on whether the drive is sensored or sensorless, as described below. In induction machines, it is based on the speed estimation error; in synchronous machines, it is based on the position estimation error.
+
+As a special case, setting $\hat{J} = \infty$ and $\kotau = 0$ yields the commonly used reduced-order estimator {cite}`Har2001`
+
+```{math}
+---
+label: speed_obs_ro
+---
+    \frac{\D \hatomegaM}{\D t} = \koomega \varepsilon
+```
+
+which corresponds to a first-order low-pass filter of the true speed. The full-order observer {eq}`speed_obs` uses the mechanical model to avoid the lag inherent in such filtering. Clearly, the inertia estimate $\hat{J}$ can be safely overestimated.
+
+The observer structure {eq}`speed_obs` was originally proposed for sensored servo drives {cite}`Lor1991` and for signal-injection methods {cite}`Kim2003`. We use it also in model-based sensorless control, where the error signal comes from the flux observer instead of a measured speed or position.
 
 ## For Induction Machines
 
@@ -44,7 +73,7 @@ label: im_eo
     \eo = \hatLsgm\frac{\D \is}{\D t} - \us + \left(\hatRsgm + \jj\omegac\hatLsgm\right)\is - \left(\hatalpha - \jj\hatomegam\right)\hatpsiR
 ```
 
-where $\hatomegam$ is the rotor speed estimate. In sensored drives, the speed estimate is replaced with the measured speed, $\hatomegam = \omegam$. In observer-based V/Hz control {cite}`Tii2025b`, the speed estimate is replaced with the (rate-limited) speed reference, $\hatomegam = \omegamref$. Note that the derivative of the stator current in {eq}`im_eo` is integrated, i.e., the noise is not amplified. The torque estimate is given by
+where $\hatomegam = \np\hatomegaM$ represents the filtered rotor speed in sensored drives and estimated rotor speed in sensorless drives. In observer-based V/Hz control {cite}`Tii2025b`, the speed estimate is replaced with the (rate-limited) speed reference, $\hatomegam = \omegamref$. Note that the derivative of the stator current in {eq}`im_eo` is integrated, i.e., the noise is not amplified. The torque estimate is given by
 
 ```{math}
 ---
@@ -62,6 +91,8 @@ The angular speed $\omegac$ of the controller coordinate system can be arbitrari
 ```{note}
 Real-valued column vectors and the corresponding $2\times 2$ gain matrix were used in {cite}`Hin2010`. The complex form in {eq}`im_obs` has the same degrees of freedom.
 ```
+
+(im_obs_analysis)=
 
 #### Gain Analysis and Selection
 
@@ -87,7 +118,7 @@ Notice that the rotor flux estimation error is $\Delta\tildepsiR = \Delta\tildep
 
 ##### Sensored Drives
 
-In sensored drives, $\Delta\tildeomegam = 0$ holds and $\kob = 0$ is used. Under these assumptions, the estimation-error dynamics {eq}`tilde_psis` reduce to {cite}`Ver1988`
+In sensored drives, $\Delta\tildeomegam$ decoupled from the flux estimation. Consequently, this external disturbance can be omitted in the analysis, $\Delta\tildeomegam = 0$. Thus, the gain $\kob = 0$ can be used. Under these assumptions, the estimation-error dynamics {eq}`tilde_psis` reduce to {cite}`Ver1988`
 
 ```{math}
 ---
@@ -168,9 +199,26 @@ alt: Pole placement example in sensorless drives
 *Figure 1:* Example pole placement of the sensorless observer.
 ```
 
-### Speed Observer
+### Speed and Flux Observer
 
-The speed observer is implemented in the {class}`motulator.drive.control.im.SpeedObserver` class. The flux observer {eq}`im_obs` is extended with the speed observer in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The estimation error signal $\varepsilon$ for the mechanical rotor speed is extracted as
+To estimate the rotor speed, the flux observer {eq}`im_obs` is extended with the speed observer {eq}`speed_obs` in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The error signal is different in sensored and sensorless drives, as described below.
+
+#### Sensored Drives
+
+In sensored drives, the error signal for the mechanical rotor speed is
+
+```{math}
+---
+label: im_obs_eps_sensored
+---
+    \varepsilon = \omegaMmeas - \hatomegaM
+```
+
+where $\omegaMmeas$ is the measured speed and $\hatomegaM$ is the filtered speed. The measured speed $\omegaMmeas$ may contain a significant amount of noise (such as quantization noise from incremental encoders), which is filtered by the speed observer.
+
+#### Sensorless Drives
+
+In sensorless drives, the estimation error of the mechanical rotor speed is obtained from the flux observer {eq}`im_obs` and {eq}`im_eo` as
 
 ```{math}
 ---
@@ -179,43 +227,13 @@ label: im_obs_eps
     \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiR} \right\}
 ```
 
-Considering the rotor speed to be a quasi-constant disturbance, the speed can be estimated as {cite}`Har2001`
-
-```{math}
----
-label: im_speed_obs_ro
----
-    \frac{\D \hatomegaM}{\D t} = \koomega \varepsilon
-```
-
-where $\hatomegaM = \hatomegam/\np$ is the mechanical rotor speed estimate and $\koomega$ is the observer gain. This estimator is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter {cite}`Hin2010`.
-
-To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a quasi-constant disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer
-
-```{math}
----
-label: im_speed_obs
----
-    \frac{\D \hatomegaM}{\D t} &= \frac{1}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
-    \frac{\D\hattauL}{\D t} &= -\kotau\varepsilon
-```
-
-where $\hattauL$ is the load torque estimate and $\koomega$ and $\kotau$ are the observer gains. This observer is analogous to the speed observer in {cite}`Lor1991`. Note that setting $\hat{J} = \infty$ and $\kotau = 0$ yields the estimator {eq}`im_speed_obs_ro`; clearly, the inertia estimate $\hat{J}$ can be safely overestimated.
+The reduced-order speed observer {eq}`speed_obs_ro` with the error signal {eq}`im_obs_eps` is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter, see {cite}`Hin2010`.
 
 #### Gain Analysis and Selection
 
-The flux observer gain {eq}`inherently` decouples the rotor speed estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. The estimator {eq}`im_speed_obs_ro` results in the first-order estimation dynamics
+The flux observer gain {eq}`inherently` decouples the rotor speed estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. Assuming an ideal measurement ($\omegaMmeas = \omegaM$) in the sensored case, the estimation dynamics are identical for both sensored and sensorless drives.
 
-```{math}
----
-label: im_speed_obs_ro_lin
----
-    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\koomega}{s + \koomega}
-```
-
-The gain $\koomega = \alphao$ determines the speed-estimation bandwidth.
-
-For the observer {eq}`im_speed_obs`, the linearized estimation dynamics are
+For the observer {eq}`speed_obs`, the linearized estimation dynamics are
 
 ```{math}
 ---
@@ -225,6 +243,17 @@ label: im_speed_obs_lin
 ```
 
 where the stiff mechanical model is assumed in the derivation. The critically damped design is obtained by setting $\koomega = 2\alphao$ and $\kotau = \alphao^2 \hat{J}$, where $\alphao$ is the desired pole location.
+
+As a special case of {eq}`speed_obs`, setting $\hat{J} = \infty$ and $\kotau = 0$ yields {eq}`speed_obs_ro`. This reduced-order estimator gives the first-order estimation dynamics
+
+```{math}
+---
+label: im_speed_obs_ro_lin
+---
+    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\koomega}{s + \koomega}
+```
+
+The gain $\koomega = \alphao$ determines the speed-estimation bandwidth.
 
 ## For Synchronous Machines
 
@@ -269,10 +298,10 @@ Based on {eq}`sm_model_obs`, a nonlinear state observer is formulated as
 label: sm_obs
 ---
     \frac{\D \hatpsis}{\D t} &= \us' - \hatRs\is' - \jj\omegac\hatpsis + \koa \eo + \kob \eo^* \\
-    \frac{\D\hatthetam}{\D t} &= \hatomegam - \kotheta \IM\left\{ \frac{\eo}{\psiaux} \right\} = \omegac
+    \frac{\D\hatthetam}{\D t} &= \hatomegam + \kotheta \np\varepsilon = \omegac
 ```
 
-where $\us'$ is the realized voltage estimate obtained from the PWM algorithm, $\omegac$ is the angular speed of the coordinate system, $\eo$ is the estimation error, $\koa$, $\kob$, and $\kotheta$ are observer gains, the estimates are marked with the hat, and $^*$ marks the complex conjugate. The flux estimation error is
+where $\us'$ is the realized voltage estimate obtained from the PWM algorithm, $\omegac$ is the angular speed of the coordinate system, and $\koa$, $\kob$, and $\kotheta$ are observer gains. Furthermore, $\hatomegam = \np \hatomegaM$ is the estimated rotor speed (in electrical rad/s) and $\varepsilon$ is the rotor position estimation error (in mechanical rad). The flux estimation error is
 
 ```{math}
 ---
@@ -281,7 +310,34 @@ label: sm_eo
     \eo = \hatpsisfcn(\is') - \hatpsis
 ```
 
-where $\hatpsisfcn$ is the flux map estimate. This observer structure is used in the {class}`motulator.drive.control.sm.FluxObserver` class. The implementation also contains optional PM-flux adaptation {cite}`Tuo2018`, see the {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt` example.
+where $\hatpsisfcn$ is the flux map estimate. In sensored drives, the estimation error signal is
+
+```{math}
+---
+label: sm_obs_eps_sensored
+---
+    \varepsilon = \thetaMmeas - \hatthetam/\np
+```
+
+where $\thetaMmeas$ is the measured mechanical angular position. In sensorless drives, the estimation error signal of the mechanical rotor position is obtained from {eq}`sm_obs` and {eq}`sm_eo` as {cite}`Hin2018`
+
+```{math}
+---
+label: sm_obs_eps_sensorless
+---
+    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
+```
+
+The mechanical position is used in these signals for compatibility with the generic speed observer {eq}`speed_obs`. The torque estimate is given by
+
+```{math}
+---
+label: sm_obs_tauM
+---
+    \hattauM = \frac{3\np}{2}\IM\left\{\is' \hatpsis^* \right\}
+```
+
+This observer structure is used in the {class}`motulator.drive.control.sm.FluxObserver` class. The implementation also contains optional PM-flux adaptation {cite}`Tuo2018`, see the {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt` example.
 
 ```{note}
 Since the current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency and magnetic saturation, the current estimation error is convenient to map (or scale in the case of linear magnetics) to the flux linkage error.
@@ -293,9 +349,11 @@ Real-valued column vectors and the corresponding $2\times 2$ gain matrix were us
 
 #### Gain Analysis and Selection
 
+The analysis resembles that of induction machines, see {ref}`im_obs_analysis`. The following results can be derived from the linearized form of {eq}`sm_model_obs` -- {eq}`sm_obs_tauM`, see details in {cite}`Hin2018`.
+
 ##### Sensored Drives
 
-In sensored case, $\tildethetam = 0$ holds and $\kob = 0$ is used. Therefore, using {eq}`sm_model_obs` and {eq}`sm_obs`, the linearized estimation-error dynamics become
+In sensored case, the rotor position estimation error is decoupled from the flux estimation, i.e., it acts as an external disturbance in the flux estimation. Therefore, the gain $\kob = 0$ can be selected. Using {eq}`sm_model_obs` and {eq}`sm_obs`, the linearized estimation-error dynamics become
 
 ```{math}
 ---
@@ -310,9 +368,7 @@ where $\Delta$ marks the small-signal quantities, the subscript 0 marks the oper
 
 ##### Sensorless Drives
 
-The analysis of the sensorless case resembles that of induction machines, see {ref}`im_obs_sensorless`. The following results can be derived from the linearized form of {eq}`sm_model_obs` -- {eq}`sm_obs`, see details in {cite}`Hin2018`.
-
-To decouple the flux estimation from the rotor angle, the gains of {eq}`sm_obs` have to be of the form
+To decouple the flux estimation from the rotor angle, the gains of {eq}`sm_obs` have to be of the form {cite}`Hin2018`
 
 ```{math}
 ---
@@ -333,59 +389,15 @@ label: sigma_sensorless
 
 where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed, one pole is placed at $s = 0$ and another at $s = -\beta$. Unstable double pole at $s = 0$ is avoided, enabling stable start of the machine.
 
-### Speed Observer
+### Speed and Flux Observer
 
-The speed observer is implemented in the {class}`motulator.drive.control.sm.SpeedObserver` class. The flux observer {eq}`sm_obs` is extended with the speed observer in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The estimation error signal $\varepsilon$ for the mechanical rotor position is extracted as for sensorless
-
-```{math}
----
-label: sm_obs_eps_sensorless
----
-    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
-```
-If mechanical angle is known, the estimation error signal is then
-```{math}
----
-label: sm_obs_eps_sensored
----
-    \varepsilon = \thetam - \hatthetam$
-```
-
-Considering the rotor speed to be a quasi-constant disturbance, the speed can be estimated as {cite}`Hin2018`
-
-```{math}
----
-label: sm_speed_obs_ro
----
-    \frac{\D \hatomegaM}{\D t} = \koomega \varepsilon
-```
-
-To avoid the lag in the speed estimate, the speed can be estimated based on the mechanical model and considering the load torque as a disturbance (see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`). This approach results in the speed observer
-
-```{math}
----
-label: sm_speed_obs
----
-    \frac{\D \hatomegaM}{\D t} &= \frac{1}{\hat{J}}(\hattauM - \hattauL) + \koomega \varepsilon \\
-    \frac{\D\hattauL}{\D t} &= -\kotau \varepsilon
-```
-
-where $\hattauL$ is the load torque estimate and $\koomega$ and $\kotau$ are the observer gains. Note that setting $\hat{J} = \infty$ and $\kotau = 0$ yields the estimator {eq}`im_speed_obs_ro`; clearly, the inertia estimate $\hat{J}$ can be safely overestimated. Originally {eq}`sm_speed_obs` was used in servo drives with incremental encoders {cite}`Lor1991` and signal-injection methods {cite}`Kim2003`.
+To estimate the rotor speed and position, the flux observer {eq}`sm_obs` is extended with the speed observer {eq}`speed_obs` in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The error signals are defined above in {eq}`sm_obs_eps_sensored` and {eq}`sm_obs_eps_sensorless` for sensored and sensorless drives, respectively.
 
 #### Gain Analysis and Selection
 
-The flux observer design decouples the speed and position estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. The estimator {eq}`sm_speed_obs_ro` results in the second-order estimation dynamics
+The flux observer design decouples the speed and position estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. Assuming an ideal measurement ($\thetaMmeas = \thetaM$) in the sensored case, the estimation dynamics are identical for both sensored and sensorless drives.
 
-```{math}
----
-label: sm_speed_obs_ro_lin
----
-    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\alphao^2}{(s + \alphao)^2}
-```
-
-The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\koomega = \alphao^2$, where $\alphao$ is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth {cite}`Tii2025a`.
-
-For the observer {eq}`sm_speed_obs`, the linearized estimation dynamics are
+For the observer {eq}`speed_obs`, the linearized estimation dynamics are
 
 ```{math}
 ---
@@ -396,3 +408,14 @@ label: sm_speed_obs_lin
 ```
 
 where the stiff mechanical model is assumed in the derivation. The critically damped design is obtained by setting $\kotheta = 3\alphao$, $\koomega = 3\alphao^2$, and $\kotau = \alphao^3 \hat{J}$.
+
+As a special case of {eq}`speed_obs`, setting $\hat{J} = \infty$ and $\kotau = 0$ yields {eq}`speed_obs_ro`. This reduced-order estimator gives the second-order estimation dynamics
+
+```{math}
+---
+label: sm_speed_obs_ro_lin
+---
+    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\alphao^2}{(s + \alphao)^2}
+```
+
+The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\koomega = \alphao^2$, where $\alphao$ is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth {cite}`Tii2025a`.

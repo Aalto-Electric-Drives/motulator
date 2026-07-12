@@ -84,7 +84,7 @@ class FluxObserver:
         self._old_i_s: complex = 0j
 
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, w_M: float | None
+        self, u_s_ab: complex, i_s_ab: complex, w_M: float
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
@@ -95,8 +95,8 @@ class FluxObserver:
             Stator voltage (V) in stator coordinates.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
-        w_M : float, optional
-            Rotor speed (mechanical rad/s), either measured or estimated.
+        w_M : float
+            Rotor speed (mechanical rad/s), typically from the speed observer.
 
         Returns
         -------
@@ -115,8 +115,6 @@ class FluxObserver:
         out.u_s = exp(-1j * out.theta_c) * u_s_ab
 
         # Mechanical and electrical angular speeds of the rotor
-        if w_M is None:
-            raise ValueError("Either measured or estimated speed must be provided")
         out.w_M = w_M
         out.w_m = par.n_p * w_M
 
@@ -181,16 +179,19 @@ class SpeedFluxObserver:
 
     This class implements a reduced-order flux observer for induction machines with
     speed estimation. If the inertia of the mechanical system is provided, the observer
-    also estimates the load torque, to avoid the lag in the speed estimate.
+    also estimates the load torque, to avoid the lag in the speed estimate. In sensored
+    mode, the measured rotor speed is filtered.
 
     Parameters
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
-    k_o1, k_o2 : Callable[[float], complex]
-        Observer gains as functions of the electrical angular speed of the rotor.
     alpha_o : float
         Speed estimation pole (rad/s).
+    k_o1, k_o2 : Callable[[float], complex]
+        Observer gains as functions of the electrical angular speed of the rotor.
+    sensorless : bool
+        If True, sensorless mode is used.
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
@@ -200,9 +201,10 @@ class SpeedFluxObserver:
     def __init__(
         self,
         par: InductionMachineInvGammaPars | InductionMachinePars,
+        alpha_o: float,
         k_o1: Callable[[float], complex],
         k_o2: Callable[[float], complex],
-        alpha_o: float,
+        sensorless: bool,
         J: float | None = None,
     ) -> None:
         # Configure observer gains for critically damped dynamics
@@ -212,10 +214,11 @@ class SpeedFluxObserver:
         else:
             k_w = 2 * alpha_o
             k_tau = J * alpha_o**2
-
         # Create component observers
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_o1, k_o2)
+        # Choose sensored or sensorless mode
+        self.sensorless = sensorless
 
     def compute_output(
         self, u_s_ab: complex, i_s_ab: complex, w_M_meas: float | None
@@ -229,77 +232,59 @@ class SpeedFluxObserver:
             Stator voltage (V) in stator coordinates.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
+        w_M_meas : float, optional
+            Measured mechanical rotor speed (rad/s), used only in sensored mode.
 
         Returns
         -------
         out : ObserverOutputs
-            Estimated feedback signals for the control system, including speed estimate.
+            Estimated feedback signals for the control system.
 
         """
         w_M, tau_L = self.speed_observer.compute_output()
         out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M)
+        if not self.sensorless and w_M_meas is not None:
+            # Use the measured rotor speed in sensored mode
+            out.eps = w_M_meas - w_M
         out.tau_L = tau_L
         return out
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Update state observers."""
-        self.flux_observer.update(T_s, out)
         self.speed_observer.update(T_s, out.eps, out.tau_M)
+        self.flux_observer.update(T_s, out)
 
 
 # %%
-def create_sensored_observer(
+def create_speed_flux_observer(
     par: InductionMachineInvGammaPars | InductionMachinePars,
+    alpha_o: float | None = None,
     k_o: Callable[[float], complex] | None = None,
-) -> FluxObserver:
-    """
-    Create a sensored observer.
-
-    The observer gains are ``k_o1 = k_o`` and ``k_o2 = 0``.
-
-    Parameters
-    ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
-        Machine model parameters.
-    k_o : Callable[[float], complex], optional
-        Observer gain as a function of the electrical angular speed of the rotor,
-        defaults to ``lambda w_m: 1 + 0.2*abs(w_m)/(R_R/L_M - 1j*w_m)``.
-
-    Returns
-    -------
-    FluxObserver
-        Sensored flux observer.
-
-    """
-
-    def default_k_o(w_m: float) -> complex:
-        return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
-
-    if k_o is None:
-        k_o = default_k_o
-    return FluxObserver(par, k_o, lambda w_m: 0)
-
-
-def create_sensorless_observer(
-    par: InductionMachineInvGammaPars | InductionMachinePars,
-    alpha_o: float = 2 * pi * 40,
-    k_o: Callable[[float], complex] | None = None,
+    sensorless: bool = True,
     J: float | None = None,
 ) -> SpeedFluxObserver:
     """
-    Create a sensorless flux observer with speed estimation.
+    Create a flux observer with speed estimation.
 
-    The observer gains are ``k_o1 = k_o`` and ``k_o2 = k_o``.
+    In sensored mode, the measured rotor speed is filtered. In sensorless mode, the
+    rotor speed is estimated based on the stator voltage and current. The observer gains
+    are ``k_o1 = k_o`` and ``k_o2 = k_o`` in sensorless mode, and ``k_o1 = k_o`` and
+    ``k_o2 = 0`` in sensored mode.
 
     Parameters
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
-    alpha_o : float
-        Speed estimation pole (rad/s), defaults to 2*pi*40.
+    alpha_o : float, optional
+        Speed estimation pole (rad/s). If `None`, it defaults to 2*pi*40 in sensorless
+        mode and 2*pi*400 in sensored mode.
     k_o : Callable[[float], complex], optional
-        Observer gain as a function of the electrical angular speed of the rotor,
-        defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``.
+        Observer gain as a function of the electrical angular rotor speed. If `None`, it
+        defaults to ``lambda w_m: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``
+        in sensorless mode, and to ``lambda w_m: 1.0 + 0.2*abs(w_m)/(par.alpha
+        - 1j*w_m)`` in sensored mode.
+    sensorless : bool, optional
+        If True, sensorless control is used, defaults to True.
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
@@ -307,17 +292,28 @@ def create_sensorless_observer(
     Returns
     -------
     SpeedFluxObserver
-        Sensorless flux observer with speed estimation.
+        Flux observer with speed estimation.
 
     """
+    if alpha_o is None:
+        alpha_o = 2 * pi * 40 if sensorless else 2 * pi * 400
 
-    def default_k_o(w_m: float) -> complex:
+    def default_k_o_sensorless(w_m: float) -> complex:
         return (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
 
-    if k_o is None:
-        k_o = default_k_o
+    def default_k_o_sensored(w_m: float) -> complex:
+        return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
 
-    return SpeedFluxObserver(par, k_o, k_o, alpha_o, J)
+    def zero_gain(_: float) -> complex:
+        return 0j
+
+    if sensorless:
+        k_o1 = k_o2 = default_k_o_sensorless if k_o is None else k_o
+    else:
+        k_o1 = default_k_o_sensored if k_o is None else k_o
+        k_o2 = zero_gain
+
+    return SpeedFluxObserver(par, alpha_o, k_o1, k_o2, sensorless, J)
 
 
 def create_vhz_observer(

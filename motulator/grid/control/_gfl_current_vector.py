@@ -135,9 +135,10 @@ class References:
     u_dc: float | None = None
 
 
-class CurrentVectorController:
+@dataclass
+class CurrentVectorControllerCfg:
     """
-    Current-vector grid-following controller.
+    Configuration for current-vector grid-following controller.
 
     Parameters
     ----------
@@ -147,11 +148,10 @@ class CurrentVectorController:
         Filter inductance (H).
     alpha_c : float, optional
         Current-control bandwidth (rad/s), defaults to 2*pi*400.
-    alpha_i : float, optional
+    alpha_i : float | None, optional
         Integral-action bandwidth (rad/s), defaults to `alpha_c`.
     u_nom : float, optional
-        Nominal grid voltage (V), line-to-neutral peak value, defaults to
-        `sqrt(2/3)*400`.
+        Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
     w_nom : float, optional
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     alpha_pll : float, optional
@@ -161,21 +161,36 @@ class CurrentVectorController:
 
     """
 
-    def __init__(
-        self,
-        i_max: float,
-        L: float,
-        alpha_c: float = 2 * pi * 400,
-        alpha_i: float | None = None,
-        u_nom: float = sqrt(2 / 3) * 400,
-        w_nom: float = 2 * pi * 50,
-        alpha_pll: float = 2 * pi * 20,
-        T_s: float = 125e-6,
-    ) -> None:
-        self.current_ctrl = CurrentController(L, alpha_c, alpha_i)
-        self.pll = PLL(u_nom, w_nom, alpha_pll)
-        self.current_limiter = CurrentLimiter(i_max)
-        self.T_s = T_s
+    i_max: float
+    L: float
+    alpha_c: float = 2 * pi * 400
+    alpha_i: float | None = None
+    u_nom: float = sqrt(2 / 3) * 400
+    w_nom: float = 2 * pi * 50
+    alpha_pll: float = 2 * pi * 20
+    T_s: float = 125e-6
+
+    def __post_init__(self) -> None:
+        if self.alpha_i is None:
+            self.alpha_i = self.alpha_c
+
+
+class CurrentVectorController:
+    """
+    Current-vector grid-following controller.
+
+    Parameters
+    ----------
+    cfg : CurrentVectorControllerCfg
+        Configuration parameters.
+
+    """
+
+    def __init__(self, cfg: CurrentVectorControllerCfg) -> None:
+        self.cfg = cfg
+        self.current_ctrl = CurrentController(cfg.L, cfg.alpha_c, cfg.alpha_i)
+        self.pll = PLL(cfg.u_nom, cfg.w_nom, cfg.alpha_pll)
+        self.current_limiter = CurrentLimiter(cfg.i_max)
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> PLLOutputSignals:
         """Get feedback signals."""
@@ -186,7 +201,7 @@ class CurrentVectorController:
         self, p_g_ref: float, q_g_ref: float, fbk: PLLOutputSignals
     ) -> References:
         """Compute references."""
-        ref = References(T_s=self.T_s, p_g=p_g_ref, q_g=q_g_ref)
+        ref = References(T_s=self.cfg.T_s, p_g=p_g_ref, q_g=q_g_ref)
 
         # Compute the reference current
         ref.i_c = (ref.p_g - 1j * ref.q_g) / (1.5 * fbk.u_g)

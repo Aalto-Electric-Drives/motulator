@@ -49,7 +49,7 @@ meas_flux_map = utils.MagneticModel(
 
 # Plot the measured data
 # sphinx_gallery_thumbnail_number = 4
-# utils.plot_flux_vs_current(meas_flux_map, base, x_lims=(-1.5, 1.5))
+utils.plot_flux_vs_current(meas_flux_map, base, x_lims=(-1.5, 1.5))
 
 # %%
 # Create a saturation model, which will be used in the control system.
@@ -82,22 +82,22 @@ est_current_map = est_current_map.as_magnetic_model(
 est_flux_map = est_current_map.invert()
 
 # Plot the saturation model (surface) and the measured data (points)
-# utils.plot_map(
-#     est_flux_map,
-#     "d",
-#     base,
-#     lims={"x": (-2, 2), "y": (-2, 2), "z": (0, 1)},
-#     ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
-#     raw_data=meas_flux_map,
-# )
-# utils.plot_map(
-#     est_flux_map,
-#     "q",
-#     base,
-#     lims={"x": (-2, 2), "y": (-2, 2), "z": (-1.5, 1.5)},
-#     ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
-#     raw_data=meas_flux_map,
-# )
+utils.plot_map(
+    est_flux_map,
+    "d",
+    base,
+    lims={"x": (-2, 2), "y": (-2, 2), "z": (0, 1)},
+    ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
+    raw_data=meas_flux_map,
+)
+utils.plot_map(
+    est_flux_map,
+    "q",
+    base,
+    lims={"x": (-2, 2), "y": (-2, 2), "z": (-1.5, 1.5)},
+    ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
+    raw_data=meas_flux_map,
+)
 
 # %%
 # Configure the system model.
@@ -119,21 +119,21 @@ est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
 )
 cfg = control.FluxVectorControllerCfg(
-    i_s_max=2 * base.i, J=0.05, alpha_i=0, alpha_o=2 * np.pi * 8 
+    i_s_max=2 * base.i, J=0.05, alpha_i=0, alpha_o=2 * np.pi * 8, sensorless=True
 )
-vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=False)
+vector_ctrl = control.FluxVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%
 # Visualize the control loci.
 
-# i_s_vals = [1, 2, 3]  # Current values for the plots
-# mc = utils.MachineCharacteristics(est_par)
-# mc.plot_flux_vs_torque(i_s_vals, base)
-# mc.plot_current_vs_torque(i_s_vals, base)
-# mc.plot_current_loci(i_s_vals, base)
-# mc.plot_flux_loci(i_s_vals, base)
+i_s_vals = [1, 2, 3]  # Current values for the plots
+mc = utils.MachineCharacteristics(est_par)
+mc.plot_flux_vs_torque(i_s_vals, base)
+mc.plot_current_vs_torque(i_s_vals, base)
+mc.plot_current_loci(i_s_vals, base)
+mc.plot_flux_loci(i_s_vals, base)
 
 # %%
 # Set the speed reference and the external load torque.
@@ -145,7 +145,6 @@ mdl.mechanics.set_external_load_torque(lambda t: (t > 1.25) * 0.7 * nom.tau)
 # Create the simulation object, simulate, and plot the results in per-unit values.
 
 sim = model.Simulation(mdl, ctrl)
-# res = sim.simulate(t_stop=1.5)
 res = sim.simulate(t_stop=2)
 utils.plot(res, base)
 

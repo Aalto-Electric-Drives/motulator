@@ -2,13 +2,11 @@
 
 from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable, Literal
+from typing import Callable, Literal, cast
 
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
-    create_sensored_observer,
-    create_sensorless_observer,
     create_speed_flux_observer,
     create_vhz_observer,
 )
@@ -132,28 +130,32 @@ class FluxVectorControllerCfg:
         Maximum stator current (A).
     alpha_tau : float, optional
         Torque-control bandwidth (rad/s), defaults to 2*pi*100.
-    alpha_psi : float, optional
+    alpha_psi : float | None, optional
         Flux-control bandwidth (rad/s), defaults to `alpha_tau`.
-    alpha_i : float, optional
+    alpha_i : float | None, optional
         Integral-action bandwidth (rad/s), defaults to `alpha_tau`.
-    alpha_o : float, optional
+    alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
         2*pi*50/3, keeping the default speed observer gain the same.
-    k_o : Callable[[float], float], optional
+    k_o : Callable[[float], float] | None, optional
         Observer gain as a function of the rotor angular speed.
-    k_f : Callable[[float], float], optional
+    k_f : Callable[[float], float] | None, optional
         PM-flux estimation gain as a function of the rotor angular speed.
-    psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`.
+    psi_s_min : float | None, optional
+        Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
         MTPV margin, defaults to 0.85.
-    J : float, optional
+    J : float | None, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
         used in speed estimation.
+    sensorless : bool, optional
+        If True, sensorless control is used, defaults to True.
+    T_s : float, optional
+        Sampling period (s), defaults to 125e-6.
 
     """
 
@@ -169,12 +171,15 @@ class FluxVectorControllerCfg:
     k_u: float = 0.9
     k_mtpv: float = 0.85
     J: float | None = None
+    sensorless: bool = True
+    T_s: float = 125e-6
 
     def __post_init__(self) -> None:
-        """Set alpha_o default based on J value."""
+        """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
-            # To keep the speed observer gain k_w the same
-            alpha = 2 * pi * 50
+            # Note: If J is not given, alpha_o is divided by three to keep the default
+            # speed observer gain k_w the same.
+            alpha = 2 * pi * 50 if self.sensorless else 2 * pi * 400
             self.alpha_o = alpha if self.J is None else alpha / 3.0
 
 
@@ -195,10 +200,6 @@ class FluxVectorController:
         Machine model parameters.
     cfg : FluxVectorControllerCfg
         Flux-vector control configuration.
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
-    T_s : float, optional
-        Sampling period (s), defaults to 125e-6.
 
     References
     ----------
@@ -221,8 +222,6 @@ class FluxVectorController:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: FluxVectorControllerCfg,
-        sensorless: bool = True,
-        T_s: float = 125e-6,
     ) -> None:
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
@@ -232,16 +231,17 @@ class FluxVectorController:
         self.flux_torque_ctrl = FluxTorqueController(
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
-        assert cfg.alpha_o is not None
-        self.observer = create_speed_flux_observer(par, cfg.alpha_o, cfg.k_o, cfg.k_f, cfg.J, sensorless)
-        self.sensorless = sensorless
-        self.T_s = T_s
+        self.observer = create_speed_flux_observer(
+            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
+        )  # alpha_o is resolved in the configuration's __post_init__
+        self.cfg = cfg
+        self.sensorless = cfg.sensorless
 
     def get_feedback(
         self,
         u_s_ab: complex,
         i_s_ab: complex,
-        w_M_meas: float | None,
+        w_M_meas: float | None,  # Not used, needed for the interface
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals with motion sensors."""
@@ -249,7 +249,7 @@ class FluxVectorController:
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
-        ref = References(T_s=self.T_s, tau_M=tau_M_ref)
+        ref = References(T_s=self.cfg.T_s, tau_M=tau_M_ref)
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
@@ -291,10 +291,12 @@ class ObserverBasedVHzControllerCfg:
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
         MTPV margin, defaults to 0.9.
-    psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`.
+    psi_s_min : float | None, optional
+        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
+    T_s : float, optional
+        Sampling period (s), defaults to 250e-6.
 
     """
 
@@ -308,6 +310,7 @@ class ObserverBasedVHzControllerCfg:
     k_mtpv: float = 0.9
     psi_s_min: float | None = None
     psi_s_max: float = inf
+    T_s: float = 250e-6
 
 
 class ObserverBasedVHzController:
@@ -323,8 +326,6 @@ class ObserverBasedVHzController:
         Machine model parameters.
     cfg : ObserverBasedVHzControllerCfg
         Observer-based V/Hz control configuration.
-    T_s : float, optional
-        Sampling period (s), defaults to 250e-6.
 
     """
 
@@ -332,8 +333,8 @@ class ObserverBasedVHzController:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: ObserverBasedVHzControllerCfg,
-        T_s: float = 250e-6,
     ) -> None:
+        self.cfg = cfg
         self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
@@ -342,8 +343,7 @@ class ObserverBasedVHzController:
         self.observer = create_vhz_observer(par, cfg.alpha_o, cfg.k_o)
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
-        self.n_p = par.n_p
-        self.T_s = T_s
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float
@@ -354,7 +354,7 @@ class ObserverBasedVHzController:
 
     def compute_output(self, fbk: ObserverOutputs) -> References:
         """Calculate references."""
-        ref = References(T_s=self.T_s)
+        ref = References(T_s=self.cfg.T_s)
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             self.tau_M_lpf, fbk.w_m, fbk.u_dc
         )

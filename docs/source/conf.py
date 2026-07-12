@@ -26,7 +26,7 @@ copyright = "2026, Aalto Electric Drives"
 author = "Aalto Electric Drives"
 
 # The full version, including alpha/beta/rc tags
-release = "0.7.3"
+release = "0.7.4"
 
 # -- General configuration -------------------------------------------------------------
 
@@ -165,6 +165,7 @@ mathjax3_config = {
             "omegamo": "\\omega_\\mathrm{m0}",
             "tildeomegam": "\\tilde{\\omega}_\\mathrm{m}",
             "omegaM": "\\omega_\\mathrm{M}",
+            "omegaMmeas": "\\omega_\\mathrm{M}^\\mathrm{meas}",
             "omegaMref": "\\omega_\\mathrm{M}^\\mathrm{ref}",
             "omegamref": "\\omega_\\mathrm{m}^\\mathrm{ref}",
             "omegaL": "\\omega_\\mathrm{L}",
@@ -178,6 +179,7 @@ mathjax3_config = {
             "omegaro": "\\omega_\\mathrm{r0}",
             "thetam": "\\vartheta_\\mathrm{m}",
             "thetaM": "\\vartheta_\\mathrm{M}",
+            "thetaMmeas": "\\vartheta_\\mathrm{M}^\\mathrm{meas}",
             "thetaL": "\\vartheta_\\mathrm{L}",
             "thetaML": "\\vartheta_\\mathrm{ML}",
             "tauM": "\\tau_\\mathrm{M}",
@@ -242,6 +244,7 @@ mathjax3_config = {
             "hatabsug": "\\hat{u}_\\mathrm{g}",
             "hatug": "\\hat{\\mathbf{u}}_\\mathrm{g}",
             "ugs": "\\mathbf{u}_\\mathrm{g}^\\mathrm{s}",
+            "ugmeas": "\\mathbf{u}_\\mathrm{g}^\\mathrm{meas}",
             "ig": "\\mathbf{i}_\\mathrm{g}",
             "igs": "\\mathbf{i}_\\mathrm{g}^\\mathrm{s}",
             "eg": "\\mathbf{e}_\\mathrm{g}",
@@ -295,6 +298,7 @@ mathjax3_config = {
             # Estimates
             "hatomegam": "\\hat{\\omega}_\\mathrm{m}",
             "hatthetam": "\\hat{\\vartheta}_\\mathrm{m}",
+            "hatthetaM": "\\hat{\\vartheta}_\\mathrm{M}",
             "tildethetam": "\\tilde{\\vartheta}_\\mathrm{m}",
             "hatRs": "\\hat{R}_\\mathrm{s}",
             "hatRR": "\\hat{R}_\\mathrm{R}",

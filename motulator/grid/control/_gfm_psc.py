@@ -3,6 +3,7 @@
 from cmath import exp
 from dataclasses import dataclass
 from math import pi
+from typing import cast
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
@@ -35,11 +36,10 @@ class Feedbacks:
     w_c: float = 0.0  # Angular speed of the coordinate system (rad/s)
 
 
-class PowerSynchronizationController:
+@dataclass
+class PowerSynchronizationControllerCfg:
     """
-    Reference-feedforward power-synchronization controller.
-
-    This implements the reference-feedforward power-synchronization control [#Har2020]_.
+    Configuration for the reference-feedforward power-synchronization controller.
 
     Parameters
     ----------
@@ -51,12 +51,38 @@ class PowerSynchronizationController:
         Maximum current (A), peak value.
     R : float, optional
         Total series resistance (Ω), defaults to 0.
-    R_a : float, optional
-        Active resistance (Ω), defaults to 0.25*u_nom/i_max.
+    R_a : float | None, optional
+        Active resistance (Ω), defaults to ``0.25*u_nom/i_max``.
     w_b : float, optional
         Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
+
+    """
+
+    u_nom: float
+    w_nom: float
+    i_max: float
+    R: float = 0.0
+    R_a: float | None = None
+    w_b: float = 2 * pi * 5
+    T_s: float = 125e-6
+
+    def __post_init__(self) -> None:
+        if self.R_a is None:
+            self.R_a = 0.25 * self.u_nom / self.i_max
+
+
+class PowerSynchronizationController:
+    """
+    Reference-feedforward power-synchronization controller.
+
+    This implements the reference-feedforward power-synchronization control [#Har2020]_.
+
+    Parameters
+    ----------
+    cfg : PowerSynchronizationControllerCfg
+        Configuration object.
 
     References
     ----------
@@ -66,25 +92,13 @@ class PowerSynchronizationController:
 
     """
 
-    def __init__(
-        self,
-        u_nom: float,
-        w_nom: float,
-        i_max: float,
-        R: float = 0.0,
-        R_a: float | None = None,
-        w_b: float = 2 * pi * 5,
-        T_s: float = 125e-6,
-    ) -> None:
+    def __init__(self, cfg: PowerSynchronizationControllerCfg) -> None:
+        self.cfg = cfg
         self.theta_c: float = 0.0
         self.i_c_flt: complex = 0j
-        self.current_limiter = CurrentLimiter(i_max)
-        self.w_nom = w_nom
-        self.R = R
-        self.w_b = w_b
-        self.R_a = 0.25 * u_nom / i_max if R_a is None else R_a
-        self.k_p_psc = w_nom * self.R_a / (1.5 * u_nom**2)
-        self.T_s = T_s
+        self.current_limiter = CurrentLimiter(cfg.i_max)
+        self.R_a = cast(float, cfg.R_a)  # Resolved in the configuration's __post_init__
+        self.k_p_psc = cfg.w_nom * self.R_a / (1.5 * cfg.u_nom**2)
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Feedbacks:
         """Get the feedback signals."""
@@ -95,7 +109,7 @@ class PowerSynchronizationController:
         out.u_c = exp(-1j * out.theta_c) * u_c_ab
 
         # Other feedback signals
-        p_loss = 1.5 * self.R * abs(out.i_c) ** 2
+        p_loss = 1.5 * self.cfg.R * abs(out.i_c) ** 2
         out.p_g = 1.5 * (out.u_c * out.i_c.conjugate()).real - p_loss
         return out
 
@@ -103,10 +117,10 @@ class PowerSynchronizationController:
         self, p_g_ref: float, v_c_ref: float, fbk: Feedbacks
     ) -> References:
         """Compute references."""
-        ref = References(T_s=self.T_s, v_c=v_c_ref, p_g=p_g_ref)
+        ref = References(T_s=self.cfg.T_s, v_c=v_c_ref, p_g=p_g_ref)
 
         # Power droop
-        fbk.w_c = ref.w_c = self.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
+        fbk.w_c = ref.w_c = self.cfg.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
 
         # Optionally, use of reference feedforward for d-axis current
         ref.i_c = ref.p_g / (1.5 * ref.v_c) + 1j * self.i_c_flt.imag
@@ -114,12 +128,12 @@ class PowerSynchronizationController:
         ref.i_c = self.current_limiter(ref.i_c)
 
         # Voltage reference
-        ref.u_c = ref.v_c + self.R_a * (ref.i_c - fbk.i_c) + self.R * fbk.i_c
+        ref.u_c = ref.v_c + self.R_a * (ref.i_c - fbk.i_c) + self.cfg.R * fbk.i_c
         return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update states."""
-        self.i_c_flt += ref.T_s * self.w_b * (fbk.i_c - self.i_c_flt)
+        self.i_c_flt += ref.T_s * self.cfg.w_b * (fbk.i_c - self.i_c_flt)
         self.theta_c += ref.T_s * ref.w_c
         self.theta_c = wrap(self.theta_c)
 

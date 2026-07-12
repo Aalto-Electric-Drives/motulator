@@ -31,9 +31,10 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # %%
 # Configure the control system.
 
-inner_ctrl = control.CurrentVectorController(
+cfg = control.CurrentVectorControllerCfg(
     i_max=1.5 * base.i, L=0.073 * base.L, T_s=100e-6
 )
+inner_ctrl = control.CurrentVectorController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 

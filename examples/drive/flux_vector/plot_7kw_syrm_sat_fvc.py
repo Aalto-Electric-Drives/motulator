@@ -49,8 +49,10 @@ est_par = control.SaturatedSynchronousMachinePars(
 )
 
 # Configure the controller
-cfg = control.FluxVectorControllerCfg(i_s_max=2 * base.i, psi_s_min=0.5 * base.psi)
-vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+cfg = control.FluxVectorControllerCfg(
+    i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, sensorless=True
+)
+vector_ctrl = control.FluxVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

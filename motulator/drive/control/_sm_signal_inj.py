@@ -1,6 +1,7 @@
 """Sensorless control with signal injection for synchronous machine drives."""
 
 from cmath import exp
+from typing import cast
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
@@ -91,11 +92,7 @@ class SignalInjectionObserver:
         return eps
 
     def compute_output(
-        self,
-        u_s_ab: complex,
-        i_s_ab: complex,
-        w_M: float | None,
-        theta_M_meas: float | None,
+        self, u_s_ab: complex, i_s_ab: complex, theta_M_meas: float | None
     ) -> ObserverOutputs:
         """Compute output."""
         # Unpack and initialize the output signals
@@ -148,8 +145,6 @@ class SignalInjectionController(CurrentVectorController):
         Current-vector control configuration.
     U_inj : float, optional
         Injected voltage amplitude (V), defaults to 250.
-    T_s : float, optional
-        Sampling period (s), defaults to 125e-6.
 
     References
     ----------
@@ -173,11 +168,11 @@ class SignalInjectionController(CurrentVectorController):
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: CurrentVectorControllerCfg,
         U_inj: float = 250,
-        T_s: float = 125e-6,
     ) -> None:
-        super().__init__(par, cfg, True, T_s)
-        assert cfg.alpha_o is not None
-        self.observer = SignalInjectionObserver(par, cfg.alpha_o, U_inj, T_s, cfg.J)
+        super().__init__(par, cfg)
+        self.observer = SignalInjectionObserver(
+            par, cast(float, cfg.alpha_o), U_inj, cfg.T_s, cfg.J
+        )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         ref = References(T_s=self.T_s, tau_M=tau_M_ref)

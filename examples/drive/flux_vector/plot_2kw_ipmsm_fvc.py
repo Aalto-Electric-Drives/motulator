@@ -32,8 +32,8 @@ mdl = model.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 est_par = par  # Assume accurate model parameter estimates
-cfg = control.FluxVectorControllerCfg(i_s_max=1.5 * base.i)
-vector_ctrl = control.FluxVectorController(est_par, cfg, sensorless=True)
+cfg = control.FluxVectorControllerCfg(i_s_max=1.5 * base.i, sensorless=True)
+vector_ctrl = control.FluxVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 

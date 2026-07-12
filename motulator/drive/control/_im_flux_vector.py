@@ -10,8 +10,7 @@ from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import sign
 from motulator.drive.control._im_observers import (
     ObserverOutputs,
-    create_sensored_observer,
-    create_sensorless_observer,
+    create_speed_flux_observer,
     create_vhz_observer,
 )
 from motulator.drive.utils._parameters import (
@@ -238,8 +237,8 @@ class FluxVectorControllerCfg:
     alpha_i : float, optional
         Integral action bandwidth (rad/s), defaults to `alpha_tau`.
     alpha_o : float, optional
-        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
-        2*pi*30, keeping the default speed observer gain the same.
+        Speed estimation poles (rad/s). If `None`, the default depends on the operation
+        mode and the inertia `J`.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
     alpha_c : float, optional
@@ -253,6 +252,10 @@ class FluxVectorControllerCfg:
     J : float, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
         used in speed estimation.
+    sensorless : bool, optional
+        If True, sensorless control is used, defaults to True.
+    T_s : float, optional
+        Sampling period (s), defaults to 125e-6.
 
     """
 
@@ -268,12 +271,15 @@ class FluxVectorControllerCfg:
     k_u: float = 0.9
     k_b: float = 0.9
     J: float | None = None
+    sensorless: bool = True
+    T_s: float = 125e-6
 
     def __post_init__(self) -> None:
-        """Set alpha_o default based on J value."""
+        """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
-            # To keep the speed observer gain k_w the same
-            alpha = 2 * pi * 60
+            # Note: If J is not given, alpha_o is halved to keep the default speed
+            # observer gain k_w the same.
+            alpha = 2 * pi * 60 if self.sensorless else 2 * pi * 400
             self.alpha_o = alpha if self.J is None else 0.5 * alpha
 
 
@@ -291,10 +297,6 @@ class FluxVectorController:
         Machine model parameters.
     cfg : FluxVectorControllerCfg
         Flux-vector control configuration.
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
-    T_s : float, optional
-        Sampling period (s), defaults to 125e-6.
 
     References
     ----------
@@ -308,8 +310,6 @@ class FluxVectorController:
         self,
         par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: FluxVectorControllerCfg,
-        sensorless: bool = True,
-        T_s: float = 125e-6,
     ) -> None:
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.tau_M_max, cfg.k_u, cfg.k_b
@@ -319,13 +319,11 @@ class FluxVectorController:
         self.flux_torque_ctrl = FluxTorqueController(
             par, alpha_psi, cfg.alpha_tau, alpha_i, cfg.alpha_c, cfg.i_s_max
         )
-        if sensorless:
-            assert cfg.alpha_o is not None
-            self.observer = create_sensorless_observer(par, cfg.alpha_o, cfg.k_o, cfg.J)
-        else:
-            self.observer = create_sensored_observer(par, cfg.k_o)
-        self.sensorless = sensorless
-        self.T_s = T_s
+        self.observer = create_speed_flux_observer(
+            par, cfg.alpha_o, cfg.k_o, cfg.sensorless, cfg.J
+        )
+        self.sensorless = cfg.sensorless
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self,
@@ -386,6 +384,8 @@ class ObserverBasedVHzControllerCfg:
         Voltage utilization factor, defaults to 0.9.
     k_b : float, optional
         Breakdown torque margin, defaults to 0.9.
+    T_s : float, optional
+        Sampling period (s), defaults to 250e-6.
 
     """
 
@@ -397,6 +397,7 @@ class ObserverBasedVHzControllerCfg:
     k_o: Callable[[float], complex] | None = None
     k_u: float = 0.9
     k_b: float = 0.9
+    T_s: float = 250e-6
 
 
 class ObserverBasedVHzController:
@@ -412,8 +413,6 @@ class ObserverBasedVHzController:
         Machine model parameters.
     cfg : ObserverBasedVHzControllerCfg
         Observer-based V/Hz controller configuration.
-    T_s : float, optional
-        Sampling period (s), defaults to 250e-6.
 
     """
 
@@ -421,8 +420,8 @@ class ObserverBasedVHzController:
         self,
         par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: ObserverBasedVHzControllerCfg,
-        T_s: float = 250e-6,
     ) -> None:
+        self.cfg = cfg
         self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, inf, cfg.k_u, cfg.k_b
@@ -433,7 +432,7 @@ class ObserverBasedVHzController:
         self.observer = create_vhz_observer(par, cfg.k_o)
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
-        self.T_s = T_s
+        self.T_s = cfg.T_s
         # Configurations for pure open-loop V/Hz control
         if par.L_M == inf:
             self.observer.psi_s = cfg.psi_s_nom

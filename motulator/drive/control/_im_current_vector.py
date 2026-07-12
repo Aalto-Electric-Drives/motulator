@@ -3,7 +3,7 @@
 from cmath import exp, phase
 from dataclasses import dataclass
 from math import pi, sqrt
-from typing import Callable
+from typing import Callable, cast
 
 import numpy as np
 
@@ -12,8 +12,7 @@ from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import clip
 from motulator.drive.control._im_observers import (
     ObserverOutputs,
-    create_sensored_observer,
-    create_sensorless_observer,
+    create_speed_flux_observer,
 )
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
@@ -216,9 +215,13 @@ class CurrentVectorControllerCfg:
         Voltage utilization factor, defaults to 0.95.
     k_fw : float, optional
         Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
-    J : float, optional
+    J : float | None, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
         used in speed estimation.
+    sensorless : bool, optional
+        If True, sensorless control is used, defaults to True.
+    T_s : float, optional
+        Sampling period (s), defaults to 125e-6.
 
     """
 
@@ -232,6 +235,8 @@ class CurrentVectorControllerCfg:
     k_u: float = 0.95
     k_fw: float = 0.0
     J: float | None = None
+    sensorless: bool = True
+    T_s: float = 125e-6
 
     def __post_init__(self) -> None:
         """Set alpha_o default based on J value."""
@@ -251,10 +256,6 @@ class CurrentVectorController:
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector controller configuration.
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
-    T_s : float, optional
-        Sampling period (s), defaults to 125e-6.
 
     """
 
@@ -262,20 +263,17 @@ class CurrentVectorController:
         self,
         par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: CurrentVectorControllerCfg,
-        sensorless: bool = True,
-        T_s: float = 125e-6,
     ) -> None:
+        self.cfg = cfg
+        self.sensorless = cfg.sensorless
         self.reference_gen = CurrentReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
-        if sensorless:
-            assert cfg.alpha_o is not None
-            self.observer = create_sensorless_observer(par, cfg.alpha_o, cfg.k_o, cfg.J)
-        else:
-            self.observer = create_sensored_observer(par, cfg.k_o)
-        self.sensorless = sensorless
-        self.T_s = T_s
+        self.observer = create_speed_flux_observer(
+            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.sensorless, cfg.J
+        )
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self,

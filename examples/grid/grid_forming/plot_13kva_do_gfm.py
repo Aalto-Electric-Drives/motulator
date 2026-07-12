@@ -29,7 +29,7 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # %%
 # Configure the control system.
 
-inner_ctrl = control.ObserverBasedGridFormingController(
+cfg = control.ObserverBasedGridFormingControllerCfg(
     i_max=1.3 * base.i,
     L=0.35 * base.L,
     R=0.05 * base.Z,
@@ -37,6 +37,7 @@ inner_ctrl = control.ObserverBasedGridFormingController(
     u_nom=base.u,
     w_nom=base.w,
 )
+inner_ctrl = control.ObserverBasedGridFormingController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 # %%

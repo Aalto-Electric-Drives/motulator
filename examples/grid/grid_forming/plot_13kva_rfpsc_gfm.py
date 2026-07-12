@@ -28,9 +28,10 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # Configure the control system.
 
 # Control configuration parameters
-inner_ctrl = control.PowerSynchronizationController(
+cfg = control.PowerSynchronizationControllerCfg(
     u_nom=base.u, w_nom=base.w, i_max=1.3 * base.i, R=0.05 * base.Z, R_a=0.2 * base.Z
 )
+inner_ctrl = control.PowerSynchronizationController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 # %%

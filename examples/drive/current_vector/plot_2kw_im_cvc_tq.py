@@ -37,8 +37,10 @@ mdl = model.Drive(machine, mechanics, converter)
 est_par = control.InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
 )
-cfg = control.CurrentVectorControllerCfg(psi_s_nom=base.psi, i_s_max=1.5 * base.i)
-vector_ctrl = control.CurrentVectorController(est_par, cfg, sensorless=True)
+cfg = control.CurrentVectorControllerCfg(
+    psi_s_nom=base.psi, i_s_max=1.5 * base.i, sensorless=True
+)
+vector_ctrl = control.CurrentVectorController(est_par, cfg)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl=None)
 
 # %%
