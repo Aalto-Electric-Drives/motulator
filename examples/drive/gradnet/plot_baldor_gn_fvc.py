@@ -2,9 +2,10 @@
 5.6-kW PM-SyRM, GradNet-based saturation model, FVC
 ===================================================
 
-This example simulates sensorless flux-vector control (FVC) of a 5.6-kW permanent-magnet
-synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet-based
-saturation models, trained on the FEM and measured datasets, are used. Due to partly
+This example simulates sensorless flux-vector control (FVC) of 
+a 5.6-kW permanent-magnet synchronous reluctance machine 
+(PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet-based saturation models, 
+trained on the FEM and measured datasets, are used. Due to partly
 unknown geometry and material properties, the FEM and measured datasets differ in
 magnitude, but their shapes are similar.
 
@@ -158,11 +159,11 @@ fig = plt.gcf()
 w, h = plt.rcParams["figure.figsize"]
 fig.set_size_inches(w, h * 3 * 4 / 5)
 # adjust details
-for ax, name in zip(fig.axes, subplots):
+for ax, name in zip(fig.axes, subplots, strict=True):
     for idx in sorted(drop.get(name, []), reverse=True):
         ax.lines[idx].remove()
-    for l, c in zip(ax.lines, colors.get(name, [])):
-        l.set_color(c)
+    for line, col in zip(ax.lines, colors.get(name, []), strict=True):
+        line.set_color(col)
     if name == "torque":
         ax.lines[1].set(linewidth=0.5, zorder=1, alpha=0.5)  # τ_m at bottom
         ax.lines[3].set(linestyle="--")
@@ -170,7 +171,7 @@ for ax, name in zip(fig.axes, subplots):
         xmin, xmax = ax.get_xlim()
         ax.legend(handles=[ax.lines[0], ax.lines[2], ax.lines[3], ax.lines[1]])
     elif ax.get_legend():
-        ax.legend(loc=legend_loc[name])
+        ax.legend(loc=legend_loc[name])  # type: ignore
 
 fig.savefig(p / "figs" / "sim.pdf", bbox_inches="tight")
 plt.show()

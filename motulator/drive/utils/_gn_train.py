@@ -168,7 +168,8 @@ def train_gradnet(
     activation : Callable[[], torch.nn.Module] | None, optional
         Activation function factory, defaults to PNormGradient.
     device : torch.device | None, optional
-        Device to use for training. If None, automatically selects CUDA if available, otherwise CPU.
+        Device to use for training.
+        If None, automatically selects CUDA if available, otherwise CPU.
     """
     # Initialize model and data
     mode = "flux_map" if is_flux_map else "current_map"

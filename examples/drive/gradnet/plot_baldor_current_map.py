@@ -2,7 +2,10 @@
 Train current map (5.6-kW PM-SyRM Baldor)
 ============================================
 
-This script demonstrates how to train GradNet current map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset.
+This script demonstrates how to train GradNet current map from 
+a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). 
+It includes loading a dataset, training a GradNet model, 
+and visualizing the trained model against the original dataset.
 It can be run in following options:
 1. Without spatial harmonics using measurement dataset.
 2. With spatial harmonics using FEM dataset.
@@ -114,7 +117,7 @@ if not model_with_harmonics:
 else:
     dataset_path = p_data / "baldor_fem.npz"
     trained_model_path = (
-        p / "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
+        p / "trained_models" / "baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
     )
     subsample = 10
     k = 6

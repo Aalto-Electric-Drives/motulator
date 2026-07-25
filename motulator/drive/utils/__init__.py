@@ -12,9 +12,6 @@ from motulator.drive.utils._gn import (
     CurrentMapWithHarmonics,
     FluxMap,
     FluxMapWithHarmonics,
-    PNormGradient,
-    Softmax,
-    Squareplus,
 )
 from motulator.drive.utils._gn_dataset import get_training_data, p_data
 from motulator.drive.utils._gn_plot import (

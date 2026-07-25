@@ -2,7 +2,10 @@
 Train flux map (5.6-kW PM-SyRM Baldor)
 ============================================
 
-This script demonstrates how to train GradNet flux-linkage map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset.
+This script demonstrates how to train GradNet flux-linkage map from 
+a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). 
+It includes loading a dataset, training a GradNet model, 
+and visualizing the trained model against the original dataset.
 It can be run in following options:
 1. Without spatial harmonics using measurement dataset.
 2. Without spatial harmonics using FEM dataset, as a control model.
@@ -120,11 +123,6 @@ if not model_with_harmonics:
     # Compute and print statistical error metrics.
 
     print_meas_flux_map_error_metrics(flux_map_fcn, val_data, base=base, name="val")
-    # set one value for testing output
-    test_i = [3 + 3j]
-    test_psi = flux_map_fcn(test_i)
-    print(f"Test input current: {test_i}")
-    print(f"Predicted flux linkage: {test_psi}")
 else:
     # %% Flux map with spatial harmonics for plot, trained on FEM data
     dataset_path = p / "datasets/baldor_fem.npz"
