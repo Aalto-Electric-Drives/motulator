@@ -159,10 +159,10 @@ fig = plt.gcf()
 w, h = plt.rcParams["figure.figsize"]
 fig.set_size_inches(w, h * 3 * 4 / 5)
 # adjust details
-for ax, name in zip(fig.axes, subplots, strict=True):
+for ax, name in zip(fig.axes, subplots):
     for idx in sorted(drop.get(name, []), reverse=True):
         ax.lines[idx].remove()
-    for line, col in zip(ax.lines, colors.get(name, []), strict=True):
+    for line, col in zip(ax.lines, colors.get(name, [])):
         line.set_color(col)
     if name == "torque":
         ax.lines[1].set(linewidth=0.5, zorder=1, alpha=0.5)  # τ_m at bottom
