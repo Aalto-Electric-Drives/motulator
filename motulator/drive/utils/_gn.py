@@ -315,7 +315,8 @@ class CurrentMap:
         i_s_dq = i_d + 1j * i_q
 
         # Symmetrize
-        n = psi_s_dq.shape[0]
+        shape = np.shape(psi_s_dq)
+        n = shape[0] if shape else 1
         i_s_dq = 0.5 * (i_s_dq[:n] + np.conj(i_s_dq[n:]))
         # i_s_dq = i_s_dq[: psi_s_dq.shape[0]]  # No symmetrization
         i_s_dq *= self.out_base

@@ -2,9 +2,9 @@
 5.6-kW PM-SyRM, GradNet-based saturation model, FVC
 ===================================================
 
-This example simulates sensorless flux-vector control (FVC) of 
-a 5.6-kW permanent-magnet synchronous reluctance machine 
-(PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet-based saturation models, 
+This example simulates sensorless flux-vector control (FVC) of
+a 5.6-kW permanent-magnet synchronous reluctance machine
+(PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet-based saturation models,
 trained on the FEM and measured datasets, are used. Due to partly
 unknown geometry and material properties, the FEM and measured datasets differ in
 magnitude, but their shapes are similar.
