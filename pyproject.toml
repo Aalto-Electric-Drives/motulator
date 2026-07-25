@@ -10,7 +10,6 @@ dependencies = [
     "scipy",
     "tqdm",
     "matplotlib",
-    "torch",
 ]
 requires-python = ">=3.12"
 authors = [
@@ -44,6 +43,7 @@ dev = [
     "pre-commit",
     "pyright",
     "pip-audit",
+    "torch",
 ]
 doc = [
     "numpydoc",
