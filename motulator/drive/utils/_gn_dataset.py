@@ -7,10 +7,12 @@ import numpy as np
 import torch
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
+
 from motulator.common.utils._utils import BaseValues
 
 # Add dataset path
 p_data = Path(__file__).resolve().parent / "datasets"
+
 
 # %%
 class BaseDataset(Dataset):
@@ -27,7 +29,8 @@ class BaseDataset(Dataset):
         Subsampling rate.
 
     """
-    def __init__(self, data_path: str, base: BaseValues, subsample: int = 1,) -> None:
+
+    def __init__(self, data_path: str, base: BaseValues, subsample: int = 1) -> None:
         with np.load(data_path) as data:
             i_full = data["i_s_dq"].flatten()
             psi_full = data["psi_s_dq"].flatten()
@@ -140,7 +143,6 @@ def get_loader(
     batch_size: int = 16,
     shuffle: bool = True,
     subsample: int = 1,
-    
 ) -> DataLoader:
     """Create a DataLoader for GradNet training data."""
     dataset_path = Path(dataset_path)
@@ -151,7 +153,10 @@ def get_loader(
 
 # %%
 def get_training_data(
-    dataset_path: str, base: BaseValues, subsample: int = 1, other_keys: list[str] | None = None
+    dataset_path: str,
+    base: BaseValues,
+    subsample: int = 1,
+    other_keys: list[str] | None = None,
 ) -> tuple[tuple[np.ndarray, ...], tuple[np.ndarray, ...]]:
     """
     Get the exact training and validation data used by the model.

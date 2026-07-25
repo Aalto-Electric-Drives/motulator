@@ -348,7 +348,7 @@ sphinx_gallery_conf = {
             "../../examples/drive/current_vector",
             "../../examples/drive/vhz",
             "../../examples/drive/signal_inj",
-            '../../examples/drive/gradnet',
+            "../../examples/drive/gradnet",
             "../../examples/grid/grid_following",
             "../../examples/grid/grid_forming",
             "../../examples/grid/identification",

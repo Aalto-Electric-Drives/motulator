@@ -2,7 +2,7 @@
 Train current map (5.6-kW PM-SyRM Baldor)
 ============================================
 
-This script demonstrates how to train GradNet current map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset. 
+This script demonstrates how to train GradNet current map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset.
 It can be run in following options:
 1. Without spatial harmonics using measurement dataset.
 2. With spatial harmonics using FEM dataset.
@@ -10,18 +10,20 @@ It can be run in following options:
 """
 
 from pathlib import Path
+
 import numpy as np
 
-from motulator.drive.utils import gn
 from motulator.drive import utils
 from motulator.drive.utils import (
-    p_data,
     get_training_data,
+    gn,
+    p_data,
+    plot_gn_map,
+    print_meas_current_map_error_metrics,
+    sample_map_on_grid,
+    stat_fem_curr,
     train_gradnet,
-    plot_gn_map, sample_map_on_grid,
-    print_meas_current_map_error_metrics, stat_fem_curr,
 )
-
 
 # %%
 # Set nominal and base values.
@@ -36,7 +38,9 @@ model_with_harmonics = False
 # Train model
 if not model_with_harmonics:
     dataset_path = p_data / "baldor_meas.npz"
-    trained_model_path = p / "trained_models/baldor_meas_current_map_squareplus_d12_sub10_.pth"
+    trained_model_path = (
+        p / "trained_models/baldor_meas_current_map_squareplus_d12_sub10_.pth"
+    )
     subsample = 10
     activation = gn.Squareplus
     # %%
@@ -70,7 +74,9 @@ if not model_with_harmonics:
 
     # %%
     # Load the dataset for comparison and split it into training and validation sets.
-    train_data, val_data = get_training_data(str(dataset_path), subsample=subsample, base=base)
+    train_data, val_data = get_training_data(
+        str(dataset_path), subsample=subsample, base=base
+    )
     # %%
     # Plot the current map.
     plot_gn_map(
@@ -107,7 +113,9 @@ if not model_with_harmonics:
 
 else:
     dataset_path = p_data / "baldor_fem.npz"
-    trained_model_path = p / "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
+    trained_model_path = (
+        p / "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
+    )
     subsample = 10
     k = 6
     activation = gn.Squareplus
@@ -132,7 +140,10 @@ else:
     # Note: get_training_data returns (psi, i, ...), but we need (i, psi, ...)
     (trn_psi, trn_i, trn_theta, trn_tau), (val_psi, val_i, val_theta, val_tau) = (
         get_training_data(
-            str(dataset_path),base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
+            str(dataset_path),
+            base=base,
+            subsample=subsample,
+            other_keys=["theta_m", "tau_m"],
         )
     )
     trn_data = (trn_i, trn_psi, trn_theta, trn_tau)
@@ -145,7 +156,7 @@ else:
     harm_map = gn.CurrentMapWithHarmonics(model, k=k)
     # %%
     # Compute and print statistical error metrics on validation data.
-    
+
     val_dict = {
         "i_s_dq": val_i,
         "psi_s_dq": val_psi,

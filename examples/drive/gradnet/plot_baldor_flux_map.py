@@ -2,7 +2,7 @@
 Train flux map (5.6-kW PM-SyRM Baldor)
 ============================================
 
-This script demonstrates how to train GradNet flux-linkage map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset. 
+This script demonstrates how to train GradNet flux-linkage map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset.
 It can be run in following options:
 1. Without spatial harmonics using measurement dataset.
 2. Without spatial harmonics using FEM dataset, as a control model.
@@ -11,16 +11,22 @@ It can be run in following options:
 """
 
 from pathlib import Path
+
 import numpy as np
+
 from motulator.drive import utils
 from motulator.drive.utils import (
-    p_data,
+    PlotOptions,
     get_training_data,
     gn,
+    p_data,
+    plot_gn_map,
+    plot_output_vs_angle,
+    plot_surface_vs_current_and_angle,
+    print_meas_flux_map_error_metrics,
+    sample_map_on_grid,
+    stat_fem,
     train_gradnet,
-    plot_gn_map, sample_map_on_grid, 
-    print_meas_flux_map_error_metrics, stat_fem, 
-    plot_surface_vs_current_and_angle, PlotOptions, plot_output_vs_angle
 )
 
 # %%
@@ -31,13 +37,12 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # %%
 # Set up the paths and parameters.
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-model_with_harmonics = False  
+model_with_harmonics = False
 
 # %%
 # Train models
-if not model_with_harmonics:   
-
-    #%% option 1.
+if not model_with_harmonics:
+    # %% option 1.
     dataset_path = p_data / "baldor_meas.npz"
     trained_model_path = p / "trained_models/baldor_meas_flux_map_pnorm_d6_sub10_.pth"
 
@@ -54,7 +59,7 @@ if not model_with_harmonics:
     if False:  # Set to True to train the model
         train_gradnet(
             dataset_path=dataset_path,
-            base = base,
+            base=base,
             save_model_path=trained_model_path,
             is_flux_map=True,
             embed_dim=6,
@@ -80,7 +85,9 @@ if not model_with_harmonics:
 
     # %%
     # Load the dataset for comparison and split it into training and validation sets.
-    train_data, val_data = get_training_data(str(dataset_path), base=base, subsample=subsample)
+    train_data, val_data = get_training_data(
+        str(dataset_path), base=base, subsample=subsample
+    )
 
     # %%
     # Plot the flux map.
@@ -111,19 +118,19 @@ if not model_with_harmonics:
 
     # %%
     # Compute and print statistical error metrics.
-    
-    print_meas_flux_map_error_metrics(
-        flux_map_fcn, val_data, base=base, name="val"
-    )
+
+    print_meas_flux_map_error_metrics(flux_map_fcn, val_data, base=base, name="val")
     # set one value for testing output
-    test_i = [3+3j]
+    test_i = [3 + 3j]
     test_psi = flux_map_fcn(test_i)
     print(f"Test input current: {test_i}")
     print(f"Predicted flux linkage: {test_psi}")
 else:
     # %% Flux map with spatial harmonics for plot, trained on FEM data
     dataset_path = p / "datasets/baldor_fem.npz"
-    trained_model_path = p / "trained_models/baldor_fem_flux_map_harm_softmax_d48_sub10_.pth"
+    trained_model_path = (
+        p / "trained_models/baldor_fem_flux_map_harm_softmax_d48_sub10_.pth"
+    )
     subsample = 10
     k = 6
     activation = gn.Softmax
@@ -131,10 +138,10 @@ else:
     # %%
     # Train the model (if enabled).
 
-    if True: 
+    if True:
         train_gradnet(
             dataset_path=dataset_path,
-            base = base,
+            base=base,
             save_model_path=trained_model_path,
             is_flux_map=True,
             k=k,
@@ -150,7 +157,10 @@ else:
     # Note: get_training_data returns (psi, i, ...), but we need (i, psi, ...)
     (trn_psi, trn_i, trn_theta, trn_tau), (val_psi, val_i, val_theta, val_tau) = (
         get_training_data(
-            str(dataset_path), base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
+            str(dataset_path),
+            base=base,
+            subsample=subsample,
+            other_keys=["theta_m", "tau_m"],
         )
     )
     trn_data = (trn_i, trn_psi, trn_theta, trn_tau)
@@ -223,9 +233,3 @@ else:
         "tau_m": val_tau,
     }
     stat_fem(map_fcn=harm_map, raw_data=val_dict, base=base)
-
-
-
-
-
-

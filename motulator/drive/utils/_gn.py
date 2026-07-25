@@ -259,9 +259,7 @@ def load_gradnet(
 
 
 # %%
-def _complex_to_torch_inputs(
-    z: complex | np.ndarray, ndmin: int = 1
-) -> torch.Tensor:
+def _complex_to_torch_inputs(z: complex | np.ndarray, ndmin: int = 1) -> torch.Tensor:
     """Convert complex inputs to torch tensor with real and imaginary parts."""
     z = np.array(z, ndmin=ndmin, dtype=np.complex64)
     d = torch.from_numpy(np.real(z).astype(np.float32))
@@ -283,7 +281,7 @@ class CurrentMap:
 
     """
 
-    def __init__(self, model: GradNet,) -> None:
+    def __init__(self, model: GradNet) -> None:
         self.model = model
         self.in_base = model.psi_base.item()
         self.out_base = model.i_base.item()
@@ -339,7 +337,7 @@ class FluxMap(CurrentMap):
 
     """
 
-    def __init__(self, model: GradNet,) -> None:
+    def __init__(self, model: GradNet) -> None:
         super().__init__(model)
         self.in_base = model.i_base.item()
         self.out_base = model.psi_base.item()
@@ -359,9 +357,7 @@ class CurrentMapWithHarmonics:
 
     """
 
-    def __init__(
-        self, model: GradNet, k: int = 6
-    ) -> None:
+    def __init__(self, model: GradNet, k: int = 6) -> None:
         self.i_base = model.i_base.item()
         self.psi_base = model.psi_base.item()
         self.tau_base = 1.5 * self.psi_base * self.i_base
@@ -430,9 +426,7 @@ class FluxMapWithHarmonics:
 
     """
 
-    def __init__(
-        self, model: GradNet, k: int = 6
-    ) -> None:
+    def __init__(self, model: GradNet, k: int = 6) -> None:
         self.i_base = model.i_base.item()
         self.psi_base = model.psi_base.item()
         self.tau_base = 1.5 * self.psi_base * self.i_base

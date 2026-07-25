@@ -10,10 +10,14 @@ import torch.nn.functional as F
 from torch import Tensor
 from torch.utils.data import DataLoader
 from tqdm import trange
-from motulator.common.utils._utils import BaseValues
-import motulator.drive.utils._gn as gn
-from motulator.drive.utils._gn_dataset import BaseDataset, SpatialHarmonicsDataset, get_loader
 
+import motulator.drive.utils._gn as gn
+from motulator.common.utils._utils import BaseValues
+from motulator.drive.utils._gn_dataset import (
+    BaseDataset,
+    SpatialHarmonicsDataset,
+    get_loader,
+)
 
 # Set random seed for reproducibility
 seed = 42
@@ -27,7 +31,6 @@ if torch.cuda.is_available():
 # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 device = torch.device("cpu")  # Force CPU for testing
 print(f"Using device: {device}")
-
 
 
 # %%
@@ -176,7 +179,11 @@ def train_gradnet(
 
     # Base values are inferred from the dataset
     data_loader = get_loader(
-        dataset_path=dataset_path, base=base, k=k, batch_size=batch_size, subsample=subsample
+        dataset_path=dataset_path,
+        base=base,
+        k=k,
+        batch_size=batch_size,
+        subsample=subsample,
     )
     dataset = cast(BaseDataset | SpatialHarmonicsDataset, data_loader.dataset)
 
