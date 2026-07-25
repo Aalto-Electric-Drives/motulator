@@ -9,7 +9,6 @@ dimensions.
 
 from pathlib import Path
 
-import gradnet as gn
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -19,6 +18,7 @@ from motulator.common.utils._plotting import (
     set_latex_style,
     set_screen_style,
 )
+from motulator.drive.utils import gn
 
 # %%
 # Initialize.

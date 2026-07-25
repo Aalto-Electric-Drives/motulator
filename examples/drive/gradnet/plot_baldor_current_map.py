@@ -1,10 +1,8 @@
 """
-Train current map on dataset of Baldor machine
+Train current map (5.6-kW PM-SyRM Baldor)
 ============================================
 
-This script demonstrates how to train GradNet current map. It includes loading a
-dataset, training a GradNet model, and visualizing the trained model against the
-original dataset. 
+This script demonstrates how to train GradNet current map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset. 
 It can be run in following options:
 1. Without spatial harmonics using measurement dataset.
 2. With spatial harmonics using FEM dataset.
@@ -20,7 +18,7 @@ from motulator.drive.utils import (
     p_data,
     get_training_data,
     train_gradnet,
-    plot_map, sample_map_on_grid,
+    plot_gn_map, sample_map_on_grid,
     print_meas_current_map_error_metrics, stat_fem_curr,
 )
 
@@ -35,6 +33,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 model_with_harmonics = False
 
+# Train model
 if not model_with_harmonics:
     dataset_path = p_data / "baldor_meas.npz"
     trained_model_path = p / "trained_models/baldor_meas_current_map_squareplus_d12_sub10_.pth"
@@ -55,7 +54,6 @@ if not model_with_harmonics:
 
     # %%
     # Create the GradNet model and its callable.
-
     model = gn.load_gradnet(trained_model_path, activation=activation)
     current_map_fcn = gn.CurrentMap(model)
     current_map = sample_map_on_grid(
@@ -70,16 +68,12 @@ if not model_with_harmonics:
     i_q_levels = np.arange(-26, 28, 2) / base.i
     current_loci_levels = (i_d_levels, i_q_levels)
 
-
     # %%
     # Load the dataset for comparison and split it into training and validation sets.
-
     train_data, val_data = get_training_data(str(dataset_path), subsample=subsample, base=base)
-
     # %%
     # Plot the current map.
-
-    plot_map(
+    plot_gn_map(
         current_map,
         "d",
         base,
@@ -91,7 +85,7 @@ if not model_with_harmonics:
         latex=True,
         save_path=p / "figs" / "baldor_meas_current_map_d.pdf",
     )
-    plot_map(
+    plot_gn_map(
         current_map,
         "q",
         base,
@@ -111,18 +105,15 @@ if not model_with_harmonics:
         current_map_fcn, val_data, base=base, name="val"
     )
 
-
-
 else:
-
     dataset_path = p_data / "baldor_fem.npz"
     trained_model_path = p / "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
     subsample = 10
     k = 6
     activation = gn.Squareplus
-
     # %%
     # Train the model (if enabled).
+
     if False:
         train_gradnet(
             dataset_path=dataset_path,
@@ -134,7 +125,6 @@ else:
             subsample=subsample,
             activation=activation,
         )
-
     # %%
     # Load the dataset for visualization comparison.
 
@@ -153,10 +143,9 @@ else:
 
     model = gn.load_gradnet(trained_model_path, activation=activation)
     harm_map = gn.CurrentMapWithHarmonics(model, k=k)
-
     # %%
     # Compute and print statistical error metrics on validation data.
-
+    
     val_dict = {
         "i_s_dq": val_i,
         "psi_s_dq": val_psi,

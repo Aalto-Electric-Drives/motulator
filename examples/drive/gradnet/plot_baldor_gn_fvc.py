@@ -11,14 +11,14 @@ magnitude, but their shapes are similar.
 """
 
 # %%
+import numpy as np
+import matplotlib.pyplot as plt
 import time
 from pathlib import Path
 
-import gradnet as gn
-import numpy as np
-
 import motulator.drive.control.sm as control
 from motulator.drive import model, utils
+from motulator.drive.utils import gn
 
 # %%
 # Compute base values based on the nominal values (just for figures).
@@ -30,7 +30,6 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Determine the path of the current script.
 
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-
 
 # %%
 # Configure the system model using the GradNet saturation model (with or without spatial
@@ -116,11 +115,11 @@ print(f"Simulation time: {time1 - time0:.2f} s")
 
 
 #%%
-import matplotlib.pyplot as plt
+# Plot figures
 
 subplots = ["speed", "torque", "current", "flux"]
-drop = {"speed": [2], "torque": [], "current": [0, 2], "flux": [1]}
-colors = {  # 删线之后的线序
+drop = {"speed": [2], "torque": [], "current": [], "flux": [1]}
+colors = {  # order
     "torque": ["b", "gray", "r", "m"],   # τ_ref, τ_m, τ̂_m, τ_L
     "current": ["b", "r"],                # i_d, i_q
     "flux": ["b", "r"],                   # ψ_ref, ψ̂_s
@@ -140,7 +139,7 @@ plt.show = _show
 fig = plt.gcf()
 w, h = plt.rcParams["figure.figsize"]
 fig.set_size_inches(w, h * 3 * 4 / 5)
-
+# adjust details
 for ax, name in zip(fig.axes, subplots):
     for idx in sorted(drop.get(name, []), reverse=True):
         ax.lines[idx].remove()
@@ -158,5 +157,3 @@ for ax, name in zip(fig.axes, subplots):
 fig.savefig(p / "figs" / "sim.pdf", bbox_inches="tight")
 plt.show()
 
-
-# %%

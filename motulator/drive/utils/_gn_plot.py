@@ -59,7 +59,7 @@ def sample_map_on_grid(
 
 
 # %%
-def plot_map(
+def plot_gn_map(
     data: MapGrid,
     component: Literal["d", "q"],
     base: BaseValues | None = None,

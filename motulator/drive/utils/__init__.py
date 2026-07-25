@@ -30,7 +30,7 @@ import motulator.drive.utils._gn as gn
 from motulator.drive.utils._gn_dataset import p_data, get_training_data
 from motulator.drive.utils._gn_train import train_gradnet
 from motulator.drive.utils._gn_plot import (
-    plot_map, 
+    plot_gn_map, 
     sample_map_on_grid, 
     plot_surface_vs_current_and_angle,
     PlotOptions, plot_output_vs_angle,
@@ -54,7 +54,7 @@ __all__ = [
     "plot_stator_waveforms",
     "plot_dc_bus_waveforms",
     "plot_flux_vs_current",
-    "plot_map",
+    "plot_gn_map",
     "SaturationModelPMSyRM",
     "SaturationModelSyRM",
     "SaturationModelBase",

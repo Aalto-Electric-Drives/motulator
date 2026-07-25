@@ -1,10 +1,8 @@
 """
-Train flux map on dataset of Baldor machine
+Train flux map (5.6-kW PM-SyRM Baldor)
 ============================================
 
-This script demonstrates how to train GradNet flux-linkage map. It includes loading a
-dataset, training a GradNet model, and visualizing the trained model against the
-original dataset. 
+This script demonstrates how to train GradNet flux-linkage map from a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4). It includes loading a dataset, training a GradNet model, and visualizing the trained model against the original dataset. 
 It can be run in following options:
 1. Without spatial harmonics using measurement dataset.
 2. Without spatial harmonics using FEM dataset, as a control model.
@@ -20,7 +18,7 @@ from motulator.drive.utils import (
     get_training_data,
     gn,
     train_gradnet,
-    plot_map, sample_map_on_grid, 
+    plot_gn_map, sample_map_on_grid, 
     print_meas_flux_map_error_metrics, stat_fem, 
     plot_surface_vs_current_and_angle, PlotOptions, plot_output_vs_angle
 )
@@ -32,11 +30,11 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
 # Set up the paths and parameters.
-
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 model_with_harmonics = False  
 
 # %%
+# Train models
 if not model_with_harmonics:   
 
     #%% option 1.
@@ -65,10 +63,8 @@ if not model_with_harmonics:
             activation=activation,
         )
 
-
     # %%
     # Create the GradNet model and its callable.
-
     model = gn.load_gradnet(trained_model_path, activation=activation)
     flux_map_fcn = gn.FluxMap(model)
     flux_map = sample_map_on_grid(
@@ -77,22 +73,18 @@ if not model_with_harmonics:
         d_range=np.linspace(-2, 2, 50) * base.i,
         q_range=np.linspace(-2.5, 2.5, 50) * base.i,
     )
-
     # Constant current contours corresponding to the measured dataset, for visualization
     i_d_levels = np.arange(-20, 22, 2) / base.i
     i_q_levels = np.arange(-26, 28, 2) / base.i
     current_loci_levels = (i_d_levels, i_q_levels)
 
-
     # %%
     # Load the dataset for comparison and split it into training and validation sets.
-
     train_data, val_data = get_training_data(str(dataset_path), base=base, subsample=subsample)
 
     # %%
     # Plot the flux map.
-
-    plot_map(
+    plot_gn_map(
         flux_map,
         "d",
         base,
@@ -104,7 +96,7 @@ if not model_with_harmonics:
         latex=True,
         save_path=p / "figs" / "baldor_meas_flux_map_d.pdf",
     )
-    plot_map(
+    plot_gn_map(
         flux_map,
         "q",
         base,
@@ -119,34 +111,26 @@ if not model_with_harmonics:
 
     # %%
     # Compute and print statistical error metrics.
-
+    
     print_meas_flux_map_error_metrics(
         flux_map_fcn, val_data, base=base, name="val"
     )
-
     # set one value for testing output
     test_i = [3+3j]
     test_psi = flux_map_fcn(test_i)
     print(f"Test input current: {test_i}")
     print(f"Predicted flux linkage: {test_psi}")
-
-
-
-
-
-
-
 else:
     # %% Flux map with spatial harmonics for plot, trained on FEM data
     dataset_path = p / "datasets/baldor_fem.npz"
     trained_model_path = p / "trained_models/baldor_fem_flux_map_harm_softmax_d48_sub10_.pth"
     subsample = 10
     k = 6
-
     activation = gn.Softmax
 
     # %%
     # Train the model (if enabled).
+
     if True: 
         train_gradnet(
             dataset_path=dataset_path,
@@ -159,7 +143,6 @@ else:
             subsample=subsample,
             activation=activation,
         )
-
     # %%
     # Load the dataset for visualization comparison.
 
@@ -175,13 +158,11 @@ else:
 
     # %%
     # Load the GradNet model and create its callable.
-
     model = gn.load_gradnet(trained_model_path, activation=activation)
     harm_map = gn.FluxMapWithHarmonics(model, k=k)
 
     # %%
     # Try the model at single point.
-
     i_s_dq_mtpa = -9 + 9j  # Approximately the rated MTPA current
     theta_m = np.deg2rad(30)
     psi_s_dq, tau_m = harm_map(i_s_dq_mtpa, np.exp(1j * theta_m))
@@ -196,7 +177,6 @@ else:
     # Define ranges for visualization
     i_q_range = np.linspace(0, 2 * base.i, 50)
     theta_m_range = np.linspace(0, 2 * np.pi / k, 50)
-
     # Plot torque as a function of i_q and theta_m at fixed i_d
     plot_surface_vs_current_and_angle(
         current_range=i_q_range,
@@ -236,7 +216,6 @@ else:
         ),
     )
     # Compute and print statistical error metrics on validation data.
-
     val_dict = {
         "i_s_dq": val_i,
         "psi_s_dq": val_psi,
