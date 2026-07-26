@@ -68,7 +68,7 @@ repos:
     rev: v1.1.411
     hooks:
       - id: pyright
-        additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery]
+        additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery, torch]
         args:
         - --venvpath=./.venv
 

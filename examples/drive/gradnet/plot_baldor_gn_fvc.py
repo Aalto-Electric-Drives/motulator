@@ -37,7 +37,7 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Configure the system model using the GradNet saturation model (with or without spatial
 # harmonics).
 
-spatial_harmonics = False
+spatial_harmonics = True
 if spatial_harmonics:
     # GradNet with spatial harmonics, trained on the FEM data
     path = "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
@@ -159,16 +159,15 @@ fig = plt.gcf()
 w, h = plt.rcParams["figure.figsize"]
 fig.set_size_inches(w, h * 3 * 4 / 5)
 # adjust details
-for ax, name in zip(fig.axes, subplots):
+for ax, name in zip(fig.axes, subplots, strict=False):
     for idx in sorted(drop.get(name, []), reverse=True):
         ax.lines[idx].remove()
-    for line, col in zip(ax.lines, colors.get(name, [])):
+    for line, col in zip(ax.lines, colors.get(name, []), strict=False):
         line.set_color(col)
     if name == "torque":
-        ax.lines[1].set(linewidth=0.5, zorder=1, alpha=0.5)  # τ_m at bottom
+        ax.lines[1].set(linewidth=0.5, zorder=1, alpha=0.5)
         ax.lines[3].set(linestyle="--")
         ax.lines[3].set_label(r"${\tau}_\mathrm{L}$")
-        xmin, xmax = ax.get_xlim()
         ax.legend(handles=[ax.lines[0], ax.lines[2], ax.lines[3], ax.lines[1]])
     elif ax.get_legend():
         ax.legend(loc=legend_loc[name])  # type: ignore
