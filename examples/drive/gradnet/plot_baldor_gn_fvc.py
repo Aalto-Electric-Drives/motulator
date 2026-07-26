@@ -37,7 +37,7 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Configure the system model using the GradNet saturation model (with or without spatial
 # harmonics).
 
-spatial_harmonics = True
+spatial_harmonics = False
 if spatial_harmonics:
     # GradNet with spatial harmonics, trained on the FEM data
     path = "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"

@@ -47,7 +47,7 @@ if not model_with_harmonics:
     activation = gn.Squareplus
     # %%
     # Train the model (if enabled).
-    if False:
+    if True:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
@@ -124,7 +124,7 @@ else:
     # %%
     # Train the model (if enabled).
 
-    if False:
+    if True:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
