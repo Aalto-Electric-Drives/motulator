@@ -58,7 +58,7 @@ if not model_with_harmonics:
 
     # %%
     # Train the model (if enabled).
-    if False:
+    if not trained_model_path.exists():
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
@@ -135,7 +135,7 @@ else:
     # %%
     # Train the model (if enabled).
 
-    if False:
+    if not trained_model_path.exists():
         train_gradnet(
             dataset_path=dataset_path,
             base=base,

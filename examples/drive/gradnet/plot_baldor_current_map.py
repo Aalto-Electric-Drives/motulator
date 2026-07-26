@@ -46,8 +46,8 @@ if not model_with_harmonics:
     subsample = 10
     activation = gn.Squareplus
     # %%
-    # Train the model (if enabled).
-    if False:
+    # Train the model.
+    if not trained_model_path.exists():
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
@@ -122,9 +122,8 @@ else:
     k = 6
     activation = gn.Squareplus
     # %%
-    # Train the model (if enabled).
-
-    if False:
+    # Train the model.
+    if not trained_model_path.exists():
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
