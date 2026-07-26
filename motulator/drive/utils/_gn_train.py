@@ -28,8 +28,7 @@ if torch.cuda.is_available():
     torch.cuda.manual_seed_all(seed)
 
 # Set device for training
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-device = torch.device("cpu")  # Force CPU for testing
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 
@@ -210,6 +209,8 @@ def train_gradnet(
     # Save model
     if save_model_path is None:
         save_model_path = Path.cwd() / "model.pth"
+    save_model_path = Path(save_model_path)
+    save_model_path.parent.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), save_model_path)
 
 

@@ -22,7 +22,6 @@ from motulator.drive.utils import (
     PlotOptions,
     get_training_data,
     gn,
-    p_data,
     plot_gn_map,
     plot_output_vs_angle,
     plot_surface_vs_current_and_angle,
@@ -46,11 +45,11 @@ model_with_harmonics = False
 # Train models
 if not model_with_harmonics:
     # %% option 1.
-    dataset_path = p_data / "baldor_meas.npz"
+    dataset_path = p / "datasets/baldor_meas.npz"
     trained_model_path = p / "trained_models/baldor_meas_flux_map_pnorm_d6_sub10_.pth"
 
     ### option 2.
-    # dataset_path = p_data / "baldor_fem.npz"
+    # dataset_path = p / "datasets/baldor_fem.npz"
     # trained_model_path = p / "trained_models/baldor_fem_flux_map_pnorm_d12_sub20_.pth"
 
     subsample = 10
@@ -58,8 +57,7 @@ if not model_with_harmonics:
 
     # %%
     # Train the model (if enabled).
-
-    if False:  # Set to True to train the model
+    if False:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,

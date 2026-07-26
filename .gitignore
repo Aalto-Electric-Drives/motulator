@@ -19,3 +19,6 @@ docs/source/sg_execution_times.rst
 
 # Identification results
 data/
+
+# macOS specific
+.DS_Store

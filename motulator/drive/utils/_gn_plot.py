@@ -321,7 +321,12 @@ def plot_gn_map(
     else:
         ax.view_init(elev=15, azim=-45)  # type: ignore
 
-    save_and_show(save_path, **savefig_kwargs)
+    if save_path is not None:
+        save_path = Path(save_path)
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        save_and_show(save_path, **savefig_kwargs)
+    else:
+        save_and_show(None, **savefig_kwargs)
 
 
 # %%

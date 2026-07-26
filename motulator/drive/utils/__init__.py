@@ -13,7 +13,7 @@ from motulator.drive.utils._gn import (
     FluxMap,
     FluxMapWithHarmonics,
 )
-from motulator.drive.utils._gn_dataset import get_training_data, p_data
+from motulator.drive.utils._gn_dataset import get_training_data
 from motulator.drive.utils._gn_plot import (
     PlotOptions,
     plot_gn_map,
@@ -62,7 +62,6 @@ __all__ = [
     "SequenceGenerator",
     "Step",
     "gn",
-    "p_data",
     "get_training_data",
     "train_gradnet",
     "plot_map",

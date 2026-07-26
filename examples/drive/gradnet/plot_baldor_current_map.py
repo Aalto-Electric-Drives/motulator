@@ -20,7 +20,6 @@ from motulator.drive import utils
 from motulator.drive.utils import (
     get_training_data,
     gn,
-    p_data,
     plot_gn_map,
     print_meas_current_map_error_metrics,
     sample_map_on_grid,
@@ -40,7 +39,7 @@ model_with_harmonics = False
 
 # Train model
 if not model_with_harmonics:
-    dataset_path = p_data / "baldor_meas.npz"
+    dataset_path = p / "datasets/baldor_meas.npz"
     trained_model_path = (
         p / "trained_models/baldor_meas_current_map_squareplus_d12_sub10_.pth"
     )
@@ -115,7 +114,7 @@ if not model_with_harmonics:
     )
 
 else:
-    dataset_path = p_data / "baldor_fem.npz"
+    dataset_path = p / "datasets/baldor_fem.npz"
     trained_model_path = (
         p / "trained_models" / "baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
     )
