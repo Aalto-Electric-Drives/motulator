@@ -35,7 +35,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # %%
 # Set up the paths and parameters.
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-model_with_harmonics = False
+model_with_harmonics = True
 
 # Train model
 if not model_with_harmonics:
@@ -47,7 +47,7 @@ if not model_with_harmonics:
     activation = gn.Squareplus
     # %%
     # Train the model (if enabled).
-    if True:
+    if False:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
@@ -124,7 +124,7 @@ else:
     # %%
     # Train the model (if enabled).
 
-    if True:
+    if False:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,

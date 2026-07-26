@@ -88,4 +88,6 @@ ax.zaxis.set_tick_params(pad=-1)
 plt.tight_layout()
 
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
-save_and_show(p / "figs" / "vectorial_activation.pdf")
+save_path = Path(p / "figs" / "vectorial_activation.pdf")
+save_path.parent.mkdir(parents=True, exist_ok=True)
+save_and_show(save_path)

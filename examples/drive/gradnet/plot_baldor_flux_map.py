@@ -44,28 +44,28 @@ model_with_harmonics = False
 # %%
 # Train models
 if not model_with_harmonics:
-    # %% option 1.
-    dataset_path = p / "datasets/baldor_meas.npz"
-    trained_model_path = p / "trained_models/baldor_meas_flux_map_pnorm_d6_sub10_.pth"
-    subsample = 10
+    # ## option 1.
+    # dataset_path = p / "datasets/baldor_meas.npz"
+    # trained_model_path = p / "trained_models/baldor_meas_flux_map_pnorm_d6_sub10_.pth"
+    # subsample = 10
 
-    # ## option 2.
-    # dataset_path = p / "datasets/baldor_fem.npz"
-    # trained_model_path = p / "trained_models/baldor_fem_flux_map_pnorm_d12_sub20_.pth"
-    # subsample = 20
+    ## option 2.
+    dataset_path = p / "datasets/baldor_fem.npz"
+    trained_model_path = p / "trained_models/baldor_fem_flux_map_pnorm_d12_sub20_.pth"
+    subsample = 20
 
     activation = gn.PNormGradient
 
     # %%
     # Train the model (if enabled).
-    if True:
+    if False:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,
             save_model_path=trained_model_path,
             is_flux_map=True,
-            embed_dim=6,
-            epochs=20000,
+            embed_dim=12,
+            epochs=1000,
             subsample=subsample,
             activation=activation,
         )
@@ -135,7 +135,7 @@ else:
     # %%
     # Train the model (if enabled).
 
-    if True:
+    if False:
         train_gradnet(
             dataset_path=dataset_path,
             base=base,

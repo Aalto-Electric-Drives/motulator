@@ -37,7 +37,7 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Configure the system model using the GradNet saturation model (with or without spatial
 # harmonics).
 
-spatial_harmonics = False
+spatial_harmonics = True
 if spatial_harmonics:
     # GradNet with spatial harmonics, trained on the FEM data
     path = "trained_models/baldor_fem_current_map_harm_squareplus_d48_sub10_.pth"
@@ -172,5 +172,7 @@ for ax, name in zip(fig.axes, subplots, strict=False):
     elif ax.get_legend():
         ax.legend(loc=legend_loc[name])  # type: ignore
 
-fig.savefig(p / "figs" / "sim.pdf", bbox_inches="tight")
+save_path = Path(p / "figs" / "sim.pdf")
+save_path.parent.mkdir(parents=True, exist_ok=True)
+plt.savefig(save_path, bbox_inches="tight")
 plt.show()
