@@ -28,7 +28,7 @@ activation = gn.Softmax(beta_log0=np.log(1), freeze_beta=True)
 # activation = gn.PNormGradient(p=4, beta_log0=np.log(1), freeze_beta=True)
 
 # Choose plotting style (LaTeX or screen)
-use_latex = True
+use_latex = False
 
 # %%
 # Plot figure.

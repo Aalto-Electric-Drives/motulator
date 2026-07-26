@@ -103,7 +103,7 @@ if not model_with_harmonics:
         ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2], "z": [0, 0.5, 1]},
         raw_data=[val_data, train_data],
         current_loci_levels=current_loci_levels,
-        latex=True,
+        latex=False,
         save_path=p / "figs" / "baldor_meas_flux_map_d.pdf",
     )
     plot_gn_map(
@@ -115,7 +115,7 @@ if not model_with_harmonics:
         ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2], "z": [-1.5, 0, 1.5]},
         raw_data=[val_data, train_data],
         current_loci_levels=current_loci_levels,
-        latex=True,
+        latex=False,
         save_path=p / "figs" / "baldor_meas_flux_map_q.pdf",
     )
 
@@ -197,7 +197,7 @@ else:
         trn_data=trn_data,
         opts=PlotOptions(
             base=base,
-            latex=True,
+            latex=False,
             lims={"x": (0, 2), "y": (0, 60), "z": (0, 1.5)},
             ticks={"x": [0, 1, 2], "y": [0, 30, 60], "z": [0, 0.5, 1.0, 1.5]},
             loci_levels_source="val",
@@ -217,7 +217,7 @@ else:
         trn_data=trn_data,
         opts=PlotOptions(
             base=base,
-            latex=True,
+            latex=False,
             lims={"x": (0, 60), "y": (0, 1)},
             ticks={"x": [0, 15, 30, 45, 60], "y": [0, 0.2, 0.4, 0.6, 0.8, 1.0]},
             save_path=p / "figs" / "fem_torque_vs_angle.pdf",

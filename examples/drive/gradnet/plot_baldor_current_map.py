@@ -91,7 +91,7 @@ if not model_with_harmonics:
         raw_data=[val_data, train_data],
         current_loci=True,
         current_loci_levels=current_loci_levels,
-        latex=True,
+        latex=False,
         save_path=p / "figs" / "baldor_meas_current_map_d.pdf",
     )
     plot_gn_map(
@@ -103,7 +103,7 @@ if not model_with_harmonics:
         raw_data=[val_data, train_data],
         current_loci=True,
         current_loci_levels=current_loci_levels,
-        latex=True,
+        latex=False,
         save_path=p / "figs" / "baldor_meas_current_map_q.pdf",
     )
 

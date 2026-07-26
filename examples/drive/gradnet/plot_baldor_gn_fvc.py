@@ -100,7 +100,7 @@ if True:
     i_s_vals = [1, 2, 3]  # Current values for the plots
     mc = utils.MachineCharacteristics(est_par)
     mc.plot_flux_vs_torque(
-        i_s_vals, base, num=50, latex=True, save_path=p / "figs" / "flux_vs_torque.pdf"
+        i_s_vals, base, num=50, latex=False, save_path=p / "figs" / "flux_vs_torque.pdf"
     )
     # mc.plot_current_vs_torque(i_s_vals, base)
     # mc.plot_current_loci(i_s_vals, base)
@@ -145,7 +145,7 @@ utils.plot(
     res,
     base,
     subplots=subplots,
-    latex=True,
+    latex=False,
     y_lims=[(-0.2, 2.2), (-0.2, 2.2), (-2.2, 2), (0, 1.25)],
     y_ticks=[
         [0, 0.5, 1.0, 1.5, 2.0],
