@@ -463,7 +463,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 GradNet Models
 --------------
 
-These examples demonstrate a physics-constrained neural network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient networks are based on [#Cha2025]_. A 5.6-kW PM-SyRM provides the dataset. Both the control and plant models are parameterized by neural networks.
+These examples demonstrate a physics-constrained neural network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient networks are based on [#Cha2025]_. A 5.6-kW PM-SyRM and 28-kW PM-SyRM provide the dataset. Both the control and plant models are parameterized by neural networks.
 
 .. rubric:: References
 
@@ -551,6 +551,23 @@ These examples demonstrate a physics-constrained neural network framework for dy
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux map for 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
+
+.. only:: html
+
+  .. image:: /drive_examples/gradnet/images/thumb/sphx_glr_plot_28kw_pmsyrm_flux_map_meas_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/gradnet/plot_28kw_pmsyrm_flux_map_meas`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">28-kW PM-SyRM, train flux map, measured data</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a four-pole 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.">
 
 .. only:: html
@@ -580,6 +597,23 @@ These examples demonstrate a physics-constrained neural network framework for dy
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, train current map, measured data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
+
+.. only:: html
+
+  .. image:: /drive_examples/gradnet/images/thumb/sphx_glr_plot_28kw_pmsyrm_curr_map_meas_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/gradnet/plot_28kw_pmsyrm_curr_map_meas`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">28-kW PM-SyRM, train current map, measured data</div>
     </div>
 
 
