@@ -513,12 +513,12 @@
                   
   <section id="gradnet-models">
 <span id="sphx-glr-drive-examples-gradnet"></span><h1>GradNet Models<a class="headerlink" href="#gradnet-models" title="Link to this heading">#</a></h1>
-<p>These examples demonstrate a physics-constrained neural network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient networks are based on <a class="footnote-reference brackets" href="#cha2025" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. A 5.6-kW PM-SyRM and 28-kW PM-SyRM provide the dataset. Both the control and plant models are parameterized by neural networks.</p>
+<p>These examples use our physics-constrained neural-network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient network (GradNet) architecture is based on <a class="footnote-reference brackets" href="#cha2025" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. This folder contains measured datasets for two PM synchronous reluctance machines: a four-pole 5.6-kW machine (Baldor ECS101M0H7EF4) and a 10-pole 28-kW machine (Brusa HSM1.10.18.04). Additionally, a FEM dataset with spatial harmonics is provided for the 5.6-kW machine.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="cha2025" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>Chaudhari, Pranav, Moura, “Gradient Networks,” IEEE Trans. Signal Process., vol. 73, pp. 324-339, 2025, doi: 10.1109/TSP.2024.3496692.</p>
+<p>Chaudhari, Pranav, Moura, “Gradient networks,” IEEE Trans. Signal Process., 2025, <a class="reference external" href="https://doi.org/10.1109/TSP.2024.3496692">https://doi.org/10.1109/TSP.2024.3496692</a></p>
 </aside>
 </aside>
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a four-pole 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset without spatial harmonics."><img alt="" src="../../_images/sphx_glr_train_6kw_pmsyrm_flux_map_fem_no_harm_thumb.png" />
@@ -527,13 +527,13 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for a four-pole 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmonics."><img alt="" src="../../_images/sphx_glr_train_6kw_pmsyrm_curr_map_fem_thumb.png" />
 <p><a class="reference internal" href="train_6kw_pmsyrm_curr_map_fem.html"><span class="doc">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</span></a></p>
   <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet saturation models, trained on the FEM dataset with spatial harmonics, are used."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_gn_fvc_fem_harm_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_gn_fvc_fem_harm_thumb.png" />
 <p><a class="reference internal" href="plot_6kw_pmsyrm_gn_fvc_fem_harm.html"><span class="doc">5.6-kW PM-SyRM, GradNet from FEM data, FVC</span></a></p>
   <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, GradNet from FEM data, FVC</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet saturation models, trained on the measured dataset without spatial harmonics, are used."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_gn_fvc_meas_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_gn_fvc_meas_thumb.png" />
 <p><a class="reference internal" href="plot_6kw_pmsyrm_gn_fvc_meas.html"><span class="doc">5.6-kW PM-SyRM, GradNet from measured data, FVC</span></a></p>
   <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, GradNet from measured data, FVC</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux map for 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset."><img alt="" src="../../_images/sphx_glr_plot_28kw_pmsyrm_flux_map_meas_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset."><img alt="" src="../../_images/sphx_glr_plot_28kw_pmsyrm_flux_map_meas_thumb.png" />
 <p><a class="reference internal" href="plot_28kw_pmsyrm_flux_map_meas.html"><span class="doc">28-kW PM-SyRM, train flux map, measured data</span></a></p>
   <div class="sphx-glr-thumbnail-title">28-kW PM-SyRM, train flux map, measured data</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a four-pole 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_flux_map_meas_thumb.png" />
@@ -542,7 +542,7 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for a four-pole 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_curr_map_meas_thumb.png" />
 <p><a class="reference internal" href="plot_6kw_pmsyrm_curr_map_meas.html"><span class="doc">5.6-kW PM-SyRM, train current map, measured data</span></a></p>
   <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, train current map, measured data</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset."><img alt="" src="../../_images/sphx_glr_plot_28kw_pmsyrm_curr_map_meas_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset."><img alt="" src="../../_images/sphx_glr_plot_28kw_pmsyrm_curr_map_meas_thumb.png" />
 <p><a class="reference internal" href="plot_28kw_pmsyrm_curr_map_meas.html"><span class="doc">28-kW PM-SyRM, train current map, measured data</span></a></p>
   <div class="sphx-glr-thumbnail-title">28-kW PM-SyRM, train current map, measured data</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a four-pole 5.6-kW PM synchronous reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmonics."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_flux_map_fem_harm_thumb.png" />

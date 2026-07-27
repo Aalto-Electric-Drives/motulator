@@ -21,8 +21,8 @@
 28-kW PM-SyRM, train current map, measured data
 ===============================================
 
-This example trains a GradNet current map for 10-pole 28-kW PM synchronous
-reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.
+This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance
+machine (Brusa HSM1.10.18.04) from a measured dataset.
 
 .. GENERATED FROM PYTHON SOURCE LINES 9-17
 
@@ -245,7 +245,7 @@ Print statistical error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.577 seconds)
+   **Total running time of the script:** (0 minutes 0.387 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_28kw_pmsyrm_curr_map_meas.py:

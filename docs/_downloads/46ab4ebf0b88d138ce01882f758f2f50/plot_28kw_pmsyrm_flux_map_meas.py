@@ -2,7 +2,7 @@
 28-kW PM-SyRM, train flux map, measured data
 ===============================================
 
-This example trains a GradNet flux map for 10-pole 28-kW PM synchronous
+This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous
 reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.
 
 """

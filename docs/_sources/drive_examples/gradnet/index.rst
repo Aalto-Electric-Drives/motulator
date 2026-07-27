@@ -5,11 +5,11 @@
 GradNet Models
 --------------
 
-These examples demonstrate a physics-constrained neural network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient networks are based on [#Cha2025]_. A 5.6-kW PM-SyRM and 28-kW PM-SyRM provide the dataset. Both the control and plant models are parameterized by neural networks.
+These examples use our physics-constrained neural-network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient network (GradNet) architecture is based on [#Cha2025]_. This folder contains measured datasets for two PM synchronous reluctance machines: a four-pole 5.6-kW machine (Baldor ECS101M0H7EF4) and a 10-pole 28-kW machine (Brusa HSM1.10.18.04). Additionally, a FEM dataset with spatial harmonics is provided for the 5.6-kW machine.
 
 .. rubric:: References
 
-.. [#Cha2025] Chaudhari, Pranav, Moura, "Gradient Networks," IEEE Trans. Signal Process., vol. 73, pp. 324-339, 2025, doi: 10.1109/TSP.2024.3496692.
+.. [#Cha2025] Chaudhari, Pranav, Moura, "Gradient networks," IEEE Trans. Signal Process., 2025, https://doi.org/10.1109/TSP.2024.3496692
 
 
 .. raw:: html
@@ -59,7 +59,7 @@ These examples demonstrate a physics-constrained neural network framework for dy
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet saturation models, trained on the FEM dataset with spatial harmonics, are used.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics.">
 
 .. only:: html
 
@@ -76,7 +76,7 @@ These examples demonstrate a physics-constrained neural network framework for dy
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet saturation models, trained on the measured dataset without spatial harmonics, are used.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system.">
 
 .. only:: html
 
@@ -93,7 +93,7 @@ These examples demonstrate a physics-constrained neural network framework for dy
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux map for 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
 
 .. only:: html
 
@@ -144,7 +144,7 @@ These examples demonstrate a physics-constrained neural network framework for dy
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
 
 .. only:: html
 

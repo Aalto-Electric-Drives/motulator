@@ -3,8 +3,8 @@
 ===============================================
 
 This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
-machine (Baldor ECS101M0H7EF4) drive. GradNet saturation models, trained on the measured
-dataset without spatial harmonics, are used.
+machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
+spatial harmonics are used for both the machine model and the control system.
 
 """
 

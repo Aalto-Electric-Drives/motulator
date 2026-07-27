@@ -21,7 +21,7 @@
 28-kW PM-SyRM, train flux map, measured data
 ===============================================
 
-This example trains a GradNet flux map for 10-pole 28-kW PM synchronous
+This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous
 reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.
 
 .. GENERATED FROM PYTHON SOURCE LINES 9-17
@@ -246,7 +246,7 @@ Print error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.549 seconds)
+   **Total running time of the script:** (0 minutes 0.357 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_28kw_pmsyrm_flux_map_meas.py:

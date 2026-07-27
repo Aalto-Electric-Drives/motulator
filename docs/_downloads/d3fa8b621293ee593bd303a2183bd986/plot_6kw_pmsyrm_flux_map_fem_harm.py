@@ -29,10 +29,10 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Flux map with spatial harmonics, trained on FEM data.
 
 dataset_path = p / "datasets/baldor_fem.npz"
-trained_path = p / "trained_models/baldor_fem_flux_map_harm_softmax_d48_sub10.pth"
+trained_path = p / "trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.pth"
 subsample = 10
 k = 6
-activation = gn.Softmax
+activation = gn.PNormGradient
 
 # %%
 # Train the model.

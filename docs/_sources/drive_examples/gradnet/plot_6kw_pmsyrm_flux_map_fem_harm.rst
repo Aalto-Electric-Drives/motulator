@@ -90,10 +90,10 @@ Flux map with spatial harmonics, trained on FEM data.
 
 
     dataset_path = p / "datasets/baldor_fem.npz"
-    trained_path = p / "trained_models/baldor_fem_flux_map_harm_softmax_d48_sub10.pth"
+    trained_path = p / "trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.pth"
     subsample = 10
     k = 6
-    activation = gn.Softmax
+    activation = gn.PNormGradient
 
 
 
@@ -205,8 +205,8 @@ Evaluate the model at single point.
 
     Current: -9.00+9.00j A
     Angle: 30.00 deg
-    Flux linkage: 0.29+0.83j Vs
-    Torque per pole pair: 14.10 Nm
+    Flux linkage: 0.29+0.82j Vs
+    Torque per pole pair: 13.69 Nm
 
 
 
@@ -314,8 +314,8 @@ Print statistical error metrics on validation data.
  .. code-block:: none
 
     Error metrics:
-    Flux linkage: rmse=0.011 p.u., max=0.037 p.u., std=0.005 p.u.
-    Torque: rmse=0.011 p.u., max=0.068 p.u., std=0.007 p.u.
+    Flux linkage: rmse=0.018 p.u., max=0.071 p.u., std=0.009 p.u.
+    Torque: rmse=0.016 p.u., max=0.115 p.u., std=0.011 p.u.
 
 
 
@@ -323,7 +323,7 @@ Print statistical error metrics on validation data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.324 seconds)
+   **Total running time of the script:** (0 minutes 0.239 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_fem_harm.py:

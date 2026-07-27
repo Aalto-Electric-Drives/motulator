@@ -539,10 +539,10 @@ reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial ha
 </div>
 <p>Flux map with spatial harmonics, trained on FEM data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">/</span> <span class="s2">&quot;datasets/baldor_fem.npz&quot;</span>
-<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">trained_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">/</span> <span class="s2">&quot;trained_models/baldor_fem_flux_map_harm_softmax_d48_sub10.pth&quot;</span>
+<a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">trained_path</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.PosixPath" title="pathlib.PosixPath" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">p</span></a> <span class="o">/</span> <span class="s2">&quot;trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.pth&quot;</span>
 <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subsample</span></a> <span class="o">=</span> <span class="mi">10</span>
 <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">k</span></a> <span class="o">=</span> <span class="mi">6</span>
-<span class="n">activation</span> <span class="o">=</span> <span class="n">gn</span><span class="o">.</span><span class="n">Softmax</span>
+<span class="n">activation</span> <span class="o">=</span> <span class="n">gn</span><span class="o">.</span><span class="n">PNormGradient</span>
 </pre></div>
 </div>
 <p>Train the model.</p>
@@ -592,8 +592,8 @@ reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial ha
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Current: -9.00+9.00j A
 Angle: 30.00 deg
-Flux linkage: 0.29+0.83j Vs
-Torque per pole pair: 14.10 Nm
+Flux linkage: 0.29+0.82j Vs
+Torque per pole pair: 13.69 Nm
 </pre></div>
 </div>
 <p>Plot torque surface.</p>
@@ -647,11 +647,11 @@ Torque per pole pair: 14.10 Nm
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Error metrics:
-Flux linkage: rmse=0.011 p.u., max=0.037 p.u., std=0.005 p.u.
-Torque: rmse=0.011 p.u., max=0.068 p.u., std=0.007 p.u.
+Flux linkage: rmse=0.018 p.u., max=0.071 p.u., std=0.009 p.u.
+Torque: rmse=0.016 p.u., max=0.115 p.u., std=0.011 p.u.
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.324 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.239 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-gradnet-plot-6kw-pmsyrm-flux-map-fem-harm-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/0b3a8b607c883b9e2e08687cbc85296e/plot_6kw_pmsyrm_flux_map_fem_harm.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_6kw_pmsyrm_flux_map_fem_harm.ipynb</span></code></a></p>
