@@ -2,13 +2,16 @@
 Gradient networks (GradNets) for magnetics modeling.
 
 This module contains GradNet architecture to model the current and flux linkage maps of
-synchronous machines. The GraNets allow modeling conservative vector fields by
-construction [#Cha2025]_. In our case, the scalar state function is either the magnetic
-energy or co-energy, depending on whether the current map or flux map is modeled. The
-monotonicity of the flux-linkage--current map is also ensured.
+synchronous machines [#Li2026]_. The GraNets allow modeling conservative vector fields
+by construction [#Cha2025]_. In our case, the scalar state function is either the
+magnetic energy or co-energy, depending on whether the current map or flux map is
+modeled. The monotonicity of the flux-linkage--current map is also ensured.
 
 References
 ----------
+.. [#Li2026] Li, Foissner, Martin, Piippo, Hinkkanen, "Gradient networks for universal
+   magnetic modeling of synchronous machines," 2026, https://arxiv.org/abs/2602.14947
+
 .. [#Cha2025] Chaudhari, Pranav, Moura, "Gradient networks," IEEE Trans. Signal
    Process., 2025, https://doi.org/10.1109/TSP.2024.3496692
 
