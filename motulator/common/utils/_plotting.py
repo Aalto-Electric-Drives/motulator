@@ -120,6 +120,8 @@ def save_and_show(save_path: str | Path | None = None, **savefig_kwargs) -> None
 
     """
     if save_path is not None:
+        save_path = Path(save_path)
+        save_path.parent.mkdir(parents=True, exist_ok=True)
         default_kwargs = {"bbox_inches": "tight"}
         default_kwargs.update(savefig_kwargs)
         plt.savefig(save_path, **default_kwargs)

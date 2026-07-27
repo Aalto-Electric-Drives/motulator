@@ -19,18 +19,6 @@ from motulator.drive.utils._gn_dataset import (
     get_loader,
 )
 
-# Set random seed for reproducibility
-seed = 42
-random.seed(seed)
-np.random.seed(seed)
-torch.manual_seed(seed)
-if torch.cuda.is_available():
-    torch.cuda.manual_seed_all(seed)
-
-# Set device for training
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
-
 
 # %%
 class Trainer:
@@ -94,7 +82,6 @@ class Trainer:
         """Compute loss for a batch without spatial harmonics."""
         mode = cast(Literal["current_map", "flux_map"], self.mode)
         inputs, targets = self.dataset.prepare_batch(batch, mode)
-        # inputs, targets = inputs.to(device), targets.to(device) # Move to device
         output = self.model(inputs)
         return F.mse_loss(output, targets)
 
@@ -103,20 +90,19 @@ class Trainer:
         mode = cast(Literal["current_map", "flux_map"], self.mode)
         k = cast(int, self.k)
         inputs, targets = self.dataset.prepare_batch(batch, mode, k)
-        # inputs, targets = inputs.to(device), targets.to(device) # Move to device
         _, _, _, _, theta_m, tau_m_theta = batch
         cos_t = torch.cos(k * theta_m)
         sin_t = torch.sin(k * theta_m)
         output = self.model(inputs)
-        dE_dcos = output[:, 2]
-        dE_dsin = output[:, 3]
-        dE_dtheta = k * (cos_t * dE_dsin - sin_t * dE_dcos)
+        dW_dcos = output[:, 2]
+        dW_dsin = output[:, 3]
+        dW_dtheta = k * (cos_t * dW_dsin - sin_t * dW_dcos)
 
         # Dataset is normalized to per-unit values
         if mode == "current_map":
-            tau_m_theta_pred = -dE_dtheta
+            tau_m_theta_pred = -dW_dtheta
         else:
-            tau_m_theta_pred = dE_dtheta
+            tau_m_theta_pred = dW_dtheta
 
         loss_main = F.mse_loss(output[:, :2], targets)
         loss_tau = F.mse_loss(tau_m_theta_pred, tau_m_theta)
@@ -137,9 +123,10 @@ def train_gradnet(
     save_model_path: str | Path | None = None,
     subsample: int = 1,
     activation: Callable[[], torch.nn.Module] | None = None,
+    device: torch.device | None = None,
 ) -> None:
     """
-    Train and save the GradNetM model.
+    Train and save the GradNet model.
 
     Parameters
     ----------
@@ -160,16 +147,29 @@ def train_gradnet(
     lr : float, optional
         Learning rate for the optimizer, defaults to 1e-3.
     save_model_path : str | Path | None, optional
-        Path to save the trained model. If None, saves to `model.pth` in
-        current directory.
+        Path to save the trained model. If None, saves to `model.pth` in current
+        directory.
     subsample : int, optional
         Subsampling factor for the training data, defaults to 1 (uses all data).
     activation : Callable[[], torch.nn.Module] | None, optional
         Activation function factory, defaults to PNormGradient.
     device : torch.device | None, optional
-        Device to use for training.
-        If None, automatically selects CUDA if available, otherwise CPU.
+        Device to use for training. If None, automatically selects CUDA if available,
+        otherwise CPU.
+
     """
+    # Set random seed for reproducibility
+    seed = 42
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+    if device is None:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
+
     # Initialize model and data
     mode = "flux_map" if is_flux_map else "current_map"
     if activation is None:

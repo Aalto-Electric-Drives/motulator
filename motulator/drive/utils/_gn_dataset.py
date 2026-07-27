@@ -10,9 +10,6 @@ from torch.utils.data import DataLoader, Dataset
 
 from motulator.common.utils._utils import BaseValues
 
-# Add dataset path
-p_data = Path(__file__).resolve().parent / "datasets"
-
 
 # %%
 class BaseDataset(Dataset):
@@ -25,8 +22,8 @@ class BaseDataset(Dataset):
         Path to the npz file containing the dataset.
     base : BaseValues
         Base values of target machine
-    subsample : int
-        Subsampling rate.
+    subsample : int, optional
+        Subsampling rate, defaults to 1 (no subsampling).
 
     """
 
@@ -106,8 +103,8 @@ class SpatialHarmonicsDataset(BaseDataset):
         Path to the npz file containing the dataset.
     base : BaseValues
         Base values of target machine
-    subsample : int
-        Subsampling rate.
+    subsample : int, optional
+        Subsampling rate, defaults to 1 (no subsampling).
 
     """
 
@@ -131,7 +128,7 @@ class SpatialHarmonicsDataset(BaseDataset):
             self.i_d[index],
             self.i_q[index],
             self.theta_m[index],  # Electrical angle (rad)
-            self.tau_m_theta[index],  # -dE_dtheta per pole pair (Nm)
+            self.tau_m_theta[index],  # -dW_dtheta per pole pair (Nm)
         )
 
 
@@ -159,7 +156,7 @@ def get_training_data(
     other_keys: list[str] | None = None,
 ) -> tuple[tuple[np.ndarray, ...], tuple[np.ndarray, ...]]:
     """
-    Get the exact training and validation data used by the model.
+    Get the training and validation data used by the model.
 
     This function re-instantiates the dataset with the same parameters to reproduce
     the training set. Validation data is the set difference (complement).

@@ -76,34 +76,6 @@ class PNormGradient(nn.Module):
 
 
 # %%
-class GeneralizedPNormGradient(nn.Module):
-    """
-    Generalized p-norm gradient activation function.
-
-    Defined as the gradient of S(z) = (1 + sum(|z_n|^p))**(1/p)/beta, where p > 1 is a
-    real number. This potential function corresponds to a smooth p-norm, which is
-    convex, thus guaranteeing monotonicity.
-
-    """
-
-    def __init__(self, dim: int = -1, p: float = 4.0, beta_log0: float = 0.0) -> None:
-        super().__init__()
-        if p <= 1:
-            raise ValueError("p must be greater than 1")
-        self.dim = dim
-        self.q_log = nn.Parameter(torch.tensor(np.log(p - 1), dtype=torch.float32))
-        self.beta_log = nn.Parameter(torch.tensor(beta_log0, dtype=torch.float32))
-        # self.beta_log.requires_grad = False
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = torch.exp(self.beta_log) * x
-        q = torch.exp(self.q_log)
-        norm = 1 + torch.sum(x.abs().pow(q + 1), dim=self.dim, keepdim=True)
-        norm = norm.pow(q / (q + 1))
-        return x.abs().pow(q) * x.sign() / norm
-
-
-# %%
 class Squareplus(nn.Module):
     """Rectifier-type activation function with one learnable parameter."""
 
@@ -272,7 +244,7 @@ class CurrentMap:
     """
     Callable wrapper for GradNet current map models.
 
-    The map is symmetrized along to the q-axis to ensure physical consistency.
+    The map is symmetrized along to the d-axis to ensure physical consistency.
 
     Parameters
     ----------
@@ -335,6 +307,11 @@ class FluxMap(CurrentMap):
     ----------
     model : GradNet
         Trained GradNet model for the current map.
+
+    Returns
+    -------
+    complex | np.ndarray
+        Stator flux linkage (Vs).
 
     """
 
@@ -399,11 +376,11 @@ class CurrentMapWithHarmonics:
         i_d = outputs[..., 0].cpu().numpy()
         i_q = outputs[..., 1].cpu().numpy()
         i_s_dq = i_d + 1j * i_q
-        dE_dcos = outputs[..., 2].cpu().numpy()
-        dE_dsin = outputs[..., 3].cpu().numpy()
-        dE_dtheta = k * (exp_j_k_theta.real * dE_dsin - exp_j_k_theta.imag * dE_dcos)
+        dW_dcos = outputs[..., 2].cpu().numpy()
+        dW_dsin = outputs[..., 3].cpu().numpy()
+        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
         # Torque in per-unit
-        tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) - dE_dtheta
+        tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) - dW_dtheta
         # Scale back to physical units
         i_s_dq *= self.i_base
         tau_m *= self.tau_base
@@ -468,11 +445,11 @@ class FluxMapWithHarmonics:
         psi_d = outputs[..., 0].cpu().numpy()
         psi_q = outputs[..., 1].cpu().numpy()
         psi_s_dq = psi_d + 1j * psi_q
-        dE_dcos = outputs[..., 2].cpu().numpy()
-        dE_dsin = outputs[..., 3].cpu().numpy()
-        dE_dtheta = k * (exp_j_k_theta.real * dE_dsin - exp_j_k_theta.imag * dE_dcos)
+        dW_dcos = outputs[..., 2].cpu().numpy()
+        dW_dsin = outputs[..., 3].cpu().numpy()
+        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
         # Torque in per-unit
-        tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) + dE_dtheta
+        tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) + dW_dtheta
         # Scale back to physical units
         psi_s_dq *= self.psi_base
         tau_m *= self.tau_base

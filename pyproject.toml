@@ -10,6 +10,7 @@ dependencies = [
     "scipy",
     "tqdm",
     "matplotlib",
+    "torch",
 ]
 requires-python = ">=3.12"
 authors = [
@@ -43,7 +44,6 @@ dev = [
     "pre-commit",
     "pyright",
     "pip-audit",
-    "torch",
 ]
 doc = [
     "numpydoc",
@@ -68,7 +68,7 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "B", "I", "PL"]
 ignore = ["PLR2004"]  # Ignore magic value warnings
-pylint = {max-args = 12}
+pylint = {max-args = 14}
 
 [tool.ruff.format]
 quote-style = "double"

@@ -1,7 +1,6 @@
 """Plotting utilities for GradNet examples."""
 
 # ruff: noqa: PLR0912, PLR0915, E501
-
 # pylint: disable=too-many-branches,too-many-statements
 
 from dataclasses import dataclass, field
@@ -39,10 +38,29 @@ def sample_map_on_grid(
     d_range: np.ndarray,
     q_range: np.ndarray,
 ) -> MapGrid:
-    """Sample a (measured/learned) map callable on a rectilinear grid.
+    """
+    Sample a (measured or learned) map callable on a rectilinear grid.
 
-    For `map_type="current_map"`, (d_range, q_range) are in (psi_d, psi_q) units.
-    For `map_type="flux_map"`, (d_range, q_range) are in (i_d, i_q) units.
+    For `map_type="current_map"`, (`d_range`, `q_range`) are in (`psi_d`, `psi_q`)
+    units. For `map_type="flux_map"`, (`d_range`, `q_range`) are in (`i_d`, `i_q`)
+    units.
+
+    Parameters
+    ----------
+    map_fcn : Callable[[complex | ndarray], complex | ndarray]
+        Callable map function.
+    map_type : {"current_map", "flux_map"}
+        Type of the map.
+    d_range : ndarray
+        Range of values for the d-axis.
+    q_range : ndarray
+        Range of values for the q-axis.
+
+    Returns
+    -------
+    MapGrid
+        Sampled grid data.
+
     """
     d_range = np.asarray(d_range, dtype=float)
     q_range = np.asarray(q_range, dtype=float)
@@ -74,11 +92,36 @@ def plot_gn_map(
     **savefig_kwargs: Any,
 ) -> None:  # noqa: PLR0912, PLR0915
     """
-    Plot component (d/q) of flux linkage or current maps (GradNet examples).
+    Plot component (d/q) of flux linkage or current maps.
 
-    current_loci_levels:
-        If list or array, same levels used for i_d and i_q.
-        If tuple of two lists/arrays, (i_d_levels, i_q_levels).
+    Parameters
+    ----------
+    data : MapGrid
+        Sampled rectilinear-grid map data.
+    component : {"d", "q"}
+        Component of the flux linkage or current to plot.
+    base : BaseValues | None, optional
+        Base values for per-unit conversion. If None, unity base values are used.
+    lims : dict[str, tuple[float, float]] | None, optional
+        Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax), 'z': (zmin, zmax)}.
+    ticks : dict[str, list[float]] | None, optional
+        Axis ticks as {'x': [x1, x2, ...], 'y': [y1, y2, ...], 'z': [z1, z2, ...]}.
+    raw_data : tuple | list[tuple] | None, optional
+        Raw validation/training data scatter overlays.
+    surface_cmap : str, optional
+        Colormap for the surface plot, defaults to "viridis".
+    current_loci : bool, optional
+        Plot constant-current loci overlays, defaults to False.
+    current_loci_levels : list | ndarray | tuple | None, optional
+        Levels for the constant-current loci overlays. If list or array, the same
+        levels are used for `i_d` and `i_q`. If a tuple of two lists/arrays,
+        `(i_d_levels, i_q_levels)`. Defaults to None.
+    latex : bool, optional
+        Use LaTeX fonts if True, defaults to False.
+    save_path : str | Path | None, optional
+        Path to save the figure, defaults to None (not saved).
+    savefig_kwargs : Any
+        Additional keyword arguments passed to `plt.savefig()`.
 
     """
     width, height = setup_plot_style(latex)
@@ -213,12 +256,10 @@ def plot_gn_map(
             def _fill_masked_with_nearest(
                 xs: np.ndarray, ys: np.ndarray, zs: Any
             ) -> np.ndarray:
-                """Fill masked/NaN interpolated values using nearest neighbor.
-
-                Matplotlib's `LinearTriInterpolator` masks points outside the
-                triangulation hull, which would otherwise truncate the overlay
-                line when we drop masked samples.
-                """
+                """Fill masked/NaN interpolated values using nearest neighbor."""
+                # Matplotlib's `LinearTriInterpolator` masks points outside the
+                # triangulation hull, which would otherwise truncate the overlay line
+                # when we drop masked samples.
                 if np.ma.is_masked(zs):
                     z_arr = np.asarray(np.ma.filled(zs, np.nan), dtype=float)
                 else:
@@ -321,12 +362,7 @@ def plot_gn_map(
     else:
         ax.view_init(elev=15, azim=-45)  # type: ignore
 
-    if save_path is not None:
-        save_path = Path(save_path)
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        save_and_show(save_path, **savefig_kwargs)
-    else:
-        save_and_show(None, **savefig_kwargs)
+    save_and_show(save_path, **savefig_kwargs)
 
 
 # %%

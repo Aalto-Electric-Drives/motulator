@@ -348,9 +348,6 @@ class MachineCharacteristics:
         ax.set_xlim(0, mtpa.tau_M[-1] / base.tau)
         ax.set_ylim(0, abs(mtpa.psi_s_dq[-1]) / base.psi)
 
-        if save_path is not None:
-            save_path = Path(save_path)
-            save_path.parent.mkdir(parents=True, exist_ok=True)
         save_and_show(save_path, **savefig_kwargs)
 
     # %%
