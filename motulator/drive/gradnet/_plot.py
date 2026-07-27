@@ -77,7 +77,7 @@ def sample_map_on_grid(
 
 
 # %%
-def plot_gn_map(
+def plot_maps(
     data: MapGrid,
     component: Literal["d", "q"],
     base: BaseValues | None = None,
@@ -92,7 +92,7 @@ def plot_gn_map(
     **savefig_kwargs: Any,
 ) -> None:  # noqa: PLR0912, PLR0915
     """
-    Plot component (d/q) of flux linkage or current maps.
+    Plot flux linkage or current maps.
 
     Parameters
     ----------

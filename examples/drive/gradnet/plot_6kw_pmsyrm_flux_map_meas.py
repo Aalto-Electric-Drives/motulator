@@ -11,15 +11,8 @@ from pathlib import Path
 
 import numpy as np
 
+import motulator.drive.gradnet as gn
 from motulator.drive import utils
-from motulator.drive.utils import (
-    get_training_data,
-    gn,
-    plot_gn_map,
-    print_meas_flux_map_error_metrics,
-    sample_map_on_grid,
-    train_gradnet,
-)
 
 # %%
 # Set nominal and base values.
@@ -41,7 +34,7 @@ activation = gn.PNormGradient
 # Train the model.
 
 if not trained_path.exists():
-    train_gradnet(
+    gn.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -61,7 +54,7 @@ flux_map_fcn = gn.FluxMap(model)
 # %%
 # Load the dataset for comparison and split it into training and validation sets.
 
-train_data, val_data = get_training_data(
+train_data, val_data = gn.get_training_data(
     str(dataset_path), base=base, subsample=subsample
 )
 
@@ -69,7 +62,7 @@ train_data, val_data = get_training_data(
 # Plot the flux map.
 
 # Sample the map on a grid for plotting
-flux_map = sample_map_on_grid(
+flux_map = gn.sample_map_on_grid(
     flux_map_fcn,
     map_type="flux_map",
     d_range=np.linspace(-2, 2, 50) * base.i,
@@ -81,7 +74,7 @@ i_d_levels = np.arange(-20, 22, 2) / base.i
 i_q_levels = np.arange(-26, 28, 2) / base.i
 current_loci_levels = (i_d_levels, i_q_levels)
 
-plot_gn_map(
+gn.plot_maps(
     flux_map,
     "d",
     base,
@@ -92,7 +85,7 @@ plot_gn_map(
     current_loci_levels=current_loci_levels,
 )
 
-plot_gn_map(
+gn.plot_maps(
     flux_map,
     "q",
     base,
@@ -106,4 +99,4 @@ plot_gn_map(
 # %%
 # Print error metrics.
 
-print_meas_flux_map_error_metrics(flux_map_fcn, val_data, base=base)
+gn.print_flux_map_errors_meas(flux_map_fcn, val_data, base=base)

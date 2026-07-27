@@ -9,8 +9,8 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmon
 
 from pathlib import Path
 
+import motulator.drive.gradnet as gn
 from motulator.drive import utils
-from motulator.drive.utils import get_training_data, gn, stat_fem_curr, train_gradnet
 
 # %%
 # Set nominal and base values.
@@ -33,7 +33,7 @@ activation = gn.Softmax
 # Train the model.
 
 if not trained_path.exists():
-    train_gradnet(
+    gn.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -49,7 +49,7 @@ if not trained_path.exists():
 # Get the training and validation data (complement) from the helper function
 # Note: get_training_data returns (psi, i, ...), but we need (i, psi, ...)
 (trn_psi, trn_i, trn_theta, trn_tau), (val_psi, val_i, val_theta, val_tau) = (
-    get_training_data(
+    gn.get_training_data(
         str(dataset_path),
         base=base,
         subsample=subsample,
@@ -74,4 +74,4 @@ val_dict = {
     "theta_m": val_theta,
     "tau_m": val_tau,
 }
-stat_fem_curr(map_fcn=harm_map, raw_data=val_dict, base=base)
+gn.print_current_map_errors_fem(map_fcn=harm_map, raw_data=val_dict, base=base)

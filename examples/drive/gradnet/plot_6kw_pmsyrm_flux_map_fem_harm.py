@@ -11,16 +11,8 @@ from pathlib import Path
 
 import numpy as np
 
+import motulator.drive.gradnet as gn
 from motulator.drive import utils
-from motulator.drive.utils import (
-    PlotOptions,
-    get_training_data,
-    gn,
-    plot_output_vs_angle,
-    plot_surface_vs_current_and_angle,
-    stat_fem,
-    train_gradnet,
-)
 
 # %%
 # Set nominal and base values.
@@ -46,7 +38,7 @@ activation = gn.Softmax
 # Train the model.
 
 if not trained_path.exists():
-    train_gradnet(
+    gn.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -63,7 +55,7 @@ if not trained_path.exists():
 # Get the training and validation data (complement) from the helper function
 # Note: get_training_data returns (psi, i, ...), but we need (i, psi, ...)
 (trn_psi, trn_i, trn_theta, trn_tau), (val_psi, val_i, val_theta, val_tau) = (
-    get_training_data(
+    gn.get_training_data(
         str(dataset_path),
         base=base,
         subsample=subsample,
@@ -98,7 +90,7 @@ i_q_range = np.linspace(0, 2 * base.i, 50)
 theta_m_range = np.linspace(0, 2 * np.pi / k, 50)
 
 # Plot torque as a function of i_q and theta_m at fixed i_d
-plot_surface_vs_current_and_angle(
+gn.plot_surface_vs_current_and_angle(
     current_range=i_q_range,
     fixed_value=i_s_dq_mtpa.real,
     theta_m_range=theta_m_range,
@@ -107,7 +99,7 @@ plot_surface_vs_current_and_angle(
     output="tau_m",
     val_data=val_data,
     trn_data=trn_data,
-    opts=PlotOptions(
+    opts=gn.PlotOptions(
         base=base,
         lims={"x": (0, 2), "y": (0, 60), "z": (0, 1.5)},
         ticks={"x": [0, 1, 2], "y": [0, 30, 60], "z": [0, 0.5, 1.0, 1.5]},
@@ -119,13 +111,13 @@ plot_surface_vs_current_and_angle(
 # Plot torque vs angle.
 
 theta_m_range = np.linspace(0, 2 * np.pi / k, 120)
-plot_output_vs_angle(
+gn.plot_output_vs_angle(
     fixed_value=i_s_dq_mtpa,
     theta_m_range=theta_m_range,
     map_fcn=harm_map,
     val_data=val_data,
     trn_data=trn_data,
-    opts=PlotOptions(
+    opts=gn.PlotOptions(
         base=base,
         lims={"x": (0, 60), "y": (0, 1)},
         ticks={"x": [0, 15, 30, 45, 60], "y": [0, 0.2, 0.4, 0.6, 0.8, 1.0]},
@@ -141,4 +133,4 @@ val_dict = {
     "theta_m": val_theta,
     "tau_m": val_tau,
 }
-stat_fem(map_fcn=harm_map, raw_data=val_dict, base=base)
+gn.print_flux_map_errors_fem(map_fcn=harm_map, raw_data=val_dict, base=base)

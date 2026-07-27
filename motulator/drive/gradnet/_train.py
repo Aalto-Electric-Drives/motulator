@@ -11,9 +11,9 @@ from torch import Tensor
 from torch.utils.data import DataLoader
 from tqdm import trange
 
-import motulator.drive.utils._gn as gn
+import motulator.drive.gradnet._gn as gn
 from motulator.common.utils._utils import BaseValues
-from motulator.drive.utils._gn_dataset import (
+from motulator.drive.gradnet._dataset import (
     BaseDataset,
     SpatialHarmonicsDataset,
     get_loader,

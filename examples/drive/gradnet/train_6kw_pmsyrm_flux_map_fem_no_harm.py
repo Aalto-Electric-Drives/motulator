@@ -9,13 +9,8 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset without spatial har
 
 from pathlib import Path
 
+import motulator.drive.gradnet as gn
 from motulator.drive import utils
-from motulator.drive.utils import (
-    get_training_data,
-    gn,
-    print_meas_flux_map_error_metrics,
-    train_gradnet,
-)
 
 # %%
 # Set nominal and base values.
@@ -38,7 +33,7 @@ activation = gn.PNormGradient
 # Train the model.
 
 if not trained_path.exists():
-    train_gradnet(
+    gn.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -59,7 +54,7 @@ flux_map_fcn = gn.FluxMap(model)
 # %%
 # Load the dataset for comparison and split it into training and validation sets.
 
-train_data, val_data = get_training_data(
+train_data, val_data = gn.get_training_data(
     str(dataset_path), base=base, subsample=subsample
 )
 
@@ -67,4 +62,4 @@ train_data, val_data = get_training_data(
 # %%
 # Print statistical error metrics.
 
-print_meas_flux_map_error_metrics(flux_map_fcn, val_data, base=base)
+gn.print_flux_map_errors_meas(flux_map_fcn, val_data, base=base)

@@ -14,8 +14,8 @@ from pathlib import Path
 import numpy as np
 
 import motulator.drive.control.sm as control
+import motulator.drive.gradnet as gn
 from motulator.drive import model, utils
-from motulator.drive.utils import gn
 
 # %%
 # Compute base values based on the nominal values (just for figures).
