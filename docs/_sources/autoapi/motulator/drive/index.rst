@@ -34,6 +34,7 @@ Subpackages
    :maxdepth: 1
 
    /autoapi/motulator/drive/control/index
+   /autoapi/motulator/drive/gradnet/index
    /autoapi/motulator/drive/model/index
    /autoapi/motulator/drive/utils/index
 

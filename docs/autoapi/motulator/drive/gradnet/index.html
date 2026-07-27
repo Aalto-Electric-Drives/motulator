@@ -1,0 +1,1095 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>motulator.drive.gradnet &#8212; motulator 0.7.4 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ebd526be" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/documentation_options.js?v=444dcb17"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'autoapi/motulator/drive/gradnet/index';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="motulator.drive.model" href="../model/index.html" />
+    <link rel="prev" title="motulator.drive.control.sm" href="../control/sm/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.7.4 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/gradnet/index.html">GradNet Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.html">5.6-kW PM-SyRM, train flux map, FEM data, no spatial harmonics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem.html">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas.html">5.6-kW PM-SyRM, train flux map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas.html">5.6-kW PM-SyRM, train current map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/identification/index.html">Output Admittance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/identification/plot_10kva_gfl_identification.html">10-kVA, GFL, converter output admittance identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/identification/plot_13kva_do_gfm_identification.html">12.5-kVA, DO-GFM, converter output admittance identification</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/induction_machine.html">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/synchronous_machine.html">Synchronous Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/control_system.html">Control System Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/reference_gen.html">Reference Generation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../index.html">API</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../common/control/index.html">motulator.common.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/model/index.html">motulator.common.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../common/utils/index.html">motulator.common.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">motulator.drive</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 has-children"><a class="reference internal" href="../control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../control/im/index.html">motulator.drive.control.im</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../control/sm/index.html">motulator.drive.control.sm</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">motulator.drive.gradnet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../model/index.html">motulator.drive.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utils/index.html">motulator.drive.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid/control/index.html">motulator.grid.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid/model/index.html">motulator.grid.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid/utils/index.html">motulator.grid.utils</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aalto-Electric-Drives/motulator" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/autoapi/motulator/drive/gradnet/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>motulator.drive.gradnet</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap"><code class="docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">CurrentMapWithHarmonics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMap"><code class="docutils literal notranslate"><span class="pre">FluxMap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">FluxMapWithHarmonics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient"><code class="docutils literal notranslate"><span class="pre">PNormGradient</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PlotOptions"><code class="docutils literal notranslate"><span class="pre">PlotOptions</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax"><code class="docutils literal notranslate"><span class="pre">Softmax</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus"><code class="docutils literal notranslate"><span class="pre">Squareplus</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.get_training_data"><code class="docutils literal notranslate"><span class="pre">get_training_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.load_gradnet"><code class="docutils literal notranslate"><span class="pre">load_gradnet()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_output_vs_angle"><code class="docutils literal notranslate"><span class="pre">plot_output_vs_angle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_current_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_current_map_errors_meas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_flux_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_flux_map_errors_meas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.sample_map_on_grid"><code class="docutils literal notranslate"><span class="pre">sample_map_on_grid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.train_gradnet"><code class="docutils literal notranslate"><span class="pre">train_gradnet()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-motulator.drive.gradnet">
+<span id="motulator-drive-gradnet"></span><h1>motulator.drive.gradnet<a class="headerlink" href="#module-motulator.drive.gradnet" title="Link to this heading">#</a></h1>
+<p>Gradient-based neural network maps.</p>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.AlgebraicSigmoid" title="motulator.drive.gradnet.AlgebraicSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a></p></td>
+<td><p>Sigmoid-type activation function with one learnable parameter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.CurrentMap" title="motulator.drive.gradnet.CurrentMap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></p></td>
+<td><p>Callable wrapper for GradNet current map models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.CurrentMapWithHarmonics" title="motulator.drive.gradnet.CurrentMapWithHarmonics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentMapWithHarmonics</span></code></a></p></td>
+<td><p>Callable wrapper for GradNet current maps with spatial harmonics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.FluxMap" title="motulator.drive.gradnet.FluxMap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxMap</span></code></a></p></td>
+<td><p>Callable wrapper for GradNet current map models.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.FluxMapWithHarmonics" title="motulator.drive.gradnet.FluxMapWithHarmonics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxMapWithHarmonics</span></code></a></p></td>
+<td><p>Callable wrapper for GradNet flux maps with spatial harmonics.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.PNormGradient" title="motulator.drive.gradnet.PNormGradient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PNormGradient</span></code></a></p></td>
+<td><p>p-norm gradient activation function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.PlotOptions" title="motulator.drive.gradnet.PlotOptions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotOptions</span></code></a></p></td>
+<td><p>Options for plotting functions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.Softmax" title="motulator.drive.gradnet.Softmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Softmax</span></code></a></p></td>
+<td><p>Softmax activation function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.Squareplus" title="motulator.drive.gradnet.Squareplus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Squareplus</span></code></a></p></td>
+<td><p>Rectifier-type activation function with one learnable parameter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.get_training_data" title="motulator.drive.gradnet.get_training_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_training_data</span></code></a>(dataset_path, base[, subsample, ...])</p></td>
+<td><p>Get the training and validation data used by the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.load_gradnet" title="motulator.drive.gradnet.load_gradnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_gradnet</span></code></a>(model_path[, activation])</p></td>
+<td><p>Load a GradNet model, inferring dimensions from the saved weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_maps" title="motulator.drive.gradnet.plot_maps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_maps</span></code></a>(data, component[, base, lims, ticks, ...])</p></td>
+<td><p>Plot flux linkage or current maps.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_output_vs_angle" title="motulator.drive.gradnet.plot_output_vs_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_output_vs_angle</span></code></a>(fixed_value, theta_m_range, map_fcn)</p></td>
+<td><p>Plot torque or flux linkage as a function of angle at a fixed input.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle" title="motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle</span></code></a>(current_range, ...)</p></td>
+<td><p>Plot selected output component vs selected input component over angle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.print_current_map_errors_meas" title="motulator.drive.gradnet.print_current_map_errors_meas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_current_map_errors_meas</span></code></a>(current_map, data[, base])</p></td>
+<td><p>Print per-unit error metrics for a measured current map.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.print_flux_map_errors_meas" title="motulator.drive.gradnet.print_flux_map_errors_meas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_flux_map_errors_meas</span></code></a>(flux_map, data[, base])</p></td>
+<td><p>Print per-unit error metrics for a measured flux map.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.sample_map_on_grid" title="motulator.drive.gradnet.sample_map_on_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_map_on_grid</span></code></a>(map_fcn, map_type, d_range, q_range)</p></td>
+<td><p>Sample a (measured or learned) map callable on a rectilinear grid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.train_gradnet" title="motulator.drive.gradnet.train_gradnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_gradnet</span></code></a>(dataset_path, base[, is_flux_map, k, ...])</p></td>
+<td><p>Train and save the GradNet model.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.AlgebraicSigmoid">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">AlgebraicSigmoid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta_log0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#AlgebraicSigmoid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.AlgebraicSigmoid" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Sigmoid-type activation function with one learnable parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beta_log0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.CurrentMap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">CurrentMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#CurrentMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.CurrentMap" title="Link to this definition">#</a></dt>
+<dd><p>Callable wrapper for GradNet current map models.</p>
+<p>The map is symmetrized along to the d-axis to ensure physical consistency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>GradNet</em>) – Trained GradNet model for the current map.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.CurrentMapWithHarmonics">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">CurrentMapWithHarmonics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#CurrentMapWithHarmonics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.CurrentMapWithHarmonics" title="Link to this definition">#</a></dt>
+<dd><p>Callable wrapper for GradNet current maps with spatial harmonics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>GradNet</em>) – Trained GradNet model for the current map with harmonics.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Spatial harmonic order, defaults to 6.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.FluxMap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">FluxMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#FluxMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.FluxMap" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.gradnet.CurrentMap" title="motulator.drive.gradnet.CurrentMap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></p>
+<p>Callable wrapper for GradNet current map models.</p>
+<p>The map is symmetrized along to the q-axis to ensure physical consistency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>GradNet</em>) – Trained GradNet model for the current map.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Stator flux linkage (Vs).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)">complex</a> | np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.FluxMapWithHarmonics">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">FluxMapWithHarmonics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#FluxMapWithHarmonics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.FluxMapWithHarmonics" title="Link to this definition">#</a></dt>
+<dd><p>Callable wrapper for GradNet flux maps with spatial harmonics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>GradNet</em>) – Trained GradNet model for the flux map with harmonics.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Spatial harmonic order, defaults to 6.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.PNormGradient">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">PNormGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_log0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#PNormGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.PNormGradient" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>p-norm gradient activation function.</p>
+<p>Defined as the gradient of S(z) = (1 + sum(z_n**p))**(1/p)/beta, where p is a
+positive even integer. This potential function corresponds to a smooth p-norm, which
+is convex, thus guaranteeing monotonicity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>beta_log0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>freeze_beta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.PlotOptions">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">PlotOptions</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#PlotOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.PlotOptions" title="Link to this definition">#</a></dt>
+<dd><p>Options for plotting functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<a class="reference internal" href="../utils/index.html#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Base values for per-unit conversion. If None, SI values are used.</p></li>
+<li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Axis limits as {‘x’: (xmin, xmax), ‘y’: (ymin, ymax)}.</p></li>
+<li><p><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Axis ticks as {‘x’: [x1, x2, …], ‘y’: [y1, y2, …]}.</p></li>
+<li><p><strong>surface_cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for the surface plot, defaults to “viridis”.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts if True, defaults to False.</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Path to save the figure. If None, the figure is not saved.</p></li>
+<li><p><strong>savefig_kwargs</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Additional keyword arguments passed to plt.savefig().</p></li>
+<li><p><strong>loci_levels_source</strong> (<em>{&quot;ticks&quot;</em><em>, </em><em>&quot;val&quot;</em><em>, </em><em>&quot;trn&quot;}</em><em>, </em><em>optional</em>) – Source for constant-loci levels in <cite>plot_surface_vs_current_and_angle()</cite> when
+plotting over current and angle. If “ticks”, uses <cite>ticks[“x”]</cite>/<cite>ticks[“y”]</cite>
+(with lims/fallback defaults). If “val” or “trn”, uses unique x/y values
+present in the corresponding point cloud slice.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.Softmax">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">Softmax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_log0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze_beta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#Softmax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.Softmax" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Softmax activation function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>beta_log0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>freeze_beta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.Squareplus">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">Squareplus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">beta_log0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#Squareplus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.Squareplus" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Rectifier-type activation function with one learnable parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>beta_log0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.get_training_data">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">get_training_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_dataset.html#get_training_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.get_training_data" title="Link to this definition">#</a></dt>
+<dd><p>Get the training and validation data used by the model.</p>
+<p>This function re-instantiates the dataset with the same parameters to reproduce
+the training set. Validation data is the set difference (complement).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>((train_psi, train_i, …), (val_psi, val_i, …))</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>base</strong> (<em>motulator.common.utils._utils.BaseValues</em>)</p></li>
+<li><p><strong>subsample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>other_keys</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.load_gradnet">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">load_gradnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#load_gradnet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.load_gradnet" title="Link to this definition">#</a></dt>
+<dd><p>Load a GradNet model, inferring dimensions from the saved weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>Path</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to the saved model file.</p></li>
+<li><p><strong>activation</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>nn.Module</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Activation function factory, defaults to PNormGradient.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Loaded GradNet model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>GradNet</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.plot_maps">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">plot_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_loci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_loci_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#plot_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.plot_maps" title="Link to this definition">#</a></dt>
+<dd><p>Plot flux linkage or current maps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>MapGrid</em>) – Sampled rectilinear-grid map data.</p></li>
+<li><p><strong>component</strong> (<em>{&quot;d&quot;</em><em>, </em><em>&quot;q&quot;}</em>) – Component of the flux linkage or current to plot.</p></li>
+<li><p><strong>base</strong> (<a class="reference internal" href="../utils/index.html#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Base values for per-unit conversion. If None, unity base values are used.</p></li>
+<li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Axis limits as {‘x’: (xmin, xmax), ‘y’: (ymin, ymax), ‘z’: (zmin, zmax)}.</p></li>
+<li><p><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Axis ticks as {‘x’: [x1, x2, …], ‘y’: [y1, y2, …], ‘z’: [z1, z2, …]}.</p></li>
+<li><p><strong>raw_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Raw validation/training data scatter overlays.</p></li>
+<li><p><strong>surface_cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for the surface plot, defaults to “viridis”.</p></li>
+<li><p><strong>current_loci</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Plot constant-current loci overlays, defaults to False.</p></li>
+<li><p><strong>current_loci_levels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> | </em><em>ndarray</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Levels for the constant-current loci overlays. If list or array, the same
+levels are used for <cite>i_d</cite> and <cite>i_q</cite>. If a tuple of two lists/arrays,
+<cite>(i_d_levels, i_q_levels)</cite>. Defaults to None.</p></li>
+<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts if True, defaults to False.</p></li>
+<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Path to save the figure, defaults to None (not saved).</p></li>
+<li><p><strong>savefig_kwargs</strong> (<em>Any</em>) – Additional keyword arguments passed to <cite>plt.savefig()</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.plot_output_vs_angle">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">plot_output_vs_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_m_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tau_m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'i_s_dq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trn_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#plot_output_vs_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.plot_output_vs_angle" title="Link to this definition">#</a></dt>
+<dd><p>Plot torque or flux linkage as a function of angle at a fixed input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fixed_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Fixed complex input value (e.g., i_s_dq or psi_s_dq).</p></li>
+<li><p><strong>theta_m_range</strong> (<em>np.ndarray</em>) – Electrical rotor angle range (rad).</p></li>
+<li><p><strong>map_fcn</strong> (<em>Callable</em>) – Flux or current map function with harmonics.</p></li>
+<li><p><strong>output</strong> (<em>{&quot;psi_d&quot;</em><em>, </em><em>&quot;psi_q&quot;</em><em>, </em><em>&quot;tau_m&quot;}</em><em>, </em><em>optional</em>) – Output quantity to plot, defaults to “tau_m”.</p></li>
+<li><p><strong>input_type</strong> (<em>{&quot;i_s_dq&quot;</em><em>, </em><em>&quot;psi_s_dq&quot;}</em><em>, </em><em>optional</em>) – Type of the fixed input value, defaults to “i_s_dq”.</p></li>
+<li><p><strong>val_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</p></li>
+<li><p><strong>trn_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</p></li>
+<li><p><strong>opts</strong> (<a class="reference internal" href="#motulator.drive.gradnet.PlotOptions" title="motulator.drive.gradnet.PlotOptions"><em>PlotOptions</em></a><em>, </em><em>optional</em>) – Plotting options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.plot_surface_vs_current_and_angle">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">plot_surface_vs_current_and_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_m_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'i_q'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tau_m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trn_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#plot_surface_vs_current_and_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle" title="Link to this definition">#</a></dt>
+<dd><p>Plot selected output component vs selected input component over angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_range</strong> (<em>np.ndarray</em>) – Range of input values to vary.</p></li>
+<li><p><strong>fixed_value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Fixed input value for the other axis.</p></li>
+<li><p><strong>theta_m_range</strong> (<em>np.ndarray</em>) – Electrical rotor angle range (rad).</p></li>
+<li><p><strong>map_fcn</strong> (<em>Callable</em>) – Flux or current map function with harmonics.</p></li>
+<li><p><strong>input</strong> (<em>{&quot;i_d&quot;</em><em>, </em><em>&quot;i_q&quot;</em><em>, </em><em>&quot;psi_d&quot;</em><em>, </em><em>&quot;psi_q&quot;}</em><em>, </em><em>optional</em>) – Input axis to vary, defaults to “i_q”.</p></li>
+<li><p><strong>output</strong> (<em>{&quot;psi_d&quot;</em><em>, </em><em>&quot;psi_q&quot;</em><em>, </em><em>&quot;tau_m&quot;</em><em>, </em><em>&quot;i_d&quot;</em><em>, </em><em>&quot;i_q&quot;}</em><em>, </em><em>optional</em>) – Output quantity to plot, defaults to “tau_m”.</p></li>
+<li><p><strong>val_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</p></li>
+<li><p><strong>trn_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</p></li>
+<li><p><strong>opts</strong> (<a class="reference internal" href="#motulator.drive.gradnet.PlotOptions" title="motulator.drive.gradnet.PlotOptions"><em>PlotOptions</em></a><em>, </em><em>optional</em>) – Plotting options.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.print_current_map_errors_meas">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">print_current_map_errors_meas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">current_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_stats.html#print_current_map_errors_meas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.print_current_map_errors_meas" title="Link to this definition">#</a></dt>
+<dd><p>Print per-unit error metrics for a measured current map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>motulator.common.utils._utils.BaseValues</em><em> | </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.print_flux_map_errors_meas">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">print_flux_map_errors_meas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flux_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_stats.html#print_flux_map_errors_meas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.print_flux_map_errors_meas" title="Link to this definition">#</a></dt>
+<dd><p>Print per-unit error metrics for a measured flux map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base</strong> (<em>motulator.common.utils._utils.BaseValues</em><em> | </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.sample_map_on_grid">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">sample_map_on_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_range</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#sample_map_on_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.sample_map_on_grid" title="Link to this definition">#</a></dt>
+<dd><p>Sample a (measured or learned) map callable on a rectilinear grid.</p>
+<p>For <cite>map_type=”current_map”</cite>, (<cite>d_range</cite>, <cite>q_range</cite>) are in (<cite>psi_d</cite>, <cite>psi_q</cite>)
+units. For <cite>map_type=”flux_map”</cite>, (<cite>d_range</cite>, <cite>q_range</cite>) are in (<cite>i_d</cite>, <cite>i_q</cite>)
+units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>ndarray</em><em>]</em>) – Callable map function.</p></li>
+<li><p><strong>map_type</strong> (<em>{&quot;current_map&quot;</em><em>, </em><em>&quot;flux_map&quot;}</em>) – Type of the map.</p></li>
+<li><p><strong>d_range</strong> (<em>ndarray</em>) – Range of values for the d-axis.</p></li>
+<li><p><strong>q_range</strong> (<em>ndarray</em>) – Range of values for the q-axis.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sampled grid data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MapGrid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.train_gradnet">
+<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">train_gradnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_flux_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_train.html#train_gradnet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.train_gradnet" title="Link to this definition">#</a></dt>
+<dd><p>Train and save the GradNet model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>Path</em>) – Path to the training data file (npz format).</p></li>
+<li><p><strong>is_flux_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether the model is a flux map or current map, defaults to False.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Spatial harmonics order. If None, no harmonics are used, defaults to None.</p></li>
+<li><p><strong>num_modules</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of GradNet modules, defaults to 1.</p></li>
+<li><p><strong>embed_dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Embedding dimension for the GradNet modules, defaults to 12.</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Batch size for training, defaults to 128.</p></li>
+<li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of training epochs, defaults to 2000.</p></li>
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Learning rate for the optimizer, defaults to 1e-3.</p></li>
+<li><p><strong>save_model_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Path to save the trained model. If None, saves to <cite>model.pth</cite> in current
+directory.</p></li>
+<li><p><strong>subsample</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Subsampling factor for the training data, defaults to 1 (uses all data).</p></li>
+<li><p><strong>activation</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>torch.nn.Module</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Activation function factory, defaults to PNormGradient.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Device to use for training. If None, automatically selects CUDA if available,
+otherwise CPU.</p></li>
+<li><p><strong>base</strong> (<em>motulator.common.utils._utils.BaseValues</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../control/sm/index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">motulator.drive.control.sm</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../model/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">motulator.drive.model</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap"><code class="docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">CurrentMapWithHarmonics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMap"><code class="docutils literal notranslate"><span class="pre">FluxMap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">FluxMapWithHarmonics</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient"><code class="docutils literal notranslate"><span class="pre">PNormGradient</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PlotOptions"><code class="docutils literal notranslate"><span class="pre">PlotOptions</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax"><code class="docutils literal notranslate"><span class="pre">Softmax</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus"><code class="docutils literal notranslate"><span class="pre">Squareplus</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.get_training_data"><code class="docutils literal notranslate"><span class="pre">get_training_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.load_gradnet"><code class="docutils literal notranslate"><span class="pre">load_gradnet()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_output_vs_angle"><code class="docutils literal notranslate"><span class="pre">plot_output_vs_angle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_current_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_current_map_errors_meas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_flux_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_flux_map_errors_meas()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.sample_map_on_grid"><code class="docutils literal notranslate"><span class="pre">sample_map_on_grid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.train_gradnet"><code class="docutils literal notranslate"><span class="pre">train_gradnet()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
