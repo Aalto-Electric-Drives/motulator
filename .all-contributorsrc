@@ -208,6 +208,17 @@
       "contributions": [
         "infra"
       ]
+    },
+    {
+      "login": "Exiaolibur",
+      "name": "Junyi Li",
+      "avatar_url": "https://avatars.githubusercontent.com/u/134478666?v=4",
+      "profile": "https://github.com/Exiaolibur",
+      "contributions": [
+        "code",
+        "example",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
