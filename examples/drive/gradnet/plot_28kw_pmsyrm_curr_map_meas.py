@@ -2,8 +2,8 @@
 28-kW PM-SyRM, train current map, measured data
 ===============================================
 
-This example trains a GradNet current map for 10-pole 28-kW PM synchronous
-reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.
+This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance
+machine (Brusa HSM1.10.18.04) from a measured dataset.
 
 """
 
