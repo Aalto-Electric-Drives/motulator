@@ -1,7 +1,7 @@
 GradNet Models
 --------------
 
-These examples demonstrate a physics-constrained neural network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient networks are based on [#Cha2025]_. A 5.6-kW PM-SyRM provides the dataset. Both the control and plant models are parameterized by neural networks.
+These examples demonstrate a physics-constrained neural network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics. The gradient networks are based on [#Cha2025]_. A 5.6-kW PM-SyRM and 28-kW PM-SyRM provide the dataset. Both the control and plant models are parameterized by neural networks.
 
 .. rubric:: References
 
