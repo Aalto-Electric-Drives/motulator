@@ -45,11 +45,8 @@ If you would like to help us develop *motulator*, see these [guidelines](https:/
 Thanks go to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-
 <!-- prettier-ignore-start -->
-
 <!-- markdownlint-disable -->
-
 <table>
   <tbody>
     <tr>
@@ -79,11 +76,13 @@ Thanks go to these wonderful people:
       <td align="center" valign="top" width="14.28%"><a href="https://cusma.algo.xyz/"><img src="https://avatars.githubusercontent.com/u/65770425?v=4?s=50" width="50px;" alt="Cosimo Bassi"/><br /><sub><b>Cosimo Bassi</b></sub></a><br /><a href="#infra-cusma" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Exiaolibur"><img src="https://avatars.githubusercontent.com/u/134478666?v=4?s=50" width="50px;" alt="Junyi Li"/><br /><sub><b>Junyi Li</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=Exiaolibur" title="Code">💻</a> <a href="#example-Exiaolibur" title="Examples">💡</a> <a href="#ideas-Exiaolibur" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/timfoissner"><img src="https://avatars.githubusercontent.com/u/310114625?v=4?s=50" width="50px;" alt="Tim Foißner"/><br /><sub><b>Tim Foißner</b></sub></a><br /><a href="#data-timfoissner" title="Data">🔣</a> <a href="#ideas-timfoissner" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
   </tbody>
 </table>
 
 <!-- markdownlint-restore -->
-
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
