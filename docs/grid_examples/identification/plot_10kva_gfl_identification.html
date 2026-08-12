@@ -561,9 +561,10 @@ grid-following (GFL) converter.</p>
 </pre></div>
 </div>
 <p>Run the identification and plot results.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">run_identification</span><span class="p">(</span><span class="n">identification_cfg</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">plot_style</span><span class="o">=</span><span class="s2">&quot;re_im&quot;</span><span class="p">)</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_vector_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">run_identification</span><span class="p">(</span><span class="n">identification_cfg</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">plot_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">plot_style</span><span class="o">=</span><span class="s2">&quot;re_im&quot;</span><span class="p">)</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">plot_vector_identification</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -571,7 +572,7 @@ grid-following (GFL) converter.</p>
 <li><img src="../../_images/sphx_glr_plot_10kva_gfl_identification_002.png" srcset="../../_images/sphx_glr_plot_10kva_gfl_identification_002.png" alt="plot 10kva gfl identification" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_10kva_gfl_identification_003.png" srcset="../../_images/sphx_glr_plot_10kva_gfl_identification_003.png" alt="plot 10kva gfl identification" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (5 minutes 31.417 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 45.212 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-identification-plot-10kva-gfl-identification-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/861556c23e350b13b9d5723674caf52f/plot_10kva_gfl_identification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_10kva_gfl_identification.ipynb</span></code></a></p>

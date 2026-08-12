@@ -134,14 +134,15 @@ Configure the control system.
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-60
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: Python
 
 
-    res = utils.run_identification(identification_cfg, mdl, ctrl)
-    utils.plot_identification(res, plot_style="re_im")
-    utils.plot_vector_identification(res, base)
+    if __name__ == "__main__":
+        res = utils.run_identification(identification_cfg, mdl, ctrl)
+        utils.plot_identification(res, plot_style="re_im")
+        utils.plot_vector_identification(res, base)
 
 
 
@@ -176,7 +177,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 31.417 seconds)
+   **Total running time of the script:** (3 minutes 45.212 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_10kva_gfl_identification.py:

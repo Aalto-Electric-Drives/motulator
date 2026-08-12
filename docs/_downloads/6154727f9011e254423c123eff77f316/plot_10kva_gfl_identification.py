@@ -54,6 +54,7 @@ ctrl.set_reactive_power_ref(0.5 * base.p)
 # %%
 # Run the identification and plot results.
 
-res = utils.run_identification(identification_cfg, mdl, ctrl)
-utils.plot_identification(res, plot_style="re_im")
-utils.plot_vector_identification(res, base)
+if __name__ == "__main__":
+    res = utils.run_identification(identification_cfg, mdl, ctrl)
+    utils.plot_identification(res, plot_style="re_im")
+    utils.plot_vector_identification(res, base)

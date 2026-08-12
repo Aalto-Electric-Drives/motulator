@@ -59,6 +59,7 @@ ctrl.set_ac_voltage_ref(base.u)
 # %%
 # Run the identification and plot results.
 
-res = utils.run_identification(identification_cfg, mdl, ctrl)
-utils.plot_identification(res, plot_style="re_im")
-utils.plot_vector_identification(res, base)
+if __name__ == "__main__":
+    res = utils.run_identification(identification_cfg, mdl, ctrl)
+    utils.plot_identification(res, plot_style="re_im")
+    utils.plot_vector_identification(res, base)
