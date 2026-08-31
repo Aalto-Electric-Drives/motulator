@@ -15,6 +15,7 @@ class BaseSynchronousMachinePars(Protocol):
 
     n_p: int
     R_s: float
+    G_c: float
 
     def magnetic_map(
         self,
@@ -206,6 +207,9 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
         q-axis inductance (H).
     psi_f : float
         Permanent-magnet flux linkage (Vs).
+    G_c : float, optional
+        Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+        defaults to 0 (no core losses).
 
     """
 
@@ -214,6 +218,7 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
     L_d: float
     L_q: float
     psi_f: float
+    G_c: float = 0.0
 
     def i_s_dq(
         self, psi_s_dq: complex | np.ndarray, exp_j_theta_m=None
@@ -269,6 +274,9 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         Stator flux linkage (Vs) as a function of the stator current (A). This function
         should be differentiable, if incremental inductances are used. Needed only for
         control methods and optimal reference loci, not used in the system model.
+    G_c : float, optional
+        Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+        defaults to 0 (no core losses).
 
     """
 
@@ -276,6 +284,7 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     R_s: float
     i_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
     psi_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
+    G_c: float = 0.0
     psi_f: float = field(init=False, default=0.0)
     L_d0: float = field(init=False)
     L_q0: float = field(init=False)
@@ -365,6 +374,9 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
         the stator flux linkage (Vs) and the complex exponential of the electrical rotor
         angle.
+    G_c : float, optional
+        Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+        defaults to 0 (no core losses).
 
     """
 
@@ -374,6 +386,7 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         [complex | np.ndarray, complex | np.ndarray],
         Tuple[complex | np.ndarray, float | np.ndarray],
     ]
+    G_c: float = 0.0
     psi_f: float = field(init=False, default=0.0)
 
     def __post_init__(self) -> None:
@@ -461,6 +474,9 @@ class InductionMachinePars:
     L_s : float | Callable[[float], float]
         Stator inductance (H). If callable, it should be a function of the stator flux
         linkage magnitude (Vs).
+    G_c : float, optional
+        Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+        defaults to 0 (no core losses).
 
     Attributes
     ----------
@@ -486,6 +502,7 @@ class InductionMachinePars:
     R_r: float
     L_ell: float
     L_s: float | Callable[[float], float]
+    G_c: float = 0.0
     psi_s: float = 0.0
 
     def update_psi_s(self, psi_s: float) -> None:
@@ -548,7 +565,7 @@ class InductionMachinePars:
         R_r = par.R_R / g**2
         L_ell = par.L_sgm / g
         L_s = par.L_M + par.L_sgm
-        return cls(R_s=par.R_s, R_r=R_r, L_ell=L_ell, L_s=L_s, n_p=par.n_p)
+        return cls(R_s=par.R_s, R_r=R_r, L_ell=L_ell, L_s=L_s, n_p=par.n_p, G_c=par.G_c)
 
 
 # %%
@@ -572,6 +589,9 @@ class InductionMachineInvGammaPars:
         Leakage inductance (H).
     L_M : float
         Magnetizing inductance (H).
+    G_c : float, optional
+        Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+        defaults to 0 (no core losses).
 
     Attributes
     ----------
@@ -590,6 +610,7 @@ class InductionMachineInvGammaPars:
     R_R: float
     L_sgm: float
     L_M: float
+    G_c: float = 0.0
 
     def update_psi_s(self, psi_s: float) -> None:
         """Update the stator flux linkage magnitude state."""

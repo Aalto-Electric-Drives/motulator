@@ -96,6 +96,25 @@ The main-flux saturation is modeled using a nonlinear stator inductance $\Ls = \
 
 The Γ model in stator coordinates ($\omegac = 0$) is implemented in the {class}`motulator.drive.model.InductionMachine` class. Its parameters are defined in the {class}`motulator.drive.model.InductionMachinePars` class, which accepts nonlinear stator inductance $\Ls = \Ls(\abspsis)$. See also examples {doc}`/drive_examples/current_vector/plot_2kw_im_sat_cvc` and {doc}`/drive_examples/flux_vector/plot_2kw_im_sat_fvc`.
 
+(im_core_losses)=
+
+### Core Losses
+
+Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance $\Gc$, connected in parallel with the magnetizing inductance {cite}`Qu2012`. In this case, the current given by {eq}`im_currents` is the current $\isp$ flowing into the magnetic circuit and the stator current becomes
+
+```{math}
+---
+label: im_core_loss
+---
+    \is = \isp + \Gc(\us - \Rs\is) = \frac{\isp + \Gc\us}{1 + \Gc\Rs}
+```
+
+where $\us - \Rs\is$ is the voltage across the core-loss conductance. The corresponding core losses are $(3/2)\Gc|\us - \Rs\is|^2$. Notice that the torque {eq}`im_torque` is produced by the current $\isp$, i.e., the core-loss current does not contribute to the torque. By default, $\Gc = 0$, i.e., the core losses are omitted.
+
+```{note}
+For notational simplicity, $\Gc = 0$ is assumed elsewhere in this documentation, i.e., $\is = \isp$. Otherwise, the magnetic model and the expressions derived from it hold as such, if the current $\isp$ is used in place of $\is$.
+```
+
 ## Induction Machine Inverse-Γ Model
 
 ### Linear Magnetic Model

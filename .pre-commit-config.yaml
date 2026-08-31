@@ -5,11 +5,7 @@ repos:
     rev: v2.10.1
     hooks:
     - id: pip-audit
-      name: pip-audit
-      description: "Audits Python environments and dependency trees for known vulnerabilities"
-      entry: pip-audit
-      pass_filenames: false
-      language: python
+      args: ["."]
 
   # Generic
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -55,7 +51,7 @@ repos:
 
   # Ruff formatter & linter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.0
+    rev: v0.16.5
     hooks:
     - id: ruff
       args: [--fix]

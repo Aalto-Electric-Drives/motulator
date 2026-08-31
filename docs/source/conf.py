@@ -99,6 +99,7 @@ mathjax3_config = {
             "usref": "\\mathbf{u}_\\mathrm{s}^\\mathrm{ref}",
             "usreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{ref}",
             "is": "\\mathbf{i}_\\mathrm{s}",
+            "isp": "\\mathbf{i}_\\mathrm{s}'",
             "isref": "\\mathbf{i}_\\mathrm{s}^\\mathrm{ref}",
             "iss": "\\mathbf{i}_\\mathrm{s}^\\mathrm{s}",
             "ir": "\\mathbf{i}_\\mathrm{r}",
@@ -160,6 +161,7 @@ mathjax3_config = {
             "Gdd": "\\varGamma_\\mathrm{dd}",
             "Gqq": "\\varGamma_\\mathrm{qq}",
             "Gdq": "\\varGamma_\\mathrm{dq}",
+            "Gc": "G_\\mathrm{c}",
             # Angular frequencies and mechanical quantities
             "omegam": "\\omega_\\mathrm{m}",
             "omegamo": "\\omega_\\mathrm{m0}",

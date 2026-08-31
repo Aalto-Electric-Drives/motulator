@@ -65,16 +65,26 @@ class InductionMachine(Subsystem):
 
         L_s = L_s(abs(psi_s_ab))
 
+    Optionally, eddy-current core losses can be modeled by means of a constant core-loss
+    conductance `G_c`, connected in parallel with the magnetizing branch.
+
     Parameters
     ----------
     par : InductionMachinePars | InductionMachineInvGammaPars
-        Machine parameters.
+        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
 
     Notes
     -----
     The Γ model is chosen here since it can be extended with the magnetic saturation
     model in a straightforward manner. If the magnetic saturation is omitted, the Γ
     model is mathematically identical to the inverse-Γ and T models [#Sle1989]_.
+
+    The core-loss branch is located between the stator resistance and the magnetizing
+    inductance, i.e., the voltage across `G_c` is `u_s_ab - R_s*i_s_ab`. Consequently,
+    the stator current depends directly on the stator voltage. This algebraic loop is
+    solved in a closed form. The electromagnetic torque is produced by the current
+    flowing into the magnetic circuit, i.e., the core-loss current is excluded from the
+    torque.
 
     References
     ----------
@@ -91,24 +101,27 @@ class InductionMachine(Subsystem):
         self.par = par
         self.inp: InductionMachineInputs = InductionMachineInputs()
         self.state: InductionMachineStates = InductionMachineStates()
-        i_s_ab, i_r_ab, tau_M = self.compute_outputs(self.state)
+        i_s_ab, i_r_ab, tau_M = self.compute_outputs(self.state, self.inp)
         self.out: InductionMachineOutputs = InductionMachineOutputs(
             i_s_ab=i_s_ab, i_r_ab=i_r_ab, tau_M=tau_M
         )
         self._history: InductionMachineStateHistory = InductionMachineStateHistory()
 
-    def compute_outputs(self, state: Any) -> tuple[Any, Any, Any]:
+    def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
-        L_s = get_value(self.par.L_s, abs(state.psi_s_ab))
-        i_r_ab = (state.psi_r_ab - state.psi_s_ab) / self.par.L_ell
-        i_s_ab = state.psi_s_ab / L_s - i_r_ab
-        tau_M = 1.5 * self.par.n_p * np.imag(i_s_ab * np.conj(state.psi_s_ab))
+        par = self.par
+        L_s = get_value(par.L_s, abs(state.psi_s_ab))
+        i_r_ab = (state.psi_r_ab - state.psi_s_ab) / par.L_ell
+        # Current into the magnetic circuit, i.e., the core-loss current excluded
+        i_m_ab = state.psi_s_ab / L_s - i_r_ab
+        tau_M = 1.5 * par.n_p * np.imag(i_m_ab * np.conj(state.psi_s_ab))
+        i_s_ab = (i_m_ab + par.G_c * inp.u_s_ab) / (1 + par.G_c * par.R_s)
         return i_s_ab, i_r_ab, tau_M
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         self.out.i_s_ab, self.out.i_r_ab, self.out.tau_M = self.compute_outputs(
-            self.state
+            self.state, self.inp
         )
 
     def rhs(self, t: float) -> list[complex]:
@@ -153,7 +166,11 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
         """Compute output time series from the states."""
         self.psi_s_ab = np.array(subsystem._history.psi_s_ab)
         self.psi_r_ab = np.array(subsystem._history.psi_r_ab)
-        self.i_s_ab, self.i_r_ab, self.tau_M = subsystem.compute_outputs(self)
+        # Provisional stator current, since u_s_ab needed for the core-loss current is
+        # not yet available; corrected in compute_input_derived_signals
+        self.i_s_ab, self.i_r_ab, self.tau_M = subsystem.compute_outputs(
+            self, InductionMachineInputs()
+        )
         L_s = get_value(subsystem.par.L_s, np.abs(self.psi_s_ab))
         # Inverse-Γ quantities
         gamma = L_s / (L_s + subsystem.par.L_ell)
@@ -164,6 +181,8 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
     ) -> None:
         """Compute signals derived from inputs."""
         self.w_m = subsystem.par.n_p * self.w_M  # Electrical rotor speed
+        if subsystem.par.G_c:
+            self.i_s_ab, _, _ = subsystem.compute_outputs(self, self)
 
 
 # %%
@@ -213,14 +232,24 @@ class SynchronousMachine(Subsystem):
     Synchronous machine model.
 
     This model is internally represented in rotor coordinates, which results in the
-    simplest implementation. The interfaces are in stator coordinates.
+    simplest implementation. The interfaces are in stator coordinates. The magnetic
+    saturation can be modeled by providing a nonlinear current map `par.i_s_dq`.
+    Optionally, eddy-current core losses can be modeled by means of a constant core-loss
+    conductance `G_c`, connected in parallel with the magnetizing branch.
 
     Parameters
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars \
         | SpatialSaturatedSynchronousMachinePars
-        Machine parameters. The magnetic saturation can be modeled by providing a
-        nonlinear current map par.i_s_dq (callable).
+        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
+
+    Notes
+    -----
+    The core-loss branch is located between the stator resistance and the magnetizing
+    branch, i.e., the voltage across `G_c` is `u_s - R_s*i_s`. Consequently, the stator
+    current depends directly on the stator voltage. This algebraic loop is solved in a
+    closed form. The electromagnetic torque is produced by the current flowing into the
+    magnetic circuit, i.e., the core-loss current is excluded from the torque.
 
     """
 
@@ -233,23 +262,28 @@ class SynchronousMachine(Subsystem):
         self.par = par
         self.inp: SynchronousMachineInputs = SynchronousMachineInputs()
         self.state: SynchronousMachineStates = SynchronousMachineStates(par)
-        i_s_dq, i_s_ab, tau_M = self.compute_outputs(self.state)
+        i_s_dq, i_s_ab, tau_M = self.compute_outputs(self.state, self.inp)
         self.out: SynchronousMachineOutputs = SynchronousMachineOutputs(
             i_s_ab=i_s_ab, i_s_dq=i_s_dq, tau_M=tau_M
         )
         self._history: SynchronousMachineStateHistory = SynchronousMachineStateHistory()
 
-    def compute_outputs(self, state: Any) -> tuple[Any, Any, Any]:
+    def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
-        i_s_dq, tau_m = self.par.magnetic_map(state.psi_s_dq, state.exp_j_theta_m)
+        par = self.par
+        # Current into the magnetic circuit, i.e., the core-loss current excluded
+        i_m_dq, tau_m = par.magnetic_map(state.psi_s_dq, state.exp_j_theta_m)
+        # In rotor coordinates, the rotational EMF does not affect the core-loss branch
+        u_s_dq = inp.u_s_ab * np.conj(state.exp_j_theta_m)
+        i_s_dq = (i_m_dq + par.G_c * u_s_dq) / (1 + par.G_c * par.R_s)
         i_s_ab = i_s_dq * state.exp_j_theta_m
-        tau_M = self.par.n_p * tau_m
+        tau_M = par.n_p * tau_m
         return i_s_dq, i_s_ab, tau_M
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         self.out.i_s_dq, self.out.i_s_ab, self.out.tau_M = self.compute_outputs(
-            self.state
+            self.state, self.inp
         )
 
     def rhs(self, t: float) -> list[complex]:
@@ -281,9 +315,11 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
     subsystem: InitVar[SynchronousMachine]
     # States
     psi_s_ab: np.ndarray = field(default_factory=empty_array)
+    psi_s_dq: np.ndarray = field(default_factory=empty_array)
     exp_j_theta_m: np.ndarray = field(default_factory=empty_array)
     # Outputs
     i_s_ab: np.ndarray = field(default_factory=empty_array)
+    i_s_dq: np.ndarray = field(default_factory=empty_array)
     tau_M: np.ndarray = field(default_factory=empty_array)
     # Inputs
     u_s_ab: np.ndarray = field(default_factory=empty_array)
@@ -297,11 +333,20 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
         self.psi_s_dq = np.array(subsystem._history.psi_s_dq)
         self.exp_j_theta_m = np.array(subsystem._history.exp_j_theta_m)
         self.theta_m = np.angle(self.exp_j_theta_m)
-        self.i_s_dq, self.i_s_ab, self.tau_M = subsystem.compute_outputs(self)
         self.psi_s_ab = self.exp_j_theta_m * self.psi_s_dq
+        # Provisional stator current, since u_s_ab needed for the core-loss current is
+        # not yet available; corrected in compute_input_derived_signals
+        i_s_dq, i_s_ab, tau_M = subsystem.compute_outputs(
+            self, SynchronousMachineInputs()
+        )
+        self.i_s_dq = np.asarray(i_s_dq)
+        self.i_s_ab = np.asarray(i_s_ab)
+        self.tau_M = np.asarray(tau_M)
 
     def compute_input_derived_signals(
         self, t: np.ndarray, subsystem: SynchronousMachine
     ) -> None:
         """Compute signals derived from inputs."""
         self.w_m = subsystem.par.n_p * self.w_M  # Electrical rotor speed
+        if subsystem.par.G_c:
+            self.i_s_dq, self.i_s_ab, _ = subsystem.compute_outputs(self, self)

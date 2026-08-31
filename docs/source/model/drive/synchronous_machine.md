@@ -142,6 +142,25 @@ Methods for manipulating and plotting the magnetic models are provided in the cl
 
 See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`, {doc}`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`, and {doc}`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`.
 
+(sm_core_losses)=
+
+### Core Losses
+
+Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance $\Gc$, connected in parallel with the magnetizing branch, similarly as in the {ref}`Γ model <im_core_losses>` of induction machines {cite}`Qu2012`. In this case, the current given by {eq}`sm_current` is the current $\isp$ flowing into the magnetic circuit and the stator current becomes
+
+```{math}
+---
+label: sm_core_loss
+---
+    \is = \isp + \Gc(\us - \Rs\is) = \frac{\isp + \Gc\us}{1 + \Gc\Rs}
+```
+
+where $\us - \Rs\is$ is the voltage across the core-loss conductance. The corresponding core losses are $(3/2)\Gc|\us - \Rs\is|^2$. Notice that the torque {eq}`sm_torque` is produced by the current $\isp$, i.e., the core-loss current does not contribute to the torque. By default, $\Gc = 0$, i.e., the core losses are omitted.
+
+```{note}
+For notational simplicity, $\Gc = 0$ is assumed elsewhere in this documentation, i.e., $\is = \isp$. Otherwise, the magnetic model and the expressions derived from it hold as such, if the current $\isp$ is used in place of $\is$.
+```
+
 (mtpa_mtpv)=
 
 ## MTPV and MTPA Conditions
