@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.gradnet._dataset</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Dataset classes and data loaders for GradNet training.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Dataset classes and data loaders for GradNet training."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span>
@@ -478,7 +478,7 @@
 
 <span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base dataset class handling common fields.</span>
 
 <span class="sd">    Parameters</span>
@@ -490,12 +490,12 @@
 <span class="sd">    subsample : int, optional</span>
 <span class="sd">        Subsampling rate, defaults to 1 (no subsampling).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">subsample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
-            <span class="n">i_full</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;i_s_dq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-            <span class="n">psi_full</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;psi_s_dq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="n">i_full</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"i_s_dq"</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="n">psi_full</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"psi_s_dq"</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
             <span class="c1"># Apply subsampling</span>
             <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">i_full</span><span class="p">),</span> <span class="n">subsample</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="o">=</span> <span class="n">indices</span>
@@ -531,13 +531,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">prepare_batch</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">batch</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;current_map&quot;</span><span class="p">,</span> <span class="s2">&quot;flux_map&quot;</span><span class="p">],</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"current_map"</span><span class="p">,</span> <span class="s2">"flux_map"</span><span class="p">],</span>
         <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare a batch for training.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Prepare a batch for training."""</span>
         <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">psi_d</span><span class="p">,</span> <span class="n">psi_q</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">i_q</span> <span class="o">=</span> <span class="n">batch</span>
-            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;flux_map&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
                 <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">i_d</span><span class="p">,</span> <span class="n">i_q</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">psi_d</span><span class="p">,</span> <span class="n">psi_q</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -547,7 +547,7 @@
             <span class="n">psi_d</span><span class="p">,</span> <span class="n">psi_q</span><span class="p">,</span> <span class="n">i_d</span><span class="p">,</span> <span class="n">i_q</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">batch</span>
             <span class="n">cos_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">theta_m</span><span class="p">)</span>
             <span class="n">sin_t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">theta_m</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;flux_map&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
                 <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">i_d</span><span class="p">,</span> <span class="n">i_q</span><span class="p">,</span> <span class="n">cos_t</span><span class="p">,</span> <span class="n">sin_t</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
                 <span class="n">targets</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">psi_d</span><span class="p">,</span> <span class="n">psi_q</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -559,7 +559,7 @@
 
 <span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpatialHarmonicsDataset</span><span class="p">(</span><span class="n">BaseDataset</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Spatial harmonics dataset.</span>
 
 <span class="sd">    Parameters</span>
@@ -571,16 +571,16 @@
 <span class="sd">    subsample : int, optional</span>
 <span class="sd">        Subsampling rate, defaults to 1 (no subsampling).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_extra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Load additional fields</span>
-        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;i_s_dq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span>
-        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;psi_s_dq&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span>
-        <span class="n">theta_m</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;theta_m&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"i_s_dq"</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span>
+        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"psi_s_dq"</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span>
+        <span class="n">theta_m</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"theta_m"</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span>
         <span class="c1"># Normalize torque by per-pole-pair base torque</span>
         <span class="n">tau_base</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span>
-        <span class="n">tau_m</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;tau_m&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span> <span class="o">/</span> <span class="n">tau_base</span>
+        <span class="n">tau_m</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"tau_m"</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">indices</span><span class="p">]</span> <span class="o">/</span> <span class="n">tau_base</span>
         <span class="n">tau_m_theta</span> <span class="o">=</span> <span class="n">tau_m</span> <span class="o">-</span> <span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span>
         <span class="c1"># Tensor conversion</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">theta_m</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -606,7 +606,7 @@
     <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">subsample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataLoader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a DataLoader for GradNet training data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a DataLoader for GradNet training data."""</span>
     <span class="n">dataset_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">)</span>
     <span class="n">dataset_cls</span> <span class="o">=</span> <span class="n">SpatialHarmonicsDataset</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">BaseDataset</span>
     <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset_cls</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">),</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="n">subsample</span><span class="p">)</span>
@@ -622,7 +622,7 @@
     <span class="n">subsample</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">other_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the training and validation data used by the model.</span>
 
 <span class="sd">    This function re-instantiates the dataset with the same parameters to reproduce</span>
@@ -633,7 +633,7 @@
 <span class="sd">    tuple</span>
 <span class="sd">         ((train_psi, train_i, ...), (val_psi, val_i, ...))</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">other_keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">other_keys</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -641,7 +641,7 @@
     <span class="n">ds</span> <span class="o">=</span> <span class="n">BaseDataset</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span> <span class="n">subsample</span><span class="o">=</span><span class="n">subsample</span><span class="p">)</span>
 
     <span class="c1"># Load full data</span>
-    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;psi_s_dq&quot;</span><span class="p">,</span> <span class="s2">&quot;i_s_dq&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">other_keys</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"psi_s_dq"</span><span class="p">,</span> <span class="s2">"i_s_dq"</span><span class="p">]</span> <span class="o">+</span> <span class="n">other_keys</span>
     <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">full_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
 

@@ -1025,6 +1025,9 @@ Module Contents
                         should be differentiable, if incremental inductances are used. Needed only for
                         control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
 
 
@@ -1494,6 +1497,9 @@ Module Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
 
 

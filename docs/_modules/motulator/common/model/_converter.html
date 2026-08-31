@@ -463,14 +463,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.common.model._converter</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">Continuous-time models for converters.</span>
 
 <span class="sd">A three-phase voltage-source inverter with optional DC-bus dynamics is modeled, along</span>
 <span class="sd">with a six-pulse diode bridge rectifier supplied from a stiff grid. Complex space</span>
 <span class="sd">vectors are used also for duty ratios and switching states, wherever applicable.</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span>
@@ -485,7 +485,7 @@
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Inputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Input variables.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Input variables."""</span>
 
     <span class="n">q_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -494,7 +494,7 @@
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Outputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Output variables for interconnection.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Output variables for interconnection."""</span>
 
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
@@ -503,7 +503,7 @@
 <div class="viewcode-block" id="VoltageSourceConverter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">VoltageSourceConverter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Lossless three-phase voltage-source converter with constant DC-bus voltage.</span>
 
 <span class="sd">    Parameters</span>
@@ -511,7 +511,7 @@
 <span class="sd">    u_dc : float</span>
 <span class="sd">        DC-bus voltage (V).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc</span>
@@ -523,35 +523,35 @@
 <div class="viewcode-block" id="VoltageSourceConverter.set_external_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.set_external_dc_current">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set external DC current (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set external DC current (A)."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.compute_internal_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.compute_internal_dc_current">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the internal DC current (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute the internal DC current (A)."""</span>
         <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set output variables."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.meas_dc_voltage">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure converter DC-bus voltage (V).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure converter DC-bus voltage (V)."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default empty implementation.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Default empty implementation."""</span>
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
@@ -559,16 +559,16 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.create_time_series">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;VoltageSourceConverterTimeSeries&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create time series.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;converter&quot;</span><span class="p">,</span> <span class="n">VoltageSourceConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"VoltageSourceConverterTimeSeries"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Create time series."""</span>
+        <span class="k">return</span> <span class="s2">"converter"</span><span class="p">,</span> <span class="n">VoltageSourceConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">VoltageSourceConverterTimeSeries</span><span class="p">[</span><span class="n">T</span><span class="p">:</span> <span class="n">VoltageSourceConverter</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous time series.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Continuous time series."""</span>
 
     <span class="n">t</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
     <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
@@ -582,25 +582,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_zoh_input_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute zero-order hold derived signals.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute zero-order hold derived signals."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_input_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process input time series.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Process input time series."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_dc_int</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CapacitiveDCBusConverterStates</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State variables.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State variables."""</span>
 
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CapacitiveDCBusConverterStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State history.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State history."""</span>
 
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
@@ -608,7 +608,7 @@
 <div class="viewcode-block" id="CapacitiveDCBusConverter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CapacitiveDCBusConverter</span><span class="p">(</span><span class="n">VoltageSourceConverter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Lossless voltage-source converter with capacitive DC-bus dynamics.</span>
 
 <span class="sd">    Parameters</span>
@@ -618,7 +618,7 @@
 <span class="sd">    C_dc : float</span>
 <span class="sd">        DC-bus capacitance (F).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
@@ -633,14 +633,14 @@
 <div class="viewcode-block" id="CapacitiveDCBusConverter.set_external_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter.set_external_dc_current">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set external DC current (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set external DC current (A)."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="n">i_dc</span></div>
 
 
 <div class="viewcode-block" id="CapacitiveDCBusConverter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables for interconnection.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set output variables for interconnection."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">real</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
 
@@ -648,7 +648,7 @@
 <div class="viewcode-block" id="CapacitiveDCBusConverter.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute state derivatives for DC-bus voltage.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute state derivatives for DC-bus voltage."""</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">):</span>
             <span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
@@ -664,9 +664,9 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter.create_time_series">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;CapacitiveDCBusConverterTimeSeries&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create time series from state list.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;converter&quot;</span><span class="p">,</span> <span class="n">CapacitiveDCBusConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"CapacitiveDCBusConverterTimeSeries"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
+        <span class="k">return</span> <span class="s2">"converter"</span><span class="p">,</span> <span class="n">CapacitiveDCBusConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -675,7 +675,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">CapacitiveDCBusConverterTimeSeries</span><span class="p">(</span>
     <span class="n">VoltageSourceConverterTimeSeries</span><span class="p">[</span><span class="n">CapacitiveDCBusConverter</span><span class="p">]</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous time series.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Continuous time series."""</span>
 
     <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">CapacitiveDCBusConverter</span><span class="p">]</span>
 
@@ -688,7 +688,7 @@
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrequencyConverterStates</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State variables.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State variables."""</span>
 
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Imaginary part is always zero</span>
     <span class="n">i_L</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Imaginary part is always zero</span>
@@ -697,7 +697,7 @@
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrequencyConverterStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State history.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State history."""</span>
 
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">i_L</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
@@ -707,7 +707,7 @@
 <div class="viewcode-block" id="FrequencyConverter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FrequencyConverter</span><span class="p">(</span><span class="n">VoltageSourceConverter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Frequency converter with a six-pulse diode bridge.</span>
 
 <span class="sd">    A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The diode</span>
@@ -724,7 +724,7 @@
 <span class="sd">    f_g : float</span>
 <span class="sd">        Grid frequency (Hz).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">L_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">U_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">U_g</span>
@@ -739,7 +739,7 @@
 <div class="viewcode-block" id="FrequencyConverter.compute_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.compute_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute grid and rectified voltages.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute grid and rectified voltages."""</span>
         <span class="c1"># Grid voltage</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_g</span>
         <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span>
@@ -751,7 +751,7 @@
 <div class="viewcode-block" id="FrequencyConverter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables for interconnection.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set output variables for interconnection."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">real</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
 
@@ -759,7 +759,7 @@
 <div class="viewcode-block" id="FrequencyConverter.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute state derivatives.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute state derivatives."""</span>
         <span class="c1"># Rectified voltage and internal DC current</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">u_di</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_voltages</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span>
         <span class="n">i_dc_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
@@ -777,9 +777,9 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.create_time_series">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;FrequencyConverterTimeSeries&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Time series.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;converter&quot;</span><span class="p">,</span> <span class="n">FrequencyConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"FrequencyConverterTimeSeries"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Time series."""</span>
+        <span class="k">return</span> <span class="s2">"converter"</span><span class="p">,</span> <span class="n">FrequencyConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -788,7 +788,7 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">FrequencyConverterTimeSeries</span><span class="p">(</span>
     <span class="n">VoltageSourceConverterTimeSeries</span><span class="p">[</span><span class="n">FrequencyConverter</span><span class="p">]</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous time series.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Continuous time series."""</span>
 
     <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">FrequencyConverter</span><span class="p">]</span>
 

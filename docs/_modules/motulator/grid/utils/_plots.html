@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.grid.utils._plots</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Example plotting scripts for grid converters.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Example plotting scripts for grid converters."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -483,21 +483,21 @@
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Setup plot style and return figure dimensions.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Setup plot style and return figure dimensions."""</span>
     <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
         <span class="n">set_latex_style</span><span class="p">()</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">2.2</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">2.2</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">set_screen_style</span><span class="p">()</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.8</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.8</span>
 
-    <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span>
 
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_powers</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot active and reactive powers.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plot active and reactive powers."""</span>
     <span class="c1"># Calculate powers</span>
     <span class="n">p_g</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">))</span>
     <span class="n">q_g</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">))</span>
@@ -505,97 +505,97 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_\mathrm</span><span class="si">{g}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="s2">"--"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$p_\mathrm</span><span class="si">{g}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">p_g</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$p_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">p_g</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$p_\mathrm</span><span class="si">{g}</span><span class="s2">$"</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;q_g&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">"q_g"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$q_\mathrm</span><span class="si">{g}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+            <span class="s2">"--"</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$q_\mathrm</span><span class="si">{g}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$"</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">q_g</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$q_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">q_g</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">p</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$q_\mathrm</span><span class="si">{g}</span><span class="s2">$"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_currents</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot converter currents.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plot converter currents."""</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">),</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{cd}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="s2">"--"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{cd}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">),</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{cd}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{cd}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">),</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{cq}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="s2">"--"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{cq}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">),</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{cq}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{cq}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_voltages</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot voltages.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plot voltages."""</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{u}</span><span class="s2">_\mathrm</span><span class="si">{c}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\hat</span><span class="si">{u}</span><span class="s2">_\mathrm</span><span class="si">{c}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">&quot;v_c&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="p">,</span> <span class="s2">"v_c"</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$v_\mathrm</span><span class="si">{c}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$v_\mathrm</span><span class="si">{c}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">$"</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
         <span class="p">)</span>
 
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">&quot;v_c&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="s2">"v_c"</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\hat</span><span class="si">{v}</span><span class="s2">_\mathrm</span><span class="si">{c}</span><span class="s2">$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\hat</span><span class="si">{v}</span><span class="s2">_\mathrm</span><span class="si">{c}</span><span class="s2">$"</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span><span class="p">):</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-            <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">/\sqrt</span><span class="si">{3}</span><span class="s2">$&quot;</span><span class="p">,</span>
-            <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+            <span class="s2">"--"</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$u_\mathrm</span><span class="si">{dc}</span><span class="s2">^\mathrm</span><span class="si">{ref}</span><span class="s2">/\sqrt</span><span class="si">{3}</span><span class="s2">$"</span><span class="p">,</span>
+            <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{dc}</span><span class="s2">/\sqrt</span><span class="si">{3}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="s2">"--"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$u_\mathrm</span><span class="si">{dc}</span><span class="s2">/\sqrt</span><span class="si">{3}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">),</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$e_\mathrm</span><span class="si">{g}</span><span class="s2">$"</span><span class="p">)</span>
 
     <span class="n">_</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymax</span><span class="p">)</span>
@@ -615,7 +615,7 @@
     <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot control signals and converter voltages.</span>
 
 <span class="sd">    Parameters</span>
@@ -641,7 +641,7 @@
 <span class="sd">    **savefig_kwargs</span>
 <span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Setup plot style and dimensions</span>
     <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
 
@@ -670,15 +670,15 @@
 
     <span class="c1"># Add axis labels</span>
     <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Power (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Power (p.u.)"</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Current (p.u.)"</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (p.u.)"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Power (W)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
-        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Power (W)"</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Current (A)"</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (V)"</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
-    <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
 
     <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
@@ -688,44 +688,44 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_three_phase_voltages</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="p">:</span> <span class="nb">bool</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot three-phase voltages.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plot three-phase voltages."""</span>
     <span class="k">if</span> <span class="n">plot_pcc_voltage</span><span class="p">:</span>
         <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">u_g_abc</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{gb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$u_\mathrm</span><span class="si">{gc}</span><span class="s2">$&quot;</span><span class="p">],</span>
+            <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">"$u_\mathrm</span><span class="si">{ga}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$u_\mathrm</span><span class="si">{gb}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$u_\mathrm</span><span class="si">{gc}</span><span class="s2">$"</span><span class="p">],</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">e_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">e_g_ab</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
             <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
             <span class="n">e_g_abc</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{gb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$e_\mathrm</span><span class="si">{gc}</span><span class="s2">$&quot;</span><span class="p">],</span>
+            <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">"$e_\mathrm</span><span class="si">{ga}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$e_\mathrm</span><span class="si">{gb}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$e_\mathrm</span><span class="si">{gc}</span><span class="s2">$"</span><span class="p">],</span>
         <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_three_phase_currents</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot three-phase currents.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Plot three-phase currents."""</span>
     <span class="n">i_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="n">i_g_abc</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{ga}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{gb}</span><span class="s2">$&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$i_\mathrm</span><span class="si">{gc}</span><span class="s2">$&quot;</span><span class="p">],</span>
+        <span class="n">label</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{ga}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{gb}</span><span class="s2">$"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{gc}</span><span class="s2">$"</span><span class="p">],</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_phase_angles</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot phase angles.&quot;&quot;&quot;</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">theta_g</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\theta_\mathrm</span><span class="si">{g}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Plot phase angles."""</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">theta_g</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\theta_\mathrm</span><span class="si">{g}</span><span class="s2">$"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span>
         <span class="mi">180</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">,</span>
-        <span class="s2">&quot;--&quot;</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\theta_\mathrm</span><span class="si">{c}</span><span class="s2">$&quot;</span><span class="p">,</span>
-        <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;steps-post&quot;</span><span class="p">,</span>
+        <span class="s2">"--"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\theta_\mathrm</span><span class="si">{c}</span><span class="s2">$"</span><span class="p">,</span>
+        <span class="n">ds</span><span class="o">=</span><span class="s2">"steps-post"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">)</span>
@@ -746,7 +746,7 @@
     <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot grid waveforms and phase angles.</span>
 
 <span class="sd">    Parameters</span>
@@ -775,7 +775,7 @@
 <span class="sd">    **savefig_kwargs</span>
 <span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Setup plot style and dimensions</span>
     <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
 
@@ -804,14 +804,14 @@
 
     <span class="c1"># Add axis labels</span>
     <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (p.u.)&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (p.u.)"</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Current (p.u.)"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Voltage (V)&quot;</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Current (A)&quot;</span><span class="p">)</span>
-    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Angle (deg)&quot;</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Voltage (V)"</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Current (A)"</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Angle (deg)"</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">align_ylabels</span><span class="p">()</span>
-    <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Time (s)"</span><span class="p">)</span>
 
     <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
@@ -826,7 +826,7 @@
     <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot locus of the grid voltage vector.</span>
 
 <span class="sd">    Parameters</span>
@@ -841,7 +841,7 @@
 <span class="sd">    **savefig_kwargs</span>
 <span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">mdl</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span>  <span class="c1"># For brevity</span>
 
     <span class="c1"># Process base values</span>
@@ -857,21 +857,21 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
         <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">e_g_ab</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
         <span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">e_g_ab</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Grid voltage&quot;</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">"Grid voltage"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"k"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"k"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Real (p.u.)&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Imaginary (p.u.)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Real (p.u.)"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Imaginary (p.u.)"</span><span class="p">)</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Real (V)&quot;</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Imaginary (V)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Real (V)"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Imaginary (V)"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
 
     <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 

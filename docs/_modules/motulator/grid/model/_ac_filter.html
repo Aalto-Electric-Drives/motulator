@@ -463,14 +463,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.grid.model._ac_filter</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""</span>
 <span class="sd">AC filter and grid impedance models.</span>
 
 <span class="sd">This module contains continuous-time models for subsystems comprising an AC filter and a</span>
 <span class="sd">grid impedance between the converter and grid voltage sources. The models are</span>
 <span class="sd">implemented with space vectors in stationary coordinates.</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
@@ -484,7 +484,7 @@
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Inputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;AC filter inputs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""AC filter inputs."""</span>
 
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">e_g_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -493,21 +493,21 @@
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LFilterOutputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for outputs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for outputs."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LFilterStates</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State variables.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State variables."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LFilterStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State history.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State history."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
@@ -515,7 +515,7 @@
 <div class="viewcode-block" id="LFilter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LFilter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Model of an L filter and an inductive-resistive grid.</span>
 
 <span class="sd">    An L filter and an inductive-resistive grid, between the converter and grid voltage</span>
@@ -534,7 +534,7 @@
 <span class="sd">    R_g : float, optional</span>
 <span class="sd">        Grid resistance (Ω), defaults to 0.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">L_f</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">R_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">L_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">R_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -556,7 +556,7 @@
 <div class="viewcode-block" id="LFilter.pcc_voltage">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.pcc_voltage">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the voltage at the point of common coupling (PCC).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute the voltage at the point of common coupling (PCC)."""</span>
         <span class="n">L_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span> <span class="o">*</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_f</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
@@ -568,14 +568,14 @@
 <div class="viewcode-block" id="LFilter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set output variables."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span></div>
 
 
 <div class="viewcode-block" id="LFilter.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute the state derivatives."""</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
         <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span>
         <span class="n">L_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span>
@@ -587,30 +587,30 @@
 <div class="viewcode-block" id="LFilter.meas_currents">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the converter phase currents (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure the converter phase currents (A)."""</span>
         <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LFilter.meas_pcc_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_pcc_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the phase voltages (V) at the PCC.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure the phase voltages (V) at the PCC."""</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LFilter.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;LFilterTimeSeries&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create time series from state list.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;ac_filter&quot;</span><span class="p">,</span> <span class="n">LFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"LFilterTimeSeries"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
+        <span class="k">return</span> <span class="s2">"ac_filter"</span><span class="p">,</span> <span class="n">LFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LFilterTimeSeries</span><span class="p">(</span><span class="n">SubsystemTimeSeries</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous time series.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Continuous time series."""</span>
 
     <span class="n">t</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
     <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">LFilter</span><span class="p">]</span>
@@ -624,19 +624,19 @@
     <span class="n">i_g_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute output time series from the states.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute output time series from the states."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c_ab</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_input_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute direct feedthrough time series.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute direct feedthrough time series."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LCLFilterStates</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;LCL filter states.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""LCL filter states."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">u_f_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -645,7 +645,7 @@
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LCLFilterOutputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for outputs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for outputs."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="n">u_f_ab</span><span class="p">:</span> <span class="nb">complex</span>
@@ -654,7 +654,7 @@
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LCLFilterStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;LCL filter state history.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""LCL filter state history."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">u_f_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
@@ -664,7 +664,7 @@
 <div class="viewcode-block" id="LCLFilter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LCLFilter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Model of an LCL filter and an inductive-resistive grid.</span>
 
 <span class="sd">    An LCL filter and an inductive-resistive grid impedance, between the converter and</span>
@@ -689,7 +689,7 @@
 <span class="sd">        Grid resistance (Ω), defaults to 0.</span>
 <span class="sd">    u_f0_ab : complex, optional</span>
 <span class="sd">        Initial value of the filter capacitor voltage (V), defaults to 0.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -722,7 +722,7 @@
 <div class="viewcode-block" id="LCLFilter.pcc_voltage">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.pcc_voltage">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the voltage at the point of common coupling (PCC).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute the voltage at the point of common coupling (PCC)."""</span>
         <span class="n">L_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">*</span> <span class="n">inp</span><span class="o">.</span><span class="n">e_g_ab</span>
@@ -735,7 +735,7 @@
 <div class="viewcode-block" id="LCLFilter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set output variables.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set output variables."""</span>
         <span class="n">state</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_f_ab</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span>
@@ -745,7 +745,7 @@
 <div class="viewcode-block" id="LCLFilter.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the state derivatives.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute the state derivatives."""</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
         <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span>
         <span class="c1"># Total inductance and resistance</span>
@@ -761,14 +761,14 @@
 <div class="viewcode-block" id="LCLFilter.meas_currents">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the converter phase currents (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure the converter phase currents (A)."""</span>
         <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.meas_pcc_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_pcc_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the phase voltages (V) at point of common coupling (PCC).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure the phase voltages (V) at point of common coupling (PCC)."""</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
 
@@ -776,29 +776,29 @@
 <div class="viewcode-block" id="LCLFilter.meas_grid_currents">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_grid_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_grid_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the grid phase currents (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure the grid phase currents (A)."""</span>
         <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.meas_capacitor_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_capacitor_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_capacitor_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Measure the capacitor phase voltages (V).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Measure the capacitor phase voltages (V)."""</span>
         <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;LCLFilterTimeSeries&quot;</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create time series from state list.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;ac_filter&quot;</span><span class="p">,</span> <span class="n">LCLFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"LCLFilterTimeSeries"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
+        <span class="k">return</span> <span class="s2">"ac_filter"</span><span class="p">,</span> <span class="n">LCLFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">LCLFilterTimeSeries</span><span class="p">(</span><span class="n">SubsystemTimeSeries</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Continuous time series for AC filters.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Continuous time series for AC filters."""</span>
 
     <span class="n">t</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
     <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">LCLFilter</span><span class="p">]</span>
@@ -813,7 +813,7 @@
     <span class="n">u_g_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LCLFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute output time series from the states.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute output time series from the states."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_g_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_f_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span>
@@ -821,7 +821,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_input_derived_signals</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LCLFilter</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process input time series.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Process input time series."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 </pre></div>
 

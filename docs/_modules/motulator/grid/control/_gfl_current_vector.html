@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.grid.control._gfl_current_vector</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Grid-following control methods.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Grid-following control methods."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
@@ -479,7 +479,7 @@
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PLLStates</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;State estimates.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""State estimates."""</span>
 
     <span class="n">w_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -488,7 +488,7 @@
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PLLOutputSignals</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Feedback signals for the control system.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Feedback signals for the control system."""</span>
 
     <span class="n">i_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">u_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -505,7 +505,7 @@
 <div class="viewcode-block" id="PLL">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.PLL">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PLL</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Phase-locked loop including the voltage-magnitude filtering.</span>
 
 <span class="sd">    This class provides a simple frequency-tracking phase-locked loop. The magnitude of</span>
@@ -520,7 +520,7 @@
 <span class="sd">    alpha_pll : float</span>
 <span class="sd">        PLL frequency-tracking bandwidth (rad/s).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha_pll</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">alpha_pll</span>
@@ -532,7 +532,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_g_meas_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PLLOutputSignals</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Output estimates and coordinate transformed quantities.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Output estimates and coordinate transformed quantities."""</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">PLLOutputSignals</span><span class="p">(</span><span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span><span class="p">,</span> <span class="n">w_g</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_g</span><span class="p">)</span>
 
         <span class="c1"># Coordinate transformations</span>
@@ -559,7 +559,7 @@
 <div class="viewcode-block" id="PLL.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.PLL.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">PLLOutputSignals</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update integral states.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update integral states."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_g</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_i</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
@@ -572,7 +572,7 @@
 <div class="viewcode-block" id="CurrentController">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurrentController</span><span class="p">(</span><span class="n">ComplexPIController</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    2DOF PI current controller for grid converters.</span>
 
 <span class="sd">    This class provides an interface for a current controller for grid converters. The</span>
@@ -588,7 +588,7 @@
 <span class="sd">    alpha_i : float, optional</span>
 <span class="sd">        Integral-action bandwidth (rad/s), defaults to `alpha_c`.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">L</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">alpha_i</span> <span class="o">=</span> <span class="n">alpha_c</span> <span class="k">if</span> <span class="n">alpha_i</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">alpha_i</span>
@@ -602,7 +602,7 @@
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">References</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reference signals for grid-following control.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reference signals for grid-following control."""</span>
 
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">u_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -616,7 +616,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorControllerCfg">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurrentVectorControllerCfg</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Configuration for current-vector grid-following controller.</span>
 
 <span class="sd">    Parameters</span>
@@ -638,7 +638,7 @@
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s), defaults to 125e-6.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
@@ -658,7 +658,7 @@
 <div class="viewcode-block" id="CurrentVectorController">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurrentVectorController</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Current-vector grid-following controller.</span>
 
 <span class="sd">    Parameters</span>
@@ -666,7 +666,7 @@
 <span class="sd">    cfg : CurrentVectorControllerCfg</span>
 <span class="sd">        Configuration parameters.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">CurrentVectorControllerCfg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
@@ -677,7 +677,7 @@
 <div class="viewcode-block" id="CurrentVectorController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PLLOutputSignals</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback signals.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pll</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 
@@ -687,7 +687,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">p_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">q_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">PLLOutputSignals</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute references.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute references."""</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">References</span><span class="p">(</span><span class="n">T_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">p_g</span><span class="o">=</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">q_g</span><span class="o">=</span><span class="n">q_g_ref</span><span class="p">)</span>
 
         <span class="c1"># Compute the reference current</span>
@@ -702,7 +702,7 @@
 <div class="viewcode-block" id="CurrentVectorController.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">PLLOutputSignals</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update states.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update states."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pll</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span></div>
 
@@ -710,7 +710,7 @@
 <div class="viewcode-block" id="CurrentVectorController.post_process">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.post_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-process controller signals.&quot;&quot;&quot;</span></div>
+<span class="w">        </span><span class="sd">"""Post-process controller signals."""</span></div>
 </div>
 
 </pre></div>

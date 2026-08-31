@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.model._drive</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Continuous-time model for electric machine drives.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Continuous-time model for electric machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrequencyConverter</span><span class="p">,</span> <span class="n">VoltageSourceConverter</span>
@@ -480,7 +480,7 @@
 <div class="viewcode-block" id="Drive">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.Drive">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Drive</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Continuous-time system model for a machine drive.</span>
 
 <span class="sd">    Parameters</span>
@@ -499,7 +499,7 @@
 <span class="sd">    delay : int, optional</span>
 <span class="sd">        Computational delay (samples), defaults to 1.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -528,25 +528,25 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Direct connections without LC filter</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;i_c_ab&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;i_s_ab&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;u_s_ab&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;u_c_ab&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;w_M&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">&quot;w_M&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"i_s_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"u_s_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">"tau_M"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"tau_M"</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Connections with LC filter</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;i_c_ab&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">&quot;i_c_ab&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">&quot;i_f_ab&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;i_s_ab&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">&quot;u_c_ab&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;u_c_ab&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;u_s_ab&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">&quot;u_f_ab&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;w_M&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">&quot;w_M&quot;</span><span class="p">),</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">&quot;tau_M&quot;</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">"i_f_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"i_s_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"u_s_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">"u_f_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">),</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span><span class="p">,</span> <span class="s2">"tau_M"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"tau_M"</span><span class="p">),</span>
             <span class="p">}</span>
 
         <span class="c1"># Define ZOH inputs separately</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zoh_connections</span> <span class="o">=</span> <span class="p">{(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">&quot;q_c_ab&quot;</span><span class="p">):</span> <span class="s2">&quot;sw_state&quot;</span><span class="p">}</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoh_connections</span> <span class="o">=</span> <span class="p">{(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"q_c_ab"</span><span class="p">):</span> <span class="s2">"sw_state"</span><span class="p">}</span></div>
 
 </pre></div>
 

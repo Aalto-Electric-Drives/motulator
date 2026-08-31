@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.utils._parameters</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Common dataclasses usable in models and control of machine drives.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Common dataclasses usable in models and control of machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -476,17 +476,18 @@
 
 <span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseSynchronousMachinePars</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for synchronous machine parameters.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base class for synchronous machine parameters."""</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">magnetic_map</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Magnetic map as a function of flux linkage and electrical rotor angle.</span>
 
 <span class="sd">        This method returns the stator current and the electromagnetic torque per pole</span>
@@ -506,7 +507,7 @@
 <span class="sd">            Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per</span>
 <span class="sd">            pole pair.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">tau_m</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">tau_m</span>
@@ -516,7 +517,7 @@
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Current as a function of flux linkage and electrical rotor angle.</span>
 
 <span class="sd">        Parameters</span>
@@ -531,7 +532,7 @@
 <span class="sd">        complex | ndarray</span>
 <span class="sd">            Stator current (A) in rotor coordinates.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
@@ -539,7 +540,7 @@
         <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Flux linkage as a function of current and electrical rotor angle.</span>
 
 <span class="sd">        Parameters</span>
@@ -554,7 +555,7 @@
 <span class="sd">        complex | ndarray</span>
 <span class="sd">            Stator flux linkage in rotor coordinates (Vs).</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
@@ -562,7 +563,7 @@
         <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Incremental inductance matrix.</span>
 
 <span class="sd">        Parameters</span>
@@ -577,7 +578,7 @@
 <span class="sd">        ndarray</span>
 <span class="sd">            Incremental inductance matrix (H).</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">aux_flux</span><span class="p">(</span>
@@ -585,7 +586,7 @@
         <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Auxiliary flux linkage as a function of current.</span>
 
 <span class="sd">        Parameters</span>
@@ -600,7 +601,7 @@
 <span class="sd">        complex | ndarray</span>
 <span class="sd">            Auxiliary flux linkage (Vs).</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># This form is valid in the saturated case as well</span>
         <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">L_dd</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
@@ -619,7 +620,7 @@
         <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Auxiliary current as a function of current.</span>
 
 <span class="sd">        Parameters</span>
@@ -634,7 +635,7 @@
 <span class="sd">        complex | ndarray</span>
 <span class="sd">            Auxiliary current (A).</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># This form is valid in the saturated case as well</span>
         <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">inv_L_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">L_s</span><span class="p">)</span>
@@ -649,7 +650,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solve for the current given the flux linkage using root finding.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Solve for the current given the flux linkage using root finding."""</span>
         <span class="o">...</span>
 
 
@@ -658,7 +659,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SynchronousMachinePars</span><span class="p">(</span><span class="n">BaseSynchronousMachinePars</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Synchronous machine parameters, without saturation.</span>
 
 <span class="sd">    Parameters</span>
@@ -673,21 +674,25 @@
 <span class="sd">        q-axis inductance (H).</span>
 <span class="sd">    psi_f : float</span>
 <span class="sd">        Permanent-magnet flux linkage (Vs).</span>
+<span class="sd">    G_c : float, optional</span>
+<span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
+<span class="sd">        defaults to 0 (no core losses).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_d</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_q</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="SynchronousMachinePars.i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current (A) as a function of the flux linkage (Vs).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Current (A) as a function of the flux linkage (Vs)."""</span>
         <span class="n">i_d</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span>
         <span class="n">i_q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">i_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">i_q</span>
@@ -699,7 +704,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flux linkage (Vs) as a function of the stator current (A).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Flux linkage (Vs) as a function of the stator current (A)."""</span>
         <span class="n">psi_d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span>
         <span class="n">psi_q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
         <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">psi_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">psi_q</span>
@@ -711,14 +716,14 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Incremental inductance matrix (H).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Incremental inductance matrix (H)."""</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">L_d</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q</span><span class="p">]])</span></div>
 
 
 <div class="viewcode-block" id="SynchronousMachinePars.iterate_i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.iterate_i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the current from the flux linkage using root finding.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute the current from the flux linkage using root finding."""</span>
         <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span></div>
 </div>
 
@@ -729,7 +734,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SaturatedSynchronousMachinePars</span><span class="p">(</span><span class="n">BaseSynchronousMachinePars</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parameters of a saturated synchronous machine.</span>
 
 <span class="sd">    The saturation model is specified as a current map (current as a function of the</span>
@@ -751,13 +756,17 @@
 <span class="sd">        Stator flux linkage (Vs) as a function of the stator current (A). This function</span>
 <span class="sd">        should be differentiable, if incremental inductances are used. Needed only for</span>
 <span class="sd">        control methods and optimal reference loci, not used in the system model.</span>
+<span class="sd">    G_c : float, optional</span>
+<span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
+<span class="sd">        defaults to 0 (no core losses).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">i_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">psi_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
     <span class="n">L_d0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">L_q0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -765,7 +774,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span>
+                <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"newton"</span>
             <span class="p">)</span><span class="o">.</span><span class="n">root</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
@@ -773,7 +782,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">L_d0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">L_q0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either i_s_dq_fcn or psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Either i_s_dq_fcn or psi_s_dq_fcn must be provided"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="mf">0.0</span>
 
@@ -782,11 +791,11 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">i_s_dq</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current (A) as a function of the flux linkage (Vs).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Current (A) as a function of the flux linkage (Vs)."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;i_s_dq_fcn must be provided&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"i_s_dq_fcn must be provided"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.psi_s_dq">
@@ -794,11 +803,11 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Flux linkage as a function of the stator current.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Flux linkage as a function of the stator current."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;psi_s_dq_fcn must be provided&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"psi_s_dq_fcn must be provided"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.incr_ind_mat">
@@ -806,7 +815,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Incremental inductance matrix at given current.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Incremental inductance matrix at given current."""</span>
         <span class="n">psi_dev_d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="n">EPS</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="n">EPS</span><span class="p">)</span>
         <span class="n">psi_dev_q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span>
         <span class="n">L_dd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_dev_d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">EPS</span><span class="p">)</span>
@@ -818,13 +827,13 @@
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.iterate_i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.iterate_i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the current from the flux linkage using root finding.</span>
 
 <span class="sd">        The current is computed iteratively from the flux map using a root-finding</span>
 <span class="sd">        algorithm. This is less efficient, but may be convenient in some special cases.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
 
@@ -834,7 +843,7 @@
             <span class="k">return</span> <span class="p">[</span><span class="n">err</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">imag</span><span class="p">]</span>
 
         <span class="n">i_s0</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d0</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q0</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="n">i_s0</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s0</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;hybr&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;maxfev&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">})</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="n">i_s0</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s0</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">"hybr"</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"maxfev"</span><span class="p">:</span> <span class="mi">50</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
 </div>
 
@@ -845,7 +854,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpatialSaturatedSynchronousMachinePars</span><span class="p">(</span><span class="n">BaseSynchronousMachinePars</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parameters of a saturated synchronous machine with spatial harmonics.</span>
 
 <span class="sd">    This saturation model contains spatial harmonics in addition to the saturation</span>
@@ -862,8 +871,11 @@
 <span class="sd">        Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of</span>
 <span class="sd">        the stator flux linkage (Vs) and the complex exponential of the electrical rotor</span>
 <span class="sd">        angle.</span>
+<span class="sd">    G_c : float, optional</span>
+<span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
+<span class="sd">        defaults to 0 (no core losses).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
@@ -871,11 +883,12 @@
         <span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
         <span class="n">Tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="p">]</span>
+    <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;newton&quot;</span>
+            <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"newton"</span>
         <span class="p">)</span><span class="o">.</span><span class="n">root</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -887,7 +900,7 @@
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Magnetic map.</span>
 
 <span class="sd">        Parameters</span>
@@ -903,11 +916,11 @@
 <span class="sd">            Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per</span>
 <span class="sd">            pole pair.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;exp_j_theta_m must be provided&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"exp_j_theta_m must be provided"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;magnetic_map_fcn must be provided&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"magnetic_map_fcn must be provided"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
 
 
@@ -918,9 +931,9 @@
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Current (A) as a function of flux linkage (Vs) and rotor angle.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Current (A) as a function of flux linkage (Vs) and rotor angle."""</span>
         <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;exp_j_theta_m must be provided&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"exp_j_theta_m must be provided"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
@@ -929,7 +942,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Flux map is not implemented&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Flux map is not implemented"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.incr_ind_mat">
@@ -937,13 +950,13 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Incremental inductance matrix is not implemented&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Incremental inductance matrix is not implemented"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This method is not implemented&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"This method is not implemented"</span><span class="p">)</span></div>
 </div>
 
 
@@ -953,7 +966,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InductionMachinePars</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Γ-model parameters of an induction machine.</span>
 
 <span class="sd">    This contains Γ-model parameters of an induction machine. The main-flux saturation</span>
@@ -976,6 +989,9 @@
 <span class="sd">    L_s : float | Callable[[float], float]</span>
 <span class="sd">        Stator inductance (H). If callable, it should be a function of the stator flux</span>
 <span class="sd">        linkage magnitude (Vs).</span>
+<span class="sd">    G_c : float, optional</span>
+<span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
+<span class="sd">        defaults to 0 (no core losses).</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -994,19 +1010,20 @@
 <span class="sd">    w_rb : float</span>
 <span class="sd">        Breakdown slip angular frequency (rad/s).</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">R_r</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_ell</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="InductionMachinePars.update_psi_s">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachinePars.update_psi_s">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_psi_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the stator flux linkage magnitude state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update the stator flux linkage magnitude state."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">psi_s</span></div>
 
 
@@ -1046,9 +1063,9 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachinePars.from_inv_gamma_pars">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_inv_gamma_pars</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="s2">&quot;InductionMachineInvGammaPars&quot;</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InductionMachinePars&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="s2">"InductionMachineInvGammaPars"</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InductionMachinePars"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute Γ-model parameters from inverse-Γ model parameters.</span>
 
 <span class="sd">        This transformation assumes that the parameters are constant.</span>
@@ -1063,12 +1080,12 @@
 <span class="sd">        InductionMachinePars</span>
 <span class="sd">            Γ model parameters.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span>
         <span class="n">R_r</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span> <span class="o">/</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">L_ell</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">/</span> <span class="n">g</span>
         <span class="n">L_s</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">R_s</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="n">R_r</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="n">L_ell</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">,</span> <span class="n">G_c</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">G_c</span><span class="p">)</span></div>
 </div>
 
 
@@ -1078,7 +1095,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachineInvGammaPars">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InductionMachineInvGammaPars</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Constant inverse-Γ model parameters of an induction machine.</span>
 
 <span class="sd">    This contains constant inverse-Γ model parameters of an induction machine. To model</span>
@@ -1096,6 +1113,9 @@
 <span class="sd">        Leakage inductance (H).</span>
 <span class="sd">    L_M : float</span>
 <span class="sd">        Magnetizing inductance (H).</span>
+<span class="sd">    G_c : float, optional</span>
+<span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
+<span class="sd">        defaults to 0 (no core losses).</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -1107,18 +1127,19 @@
 <span class="sd">        Breakdown slip angular frequency (rad/s).</span>
 
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">R_R</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_sgm</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_M</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 <div class="viewcode-block" id="InductionMachineInvGammaPars.update_psi_s">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_psi_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the stator flux linkage magnitude state.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Update the stator flux linkage magnitude state."""</span>
         <span class="c1"># This method has no effect for constant parameters (no saturation)</span>
         <span class="k">pass</span></div>
 
@@ -1139,9 +1160,9 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_gamma_pars</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="s2">&quot;InductionMachinePars&quot;</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;InductionMachineInvGammaPars&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="s2">"InductionMachinePars"</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InductionMachineInvGammaPars"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute inverse-Γ model parameters from Γ model parameters.</span>
 
 <span class="sd">        This transformation assumes that the parameters are constant.</span>
@@ -1156,9 +1177,9 @@
 <span class="sd">        InductionMachineInvGammaPars</span>
 <span class="sd">            Inverse-Γ model parameters.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;L_s must be constant for this transformation&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"L_s must be constant for this transformation"</span><span class="p">)</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">L_s</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_s</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_ell</span><span class="p">)</span>
         <span class="n">R_R</span> <span class="o">=</span> <span class="n">g</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_r</span>
         <span class="n">L_sgm</span> <span class="o">=</span> <span class="n">g</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">L_ell</span>

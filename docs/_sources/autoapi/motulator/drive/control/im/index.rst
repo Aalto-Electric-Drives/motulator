@@ -671,6 +671,9 @@ Module Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
    .. attribute:: R_sgm
 

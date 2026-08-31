@@ -532,10 +532,10 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmon
 </pre></div>
 </div>
 <p>Set up the paths and parameters.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="s2">&quot;__file__&quot;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span> <span class="k">else</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib-Path sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Path</span></a><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="s2">"__file__"</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()</span> <span class="k">else</span> <a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib-Path sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()</span>
 
-<span class="n">dataset_path</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">&quot;datasets/baldor_fem.npz&quot;</span>
-<span class="n">trained_path</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">&quot;trained_models&quot;</span> <span class="o">/</span> <span class="s2">&quot;baldor_fem_curr_map_harm_softmax_d48_sub10.pth&quot;</span>
+<span class="n">dataset_path</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">"datasets/baldor_fem.npz"</span>
+<span class="n">trained_path</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="s2">"trained_models"</span> <span class="o">/</span> <span class="s2">"baldor_fem_curr_map_harm_softmax_d48_sub10.pth"</span>
 <span class="n">subsample</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">k</span> <span class="o">=</span> <span class="mi">6</span>
 <span class="n">activation</span> <span class="o">=</span> <span class="n">gn</span><span class="o">.</span><span class="n">Softmax</span>
@@ -563,7 +563,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmon
         <span class="nb">str</span><span class="p">(</span><span class="n">dataset_path</span><span class="p">),</span>
         <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span>
         <span class="n">subsample</span><span class="o">=</span><span class="n">subsample</span><span class="p">,</span>
-        <span class="n">other_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;theta_m&quot;</span><span class="p">,</span> <span class="s2">&quot;tau_m&quot;</span><span class="p">],</span>
+        <span class="n">other_keys</span><span class="o">=</span><span class="p">[</span><span class="s2">"theta_m"</span><span class="p">,</span> <span class="s2">"tau_m"</span><span class="p">],</span>
     <span class="p">)</span>
 <span class="p">)</span>
 <span class="n">trn_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">trn_i</span><span class="p">,</span> <span class="n">trn_psi</span><span class="p">,</span> <span class="n">trn_theta</span><span class="p">,</span> <span class="n">trn_tau</span><span class="p">)</span>
@@ -577,10 +577,10 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmon
 </div>
 <p>Print statistical error metrics on validation data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">val_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;i_s_dq&quot;</span><span class="p">:</span> <span class="n">val_i</span><span class="p">,</span>
-    <span class="s2">&quot;psi_s_dq&quot;</span><span class="p">:</span> <span class="n">val_psi</span><span class="p">,</span>
-    <span class="s2">&quot;theta_m&quot;</span><span class="p">:</span> <span class="n">val_theta</span><span class="p">,</span>
-    <span class="s2">&quot;tau_m&quot;</span><span class="p">:</span> <span class="n">val_tau</span><span class="p">,</span>
+    <span class="s2">"i_s_dq"</span><span class="p">:</span> <span class="n">val_i</span><span class="p">,</span>
+    <span class="s2">"psi_s_dq"</span><span class="p">:</span> <span class="n">val_psi</span><span class="p">,</span>
+    <span class="s2">"theta_m"</span><span class="p">:</span> <span class="n">val_theta</span><span class="p">,</span>
+    <span class="s2">"tau_m"</span><span class="p">:</span> <span class="n">val_tau</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">gn</span><span class="o">.</span><span class="n">print_current_map_errors_fem</span><span class="p">(</span><span class="n">map_fcn</span><span class="o">=</span><span class="n">harm_map</span><span class="p">,</span> <span class="n">raw_data</span><span class="o">=</span><span class="n">val_dict</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">)</span>
 </pre></div>

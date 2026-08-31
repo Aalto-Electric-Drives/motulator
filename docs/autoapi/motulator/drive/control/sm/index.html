@@ -1334,6 +1334,8 @@ system model and in some control methods.</p></li>
 <li><p><strong>psi_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
 should be differentiable, if incremental inductances are used. Needed only for
 control methods and optimal reference loci, not used in the system model.</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1626,6 +1628,8 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <li><p><strong>L_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – d-axis inductance (H).</p></li>
 <li><p><strong>L_q</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – q-axis inductance (H).</p></li>
 <li><p><strong>psi_f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Permanent-magnet flux linkage (Vs).</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>

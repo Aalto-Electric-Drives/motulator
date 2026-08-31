@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.grid.control._common</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Common control functions and classes.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Common control functions and classes."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 
@@ -474,7 +474,7 @@
 <div class="viewcode-block" id="DCBusVoltageController">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DCBusVoltageController</span><span class="p">(</span><span class="n">PIController</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    DC-bus voltage PI controller.</span>
 
 <span class="sd">    This controller regulates the energy stored in the DC-bus capacitor (scaled square</span>
@@ -491,11 +491,11 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Hur2001] Hur, Jung, Nam, &quot;A fast dynamic DC-link power-balancing scheme for a</span>
-<span class="sd">       PWM converter-inverter system,&quot; IEEE Trans. Ind. Electron., 2001,</span>
+<span class="sd">    .. [#Hur2001] Hur, Jung, Nam, "A fast dynamic DC-link power-balancing scheme for a</span>
+<span class="sd">       PWM converter-inverter system," IEEE Trans. Ind. Electron., 2001,</span>
 <span class="sd">       https://doi.org/10.1109/41.937412</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">k_p</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">alpha_dc</span>
@@ -518,7 +518,7 @@
 <div class="viewcode-block" id="CurrentLimiter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentLimiter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurrentLimiter</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Limit the amplitude of the input signal.</span>
 
 <span class="sd">    Parameters</span>
@@ -531,7 +531,7 @@
 <span class="sd">    complex</span>
 <span class="sd">        Limited signal.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span> <span class="o">=</span> <span class="n">i_max</span>

@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.common.utils._utils</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Helper functions and classes.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Helper functions and classes."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
@@ -475,7 +475,7 @@
 <div class="viewcode-block" id="abc2complex">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/utils/index.html#motulator.common.utils.abc2complex">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">abc2complex</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transform three-phase quantities to a complex space vector.</span>
 
 <span class="sd">    Parameters</span>
@@ -495,7 +495,7 @@
 <span class="sd">    &gt;&gt;&gt; y</span>
 <span class="sd">    (-1-0.5773502691896258j)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 
 
@@ -504,7 +504,7 @@
 <div class="viewcode-block" id="complex2abc">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/utils/index.html#motulator.common.utils.complex2abc">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">complex2abc</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transform a complex space vector to three-phase quantities.</span>
 
 <span class="sd">    Parameters</span>
@@ -524,7 +524,7 @@
 <span class="sd">    &gt;&gt;&gt; y</span>
 <span class="sd">    array([ 1.       , -0.9330127, -0.0669873])</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="n">u</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
@@ -539,7 +539,7 @@
 <div class="viewcode-block" id="SequenceGenerator">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.SequenceGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SequenceGenerator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sequence generator.</span>
 
 <span class="sd">    The time array must be increasing. The output values are interpolated between the</span>
@@ -554,7 +554,7 @@
 <span class="sd">    periodic : bool, optional</span>
 <span class="sd">        Enables periodicity, defaults to False.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">times</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">periodic</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">times</span> <span class="o">=</span> <span class="n">times</span>
@@ -565,7 +565,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_period</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interpolate the output.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Interpolate the output."""</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">times</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">period</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_period</span><span class="p">)</span></div>
 
 
@@ -574,7 +574,7 @@
 <div class="viewcode-block" id="Step">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.Step">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Step</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Step function.</span>
 
 <span class="sd">    Parameters</span>
@@ -586,7 +586,7 @@
 <span class="sd">    initial_value : float, optional</span>
 <span class="sd">        Initial value, defaults to 0.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">step_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">step_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -596,7 +596,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">=</span> <span class="n">initial_value</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Step function.</span>
 
 <span class="sd">        Parameters</span>
@@ -609,14 +609,14 @@
 <span class="sd">        float</span>
 <span class="sd">            Step output.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_value</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_time</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_value</span></div>
 
 
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">wrap</span><span class="p">(</span><span class="n">theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Limit the angle into the range [-pi, pi).</span>
 
 <span class="sd">    Parameters</span>
@@ -629,7 +629,7 @@
 <span class="sd">    float</span>
 <span class="sd">        Limited angle.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">theta</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
 
@@ -639,7 +639,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.NominalValues">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">NominalValues</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Nominal values.</span>
 
 <span class="sd">    Parameters</span>
@@ -655,7 +655,7 @@
 <span class="sd">    tau : float, optional</span>
 <span class="sd">        Torque (Nm), defaults to 0.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">U</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">I</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># noqa: E741</span>
@@ -670,7 +670,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.BaseValues">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseValues</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base values.</span>
 
 <span class="sd">    Parameters</span>
@@ -698,7 +698,7 @@
 <span class="sd">    w_M : float, optional</span>
 <span class="sd">        Mechanical angular frequency (rad/s), defaults to 0.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">u</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">i</span><span class="p">:</span> <span class="nb">float</span>
@@ -715,8 +715,8 @@
 <div class="viewcode-block" id="BaseValues.from_nominal">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.BaseValues.from_nominal">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_nominal</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">nom</span><span class="p">:</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseValues&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_nominal</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">nom</span><span class="p">:</span> <span class="n">NominalValues</span><span class="p">,</span> <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"BaseValues"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute base values from nominal values.</span>
 
 <span class="sd">        Parameters</span>
@@ -742,7 +742,7 @@
 <span class="sd">        Notice that the nominal torque is larger than the base torque due to the power</span>
 <span class="sd">        factor and efficiency being less than unity.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">nom</span><span class="o">.</span><span class="n">U</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">nom</span><span class="o">.</span><span class="n">I</span>
         <span class="n">w</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">nom</span><span class="o">.</span><span class="n">f</span>
@@ -764,8 +764,8 @@
 <div class="viewcode-block" id="BaseValues.unity">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.BaseValues.unity">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unity</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseValues&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create base values with all values set to 1.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">unity</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"BaseValues"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create base values with all values set to 1."""</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">u</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">psi</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 </div>
 
@@ -773,7 +773,7 @@
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Helper to get the value of an object that is either callable or float.</span>
 
 <span class="sd">    Parameters</span>
@@ -788,27 +788,27 @@
 <span class="sd">    Any</span>
 <span class="sd">        Values of `u(x)` if callable, otherwise `u`.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">u</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input value cannot be None&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Input value cannot be None"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">u</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">else</span> <span class="n">u</span>
 
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">empty_array</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an empty array.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return an empty array."""</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
 
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">clip</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">min_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Clip a value between minimum and maximum.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Clip a value between minimum and maximum."""</span>
     <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">),</span> <span class="n">min_value</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">sign</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the sign of x: -1 for negative, 0 for zero, 1 for positive.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Return the sign of x: -1 for negative, 0 for zero, 1 for positive."""</span>
     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 

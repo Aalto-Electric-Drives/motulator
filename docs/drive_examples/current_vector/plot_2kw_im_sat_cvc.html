@@ -535,7 +535,7 @@ control system uses constant parameters.</p>
 <p>The main-flux saturation in the system model is modeled based on <a class="footnote-reference brackets" href="#qu2012" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The
 default parameters correspond to the measured data of a 2.2-kW machine.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">L_s</span><span class="p">(</span><span class="n">psi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">L_su</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.34</span><span class="p">,</span> <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.84</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">7</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stator inductance saturation model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Stator inductance saturation model."""</span>
     <span class="k">return</span> <span class="n">L_su</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="n">psi</span><span class="p">)</span> <span class="o">**</span> <span class="n">S</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -591,7 +591,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.199 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 5.223 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-im-sat-cvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1dfc21af3ffdec5ab38e033084d08a7e/plot_2kw_im_sat_cvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_im_sat_cvc.ipynb</span></code></a></p>

@@ -913,15 +913,23 @@ inductance <cite>L_s</cite> can either be constant or a function of the stator f
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">L_s</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_ab</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>Optionally, eddy-current core losses can be modeled by means of a constant core-loss
+conductance <cite>G_c</cite>, connected in parallel with the magnetizing branch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><em>InductionMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine parameters.</p>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><em>InductionMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Machine parameters. Core losses are modeled if <cite>par.G_c</cite> is nonzero.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <p>The Γ model is chosen here since it can be extended with the magnetic saturation
 model in a straightforward manner. If the magnetic saturation is omitted, the Γ
 model is mathematically identical to the inverse-Γ and T models <a class="footnote-reference brackets" href="#sle1989" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+<p>The core-loss branch is located between the stator resistance and the magnetizing
+inductance, i.e., the voltage across <cite>G_c</cite> is <cite>u_s_ab - R_s*i_s_ab</cite>. Consequently,
+the stator current depends directly on the stator voltage. This algebraic loop is
+solved in a closed form. The electromagnetic torque is produced by the current
+flowing into the magnetic circuit, i.e., the core-loss current is excluded from the
+torque.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="sle1989" role="doc-footnote">
@@ -933,11 +941,14 @@ drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="htt
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.InductionMachine.compute_outputs">
-<span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#InductionMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.InductionMachine.compute_outputs" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#InductionMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.InductionMachine.compute_outputs" title="Link to this definition">#</a></dt>
 <dd><p>Compute output variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>state</strong> (<em>Any</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>Any</em>)</p></li>
+<li><p><strong>inp</strong> (<em>Any</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[Any, Any, Any]</p>
@@ -1014,6 +1025,8 @@ the main-flux saturation, use the <cite>InductionMachinePars</cite> class instea
 <li><p><strong>R_R</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Rotor resistance (Ω).</p></li>
 <li><p><strong>L_sgm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Leakage inductance (H).</p></li>
 <li><p><strong>L_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Magnetizing inductance (H).</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1112,6 +1125,8 @@ updated by calling the <cite>update_psi_s</cite> method.</p>
 <li><p><strong>L_ell</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Leakage inductance (H).</p></li>
 <li><p><strong>L_s</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Stator inductance (H). If callable, it should be a function of the stator flux
 linkage magnitude (Vs).</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1471,6 +1486,8 @@ system model and in some control methods.</p></li>
 <li><p><strong>psi_s_dq_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>optional</em>) – Stator flux linkage (Vs) as a function of the stator current (A). This function
 should be differentiable, if incremental inductances are used. Needed only for
 control methods and optimal reference loci, not used in the system model.</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1585,6 +1602,8 @@ simulation purposes, while control methods do not support spatial harmonics.</p>
 <li><p><strong>magnetic_map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em><em>, </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>]</em>) – Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
 the stator flux linkage (Vs) and the complex exponential of the electrical rotor
 angle.</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1688,20 +1707,31 @@ pole pair.</p>
 <dd><p>Bases: <a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
 <p>Synchronous machine model.</p>
 <p>This model is internally represented in rotor coordinates, which results in the
-simplest implementation. The interfaces are in stator coordinates.</p>
+simplest implementation. The interfaces are in stator coordinates. The magnetic
+saturation can be modeled by providing a nonlinear current map <cite>par.i_s_dq</cite>.
+Optionally, eddy-current core losses can be modeled by means of a constant core-loss
+conductance <cite>G_c</cite>, connected in parallel with the magnetizing branch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.model.SynchronousMachinePars" title="motulator.drive.model.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.SaturatedSynchronousMachinePars" title="motulator.drive.model.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a><em>         | </em><a class="reference internal" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars" title="motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><em>SpatialSaturatedSynchronousMachinePars</em></a>) – Machine parameters. The magnetic saturation can be modeled by providing a
-nonlinear current map par.i_s_dq (callable).</p>
+<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.model.SynchronousMachinePars" title="motulator.drive.model.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.model.SaturatedSynchronousMachinePars" title="motulator.drive.model.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a><em>         | </em><a class="reference internal" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars" title="motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><em>SpatialSaturatedSynchronousMachinePars</em></a>) – Machine parameters. Core losses are modeled if <cite>par.G_c</cite> is nonzero.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The core-loss branch is located between the stator resistance and the magnetizing
+branch, i.e., the voltage across <cite>G_c</cite> is <cite>u_s - R_s*i_s</cite>. Consequently, the stator
+current depends directly on the stator voltage. This algebraic loop is solved in a
+closed form. The electromagnetic torque is produced by the current flowing into the
+magnetic circuit, i.e., the core-loss current is excluded from the torque.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachine.compute_outputs">
-<span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#SynchronousMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachine.compute_outputs" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#SynchronousMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachine.compute_outputs" title="Link to this definition">#</a></dt>
 <dd><p>Compute output variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>state</strong> (<em>Any</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>Any</em>)</p></li>
+<li><p><strong>inp</strong> (<em>Any</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[Any, Any, Any]</p>
@@ -1777,6 +1807,8 @@ nonlinear current map par.i_s_dq (callable).</p>
 <li><p><strong>L_d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – d-axis inductance (H).</p></li>
 <li><p><strong>L_q</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – q-axis inductance (H).</p></li>
 <li><p><strong>psi_f</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Permanent-magnet flux linkage (Vs).</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>

@@ -463,7 +463,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.control._common</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Common control functions and classes for machine drives.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""Common control functions and classes for machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 
@@ -474,7 +474,7 @@
 <div class="viewcode-block" id="SpeedController">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpeedController</span><span class="p">(</span><span class="n">PIController</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    2DOF PI speed controller.</span>
 
 <span class="sd">    This is an interface for a speed controller. The gains are initialized based on the</span>
@@ -491,7 +491,7 @@
 <span class="sd">    tau_M_max : float, optional</span>
 <span class="sd">        Maximum motor torque (Nm), defaults to `inf`.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -512,7 +512,7 @@
 <div class="viewcode-block" id="SpeedObserver">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedObserver">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SpeedObserver</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Speed observer.</span>
 
 <span class="sd">    This observer estimates the mechanical rotor speed based on the mechanical system</span>
@@ -533,11 +533,11 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Lor1991] Lorenz, Van Patten, &quot;High-resolution velocity estimation for</span>
-<span class="sd">       all-digital, AC servo drives,&quot; IEEE Trans. Ind. Appl., 1991,</span>
+<span class="sd">    .. [#Lor1991] Lorenz, Van Patten, "High-resolution velocity estimation for</span>
+<span class="sd">       all-digital, AC servo drives," IEEE Trans. Ind. Appl., 1991,</span>
 <span class="sd">       https://doi.org/10.1109/28.85485</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k_w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">k_tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">=</span> <span class="n">k_w</span>
@@ -549,14 +549,14 @@
 <div class="viewcode-block" id="SpeedObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute outputs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Compute outputs."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span></div>
 
 
 <div class="viewcode-block" id="SpeedObserver.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.SpeedObserver.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Update mechanical state estimates.</span>
 
 <span class="sd">        Parameters</span>
@@ -569,7 +569,7 @@
 <span class="sd">        tau_M : float, optional</span>
 <span class="sd">            Electromagnetic torque estimate (Nm).</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">d_w_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_w</span> <span class="o">*</span> <span class="n">eps</span>
             <span class="n">d_tau_L</span> <span class="o">=</span> <span class="mf">0.0</span>

@@ -435,7 +435,10 @@ Package Contents
 
        L_s = L_s(abs(psi_s_ab))
 
-   :param par: Machine parameters.
+   Optionally, eddy-current core losses can be modeled by means of a constant core-loss
+   conductance `G_c`, connected in parallel with the magnetizing branch.
+
+   :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
    :type par: InductionMachinePars | InductionMachineInvGammaPars
 
    .. rubric:: Notes
@@ -443,6 +446,13 @@ Package Contents
    The Γ model is chosen here since it can be extended with the magnetic saturation
    model in a straightforward manner. If the magnetic saturation is omitted, the Γ
    model is mathematically identical to the inverse-Γ and T models [#Sle1989]_.
+
+   The core-loss branch is located between the stator resistance and the magnetizing
+   inductance, i.e., the voltage across `G_c` is `u_s_ab - R_s*i_s_ab`. Consequently,
+   the stator current depends directly on the stator voltage. This algebraic loop is
+   solved in a closed form. The electromagnetic torque is produced by the current
+   flowing into the magnetic circuit, i.e., the core-loss current is excluded from the
+   torque.
 
    .. rubric:: References
 
@@ -466,7 +476,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_outputs(state)
+   .. py:method:: compute_outputs(state, inp)
 
       
       Compute output variables.
@@ -604,6 +614,9 @@ Package Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
    .. attribute:: R_sgm
 
@@ -720,6 +733,9 @@ Package Contents
    :param L_s: Stator inductance (H). If callable, it should be a function of the stator flux
                linkage magnitude (Vs).
    :type L_s: float | Callable[[float], float]
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
    .. attribute:: gamma
 
@@ -1241,6 +1257,9 @@ Package Contents
                         should be differentiable, if incremental inductances are used. Needed only for
                         control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
 
 
@@ -1438,6 +1457,9 @@ Package Contents
                             the stator flux linkage (Vs) and the complex exponential of the electrical rotor
                             angle.
    :type magnetic_map_fcn: Callable[[complex, complex], Tuple[complex, float]]
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
 
 
@@ -1613,11 +1635,21 @@ Package Contents
    Synchronous machine model.
 
    This model is internally represented in rotor coordinates, which results in the
-   simplest implementation. The interfaces are in stator coordinates.
+   simplest implementation. The interfaces are in stator coordinates. The magnetic
+   saturation can be modeled by providing a nonlinear current map `par.i_s_dq`.
+   Optionally, eddy-current core losses can be modeled by means of a constant core-loss
+   conductance `G_c`, connected in parallel with the magnetizing branch.
 
-   :param par: Machine parameters. The magnetic saturation can be modeled by providing a
-               nonlinear current map par.i_s_dq (callable).
+   :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars         | SpatialSaturatedSynchronousMachinePars
+
+   .. rubric:: Notes
+
+   The core-loss branch is located between the stator resistance and the magnetizing
+   branch, i.e., the voltage across `G_c` is `u_s - R_s*i_s`. Consequently, the stator
+   current depends directly on the stator voltage. This algebraic loop is solved in a
+   closed form. The electromagnetic torque is produced by the current flowing into the
+   magnetic circuit, i.e., the core-loss current is excluded from the torque.
 
 
 
@@ -1636,7 +1668,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_outputs(state)
+   .. py:method:: compute_outputs(state, inp)
 
       
       Compute output variables.
@@ -1774,6 +1806,9 @@ Package Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
 
 
 
