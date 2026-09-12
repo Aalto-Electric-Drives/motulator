@@ -92,7 +92,7 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-58
+.. GENERATED FROM PYTHON SOURCE LINES 40-56
 
 .. code-block:: Python
 
@@ -104,9 +104,7 @@ Configure the control system.
     flux_map = curr_map.invert()
 
     # Parameter estimates, stator resistance not needed
-    est_par = model.SaturatedSynchronousMachinePars(
-        n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map
-    )
+    est_par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0, psi_s_dq_fcn=flux_map)
     cfg = control.CurrentVectorControllerCfg(
         i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, alpha_o=2 * np.pi * 40
     )
@@ -121,11 +119,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-70
+.. GENERATED FROM PYTHON SOURCE LINES 58-68
 
 .. code-block:: Python
 
@@ -146,11 +144,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 69-70
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-77
+.. GENERATED FROM PYTHON SOURCE LINES 70-75
 
 .. code-block:: Python
 
@@ -171,11 +169,11 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 76-77
 
 Plot also the angles.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-93
+.. GENERATED FROM PYTHON SOURCE LINES 77-91
 
 .. code-block:: Python
 
@@ -208,7 +206,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 36.031 seconds)
+   **Total running time of the script:** (0 minutes 41.177 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py:

@@ -907,8 +907,9 @@ Module Contents
    given torque reference. The MTPA locus as well as the current, voltage and MTPV
    limits are taken into account. This class can be used also for a saturated machine
    model. The flux and torque references are computed using pre-computed lookup
-   tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using a
-   root-finding algorithm (needed only for current-vector control).
+   tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using inner
+   iterations of a forward-flux-map tracking law [#Sar2026]_ (needed only for
+   current-vector control).
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -933,6 +934,10 @@ Module Contents
       saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
       2018, https://doi.org/10.1109/TIA.2018.2862410
 
+   .. [#Sar2026] Sarén, Hartikainen, Piippo, Hinkkanen, "Decoupled online feedforward
+      generation of optimal references for saturated synchronous machine drives,"
+      2026, https://arxiv.org/abs/2607.08528
+
 
 
 
@@ -955,8 +960,9 @@ Module Contents
       
       Compute the current reference.
 
-      This method is needed only for current-vector control. The current maps are
-      needed.
+      This method is needed only for current-vector control. It requires the forward
+      flux map. The solution is computed for positive torque and mirrored afterwards.
+      The previous solution is used as the initial guess.
 
 
 
@@ -1144,7 +1150,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SignalInjectionController(par, cfg, U_inj = 250)
+.. py:class:: SignalInjectionController(par, cfg, U_inj = 250, N_inj = 1)
 
    Bases: :py:obj:`motulator.drive.control._sm_current_vector.CurrentVectorController`
 
@@ -1154,9 +1160,10 @@ Module Contents
 
    This class implements a square-wave signal injection for low-speed operation
    according to [#Kim2012]_. Cross-saturation errors are compensated for using flux
-   maps [#You2018]_. If the inertia of the mechanical system is provided, the speed is
-   estimated using the speed observer based on the mechanical model [#Kim2003]_,
-   otherwise the phase-locked loop is used.
+   maps [#You2018]_. A related adjustable-frequency method is presented in [#Yu2022]_.
+   If the inertia of the mechanical system is provided, the speed is estimated using
+   the speed observer based on the mechanical model [#Kim2003]_, otherwise the phase-
+   locked loop is used.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -1164,6 +1171,10 @@ Module Contents
    :type cfg: CurrentVectorControllerCfg
    :param U_inj: Injected voltage amplitude (V), defaults to 250.
    :type U_inj: float, optional
+   :param N_inj: Number of sampling periods per injection voltage half-period, defaults to 1. The
+                 injection frequency is `1 / (2 * N_inj * cfg.T_s)`. Reducing this frequency
+                 requires reducing `cfg.alpha_o` accordingly.
+   :type N_inj: int, optional
 
    .. rubric:: References
 
@@ -1175,6 +1186,10 @@ Module Contents
       and high-frequency injection methods for sensorless direct-flux vector control of
       synchronous reluctance machines," IEEE Trans. Power Electron., 2018,
       https://doi.org/10.1109/TPEL.2017.2697209
+
+   .. [#Yu2022] Yu, Wang, "Position sensorless control of IPMSM using adjustable
+      frequency setting square-wave voltage injection," IEEE Trans. Power Electron.,
+      2022, https://doi.org/10.1109/TPEL.2022.3179611
 
    .. [#Kim2003] Kim, Harke, Lorenz, "Sensorless control of interior permanent-magnet
       machine drives with zero-phase lag position estimation," IEEE Trans. Ind. Appl.,
