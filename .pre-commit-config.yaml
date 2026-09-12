@@ -51,7 +51,7 @@ repos:
 
   # Ruff formatter & linter
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.5
+    rev: v0.16.7
     hooks:
     - id: ruff
       args: [--fix]
@@ -61,7 +61,7 @@ repos:
 
   # Pyright
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.411
+    rev: v1.1.414
     hooks:
       - id: pyright
         additional_dependencies: [numpy, scipy, matplotlib, tqdm, sphinx-gallery, torch]
