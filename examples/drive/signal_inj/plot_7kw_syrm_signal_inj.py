@@ -45,9 +45,7 @@ curr_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range)
 flux_map = curr_map.invert()
 
 # Parameter estimates, stator resistance not needed
-est_par = model.SaturatedSynchronousMachinePars(
-    n_p=2, R_s=0, i_s_dq_fcn=curr_map, psi_s_dq_fcn=flux_map
-)
+est_par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0, psi_s_dq_fcn=flux_map)
 cfg = control.CurrentVectorControllerCfg(
     i_s_max=2 * base.i, psi_s_min=0.5 * base.psi, alpha_o=2 * np.pi * 40
 )

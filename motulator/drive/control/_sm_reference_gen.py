@@ -1,9 +1,7 @@
 """Reference generation for synchronous machine drives."""
 
-from cmath import exp, phase
+from cmath import phase
 from math import inf, sqrt
-
-from scipy.optimize import root_scalar
 
 from motulator.common.utils._utils import clip, sign
 from motulator.drive.utils._parameters import (
@@ -11,6 +9,9 @@ from motulator.drive.utils._parameters import (
     SynchronousMachinePars,
 )
 from motulator.drive.utils._sm_control_loci import ControlLoci
+
+MAX_ITER = 15  # Maximum number of inner iterations in the current-reference tracking
+TOL = 1e-6  # Relative convergence tolerance of the current-reference tracking
 
 
 # %%
@@ -22,8 +23,9 @@ class ReferenceGenerator:
     given torque reference. The MTPA locus as well as the current, voltage and MTPV
     limits are taken into account. This class can be used also for a saturated machine
     model. The flux and torque references are computed using pre-computed lookup
-    tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using a
-    root-finding algorithm (needed only for current-vector control).
+    tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using inner
+    iterations of a forward-flux-map tracking law [#Sar2026]_ (needed only for
+    current-vector control).
 
     Parameters
     ----------
@@ -50,6 +52,10 @@ class ReferenceGenerator:
        saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
        2018, https://doi.org/10.1109/TIA.2018.2862410
 
+    .. [#Sar2026] Sarén, Hartikainen, Piippo, Hinkkanen, "Decoupled online feedforward
+       generation of optimal references for saturated synchronous machine drives,"
+       2026, https://arxiv.org/abs/2607.08528
+
     """
 
     def __init__(
@@ -64,6 +70,7 @@ class ReferenceGenerator:
         self.par = par
         self.k_u = k_u
         self.k_mtpv = k_mtpv
+        self._i_s_ref = 0j
 
         # Set limits
         psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
@@ -76,6 +83,11 @@ class ReferenceGenerator:
         mtpa = loci.compute_mtpa_locus(i_s_max)
         self.i_s_mtpa = mtpa.i_s_dq_vs_tau_M
 
+        # Machine-scale references for the current-reference tracking tolerance
+        self._tau_M_scale = max(abs(mtpa.tau_M[-1]), 1e-9)
+        self._psi_s_scale = max(abs(mtpa.psi_s_dq[-1]), 1e-9)
+        self._i_s_scale = i_s_max
+
         # MTPV limit
         mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
         self.i_s_mtpv = mtpv.i_s_dq_vs_psi_s_abs
@@ -86,24 +98,25 @@ class ReferenceGenerator:
         cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
         self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
 
-    def _get_mtpa_flux(self, tau_M_ref: float) -> complex:
-        """Get the maximum-torque-per-ampere (MTPA) flux linkage."""
-        i_s = self.i_s_mtpa(abs(tau_M_ref))
-        psi_s = complex(self.par.psi_s_dq(i_s))
-        return psi_s
-
-    def _get_mtpv_flux_and_torque(self, psi_s_abs_ref: float) -> tuple[complex, float]:
-        """Get the maximum-torque-per-volt (MTPV) references."""
-        i_s = self.i_s_mtpv(psi_s_abs_ref)
+    def _evaluate(self, i_s: complex) -> tuple[complex, float]:
+        """Flux linkage and torque produced by the given current."""
         psi_s = complex(self.par.psi_s_dq(i_s))
         tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
         return psi_s, tau_M
 
+    def _get_mtpa_flux(self, tau_M_ref: float) -> float:
+        """Get the maximum-torque-per-ampere (MTPA) flux magnitude."""
+        psi_s, _ = self._evaluate(self.i_s_mtpa(abs(tau_M_ref)))
+        return abs(psi_s)
+
+    def _get_mtpv_torque(self, psi_s_abs_ref: float) -> float:
+        """Get the maximum-torque-per-volt (MTPV) torque limit."""
+        _, tau_M = self._evaluate(self.i_s_mtpv(psi_s_abs_ref))
+        return tau_M
+
     def _get_current_limit_torque(self, psi_s_abs_ref: float) -> float:
         """Get torque corresponding to the current limit."""
-        i_s = self.i_s_cl(psi_s_abs_ref)
-        psi_s = complex(self.par.psi_s_dq(i_s))
-        tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
+        _, tau_M = self._evaluate(self.i_s_cl(psi_s_abs_ref))
         return tau_M
 
     def _get_max_flux(self, w_m: float, u_dc: float) -> float:
@@ -117,24 +130,19 @@ class ReferenceGenerator:
     ) -> tuple[float, float]:
         """Compute the flux and torque reference signals."""
         # MTPA flux
-        psi_s_abs_mtpa = self._get_mtpa_flux(tau_M_ref)
-        psi_s_abs_ref = clip(abs(psi_s_abs_mtpa), *self.psi_s_limits)
+        psi_s_abs_ref = clip(self._get_mtpa_flux(tau_M_ref), *self.psi_s_limits)
 
         # Maximum flux (field weakening)
-        psi_s_max = self._get_max_flux(w_m, u_dc)
-        psi_s_abs_ref = min(psi_s_abs_ref, psi_s_max)
+        psi_s_abs_ref = min(psi_s_abs_ref, self._get_max_flux(w_m, u_dc))
 
         # Current limit
         tau_M_cl = self._get_current_limit_torque(psi_s_abs_ref)
         tau_M_ref = min(tau_M_cl, abs(tau_M_ref)) * sign(tau_M_ref)
 
         # MTPV limit
-        psi_s_mtpv, tau_M_mtpv = self._get_mtpv_flux_and_torque(psi_s_abs_ref)
+        tau_M_mtpv = self._get_mtpv_torque(psi_s_abs_ref)
         if tau_M_mtpv > 0:
             tau_M_ref = min(self.k_mtpv * tau_M_mtpv, abs(tau_M_ref)) * sign(tau_M_ref)
-
-        # Store for the current vector reference computation
-        self._psi_s_mtpv = psi_s_mtpv
 
         return psi_s_abs_ref, tau_M_ref
 
@@ -142,32 +150,55 @@ class ReferenceGenerator:
         """
         Compute the current reference.
 
-        This method is needed only for current-vector control. The current maps are
-        needed.
+        This method is needed only for current-vector control. It requires the forward
+        flux map. The solution is computed for positive torque and mirrored afterwards.
+        The previous solution is used as the initial guess.
 
         """
-        delta_range = (0, phase(self._psi_s_mtpv))
+        tau_M_abs = abs(tau_M_ref)
 
-        def error(delta: float) -> float:
-            psi_s = psi_s_abs_ref * exp(1j * delta)
-            i_s = complex(self.par.i_s_dq(psi_s))
-            tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
-            return abs(tau_M_ref) - tau_M
+        def rel_error(psi_s_abs: float, tau_M: float) -> float:
+            """Tracking error, normalized by the machine's MTPA-limit values."""
+            return max(
+                abs(tau_M_abs - tau_M) / self._tau_M_scale,
+                abs(psi_s_abs_ref - psi_s_abs) / self._psi_s_scale,
+            )
 
-        if error(delta_range[0]) * error(delta_range[1]) >= 0:
-            delta = 0.0
-        else:
-            delta = root_scalar(
-                error, bracket=delta_range, method="brentq", maxiter=20
-            ).root
+        i_s = self._i_s_ref if self._i_s_ref != 0 else self.i_s_mtpa(tau_M_abs)
 
-        # Compute flux reference
-        psi_s_ref = psi_s_abs_ref * exp(1j * delta)
+        # Inner iterations of the tracking law (typically converges in a few iterations)
+        for _ in range(MAX_ITER):
+            psi_s, tau_M = self._evaluate(i_s)
+            psi_s_abs = abs(psi_s)
+            err = rel_error(psi_s_abs, tau_M)
+            if err < TOL:
+                break
+            if psi_s_abs < TOL * self._psi_s_scale:
+                i_s += self._i_s_scale * TOL  # Nudge away from the singular point
+                continue
 
-        # Set direction
-        psi_s_ref = psi_s_ref if tau_M_ref > 0 else psi_s_ref.conjugate()
+            L_s = self.par.incr_ind_mat(i_s)
+            ell = complex(*(L_s @ [psi_s.real, psi_s.imag])) / psi_s_abs
+            psi_a = complex(self.par.aux_flux(i_s))
+            den = (psi_a * ell.conjugate()).real
+            if den == 0:
+                break
 
-        # Map to current reference
-        i_s_ref = complex(self.par.i_s_dq(psi_s_ref))
+            # Newton step of the tracking law [#Sar2026]_
+            d_i_s = (
+                1j * ell * (tau_M_abs - tau_M) / (1.5 * self.par.n_p)
+                + psi_a * (psi_s_abs_ref - psi_s_abs)
+            ) / den
 
-        return i_s_ref
+            # Shrink the step if it does not reduce the error
+            for alpha in (1.0, 0.5, 0.25):
+                psi_s_try, tau_M_try = self._evaluate(i_s + alpha * d_i_s)
+                if rel_error(abs(psi_s_try), tau_M_try) < err:
+                    i_s += alpha * d_i_s
+                    break
+            else:
+                break  # No improving step found
+
+        self._i_s_ref = i_s
+
+        return i_s if tau_M_ref >= 0 else i_s.conjugate()
