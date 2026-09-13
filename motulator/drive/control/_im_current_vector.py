@@ -283,7 +283,12 @@ class CurrentVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        return self.observer.compute_output(u_s_ab, i_s_ab, w_M_meas)
+        if self.sensorless:
+            return self.observer.compute_output(u_s_ab, i_s_ab)
+        if w_M_meas is None:
+            raise ValueError("Rotor speed must be provided in sensored mode")
+        eps = w_M_meas - self.observer.speed_observer.w_M
+        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""

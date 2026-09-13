@@ -333,7 +333,12 @@ class FluxVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        return self.observer.compute_output(u_s_ab, i_s_ab, w_M_meas)
+        if self.sensorless:
+            return self.observer.compute_output(u_s_ab, i_s_ab)
+        if w_M_meas is None:
+            raise ValueError("Rotor speed must be provided in sensored mode")
+        eps = w_M_meas - self.observer.speed_observer.w_M
+        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -434,15 +439,17 @@ class ObserverBasedVHzController:
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.T_s = cfg.T_s
         # Configurations for pure open-loop V/Hz control
+        self.h: float = 0.0
         if par.L_M == inf:
             self.observer.psi_s = cfg.psi_s_nom
             self.reference_gen.k_u = inf
+            self.h = 1.0  # Disables the model-based correction
 
     def get_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float
     ) -> ObserverOutputs:
         """Get feedback signals."""
-        fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref)
+        fbk = self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref, 0.0, self.h)
         return fbk
 
     def compute_output(self, fbk: ObserverOutputs) -> References:
