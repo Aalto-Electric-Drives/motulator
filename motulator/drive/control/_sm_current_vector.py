@@ -95,7 +95,7 @@ class CurrentVectorControllerCfg:
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
         2*pi*50/3, keeping the default speed observer gain the same.
     alpha_cur : float, optional
-        Current-reference tracking bandwidth (rad/s), defaults to 2*pi*400.
+        Current-reference tracking bandwidth (rad/s), defaults to 2*pi*200.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float], optional
@@ -122,7 +122,7 @@ class CurrentVectorControllerCfg:
     alpha_c: float = 2 * pi * 200
     alpha_i: float | None = None
     alpha_o: float | None = None
-    alpha_cur: float = 2 * pi * 400
+    alpha_cur: float = 2 * pi * 200
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
     psi_s_min: float | None = None
@@ -205,7 +205,7 @@ class CurrentVectorController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        self.current_ctrl.update(ref.T_s, ref.u_s, fbk.w_c)
+        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
         self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
 
     def post_process(self, ts: TimeSeries) -> None:
