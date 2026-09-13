@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>12.5-kVA, DO-GFM, converter output admittance identification &#8212; motulator 0.7.6 documentation</title>
+    <title>12.5-kVA, DO-GFM, converter output admittance identification &#8212; motulator 0.7.7 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=e8c5c96c"></script>
+    <script src="../../_static/documentation_options.js?v=53394b71"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.6 documentation</p>
+    <p class="title logo__title">motulator 0.7.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -543,7 +543,7 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 </div>
 <p>Configure the system model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ac_filter</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">LFilter</span></a><span class="p">(</span><span class="n">L_f</span><span class="o">=</span><span class="mf">0.15</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">R_f</span><span class="o">=</span><span class="mf">0.05</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">L_g</span><span class="o">=</span><span class="mf">0.74</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
-<span class="n">ac_source</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseSource</span></a><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span> <span class="n">e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
+<span class="n">ac_source</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseSource</span></a><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span> <span class="n">e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span></a><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">650</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">)</span>
 </pre></div>
@@ -555,8 +555,8 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
     <span class="n">R</span><span class="o">=</span><span class="mf">0.05</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
     <span class="n">R_a</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">Z</span><span class="p">,</span>
     <span class="n">u_nom</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">,</span>
-    <span class="n">w_nom</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span>
-    <span class="n">T_s</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">identification_cfg</span><span class="o">.</span><span class="n">T_s</span></a><span class="p">,</span>
+    <span class="n">w_nom</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span>
+    <span class="n">T_s</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">identification_cfg</span><span class="o">.</span><span class="n">T_s</span></a><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">inner_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">ObserverBasedGridFormingController</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">GridConverterControlSystem</span></a><span class="p">(</span><span class="n">inner_ctrl</span><span class="p">)</span>
@@ -577,7 +577,7 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_identification_002.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_identification_002.png" alt="plot 13kva do gfm identification" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_identification_003.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_identification_003.png" alt="plot 13kva do gfm identification" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 58.551 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (3 minutes 50.550 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-identification-plot-13kva-do-gfm-identification-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/520bb5cd851c33806567c577d9615a28/plot_13kva_do_gfm_identification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_13kva_do_gfm_identification.ipynb</span></code></a></p>

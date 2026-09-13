@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2.2-kW saturated IM, FVC &#8212; motulator 0.7.6 documentation</title>
+    <title>2.2-kW saturated IM, FVC &#8212; motulator 0.7.7 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=e8c5c96c"></script>
+    <script src="../../_static/documentation_options.js?v=53394b71"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.6 documentation</p>
+    <p class="title logo__title">motulator 0.7.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -522,7 +522,7 @@ to download the full example code.</p>
 machine (IM) drive. The magnetic saturation is included in the machine model and taken
 into account in the control system. This example also applies the mechanical-model-based
 speed observer.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">motulator.drive.control.im</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">control</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span>
@@ -557,13 +557,13 @@ is used. The parameters are based on the measured data of a 2.2-kW machine <a cl
     <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorController</span><span class="p">(</span><span class="n">est_par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
-<span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">VectorControlSystem</span></a><span class="p">(</span><span class="n">vector_ctrl</span><span class="p">,</span> <span class="n">speed_ctrl</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">set_speed_ref</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_load_torque</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">set_speed_ref</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_load_torque</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create the simulation object, simulate, and plot the results in per-unit values.</p>
@@ -581,7 +581,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.959 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.638 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-flux-vector-plot-2kw-im-sat-fvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/9915d891b22071155c36da766d39378c/plot_2kw_im_sat_fvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_im_sat_fvc.ipynb</span></code></a></p>

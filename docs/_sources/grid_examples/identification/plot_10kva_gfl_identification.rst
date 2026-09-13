@@ -177,7 +177,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (4 minutes 3.338 seconds)
+   **Total running time of the script:** (3 minutes 55.473 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_10kva_gfl_identification.py:

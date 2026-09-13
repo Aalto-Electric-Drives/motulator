@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._sm_reference_gen &#8212; motulator 0.7.6 documentation</title>
+    <title>motulator.drive.control._sm_reference_gen &#8212; motulator 0.7.7 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=e8c5c96c"></script>
+    <script src="../../../../_static/documentation_options.js?v=53394b71"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.6 documentation</p>
+    <p class="title logo__title">motulator 0.7.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -466,7 +466,7 @@
 <span></span><span class="sd">"""Reference generation for synchronous machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">phase</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">clip</span><span class="p">,</span> <span class="n">sign</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -474,9 +474,6 @@
     <span class="n">SynchronousMachinePars</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_control_loci</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlLoci</span>
-
-<span class="n">MAX_ITER</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># Maximum number of inner iterations in the current-reference tracking</span>
-<span class="n">TOL</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># Relative convergence tolerance of the current-reference tracking</span>
 
 
 <span class="c1"># %%</span>
@@ -490,9 +487,8 @@
 <span class="sd">    given torque reference. The MTPA locus as well as the current, voltage and MTPV</span>
 <span class="sd">    limits are taken into account. This class can be used also for a saturated machine</span>
 <span class="sd">    model. The flux and torque references are computed using pre-computed lookup</span>
-<span class="sd">    tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using inner</span>
-<span class="sd">    iterations of a forward-flux-map tracking law [#Sar2026]_ (needed only for</span>
-<span class="sd">    current-vector control).</span>
+<span class="sd">    tables [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically</span>
+<span class="sd">    using a tracking law [#Sar2026]_, needed only for current-vector control.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -508,6 +504,9 @@
 <span class="sd">        Voltage utilization factor, defaults to 1.</span>
 <span class="sd">    k_mtpv : float, optional</span>
 <span class="sd">        MTPV margin, defaults to 1.</span>
+<span class="sd">    alpha_cur : float, optional</span>
+<span class="sd">        Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*400. It</span>
+<span class="sd">        should be well below the sampling frequency to maintain a numerical margin.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -533,11 +532,12 @@
         <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span>
         <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">alpha_cur</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">k_u</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_mtpv</span> <span class="o">=</span> <span class="n">k_mtpv</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ref</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_cur</span> <span class="o">=</span> <span class="n">alpha_cur</span>
 
         <span class="c1"># Set limits</span>
         <span class="n">psi_s_min</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="k">if</span> <span class="n">psi_s_min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">psi_s_min</span>
@@ -550,11 +550,6 @@
         <span class="n">mtpa</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpa</span> <span class="o">=</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq_vs_tau_M</span>
 
-        <span class="c1"># Machine-scale references for the current-reference tracking tolerance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tau_M_scale</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mf">1e-9</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_psi_s_scale</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mf">1e-9</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_scale</span> <span class="o">=</span> <span class="n">i_s_max</span>
-
         <span class="c1"># MTPV limit</span>
         <span class="n">mtpv</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpv</span> <span class="o">=</span> <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq_vs_psi_s_abs</span>
@@ -564,6 +559,11 @@
         <span class="n">gamma2</span> <span class="o">=</span> <span class="n">phase</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">cl</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">,</span> <span class="p">(</span><span class="n">gamma1</span><span class="p">,</span> <span class="n">gamma2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_cl</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">i_s_dq_vs_psi_s_abs</span>
+
+        <span class="c1"># Current-reference state, initialized at the zero-torque operating point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpa</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">i_s_max</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Flux linkage and torque produced by the given current."""</span>
@@ -618,62 +618,61 @@
 
 <div class="viewcode-block" id="ReferenceGenerator.compute_current_ref">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGenerator.compute_current_ref">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_current_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_abs_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_current_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the current reference.</span>
 
-<span class="sd">        This method is needed only for current-vector control. It requires the forward</span>
-<span class="sd">        flux map. The solution is computed for positive torque and mirrored afterwards.</span>
-<span class="sd">        The previous solution is used as the initial guess.</span>
+<span class="sd">        This method is needed only for current-vector control. It returns the current</span>
+<span class="sd">        reference state. The state is updated in the `update` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tau_M_ref : float</span>
+<span class="sd">            Torque reference (Nm).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex</span>
+<span class="sd">            Stator current reference (A) in rotor coordinates.</span>
 
 <span class="sd">        """</span>
-        <span class="n">tau_M_abs</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="k">if</span> <span class="n">tau_M_ref</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span></div>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">rel_error</span><span class="p">(</span><span class="n">psi_s_abs</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">"""Tracking error, normalized by the machine's MTPA-limit values."""</span>
-            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span>
-                <span class="nb">abs</span><span class="p">(</span><span class="n">tau_M_abs</span> <span class="o">-</span> <span class="n">tau_M</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tau_M_scale</span><span class="p">,</span>
-                <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_abs_ref</span> <span class="o">-</span> <span class="n">psi_s_abs</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psi_s_scale</span><span class="p">,</span>
-            <span class="p">)</span>
 
-        <span class="n">i_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ref</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ref</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpa</span><span class="p">(</span><span class="n">tau_M_abs</span><span class="p">)</span>
+<div class="viewcode-block" id="ReferenceGenerator.update">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGenerator.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">psi_s_abs_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Update the current-reference state.</span>
 
-        <span class="c1"># Inner iterations of the tracking law (typically converges in a few iterations)</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_ITER</span><span class="p">):</span>
-            <span class="n">psi_s</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
-            <span class="n">psi_s_abs</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="n">rel_error</span><span class="p">(</span><span class="n">psi_s_abs</span><span class="p">,</span> <span class="n">tau_M</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="k">if</span> <span class="n">psi_s_abs</span> <span class="o">&lt;</span> <span class="n">TOL</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psi_s_scale</span><span class="p">:</span>
-                <span class="n">i_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_scale</span> <span class="o">*</span> <span class="n">TOL</span>  <span class="c1"># Nudge away from the singular point</span>
-                <span class="k">continue</span>
+<span class="sd">        The current reference is a state variable, driven toward the given flux and</span>
+<span class="sd">        torque references by the tracking law with the bandwidth `alpha_cur`</span>
+<span class="sd">        [#Sar2026]_.</span>
 
-            <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period (s).</span>
+<span class="sd">        psi_s_abs_ref : float</span>
+<span class="sd">            Stator flux reference (Vs).</span>
+<span class="sd">        tau_M_ref : float</span>
+<span class="sd">            Torque reference (Nm).</span>
+
+<span class="sd">        """</span>
+        <span class="n">psi_s</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="p">)</span>
+        <span class="n">psi_s_abs</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">psi_s_abs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="p">)</span>
             <span class="n">ell</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">L_s</span> <span class="o">@</span> <span class="p">[</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">imag</span><span class="p">]))</span> <span class="o">/</span> <span class="n">psi_s_abs</span>
-            <span class="n">psi_a</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">aux_flux</span><span class="p">(</span><span class="n">i_s</span><span class="p">))</span>
+            <span class="n">psi_a</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">aux_flux</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="p">))</span>
             <span class="n">den</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_a</span> <span class="o">*</span> <span class="n">ell</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
-            <span class="k">if</span> <span class="n">den</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">break</span>
-
-            <span class="c1"># Newton step of the tracking law [#Sar2026]_</span>
-            <span class="n">d_i_s</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">ell</span> <span class="o">*</span> <span class="p">(</span><span class="n">tau_M_abs</span> <span class="o">-</span> <span class="n">tau_M</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span>
-                <span class="o">+</span> <span class="n">psi_a</span> <span class="o">*</span> <span class="p">(</span><span class="n">psi_s_abs_ref</span> <span class="o">-</span> <span class="n">psi_s_abs</span><span class="p">)</span>
-            <span class="p">)</span> <span class="o">/</span> <span class="n">den</span>
-
-            <span class="c1"># Shrink the step if it does not reduce the error</span>
-            <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">):</span>
-                <span class="n">psi_s_try</span><span class="p">,</span> <span class="n">tau_M_try</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">i_s</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">d_i_s</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">rel_error</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">psi_s_try</span><span class="p">),</span> <span class="n">tau_M_try</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">err</span><span class="p">:</span>
-                    <span class="n">i_s</span> <span class="o">+=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">d_i_s</span>
-                    <span class="k">break</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">break</span>  <span class="c1"># No improving step found</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ref</span> <span class="o">=</span> <span class="n">i_s</span>
-
-        <span class="k">return</span> <span class="n">i_s</span> <span class="k">if</span> <span class="n">tau_M_ref</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">i_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span></div>
+            <span class="k">if</span> <span class="n">den</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">d_i_s</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">ell</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">)</span> <span class="o">-</span> <span class="n">tau_M</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">)</span>
+                    <span class="o">+</span> <span class="n">psi_a</span> <span class="o">*</span> <span class="p">(</span><span class="n">psi_s_abs_ref</span> <span class="o">-</span> <span class="n">psi_s_abs</span><span class="p">)</span>
+                <span class="p">)</span> <span class="o">/</span> <span class="n">den</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_cur</span> <span class="o">*</span> <span class="n">d_i_s</span></div>
 </div>
 
 </pre></div>

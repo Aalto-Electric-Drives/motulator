@@ -252,6 +252,8 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
                    2*pi*50/3, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
+   :param alpha_cur: Current-reference tracking bandwidth (rad/s), defaults to 2*pi*400.
+   :type alpha_cur: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
@@ -903,7 +905,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0)
+.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_cur = 2 * pi * 400)
 
    
    Optimal reference generator for synchronous machines.
@@ -912,9 +914,8 @@ Module Contents
    given torque reference. The MTPA locus as well as the current, voltage and MTPV
    limits are taken into account. This class can be used also for a saturated machine
    model. The flux and torque references are computed using pre-computed lookup
-   tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using inner
-   iterations of a forward-flux-map tracking law [#Sar2026]_ (needed only for
-   current-vector control).
+   tables [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically
+   using a tracking law [#Sar2026]_, needed only for current-vector control.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -928,6 +929,9 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 1.
    :type k_mtpv: float, optional
+   :param alpha_cur: Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*400. It
+                     should be well below the sampling frequency to maintain a numerical margin.
+   :type alpha_cur: float, optional
 
    .. rubric:: References
 
@@ -960,14 +964,19 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_current_ref(psi_s_abs_ref, tau_M_ref)
+   .. py:method:: compute_current_ref(tau_M_ref)
 
       
       Compute the current reference.
 
-      This method is needed only for current-vector control. It requires the forward
-      flux map. The solution is computed for positive torque and mirrored afterwards.
-      The previous solution is used as the initial guess.
+      This method is needed only for current-vector control. It returns the current
+      reference state. The state is updated in the `update` method.
+
+      :param tau_M_ref: Torque reference (Nm).
+      :type tau_M_ref: float
+
+      :returns: Stator current reference (A) in rotor coordinates.
+      :rtype: complex
 
 
 
@@ -992,6 +1001,40 @@ Module Contents
       
       Compute the flux and torque reference signals.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, psi_s_abs_ref, tau_M_ref)
+
+      
+      Update the current-reference state.
+
+      The current reference is a state variable, driven toward the given flux and
+      torque references by the tracking law with the bandwidth `alpha_cur`
+      [#Sar2026]_.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param psi_s_abs_ref: Stator flux reference (Vs).
+      :type psi_s_abs_ref: float
+      :param tau_M_ref: Torque reference (Nm).
+      :type tau_M_ref: float
 
 
 

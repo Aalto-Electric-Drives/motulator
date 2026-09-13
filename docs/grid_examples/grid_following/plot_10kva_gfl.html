@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>10-kVA, GFL &#8212; motulator 0.7.6 documentation</title>
+    <title>10-kVA, GFL &#8212; motulator 0.7.7 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=e8c5c96c"></script>
+    <script src="../../_static/documentation_options.js?v=53394b71"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.6 documentation</p>
+    <p class="title logo__title">motulator 0.7.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -532,7 +532,7 @@ with the grid, a current reference generator, and a PI-based current controller.
 <p>Configure the system model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Filter and grid</span>
 <span class="n">ac_filter</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">LFilter</span></a><span class="p">(</span><span class="n">L_f</span><span class="o">=</span><span class="mf">0.2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
-<span class="n">ac_source</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseSource</span></a><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span> <span class="n">e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
+<span class="n">ac_source</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseSource</span></a><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">,</span> <span class="n">e_g</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">u</span><span class="p">)</span>
 <span class="n">converter</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span></a><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">650</span><span class="p">)</span>
 <span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">)</span>
 </pre></div>
@@ -570,7 +570,7 @@ with the grid, a current reference generator, and a PI-based current controller.
 <li><img src="../../_images/sphx_glr_plot_10kva_gfl_001.png" srcset="../../_images/sphx_glr_plot_10kva_gfl_001.png" alt="plot 10kva gfl" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_10kva_gfl_002.png" srcset="../../_images/sphx_glr_plot_10kva_gfl_002.png" alt="plot 10kva gfl" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.713 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.651 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-grid-following-plot-10kva-gfl-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/45cd638dfe94a1cb476da105df901b3b/plot_10kva_gfl.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_10kva_gfl.ipynb</span></code></a></p>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2.2-kW IPMSM, CVC, PM-flux adaptation &#8212; motulator 0.7.6 documentation</title>
+    <title>2.2-kW IPMSM, CVC, PM-flux adaptation &#8212; motulator 0.7.7 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=e8c5c96c"></script>
+    <script src="../../_static/documentation_options.js?v=53394b71"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.7.6 documentation</p>
+    <p class="title logo__title">motulator 0.7.7 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -522,7 +522,7 @@ to download the full example code.</p>
 permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled
 <a class="footnote-reference brackets" href="#tuo2018" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. To demonstrate adaptation, the initial value of the PM-flux estimate has an
 error of 25%.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
@@ -549,17 +549,17 @@ error of 25%.</p>
 <span class="c1"># Gain `k_f` enables the PM-flux disturbance estimation at speeds above 0.2 p.u.</span>
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControllerCfg</span><span class="p">(</span>
     <span class="n">i_s_max</span><span class="o">=</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-    <span class="n">k_f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
-    <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">k_f</span><span class="o">=</span><span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.2</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w</span></a><span class="p">),</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">alpha_o</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorController</span><span class="p">(</span><span class="n">est_par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
-<span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
 <span class="n">ctrl</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol" class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class"><span class="n">control</span><span class="o">.</span><span class="n">VectorControlSystem</span></a><span class="p">(</span><span class="n">vector_ctrl</span><span class="p">,</span> <span class="n">speed_ctrl</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Set the speed reference and the external load torque.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">set_speed_ref</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="p">)</span>
-<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_load_torque</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">set_speed_ref</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="p">)</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_load_torque</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">*</span> <a href="https://docs.python.org/3/builtins/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <p>Create the simulation object, simulate, and plot the results in per-unit values.</p>
@@ -599,7 +599,7 @@ adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 <a class="reference external" href="https://doi.org/10.1109/SLED.2018.8485899">https://doi.org/10.1109/SLED.2018.8485899</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.249 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.926 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-ipmsm-cvc-adapt-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/52c7cc7d4f4a7845a260b44ff24700e0/plot_2kw_ipmsm_cvc_adapt.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_ipmsm_cvc_adapt.ipynb</span></code></a></p>
