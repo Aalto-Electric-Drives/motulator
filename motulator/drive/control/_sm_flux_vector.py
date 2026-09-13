@@ -261,7 +261,7 @@ class FluxVectorController:
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
         # Current references are not used, but they could be computed for plotting
-        # ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
+        # ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
@@ -269,6 +269,7 @@ class FluxVectorController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
+        # self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
@@ -365,8 +366,6 @@ class ObserverBasedVHzController:
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             self.tau_M_lpf, fbk.w_m, fbk.u_dc
         )
-        # Current references are not used, but they are computed for plotting
-        ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 

@@ -1,7 +1,7 @@
 """Reference generation for synchronous machine drives."""
 
 from cmath import phase
-from math import inf, sqrt
+from math import inf, pi, sqrt
 
 from motulator.common.utils._utils import clip, sign
 from motulator.drive.utils._parameters import (
@@ -9,9 +9,6 @@ from motulator.drive.utils._parameters import (
     SynchronousMachinePars,
 )
 from motulator.drive.utils._sm_control_loci import ControlLoci
-
-MAX_ITER = 15  # Maximum number of inner iterations in the current-reference tracking
-TOL = 1e-6  # Relative convergence tolerance of the current-reference tracking
 
 
 # %%
@@ -23,9 +20,8 @@ class ReferenceGenerator:
     given torque reference. The MTPA locus as well as the current, voltage and MTPV
     limits are taken into account. This class can be used also for a saturated machine
     model. The flux and torque references are computed using pre-computed lookup
-    tables [#Mey2006]_, [#Awa2018]_. The current reference is computed using inner
-    iterations of a forward-flux-map tracking law [#Sar2026]_ (needed only for
-    current-vector control).
+    tables [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically
+    using a tracking law [#Sar2026]_, needed only for current-vector control.
 
     Parameters
     ----------
@@ -41,6 +37,9 @@ class ReferenceGenerator:
         Voltage utilization factor, defaults to 1.
     k_mtpv : float, optional
         MTPV margin, defaults to 1.
+    alpha_cur : float, optional
+        Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*400. It
+        should be well below the sampling frequency to maintain a numerical margin.
 
     References
     ----------
@@ -66,11 +65,12 @@ class ReferenceGenerator:
         psi_s_max: float = inf,
         k_u: float = 1.0,
         k_mtpv: float = 1.0,
+        alpha_cur: float = 2 * pi * 400,
     ) -> None:
         self.par = par
         self.k_u = k_u
         self.k_mtpv = k_mtpv
-        self._i_s_ref = 0j
+        self.alpha_cur = alpha_cur
 
         # Set limits
         psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
@@ -83,11 +83,6 @@ class ReferenceGenerator:
         mtpa = loci.compute_mtpa_locus(i_s_max)
         self.i_s_mtpa = mtpa.i_s_dq_vs_tau_M
 
-        # Machine-scale references for the current-reference tracking tolerance
-        self._tau_M_scale = max(abs(mtpa.tau_M[-1]), 1e-9)
-        self._psi_s_scale = max(abs(mtpa.psi_s_dq[-1]), 1e-9)
-        self._i_s_scale = i_s_max
-
         # MTPV limit
         mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
         self.i_s_mtpv = mtpv.i_s_dq_vs_psi_s_abs
@@ -97,6 +92,11 @@ class ReferenceGenerator:
         gamma2 = phase(mtpa.i_s_dq[-1])
         cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
         self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
+
+        # Current-reference state, initialized at the zero-torque operating point
+        self.i_s_ref = complex(self.i_s_mtpa(0.0))
+        if par.psi_f == 0:
+            self.i_s_ref = 1e-3 * i_s_max
 
     def _evaluate(self, i_s: complex) -> tuple[complex, float]:
         """Flux linkage and torque produced by the given current."""
@@ -146,59 +146,55 @@ class ReferenceGenerator:
 
         return psi_s_abs_ref, tau_M_ref
 
-    def compute_current_ref(self, psi_s_abs_ref: float, tau_M_ref: float) -> complex:
+    def compute_current_ref(self, tau_M_ref: float) -> complex:
         """
         Compute the current reference.
 
-        This method is needed only for current-vector control. It requires the forward
-        flux map. The solution is computed for positive torque and mirrored afterwards.
-        The previous solution is used as the initial guess.
+        This method is needed only for current-vector control. It returns the current
+        reference state. The state is updated in the `update` method.
+
+        Parameters
+        ----------
+        tau_M_ref : float
+            Torque reference (Nm).
+
+        Returns
+        -------
+        complex
+            Stator current reference (A) in rotor coordinates.
 
         """
-        tau_M_abs = abs(tau_M_ref)
+        return self.i_s_ref if tau_M_ref >= 0 else self.i_s_ref.conjugate()
 
-        def rel_error(psi_s_abs: float, tau_M: float) -> float:
-            """Tracking error, normalized by the machine's MTPA-limit values."""
-            return max(
-                abs(tau_M_abs - tau_M) / self._tau_M_scale,
-                abs(psi_s_abs_ref - psi_s_abs) / self._psi_s_scale,
-            )
+    def update(self, T_s: float, psi_s_abs_ref: float, tau_M_ref: float) -> None:
+        """
+        Update the current-reference state.
 
-        i_s = self._i_s_ref if self._i_s_ref != 0 else self.i_s_mtpa(tau_M_abs)
+        The current reference is a state variable, driven toward the given flux and
+        torque references by the tracking law with the bandwidth `alpha_cur`
+        [#Sar2026]_.
 
-        # Inner iterations of the tracking law (typically converges in a few iterations)
-        for _ in range(MAX_ITER):
-            psi_s, tau_M = self._evaluate(i_s)
-            psi_s_abs = abs(psi_s)
-            err = rel_error(psi_s_abs, tau_M)
-            if err < TOL:
-                break
-            if psi_s_abs < TOL * self._psi_s_scale:
-                i_s += self._i_s_scale * TOL  # Nudge away from the singular point
-                continue
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+        psi_s_abs_ref : float
+            Stator flux reference (Vs).
+        tau_M_ref : float
+            Torque reference (Nm).
 
-            L_s = self.par.incr_ind_mat(i_s)
+        """
+        psi_s, tau_M = self._evaluate(self.i_s_ref)
+        psi_s_abs = abs(psi_s)
+
+        if psi_s_abs > 0:
+            L_s = self.par.incr_ind_mat(self.i_s_ref)
             ell = complex(*(L_s @ [psi_s.real, psi_s.imag])) / psi_s_abs
-            psi_a = complex(self.par.aux_flux(i_s))
+            psi_a = complex(self.par.aux_flux(self.i_s_ref))
             den = (psi_a * ell.conjugate()).real
-            if den == 0:
-                break
-
-            # Newton step of the tracking law [#Sar2026]_
-            d_i_s = (
-                1j * ell * (tau_M_abs - tau_M) / (1.5 * self.par.n_p)
-                + psi_a * (psi_s_abs_ref - psi_s_abs)
-            ) / den
-
-            # Shrink the step if it does not reduce the error
-            for alpha in (1.0, 0.5, 0.25):
-                psi_s_try, tau_M_try = self._evaluate(i_s + alpha * d_i_s)
-                if rel_error(abs(psi_s_try), tau_M_try) < err:
-                    i_s += alpha * d_i_s
-                    break
-            else:
-                break  # No improving step found
-
-        self._i_s_ref = i_s
-
-        return i_s if tau_M_ref >= 0 else i_s.conjugate()
+            if den != 0:
+                d_i_s = (
+                    1j * ell * (abs(tau_M_ref) - tau_M) / (1.5 * self.par.n_p)
+                    + psi_a * (psi_s_abs_ref - psi_s_abs)
+                ) / den
+                self.i_s_ref += T_s * self.alpha_cur * d_i_s

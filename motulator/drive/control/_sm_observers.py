@@ -28,7 +28,7 @@ class ObserverOutputs:
     tau_M: float = 0.0  # Electromagnetic torque estimate
     tau_L: float = 0.0  # Load torque estimate
     w_c: float = 0.0  # Angular speed of the coordinate system
-    w_m: float = 0.0  # Electrical angular rotor speed
+    w_m: float = 0.0  # Electrical angular rotor speed estimate
     w_M: float = 0.0  # Mechanical angular rotor speed estimate
     theta_c: float = 0.0  # Coordinate system angle
     theta_m: float = 0.0  # Electrical rotor angle estimate
