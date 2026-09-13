@@ -527,26 +527,24 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#speed-and-flux-observer">Speed and Flux Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Sensored Drives</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Sensorless Drives</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Gain Analysis and Selection</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Gain Analysis and Selection</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-synchronous-machines">For Synchronous Machines</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Machine Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Machine Model</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-transformation">Coordinate Transformation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-position-observer">Flux and Position Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Sensored Drives</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Sensored Drives</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#sm-obs-sensorless">Sensorless Drives</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Speed and Flux Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Gain Analysis and Selection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Speed and Flux Observer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Gain Analysis and Selection</a></li>
 </ul>
 </li>
 </ul>
@@ -659,11 +657,11 @@
 <p><span class="caption-text"><em>Figure 1:</em> Example pole placement of the sensorless observer.</span><a class="headerlink" href="#fig-poles" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id29">
+<figure class="align-center" id="id27">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/poles.svg"><img alt="Pole placement example in sensorless drives" class="invert-colors-dark only-dark" src="../../_images/poles.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 1:</em> Example pole placement of the sensorless observer.</span><a class="headerlink" href="#id29" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Example pole placement of the sensorless observer.</span><a class="headerlink" href="#id27" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -671,43 +669,38 @@
 </section>
 <section id="speed-and-flux-observer">
 <h3>Speed and Flux Observer<a class="headerlink" href="#speed-and-flux-observer" title="Link to this heading">#</a></h3>
-<p>To estimate the rotor speed, the flux observer <a class="reference internal" href="#equation-im-obs">(4)</a> is extended with the speed observer <a class="reference internal" href="#equation-speed-obs">(1)</a> in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver" title="motulator.drive.control.im.SpeedFluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.SpeedFluxObserver</span></code></a> class. The error signal is different in sensored and sensorless drives, as described below.</p>
-<section id="id11">
-<h4>Sensored Drives<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
-<p>In sensored drives, the error signal for the mechanical rotor speed is</p>
+<p>To estimate the rotor speed, the flux observer <a class="reference internal" href="#equation-im-obs">(4)</a> is extended with the speed observer <a class="reference internal" href="#equation-speed-obs">(1)</a> in the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver" title="motulator.drive.control.im.SpeedFluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.SpeedFluxObserver</span></code></a> class. The speed error signal is</p>
+<div class="math notranslate nohighlight" id="equation-im-obs-eps-weighted">
+<span class="eqno">(14)<a class="headerlink" href="#equation-im-obs-eps-weighted" title="Link to this equation">#</a></span>\[    \varepsilon = h \varepsilon_\mathrm{ext} - \frac{1 - h}{\np}\IM\left\{ \frac{\eo}{\hatpsiR} \right\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon_\mathrm{ext}\)</span> is an externally supplied error signal and <span class="math notranslate nohighlight">\(h \in [0, 1]\)</span> is its weight, analogously to the synchronous-machine observer <a class="reference internal" href="#equation-sm-obs-eps">(23)</a>. Setting <span class="math notranslate nohighlight">\(h = 0\)</span> gives sensorless operation, where the reduced-order speed observer <a class="reference internal" href="#equation-speed-obs-ro">(2)</a> becomes essentially the same as the conventional slip-relation-based estimator with a first-order low-pass filter <span class="bibtex-citation" id="id11">[<a class="reference internal" href="../../bibliography.html#id19" title="Hinkkanen, Harnefors, and Luomi. Reduced-order flux observers with stator-resistance adaptation for speed-sensorless induction motor drives. IEEE Trans. Power Electron., 2010. doi:10.1109/TPEL.2009.2039650.">Hinkkanen <em>et al.</em>, 2010</a>]</span>. In sensored drives, <span class="math notranslate nohighlight">\(h = 1\)</span> is used together with</p>
 <div class="math notranslate nohighlight" id="equation-im-obs-eps-sensored">
-<span class="eqno">(14)<a class="headerlink" href="#equation-im-obs-eps-sensored" title="Link to this equation">#</a></span>\[    \varepsilon = \omegaMmeas - \hatomegaM\]</div>
-<p>where <span class="math notranslate nohighlight">\(\omegaMmeas\)</span> is the measured speed and <span class="math notranslate nohighlight">\(\hatomegaM\)</span> is the filtered speed. The measured speed <span class="math notranslate nohighlight">\(\omegaMmeas\)</span> may contain a significant amount of noise (such as quantization noise from incremental encoders), which is filtered by the speed observer.</p>
-</section>
+<span class="eqno">(15)<a class="headerlink" href="#equation-im-obs-eps-sensored" title="Link to this equation">#</a></span>\[    \varepsilon_\mathrm{ext} = \omegaMmeas - \hatomegaM\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omegaMmeas\)</span> is the measured speed, filtered by the speed observer to reduce noise (e.g., quantization noise from an incremental encoder). The gain <a class="reference internal" href="#equation-inherently">(11)</a>, which decouples the speed estimation from the flux estimation, is scheduled with the same weight,</p>
+<div class="math notranslate nohighlight" id="equation-im-k2-weighted">
+<span class="eqno">(16)<a class="headerlink" href="#equation-im-k2-weighted" title="Link to this equation">#</a></span>\[    \kob = (1 - h)\frac{\hatpsiR}{\hatpsiR^*} \koa\]</div>
+<p>reducing to <a class="reference internal" href="#equation-inherently">(11)</a> for <span class="math notranslate nohighlight">\(h = 0\)</span> and to <span class="math notranslate nohighlight">\(\kob = 0\)</span> for <span class="math notranslate nohighlight">\(h = 1\)</span>.</p>
 <section id="id12">
-<h4>Sensorless Drives<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
-<p>In sensorless drives, the estimation error of the mechanical rotor speed is obtained from the flux observer <a class="reference internal" href="#equation-im-obs">(4)</a> and <a class="reference internal" href="#equation-im-eo">(5)</a> as</p>
-<div class="math notranslate nohighlight" id="equation-im-obs-eps">
-<span class="eqno">(15)<a class="headerlink" href="#equation-im-obs-eps" title="Link to this equation">#</a></span>\[    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiR} \right\}\]</div>
-<p>The reduced-order speed observer <a class="reference internal" href="#equation-speed-obs-ro">(2)</a> with the error signal <a class="reference internal" href="#equation-im-obs-eps">(15)</a> is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter, see <span class="bibtex-citation" id="id13">[<a class="reference internal" href="../../bibliography.html#id19" title="Hinkkanen, Harnefors, and Luomi. Reduced-order flux observers with stator-resistance adaptation for speed-sensorless induction motor drives. IEEE Trans. Power Electron., 2010. doi:10.1109/TPEL.2009.2039650.">Hinkkanen <em>et al.</em>, 2010</a>]</span>.</p>
-</section>
-<section id="id14">
-<h4>Gain Analysis and Selection<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<h4>Gain Analysis and Selection<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
 <p>The flux observer gain <a class="reference internal" href="#equation-inherently">(11)</a> decouples the rotor speed estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. Assuming an ideal measurement (<span class="math notranslate nohighlight">\(\omegaMmeas = \omegaM\)</span>) in the sensored case, the estimation dynamics are identical for both sensored and sensorless drives.</p>
 <p>For the observer <a class="reference internal" href="#equation-speed-obs">(1)</a>, the linearized estimation dynamics are</p>
 <div class="math notranslate nohighlight" id="equation-im-speed-obs-lin">
-<span class="eqno">(16)<a class="headerlink" href="#equation-im-speed-obs-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}\]</div>
+<span class="eqno">(17)<a class="headerlink" href="#equation-im-speed-obs-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{(J/\hat{J})s^2 + \koomega s + \kotau/\hat{J}}{s^2 + \koomega s + \kotau/\hat{J}}\]</div>
 <p>where the stiff mechanical model is assumed in the derivation. The critically damped design is obtained by setting <span class="math notranslate nohighlight">\(\koomega = 2\alphao\)</span> and <span class="math notranslate nohighlight">\(\kotau = \alphao^2 \hat{J}\)</span>, where <span class="math notranslate nohighlight">\(\alphao\)</span> is the desired pole location.</p>
 <p>As a special case of <a class="reference internal" href="#equation-speed-obs">(1)</a>, setting <span class="math notranslate nohighlight">\(\hat{J} = \infty\)</span> and <span class="math notranslate nohighlight">\(\kotau = 0\)</span> yields <a class="reference internal" href="#equation-speed-obs-ro">(2)</a>. This reduced-order estimator gives the first-order estimation dynamics</p>
 <div class="math notranslate nohighlight" id="equation-im-speed-obs-ro-lin">
-<span class="eqno">(17)<a class="headerlink" href="#equation-im-speed-obs-ro-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\koomega}{s + \koomega}\]</div>
+<span class="eqno">(18)<a class="headerlink" href="#equation-im-speed-obs-ro-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\koomega}{s + \koomega}\]</div>
 <p>The gain <span class="math notranslate nohighlight">\(\koomega = \alphao\)</span> determines the speed-estimation bandwidth.</p>
 </section>
 </section>
 </section>
 <section id="for-synchronous-machines">
 <h2>For Synchronous Machines<a class="headerlink" href="#for-synchronous-machines" title="Link to this heading">#</a></h2>
-<p>In synchronous machine drives, the flux linkage and the torque are estimated. In sensorless drives, the rotor speed and position are also estimated <span class="bibtex-citation" id="id15">[<a class="reference internal" href="../../bibliography.html#id10" title="Capecchi, Guglielmo, Pastorelli, and Vagati. Position-sensorless control of the transverse-laminated synchronous reluctance motor. IEEE Trans. Ind. Appl., 2001. doi:10.1109/28.968190.">Capecchi <em>et al.</em>, 2001</a>, <a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>, <a class="reference internal" href="../../bibliography.html#id26" title="Jones and Lang. A state observer for the permanent-magnet synchronous motor. IEEE Trans. Ind. Electron., 1989. doi:10.1109/41.31500.">Jones and Lang, 1989</a>, <a class="reference internal" href="../../bibliography.html#id37" title="Piippo, Hinkkanen, and Luomi. Analysis of an adaptive observer for sensorless control of interior permanent magnet synchronous motors. IEEE Trans. Ind. Electron., 2008. doi:10.1109/TIE.2007.911949.">Piippo <em>et al.</em>, 2008</a>]</span>. This document describes an observer design implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxObserver</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.SpeedFluxObserver</span></code></a> classes, based on <span class="bibtex-citation" id="id16">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>. The observer supports both sensorless and sensored operating modes and accounts for magnetic saturation.</p>
-<section id="id17">
-<h3>Machine Model<a class="headerlink" href="#id17" title="Link to this heading">#</a></h3>
+<p>In synchronous machine drives, the flux linkage and the torque are estimated. In sensorless drives, the rotor speed and position are also estimated <span class="bibtex-citation" id="id13">[<a class="reference internal" href="../../bibliography.html#id10" title="Capecchi, Guglielmo, Pastorelli, and Vagati. Position-sensorless control of the transverse-laminated synchronous reluctance motor. IEEE Trans. Ind. Appl., 2001. doi:10.1109/28.968190.">Capecchi <em>et al.</em>, 2001</a>, <a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>, <a class="reference internal" href="../../bibliography.html#id26" title="Jones and Lang. A state observer for the permanent-magnet synchronous motor. IEEE Trans. Ind. Electron., 1989. doi:10.1109/41.31500.">Jones and Lang, 1989</a>, <a class="reference internal" href="../../bibliography.html#id37" title="Piippo, Hinkkanen, and Luomi. Analysis of an adaptive observer for sensorless control of interior permanent magnet synchronous motors. IEEE Trans. Ind. Electron., 2008. doi:10.1109/TIE.2007.911949.">Piippo <em>et al.</em>, 2008</a>]</span>. This document describes an observer design implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxObserver</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.SpeedFluxObserver</span></code></a> classes, based on <span class="bibtex-citation" id="id14">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>. The observer supports both sensorless and sensored operating modes and accounts for magnetic saturation.</p>
+<section id="id15">
+<h3>Machine Model<a class="headerlink" href="#id15" title="Link to this heading">#</a></h3>
 <p>The synchronous machine model in rotor coordinates rotating at <span class="math notranslate nohighlight">\(\omegam\)</span> is</p>
 <div class="math notranslate nohighlight" id="equation-sm-model-obs">
-<span class="eqno">(18)<a class="headerlink" href="#equation-sm-model-obs" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D\psis}{\D t} &amp;= \us - \Rs\is - \jj\omegam\psis \\
+<span class="eqno">(19)<a class="headerlink" href="#equation-sm-model-obs" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D\psis}{\D t} &amp;= \us - \Rs\is - \jj\omegam\psis \\
     \frac{\D\thetam}{\D t} &amp;= \omegam \\
     \is &amp;= \isfcn(\psis) \\
     \tauM &amp;= \frac{3 \np}{2}\IM\left\{\is\psis^*\right\}\end{split}\]</div>
@@ -717,75 +710,77 @@
 <h3>Coordinate Transformation<a class="headerlink" href="#coordinate-transformation" title="Link to this heading">#</a></h3>
 <p>The control system operates in estimated rotor coordinates, <span class="math notranslate nohighlight">\(\thetac = \hatthetam\)</span>, aligned at the rotor angle estimate. In these coordinates, the measured current and the realized voltage (obtained from the PWM algorithm), respectively, are</p>
 <div class="math notranslate nohighlight" id="equation-is-prime">
-<span class="eqno">(19)<a class="headerlink" href="#equation-is-prime" title="Link to this equation">#</a></span>\[    \is' = \iss \e^{-\jj\hatthetam} \qquad
+<span class="eqno">(20)<a class="headerlink" href="#equation-is-prime" title="Link to this equation">#</a></span>\[    \is' = \iss \e^{-\jj\hatthetam} \qquad
     \us' = \us \e^{-\jj\hatthetam}\]</div>
 <p>Due to the estimation error <span class="math notranslate nohighlight">\(\tildethetam = \thetam - \hatthetam\)</span>, the current <span class="math notranslate nohighlight">\(\is'\)</span> generally differs from the current <span class="math notranslate nohighlight">\(\is\)</span> (and similarly for the voltage).</p>
 </section>
 <section id="flux-and-position-observer">
 <h3>Flux and Position Observer<a class="headerlink" href="#flux-and-position-observer" title="Link to this heading">#</a></h3>
-<p>Based on <a class="reference internal" href="#equation-sm-model-obs">(18)</a>, a nonlinear state observer is formulated as</p>
+<p>Based on <a class="reference internal" href="#equation-sm-model-obs">(19)</a>, a nonlinear state observer is formulated as</p>
 <div class="math notranslate nohighlight" id="equation-sm-obs">
-<span class="eqno">(20)<a class="headerlink" href="#equation-sm-obs" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \hatpsis}{\D t} &amp;= \us' - \hatRs\is' - \jj\omegac\hatpsis + \koa \eo + \kob \eo^* \\
+<span class="eqno">(21)<a class="headerlink" href="#equation-sm-obs" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \hatpsis}{\D t} &amp;= \us' - \hatRs\is' - \jj\omegac\hatpsis + \koa \eo + \kob \eo^* \\
     \frac{\D\hatthetam}{\D t} &amp;= \hatomegam + \kotheta \np\varepsilon = \omegac\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\us'\)</span> is the realized voltage estimate obtained from the PWM algorithm, <span class="math notranslate nohighlight">\(\omegac\)</span> is the angular speed of the coordinate system, and <span class="math notranslate nohighlight">\(\koa\)</span>, <span class="math notranslate nohighlight">\(\kob\)</span>, and <span class="math notranslate nohighlight">\(\kotheta\)</span> are observer gains. Furthermore, <span class="math notranslate nohighlight">\(\hatomegam = \np \hatomegaM\)</span> is the estimated rotor speed (in electrical rad/s) and <span class="math notranslate nohighlight">\(\varepsilon\)</span> is the rotor position estimation error (in mechanical rad). The flux estimation error is</p>
 <div class="math notranslate nohighlight" id="equation-sm-eo">
-<span class="eqno">(21)<a class="headerlink" href="#equation-sm-eo" title="Link to this equation">#</a></span>\[    \eo = \hatpsisfcn(\is') - \hatpsis\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hatpsisfcn\)</span> is the flux map estimate. In sensored drives, the estimation error signal is</p>
+<span class="eqno">(22)<a class="headerlink" href="#equation-sm-eo" title="Link to this equation">#</a></span>\[    \eo = \hatpsisfcn(\is') - \hatpsis\]</div>
+<p>where <span class="math notranslate nohighlight">\(\hatpsisfcn\)</span> is the flux map estimate. The position estimation error signal is</p>
+<div class="math notranslate nohighlight" id="equation-sm-obs-eps">
+<span class="eqno">(23)<a class="headerlink" href="#equation-sm-obs-eps" title="Link to this equation">#</a></span>\[    \varepsilon = h \varepsilon_\mathrm{ext} - \frac{1 - h}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\varepsilon_\mathrm{ext}\)</span> is an externally supplied error signal and <span class="math notranslate nohighlight">\(h \in [0, 1]\)</span> is its weight. The second term is the model-based (back-EMF) error signal obtained from <a class="reference internal" href="#equation-sm-obs">(21)</a> and <a class="reference internal" href="#equation-sm-eo">(22)</a> <span class="bibtex-citation" id="id16">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>. Setting <span class="math notranslate nohighlight">\(h = 0\)</span> gives sensorless operation, where the error signal is generated internally. In sensored drives, <span class="math notranslate nohighlight">\(h = 1\)</span> is used together with</p>
 <div class="math notranslate nohighlight" id="equation-sm-obs-eps-sensored">
-<span class="eqno">(22)<a class="headerlink" href="#equation-sm-obs-eps-sensored" title="Link to this equation">#</a></span>\[    \varepsilon = \thetaMmeas - \hatthetam/\np\]</div>
-<p>where <span class="math notranslate nohighlight">\(\thetaMmeas\)</span> is the measured mechanical angular position. In sensorless drives, the estimation error signal of the mechanical rotor position is obtained from <a class="reference internal" href="#equation-sm-obs">(20)</a> and <a class="reference internal" href="#equation-sm-eo">(21)</a> as <span class="bibtex-citation" id="id18">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span></p>
-<div class="math notranslate nohighlight" id="equation-sm-obs-eps-sensorless">
-<span class="eqno">(23)<a class="headerlink" href="#equation-sm-obs-eps-sensorless" title="Link to this equation">#</a></span>\[    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}\]</div>
+<span class="eqno">(24)<a class="headerlink" href="#equation-sm-obs-eps-sensored" title="Link to this equation">#</a></span>\[    \varepsilon_\mathrm{ext} = \thetaMmeas - \hatthetam/\np\]</div>
+<p>where <span class="math notranslate nohighlight">\(\thetaMmeas\)</span> is the measured mechanical angular position. Intermediate values <span class="math notranslate nohighlight">\(0 &lt; h &lt; 1\)</span> blend the two error signals. As shown below, the observer gain <span class="math notranslate nohighlight">\(\kob\)</span> follows the same weight, so the gain selection is consistent for any <span class="math notranslate nohighlight">\(h\)</span>.</p>
 <p>The mechanical position is used in these signals for compatibility with the generic speed observer <a class="reference internal" href="#equation-speed-obs">(1)</a>. The torque estimate is given by</p>
 <div class="math notranslate nohighlight" id="equation-sm-obs-taum">
-<span class="eqno">(24)<a class="headerlink" href="#equation-sm-obs-taum" title="Link to this equation">#</a></span>\[    \hattauM = \frac{3\np}{2}\IM\left\{\is' \hatpsis^* \right\}\]</div>
-<p>This observer structure is used in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxObserver</span></code></a> class. The implementation also contains optional PM-flux adaptation <span class="bibtex-citation" id="id19">[<a class="reference internal" href="../../bibliography.html#id46" title="Tuovinen, Awan, Kukkola, Saarakkala, and Hinkkanen. Permanent-magnet flux adaptation for sensorless synchronous motor drives. In Proc. IEEE SLED. 2018. doi:10.1109/SLED.2018.8485899.">Tuovinen <em>et al.</em>, 2018</a>]</span>, see the <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html"><span class="doc">2.2-kW IPMSM, CVC, PM-flux adaptation</span></a> example.</p>
+<span class="eqno">(25)<a class="headerlink" href="#equation-sm-obs-taum" title="Link to this equation">#</a></span>\[    \hattauM = \frac{3\np}{2}\IM\left\{\is' \hatpsis^* \right\}\]</div>
+<p>This observer structure is used in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxObserver</span></code></a> class. The implementation also contains optional PM-flux adaptation <span class="bibtex-citation" id="id17">[<a class="reference internal" href="../../bibliography.html#id46" title="Tuovinen, Awan, Kukkola, Saarakkala, and Hinkkanen. Permanent-magnet flux adaptation for sensorless synchronous motor drives. In Proc. IEEE SLED. 2018. doi:10.1109/SLED.2018.8485899.">Tuovinen <em>et al.</em>, 2018</a>]</span>, see the <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html"><span class="doc">2.2-kW IPMSM, CVC, PM-flux adaptation</span></a> example.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Since the current is measured, the observer is fundamentally corrected by means of the current estimation error. However, due to the saliency and magnetic saturation, the current estimation error is convenient to map (or scale in the case of linear magnetics) to the flux linkage error.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Real-valued column vectors and the corresponding <span class="math notranslate nohighlight">\(2\times 2\)</span> gain matrix were used in <span class="bibtex-citation" id="id20">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>. The complex form in <a class="reference internal" href="#equation-sm-obs">(20)</a> has the same degrees of freedom.</p>
+<p>Real-valued column vectors and the corresponding <span class="math notranslate nohighlight">\(2\times 2\)</span> gain matrix were used in <span class="bibtex-citation" id="id18">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>. The complex form in <a class="reference internal" href="#equation-sm-obs">(21)</a> has the same degrees of freedom.</p>
 </div>
+<section id="id19">
+<h4>Gain Analysis and Selection<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<p>The analysis resembles that of induction machines, see <a class="reference internal" href="#im-obs-analysis"><span class="std std-ref">Gain Analysis and Selection</span></a>. The following results can be derived from the linearized form of <a class="reference internal" href="#equation-sm-model-obs">(19)</a> – <a class="reference internal" href="#equation-sm-obs-taum">(25)</a>, see details in <span class="bibtex-citation" id="id20">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>.</p>
 <section id="id21">
-<h4>Gain Analysis and Selection<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
-<p>The analysis resembles that of induction machines, see <a class="reference internal" href="#im-obs-analysis"><span class="std std-ref">Gain Analysis and Selection</span></a>. The following results can be derived from the linearized form of <a class="reference internal" href="#equation-sm-model-obs">(18)</a> – <a class="reference internal" href="#equation-sm-obs-taum">(24)</a>, see details in <span class="bibtex-citation" id="id22">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span>.</p>
-<section id="id23">
-<h5>Sensored Drives<a class="headerlink" href="#id23" title="Link to this heading">#</a></h5>
-<p>In sensored case, the rotor position estimation error is decoupled from the flux estimation, i.e., it acts as an external disturbance in the flux estimation. Therefore, the gain <span class="math notranslate nohighlight">\(\kob = 0\)</span> can be selected. Using <a class="reference internal" href="#equation-sm-model-obs">(18)</a> and <a class="reference internal" href="#equation-sm-obs">(20)</a>, the linearized estimation-error dynamics become</p>
+<h5>Sensored Drives<a class="headerlink" href="#id21" title="Link to this heading">#</a></h5>
+<p>In sensored case, the rotor position estimation error is decoupled from the flux estimation, i.e., it acts as an external disturbance in the flux estimation. Therefore, the gain <span class="math notranslate nohighlight">\(\kob = 0\)</span> can be selected. Using <a class="reference internal" href="#equation-sm-model-obs">(19)</a> and <a class="reference internal" href="#equation-sm-obs">(21)</a>, the linearized estimation-error dynamics become</p>
 <div class="math notranslate nohighlight" id="equation-sm-tilde-psis-sensored">
-<span class="eqno">(25)<a class="headerlink" href="#equation-sm-tilde-psis-sensored" title="Link to this equation">#</a></span>\[    \frac{\D \Delta\tildepsis}{\D t} = -(\koa + \jj\omegamo)\Delta\tildepsis\]</div>
+<span class="eqno">(26)<a class="headerlink" href="#equation-sm-tilde-psis-sensored" title="Link to this equation">#</a></span>\[    \frac{\D \Delta\tildepsis}{\D t} = -(\koa + \jj\omegamo)\Delta\tildepsis\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Delta\)</span> marks the small-signal quantities, the subscript 0 marks the operating-point quantities, and <span class="math notranslate nohighlight">\(\tildepsis = \psis - \hatpsis\)</span> is the estimation error. The pole can be arbitrarily placed via the gain <span class="math notranslate nohighlight">\(\koa\)</span>. Well-damped dynamics are obtained simply with a real gain, <span class="math notranslate nohighlight">\(\koa = \sigma\)</span>, resulting in the pole at <span class="math notranslate nohighlight">\(s = -\sigma - \jj\omegamo\)</span>, where <span class="math notranslate nohighlight">\(\sigma = 2\pi \cdot 15\)</span> rad/s is used as the default value in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.FluxObserver</span></code></a> class in sensored drives.</p>
 </section>
 <section id="sm-obs-sensorless">
-<span id="id24"></span><h5>Sensorless Drives<a class="headerlink" href="#sm-obs-sensorless" title="Link to this heading">#</a></h5>
-<p>To decouple the flux estimation from the rotor angle, the gains of <a class="reference internal" href="#equation-sm-obs">(20)</a> have to be of the form <span class="bibtex-citation" id="id25">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span></p>
+<span id="id22"></span><h5>Sensorless Drives<a class="headerlink" href="#sm-obs-sensorless" title="Link to this heading">#</a></h5>
+<p>To decouple the flux estimation from the rotor angle, the gains of <a class="reference internal" href="#equation-sm-obs">(21)</a> have to be of the form <span class="bibtex-citation" id="id23">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Saarakkala, Awan, Mölsä, and Tuovinen. Observers for sensorless synchronous motor drives: framework for design and analysis. IEEE Trans. Ind. Appl., 2018. doi:10.1109/TIA.2018.2858753.">Hinkkanen <em>et al.</em>, 2018</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-k1k2-sensorless">
-<span class="eqno">(26)<a class="headerlink" href="#equation-k1k2-sensorless" title="Link to this equation">#</a></span>\[    \koa = \sigma \qquad
+<span class="eqno">(27)<a class="headerlink" href="#equation-k1k2-sensorless" title="Link to this equation">#</a></span>\[    \koa = \sigma \qquad
     \kob = \frac{\sigma\hatpsiaux}{\hatpsiaux^*}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\hatpsiaux = \hatpsiaux(\is')\)</span> is the estimate of the auxiliary flux [see <a class="reference internal" href="../../model/drive/synchronous_machine.html#equation-sm-mtpa-aux">(10)</a> in <a class="reference internal" href="../../model/drive/synchronous_machine.html#synchronous-machine"><span class="std std-ref">Synchronous Machine Model</span></a>] and <span class="math notranslate nohighlight">\(\sigma\)</span> is the attenuation, i.e., the resulting characteristic polynomial is <span class="math notranslate nohighlight">\(D(s) = s^2 + 2\sigma s + \omegamo^2\)</span>. By default, the attenuation in sensorless drives is scheduled as</p>
 <div class="math notranslate nohighlight" id="equation-sigma-sensorless">
-<span class="eqno">(27)<a class="headerlink" href="#equation-sigma-sensorless" title="Link to this equation">#</a></span>\[    \sigma = \frac{\beta}{2} + \zeta_\infty |\hatomegam |\]</div>
+<span class="eqno">(28)<a class="headerlink" href="#equation-sigma-sensorless" title="Link to this equation">#</a></span>\[    \sigma = \frac{\beta}{2} + \zeta_\infty |\hatomegam |\]</div>
 <p>where <span class="math notranslate nohighlight">\(\zeta_\infty\)</span> is the desired damping ratio at high speeds. At zero speed, one pole is placed at <span class="math notranslate nohighlight">\(s = 0\)</span> and another at <span class="math notranslate nohighlight">\(s = -\beta\)</span>. Unstable double pole at <span class="math notranslate nohighlight">\(s = 0\)</span> is avoided, enabling stable start of the machine.</p>
+<p>Since the gain <span class="math notranslate nohighlight">\(\kob\)</span> decouples the flux estimation from the rotor angle only to the extent that the model-based error signal is used, it is scheduled with the same weight <span class="math notranslate nohighlight">\(h\)</span> as in <a class="reference internal" href="#equation-sm-obs-eps">(23)</a>, i.e., <span class="math notranslate nohighlight">\(\kob = (1 - h)\sigma\hatpsiaux/\hatpsiaux^*\)</span>. This reduces to <a class="reference internal" href="#equation-k1k2-sensorless">(27)</a> for <span class="math notranslate nohighlight">\(h = 0\)</span> and to <span class="math notranslate nohighlight">\(\kob = 0\)</span> for <span class="math notranslate nohighlight">\(h = 1\)</span> (the sensored case above), interpolating between them in between.</p>
 </section>
 </section>
 </section>
-<section id="id26">
-<h3>Speed and Flux Observer<a class="headerlink" href="#id26" title="Link to this heading">#</a></h3>
-<p>To estimate the rotor speed and position, the flux observer <a class="reference internal" href="#equation-sm-obs">(20)</a> is extended with the speed observer <a class="reference internal" href="#equation-speed-obs">(1)</a> in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.SpeedFluxObserver</span></code></a> class. The error signals are defined above in <a class="reference internal" href="#equation-sm-obs-eps-sensored">(22)</a> and <a class="reference internal" href="#equation-sm-obs-eps-sensorless">(23)</a> for sensored and sensorless drives, respectively.</p>
-<section id="id27">
-<h4>Gain Analysis and Selection<a class="headerlink" href="#id27" title="Link to this heading">#</a></h4>
+<section id="id24">
+<h3>Speed and Flux Observer<a class="headerlink" href="#id24" title="Link to this heading">#</a></h3>
+<p>To estimate the rotor speed and position, the flux observer <a class="reference internal" href="#equation-sm-obs">(21)</a> is extended with the speed observer <a class="reference internal" href="#equation-speed-obs">(1)</a> in the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.SpeedFluxObserver</span></code></a> class. The error signal is defined above in <a class="reference internal" href="#equation-sm-obs-eps">(23)</a>.</p>
+<section id="id25">
+<h4>Gain Analysis and Selection<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
 <p>The flux observer design decouples the speed and position estimation from the flux estimation. Therefore, the speed estimation dynamics can be analyzed separately. Assuming an ideal measurement (<span class="math notranslate nohighlight">\(\thetaMmeas = \thetaM\)</span>) in the sensored case, the estimation dynamics are identical for both sensored and sensorless drives.</p>
 <p>For the observer <a class="reference internal" href="#equation-speed-obs">(1)</a>, the linearized estimation dynamics are</p>
 <div class="math notranslate nohighlight" id="equation-sm-speed-obs-lin">
-<span class="eqno">(28)<a class="headerlink" href="#equation-sm-speed-obs-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} =
+<span class="eqno">(29)<a class="headerlink" href="#equation-sm-speed-obs-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} =
     \frac{(J/\hat{J}) s^3 + (J/\hat{J}) \kotheta s^2 + \koomega s + \kotau/\hat{J}}{s^3 + \kotheta s^2 + \koomega s + \kotau/\hat{J}}\]</div>
 <p>where the stiff mechanical model is assumed in the derivation. The critically damped design is obtained by setting <span class="math notranslate nohighlight">\(\kotheta = 3\alphao\)</span>, <span class="math notranslate nohighlight">\(\koomega = 3\alphao^2\)</span>, and <span class="math notranslate nohighlight">\(\kotau = \alphao^3 \hat{J}\)</span>.</p>
 <p>As a special case of <a class="reference internal" href="#equation-speed-obs">(1)</a>, setting <span class="math notranslate nohighlight">\(\hat{J} = \infty\)</span> and <span class="math notranslate nohighlight">\(\kotau = 0\)</span> yields <a class="reference internal" href="#equation-speed-obs-ro">(2)</a>. This reduced-order estimator gives the second-order estimation dynamics</p>
 <div class="math notranslate nohighlight" id="equation-sm-speed-obs-ro-lin">
-<span class="eqno">(29)<a class="headerlink" href="#equation-sm-speed-obs-ro-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\alphao^2}{(s + \alphao)^2}\]</div>
-<p>The critically damped design is obtained by setting <span class="math notranslate nohighlight">\(\kotheta = 2\alphao\)</span> and <span class="math notranslate nohighlight">\(\koomega = \alphao^2\)</span>, where <span class="math notranslate nohighlight">\(\alphao\)</span> is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth <span class="bibtex-citation" id="id28">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
+<span class="eqno">(30)<a class="headerlink" href="#equation-sm-speed-obs-ro-lin" title="Link to this equation">#</a></span>\[    \frac{\Delta\hatomegaM(s)}{\Delta\omegaM(s)} = \frac{\alphao^2}{(s + \alphao)^2}\]</div>
+<p>The critically damped design is obtained by setting <span class="math notranslate nohighlight">\(\kotheta = 2\alphao\)</span> and <span class="math notranslate nohighlight">\(\koomega = \alphao^2\)</span>, where <span class="math notranslate nohighlight">\(\alphao\)</span> is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth <span class="bibtex-citation" id="id26">[<a class="reference internal" href="../../bibliography.html#id44" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
 </section>
 </section>
 </section>
@@ -850,26 +845,24 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#speed-and-flux-observer">Speed and Flux Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Sensored Drives</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Sensorless Drives</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Gain Analysis and Selection</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">Gain Analysis and Selection</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-synchronous-machines">For Synchronous Machines</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Machine Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">Machine Model</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-transformation">Coordinate Transformation</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-position-observer">Flux and Position Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Sensored Drives</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">Sensored Drives</a></li>
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#sm-obs-sensorless">Sensorless Drives</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Speed and Flux Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">Gain Analysis and Selection</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">Speed and Flux Observer</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Gain Analysis and Selection</a></li>
 </ul>
 </li>
 </ul>

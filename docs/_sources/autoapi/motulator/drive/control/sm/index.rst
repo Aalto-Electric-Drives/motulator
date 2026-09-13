@@ -289,7 +289,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxObserver(par, k_theta, k_o, k_f, sensorless)
+.. py:class:: FluxObserver(par, k_theta, k_o, k_f)
 
    
    Observer for synchronous machines in estimated rotor coordinates.
@@ -297,10 +297,14 @@ Module Contents
    This observer estimates the stator flux linkage, the rotor angle, and (optionally)
    the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]. The observer
    gain decouples the electrical and mechanical dynamics and allows placing the poles
-   of the corresponding linearized estimation error dynamics. The PM-flux linkage can
-   also be estimated [#Tuo2018]_. The observer can also be used in sensored mode, in
-   which case the control system is fixed to the measured rotor angle. The magnetic
-   saturation is taken into account.
+   of the corresponding linearized estimation error dynamics. The rotor angle is
+   tracked using a position error signal, which is either computed internally from the
+   back-EMF-based flux estimation error or supplied externally, e.g., from the measured
+   rotor angle. The weight `h` of the external signal, given to `compute_output`,
+   selects between these: `h = 0` gives purely model-based (sensorless) operation,
+   `h = 1` relies on the external signal alone, and intermediate values blend the two.
+   The magnetic saturation is taken into account based on the provided machine model.
+   The PM-flux linkage can also be estimated [#Tuo2018]_.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -310,8 +314,6 @@ Module Contents
    :type k_o: Callable[[float], float]
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
    :type k_f: Callable[[float], float], optional
-   :param sensorless: If True, sensorless mode is used.
-   :type sensorless: bool
 
    .. rubric:: References
 
@@ -340,7 +342,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, theta_M_meas = None)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, eps_ext = 0.0, h = 0.0)
 
       
       Compute the feedback signals for the control system.
@@ -351,8 +353,11 @@ Module Contents
       :type i_s_ab: complex
       :param w_M: Mechanical rotor speed (rad/s), typically from the speed observer.
       :type w_M: float
-      :param theta_M_meas: Measured mechanical rotor angle (rad), used only in sensored mode.
-      :type theta_M_meas: float, optional
+      :param eps_ext: External mechanical position error signal (rad), defaults to 0.
+      :type eps_ext: float, optional
+      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
+                based error signal is used exclusively.
+      :type h: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
@@ -474,7 +479,7 @@ Module Contents
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
-      Get the feedback signals with motion sensors.
+      Get the feedback signals.
 
 
 
@@ -1297,7 +1302,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, sensorless, J = None)
+.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, J = None)
 
    
    Flux observer with speed estimation.
@@ -1306,8 +1311,8 @@ Module Contents
    observer gain decouples the electrical and mechanical dynamics and allows placing
    the poles of the corresponding linearized estimation error dynamics. If the inertia
    of the mechanical system is provided, the observer also estimates the load torque,
-   to avoid the lag in the speed estimate. In sensored mode, the rotor speed is
-   estimated from the measured rotor angle.
+   to avoid the lag in the speed estimate. The rotor angle is tracked using a position
+   error signal, see {class}`FluxObserver`.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -1317,8 +1322,6 @@ Module Contents
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
    :type k_f: Callable[[float], float], optional
-   :param sensorless: If True, sensorless mode is used.
-   :type sensorless: bool
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
@@ -1340,7 +1343,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, theta_M_meas = None)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0)
 
       
       Compute the feedback signals for the control system.
@@ -1349,11 +1352,39 @@ Module Contents
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
-      :param theta_M_meas: Measured mechanical rotor angle (rad), used only in sensored mode.
-      :type theta_M_meas: float, optional
+      :param eps_ext: External mechanical position error signal (rad), defaults to 0.
+      :type eps_ext: float, optional
+      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
+                based error signal is used exclusively.
+      :type h: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: theta_m
+      :type: float
+
+      
+      Electrical rotor angle estimate (rad).
+
 
 
 

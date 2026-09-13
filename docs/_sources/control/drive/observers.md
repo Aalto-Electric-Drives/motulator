@@ -201,33 +201,34 @@ alt: Pole placement example in sensorless drives
 
 ### Speed and Flux Observer
 
-To estimate the rotor speed, the flux observer {eq}`im_obs` is extended with the speed observer {eq}`speed_obs` in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The error signal is different in sensored and sensorless drives, as described below.
+To estimate the rotor speed, the flux observer {eq}`im_obs` is extended with the speed observer {eq}`speed_obs` in the {class}`motulator.drive.control.im.SpeedFluxObserver` class. The speed error signal is
 
-#### Sensored Drives
+```{math}
+---
+label: im_obs_eps_weighted
+---
+    \varepsilon = h \varepsilon_\mathrm{ext} - \frac{1 - h}{\np}\IM\left\{ \frac{\eo}{\hatpsiR} \right\}
+```
 
-In sensored drives, the error signal for the mechanical rotor speed is
+where $\varepsilon_\mathrm{ext}$ is an externally supplied error signal and $h \in [0, 1]$ is its weight, analogously to the synchronous-machine observer {eq}`sm_obs_eps`. Setting $h = 0$ gives sensorless operation, where the reduced-order speed observer {eq}`speed_obs_ro` becomes essentially the same as the conventional slip-relation-based estimator with a first-order low-pass filter {cite}`Hin2010`. In sensored drives, $h = 1$ is used together with
 
 ```{math}
 ---
 label: im_obs_eps_sensored
 ---
-    \varepsilon = \omegaMmeas - \hatomegaM
+    \varepsilon_\mathrm{ext} = \omegaMmeas - \hatomegaM
 ```
 
-where $\omegaMmeas$ is the measured speed and $\hatomegaM$ is the filtered speed. The measured speed $\omegaMmeas$ may contain a significant amount of noise (such as quantization noise from incremental encoders), which is filtered by the speed observer.
-
-#### Sensorless Drives
-
-In sensorless drives, the estimation error of the mechanical rotor speed is obtained from the flux observer {eq}`im_obs` and {eq}`im_eo` as
+where $\omegaMmeas$ is the measured speed, filtered by the speed observer to reduce noise (e.g., quantization noise from an incremental encoder). The gain {eq}`inherently`, which decouples the speed estimation from the flux estimation, is scheduled with the same weight,
 
 ```{math}
 ---
-label: im_obs_eps
+label: im_k2_weighted
 ---
-    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiR} \right\}
+    \kob = (1 - h)\frac{\hatpsiR}{\hatpsiR^*} \koa
 ```
 
-The reduced-order speed observer {eq}`speed_obs_ro` with the error signal {eq}`im_obs_eps` is essentially the same as the conventional slip-relation-based estimator with the first-order low-pass filter, see {cite}`Hin2010`.
+reducing to {eq}`inherently` for $h = 0$ and to $\kob = 0$ for $h = 1$.
 
 #### Gain Analysis and Selection
 
@@ -310,23 +311,25 @@ label: sm_eo
     \eo = \hatpsisfcn(\is') - \hatpsis
 ```
 
-where $\hatpsisfcn$ is the flux map estimate. In sensored drives, the estimation error signal is
+where $\hatpsisfcn$ is the flux map estimate. The position estimation error signal is
+
+```{math}
+---
+label: sm_obs_eps
+---
+    \varepsilon = h \varepsilon_\mathrm{ext} - \frac{1 - h}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
+```
+
+where $\varepsilon_\mathrm{ext}$ is an externally supplied error signal and $h \in [0, 1]$ is its weight. The second term is the model-based (back-EMF) error signal obtained from {eq}`sm_obs` and {eq}`sm_eo` {cite}`Hin2018`. Setting $h = 0$ gives sensorless operation, where the error signal is generated internally. In sensored drives, $h = 1$ is used together with
 
 ```{math}
 ---
 label: sm_obs_eps_sensored
 ---
-    \varepsilon = \thetaMmeas - \hatthetam/\np
+    \varepsilon_\mathrm{ext} = \thetaMmeas - \hatthetam/\np
 ```
 
-where $\thetaMmeas$ is the measured mechanical angular position. In sensorless drives, the estimation error signal of the mechanical rotor position is obtained from {eq}`sm_obs` and {eq}`sm_eo` as {cite}`Hin2018`
-
-```{math}
----
-label: sm_obs_eps_sensorless
----
-    \varepsilon = -\frac{1}{\np}\IM\left\{ \frac{\eo}{\hatpsiaux} \right\}
-```
+where $\thetaMmeas$ is the measured mechanical angular position. Intermediate values $0 < h < 1$ blend the two error signals. As shown below, the observer gain $\kob$ follows the same weight, so the gain selection is consistent for any $h$.
 
 The mechanical position is used in these signals for compatibility with the generic speed observer {eq}`speed_obs`. The torque estimate is given by
 
@@ -389,9 +392,11 @@ label: sigma_sensorless
 
 where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed, one pole is placed at $s = 0$ and another at $s = -\beta$. Unstable double pole at $s = 0$ is avoided, enabling stable start of the machine.
 
+Since the gain $\kob$ decouples the flux estimation from the rotor angle only to the extent that the model-based error signal is used, it is scheduled with the same weight $h$ as in {eq}`sm_obs_eps`, i.e., $\kob = (1 - h)\sigma\hatpsiaux/\hatpsiaux^*$. This reduces to {eq}`k1k2_sensorless` for $h = 0$ and to $\kob = 0$ for $h = 1$ (the sensored case above), interpolating between them in between.
+
 ### Speed and Flux Observer
 
-To estimate the rotor speed and position, the flux observer {eq}`sm_obs` is extended with the speed observer {eq}`speed_obs` in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The error signals are defined above in {eq}`sm_obs_eps_sensored` and {eq}`sm_obs_eps_sensorless` for sensored and sensorless drives, respectively.
+To estimate the rotor speed and position, the flux observer {eq}`sm_obs` is extended with the speed observer {eq}`speed_obs` in the {class}`motulator.drive.control.sm.SpeedFluxObserver` class. The error signal is defined above in {eq}`sm_obs_eps`.
 
 #### Gain Analysis and Selection
 

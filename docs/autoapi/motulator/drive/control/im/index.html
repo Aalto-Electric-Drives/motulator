@@ -884,26 +884,30 @@ used in speed estimation.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.FluxObserver">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">FluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">FluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver" title="Link to this definition">#</a></dt>
 <dd><p>Reduced-order flux observer.</p>
 <p>This class implements a reduced-order flux observer for induction machines. The
 observer structure is similar to <a class="footnote-reference brackets" href="#hin2010" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The observer operates in synchronous
-coordinates rotating at <cite>w_c</cite> (but not locked to any particular vector). The main-
-flux saturation can be taken into account by providing the saturation model via
-<cite>InductionMachinePars</cite>.</p>
+coordinates rotating at <cite>w_c</cite> (but not locked to any particular vector). The rotor
+speed error signal is either computed internally from the flux estimation error or
+supplied externally, e.g., from the speed measurement. The weight <cite>h</cite> of the
+external signal, given to <cite>compute_output</cite>, selects between these: <cite>h = 0</cite> gives
+purely model-based (sensorless) operation, <cite>h = 1</cite> relies on the external signal
+alone, and intermediate values blend the two. The conjugate-error observer gain
+follows the same weight. The main-flux saturation can be taken into account by
+providing the saturation model via <cite>InductionMachinePars</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="../../model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>k_o1</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Observer gains as functions of the electrical angular speed of the rotor.</p></li>
-<li><p><strong>k_o2</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Observer gains as functions of the electrical angular speed of the rotor.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Observer gain as a function of the electrical angular speed of the rotor.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The pure voltage model corresponds to <code class="docutils literal notranslate"><span class="pre">k_o1</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0</span></code> and <cite>k_o2 = lambda
-w_m: 0`</cite>, resulting in the marginally stable estimation-error dynamics. The current
-model is obtained by setting <code class="docutils literal notranslate"><span class="pre">k_o1</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">1</span></code> and <cite>k_o2 = lambda w_m: 0`</cite>.</p>
+<p>The pure voltage model corresponds to <code class="docutils literal notranslate"><span class="pre">k_o</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0</span></code>, resulting in the
+marginally stable estimation-error dynamics. The current model is obtained by
+setting <code class="docutils literal notranslate"><span class="pre">k_o</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">1</span></code> together with <cite>h = 1</cite>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hin2010" role="doc-footnote">
@@ -915,7 +919,7 @@ Trans. Power Electron., 2010, <a class="reference external" href="https://doi.or
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.FluxObserver.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute the feedback signals for the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -923,6 +927,9 @@ Trans. Power Electron., 2010, <a class="reference external" href="https://doi.or
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Rotor speed (mechanical rad/s), typically from the speed observer.</p></li>
+<li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – External rotor speed error signal (mechanical rad/s), defaults to 0.</p></li>
+<li><p><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Weight of <cite>eps_ext</cite> in the range [0, 1], defaults to 0, i.e., the model-
+based error signal is used exclusively.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1394,20 +1401,18 @@ desired closed-loop bandwidth and the rotor inertia estimate.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedFluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensorless</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedFluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">J</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver" title="Link to this definition">#</a></dt>
 <dd><p>Flux observer with speed estimation.</p>
 <p>This class implements a reduced-order flux observer for induction machines with
 speed estimation. If the inertia of the mechanical system is provided, the observer
-also estimates the load torque, to avoid the lag in the speed estimate. In sensored
-mode, the measured rotor speed is filtered.</p>
+also estimates the load torque, to avoid the lag in the speed estimate. The rotor
+speed error signal is defined in {class}`FluxObserver`.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="../../model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Speed estimation pole (rad/s).</p></li>
-<li><p><strong>k_o1</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Observer gains as functions of the electrical angular speed of the rotor.</p></li>
-<li><p><strong>k_o2</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Observer gains as functions of the electrical angular speed of the rotor.</p></li>
-<li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, sensorless mode is used.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>]</em>) – Observer gain as a function of the electrical angular speed of the rotor.</p></li>
 <li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Inertia of the mechanical system (kgm²). Defaults to None, which means the
 mechanical system model is not used.</p></li>
 </ul>
@@ -1415,14 +1420,16 @@ mechanical system model is not used.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute feedback signals with speed estimation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
-<li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Measured mechanical rotor speed (rad/s), used only in sensored mode.</p></li>
+<li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – External rotor speed error signal (mechanical rad/s), defaults to 0.</p></li>
+<li><p><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Weight of <cite>eps_ext</cite> in the range [0, 1], defaults to 0, i.e., the model-
+based error signal is used exclusively.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

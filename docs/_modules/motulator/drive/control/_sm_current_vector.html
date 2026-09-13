@@ -474,6 +474,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._sm_observers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ObserverOutputs</span><span class="p">,</span>
     <span class="n">create_speed_flux_observer</span><span class="p">,</span>
+    <span class="n">position_error</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._sm_reference_gen</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReferenceGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -639,6 +640,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">create_speed_flux_observer</span><span class="p">(</span>
             <span class="n">par</span><span class="p">,</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_f</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">J</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
 
@@ -652,7 +654,12 @@
         <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get the feedback signals."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">theta_M_meas</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">theta_M_meas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Rotor angle must be provided in sensored mode"</span><span class="p">)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">position_error</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">n_p</span><span class="p">,</span> <span class="n">theta_M_meas</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CurrentVectorController.compute_output">

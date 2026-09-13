@@ -498,6 +498,7 @@
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Coordinate system angle</span>
     <span class="n">e_o</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Estimation error</span>
     <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Mechanical rotor speed estimation error signal</span>
+    <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Weight of the external speed error signal</span>
 
 
 <span class="c1"># %%</span>
@@ -509,22 +510,27 @@
 
 <span class="sd">    This class implements a reduced-order flux observer for induction machines. The</span>
 <span class="sd">    observer structure is similar to [#Hin2010]_. The observer operates in synchronous</span>
-<span class="sd">    coordinates rotating at `w_c` (but not locked to any particular vector). The main-</span>
-<span class="sd">    flux saturation can be taken into account by providing the saturation model via</span>
-<span class="sd">    `InductionMachinePars`.</span>
+<span class="sd">    coordinates rotating at `w_c` (but not locked to any particular vector). The rotor</span>
+<span class="sd">    speed error signal is either computed internally from the flux estimation error or</span>
+<span class="sd">    supplied externally, e.g., from the speed measurement. The weight `h` of the</span>
+<span class="sd">    external signal, given to `compute_output`, selects between these: `h = 0` gives</span>
+<span class="sd">    purely model-based (sensorless) operation, `h = 1` relies on the external signal</span>
+<span class="sd">    alone, and intermediate values blend the two. The conjugate-error observer gain</span>
+<span class="sd">    follows the same weight. The main-flux saturation can be taken into account by</span>
+<span class="sd">    providing the saturation model via `InductionMachinePars`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : InductionMachineInvGammaPars | InductionMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
-<span class="sd">    k_o1, k_o2 : Callable[[float], complex]</span>
-<span class="sd">        Observer gains as functions of the electrical angular speed of the rotor.</span>
+<span class="sd">    k_o : Callable[[float], complex]</span>
+<span class="sd">        Observer gain as a function of the electrical angular speed of the rotor.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The pure voltage model corresponds to ``k_o1 = lambda w_m: 0`` and `k_o2 = lambda</span>
-<span class="sd">    w_m: 0``, resulting in the marginally stable estimation-error dynamics. The current</span>
-<span class="sd">    model is obtained by setting ``k_o1 = lambda w_m: 1`` and `k_o2 = lambda w_m: 0``.</span>
+<span class="sd">    The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in the</span>
+<span class="sd">    marginally stable estimation-error dynamics. The current model is obtained by</span>
+<span class="sd">    setting ``k_o = lambda w_m: 1`` together with `h = 1`.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -537,12 +543,10 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachinePars</span> <span class="o">|</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
-        <span class="n">k_o1</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
-        <span class="n">k_o2</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
+        <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_o1</span> <span class="o">=</span> <span class="n">k_o1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_o2</span> <span class="o">=</span> <span class="n">k_o2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span> <span class="o">=</span> <span class="n">k_o</span>
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -553,7 +557,12 @@
 <div class="viewcode-block" id="FluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the feedback signals for the control system.</span>
@@ -566,6 +575,11 @@
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
 <span class="sd">            Rotor speed (mechanical rad/s), typically from the speed observer.</span>
+<span class="sd">        eps_ext : float, optional</span>
+<span class="sd">            External rotor speed error signal (mechanical rad/s), defaults to 0.</span>
+<span class="sd">        h : float, optional</span>
+<span class="sd">            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-</span>
+<span class="sd">            based error signal is used exclusively.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -577,7 +591,7 @@
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
 
         <span class="c1"># Initialize the output signals</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
 
         <span class="c1"># Current and voltage vectors in estimated rotor coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
@@ -613,8 +627,10 @@
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># Disable torque estimation in pure open-loop V/Hz control mode</span>
             <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="c1"># Mechanical speed estimation error for the speed observer</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="c1"># Rotor speed error signal for the speed observer. The model-based part is faded</span>
+        <span class="c1"># out as the external error signal takes over.</span>
+        <span class="n">eps_o</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">eps_ext</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">eps_o</span>
 
         <span class="k">return</span> <span class="n">out</span></div>
 
@@ -625,10 +641,11 @@
 <span class="w">        </span><span class="sd">"""Update the state estimates."""</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
 
-        <span class="c1"># Observer gains</span>
-        <span class="n">k_o1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o1</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
+        <span class="c1"># Observer gains. The conjugate-error gain decouples the speed estimation error,</span>
+        <span class="c1"># so it is faded out together with the model-based error signal.</span>
+        <span class="n">k_o1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
         <span class="n">proj</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="mf">0.0</span>
-        <span class="n">k_o2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o2</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">proj</span>  <span class="c1"># Inherently sensorless observer gain</span>
+        <span class="n">k_o2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">proj</span>
 
         <span class="c1"># Update the states</span>
         <span class="n">v_err</span> <span class="o">=</span> <span class="n">k_o1</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">+</span> <span class="n">k_o2</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">e_o</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
@@ -655,8 +672,8 @@
 
 <span class="sd">    This class implements a reduced-order flux observer for induction machines with</span>
 <span class="sd">    speed estimation. If the inertia of the mechanical system is provided, the observer</span>
-<span class="sd">    also estimates the load torque, to avoid the lag in the speed estimate. In sensored</span>
-<span class="sd">    mode, the measured rotor speed is filtered.</span>
+<span class="sd">    also estimates the load torque, to avoid the lag in the speed estimate. The rotor</span>
+<span class="sd">    speed error signal is defined in {class}`FluxObserver`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -664,10 +681,8 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float</span>
 <span class="sd">        Speed estimation pole (rad/s).</span>
-<span class="sd">    k_o1, k_o2 : Callable[[float], complex]</span>
-<span class="sd">        Observer gains as functions of the electrical angular speed of the rotor.</span>
-<span class="sd">    sensorless : bool</span>
-<span class="sd">        If True, sensorless mode is used.</span>
+<span class="sd">    k_o : Callable[[float], complex]</span>
+<span class="sd">        Observer gain as a function of the electrical angular speed of the rotor.</span>
 <span class="sd">    J : float, optional</span>
 <span class="sd">        Inertia of the mechanical system (kgm²). Defaults to None, which means the</span>
 <span class="sd">        mechanical system model is not used.</span>
@@ -678,9 +693,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
         <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">k_o1</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
-        <span class="n">k_o2</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
-        <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
         <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Configure observer gains for critically damped dynamics</span>
@@ -692,14 +705,12 @@
             <span class="n">k_tau</span> <span class="o">=</span> <span class="n">J</span> <span class="o">*</span> <span class="n">alpha_o</span><span class="o">**</span><span class="mi">2</span>
         <span class="c1"># Create component observers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span> <span class="o">=</span> <span class="n">SpeedObserver</span><span class="p">(</span><span class="n">k_w</span><span class="p">,</span> <span class="n">k_tau</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span> <span class="o">=</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">k_o1</span><span class="p">,</span> <span class="n">k_o2</span><span class="p">)</span>
-        <span class="c1"># Choose sensored or sensorless mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">sensorless</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span> <span class="o">=</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">k_o</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SpeedFluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute feedback signals with speed estimation.</span>
@@ -710,8 +721,11 @@
 <span class="sd">            Stator voltage (V) in stator coordinates.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
-<span class="sd">        w_M_meas : float, optional</span>
-<span class="sd">            Measured mechanical rotor speed (rad/s), used only in sensored mode.</span>
+<span class="sd">        eps_ext : float, optional</span>
+<span class="sd">            External rotor speed error signal (mechanical rad/s), defaults to 0.</span>
+<span class="sd">        h : float, optional</span>
+<span class="sd">            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-</span>
+<span class="sd">            based error signal is used exclusively.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -720,10 +734,7 @@
 
 <span class="sd">        """</span>
         <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">()</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="ow">and</span> <span class="n">w_M_meas</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Use the measured rotor speed in sensored mode</span>
-            <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">w_M_meas</span> <span class="o">-</span> <span class="n">w_M</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">tau_L</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
@@ -750,9 +761,9 @@
 <span class="sd">    Create a flux observer with speed estimation.</span>
 
 <span class="sd">    In sensored mode, the measured rotor speed is filtered. In sensorless mode, the</span>
-<span class="sd">    rotor speed is estimated based on the stator voltage and current. The observer gains</span>
-<span class="sd">    are ``k_o1 = k_o`` and ``k_o2 = k_o`` in sensorless mode, and ``k_o1 = k_o`` and</span>
-<span class="sd">    ``k_o2 = 0`` in sensored mode.</span>
+<span class="sd">    rotor speed is estimated based on the stator voltage and current. The sensored mode</span>
+<span class="sd">    corresponds to the weight `h = 1` and the sensorless mode to `h = 0`, see</span>
+<span class="sd">    {class}`FluxObserver`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -787,16 +798,12 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">default_k_o_sensored</span><span class="p">(</span><span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
         <span class="k">return</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_m</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">zero_gain</span><span class="p">(</span><span class="n">_</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span><span class="n">j</span>
-
     <span class="k">if</span> <span class="n">sensorless</span><span class="p">:</span>
-        <span class="n">k_o1</span> <span class="o">=</span> <span class="n">k_o2</span> <span class="o">=</span> <span class="n">default_k_o_sensorless</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
+        <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_k_o_sensorless</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">k_o1</span> <span class="o">=</span> <span class="n">default_k_o_sensored</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
-        <span class="n">k_o2</span> <span class="o">=</span> <span class="n">zero_gain</span>
+        <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_k_o_sensored</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
 
-    <span class="k">return</span> <span class="n">SpeedFluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">k_o1</span><span class="p">,</span> <span class="n">k_o2</span><span class="p">,</span> <span class="n">sensorless</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SpeedFluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">k_o</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_vhz_observer</span><span class="p">(</span>
@@ -806,9 +813,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Create a sensorless flux observer without speed estimation.</span>
 
-<span class="sd">    The observer gains are ``k_o1 = k_o`` and ``k_o2 = k_o``. However, if ``L_M = inf``,</span>
-<span class="sd">    then ``k_o1 = 1`` and ``k_o2 = 0``, allowing to parametrize observer-based V/Hz</span>
-<span class="sd">    control as pure open loop V/Hz control.</span>
+<span class="sd">    The observer gain is `k_o`. However, if ``L_M = inf``, then ``k_o = 1`` is used</span>
+<span class="sd">    together with the weight `h = 1`, which disables the model-based correction and</span>
+<span class="sd">    allows to parametrize observer-based V/Hz control as pure open loop V/Hz control.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -825,8 +832,8 @@
 <span class="sd">        Sensorless flux observer without speed estimation.</span>
 
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">==</span> <span class="n">inf</span><span class="p">:</span>  <span class="c1"># Pure open-loop V/Hz control</span>
-        <span class="k">return</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">==</span> <span class="n">inf</span><span class="p">:</span>  <span class="c1"># Pure open-loop V/Hz control, used with h = 1</span>
+        <span class="k">return</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">default_k_o</span><span class="p">(</span><span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_m</span><span class="p">)</span>
@@ -834,7 +841,7 @@
     <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_k_o</span>
 
-    <span class="k">return</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">k_o</span><span class="p">,</span> <span class="n">k_o</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">k_o</span><span class="p">)</span>
 </pre></div>
 
                 </article>

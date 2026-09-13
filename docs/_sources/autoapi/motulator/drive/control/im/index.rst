@@ -364,29 +364,32 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: FluxObserver(par, k_o1, k_o2)
+.. py:class:: FluxObserver(par, k_o)
 
    
    Reduced-order flux observer.
 
    This class implements a reduced-order flux observer for induction machines. The
    observer structure is similar to [#Hin2010]_. The observer operates in synchronous
-   coordinates rotating at `w_c` (but not locked to any particular vector). The main-
-   flux saturation can be taken into account by providing the saturation model via
-   `InductionMachinePars`.
+   coordinates rotating at `w_c` (but not locked to any particular vector). The rotor
+   speed error signal is either computed internally from the flux estimation error or
+   supplied externally, e.g., from the speed measurement. The weight `h` of the
+   external signal, given to `compute_output`, selects between these: `h = 0` gives
+   purely model-based (sensorless) operation, `h = 1` relies on the external signal
+   alone, and intermediate values blend the two. The conjugate-error observer gain
+   follows the same weight. The main-flux saturation can be taken into account by
+   providing the saturation model via `InductionMachinePars`.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
-   :param k_o1: Observer gains as functions of the electrical angular speed of the rotor.
-   :type k_o1: Callable[[float], complex]
-   :param k_o2: Observer gains as functions of the electrical angular speed of the rotor.
-   :type k_o2: Callable[[float], complex]
+   :param k_o: Observer gain as a function of the electrical angular speed of the rotor.
+   :type k_o: Callable[[float], complex]
 
    .. rubric:: Notes
 
-   The pure voltage model corresponds to ``k_o1 = lambda w_m: 0`` and `k_o2 = lambda
-   w_m: 0``, resulting in the marginally stable estimation-error dynamics. The current
-   model is obtained by setting ``k_o1 = lambda w_m: 1`` and `k_o2 = lambda w_m: 0``.
+   The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in the
+   marginally stable estimation-error dynamics. The current model is obtained by
+   setting ``k_o = lambda w_m: 1`` together with `h = 1`.
 
    .. rubric:: References
 
@@ -411,7 +414,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, eps_ext = 0.0, h = 0.0)
 
       
       Compute the feedback signals for the control system.
@@ -422,6 +425,11 @@ Module Contents
       :type i_s_ab: complex
       :param w_M: Rotor speed (mechanical rad/s), typically from the speed observer.
       :type w_M: float
+      :param eps_ext: External rotor speed error signal (mechanical rad/s), defaults to 0.
+      :type eps_ext: float, optional
+      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
+                based error signal is used exclusively.
+      :type h: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
@@ -1138,26 +1146,22 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, alpha_o, k_o1, k_o2, sensorless, J = None)
+.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, J = None)
 
    
    Flux observer with speed estimation.
 
    This class implements a reduced-order flux observer for induction machines with
    speed estimation. If the inertia of the mechanical system is provided, the observer
-   also estimates the load torque, to avoid the lag in the speed estimate. In sensored
-   mode, the measured rotor speed is filtered.
+   also estimates the load torque, to avoid the lag in the speed estimate. The rotor
+   speed error signal is defined in {class}`FluxObserver`.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param alpha_o: Speed estimation pole (rad/s).
    :type alpha_o: float
-   :param k_o1: Observer gains as functions of the electrical angular speed of the rotor.
-   :type k_o1: Callable[[float], complex]
-   :param k_o2: Observer gains as functions of the electrical angular speed of the rotor.
-   :type k_o2: Callable[[float], complex]
-   :param sensorless: If True, sensorless mode is used.
-   :type sensorless: bool
+   :param k_o: Observer gain as a function of the electrical angular speed of the rotor.
+   :type k_o: Callable[[float], complex]
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
@@ -1179,7 +1183,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M_meas)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0)
 
       
       Compute feedback signals with speed estimation.
@@ -1188,8 +1192,11 @@ Module Contents
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
-      :param w_M_meas: Measured mechanical rotor speed (rad/s), used only in sensored mode.
-      :type w_M_meas: float, optional
+      :param eps_ext: External rotor speed error signal (mechanical rad/s), defaults to 0.
+      :type eps_ext: float, optional
+      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
+                based error signal is used exclusively.
+      :type h: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs

@@ -811,7 +811,12 @@
         <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get the feedback signals."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M_meas</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">w_M_meas</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Rotor speed must be provided in sensored mode"</span><span class="p">)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">w_M_meas</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">w_M</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">eps</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FluxVectorController.compute_output">
@@ -928,9 +933,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_lpf</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Low-pass-filtered torque estimate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
         <span class="c1"># Configurations for pure open-loop V/Hz control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">==</span> <span class="n">inf</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">psi_s_nom</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">inf</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Disables the model-based correction</span>
 
 <div class="viewcode-block" id="ObserverBasedVHzController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ObserverBasedVHzController.get_feedback">[docs]</a>
@@ -938,7 +945,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
-        <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">)</span>
+        <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 
 
