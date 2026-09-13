@@ -72,7 +72,7 @@ Configure the system model.
     par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
-    converter = model.FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=400, f_g=50)
+    converter = model.FrequencyConverter(C_dc=235e-6, L_dc=1e-3, U_g=400, f_g=50)
     mdl = model.Drive(machine, mechanics, converter, pwm=True)
 
 
@@ -190,7 +190,7 @@ quantities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.868 seconds)
+   **Total running time of the script:** (0 minutes 11.196 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py:

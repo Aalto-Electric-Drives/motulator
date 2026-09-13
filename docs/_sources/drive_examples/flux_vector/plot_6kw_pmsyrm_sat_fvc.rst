@@ -366,7 +366,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 19.260 seconds)
+   **Total running time of the script:** (0 minutes 33.673 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:

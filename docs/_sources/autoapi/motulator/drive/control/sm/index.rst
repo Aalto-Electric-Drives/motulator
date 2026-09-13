@@ -252,7 +252,7 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
                    2*pi*50/3, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
-   :param alpha_cur: Current-reference tracking bandwidth (rad/s), defaults to 2*pi*400.
+   :param alpha_cur: Current-reference tracking bandwidth (rad/s), defaults to 2*pi*200.
    :type alpha_cur: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
@@ -905,7 +905,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_cur = 2 * pi * 400)
+.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_cur = 2 * pi * 200)
 
    
    Optimal reference generator for synchronous machines.
@@ -929,7 +929,7 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 1.
    :type k_mtpv: float, optional
-   :param alpha_cur: Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*400. It
+   :param alpha_cur: Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*200. It
                      should be well below the sampling frequency to maintain a numerical margin.
    :type alpha_cur: float, optional
 
