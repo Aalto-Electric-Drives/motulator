@@ -38,7 +38,7 @@ class ReferenceGenerator:
     k_mtpv : float, optional
         MTPV margin, defaults to 1.
     alpha_cur : float, optional
-        Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*400. It
+        Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*200. It
         should be well below the sampling frequency to maintain a numerical margin.
 
     References
@@ -65,7 +65,7 @@ class ReferenceGenerator:
         psi_s_max: float = inf,
         k_u: float = 1.0,
         k_mtpv: float = 1.0,
-        alpha_cur: float = 2 * pi * 400,
+        alpha_cur: float = 2 * pi * 200,
     ) -> None:
         self.par = par
         self.k_u = k_u
