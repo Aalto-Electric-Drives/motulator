@@ -20,6 +20,86 @@ from motulator.drive.utils._parameters import (
 
 
 # %%
+class SquareWaveInjection:
+    """
+    Square-wave signal injection with demodulation.
+
+    This injects a square-wave voltage in the estimated d-axis direction and computes
+    the mechanical position error signal by demodulating the current response. Cross-
+    saturation errors are compensated for using flux maps.
+
+    Parameters
+    ----------
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+        Machine model parameters.
+    U_inj : float
+        Injected voltage amplitude (V).
+    T_s : float
+        Sampling period (s).
+    N_inj : int, optional
+        Number of sampling periods per injection voltage half-period, defaults to 1.
+
+    """
+
+    def __init__(
+        self,
+        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        U_inj: float,
+        T_s: float,
+        N_inj: int = 1,
+    ) -> None:
+        if N_inj < 1:
+            raise ValueError("N_inj must be a positive integer")
+        self.par = par
+        self.U_inj = U_inj
+        self.N_inj = N_inj
+        # Constant error gain based on the unsaturated inductances
+        L_s = par.incr_ind_mat(0j)
+        self.k = 0.5 * L_s[0, 0] / (L_s[1, 1] - L_s[0, 0]) / par.n_p
+        self.u_sd_inj: float = U_inj
+        self._sign: float = 1.0
+        self._T_s = T_s
+        self._psi_sq_history: deque[float] = deque(maxlen=2 * N_inj + 1)
+        self._eps: float = 0.0
+        self._inj_counter: int = 0
+
+    def compute_error(self, i_s_ab: complex, theta_m: float) -> float:
+        """Compute mechanical position error signal."""
+        # Apply the flux map to compensate the cross saturation
+        i_s = exp(-1j * theta_m) * i_s_ab
+        psi_sq = complex(self.par.psi_s_dq(i_s)).imag
+        self._psi_sq_history.append(psi_sq)
+
+        if len(self._psi_sq_history) < 2 * self.N_inj + 1:
+            return self._eps
+        if self._inj_counter != 0:
+            return self._eps
+
+        # Compute the second difference over two injection half-periods
+        d_psi_sq = (
+            self._psi_sq_history[-1]
+            - 2.0 * self._psi_sq_history[-1 - self.N_inj]
+            + self._psi_sq_history[-1 - 2 * self.N_inj]
+        )
+
+        # Update the error signal at injection voltage transitions
+        if abs(self.u_sd_inj) > 0:
+            self._eps = self.k * d_psi_sq / (self.u_sd_inj * self.N_inj * self._T_s)
+        else:
+            self._eps = 0.0
+
+        return self._eps
+
+    def update(self, T_s: float, scale: float = 1.0) -> None:
+        """Toggle the injection voltage, whose amplitude is scaled by `scale`."""
+        self._inj_counter = (self._inj_counter + 1) % self.N_inj
+        if self._inj_counter == 0:
+            self._sign = -self._sign
+        self.u_sd_inj = self._sign * self.U_inj * scale
+        self._T_s = T_s
+
+
+# %%
 class SignalInjectionObserver:
     """
     Signal injection observer for synchronous machine drives.
@@ -50,10 +130,6 @@ class SignalInjectionObserver:
         J: float | None = None,
         N_inj: int = 1,
     ) -> None:
-        if N_inj < 1:
-            raise ValueError("N_inj must be a positive integer")
-        self._T_s = T_s
-        self.N_inj = N_inj
         # Configure observer gains for critically damped dynamics
         if J is None:
             self.k_theta = 2 * par.n_p * alpha_o
@@ -64,49 +140,15 @@ class SignalInjectionObserver:
             k_w = 3 * alpha_o**2
             k_tau = J * alpha_o**3
 
-        # Create speed observer
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
+        self.injection = SquareWaveInjection(par, U_inj, T_s, N_inj)
         # State
         self.theta_m: float = 0.0
-        # Constant error gain based on the unsaturated inductances
-        L_s = par.incr_ind_mat(0j)
-        self.k = 0.5 * L_s[0, 0] / (L_s[1, 1] - L_s[0, 0]) / par.n_p
-        self.U_inj = U_inj
-        self.u_sd_inj = U_inj
-        self._psi_sq_history: deque[float] = deque(maxlen=2 * N_inj + 1)
-        self._eps: float = 0.0
-        self._inj_counter: int = 0
         self.par = par
         self.sensorless = True  # For compatibility reasons
 
-    def _compute_demodulation_error(self, i_s: complex) -> float:
-        """Compute mechanical position error signal."""
-        # Apply the flux map to compensate the cross saturation
-        psi_sq = complex(self.par.psi_s_dq(i_s)).imag
-        self._psi_sq_history.append(psi_sq)
-
-        if len(self._psi_sq_history) < 2 * self.N_inj + 1:
-            return self._eps
-        if self._inj_counter != 0:
-            return self._eps
-
-        # Compute the second difference over two injection half-periods
-        d_psi_sq = (
-            self._psi_sq_history[-1]
-            - 2.0 * self._psi_sq_history[-1 - self.N_inj]
-            + self._psi_sq_history[-1 - 2 * self.N_inj]
-        )
-
-        # Update the error signal at injection voltage transitions
-        if abs(self.u_sd_inj) > 0:
-            self._eps = self.k * d_psi_sq / (self.u_sd_inj * self.N_inj * self._T_s)
-        else:
-            self._eps = 0.0
-
-        return self._eps
-
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, theta_M_meas: float | None
+        self, u_s_ab: complex, i_s_ab: complex, theta_M_meas: float | None = None
     ) -> ObserverOutputs:
         """Compute output."""
         # Unpack and initialize the output signals
@@ -121,7 +163,7 @@ class SignalInjectionObserver:
         out.u_s = exp(-1j * out.theta_m) * u_s_ab
 
         # Compute the mechanical position error signal
-        out.eps = self._compute_demodulation_error(out.i_s)
+        out.eps = self.injection.compute_error(i_s_ab, out.theta_m)
 
         # Coordinate system angular frequency
         out.w_c = out.w_m + self.k_theta * out.eps
@@ -136,10 +178,7 @@ class SignalInjectionObserver:
         """Update the states."""
         self.speed_observer.update(T_s, out.eps, out.tau_M)
         self.theta_m = wrap(self.theta_m + T_s * out.w_c)
-        self._inj_counter = (self._inj_counter + 1) % self.N_inj
-        if self._inj_counter == 0:
-            self.u_sd_inj = (-1 if self.u_sd_inj > 0 else 1) * self.U_inj
-        self._T_s = T_s
+        self.injection.update(T_s)
 
 
 # %%
@@ -207,7 +246,8 @@ class SignalInjectionController(CurrentVectorController):
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
         ref.u_s = (
-            self.current_ctrl.compute_output(ref.i_s, fbk.i_s) + self.observer.u_sd_inj
+            self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
+            + self.observer.injection.u_sd_inj
         )
         return ref
 

@@ -9,6 +9,7 @@ from motulator.drive.control._sm_observers import (
     ObserverOutputs,
     create_speed_flux_observer,
     create_vhz_observer,
+    position_error,
 )
 from motulator.drive.control._sm_reference_gen import ReferenceGenerator
 from motulator.drive.utils._parameters import (
@@ -235,6 +236,7 @@ class FluxVectorController:
             par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
         )  # alpha_o is resolved in the configuration's __post_init__
         self.cfg = cfg
+        self.par = par
         self.sensorless = cfg.sensorless
 
     def get_feedback(
@@ -244,8 +246,13 @@ class FluxVectorController:
         w_M_meas: float | None,  # Not used, needed for the interface
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
-        """Get the feedback signals with motion sensors."""
-        return self.observer.compute_output(u_s_ab, i_s_ab, theta_M_meas)
+        """Get the feedback signals."""
+        if self.sensorless:
+            return self.observer.compute_output(u_s_ab, i_s_ab)
+        if theta_M_meas is None:
+            raise ValueError("Rotor angle must be provided in sensored mode")
+        eps = position_error(self.par.n_p, theta_M_meas, self.observer.theta_m)
+        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
