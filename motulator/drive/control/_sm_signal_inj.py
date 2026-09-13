@@ -142,10 +142,8 @@ class SignalInjectionObserver:
 
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.injection = SquareWaveInjection(par, U_inj, T_s, N_inj)
-        # State
-        self.theta_m: float = 0.0
+        self.theta_m: float = 0.0  # State
         self.par = par
-        self.sensorless = True  # For compatibility reasons
 
     def compute_output(
         self, u_s_ab: complex, i_s_ab: complex, theta_M_meas: float | None = None
@@ -244,7 +242,7 @@ class SignalInjectionController(CurrentVectorController):
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
-        ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
+        ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
         ref.u_s = (
             self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
             + self.observer.injection.u_sd_inj

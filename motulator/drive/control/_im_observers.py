@@ -27,9 +27,9 @@ class ObserverOutputs:
     tau_L: float = 0.0  # Load torque estimate
     w_c: float = 0.0  # Angular speed of the coordinate system
     w_s: float = 0.0  # Synchronous angular frequency, w_s = w_m + w_r
-    w_r: float = 0.0  # Slip angular frequency
-    w_m: float = 0.0  # Electrical angular speed of the rotor
-    w_M: float = 0.0  # Mechanical angular speed of the rotor
+    w_r: float = 0.0  # Slip angular frequency estimate
+    w_m: float = 0.0  # Electrical angular rotor speed estimate
+    w_M: float = 0.0  # Mechanical angular rotor speed estimate
     theta_c: float = 0.0  # Coordinate system angle
     e_o: complex = 0j  # Estimation error
     eps: float = 0.0  # Mechanical rotor speed estimation error signal

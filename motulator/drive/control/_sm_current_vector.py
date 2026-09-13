@@ -94,6 +94,8 @@ class CurrentVectorControllerCfg:
     alpha_o : float, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
         2*pi*50/3, keeping the default speed observer gain the same.
+    alpha_cur : float, optional
+        Current-reference tracking bandwidth (rad/s), defaults to 2*pi*400.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float], optional
@@ -120,6 +122,7 @@ class CurrentVectorControllerCfg:
     alpha_c: float = 2 * pi * 200
     alpha_i: float | None = None
     alpha_o: float | None = None
+    alpha_cur: float = 2 * pi * 400
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
     psi_s_min: float | None = None
@@ -158,7 +161,13 @@ class CurrentVectorController:
         cfg: CurrentVectorControllerCfg,
     ) -> None:
         self.reference_gen = ReferenceGenerator(
-            par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
+            par,
+            cfg.i_s_max,
+            cfg.psi_s_min,
+            cfg.psi_s_max,
+            cfg.k_u,
+            cfg.k_mtpv,
+            cfg.alpha_cur,
         )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
@@ -189,14 +198,15 @@ class CurrentVectorController:
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
-        ref.i_s = self.reference_gen.compute_current_ref(ref.psi_s, ref.tau_M)
+        ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
+        self.current_ctrl.update(ref.T_s, ref.u_s, fbk.w_c)
+        self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
