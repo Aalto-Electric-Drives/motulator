@@ -138,7 +138,7 @@ class CurrentVectorControllerCfg:
     k_u: float = 0.9
     k_mtpv: float = 0.9
     J: float | None = None
-    sensorless: bool = False
+    sensorless: bool = True
     online: bool = False
     T_s: float = 125e-6
 
