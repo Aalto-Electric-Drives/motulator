@@ -11,7 +11,10 @@ from motulator.drive.control._sm_observers import (
     create_vhz_observer,
     position_error,
 )
-from motulator.drive.control._sm_reference_gen import ReferenceGenerator
+from motulator.drive.control._sm_reference_gen import (
+    ReferenceGenerator,
+    ReferenceGeneratorOnline,
+)
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -138,6 +141,8 @@ class FluxVectorControllerCfg:
     alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
         2*pi*50/3, keeping the default speed observer gain the same.
+    alpha_ref: float, optional
+        Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float] | None, optional
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float] | None, optional
@@ -155,6 +160,10 @@ class FluxVectorControllerCfg:
         used in speed estimation.
     sensorless : bool, optional
         If True, sensorless control is used, defaults to True.
+    online : bool, optional
+        If True, the online reference generation is used, defaults to False.
+    current_ref : bool, optional
+        If True, the current reference is computed for plotting, defaults to False.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 
@@ -165,6 +174,7 @@ class FluxVectorControllerCfg:
     alpha_psi: float | None = None
     alpha_i: float | None = None
     alpha_o: float | None = None
+    alpha_ref: float = 2 * pi * 100
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
     psi_s_min: float | None = None
@@ -173,6 +183,8 @@ class FluxVectorControllerCfg:
     k_mtpv: float = 0.85
     J: float | None = None
     sensorless: bool = True
+    online: bool = False
+    current_ref: bool = False
     T_s: float = 125e-6
 
     def __post_init__(self) -> None:
@@ -224,9 +236,21 @@ class FluxVectorController:
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: FluxVectorControllerCfg,
     ) -> None:
-        self.reference_gen = ReferenceGenerator(
-            par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
-        )
+        if cfg.online:
+            self.reference_gen = ReferenceGeneratorOnline(
+                par,
+                cfg.i_s_max,
+                cfg.psi_s_min,
+                cfg.psi_s_max,
+                cfg.k_u,
+                cfg.k_mtpv,
+                cfg.alpha_ref,
+                cfg.current_ref,
+            )
+        else:
+            self.reference_gen = ReferenceGenerator(
+                par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
+            )
         alpha_psi = cfg.alpha_tau if cfg.alpha_psi is None else cfg.alpha_psi
         alpha_i = cfg.alpha_tau if cfg.alpha_i is None else cfg.alpha_i
         self.flux_torque_ctrl = FluxTorqueController(
@@ -238,6 +262,8 @@ class FluxVectorController:
         self.cfg = cfg
         self.par = par
         self.sensorless = cfg.sensorless
+        self.online = cfg.online
+        self.current_ref = cfg.current_ref
 
     def get_feedback(
         self,
@@ -261,7 +287,8 @@ class FluxVectorController:
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
         # Current references are not used, but they could be computed for plotting
-        # ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
+        if self.current_ref:
+            ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
@@ -269,7 +296,10 @@ class FluxVectorController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
-        # self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
+        if self.online:
+            self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
+        elif self.current_ref:
+            self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

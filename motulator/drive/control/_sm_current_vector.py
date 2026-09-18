@@ -11,7 +11,10 @@ from motulator.drive.control._sm_observers import (
     create_speed_flux_observer,
     position_error,
 )
-from motulator.drive.control._sm_reference_gen import ReferenceGenerator
+from motulator.drive.control._sm_reference_gen import (
+    ReferenceGenerator,
+    ReferenceGeneratorOnline,
+)
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -96,6 +99,8 @@ class CurrentVectorControllerCfg:
         2*pi*50/3, keeping the default speed observer gain the same.
     alpha_cur : float, optional
         Current-reference tracking bandwidth (rad/s), defaults to 2*pi*200.
+    alpha_ref: float, optional
+        Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float], optional
@@ -113,6 +118,8 @@ class CurrentVectorControllerCfg:
         used in speed estimation.
     sensorless : bool, optional
         If True, sensorless control is used, defaults to True.
+    online : bool, optional
+        If True, the online reference generation is used, defaults to False.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 
@@ -123,6 +130,7 @@ class CurrentVectorControllerCfg:
     alpha_i: float | None = None
     alpha_o: float | None = None
     alpha_cur: float = 2 * pi * 200
+    alpha_ref: float = 2 * pi * 100
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
     psi_s_min: float | None = None
@@ -130,7 +138,8 @@ class CurrentVectorControllerCfg:
     k_u: float = 0.9
     k_mtpv: float = 0.9
     J: float | None = None
-    sensorless: bool = True
+    sensorless: bool = False
+    online: bool = False
     T_s: float = 125e-6
 
     def __post_init__(self) -> None:
@@ -160,20 +169,27 @@ class CurrentVectorController:
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: CurrentVectorControllerCfg,
     ) -> None:
-        self.reference_gen = ReferenceGenerator(
-            par,
-            cfg.i_s_max,
-            cfg.psi_s_min,
-            cfg.psi_s_max,
-            cfg.k_u,
-            cfg.k_mtpv,
-            cfg.alpha_cur,
-        )
+        if cfg.online:
+            self.reference_gen = ReferenceGeneratorOnline(
+                par,
+                cfg.i_s_max,
+                cfg.psi_s_min,
+                cfg.psi_s_max,
+                cfg.k_u,
+                cfg.k_mtpv,
+                cfg.alpha_ref,
+                current_ref=True,
+            )
+        else:
+            self.reference_gen = ReferenceGenerator(
+                par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
+            )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
             par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
         )
         self.par = par
+        self.cfg = cfg
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s
 
