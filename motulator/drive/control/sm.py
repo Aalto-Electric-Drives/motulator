@@ -18,7 +18,10 @@ from motulator.drive.control._sm_observers import (
     ObserverOutputs,
     SpeedFluxObserver,
 )
-from motulator.drive.control._sm_reference_gen import ReferenceGenerator
+from motulator.drive.control._sm_reference_gen import (
+    ReferenceGenerator,
+    ReferenceGeneratorOnline,
+)
 from motulator.drive.control._sm_signal_inj import SignalInjectionController
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
@@ -40,6 +43,7 @@ __all__ = [
     "ObserverBasedVHzControllerCfg",
     "ObserverOutputs",
     "ReferenceGenerator",
+    "ReferenceGeneratorOnline",
     "SaturatedSynchronousMachinePars",
     "SignalInjectionController",
     "SpeedController",
