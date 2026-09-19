@@ -97,9 +97,7 @@ class CurrentVectorControllerCfg:
     alpha_o : float, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
         2*pi*50/3, keeping the default speed observer gain the same.
-    alpha_cur : float, optional
-        Current-reference tracking bandwidth (rad/s), defaults to 2*pi*200.
-    alpha_ref: float, optional
+    alpha_ref : float, optional
         Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed.
@@ -129,7 +127,6 @@ class CurrentVectorControllerCfg:
     alpha_c: float = 2 * pi * 200
     alpha_i: float | None = None
     alpha_o: float | None = None
-    alpha_cur: float = 2 * pi * 200
     alpha_ref: float = 2 * pi * 100
     k_o: Callable[[float], float] | None = None
     k_f: Callable[[float], float] | None = None
@@ -169,21 +166,18 @@ class CurrentVectorController:
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: CurrentVectorControllerCfg,
     ) -> None:
-        if cfg.online:
-            self.reference_gen = ReferenceGeneratorOnline(
-                par,
-                cfg.i_s_max,
-                cfg.psi_s_min,
-                cfg.psi_s_max,
-                cfg.k_u,
-                cfg.k_mtpv,
-                cfg.alpha_ref,
-                current_ref=True,
-            )
-        else:
-            self.reference_gen = ReferenceGenerator(
-                par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
-            )
+        reference_generator = (
+            ReferenceGeneratorOnline if cfg.online else ReferenceGenerator
+        )
+        self.reference_gen = reference_generator(
+            par,
+            cfg.i_s_max,
+            cfg.psi_s_min,
+            cfg.psi_s_max,
+            cfg.k_u,
+            cfg.k_mtpv,
+            cfg.alpha_ref,
+        )
         self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
             par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
@@ -222,7 +216,7 @@ class CurrentVectorController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
-        self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
+        self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

@@ -162,8 +162,6 @@ class FluxVectorControllerCfg:
         If True, sensorless control is used, defaults to True.
     online : bool, optional
         If True, the online reference generation is used, defaults to False.
-    current_ref : bool, optional
-        If True, the current reference is computed for plotting, defaults to False.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 
@@ -184,7 +182,6 @@ class FluxVectorControllerCfg:
     J: float | None = None
     sensorless: bool = True
     online: bool = False
-    current_ref: bool = False
     T_s: float = 125e-6
 
     def __post_init__(self) -> None:
@@ -236,21 +233,18 @@ class FluxVectorController:
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         cfg: FluxVectorControllerCfg,
     ) -> None:
-        if cfg.online:
-            self.reference_gen = ReferenceGeneratorOnline(
-                par,
-                cfg.i_s_max,
-                cfg.psi_s_min,
-                cfg.psi_s_max,
-                cfg.k_u,
-                cfg.k_mtpv,
-                cfg.alpha_ref,
-                cfg.current_ref,
-            )
-        else:
-            self.reference_gen = ReferenceGenerator(
-                par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
-            )
+        reference_generator = (
+            ReferenceGeneratorOnline if cfg.online else ReferenceGenerator
+        )
+        self.reference_gen = reference_generator(
+            par,
+            cfg.i_s_max,
+            cfg.psi_s_min,
+            cfg.psi_s_max,
+            cfg.k_u,
+            cfg.k_mtpv,
+            cfg.alpha_ref,
+        )
         alpha_psi = cfg.alpha_tau if cfg.alpha_psi is None else cfg.alpha_psi
         alpha_i = cfg.alpha_tau if cfg.alpha_i is None else cfg.alpha_i
         self.flux_torque_ctrl = FluxTorqueController(
@@ -263,7 +257,6 @@ class FluxVectorController:
         self.par = par
         self.sensorless = cfg.sensorless
         self.online = cfg.online
-        self.current_ref = cfg.current_ref
 
     def get_feedback(
         self,
@@ -286,9 +279,6 @@ class FluxVectorController:
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
-        # Current references are not used, but they could be computed for plotting
-        if self.current_ref:
-            ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
@@ -297,9 +287,7 @@ class FluxVectorController:
         self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
         if self.online:
-            self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
-        elif self.current_ref:
-            self.reference_gen.update(ref.T_s, ref.psi_s, ref.tau_M)
+            self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
