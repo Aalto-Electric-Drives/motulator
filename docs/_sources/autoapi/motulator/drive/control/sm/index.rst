@@ -27,6 +27,7 @@ Classes
    motulator.drive.control.sm.ObserverOutputs
    motulator.drive.control.sm.PIController
    motulator.drive.control.sm.ReferenceGenerator
+   motulator.drive.control.sm.ReferenceGeneratorOnline
    motulator.drive.control.sm.SaturatedSynchronousMachinePars
    motulator.drive.control.sm.SignalInjectionController
    motulator.drive.control.sm.SpeedController
@@ -252,8 +253,8 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
                    2*pi*50/3, keeping the default speed observer gain the same.
    :type alpha_o: float, optional
-   :param alpha_cur: Current-reference tracking bandwidth (rad/s), defaults to 2*pi*200.
-   :type alpha_cur: float, optional
+   :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
+   :type alpha_ref: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
@@ -271,6 +272,8 @@ Module Contents
    :type J: float | None, optional
    :param sensorless: If True, sensorless control is used, defaults to True.
    :type sensorless: bool, optional
+   :param online: If True, the online reference generation is used, defaults to False.
+   :type online: bool, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
@@ -566,6 +569,8 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
                    2*pi*50/3, keeping the default speed observer gain the same.
    :type alpha_o: float | None, optional
+   :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
+   :type alpha_ref: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float] | None, optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
@@ -583,6 +588,8 @@ Module Contents
    :type J: float | None, optional
    :param sensorless: If True, sensorless control is used, defaults to True.
    :type sensorless: bool, optional
+   :param online: If True, the online reference generation is used, defaults to False.
+   :type online: bool, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
@@ -905,17 +912,17 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_cur = 2 * pi * 200)
+.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_ref = 2 * pi * 100)
 
    
-   Optimal reference generator for synchronous machines.
+   Optimal feedforward reference generator for synchronous machines.
 
    This class computes the optimal flux, limited torque, and current references from a
    given torque reference. The MTPA locus as well as the current, voltage and MTPV
    limits are taken into account. This class can be used also for a saturated machine
-   model. The flux and torque references are computed using pre-computed lookup
-   tables [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically
-   using a tracking law [#Sar2026]_, needed only for current-vector control.
+   model. The flux and torque references are computed using pre-computed lookup tables
+   [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically using a
+   tracking law [#Sar2026]_, needed only for current-vector control.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -929,9 +936,9 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 1.
    :type k_mtpv: float, optional
-   :param alpha_cur: Bandwidth of the current-reference tracking (rad/s), defaults to 2*pi*200. It
-                     should be well below the sampling frequency to maintain a numerical margin.
-   :type alpha_cur: float, optional
+   :param alpha_ref: Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100. It should be
+                     well below the sampling frequency to maintain a numerical margin.
+   :type alpha_ref: float, optional
 
    .. rubric:: References
 
@@ -1001,6 +1008,15 @@ Module Contents
       
       Compute the flux and torque reference signals.
 
+      :param tau_M_ref: Torque reference (Nm).
+      :type tau_M_ref: float
+      :param w_m: Mechanical angular speed (rad/s).
+      :type w_m: float
+      :param u_dc: DC-link voltage (V).
+      :type u_dc: float
+
+      :returns: Flux and torque reference signals.
+      :rtype: tuple[float, float]
 
 
 
@@ -1020,21 +1036,139 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, psi_s_abs_ref, tau_M_ref)
+   .. py:method:: update(T_s)
 
       
       Update the current-reference state.
 
-      The current reference is a state variable, driven toward the given flux and
-      torque references by the tracking law with the bandwidth `alpha_cur`
-      [#Sar2026]_.
-
       :param T_s: Sampling period (s).
       :type T_s: float
-      :param psi_s_abs_ref: Stator flux reference (Vs).
-      :type psi_s_abs_ref: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ReferenceGeneratorOnline(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_ref = 2 * pi * 100)
+
+   
+   Optimal feedforward online reference generator for synchronous machines.
+
+   This class tracks online in a feedforward manner the optimal flux, limited torque,
+   and current references from a given torque reference [#Sar2026]_. The MTPA locus as
+   well as the current, voltage, and MTPV limits are taken into account. This class can
+   be used also for a saturated machine model. The current reference is only needed for
+   current-vector control.
+
+   :param par: Machine model parameters.
+   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :param i_s_max: Maximum stator current (A).
+   :type i_s_max: float
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`.
+   :type psi_s_min: float, optional
+   :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
+   :type psi_s_max: float, optional
+   :param k_u: Voltage utilization factor, defaults to 1.
+   :type k_u: float, optional
+   :param k_mtpv: MTPV margin, defaults to 1.
+   :type k_mtpv: float, optional
+   :param alpha_ref: Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100.
+   :type alpha_ref: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_current_ref(tau_M_ref)
+
+      
+      Compute current reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_flux_and_torque_refs(tau_M_ref, w_m, u_dc)
+
+      
+      Compute flux and torque references.
+
       :param tau_M_ref: Torque reference (Nm).
       :type tau_M_ref: float
+      :param w_m: Mechanical angular speed (rad/s).
+      :type w_m: float
+      :param u_dc: DC-link voltage (V).
+      :type u_dc: float
+
+      :returns: Flux and torque reference signals.
+      :rtype: tuple[float, float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s)
+
+      
+      Update all tracking states.
+
+      :param T_s: Sampling period.
+      :type T_s: float
 
 
 

@@ -121,6 +121,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of the same 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux- vector control example. See plot_6kw_pmsyrm_sat_fvc for the machine model, flux- map data, and saturation-model description.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_sat_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5.6-kW saturated PM-SyRM, CVC</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html
@@ -137,4 +154,5 @@ These examples are for current-vector control (CVC) of induction and synchronous
    /drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt
    /drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc
    /drive_examples/current_vector/plot_2kw_im_sat_cvc
+   /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc
 

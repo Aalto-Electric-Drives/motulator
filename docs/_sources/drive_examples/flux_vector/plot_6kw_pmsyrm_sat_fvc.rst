@@ -84,7 +84,7 @@ data is used to parametrize the machine model.
 
 
     # Load the measured data
-    p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+    p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
     meas_data = np.load(p / "baldor_400rpm_map.npz")
     i_s_dq_map = meas_data["i_s_dq"]
     psi_s_dq_map = meas_data["psi_s_dq"]
@@ -366,7 +366,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 33.673 seconds)
+   **Total running time of the script:** (0 minutes 15.302 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:

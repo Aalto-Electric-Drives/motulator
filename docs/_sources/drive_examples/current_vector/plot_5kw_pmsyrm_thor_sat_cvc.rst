@@ -81,7 +81,7 @@ Load and plot the flux maps.
 
 
     # Get the path of the MATLAB file and load the FEM data
-    p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+    p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
     fem_flux_map = utils.import_syre_data(p / "thor.mat")
     utils.plot_map(fem_flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
     utils.plot_map(fem_flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2)})
@@ -273,7 +273,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 34.244 seconds)
+   **Total running time of the script:** (0 minutes 17.755 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py:
