@@ -80,6 +80,6 @@ mdl.mechanics.set_external_load_torque(lambda t: (t > 1.25) * 0.5 * base.tau)
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.
 
-sim = model.Simulation(mdl, ctrl)
-res = sim.simulate(t_stop=1.75)
-utils.plot(res, base)
+# sim = model.Simulation(mdl, ctrl)
+# res = sim.simulate(t_stop=1.75)
+# utils.plot(res, base)

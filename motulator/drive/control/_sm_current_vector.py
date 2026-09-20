@@ -116,7 +116,7 @@ class CurrentVectorControllerCfg:
         used in speed estimation.
     sensorless : bool, optional
         If True, sensorless control is used, defaults to True.
-    online : bool, optional
+    online_ref : bool, optional
         If True, the online reference generation is used, defaults to False.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
@@ -136,7 +136,7 @@ class CurrentVectorControllerCfg:
     k_mtpv: float = 0.9
     J: float | None = None
     sensorless: bool = True
-    online: bool = False
+    online_ref: bool = False
     T_s: float = 125e-6
 
     def __post_init__(self) -> None:
@@ -167,7 +167,7 @@ class CurrentVectorController:
         cfg: CurrentVectorControllerCfg,
     ) -> None:
         reference_generator = (
-            ReferenceGeneratorOnline if cfg.online else ReferenceGenerator
+            ReferenceGeneratorOnline if cfg.online_ref else ReferenceGenerator
         )
         self.reference_gen = reference_generator(
             par,
