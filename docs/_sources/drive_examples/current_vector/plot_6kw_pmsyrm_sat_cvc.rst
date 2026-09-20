@@ -23,13 +23,12 @@
 
 This example simulates sensorless current-vector control (CVC) of the same 5.6-kW
 permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux-
-vector control example. See :ref:`plot_6kw_pmsyrm_sat_fvc` for the machine model, flux-
-map data, and saturation-model description.
+vector control example. See :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
+for the machine model, flux-map data, and saturation-model description. This example
+demonstrates online reference generation in current-vector control, which allows the
+optimal current references to be generated in real time [#Sar2026]_.
 
-This example demonstrates online reference generation in current-vector control, which
-allows the optimal current references to be generated in real time [#Sar2026]_.
-
-.. GENERATED FROM PYTHON SOURCE LINES 15-23
+.. GENERATED FROM PYTHON SOURCE LINES 14-22
 
 .. code-block:: Python
 
@@ -48,11 +47,11 @@ allows the optimal current references to be generated in real time [#Sar2026]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-29
+.. GENERATED FROM PYTHON SOURCE LINES 24-28
 
 .. code-block:: Python
 
@@ -67,11 +66,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 29-30
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-51
+.. GENERATED FROM PYTHON SOURCE LINES 30-50
 
 .. code-block:: Python
 
@@ -102,11 +101,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-88
+.. GENERATED FROM PYTHON SOURCE LINES 52-87
 
 .. code-block:: Python
 
@@ -139,7 +138,7 @@ Configure the control system.
         n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
     )
     cfg = control.CurrentVectorControllerCfg(
-        i_s_max=2 * base.i, J=0.05, sensorless=True, online=True
+        i_s_max=2 * base.i, J=0.05, sensorless=True, online_ref=True
     )
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
@@ -152,11 +151,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-90
+.. GENERATED FROM PYTHON SOURCE LINES 88-89
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 90-94
+.. GENERATED FROM PYTHON SOURCE LINES 89-93
 
 .. code-block:: Python
 
@@ -171,11 +170,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-96
+.. GENERATED FROM PYTHON SOURCE LINES 94-95
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-101
+.. GENERATED FROM PYTHON SOURCE LINES 95-100
 
 .. code-block:: Python
 
@@ -196,7 +195,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-107
+.. GENERATED FROM PYTHON SOURCE LINES 101-106
 
 .. rubric:: References
 
@@ -207,7 +206,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.811 seconds)
+   **Total running time of the script:** (0 minutes 14.735 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc.py:

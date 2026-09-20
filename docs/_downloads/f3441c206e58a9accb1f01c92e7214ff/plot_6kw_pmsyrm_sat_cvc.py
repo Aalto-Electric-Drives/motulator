@@ -4,11 +4,10 @@
 
 This example simulates sensorless current-vector control (CVC) of the same 5.6-kW
 permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux-
-vector control example. See :ref:`plot_6kw_pmsyrm_sat_fvc` for the machine model, flux-
-map data, and saturation-model description.
-
-This example demonstrates online reference generation in current-vector control, which
-allows the optimal current references to be generated in real time [#Sar2026]_.
+vector control example. See :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
+for the machine model, flux-map data, and saturation-model description. This example
+demonstrates online reference generation in current-vector control, which allows the
+optimal current references to be generated in real time [#Sar2026]_.
 
 """
 # %%
@@ -79,7 +78,7 @@ est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
 )
 cfg = control.CurrentVectorControllerCfg(
-    i_s_max=2 * base.i, J=0.05, sensorless=True, online=True
+    i_s_max=2 * base.i, J=0.05, sensorless=True, online_ref=True
 )
 vector_ctrl = control.CurrentVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)

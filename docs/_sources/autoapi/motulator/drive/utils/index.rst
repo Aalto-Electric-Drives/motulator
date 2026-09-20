@@ -345,7 +345,7 @@ Package Contents
    .. py:method:: compute_mtpv_flux_angle(psi_s_abs)
 
       
-      MTPV flux angle (rad) at given flux magnitude (Vs).
+      MTPV flux angle (rad) and the corresponding current (A).
 
 
 

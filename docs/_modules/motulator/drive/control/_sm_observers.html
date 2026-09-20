@@ -585,6 +585,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_aux_flux</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Auxiliary flux linkage vector."""</span>
+        <span class="n">L_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">i_s</span><span class="p">)</span>
+        <span class="n">L_dd</span><span class="p">,</span> <span class="n">L_dq</span><span class="p">,</span> <span class="n">L_qq</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">psi_s</span> <span class="o">-</span> <span class="n">L_qq</span> <span class="o">*</span> <span class="n">i_s</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_dd</span> <span class="o">*</span> <span class="n">i_s</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_dq</span> <span class="o">*</span> <span class="n">i_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+        <span class="p">)</span>
+
 <div class="viewcode-block" id="FluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
@@ -633,11 +641,12 @@
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
 
-        <span class="c1"># Auxiliary flux</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">psi_a</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">aux_flux</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
-
         <span class="c1"># Flux estimation error</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span>
+        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">=</span> <span class="n">psi_s_dq</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span>
+
+        <span class="c1"># Auxiliary flux</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">psi_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aux_flux</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">)</span>
 
         <span class="c1"># Error signals for the rotor angle and PM-flux estimation. The model-based part</span>
         <span class="c1"># is faded out as the external error signal takes over.</span>

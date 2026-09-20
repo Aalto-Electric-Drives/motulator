@@ -272,8 +272,8 @@ Module Contents
    :type J: float | None, optional
    :param sensorless: If True, sensorless control is used, defaults to True.
    :type sensorless: bool, optional
-   :param online: If True, the online reference generation is used, defaults to False.
-   :type online: bool, optional
+   :param online_ref: If True, the online reference generation is used, defaults to False.
+   :type online_ref: bool, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
@@ -588,8 +588,8 @@ Module Contents
    :type J: float | None, optional
    :param sensorless: If True, sensorless control is used, defaults to True.
    :type sensorless: bool, optional
-   :param online: If True, the online reference generation is used, defaults to False.
-   :type online: bool, optional
+   :param online_ref: If True, the online reference generation is used, defaults to False.
+   :type online_ref: bool, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
