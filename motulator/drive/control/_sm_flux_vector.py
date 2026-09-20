@@ -77,6 +77,15 @@ class FluxTorqueController:
         # Gains
         self.gain = Gains(alpha_psi, alpha_tau, alpha_i)
 
+    def _aux_current(self, psi_s: complex, i_s: complex) -> complex:
+        """Auxiliary current vector."""
+        L_s = self.par.incr_ind_mat(i_s)
+        L_dd, L_dq, L_qq = L_s[0, 0], L_s[0, 1], L_s[1, 1]
+        det_L = L_dd * L_qq - L_dq**2
+        return (
+            L_dd * psi_s.real + 1j * L_qq * psi_s.imag + 1j * L_dq * psi_s.conjugate()
+        ) / det_L - i_s
+
     def compute_output(
         self, psi_s_ref: float, tau_M_ref: float, fbk: ObserverOutputs
     ) -> complex:
@@ -85,7 +94,7 @@ class FluxTorqueController:
         gain = self.gain
 
         # Auxiliary current and torque-production factor
-        i_a = complex(par.aux_current(fbk.i_s))
+        i_a = self._aux_current(fbk.psi_s, fbk.i_s)
         c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
 
         # Directions
@@ -160,7 +169,7 @@ class FluxVectorControllerCfg:
         used in speed estimation.
     sensorless : bool, optional
         If True, sensorless control is used, defaults to True.
-    online : bool, optional
+    online_ref : bool, optional
         If True, the online reference generation is used, defaults to False.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
@@ -181,7 +190,7 @@ class FluxVectorControllerCfg:
     k_mtpv: float = 0.85
     J: float | None = None
     sensorless: bool = True
-    online: bool = False
+    online_ref: bool = False
     T_s: float = 125e-6
 
     def __post_init__(self) -> None:
@@ -234,7 +243,7 @@ class FluxVectorController:
         cfg: FluxVectorControllerCfg,
     ) -> None:
         reference_generator = (
-            ReferenceGeneratorOnline if cfg.online else ReferenceGenerator
+            ReferenceGeneratorOnline if cfg.online_ref else ReferenceGenerator
         )
         self.reference_gen = reference_generator(
             par,
@@ -256,7 +265,7 @@ class FluxVectorController:
         self.cfg = cfg
         self.par = par
         self.sensorless = cfg.sensorless
-        self.online = cfg.online
+        self.online_ref = cfg.online_ref
 
     def get_feedback(
         self,
@@ -286,7 +295,7 @@ class FluxVectorController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
-        if self.online:
+        if self.online_ref:
             self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:

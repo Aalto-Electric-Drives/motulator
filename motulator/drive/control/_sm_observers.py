@@ -114,6 +114,14 @@ class FluxObserver:
         self.theta_m: float = 0.0
         self.psi_s: complex = complex(par.psi_f)
 
+    def _aux_flux(self, i_s: complex, psi_s: complex) -> complex:
+        """Auxiliary flux linkage vector."""
+        L_s = self.par.incr_ind_mat(i_s)
+        L_dd, L_dq, L_qq = L_s[0, 0], L_s[0, 1], L_s[1, 1]
+        return (
+            psi_s - L_qq * i_s.real - 1j * L_dd * i_s.imag + 1j * L_dq * i_s.conjugate()
+        )
+
     def compute_output(
         self,
         u_s_ab: complex,
@@ -160,11 +168,12 @@ class FluxObserver:
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
         out.u_s = exp(-1j * out.theta_c) * u_s_ab
 
-        # Auxiliary flux
-        out.psi_a = complex(par.aux_flux(out.i_s))
-
         # Flux estimation error
-        out.e_o = complex(par.psi_s_dq(out.i_s)) - out.psi_s
+        psi_s_dq = complex(self.par.psi_s_dq(out.i_s))
+        out.e_o = psi_s_dq - out.psi_s
+
+        # Auxiliary flux
+        out.psi_a = self._aux_flux(out.i_s, psi_s_dq)
 
         # Error signals for the rotor angle and PM-flux estimation. The model-based part
         # is faded out as the external error signal takes over.
