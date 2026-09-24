@@ -206,7 +206,7 @@ Evaluate the model at single point.
     Current: -9.00+9.00j A
     Angle: 30.00 deg
     Flux linkage: 0.29+0.82j Vs
-    Torque per pole pair: 13.69 Nm
+    Torque per pole pair: 13.64 Nm
 
 
 
@@ -315,7 +315,7 @@ Print statistical error metrics on validation data.
 
     Error metrics:
     Flux linkage: rmse=0.018 p.u., max=0.071 p.u., std=0.009 p.u.
-    Torque: rmse=0.016 p.u., max=0.115 p.u., std=0.011 p.u.
+    Torque: rmse=0.015 p.u., max=0.106 p.u., std=0.010 p.u.
 
 
 
@@ -323,7 +323,7 @@ Print statistical error metrics on validation data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.258 seconds)
+   **Total running time of the script:** (0 minutes 0.402 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_fem_harm.py:

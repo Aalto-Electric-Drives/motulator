@@ -210,7 +210,7 @@ Plot the actual and estimated values for flux linkages.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.542 seconds)
+   **Total running time of the script:** (0 minutes 4.852 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py:

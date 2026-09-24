@@ -93,7 +93,7 @@ Package Contents
    
    Callable wrapper for GradNet current map models.
 
-   The map is symmetrized along to the d-axis to ensure physical consistency.
+   The map is symmetrized about the d-axis to ensure physical consistency.
 
    :param model: Trained GradNet model for the current map.
    :type model: GradNet
@@ -148,11 +148,11 @@ Package Contents
 
 
    
-   Callable wrapper for GradNet current map models.
+   Callable wrapper for GradNet flux-linkage map models.
 
-   The map is symmetrized along to the q-axis to ensure physical consistency.
+   The map is symmetrized about the d-axis to ensure physical consistency.
 
-   :param model: Trained GradNet model for the current map.
+   :param model: Trained GradNet model for the flux-linkage map.
    :type model: GradNet
 
    :returns: Stator flux linkage (Vs).

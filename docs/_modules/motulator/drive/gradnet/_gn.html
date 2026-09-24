@@ -468,7 +468,7 @@
 <span class="sd">Gradient networks (GradNets) for magnetics modeling.</span>
 
 <span class="sd">This module contains GradNet architecture to model the current and flux linkage maps of</span>
-<span class="sd">synchronous machines [#Li2026]_. The GraNets allow modeling conservative vector fields</span>
+<span class="sd">synchronous machines [#Li2026]_. The GradNets allow modeling conservative vector fields</span>
 <span class="sd">by construction [#Cha2025]_. In our case, the scalar state function is either the</span>
 <span class="sd">magnetic energy or co-energy, depending on whether the current map or flux map is</span>
 <span class="sd">modeled. The monotonicity of the flux-linkage--current map is also ensured.</span>
@@ -730,7 +730,7 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Callable wrapper for GradNet current map models.</span>
 
-<span class="sd">    The map is symmetrized along to the d-axis to ensure physical consistency.</span>
+<span class="sd">    The map is symmetrized about the d-axis to ensure physical consistency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -788,14 +788,14 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.FluxMap">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FluxMap</span><span class="p">(</span><span class="n">CurrentMap</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Callable wrapper for GradNet current map models.</span>
+<span class="sd">    Callable wrapper for GradNet flux-linkage map models.</span>
 
-<span class="sd">    The map is symmetrized along to the q-axis to ensure physical consistency.</span>
+<span class="sd">    The map is symmetrized about the d-axis to ensure physical consistency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model : GradNet</span>
-<span class="sd">        Trained GradNet model for the current map.</span>
+<span class="sd">        Trained GradNet model for the flux-linkage map.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -854,24 +854,45 @@
 <span class="sd">            Stator current (A) and electromagnetic torque (Nm) per pole pair.</span>
 
 <span class="sd">        """</span>
+        <span class="c1"># Create a batch of inputs and their conjugates</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span>
+        <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span>
         <span class="n">exp_j_k_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_j_theta_m</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="o">**</span> <span class="n">k</span>
-        <span class="n">psi_inputs</span> <span class="o">=</span> <span class="n">_complex_to_torch_inputs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-        <span class="n">cos_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
-        <span class="n">sin_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+        <span class="n">psi_s_dq_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">exp_j_k_theta_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">exp_j_k_theta</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">psi_inputs</span> <span class="o">=</span> <span class="n">_complex_to_torch_inputs</span><span class="p">(</span><span class="n">psi_s_dq_combined</span><span class="p">)</span>
+        <span class="n">cos_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">exp_j_k_theta_combined</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">sin_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">exp_j_k_theta_combined</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
             <span class="p">(</span><span class="n">psi_inputs</span><span class="p">,</span> <span class="n">cos_k_theta</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">sin_k_theta</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span>
         <span class="p">)</span>
+
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="c1"># Unpack outputs</span>
         <span class="n">i_d</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">i_q</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">i_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">i_q</span>
         <span class="n">dW_dcos</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">dW_dsin</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-        <span class="n">dW_dtheta</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">dW_dsin</span> <span class="o">-</span> <span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">imag</span> <span class="o">*</span> <span class="n">dW_dcos</span><span class="p">)</span>
+
+        <span class="c1"># Symmetrize</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">shape</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">i_s_dq</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">[</span><span class="n">n</span><span class="p">:]))</span>
+        <span class="n">dW_dcos</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">dW_dcos</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">dW_dcos</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+        <span class="n">dW_dsin</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">dW_dsin</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="n">dW_dsin</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+
         <span class="c1"># Torque in per-unit</span>
+        <span class="n">dW_dtheta</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">dW_dsin</span> <span class="o">-</span> <span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">imag</span> <span class="o">*</span> <span class="n">dW_dcos</span><span class="p">)</span>
         <span class="n">tau_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span> <span class="o">-</span> <span class="n">dW_dtheta</span>
         <span class="c1"># Scale back to physical units</span>
         <span class="n">i_s_dq</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span>
@@ -926,24 +947,44 @@
 <span class="sd">            Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.</span>
 
 <span class="sd">        """</span>
+        <span class="c1"># Create a batch of inputs and their conjugates</span>
         <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span>
+        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span>
         <span class="n">exp_j_k_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">exp_j_theta_m</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="o">**</span> <span class="n">k</span>
-        <span class="n">i_inputs</span> <span class="o">=</span> <span class="n">_complex_to_torch_inputs</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
-        <span class="n">cos_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
-        <span class="n">sin_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+        <span class="n">i_s_dq_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">exp_j_k_theta_combined</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">exp_j_k_theta</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span>
+        <span class="n">i_inputs</span> <span class="o">=</span> <span class="n">_complex_to_torch_inputs</span><span class="p">(</span><span class="n">i_s_dq_combined</span><span class="p">)</span>
+        <span class="n">cos_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">exp_j_k_theta_combined</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">sin_k_theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">exp_j_k_theta_combined</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span>
             <span class="p">(</span><span class="n">i_inputs</span><span class="p">,</span> <span class="n">cos_k_theta</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">sin_k_theta</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span>
         <span class="p">)</span>
+
         <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="c1"># Unpack outputs</span>
         <span class="n">psi_d</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">psi_q</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">psi_d</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">psi_q</span>
         <span class="n">dW_dcos</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
         <span class="n">dW_dsin</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-        <span class="n">dW_dtheta</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">dW_dsin</span> <span class="o">-</span> <span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">imag</span> <span class="o">*</span> <span class="n">dW_dcos</span><span class="p">)</span>
+
+        <span class="c1"># Symmetrize</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="n">n</span><span class="p">:]))</span>
+        <span class="n">dW_dcos</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">dW_dcos</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">+</span> <span class="n">dW_dcos</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+        <span class="n">dW_dsin</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">dW_dsin</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span> <span class="o">-</span> <span class="n">dW_dsin</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+
         <span class="c1"># Torque in per-unit</span>
+        <span class="n">dW_dtheta</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> <span class="n">dW_dsin</span> <span class="o">-</span> <span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">imag</span> <span class="o">*</span> <span class="n">dW_dcos</span><span class="p">)</span>
         <span class="n">tau_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span> <span class="o">+</span> <span class="n">dW_dtheta</span>
         <span class="c1"># Scale back to physical units</span>
         <span class="n">psi_s_dq</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span>
