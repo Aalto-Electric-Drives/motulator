@@ -2,7 +2,7 @@
 Gradient networks (GradNets) for magnetics modeling.
 
 This module contains GradNet architecture to model the current and flux linkage maps of
-synchronous machines [#Li2026]_. The GraNets allow modeling conservative vector fields
+synchronous machines [#Li2026]_. The GradNets allow modeling conservative vector fields
 by construction [#Cha2025]_. In our case, the scalar state function is either the
 magnetic energy or co-energy, depending on whether the current map or flux map is
 modeled. The monotonicity of the flux-linkage--current map is also ensured.
@@ -247,7 +247,7 @@ class CurrentMap:
     """
     Callable wrapper for GradNet current map models.
 
-    The map is symmetrized along to the d-axis to ensure physical consistency.
+    The map is symmetrized about the d-axis to ensure physical consistency.
 
     Parameters
     ----------
@@ -302,14 +302,14 @@ class CurrentMap:
 # %%
 class FluxMap(CurrentMap):
     """
-    Callable wrapper for GradNet current map models.
+    Callable wrapper for GradNet flux-linkage map models.
 
-    The map is symmetrized along to the q-axis to ensure physical consistency.
+    The map is symmetrized about the d-axis to ensure physical consistency.
 
     Parameters
     ----------
     model : GradNet
-        Trained GradNet model for the current map.
+        Trained GradNet model for the flux-linkage map.
 
     Returns
     -------
@@ -367,6 +367,7 @@ class CurrentMapWithHarmonics:
         """
         # Create a batch of inputs and their conjugates
         k = self.k
+        psi_s_dq, exp_j_theta_m = np.broadcast_arrays(psi_s_dq, exp_j_theta_m)
         psi_s_dq = np.array(psi_s_dq, ndmin=1, dtype=np.complex64) / self.psi_base
         exp_j_k_theta = np.array(exp_j_theta_m, ndmin=1, dtype=np.complex64) ** k
         psi_s_dq_combined = np.concatenate([psi_s_dq, np.conj(psi_s_dq)], axis=0)
@@ -393,10 +394,6 @@ class CurrentMapWithHarmonics:
         i_s_dq = i_d + 1j * i_q
         dW_dcos = outputs[..., 2].cpu().numpy()
         dW_dsin = outputs[..., 3].cpu().numpy()
-        dW_dtheta = k * (
-            exp_j_k_theta_combined.real * dW_dsin
-            - exp_j_k_theta_combined.imag * dW_dcos
-        )
 
         # Symmetrize
         shape = np.shape(psi_s_dq)
@@ -460,6 +457,7 @@ class FluxMapWithHarmonics:
         """
         # Create a batch of inputs and their conjugates
         k = self.k
+        i_s_dq, exp_j_theta_m = np.broadcast_arrays(i_s_dq, exp_j_theta_m)
         i_s_dq = np.array(i_s_dq, ndmin=1, dtype=np.complex64) / self.i_base
         exp_j_k_theta = np.array(exp_j_theta_m, ndmin=1, dtype=np.complex64) ** k
         i_s_dq_combined = np.concatenate([i_s_dq, np.conj(i_s_dq)], axis=0)
