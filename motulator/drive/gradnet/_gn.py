@@ -2,7 +2,7 @@
 Gradient networks (GradNets) for magnetics modeling.
 
 This module contains GradNet architecture to model the current and flux linkage maps of
-synchronous machines [#Li2026]_. The GraNets allow modeling conservative vector fields
+synchronous machines [#Li2026]_. The GradNets allow modeling conservative vector fields
 by construction [#Cha2025]_. In our case, the scalar state function is either the
 magnetic energy or co-energy, depending on whether the current map or flux map is
 modeled. The monotonicity of the flux-linkage--current map is also ensured.
@@ -247,7 +247,7 @@ class CurrentMap:
     """
     Callable wrapper for GradNet current map models.
 
-    The map is symmetrized along to the d-axis to ensure physical consistency.
+    The map is symmetrized about the d-axis to ensure physical consistency.
 
     Parameters
     ----------
@@ -302,14 +302,14 @@ class CurrentMap:
 # %%
 class FluxMap(CurrentMap):
     """
-    Callable wrapper for GradNet current map models.
+    Callable wrapper for GradNet flux-linkage map models.
 
-    The map is symmetrized along to the q-axis to ensure physical consistency.
+    The map is symmetrized about the d-axis to ensure physical consistency.
 
     Parameters
     ----------
     model : GradNet
-        Trained GradNet model for the current map.
+        Trained GradNet model for the flux-linkage map.
 
     Returns
     -------
@@ -365,24 +365,45 @@ class CurrentMapWithHarmonics:
             Stator current (A) and electromagnetic torque (Nm) per pole pair.
 
         """
+        # Create a batch of inputs and their conjugates
         k = self.k
+        psi_s_dq, exp_j_theta_m = np.broadcast_arrays(psi_s_dq, exp_j_theta_m)
         psi_s_dq = np.array(psi_s_dq, ndmin=1, dtype=np.complex64) / self.psi_base
         exp_j_k_theta = np.array(exp_j_theta_m, ndmin=1, dtype=np.complex64) ** k
-        psi_inputs = _complex_to_torch_inputs(psi_s_dq)
-        cos_k_theta = torch.from_numpy(np.real(exp_j_k_theta).astype(np.float32))
-        sin_k_theta = torch.from_numpy(np.imag(exp_j_k_theta).astype(np.float32))
+        psi_s_dq_combined = np.concatenate([psi_s_dq, np.conj(psi_s_dq)], axis=0)
+        exp_j_k_theta_combined = np.concatenate(
+            [exp_j_k_theta, np.conj(exp_j_k_theta)], axis=0
+        )
+        psi_inputs = _complex_to_torch_inputs(psi_s_dq_combined)
+        cos_k_theta = torch.from_numpy(
+            np.real(exp_j_k_theta_combined).astype(np.float32)
+        )
+        sin_k_theta = torch.from_numpy(
+            np.imag(exp_j_k_theta_combined).astype(np.float32)
+        )
         inputs = torch.cat(
             (psi_inputs, cos_k_theta.unsqueeze(-1), sin_k_theta.unsqueeze(-1)), dim=-1
         )
+
         with torch.no_grad():
             outputs = self.model(inputs)
+
+        # Unpack outputs
         i_d = outputs[..., 0].cpu().numpy()
         i_q = outputs[..., 1].cpu().numpy()
         i_s_dq = i_d + 1j * i_q
         dW_dcos = outputs[..., 2].cpu().numpy()
         dW_dsin = outputs[..., 3].cpu().numpy()
-        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
+
+        # Symmetrize
+        shape = np.shape(psi_s_dq)
+        n = shape[0] if shape else 1
+        i_s_dq = 0.5 * (i_s_dq[:n] + np.conj(i_s_dq[n:]))
+        dW_dcos = 0.5 * (dW_dcos[:n] + dW_dcos[n:])
+        dW_dsin = 0.5 * (dW_dsin[:n] - dW_dsin[n:])
+
         # Torque in per-unit
+        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
         tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) - dW_dtheta
         # Scale back to physical units
         i_s_dq *= self.i_base
@@ -434,24 +455,44 @@ class FluxMapWithHarmonics:
             Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.
 
         """
+        # Create a batch of inputs and their conjugates
         k = self.k
+        i_s_dq, exp_j_theta_m = np.broadcast_arrays(i_s_dq, exp_j_theta_m)
         i_s_dq = np.array(i_s_dq, ndmin=1, dtype=np.complex64) / self.i_base
         exp_j_k_theta = np.array(exp_j_theta_m, ndmin=1, dtype=np.complex64) ** k
-        i_inputs = _complex_to_torch_inputs(i_s_dq)
-        cos_k_theta = torch.from_numpy(np.real(exp_j_k_theta).astype(np.float32))
-        sin_k_theta = torch.from_numpy(np.imag(exp_j_k_theta).astype(np.float32))
+        i_s_dq_combined = np.concatenate([i_s_dq, np.conj(i_s_dq)], axis=0)
+        exp_j_k_theta_combined = np.concatenate(
+            [exp_j_k_theta, np.conj(exp_j_k_theta)], axis=0
+        )
+        i_inputs = _complex_to_torch_inputs(i_s_dq_combined)
+        cos_k_theta = torch.from_numpy(
+            np.real(exp_j_k_theta_combined).astype(np.float32)
+        )
+        sin_k_theta = torch.from_numpy(
+            np.imag(exp_j_k_theta_combined).astype(np.float32)
+        )
         inputs = torch.cat(
             (i_inputs, cos_k_theta.unsqueeze(-1), sin_k_theta.unsqueeze(-1)), dim=-1
         )
+
         with torch.no_grad():
             outputs = self.model(inputs)
+
+        # Unpack outputs
         psi_d = outputs[..., 0].cpu().numpy()
         psi_q = outputs[..., 1].cpu().numpy()
         psi_s_dq = psi_d + 1j * psi_q
         dW_dcos = outputs[..., 2].cpu().numpy()
         dW_dsin = outputs[..., 3].cpu().numpy()
-        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
+
+        # Symmetrize
+        n = i_s_dq.shape[0]
+        psi_s_dq = 0.5 * (psi_s_dq[:n] + np.conj(psi_s_dq[n:]))
+        dW_dcos = 0.5 * (dW_dcos[:n] + dW_dcos[n:])
+        dW_dsin = 0.5 * (dW_dsin[:n] - dW_dsin[n:])
+
         # Torque in per-unit
+        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
         tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) + dW_dtheta
         # Scale back to physical units
         psi_s_dq *= self.psi_base
