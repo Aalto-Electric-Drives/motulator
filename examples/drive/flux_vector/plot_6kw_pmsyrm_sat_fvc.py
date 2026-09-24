@@ -37,7 +37,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # data is used to parametrize the machine model.
 
 # Load the measured data
-p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
 meas_data = np.load(p / "baldor_400rpm_map.npz")
 i_s_dq_map = meas_data["i_s_dq"]
 psi_s_dq_map = meas_data["psi_s_dq"]

@@ -165,7 +165,7 @@ For notational simplicity, $\Gc = 0$ is assumed elsewhere in this documentation,
 
 ## MTPV and MTPA Conditions
 
-The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditions for saturable machines can be compactly presented by means of the auxiliary current and flux vectors {cite}`Var2022`. In addition to optimal reference generation, these vectors are useful in flux-vector control and sensorless observers {cite}`Tii2025a`. The {class}`motulator.drive.model.SaturatedSynchronousMachinePars` class contains methods for computing these vectors from the given magnetic model.
+The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditions for saturable machines can be compactly presented by means of the auxiliary current and flux vectors {cite}`Var2022`. In addition to optimal reference generation, these vectors are useful in flux-vector control and sensorless observers {cite}`Tii2025a`.
 
 Consider the MTPV condition as an example. Applying the flux linkage vector $\psis = \abspsis \e^{\jj\delta}$ with a given magnitude $\abspsis$ in the torque expression {eq}`sm_torque`, the MTPV condition is obtained by setting $\partial \tauM/\partial \delta = 0$. This results in
 

@@ -23,6 +23,7 @@ class MTPALocus:
     psi_s_dq: Any
     tau_M: Any
     i_s_dq_vs_tau_M: Callable[[float], complex]
+    psi_s_abs_vs_tau_M: Callable[[float], float]
 
 
 @dataclass
@@ -44,6 +45,7 @@ class CurrentLimitLocus:
     i_s_dq: Any
     tau_M: Any
     i_s_dq_vs_psi_s_abs: Callable[[float], complex]
+    tau_M_vs_psi_s_abs: Callable[[float], float]
 
 
 # %%
@@ -87,12 +89,41 @@ class ControlLoci:
     ) -> None:
         self.par = par
 
+    def _aux_flux(
+        self, i_s_dq: complex | np.ndarray, psi_s_dq: complex | np.ndarray
+    ) -> complex:
+        """Auxiliary flux linkage vector."""
+        L_s = self.par.incr_ind_mat(i_s_dq)
+        return complex(
+            psi_s_dq
+            - L_s[1, 1] * np.real(i_s_dq)
+            - 1j * L_s[0, 0] * np.imag(i_s_dq)
+            + 1j * L_s[0, 1] * np.conj(i_s_dq)
+        )
+
+    def _aux_current(
+        self, psi_s_dq: complex | np.ndarray, i_s_dq: complex | np.ndarray
+    ) -> complex:
+        """Auxiliary current vector."""
+        L_s = self.par.incr_ind_mat(i_s_dq)
+        det_L = L_s[0, 0] * L_s[1, 1] - L_s[0, 1] ** 2
+        return complex(
+            (
+                L_s[0, 0] * np.real(psi_s_dq)
+                + 1j * L_s[1, 1] * np.imag(psi_s_dq)
+                + 1j * L_s[0, 1] * np.conj(psi_s_dq)
+            )
+            / det_L
+            - i_s_dq
+        )
+
     def compute_mtpa_current_angle(self, i_s_abs: float) -> float:
         """MTPA current angle (rad) at given current magnitude (A)."""
 
         def mtpa_cond(gamma: float) -> float:
             i_s_dq = i_s_abs * np.exp(1j * gamma)
-            psi_a_dq = self.par.aux_flux(i_s_dq)
+            psi_s_dq = self.par.psi_s_dq(i_s_dq)
+            psi_a_dq = self._aux_flux(i_s_dq, psi_s_dq)
             return np.real(psi_a_dq * np.conj(i_s_dq))
 
         if self.par.psi_f == 0:
@@ -138,15 +169,18 @@ class ControlLoci:
             psi_s_dq=psi_s_dq,
             tau_M=tau_M,
             i_s_dq_vs_tau_M=lambda x: np.interp(x, tau_M, i_s_dq),
+            psi_s_abs_vs_tau_M=lambda x: np.interp(x, tau_M, abs(psi_s_dq)),
         )
 
-    def compute_mtpv_flux_angle(self, psi_s_abs: float) -> float:
-        """MTPV flux angle (rad) at given flux magnitude (Vs)."""
+    def compute_mtpv_flux_angle(self, psi_s_abs: float) -> tuple[float, complex]:
+        """MTPV flux angle (rad) and the corresponding current (A)."""
+        i_s_dq = np.nan  # Updated to the converged current as a side effect
 
         def mtpv_cond(delta: float) -> float:
+            nonlocal i_s_dq
             psi_s_dq = psi_s_abs * np.exp(1j * delta)
             i_s_dq = self.par.iterate_i_s_dq(psi_s_dq)
-            i_a_dq = self.par.aux_current(i_s_dq)
+            i_a_dq = self._aux_current(psi_s_dq, i_s_dq)
             return np.real(i_a_dq * np.conj(psi_s_dq))
 
         if self.par.psi_f == 0:
@@ -155,8 +189,9 @@ class ControlLoci:
             delta_range = (0.5 * np.pi, np.pi)
 
         if mtpv_cond(delta_range[0]) * mtpv_cond(delta_range[1]) > 0:
-            return np.nan  # No root in the range
-        return root_scalar(mtpv_cond, bracket=delta_range, method="brentq").root
+            return np.nan, np.nan  # No root in the range
+        delta = root_scalar(mtpv_cond, bracket=delta_range, method="brentq").root
+        return delta, i_s_dq
 
     def compute_mtpv_locus(self, psi_s_max: float, num: int = NUM) -> MTPVLocus:
         """
@@ -178,12 +213,12 @@ class ControlLoci:
         # Calculate MTPV points iteratively for each flux magnitude
         flux_magnitudes = np.linspace(0, psi_s_max, num)
         delta = np.zeros_like(flux_magnitudes)
+        i_s_dq = np.zeros_like(flux_magnitudes, dtype=complex)
         for idx, psi_s_abs in enumerate(flux_magnitudes):
-            delta[idx] = self.compute_mtpv_flux_angle(float(psi_s_abs))
+            delta[idx], i_s_dq[idx] = self.compute_mtpv_flux_angle(float(psi_s_abs))
 
         # MTPV locus expressed with different quantities
         psi_s_dq = flux_magnitudes * np.exp(1j * delta)
-        i_s_dq = np.array([self.par.iterate_i_s_dq(psi) for psi in psi_s_dq])
         tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
 
         return MTPVLocus(
@@ -233,6 +268,7 @@ class ControlLoci:
             i_s_dq=i_s_dq,
             tau_M=tau_M,
             i_s_dq_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), i_s_dq),
+            tau_M_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), tau_M),
         )
 
     def compute_mtpv_current(self, i_s_abs: float) -> complex:
@@ -254,7 +290,7 @@ class ControlLoci:
         def mtpv_cond(gamma: float) -> float:
             i_s_dq = i_s_abs * np.exp(1j * gamma)
             psi_s_dq = self.par.psi_s_dq(i_s_dq)
-            i_a_dq = self.par.aux_current(i_s_dq)
+            i_a_dq = self._aux_current(psi_s_dq, i_s_dq)
             return float(np.real(i_a_dq * np.conj(psi_s_dq)))
 
         if self.par.psi_f == 0:

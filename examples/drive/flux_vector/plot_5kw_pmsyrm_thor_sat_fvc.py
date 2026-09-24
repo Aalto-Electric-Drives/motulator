@@ -36,7 +36,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Load the flux maps.
 
 # Get the path of the MATLAB file and load the FEM data
-p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
 fem_flux_map = utils.import_syre_data(p / "thor.mat")
 
 # %%
