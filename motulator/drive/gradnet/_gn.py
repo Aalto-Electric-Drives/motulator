@@ -492,7 +492,7 @@ class FluxMapWithHarmonics:
         psi_s_dq = 0.5 * (psi_s_dq[:n] + np.conj(psi_s_dq[n:]))
         dW_dcos = 0.5 * (dW_dcos[:n] + dW_dcos[n:])
         dW_dsin = 0.5 * (dW_dsin[:n] - dW_dsin[n:])
-        
+
         # Torque in per-unit
         dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
         tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) + dW_dtheta
