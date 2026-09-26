@@ -1,40 +1,81 @@
-# *motulator:* Motor Drive and Grid Converter Simulator in Python
+# motulator
 
-[![DOI](https://zenodo.org/badge/377399301.svg)](https://zenodo.org/doi/10.5281/zenodo.10223090)
+**Motor drive and grid converter simulator in Python**
+
+[![PyPI version](https://img.shields.io/pypi/v/motulator.svg)](https://pypi.org/project/motulator/)
+[![Python versions](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://pypi.org/project/motulator/)
 [![Build Status](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml/badge.svg)](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml)
-[![License](https://img.shields.io/github/license/mashape/apistatus)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
-[![PyPI version shields.io](https://img.shields.io/pypi/v/motulator.svg)](https://pypi.org/project/motulator/)
-[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+[![License](https://img.shields.io/github/license/Aalto-Electric-Drives/motulator)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
+[![DOI](https://zenodo.org/badge/377399301.svg)](https://zenodo.org/doi/10.5281/zenodo.10223090)
+[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors)
 
-## Introduction
+**[Documentation](https://aalto-electric-drives.github.io/motulator/)** ·
+**[Drive examples](https://aalto-electric-drives.github.io/motulator/drive_examples/index.html)** ·
+**[Grid examples](https://aalto-electric-drives.github.io/motulator/grid_examples/index.html)** ·
+**[Installation](https://aalto-electric-drives.github.io/motulator/installation.html)**
 
-This open-source software includes simulation models and controllers for electric machine drives and grid converter systems. The machine models include an induction machine, a synchronous reluctance machine, and a permanent-magnet synchronous machine. Various subsystem models are provided for modeling grid converter systems, such as an LCL filter connected to an inductive-resistive grid.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/hero-dark.svg">
+  <img src=".github/assets/hero-light.svg" alt="Simulated sensorless flux-vector control of a 2.2-kW IPMSM drive: speed step, load-torque step, and phase currents" width="100%">
+</picture>
 
-The system models are simulated in the continuous-time domain while the control algorithms run in discrete time. The default solver is the explicit Runge-Kutta method of order 5(4) from scipy.integrate.solve_ivp. Various control algorithms are provided as examples. The documentation is available here:
+*motulator* provides simulation models and control algorithms for electric machine drives and grid converter systems. The system models are simulated in the continuous-time domain, while the control algorithms run in discrete time, as they would in a real converter.
 
-https://aalto-electric-drives.github.io/motulator/
+## Features
+
+- **Machine models:** induction machines, synchronous reluctance machines, and permanent-magnet synchronous machines, including magnetic saturation and two-mass mechanics
+- **Grid converter models:** L and LCL filters, inductive-resistive grids, and DC-bus dynamics
+- **Drive control:** V/Hz control, current-vector and flux-vector control, sensorless observers, and signal injection
+- **Grid converter control:** grid-following and grid-forming control, including disturbance-observer-based and power-synchronization methods
+- **Ready-to-run examples** as Python scripts and Jupyter notebooks, including neural-network-based flux maps learned from measured data
 
 ## Installation
-
-This software can be installed using pip:
 
 ```bash
 pip install motulator
 ```
 
-Alternatively, the repository can be cloned:
+To develop *motulator* itself, clone the repository as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
 
-https://aalto-electric-drives.github.io/motulator/installation.html
+## Quick start
 
-## Usage
+A complete simulation takes about 20 lines. This example runs sensorless flux-vector control of a 2.2-kW interior permanent-magnet synchronous machine drive:
 
-The system models, controllers, reference sequences etc. are easy to configure. As a starting point, example scripts and Jupyter notebooks can be downloaded here:
+```python
+import motulator.drive.control.sm as control
+from motulator.drive import model, utils
 
-https://aalto-electric-drives.github.io/motulator/drive_examples/index.html
+# Continuous-time system model: 2.2-kW IPMSM, mechanics, and converter
+par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
+mdl = model.Drive(
+    model.SynchronousMachine(par),
+    model.MechanicalSystem(J=0.015),
+    model.VoltageSourceConverter(u_dc=540),
+)
 
-https://aalto-electric-drives.github.io/motulator/grid_examples/index.html
+# Discrete-time control system: sensorless flux-vector control
+cfg = control.FluxVectorControllerCfg(i_s_max=6.5, sensorless=True)
+ctrl = control.VectorControlSystem(
+    control.FluxVectorController(par, cfg), control.SpeedController(J=0.015, alpha_s=25)
+)
 
-New system models and controllers can be developed using the existing ones as templates.
+# Speed reference and load torque
+ctrl.set_speed_ref(lambda t: (t > 0.1) * 50)  # rad/s
+mdl.mechanics.set_external_load_torque(lambda t: (t > 0.7) * 10)  # Nm
+
+res = model.Simulation(mdl, ctrl).simulate(t_stop=1.2)
+utils.plot(res)
+```
+
+To go further, start from the [drive examples](https://aalto-electric-drives.github.io/motulator/drive_examples/index.html) and [grid examples](https://aalto-electric-drives.github.io/motulator/grid_examples/index.html). New system models and controllers can be developed using the existing ones as templates.
+
+## From simulation to the laboratory
+
+<img src=".github/assets/testbench.jpg" alt="Laboratory test bench: a permanent-magnet synchronous machine coupled to a load machine through a torque sensor, with the converter cabinet in the background" width="360" align="right">
+
+Almost all control methods in the examples have also been implemented and tested on laboratory test benches at Aalto University, such as the one shown here. The simulation models aim to capture the dynamics that matter for control design.
+
+<br clear="right">
 
 ## Contributing
 
@@ -42,7 +83,8 @@ If you would like to help us develop *motulator*, see these [guidelines](https:/
 
 ## Contributors
 
-Thanks go to these wonderful people:
+<details>
+<summary>Thanks go to these wonderful people.</summary>
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 
@@ -90,6 +132,8 @@ Thanks go to these wonderful people:
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+</details>
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
