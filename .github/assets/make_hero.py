@@ -170,5 +170,7 @@ if __name__ == "__main__":
         path = OUT_DIR / f"hero-{theme}.svg"
         fig.savefig(path, transparent=True, metadata={"Date": None})
         plt.close(fig)
-        path.write_text(add_reveal_animation(path.read_text()))
+        svg = add_reveal_animation(path.read_text())
+        # Strip trailing whitespace to keep the pre-commit hooks happy
+        path.write_text("\n".join(line.rstrip() for line in svg.splitlines()) + "\n")
         print(f"Wrote {path} ({path.stat().st_size / 1e3:.0f} kB)")

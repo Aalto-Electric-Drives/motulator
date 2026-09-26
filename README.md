@@ -83,8 +83,7 @@ If you would like to help us develop *motulator*, see these [guidelines](https:/
 
 ## Contributors
 
-<details>
-<summary>Thanks go to these wonderful people.</summary>
+Thanks go to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 
@@ -132,8 +131,6 @@ If you would like to help us develop *motulator*, see these [guidelines](https:/
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-</details>
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
