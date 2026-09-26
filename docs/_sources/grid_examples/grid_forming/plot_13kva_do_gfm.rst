@@ -110,7 +110,7 @@ Configure the control system.
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-60
+.. GENERATED FROM PYTHON SOURCE LINES 45-58
 
 .. code-block:: Python
 
@@ -124,10 +124,8 @@ Set the references for converter output voltage magnitude and active power.
     # Uncomment line below to simulate operation in rectifier mode
     # ctrl.ext_ref.p_g = lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P
 
-    # Uncomment lines below to simulate a grid voltage sag with constant ref.p_g
-    # mdl.ac_filter.L_g = 0
-    # mdl.ac_source.e_g = lambda t: (1 - (t > 0.2) * 0.8 + (t > 1) * 0.8) * base.u
-    # ctrl.ext_ref.p_g = lambda t: nom.P
+    # A grid-voltage sag in this weak grid is simulated in the example
+    # plot_13kva_do_gfm_sag.py, where the active-power reference limitation is used.
 
 
 
@@ -136,11 +134,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-67
+.. GENERATED FROM PYTHON SOURCE LINES 60-65
 
 .. code-block:: Python
 
@@ -176,7 +174,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.075 seconds)
+   **Total running time of the script:** (0 minutes 4.953 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm.py:

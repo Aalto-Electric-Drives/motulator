@@ -257,6 +257,7 @@
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Grid-Forming Control</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">12.5-kVA, DO-GFM</a></li>
 </ul>
@@ -557,10 +558,8 @@ A transparent current controller is included for current limitation.</p>
 </span><span class="c1"># Uncomment line below to simulate operation in rectifier mode</span><span class="w">
 </span><span class="c1"># ctrl.ext_ref.p_g = lambda t: ((t &gt; 0.2) - (t &gt; 0.7) * 2 + (t &gt; 1.2)) * nom.P</span><span class="w">
 </span><span class="w">
-</span><span class="c1"># Uncomment lines below to simulate a grid voltage sag with constant ref.p_g</span><span class="w">
-</span><span class="c1"># mdl.ac_filter.L_g = 0</span><span class="w">
-</span><span class="c1"># mdl.ac_source.e_g = lambda t: (1 - (t &gt; 0.2) * 0.8 + (t &gt; 1) * 0.8) * base.u</span><span class="w">
-</span><span class="c1"># ctrl.ext_ref.p_g = lambda t: nom.P</span><span class="w">
+</span><span class="c1"># A grid-voltage sag in this weak grid is simulated in the example</span><span class="w">
+</span><span class="c1"># plot_13kva_do_gfm_sag.py, where the active-power reference limitation is used.</span><span class="w">
 </span></pre></div></div>
 <p>Create the simulation object, simulate, and plot the results in per-unit values.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><span class="n">sim</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><span class="n">model</span><span class="o">.</span><span class="n">Simulation</span></a><span class="p">(</span><a class="sphx-glr-backref-module-motulator-grid-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/grid/model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><span class="n">mdl</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-grid-control sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><span class="n">ctrl</span></a><span class="p">)</span><span class="w">
@@ -572,7 +571,7 @@ A transparent current controller is included for current limitation.</p>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_001.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_001.png" alt="plot 13kva do gfm" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_002.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_002.png" alt="plot 13kva do gfm" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 3.075 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.953 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-grid-forming-plot-13kva-do-gfm-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/e4d9978ae2972006999115024f9cfd81/plot_13kva_do_gfm.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_13kva_do_gfm.ipynb</span></code></a></p>

@@ -256,6 +256,7 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
 </ul>
@@ -468,7 +469,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">copysign</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -603,6 +604,12 @@
 <span class="sd">        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s), defaults to 125e-6.</span>
+<span class="sd">    i_d_max : float, optional</span>
+<span class="sd">        Maximum active current (A), peak value, for the active-power reference</span>
+<span class="sd">        limitation. If not given, the active-power reference is not limited. A value</span>
+<span class="sd">        somewhat below `i_max` is recommended, e.g., `i_d_max = 0.85*i_max`.</span>
+<span class="sd">    alpha_l : float, optional</span>
+<span class="sd">        Power-limitation bandwidth (rad/s), defaults to 2*pi*50.</span>
 
 <span class="sd">    """</span>
 
@@ -616,6 +623,8 @@
     <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">400</span>
     <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span>
+    <span class="n">i_d_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">alpha_l</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -632,7 +641,10 @@
 <span class="sd">    Disturbance-observer-based grid-forming controller.</span>
 
 <span class="sd">    This implements the RFPSC-type grid-forming mode of the control method described in</span>
-<span class="sd">    [#Nur2024]_. Transparent current control is also implemented.</span>
+<span class="sd">    [#Nur2024]_. Transparent current control is also implemented. Optionally, the</span>
+<span class="sd">    active-power reference is limited to a realizable level, prioritizing the reactive</span>
+<span class="sd">    current, as described in [#Maa2026]_ (here reduced to balanced conditions). This</span>
+<span class="sd">    limitation helps to maintain synchronism during grid-voltage sags in weak grids.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -651,6 +663,10 @@
 <span class="sd">       converter control based on a disturbance observer," IEEE Trans. Power Electron.,</span>
 <span class="sd">       2024, https://doi.org/10.1109/TPEL.2024.3433503</span>
 
+<span class="sd">    .. [#Maa2026] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,</span>
+<span class="sd">       "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,</span>
+<span class="sd">       https://arxiv.org/abs/2608.11857</span>
+
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">ObserverBasedGridFormingControllerCfg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -662,6 +678,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="c1"># Active-power reference limitation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_d_max</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_d_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_l</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_l</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span> <span class="o">=</span> <span class="n">inf</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_d_max</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_d_max</span>
 
 <div class="viewcode-block" id="ObserverBasedGridFormingController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.get_feedback">[docs]</a>
@@ -677,6 +697,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">p_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v_c_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute references."""</span>
+        <span class="c1"># Limit the active-power reference</span>
+        <span class="n">p_g_ref</span> <span class="o">=</span> <span class="n">copysign</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span><span class="p">),</span> <span class="n">p_g_ref</span><span class="p">)</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="n">References</span><span class="p">(</span><span class="n">T_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">p_g</span><span class="o">=</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">v_c</span><span class="o">=</span><span class="n">v_c_ref</span><span class="p">)</span>
 
         <span class="c1"># Complex gains for grid-forming mode</span>
@@ -701,7 +723,14 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Update states."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_d_max</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Maximum active power, prioritizing the reactive current</span>
+            <span class="n">abs_u_c</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span><span class="p">),</span> <span class="mf">1e-6</span><span class="p">)</span>
+            <span class="n">i_q</span> <span class="o">=</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">abs_u_c</span>
+            <span class="n">i_d_lim_sqr</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_d_max</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">i_q</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_d_max</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">p_max</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">abs_u_c</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">i_d_lim_sqr</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span> <span class="o">+=</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_l</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ObserverBasedGridFormingController.post_process">

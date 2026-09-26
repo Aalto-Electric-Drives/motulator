@@ -52,10 +52,8 @@ ctrl.set_power_ref(
 # Uncomment line below to simulate operation in rectifier mode
 # ctrl.ext_ref.p_g = lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P
 
-# Uncomment lines below to simulate a grid voltage sag with constant ref.p_g
-# mdl.ac_filter.L_g = 0
-# mdl.ac_source.e_g = lambda t: (1 - (t > 0.2) * 0.8 + (t > 1) * 0.8) * base.u
-# ctrl.ext_ref.p_g = lambda t: nom.P
+# A grid-voltage sag in this weak grid is simulated in the example
+# plot_13kva_do_gfm_sag.py, where the active-power reference limitation is used.
 
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.

@@ -610,7 +610,10 @@ Package Contents
    Disturbance-observer-based grid-forming controller.
 
    This implements the RFPSC-type grid-forming mode of the control method described in
-   [#Nur2024]_. Transparent current control is also implemented.
+   [#Nur2024]_. Transparent current control is also implemented. Optionally, the
+   active-power reference is limited to a realizable level, prioritizing the reactive
+   current, as described in [#Maa2026]_ (here reduced to balanced conditions). This
+   limitation helps to maintain synchronism during grid-voltage sags in weak grids.
 
    :param cfg: Grid-forming control configuration.
    :type cfg: ObserverBasedGridFormingControllerCfg
@@ -626,6 +629,10 @@ Package Contents
    .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming
       converter control based on a disturbance observer," IEEE Trans. Power Electron.,
       2024, https://doi.org/10.1109/TPEL.2024.3433503
+
+   .. [#Maa2026] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
+      "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
+      https://arxiv.org/abs/2608.11857
 
 
 
@@ -766,6 +773,12 @@ Package Contents
    :type w_nom: float, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
+   :param i_d_max: Maximum active current (A), peak value, for the active-power reference
+                   limitation. If not given, the active-power reference is not limited. A value
+                   somewhat below `i_max` is recommended, e.g., `i_d_max = 0.85*i_max`.
+   :type i_d_max: float, optional
+   :param alpha_l: Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
+   :type alpha_l: float, optional
 
 
 
