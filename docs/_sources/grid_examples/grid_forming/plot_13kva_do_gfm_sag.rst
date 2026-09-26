@@ -180,7 +180,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.456 seconds)
+   **Total running time of the script:** (0 minutes 5.507 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm_sag.py:
