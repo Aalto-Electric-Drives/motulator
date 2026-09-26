@@ -2,7 +2,7 @@
 
 from cmath import exp, phase
 from dataclasses import dataclass
-from math import pi, sqrt
+from math import copysign, inf, pi, sqrt
 from typing import cast
 
 import numpy as np
@@ -135,6 +135,12 @@ class ObserverBasedGridFormingControllerCfg:
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
+    i_d_max : float, optional
+        Maximum active current (A), peak value, for the active-power reference
+        limitation. If not given, the active-power reference is not limited. A value
+        somewhat below `i_max` is recommended, e.g., `i_d_max = 0.85*i_max`.
+    alpha_l : float, optional
+        Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
 
     """
 
@@ -148,6 +154,8 @@ class ObserverBasedGridFormingControllerCfg:
     u_nom: float = sqrt(2 / 3) * 400
     w_nom: float = 2 * pi * 50
     T_s: float = 125e-6
+    i_d_max: float | None = None
+    alpha_l: float = 2 * pi * 50
 
     def __post_init__(self) -> None:
         if self.R_a is None:
@@ -161,7 +169,10 @@ class ObserverBasedGridFormingController:
     Disturbance-observer-based grid-forming controller.
 
     This implements the RFPSC-type grid-forming mode of the control method described in
-    [#Nur2024]_. Transparent current control is also implemented.
+    [#Nur2024]_. Transparent current control is also implemented. Optionally, the
+    active-power reference is limited to a realizable level, prioritizing the reactive
+    current, as described in [#Maa2026]_ (here reduced to balanced conditions). This
+    limitation helps to maintain synchronism during grid-voltage sags in weak grids.
 
     Parameters
     ----------
@@ -180,6 +191,10 @@ class ObserverBasedGridFormingController:
        converter control based on a disturbance observer," IEEE Trans. Power Electron.,
        2024, https://doi.org/10.1109/TPEL.2024.3433503
 
+    .. [#Maa2026] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
+       "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
+       https://arxiv.org/abs/2608.11857
+
     """
 
     def __init__(self, cfg: ObserverBasedGridFormingControllerCfg) -> None:
@@ -191,6 +206,10 @@ class ObserverBasedGridFormingController:
         self.k_v = cast(float, cfg.k_v)
         self.k_c = cfg.alpha_c * cfg.L  # Current control gain
         self.T_s: float = cfg.T_s
+        # Active-power reference limitation
+        self.i_d_max = cfg.i_d_max
+        self.alpha_l = cfg.alpha_l
+        self.p_max = inf if cfg.i_d_max is None else 1.5 * cfg.u_nom * cfg.i_d_max
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
@@ -201,6 +220,8 @@ class ObserverBasedGridFormingController:
         self, p_g_ref: float, v_c_ref: float, fbk: ObserverOutputs
     ) -> References:
         """Compute references."""
+        # Limit the active-power reference
+        p_g_ref = copysign(min(abs(p_g_ref), self.p_max), p_g_ref)
         ref = References(T_s=self.T_s, p_g=p_g_ref, v_c=v_c_ref)
 
         # Complex gains for grid-forming mode
@@ -223,6 +244,13 @@ class ObserverBasedGridFormingController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
+        if self.i_d_max is not None:
+            # Maximum active power, prioritizing the reactive current
+            abs_u_c = max(abs(ref.u_c), 1e-6)
+            i_q = (ref.u_c * fbk.i_c.conjugate()).imag / abs_u_c
+            i_d_lim_sqr = min(max(self.i_d_max**2 - i_q**2, 0.0), self.i_d_max**2)
+            p_max = 1.5 * abs_u_c * sqrt(i_d_lim_sqr)
+            self.p_max += ref.T_s * self.alpha_l * (p_max - self.p_max)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

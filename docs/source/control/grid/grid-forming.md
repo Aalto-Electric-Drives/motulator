@@ -97,3 +97,19 @@ label: control_system_gfm
 where the gains can be selected according to {eq}`gain_selection_gfm` and the converter voltage appearing in the observer has been replaced with its reference. Various control modes could be easily incorporated into the control system {eq}`control_system_gfm`, simply by changing the feedback correction terms of the control law {cite}`Nur2024`. The switching between the modes is seamless since the control law does not have memory, but the integral action is provided by the disturbance observer (in addition to synchronization).
 
 The control system implemented in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class corresponds to {eq}`control_system_gfm`. In the example implementation, a transparent current-control mode is implemented. In the grid-forming mode, the observer bandwidth $\alphao = 1$ p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., $\hat L = 0.15$ p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.
+
+## Active-Power Reference Limitation
+
+The transparent current controller limits the converter current, but it does not guarantee that the active-power reference is realizable. For example, during a grid-voltage sag in a weak grid, the power that can be transferred to the grid may drop below the reference. Then, no equilibrium exists and the converter loses synchronism. To avoid this, the active-power reference can be limited to a realizable level, prioritizing the reactive current {cite}`Maa2026`. In balanced conditions, the maximum allowable active power is
+
+```{math}
+---
+label: power_limitation_gfm
+---
+i_\mathrm{q} &= \frac{\IM\{\ucref\ic^*\}}{|\ucref|} \\
+i_\mathrm{d,lim}^2 &= i_\mathrm{d,max}^2 - i_\mathrm{q}^2 \\
+p_\mathrm{max} &= \frac{\alpha_\mathrm{l}}{s + \alpha_\mathrm{l}} \frac{3}{2} |\ucref| \sqrt{\min\left[\max\left(i_\mathrm{d,lim}^2,\, 0\right),\, i_\mathrm{d,max}^2\right]}
+```
+
+where $i_\mathrm{d,max}$ is the maximum active current and $\alpha_\mathrm{l}$ is the power-limitation bandwidth. The limited active-power reference is $\bar p_\mathrm{g}^\mathrm{ref} = \mathrm{sign}(\pgref) \min(|\pgref|, p_\mathrm{max})$. The maximum active current should be chosen somewhat below the current limit $i_\mathrm{max}$, e.g., $i_\mathrm{d,max} = 1.1$ p.u. when $i_\mathrm{max} = 1.3$ p.u. {cite}`Maa2026`. This limitation is enabled in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class by setting the parameter `i_d_max`. Its effect is demonstrated in the example {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
+
