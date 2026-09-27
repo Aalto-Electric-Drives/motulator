@@ -10,8 +10,9 @@ Development uses a virtual environment in `.venv` (pyright is configured to use 
 - Single file: `ruff check --fix <file>`, `ruff format <file>`, `pyright <file>`
 - Build the docs (runs every example in `examples/`, slow): `make html` in `docs/`, or `sphinx-build -b html docs/source docs/build/html`
 - Run one example: `python examples/drive/flux_vector/plot_2kw_ipmsm_fvc.py`
+- Run the tests (about 30 s): `pytest`. A single test: `pytest tests/test_drive.py -k ipmsm_fvc_sensorless`
 
-There is no pytest suite. The examples are the de facto regression tests, since the docs build on pull requests executes all of them.
+The tests in `tests/` run short closed-loop simulations and check physical properties of the response (e.g., speed tracking and torque balance) with loose tolerances, so they tolerate retuning of the controllers. The docstring examples in `motulator/` are run as doctests. The docs build additionally executes all examples, but it only checks that they run.
 
 ## Architecture
 

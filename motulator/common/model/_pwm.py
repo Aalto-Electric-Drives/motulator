@@ -94,7 +94,7 @@ class CarrierComparison(PWM):
            [0, 0, 1],
            [0, 0, 0]])
     >>> # Sum of the step times equals T_s
-    >>> np.sum(t_steps)
+    >>> float(np.sum(t_steps))
     0.001
     >>> # 50% duty ratios in all phases
     >>> t_steps, q_abc = carrier_cmp(1e-3, [.5, .5, .5])
