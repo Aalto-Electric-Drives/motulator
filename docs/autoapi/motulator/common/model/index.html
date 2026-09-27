@@ -520,18 +520,13 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Model.get_initial_values()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.interconnect"><code class="docutils literal notranslate"><span class="pre">Model.interconnect()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.rhs"><code class="docutils literal notranslate"><span class="pre">Model.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_outputs"><code class="docutils literal notranslate"><span class="pre">Model.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_states"><code class="docutils literal notranslate"><span class="pre">Model.set_states()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_zoh_input"><code class="docutils literal notranslate"><span class="pre">Model.set_zoh_input()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries.build_subsystem_time_series"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries.build_subsystem_time_series()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation.simulate"><code class="docutils literal notranslate"><span class="pre">Simulation.simulate()</span></code></a></li>
 </ul>
@@ -585,7 +580,7 @@
 <td><p>Base class for continuous-time system models.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.ModelTimeSeries" title="motulator.common.model.ModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></p></td>
-<td><p>Container for simulation result time series.</p></td>
+<td><p>Time series of the simulation results.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
@@ -666,20 +661,21 @@ switching states are returned, defaults to True.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Model">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model" title="Link to this definition">#</a></dt>
 <dd><p>Base class for continuous-time system models.</p>
-<p>This class defines the interface for continuous-time system models. It provides
-methods for setting initial values, computing state derivatives, interconnecting
-subsystems, and saving simulation results. The class also provides methods for
-setting ZOH inputs and computing outputs. The model can be configured to use either
-PWM or ZOH for the carrier comparison. The class also provides a method for saving
-the simulation results, which includes the time history and the ZOH inputs. The
-class is designed to be subclassed for specific applications.</p>
+<p>A model consists of subsystems and connections between them. The converter
+subsystem gets the switching state <cite>q_c_ab</cite>, which is held constant over each
+integration interval. The outputs are computed in the order of the <cite>subsystems</cite> list
+and passed to the connected inputs immediately. Hence, a subsystem whose outputs
+depend directly on its inputs must come after the subsystems providing these inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
-<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>converter</strong> (<a class="reference internal" href="../../drive/model/index.html#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a>) – Converter model.</p></li>
+<li><p><strong>subsystems</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>]</em>) – All subsystems, including the converter.</p></li>
+<li><p><strong>connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>]</em>) – Connections as <cite>{(target, input_name): (source, output_name)}</cite>.</p></li>
+<li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable PWM model, defaults to False.</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay (samples), defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -690,17 +686,6 @@ class is designed to be subclassed for specific applications.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)">complex</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.Model.interconnect">
-<span class="sig-name descname"><span class="pre">interconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.interconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.interconnect" title="Link to this definition">#</a></dt>
-<dd><p>Connect subsystem inputs and outputs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -725,7 +710,7 @@ class is designed to be subclassed for specific applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Model.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.save" title="Link to this definition">#</a></dt>
-<dd><p>Save solution with all ZOH inputs.</p>
+<dd><p>Save the solution and the switching state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>sol</strong> (<em>scipy.integrate._ivp.ivp.OdeResult</em>)</p>
@@ -739,7 +724,7 @@ class is designed to be subclassed for specific applications.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Model.set_outputs">
 <span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.set_outputs" title="Link to this definition">#</a></dt>
-<dd><p>Compute output variables.</p>
+<dd><p>Compute the outputs and pass them to the connected inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
@@ -764,47 +749,15 @@ class is designed to be subclassed for specific applications.</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.Model.set_zoh_input">
-<span class="sig-name descname"><span class="pre">set_zoh_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.set_zoh_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.set_zoh_input" title="Link to this definition">#</a></dt>
-<dd><p>Set a specific ZOH input value.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
-<li><p><strong>value</strong> (<em>Any</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.ModelTimeSeries">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">ModelTimeSeries</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#ModelTimeSeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ModelTimeSeries" title="Link to this definition">#</a></dt>
-<dd><p>Container for simulation result time series.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.ModelTimeSeries.build_subsystem_time_series">
-<span class="sig-name descname"><span class="pre">build_subsystem_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsystems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoh_connections</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#ModelTimeSeries.build_subsystem_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ModelTimeSeries.build_subsystem_time_series" title="Link to this definition">#</a></dt>
-<dd><p>Build time series for all subsystems.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>subsystems</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>)</p></li>
-<li><p><strong>connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>)</p></li>
-<li><p><strong>zoh_connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
+<dd><p>Time series of the simulation results.</p>
+<p>The time series of each subsystem is stored as an attribute (e.g., <cite>machine</cite>). It
+also contains the time series of the subsystem inputs, which are used for plotting
+and for computing the signals that depend directly on the inputs.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1081,18 +1034,13 @@ representations of the subsystem.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.get_initial_values"><code class="docutils literal notranslate"><span class="pre">Model.get_initial_values()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.interconnect"><code class="docutils literal notranslate"><span class="pre">Model.interconnect()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.rhs"><code class="docutils literal notranslate"><span class="pre">Model.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_outputs"><code class="docutils literal notranslate"><span class="pre">Model.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_states"><code class="docutils literal notranslate"><span class="pre">Model.set_states()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_zoh_input"><code class="docutils literal notranslate"><span class="pre">Model.set_zoh_input()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries.build_subsystem_time_series"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries.build_subsystem_time_series()</span></code></a></li>
-</ul>
-</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation.simulate"><code class="docutils literal notranslate"><span class="pre">Simulation.simulate()</span></code></a></li>
 </ul>

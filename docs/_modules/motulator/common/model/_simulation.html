@@ -469,7 +469,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_ivp</span>
@@ -618,12 +618,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid value encountered at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s."</span><span class="p">)</span>
 
         <span class="c1"># Post-process the solution data</span>
-        <span class="n">mdl_ts</span> <span class="o">=</span> <span class="n">ModelTimeSeries</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">_history</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">zoh_connections</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="n">mdl_ts</span> <span class="o">=</span> <span class="n">ModelTimeSeries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="p">)</span>
         <span class="n">ctrl_ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">SimulationResults</span><span class="p">(</span><span class="n">mdl_ts</span><span class="p">,</span> <span class="n">ctrl_ts</span><span class="p">)</span></div>
 
@@ -643,8 +638,7 @@
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t_step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_steps</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">t_step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="c1"># Set the switching state and get initial values</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">set_zoh_input</span><span class="p">(</span><span class="s2">"sw_state"</span><span class="p">,</span> <span class="n">sw_states</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">interconnect</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">complex</span><span class="p">,</span> <span class="n">sw_states</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                     <span class="n">state0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
 
                     <span class="c1"># Set the integration time span</span>

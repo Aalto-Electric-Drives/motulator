@@ -509,25 +509,15 @@
         <span class="n">pwm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pwm</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
-
-        <span class="c1"># Create subsystems</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_filter</span> <span class="o">=</span> <span class="n">ac_filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_source</span> <span class="o">=</span> <span class="n">ac_source</span>
-
-        <span class="c1"># Store references for interconnection</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ac_filter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ac_source</span><span class="p">]</span>
-
-        <span class="c1"># Define connections</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">),</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
-            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ac_source</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">),</span>
+        <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">ac_source</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">),</span>
         <span class="p">}</span>
-
-        <span class="c1"># Define ZOH inputs separately</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zoh_connections</span> <span class="o">=</span> <span class="p">{(</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"q_c_ab"</span><span class="p">):</span> <span class="s2">"sw_state"</span><span class="p">}</span></div>
+        <span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span></div>
 
 </pre></div>
 

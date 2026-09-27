@@ -117,18 +117,27 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Model(pwm = False, delay = 0)
+.. py:class:: Model(converter, subsystems, connections, pwm = False, delay = 0)
 
    
    Base class for continuous-time system models.
 
-   This class defines the interface for continuous-time system models. It provides
-   methods for setting initial values, computing state derivatives, interconnecting
-   subsystems, and saving simulation results. The class also provides methods for
-   setting ZOH inputs and computing outputs. The model can be configured to use either
-   PWM or ZOH for the carrier comparison. The class also provides a method for saving
-   the simulation results, which includes the time history and the ZOH inputs. The
-   class is designed to be subclassed for specific applications.
+   A model consists of subsystems and connections between them. The converter
+   subsystem gets the switching state `q_c_ab`, which is held constant over each
+   integration interval. The outputs are computed in the order of the `subsystems` list
+   and passed to the connected inputs immediately. Hence, a subsystem whose outputs
+   depend directly on its inputs must come after the subsystems providing these inputs.
+
+   :param converter: Converter model.
+   :type converter: VoltageSourceConverter
+   :param subsystems: All subsystems, including the converter.
+   :type subsystems: list[Subsystem]
+   :param connections: Connections as `{(target, input_name): (source, output_name)}`.
+   :type connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+   :param pwm: Enable PWM model, defaults to False.
+   :type pwm: bool, optional
+   :param delay: Computational delay (samples), defaults to 0.
+   :type delay: int, optional
 
 
 
@@ -151,30 +160,6 @@ Package Contents
 
       
       Get initial values of all subsystems before the solver.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: interconnect()
-
-      
-      Connect subsystem inputs and outputs.
 
 
 
@@ -222,7 +207,7 @@ Package Contents
    .. py:method:: save(sol)
 
       
-      Save solution with all ZOH inputs.
+      Save the solution and the switching state.
 
 
 
@@ -246,7 +231,7 @@ Package Contents
    .. py:method:: set_outputs(t)
 
       
-      Compute output variables.
+      Compute the outputs and pass them to the connected inputs.
 
 
 
@@ -291,35 +276,14 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_zoh_input(name, value)
-
-      
-      Set a specific ZOH input value.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: ModelTimeSeries
 
    
-   Container for simulation result time series.
+   Time series of the simulation results.
 
+   The time series of each subsystem is stored as an attribute (e.g., `machine`). It
+   also contains the time series of the subsystem inputs, which are used for plotting
+   and for computing the signals that depend directly on the inputs.
 
 
 
@@ -337,30 +301,6 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
-
-   .. py:method:: build_subsystem_time_series(subsystems, connections, zoh_connections)
-
-      
-      Build time series for all subsystems.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None)
 

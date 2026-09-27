@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**07:54.911** total execution time for 2 files **from grid_examples/identification**:
+**05:25.914** total execution time for 2 files **from grid_examples/identification**:
 
 .. container::
 
@@ -33,8 +33,8 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_grid_examples_identification_plot_10kva_gfl_identification.py` (``plot_10kva_gfl_identification.py``)
-     - 04:00.219
+     - 02:43.835
      - 0.0
    * - :ref:`sphx_glr_grid_examples_identification_plot_13kva_do_gfm_identification.py` (``plot_13kva_do_gfm_identification.py``)
-     - 03:54.692
+     - 02:42.079
      - 0.0
