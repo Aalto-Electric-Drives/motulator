@@ -258,6 +258,9 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
     ) -> np.ndarray:
         """Incremental inductance matrix at given current."""
+        # Use the Jacobian of the flux map, if available (e.g., GradNet flux maps)
+        if (jacobian := getattr(self.psi_s_dq_fcn, "jacobian", None)) is not None:
+            return np.moveaxis(jacobian(i_s_dq), (-2, -1), (0, 1))
         pts = np.array(
             [i_s_dq + EPS, i_s_dq - EPS, i_s_dq + 1j * EPS, i_s_dq - 1j * EPS]
         )
