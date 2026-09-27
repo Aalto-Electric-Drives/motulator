@@ -518,15 +518,30 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap"><code class="docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid.jacobian"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid.jacobian()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap"><code class="docutils literal notranslate"><span class="pre">CurrentMap</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap.jacobian"><code class="docutils literal notranslate"><span class="pre">CurrentMap.jacobian()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">CurrentMapWithHarmonics</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMap"><code class="docutils literal notranslate"><span class="pre">FluxMap</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">FluxMapWithHarmonics</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient"><code class="docutils literal notranslate"><span class="pre">PNormGradient</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient"><code class="docutils literal notranslate"><span class="pre">PNormGradient</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient.jacobian"><code class="docutils literal notranslate"><span class="pre">PNormGradient.jacobian()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PlotOptions"><code class="docutils literal notranslate"><span class="pre">PlotOptions</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax"><code class="docutils literal notranslate"><span class="pre">Softmax</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus"><code class="docutils literal notranslate"><span class="pre">Squareplus</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax"><code class="docutils literal notranslate"><span class="pre">Softmax</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax.jacobian"><code class="docutils literal notranslate"><span class="pre">Softmax.jacobian()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus"><code class="docutils literal notranslate"><span class="pre">Squareplus</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus.jacobian"><code class="docutils literal notranslate"><span class="pre">Squareplus.jacobian()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.get_training_data"><code class="docutils literal notranslate"><span class="pre">get_training_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.load_gradnet"><code class="docutils literal notranslate"><span class="pre">load_gradnet()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
@@ -634,6 +649,20 @@
 <dd class="field-odd"><p><strong>beta_log0</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.AlgebraicSigmoid.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#AlgebraicSigmoid.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.AlgebraicSigmoid.jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Jacobian matrix, shape (…, n, n), for inputs of shape (…, n).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -646,6 +675,26 @@
 <dd class="field-odd"><p><strong>model</strong> (<em>GradNet</em>) – Trained GradNet model for the current map.</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.CurrentMap.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#CurrentMap.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.CurrentMap.jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Jacobian matrix of the symmetrized map.</p>
+<p>The Jacobian is computed analytically, which is accurate also in single
+precision (unlike finite differences).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em> | </em><em>np.ndarray</em>) – Input of the map (flux linkage in Vs or current in A).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Jacobian matrix [[dy_d/dx_d, dy_d/dx_q], [dy_q/dx_d, dy_q/dx_q]], where y is
+the output of the map, in SI units.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray, shape (…, 2, 2)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -713,6 +762,20 @@ is convex, thus guaranteeing monotonicity.</p>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.PNormGradient.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#PNormGradient.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.PNormGradient.jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Jacobian matrix, shape (…, n, n), for inputs of shape (…, n).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -752,6 +815,20 @@ present in the corresponding point cloud slice.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.Softmax.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#Softmax.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.Softmax.jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Jacobian matrix, shape (…, n, n), for inputs of shape (…, n).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -764,6 +841,20 @@ present in the corresponding point cloud slice.</p></li>
 <dd class="field-odd"><p><strong>beta_log0</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.gradnet.Squareplus.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#Squareplus.jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.Squareplus.jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Jacobian matrix, shape (…, n, n), for inputs of shape (…, n).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -1022,15 +1113,30 @@ otherwise CPU.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap"><code class="docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.AlgebraicSigmoid.jacobian"><code class="docutils literal notranslate"><span class="pre">AlgebraicSigmoid.jacobian()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap"><code class="docutils literal notranslate"><span class="pre">CurrentMap</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMap.jacobian"><code class="docutils literal notranslate"><span class="pre">CurrentMap.jacobian()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.CurrentMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">CurrentMapWithHarmonics</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMap"><code class="docutils literal notranslate"><span class="pre">FluxMap</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.FluxMapWithHarmonics"><code class="docutils literal notranslate"><span class="pre">FluxMapWithHarmonics</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient"><code class="docutils literal notranslate"><span class="pre">PNormGradient</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient"><code class="docutils literal notranslate"><span class="pre">PNormGradient</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PNormGradient.jacobian"><code class="docutils literal notranslate"><span class="pre">PNormGradient.jacobian()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.PlotOptions"><code class="docutils literal notranslate"><span class="pre">PlotOptions</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax"><code class="docutils literal notranslate"><span class="pre">Softmax</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus"><code class="docutils literal notranslate"><span class="pre">Squareplus</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax"><code class="docutils literal notranslate"><span class="pre">Softmax</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Softmax.jacobian"><code class="docutils literal notranslate"><span class="pre">Softmax.jacobian()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus"><code class="docutils literal notranslate"><span class="pre">Squareplus</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.Squareplus.jacobian"><code class="docutils literal notranslate"><span class="pre">Squareplus.jacobian()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.get_training_data"><code class="docutils literal notranslate"><span class="pre">get_training_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.load_gradnet"><code class="docutils literal notranslate"><span class="pre">load_gradnet()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>

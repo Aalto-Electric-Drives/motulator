@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:35.570** total execution time for 9 files **from drive_examples/gradnet**:
+**01:04.354** total execution time for 9 files **from drive_examples/gradnet**:
 
 .. container::
 
@@ -33,25 +33,25 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_6kw_pmsyrm_gn_fvc_fem_harm.py` (``plot_6kw_pmsyrm_gn_fvc_fem_harm.py``)
-     - 00:18.185
+     - 00:31.976
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_6kw_pmsyrm_gn_fvc_meas.py` (``plot_6kw_pmsyrm_gn_fvc_meas.py``)
-     - 00:16.041
+     - 00:30.215
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_28kw_pmsyrm_curr_map_meas.py` (``plot_28kw_pmsyrm_curr_map_meas.py``)
-     - 00:00.355
+     - 00:00.543
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_28kw_pmsyrm_flux_map_meas.py` (``plot_28kw_pmsyrm_flux_map_meas.py``)
-     - 00:00.309
+     - 00:00.513
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_6kw_pmsyrm_curr_map_meas.py` (``plot_6kw_pmsyrm_curr_map_meas.py``)
-     - 00:00.255
+     - 00:00.406
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_meas.py` (``plot_6kw_pmsyrm_flux_map_meas.py``)
-     - 00:00.223
+     - 00:00.357
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_fem_harm.py` (``plot_6kw_pmsyrm_flux_map_fem_harm.py``)
-     - 00:00.202
+     - 00:00.343
      - 0.0
    * - :ref:`sphx_glr_drive_examples_gradnet_train_6kw_pmsyrm_curr_map_fem.py` (``train_6kw_pmsyrm_curr_map_fem.py``)
      - 00:00.000

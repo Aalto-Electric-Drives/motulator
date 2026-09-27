@@ -88,6 +88,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: jacobian(x)
+
+      
+      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: CurrentMap(model)
 
    
@@ -114,6 +138,39 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: jacobian(x_dq)
+
+      
+      Jacobian matrix of the symmetrized map.
+
+      The Jacobian is computed analytically, which is accurate also in single
+      precision (unlike finite differences).
+
+      :param x_dq: Input of the map (flux linkage in Vs or current in A).
+      :type x_dq: complex | np.ndarray
+
+      :returns: Jacobian matrix [[dy_d/dx_d, dy_d/dx_q], [dy_q/dx_d, dy_q/dx_q]], where y is
+                the output of the map, in SI units.
+      :rtype: np.ndarray, shape (..., 2, 2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: CurrentMapWithHarmonics(model, k = 6)
 
@@ -231,6 +288,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: jacobian(x)
+
+      
+      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: PlotOptions
 
    
@@ -299,6 +380,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: jacobian(x)
+
+      
+      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: Squareplus(beta_log0 = -2.0)
 
    Bases: :py:obj:`torch.nn.Module`
@@ -324,6 +429,30 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: jacobian(x)
+
+      
+      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:function:: get_training_data(dataset_path, base, subsample = 1, other_keys = None)
 
