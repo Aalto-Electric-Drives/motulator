@@ -44,6 +44,7 @@ dev = [
     "pre-commit",
     "pyright",
     "pip-audit",
+    "pytest",
 ]
 doc = [
     "numpydoc",
@@ -75,6 +76,10 @@ quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
 skip-magic-trailing-comma = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "motulator"]
+addopts = "--doctest-modules"
 
 [tool.pyright]
 include = ["motulator", "examples"]
