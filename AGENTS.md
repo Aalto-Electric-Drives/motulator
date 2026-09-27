@@ -24,11 +24,11 @@ The package is split into `common` (shared base classes), `drive` (machine drive
 
 1. The control system is called once per sampling period: `ctrl(mdl)` returns `(T_s, d_abc)`. The controller can change `T_s` at every step.
 1. `mdl.delay` applies the computational delay, and `mdl.pwm` converts the duty ratios into switching intervals: `ZOH` (averaged, default) or `CarrierComparison` (`pwm=True` in the model constructor).
-1. `solve_ivp` integrates `mdl.rhs` over each switching interval, with the switching state held as a ZOH input.
+1. `solve_ivp` integrates `mdl.rhs` over each switching interval, with the switching state `mdl.converter.inp.q_c_ab` held constant.
 
 ### System models (`common/model/_base.py`)
 
-A `Model` (e.g., `drive.model.Drive`, `grid.model.GridConverterSystem`) is a list of subsystems plus a wiring table. Each subsystem has `inp`, `out`, and `state` dataclasses and implements `set_outputs(t)` and `rhs(t)`. The model's `connections` dict maps `(target, input_attr)` to `(source, output_attr)`, and `zoh_connections` maps inputs to ZOH signals such as `sw_state`. States are gathered from the `state` dataclass fields in declaration order, so the field order defines the solver's state vector. New subsystems follow this pattern and are added to the model's `subsystems` and `connections`.
+A `Model` (e.g., `drive.model.Drive`, `grid.model.GridConverterSystem`) is a list of subsystems plus a wiring table. Each subsystem has `inp`, `out`, and `state` dataclasses and implements `set_outputs(t)` and `rhs(t)`. The subsystems, the converter, and the `connections` dict, which maps `(target, input_attr)` to `(source, output_attr)`, are passed to `Model.__init__`. The outputs are computed in the order of the `subsystems` list and passed to the connected inputs immediately, so a subsystem whose outputs depend directly on its inputs (e.g., a machine with core losses) must come after its input sources. States are gathered from the `state` dataclass fields in declaration order, so the field order defines the solver's state vector.
 
 ### Control systems (`common/control/_base.py`)
 

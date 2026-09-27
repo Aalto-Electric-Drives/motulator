@@ -1,12 +1,15 @@
 """Base classes for models."""
 
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
 from motulator.common.model._pwm import ZOH, CarrierComparison
+
+if TYPE_CHECKING:
+    from motulator.common.model._converter import VoltageSourceConverter
 
 
 # %%
@@ -86,30 +89,61 @@ class ModelStateHistory:
     """Temporary storage."""
 
     t: list[float] = field(default_factory=list)
+    q_c_ab: list[complex] = field(default_factory=list)
 
 
 class Model:
     """
     Base class for continuous-time system models.
 
-    This class defines the interface for continuous-time system models. It provides
-    methods for setting initial values, computing state derivatives, interconnecting
-    subsystems, and saving simulation results. The class also provides methods for
-    setting ZOH inputs and computing outputs. The model can be configured to use either
-    PWM or ZOH for the carrier comparison. The class also provides a method for saving
-    the simulation results, which includes the time history and the ZOH inputs. The
-    class is designed to be subclassed for specific applications.
+    A model consists of subsystems and connections between them. The converter
+    subsystem gets the switching state `q_c_ab`, which is held constant over each
+    integration interval. The outputs are computed in the order of the `subsystems` list
+    and passed to the connected inputs immediately. Hence, a subsystem whose outputs
+    depend directly on its inputs must come after the subsystems providing these inputs.
+
+    Parameters
+    ----------
+    converter : VoltageSourceConverter
+        Converter model.
+    subsystems : list[Subsystem]
+        All subsystems, including the converter.
+    connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+        Connections as `{(target, input_name): (source, output_name)}`.
+    pwm : bool, optional
+        Enable PWM model, defaults to False.
+    delay : int, optional
+        Computational delay (samples), defaults to 0.
 
     """
 
-    def __init__(self, pwm: bool = False, delay: int = 0) -> None:
+    def __init__(
+        self,
+        converter: "VoltageSourceConverter",
+        subsystems: list[Subsystem],
+        connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
+        pwm: bool = False,
+        delay: int = 0,
+    ) -> None:
+        if converter not in subsystems:
+            raise ValueError("The converter must be included in the subsystems")
+        # Group the connections by the source for passing the outputs to the inputs
+        self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
+            s: [] for s in subsystems
+        }
+        for (target, inp), (src, out) in connections.items():
+            if not (hasattr(target.inp, inp) and hasattr(src.out, out)):
+                raise ValueError(
+                    f"Invalid connection {type(src).__name__}.{out} -> "
+                    f"{type(target).__name__}.{inp}"
+                )
+            self._outgoing[src].append((target, inp, out))
         self.t0: float = 0.0
         self.delay = Delay(delay)
         self.pwm = CarrierComparison() if pwm else ZOH()
-        self.subsystems: list[Subsystem] = []
-        self.connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]] = {}
-        self.zoh_connections: dict[tuple[Subsystem, str], str] = {}
-        self.zoh_inputs: dict[str, Any] = {}
+        self.converter = converter
+        self.subsystems = subsystems
+        self.connections = connections
         self._history = ModelStateHistory()
 
     def get_initial_values(self) -> list[complex]:
@@ -120,14 +154,6 @@ class Model:
                 state0.extend(vars(subsystem.state).values())
         return state0
 
-    def set_zoh_input(self, name: str, value: Any) -> None:
-        """Set a specific ZOH input value."""
-        self.zoh_inputs[name] = value
-        # Update any subsystem that uses this input
-        for (target, target_attr), input_name in self.zoh_connections.items():
-            if input_name == name:
-                setattr(target.inp, target_attr, value)
-
     def set_states(self, state_list: list[complex]) -> None:
         """Set states in all subsystems."""
         index = 0
@@ -135,20 +161,16 @@ class Model:
             index = subsystem.set_states(state_list, index)
 
     def set_outputs(self, t: float) -> None:
-        """Compute output variables."""
+        """Compute the outputs and pass them to the connected inputs."""
         for subsystem in self.subsystems:
             subsystem.set_outputs(t)
-
-    def interconnect(self) -> None:
-        """Connect subsystem inputs and outputs."""
-        for (target, target_attr), (src, src_attr) in self.connections.items():
-            setattr(target.inp, target_attr, getattr(src.out, src_attr))
+            for target, inp, out in self._outgoing[subsystem]:
+                setattr(target.inp, inp, getattr(subsystem.out, out))
 
     def rhs(self, t: float, state_list: list[complex]) -> list[complex]:
         """Compute complete state derivative list for the solver."""
         self.set_states(state_list)
         self.set_outputs(t)
-        self.interconnect()
         rhs_list: list[complex] = []
         for subsystem in self.subsystems:
             if derivatives := subsystem.rhs(t):
@@ -156,13 +178,9 @@ class Model:
         return rhs_list
 
     def save(self, sol: OdeResult) -> None:
-        """Save solution with all ZOH inputs."""
+        """Save the solution and the switching state."""
         self._history.t.extend(sol.t)
-        # Save ZOH inputs for the current time span
-        for name, value in self.zoh_inputs.items():
-            if not hasattr(self._history, name):
-                setattr(self._history, name, [])
-            getattr(self._history, name).extend([value] * len(sol.t))
+        self._history.q_c_ab.extend([self.converter.inp.q_c_ab] * len(sol.t))
         # Save states
         index = 0
         for subsystem in self.subsystems:
@@ -186,121 +204,39 @@ class SubsystemTimeSeries[S: Subsystem](Protocol):
 
 @dataclass
 class ModelTimeSeries:
-    """Container for simulation result time series."""
+    """
+    Time series of the simulation results.
 
-    _history: InitVar[ModelStateHistory]
-    subsystems: InitVar[list[Subsystem] | None] = None
-    connections: InitVar[dict[tuple[Subsystem, str], tuple[Subsystem, str]] | None] = (
-        None
-    )
-    zoh_connections: InitVar[dict[tuple[Subsystem, str], str] | None] = None
+    The time series of each subsystem is stored as an attribute (e.g., `machine`). It
+    also contains the time series of the subsystem inputs, which are used for plotting
+    and for computing the signals that depend directly on the inputs.
+
+    """
+
+    mdl: InitVar[Model]
     t: np.ndarray = field(default_factory=lambda: np.array([]), init=False)
 
-    def __post_init__(self, history, subsystems, connections, zoh_connections) -> None:
-        self.t = np.array(history.t)
-        # Process ZOH inputs
-        for attr_name, value in vars(history).items():
-            if attr_name != "t" and not attr_name.startswith("_"):
-                setattr(self, attr_name, np.array(value))
-        # Process subsystems
-        zoh_connections = zoh_connections or {}
-        if subsystems is not None and connections is not None:
-            self.build_subsystem_time_series(subsystems, connections, zoh_connections)
+    def __post_init__(self, mdl: Model) -> None:
+        self.t = np.array(mdl._history.t)
+        ts = {}
+        for subsystem in mdl.subsystems:
+            name, ts[subsystem] = subsystem.create_time_series(self.t)
+            setattr(self, name, ts[subsystem])
+        # Switching states and the signals derived from them
+        ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
+        for subsystem in mdl.subsystems:
+            ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)
+        # Inputs from the connections and the signals derived from them
+        for (target, inp), (src, out) in mdl.connections.items():
+            setattr(ts[target], inp, np.array(getattr(ts[src], out)))
+        for subsystem in mdl.subsystems:
+            ts[subsystem].compute_input_derived_signals(self.t, subsystem)
 
     def __getattr__(self, name: str) -> Any:
         """Support type checking for dynamic attributes."""
         # This helps type checkers understand dynamic attributes
         error_msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
         raise AttributeError(error_msg)
-
-    def build_subsystem_time_series(
-        self, subsystems: list, connections: dict, zoh_connections: dict
-    ) -> None:
-        """Build time series for all subsystems."""
-        ts_objects = self._create_time_series(subsystems)
-        self._add_zoh_input_signals(ts_objects, zoh_connections)
-        self._compute_zoh_input_derived_signals(subsystems, ts_objects)
-        self._add_input_signals(ts_objects, connections)
-        self._compute_input_derived_signals(subsystems, ts_objects)
-
-    def _create_time_series(
-        self, subsystems: list
-    ) -> dict[Subsystem, SubsystemTimeSeries]:
-        """
-        Create time series objects using subsystem methods.
-
-        This method converts the state history lists of each subsystem to the
-        corresponding Numpy arrays. These time series arrays are stored as attributes of
-        the ModelTimeSeries object.
-
-        """
-        ts_objects = {}
-        for subsystem in subsystems:
-            attr_name, ts = subsystem.create_time_series(self.t)
-            setattr(self, attr_name, ts)
-            ts_objects[subsystem] = ts
-        return ts_objects
-
-    def _add_zoh_input_signals(self, ts_objects: dict, zoh_connections: dict) -> None:
-        """
-        Add ZOH inputs' time series to subsystems.
-
-        This methods adds ZOH input time series (where available) to each subsystem
-        based on the ZOH connections dictionary. This helps plotting and analysis of the
-        simulation results, since each subsystem time series contains all the necessary
-        data. Typical ZOH inputs are the switching states of the converters.
-
-        """
-        if not zoh_connections:
-            return
-        for (target, target_attr), input_name in zoh_connections.items():
-            if (target_ts := ts_objects.get(target)) is not None:
-                setattr(target_ts, target_attr, np.array(getattr(self, input_name)))
-
-    def _compute_zoh_input_derived_signals(
-        self, subsystems: list, ts_objects: dict
-    ) -> None:
-        """
-        Compute additional time series using the added ZOH inputs.
-
-        Additional time series can be computed using the added ZOH inputs and the
-        internal states of the subsystems. For example, the converter output voltage can
-        be computed using the switching states (ZOH signals) and the DC-bus voltage
-        (internal continuous-time signal).
-
-        """
-        for subsystem in subsystems:
-            if (ts := ts_objects.get(subsystem)) is not None:
-                ts.compute_zoh_input_derived_signals(self.t, subsystem)
-
-    def _add_input_signals(self, ts_objects: dict, connections: dict) -> None:
-        """
-        Add continuous-time inputs' time series to subsystems.
-
-        This methods adds continuous-time inputs' time series to each subsystem based on
-        the connections dictionary. This helps plotting and analysis of the simulation
-        results, since each subsystem time series contains all the necessary data.
-
-        """
-        for (target, target_attr), (src, src_attr) in connections.items():
-            target_ts = ts_objects.get(target)
-            source_ts = ts_objects.get(src)
-            if target_ts is not None and source_ts is not None:
-                data = getattr(source_ts, src_attr)
-                setattr(target_ts, target_attr, np.array(data))
-
-    def _compute_input_derived_signals(
-        self, subsystems: list, ts_objects: dict
-    ) -> None:
-        """
-        Compute additional time series using the added continuous-time inputs.
-
-        Additional outputs containing direct feedthrough can be computed at this stage.
-
-        """
-        for subsystem in subsystems:
-            if (ts := ts_objects.get(subsystem)) is not None:
-                ts.compute_input_derived_signals(self.t, subsystem)
 
 
 # %%
