@@ -6,7 +6,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model import Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import complex2abc, empty_array
+from motulator.common.utils._utils import complex2abc, complex2line, empty_array
 
 
 # %%
@@ -86,8 +86,8 @@ class LCFilter(Subsystem):
         return complex2abc(self.out.i_c_ab)
 
     def meas_capacitor_voltages(self) -> Any:
-        """Measure the capacitor phase voltages."""
-        return complex2abc(self.out.u_f_ab)
+        """Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""
+        return complex2line(self.out.u_f_ab)
 
     def create_time_series(self, t: np.ndarray) -> tuple[str, "LCFilterTimeSeries"]:
         """Create time series from state list."""

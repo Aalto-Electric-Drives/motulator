@@ -65,6 +65,59 @@ def complex2abc(u: Any) -> np.ndarray:
 
 
 # %%
+def line2complex(u: Any) -> Any:
+    """
+    Transform two line-to-line quantities to a complex space vector.
+
+    Parameters
+    ----------
+    u : array_like, shape (2,)
+        Line-to-line quantities `u_ab` and `u_bc`, e.g., measured voltages.
+
+    Returns
+    -------
+    complex
+        Complex space vector (peak-value scaling), without the zero sequence.
+
+    Examples
+    --------
+    >>> from motulator.common.utils import line2complex
+    >>> y = line2complex([2, -1])
+    >>> y
+    (1-0.5773502691896258j)
+
+    """
+    return (2 * u[0] + u[1]) / 3 + 1j * u[1] / np.sqrt(3)
+
+
+# %%
+def complex2line(u: Any) -> np.ndarray:
+    """
+    Transform a complex space vector to two line-to-line quantities.
+
+    Parameters
+    ----------
+    u : complex
+        Complex space vector (peak-value scaling).
+
+    Returns
+    -------
+    ndarray, shape (2,)
+        Line-to-line quantities `u_ab` and `u_bc`.
+
+    Examples
+    --------
+    >>> from motulator.common.utils import complex2line
+    >>> y = complex2line(1-.5j)
+    >>> y
+    array([ 1.9330127, -0.8660254])
+
+    """
+    u_abc = complex2abc(u)
+    return np.array([u_abc[0] - u_abc[1], u_abc[1] - u_abc[2]])
+
+
+# %%
 class SequenceGenerator:
     """
     Sequence generator.
