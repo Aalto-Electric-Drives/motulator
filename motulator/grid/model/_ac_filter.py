@@ -13,7 +13,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model import Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import complex2abc, empty_array
+from motulator.common.utils._utils import complex2abc, complex2line, empty_array
 
 
 # %%
@@ -113,9 +113,9 @@ class LFilter(Subsystem):
         return complex2abc(self.state.i_c_ab)
 
     def meas_pcc_voltages(self) -> Any:
-        """Measure the phase voltages (V) at the PCC."""
+        """Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""
         u_g_ab = self.pcc_voltage(self.state, self.inp)
-        return complex2abc(u_g_ab)
+        return complex2line(u_g_ab)
 
     def create_time_series(self, t: np.ndarray) -> tuple[str, "LFilterTimeSeries"]:
         """Create time series from state list."""
@@ -266,17 +266,20 @@ class LCLFilter(Subsystem):
         return complex2abc(self.state.i_c_ab)
 
     def meas_pcc_voltages(self) -> Any:
-        """Measure the phase voltages (V) at point of common coupling (PCC)."""
+        """
+        Measure the line-to-line voltages u_ab and u_bc (V) at the point of common
+        coupling (PCC).
+        """
         u_g_ab = self.pcc_voltage(self.state, self.inp)
-        return complex2abc(u_g_ab)
+        return complex2line(u_g_ab)
 
     def meas_grid_currents(self) -> Any:
         """Measure the grid phase currents (A)."""
         return complex2abc(self.state.i_g_ab)
 
     def meas_capacitor_voltages(self) -> Any:
-        """Measure the capacitor phase voltages (V)."""
-        return complex2abc(self.state.u_f_ab)
+        """Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""
+        return complex2line(self.state.u_f_ab)
 
     def create_time_series(self, t: np.ndarray) -> tuple[str, "LCLFilterTimeSeries"]:
         """Create time series from state list."""
