@@ -40,22 +40,12 @@ class GridConverterSystem(Model):
         pwm: bool = False,
         delay: int = 1,
     ) -> None:
-        super().__init__(pwm, delay)
-
-        # Create subsystems
-        self.converter = converter
         self.ac_filter = ac_filter
         self.ac_source = ac_source
-
-        # Store references for interconnection
-        self.subsystems = [self.converter, self.ac_filter, self.ac_source]
-
-        # Define connections
-        self.connections = {
-            (self.converter, "i_c_ab"): (self.ac_filter, "i_c_ab"),
-            (self.ac_filter, "u_c_ab"): (self.converter, "u_c_ab"),
-            (self.ac_filter, "e_g_ab"): (self.ac_source, "e_g_ab"),
+        connections = {
+            (converter, "i_c_ab"): (ac_filter, "i_c_ab"),
+            (ac_filter, "u_c_ab"): (converter, "u_c_ab"),
+            (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
         }
-
-        # Define ZOH inputs separately
-        self.zoh_connections = {(self.converter, "q_c_ab"): "sw_state"}
+        subsystems = [converter, ac_filter, ac_source]
+        super().__init__(converter, subsystems, connections, pwm, delay)

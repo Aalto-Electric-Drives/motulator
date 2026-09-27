@@ -2,7 +2,7 @@
 
 import os
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -141,12 +141,7 @@ class Simulation:
             print(f"Invalid value encountered at {self.mdl.t0:.2f} s.")
 
         # Post-process the solution data
-        mdl_ts = ModelTimeSeries(
-            self.mdl._history,
-            self.mdl.subsystems,
-            self.mdl.connections,
-            self.mdl.zoh_connections,
-        )
+        mdl_ts = ModelTimeSeries(self.mdl)
         ctrl_ts = self.ctrl.post_process()
         return SimulationResults(mdl_ts, ctrl_ts)
 
@@ -165,8 +160,7 @@ class Simulation:
             for i, t_step in enumerate(t_steps):
                 if t_step > 0:
                     # Set the switching state and get initial values
-                    self.mdl.set_zoh_input("sw_state", sw_states[i])
-                    self.mdl.interconnect()
+                    self.mdl.converter.inp.q_c_ab = cast(complex, sw_states[i])
                     state0 = self.mdl.get_initial_values()
 
                     # Set the integration time span

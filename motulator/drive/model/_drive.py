@@ -43,40 +43,27 @@ class Drive(Model):
         pwm: bool = False,
         delay: int = 1,
     ) -> None:
-        super().__init__(pwm, delay)
-
-        # Create subsystems
         self.machine = machine
         self.mechanics = mechanics
-        self.converter = converter
-        if lc_filter is not None:
-            self.lc_filter = lc_filter
-        else:
-            self.lc_filter = None
-
-        # Store references for interconnection
-        self.subsystems = [self.converter, self.machine, self.mechanics]
-
-        # Define connections based on presence of LC filter
-        if self.lc_filter is None:
-            # Direct connections without LC filter
-            self.connections = {
-                (self.converter, "i_c_ab"): (self.machine, "i_s_ab"),
-                (self.machine, "u_s_ab"): (self.converter, "u_c_ab"),
-                (self.machine, "w_M"): (self.mechanics, "w_M"),
-                (self.mechanics, "tau_M"): (self.machine, "tau_M"),
+        self.lc_filter = lc_filter
+        connections = {
+            (machine, "w_M"): (mechanics, "w_M"),
+            (mechanics, "tau_M"): (machine, "tau_M"),
+        }
+        if lc_filter is None:
+            subsystems = [converter, machine, mechanics]
+            connections |= {
+                (converter, "i_c_ab"): (machine, "i_s_ab"),
+                (machine, "u_s_ab"): (converter, "u_c_ab"),
             }
         else:
-            # Connections with LC filter
-            self.subsystems.append(self.lc_filter)
-            self.connections = {
-                (self.converter, "i_c_ab"): (self.lc_filter, "i_c_ab"),
-                (self.lc_filter, "i_f_ab"): (self.machine, "i_s_ab"),
-                (self.lc_filter, "u_c_ab"): (self.converter, "u_c_ab"),
-                (self.machine, "u_s_ab"): (self.lc_filter, "u_f_ab"),
-                (self.machine, "w_M"): (self.mechanics, "w_M"),
-                (self.mechanics, "tau_M"): (self.machine, "tau_M"),
+            # The machine comes after the filter, since its current can depend directly
+            # on the filter voltage
+            subsystems = [converter, lc_filter, machine, mechanics]
+            connections |= {
+                (converter, "i_c_ab"): (lc_filter, "i_c_ab"),
+                (lc_filter, "i_f_ab"): (machine, "i_s_ab"),
+                (lc_filter, "u_c_ab"): (converter, "u_c_ab"),
+                (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
             }
-
-        # Define ZOH inputs separately
-        self.zoh_connections = {(self.converter, "q_c_ab"): "sw_state"}
+        super().__init__(converter, subsystems, connections, pwm, delay)
