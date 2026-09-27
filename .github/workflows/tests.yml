@@ -18,6 +18,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --index-url https://download.pytorch.org/whl/cpu torch
-        pip install .[dev]
+        pip install -e .[dev]
     - name: Run tests
       run: pytest
