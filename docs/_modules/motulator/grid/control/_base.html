@@ -473,7 +473,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">TimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PWM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">line2complex</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">DCBusVoltageController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridConverterSystem</span>
 
@@ -652,7 +652,7 @@
 <span class="w">        </span><span class="sd">"""Get measurements from sensors."""</span>
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
         <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_pcc_voltages</span><span class="p">())</span>
+        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">line2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_pcc_voltages</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
 
 

@@ -280,7 +280,7 @@ Package Contents
    .. py:method:: meas_capacitor_voltages()
 
       
-      Measure the capacitor phase voltages (V).
+      Measure the capacitor line-to-line voltages u_ab and u_bc (V).
 
 
 
@@ -352,7 +352,8 @@ Package Contents
    .. py:method:: meas_pcc_voltages()
 
       
-      Measure the phase voltages (V) at point of common coupling (PCC).
+      Measure the line-to-line voltages u_ab and u_bc (V) at the point of common
+      coupling (PCC).
 
 
 
@@ -535,7 +536,7 @@ Package Contents
    .. py:method:: meas_pcc_voltages()
 
       
-      Measure the phase voltages (V) at the PCC.
+      Measure the line-to-line voltages u_ab and u_bc (V) at the PCC.
 
 
 

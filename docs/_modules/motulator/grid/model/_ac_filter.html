@@ -480,7 +480,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">empty_array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">complex2line</span><span class="p">,</span> <span class="n">empty_array</span>
 
 
 <span class="c1"># %%</span>
@@ -596,9 +596,9 @@
 <div class="viewcode-block" id="LFilter.meas_pcc_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_pcc_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure the phase voltages (V) at the PCC."""</span>
+<span class="w">        </span><span class="sd">"""Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">complex2line</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LFilter.create_time_series">
@@ -770,9 +770,12 @@
 <div class="viewcode-block" id="LCLFilter.meas_pcc_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_pcc_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure the phase voltages (V) at point of common coupling (PCC)."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Measure the line-to-line voltages u_ab and u_bc (V) at the point of common</span>
+<span class="sd">        coupling (PCC).</span>
+<span class="sd">        """</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">complex2line</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.meas_grid_currents">
@@ -785,8 +788,8 @@
 <div class="viewcode-block" id="LCLFilter.meas_capacitor_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_capacitor_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_capacitor_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure the capacitor phase voltages (V)."""</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""</span>
+        <span class="k">return</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.create_time_series">

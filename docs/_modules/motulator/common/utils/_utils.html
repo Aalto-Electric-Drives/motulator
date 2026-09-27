@@ -538,6 +538,65 @@
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="line2complex">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/utils/index.html#motulator.common.utils.line2complex">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">line2complex</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Transform two line-to-line quantities to a complex space vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    u : array_like, shape (2,)</span>
+<span class="sd">        Line-to-line quantities `u_ab` and `u_bc`, e.g., measured voltages.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    complex</span>
+<span class="sd">        Complex space vector (peak-value scaling), without the zero sequence.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from motulator.common.utils import line2complex</span>
+<span class="sd">    &gt;&gt;&gt; y = line2complex([2, -1])</span>
+<span class="sd">    &gt;&gt;&gt; y</span>
+<span class="sd">    (1-0.5773502691896258j)</span>
+
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="complex2line">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/utils/index.html#motulator.common.utils.complex2line">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">complex2line</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Transform a complex space vector to two line-to-line quantities.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    u : complex</span>
+<span class="sd">        Complex space vector (peak-value scaling).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray, shape (2,)</span>
+<span class="sd">        Line-to-line quantities `u_ab` and `u_bc`.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from motulator.common.utils import complex2line</span>
+<span class="sd">    &gt;&gt;&gt; y = complex2line(1-.5j)</span>
+<span class="sd">    &gt;&gt;&gt; y</span>
+<span class="sd">    array([ 1.9330127, -0.8660254])</span>
+
+<span class="sd">    """</span>
+    <span class="n">u_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">u_abc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">u_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">u_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">u_abc</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span></div>
+
+
+
+<span class="c1"># %%</span>
 <div class="viewcode-block" id="SequenceGenerator">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.common.utils.SequenceGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SequenceGenerator</span><span class="p">:</span>

@@ -912,7 +912,7 @@ Package Contents
    .. py:method:: meas_capacitor_voltages()
 
       
-      Measure the capacitor phase voltages.
+      Measure the capacitor line-to-line voltages u_ab and u_bc (V).
 
 
 

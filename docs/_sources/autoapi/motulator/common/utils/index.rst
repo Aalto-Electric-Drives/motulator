@@ -43,6 +43,8 @@ Functions
 
    motulator.common.utils.abc2complex
    motulator.common.utils.complex2abc
+   motulator.common.utils.complex2line
+   motulator.common.utils.line2complex
 
 
 Package Contents
@@ -161,6 +163,76 @@ Package Contents
    >>> y = complex2abc(1-.5j)
    >>> y
    array([ 1.       , -0.9330127, -0.0669873])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: complex2line(u)
+
+   
+   Transform a complex space vector to two line-to-line quantities.
+
+   :param u: Complex space vector (peak-value scaling).
+   :type u: complex
+
+   :returns: Line-to-line quantities `u_ab` and `u_bc`.
+   :rtype: ndarray, shape (2,)
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.utils import complex2line
+   >>> y = complex2line(1-.5j)
+   >>> y
+   array([ 1.9330127, -0.8660254])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: line2complex(u)
+
+   
+   Transform two line-to-line quantities to a complex space vector.
+
+   :param u: Line-to-line quantities `u_ab` and `u_bc`, e.g., measured voltages.
+   :type u: array_like, shape (2,)
+
+   :returns: Complex space vector (peak-value scaling), without the zero sequence.
+   :rtype: complex
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.utils import line2complex
+   >>> y = line2complex([2, -1])
+   >>> y
+   (1-0.5773502691896258j)
 
 
 

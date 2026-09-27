@@ -522,6 +522,8 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2line"><code class="docutils literal notranslate"><span class="pre">complex2line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.line2complex"><code class="docutils literal notranslate"><span class="pre">line2complex()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -561,6 +563,12 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.complex2abc" title="motulator.common.utils.complex2abc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex2abc</span></code></a>(u)</p></td>
 <td><p>Transform a complex space vector to three-phase quantities.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.complex2line" title="motulator.common.utils.complex2line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex2line</span></code></a>(u)</p></td>
+<td><p>Transform a complex space vector to two line-to-line quantities.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.line2complex" title="motulator.common.utils.line2complex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line2complex</span></code></a>(u)</p></td>
+<td><p>Transform two line-to-line quantities to a complex space vector.</p></td>
 </tr>
 </tbody>
 </table>
@@ -648,6 +656,54 @@ data points.</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.utils.complex2line">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">complex2line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#complex2line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.complex2line" title="Link to this definition">#</a></dt>
+<dd><p>Transform a complex space vector to two line-to-line quantities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Complex space vector (peak-value scaling).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Line-to-line quantities <cite>u_ab</cite> and <cite>u_bc</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (2,)</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2line</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">.5</span><span class="n">j</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
+<span class="go">array([ 1.9330127, -0.8660254])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.utils.line2complex">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">line2complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#line2complex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.line2complex" title="Link to this definition">#</a></dt>
+<dd><p>Transform two line-to-line quantities to a complex space vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>u</strong> (<em>array_like</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>,</em><em>)</em>) – Line-to-line quantities <cite>u_ab</cite> and <cite>u_bc</cite>, e.g., measured voltages.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Complex space vector (peak-value scaling), without the zero sequence.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)">complex</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">line2complex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">line2complex</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>
+<span class="go">(1-0.5773502691896258j)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 </section>
 
@@ -705,6 +761,8 @@ data points.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2line"><code class="docutils literal notranslate"><span class="pre">complex2line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.line2complex"><code class="docutils literal notranslate"><span class="pre">line2complex()</span></code></a></li>
 </ul>
 </li>
 </ul>
