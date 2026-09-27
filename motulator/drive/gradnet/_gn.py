@@ -18,7 +18,7 @@ References
 """
 
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable, cast
 
 import numpy as np
 import torch
@@ -42,6 +42,12 @@ class Softmax(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return F.softmax(torch.exp(self.beta_log) * x, dim=self.dim)
+
+    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
+        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
+        beta = torch.exp(self.beta_log)
+        s = F.softmax(beta * x, dim=-1)
+        return beta * (torch.diag_embed(s) - s.unsqueeze(-1) * s.unsqueeze(-2))
 
 
 # %%
@@ -77,6 +83,17 @@ class PNormGradient(nn.Module):
         norm = norm.pow(self.q / (self.q + 1))
         return x.pow(self.q) / norm
 
+    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
+        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
+        beta = torch.exp(self.beta_log)
+        x = beta * x
+        q = self.q
+        norm = 1 + torch.sum(x.pow(q + 1), dim=-1, keepdim=True)
+        x_q = x.pow(q)
+        outer = x_q.unsqueeze(-1) * x_q.unsqueeze(-2) / norm.unsqueeze(-1)
+        scale = (beta * q * norm.pow(-q / (q + 1))).unsqueeze(-1)
+        return scale * (torch.diag_embed(x.pow(q - 1)) - outer)
+
 
 # %%
 class Squareplus(nn.Module):
@@ -89,6 +106,12 @@ class Squareplus(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return 0.5 * (x + torch.sqrt(x**2 + torch.exp(self.beta_log)))
 
+    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
+        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
+        return torch.diag_embed(
+            0.5 * (1 + x / torch.sqrt(x**2 + torch.exp(self.beta_log)))
+        )
+
 
 # %%
 class AlgebraicSigmoid(nn.Module):
@@ -100,6 +123,11 @@ class AlgebraicSigmoid(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return x / torch.sqrt(x**2 + torch.exp(self.beta_log))
+
+    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
+        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
+        c = torch.exp(self.beta_log)
+        return torch.diag_embed(c / (x**2 + c).pow(1.5))
 
 
 # %%
@@ -131,6 +159,12 @@ class GradNetModule(nn.Module):
         z = self.act(z)
         z = F.linear(z, weight=self.W.T)
         return z
+
+    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
+        """Jacobian matrix W^T J_act W, shape (..., in_dim, in_dim)."""
+        z = F.linear(x, weight=self.W, bias=self.b)
+        act = cast(Any, self.act)  # Activations provide the jacobian method
+        return self.W.T @ act.jacobian(z) @ self.W
 
 
 # %%
@@ -191,6 +225,27 @@ class GradNet(nn.Module):
             out = self.blocks[i](x)
             z += out
         return z
+
+    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Jacobian matrix of the output with respect to the input.
+
+        Parameters
+        ----------
+        x : torch.Tensor, shape (..., in_dim)
+            Input.
+
+        Returns
+        -------
+        torch.Tensor, shape (..., in_dim, in_dim)
+            Jacobian matrix (the Hessian of the underlying scalar state function).
+
+        """
+        mu = torch.cat([torch.exp(self.mu_log), x.new_zeros(self.non_mu_dim)], dim=0)
+        jac = torch.diag(mu).expand(*x.shape[:-1], -1, -1)
+        for i in range(self.num_modules):
+            jac = jac + cast(GradNetModule, self.blocks[i]).jacobian(x)
+        return jac
 
 
 # %%
@@ -297,6 +352,39 @@ class CurrentMap:
         i_s_dq *= self.out_base
 
         return i_s_dq[0] if i_s_dq.size == 1 else i_s_dq
+
+    def jacobian(self, x_dq: complex | np.ndarray) -> np.ndarray:
+        """
+        Jacobian matrix of the symmetrized map.
+
+        The Jacobian is computed analytically, which is accurate also in single
+        precision (unlike finite differences).
+
+        Parameters
+        ----------
+        x_dq : complex | np.ndarray
+            Input of the map (flux linkage in Vs or current in A).
+
+        Returns
+        -------
+        np.ndarray, shape (..., 2, 2)
+            Jacobian matrix [[dy_d/dx_d, dy_d/dx_q], [dy_q/dx_d, dy_q/dx_q]], where y is
+            the output of the map, in SI units.
+
+        """
+        # Create a batch of inputs and their conjugates
+        x = np.array(x_dq, ndmin=1, dtype=np.complex64).ravel() / self.in_base
+        n = x.size
+        inputs = _complex_to_torch_inputs(np.concatenate([x, np.conj(x)], axis=0))
+
+        with torch.no_grad():
+            jac = self.model.jacobian(inputs).cpu().numpy().astype(float)
+
+        # Symmetrize: the conjugation corresponds to S = diag(1, -1) on both sides
+        s = np.array([1.0, -1.0])
+        jac = 0.5 * (jac[:n] + s[:, None] * jac[n:] * s[None, :])
+        jac *= self.out_base / self.in_base
+        return jac.reshape(*np.shape(x_dq), 2, 2)
 
 
 # %%
