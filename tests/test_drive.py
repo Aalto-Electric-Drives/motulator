@@ -67,6 +67,20 @@ def ipmsm_cvc(sensorless: bool) -> sm_control.VectorControlSystem:
     )
 
 
+def ipmsm_signal_inj() -> sm_control.VectorControlSystem:
+    par = sm_control.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    # Signal injection is always sensorless, regardless of the cfg
+    cfg = sm_control.CurrentVectorControllerCfg(
+        i_s_max=6.5, alpha_o=2 * pi * 40, sensorless=False
+    )
+    return sm_control.VectorControlSystem(
+        sm_control.SignalInjectionController(par, cfg),
+        sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+    )
+
+
 def im_par() -> im_control.InductionMachineInvGammaPars:
     return im_control.InductionMachineInvGammaPars(
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
@@ -99,6 +113,7 @@ CASES = {
     "ipmsm_fvc_pwm": (lambda: ipmsm_drive(True), lambda: ipmsm_fvc(True)),
     "ipmsm_cvc_sensorless": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(True)),
     "ipmsm_cvc_sensored": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(False)),
+    "ipmsm_signal_inj": (lambda: ipmsm_drive(False), ipmsm_signal_inj),
     "im_cvc_sensorless": (im_drive, im_cvc),
     "im_fvc_sensorless": (im_drive, im_fvc),
 }
@@ -148,3 +163,26 @@ def test_observer_based_vhz() -> None:
     # V/Hz control has no speed controller, so the slip is allowed for
     assert np.mean(res.mdl.machine.w_M[end]) == pytest.approx(w_M_ref, rel=0.05)
     assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
+
+
+def test_pm_flux_adaptation_keeps_parameters() -> None:
+    """PM-flux adaptation does not modify the parameter object given by the user."""
+    par = sm_control.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, k_f=lambda w_m: 1.0)
+    ctrl = sm_control.VectorControlSystem(
+        sm_control.CurrentVectorController(par, cfg),
+        sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+    )
+    # The same parameter object is used in the system model
+    mdl = model.Drive(
+        model.SynchronousMachine(par),
+        model.MechanicalSystem(J=0.015),
+        model.VoltageSourceConverter(u_dc=540),
+    )
+    ctrl.set_speed_ref(lambda t: (t > 0.05) * 50)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
+
+    assert par.psi_f == 0.545
+    assert res.ctrl.fbk.psi_f[-1] != 0.545  # The estimate is adapted

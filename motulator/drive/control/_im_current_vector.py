@@ -121,8 +121,7 @@ class CurrentReferenceGenerator:
         self.i_s_max = i_s_max
         self.k_u = k_u
         self.i_sd_nom = psi_s_nom / (par.L_M + par.L_sgm)
-        if k_fw == 0:
-            self.k_fw = 2 * par.R_R / (w_s_nom * par.L_sgm**2)
+        self.k_fw = k_fw or 2 * par.R_R / (w_s_nom * par.L_sgm**2)
         self.i_sd_ref = self.i_sd_nom  # Integral state
 
     def compute_output(self, tau_M_ref: float, psi_R: float) -> tuple[complex, float]:

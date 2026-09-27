@@ -1,6 +1,7 @@
 """Observers for synchronous machine drives."""
 
 from cmath import exp
+from copy import copy
 from dataclasses import dataclass
 from math import pi
 from typing import Callable
@@ -106,7 +107,7 @@ class FluxObserver:
         k_o: Callable[[float], float],
         k_f: Callable[[float], float],
     ) -> None:
-        self.par = par
+        self.par = copy(par)  # PM-flux estimation updates psi_f of this copy
         self.k_theta = k_theta
         self.k_o = k_o
         self.k_f = k_f
