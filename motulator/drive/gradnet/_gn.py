@@ -376,6 +376,7 @@ class CurrentMap:
         x = np.array(x_dq, ndmin=1, dtype=np.complex64).ravel() / self.in_base
         n = x.size
         inputs = _complex_to_torch_inputs(np.concatenate([x, np.conj(x)], axis=0))
+        inputs = inputs.to(self.model.bias.dtype)  # Also for double-precision models
 
         with torch.no_grad():
             jac = self.model.jacobian(inputs).cpu().numpy().astype(float)
