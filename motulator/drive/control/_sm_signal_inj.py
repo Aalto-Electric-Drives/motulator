@@ -145,9 +145,7 @@ class SignalInjectionObserver:
         self.theta_m: float = 0.0  # State
         self.par = par
 
-    def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, theta_M_meas: float | None = None
-    ) -> ObserverOutputs:
+    def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
         """Compute output."""
         # Unpack and initialize the output signals
         par = self.par
@@ -233,6 +231,7 @@ class SignalInjectionController(CurrentVectorController):
         N_inj: int = 1,
     ) -> None:
         super().__init__(par, cfg)
+        self.sensorless = True
         self.observer = SignalInjectionObserver(
             par, cast(float, cfg.alpha_o), U_inj, cfg.T_s, cfg.J, N_inj
         )

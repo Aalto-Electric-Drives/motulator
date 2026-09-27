@@ -221,7 +221,7 @@ class GridConverterControlSystem(ControlSystem):
         """Update controller states."""
         super().update(ref, fbk)
         self.inner_ctrl.update(ref, fbk)
-        if self.dc_bus_voltage_ctrl and ref.p_g:
+        if self.dc_bus_voltage_ctrl and ref.u_dc is not None:
             self.dc_bus_voltage_ctrl.update(ref.T_s, ref.p_g)
 
     def post_process(self) -> TimeSeries:

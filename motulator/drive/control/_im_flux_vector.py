@@ -39,7 +39,6 @@ class Gains:
     alpha_psi: float
     alpha_tau: float
     alpha_i: float
-    alpha_c: float
 
 
 class FluxTorqueController:
@@ -56,10 +55,6 @@ class FluxTorqueController:
         Torque-control bandwidth (rad/s).
     alpha_i : float, optional
         Integral action bandwidth (rad/s), defaults to 0.
-    alpha_c : float, optional
-        Transparent current-control bandwidth (rad/s), defaults to `alpha_tau`.
-    i_s_max : float, optional
-        Stator current limit (A), defaults to `inf`.
 
     """
 
@@ -69,13 +64,9 @@ class FluxTorqueController:
         alpha_psi: float,
         alpha_tau: float,
         alpha_i: float = 0,
-        alpha_c: float | None = None,
-        i_s_max: float = inf,
     ) -> None:
         self.par = par
-        alpha_c = alpha_tau if alpha_c is None else alpha_c
-        self.i_s_max = i_s_max
-        self.gain = Gains(alpha_psi, alpha_tau, alpha_i, alpha_c)
+        self.gain = Gains(alpha_psi, alpha_tau, alpha_i)
         # Integral states
         self.x_psi: complex = 0j
         self.x_tau: complex = 0j
@@ -87,7 +78,7 @@ class FluxTorqueController:
         self, psi_s_ref: float, tau_M_ref: float, fbk: ObserverOutputs
     ) -> complex:
         """
-        Calculate the voltage reference, with transparent current limitation.
+        Calculate the voltage reference.
 
         Parameters
         ----------
@@ -241,8 +232,6 @@ class FluxVectorControllerCfg:
         mode and the inertia `J`.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
-    alpha_c : float, optional
-        Transparent current-control bandwidth (rad/s), defaults to `alpha_tau`.
     tau_M_max : float
         Maximum torque reference (Nm).
     k_u : float, optional
@@ -266,7 +255,6 @@ class FluxVectorControllerCfg:
     alpha_i: float | None = None
     alpha_o: float | None = None
     k_o: Callable[[float], complex] | None = None
-    alpha_c: float | None = None
     tau_M_max: float = inf
     k_u: float = 0.9
     k_b: float = 0.9
@@ -317,7 +305,7 @@ class FluxVectorController:
         alpha_psi = cfg.alpha_tau if cfg.alpha_psi is None else cfg.alpha_psi
         alpha_i = cfg.alpha_tau if cfg.alpha_i is None else cfg.alpha_i
         self.flux_torque_ctrl = FluxTorqueController(
-            par, alpha_psi, cfg.alpha_tau, alpha_i, cfg.alpha_c, cfg.i_s_max
+            par, alpha_psi, cfg.alpha_tau, alpha_i
         )
         self.observer = create_speed_flux_observer(
             par, cfg.alpha_o, cfg.k_o, cfg.sensorless, cfg.J
@@ -431,9 +419,7 @@ class ObserverBasedVHzController:
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, inf, cfg.k_u, cfg.k_b
         )
-        self.flux_torque_ctrl = FluxTorqueController(
-            par, cfg.alpha_psi, cfg.alpha_tau, 0, cfg.alpha_tau, cfg.i_s_max
-        )
+        self.flux_torque_ctrl = FluxTorqueController(par, cfg.alpha_psi, cfg.alpha_tau)
         self.observer = create_vhz_observer(par, cfg.k_o)
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
