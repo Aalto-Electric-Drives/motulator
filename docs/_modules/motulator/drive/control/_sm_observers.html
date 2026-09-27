@@ -468,6 +468,7 @@
 <span></span><span class="sd">"""Observers for synchronous machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
@@ -578,7 +579,7 @@
         <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
         <span class="n">k_f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>  <span class="c1"># PM-flux estimation updates psi_f of this copy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">=</span> <span class="n">k_theta</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span> <span class="o">=</span> <span class="n">k_o</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_f</span> <span class="o">=</span> <span class="n">k_f</span>

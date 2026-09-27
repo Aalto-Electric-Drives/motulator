@@ -628,8 +628,6 @@ Module Contents
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
-   :param alpha_c: Transparent current-control bandwidth (rad/s), defaults to `alpha_tau`.
-   :type alpha_c: float, optional
    :param tau_M_max: Maximum torque reference (Nm).
    :type tau_M_max: float
    :param k_u: Voltage utilization factor, defaults to 0.9.

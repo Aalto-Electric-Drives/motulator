@@ -713,7 +713,7 @@
 <span class="w">        </span><span class="sd">"""Update controller states."""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span></div>
 
 
