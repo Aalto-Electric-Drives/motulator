@@ -52,7 +52,7 @@ est_par = control.InductionMachineInvGammaPars(
 )
 # est_par = par  # Uncomment this line to use the perfectly known machine model
 cfg = control.CurrentVectorControllerCfg(
-    psi_s_nom=base.psi, i_s_max=1.5 * base.i, sensorless=True
+    psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, sensorless=True
 )
 vector_ctrl = control.CurrentVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
