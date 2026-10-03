@@ -36,7 +36,28 @@ This voltage is controllable (unlike the grid voltage which is the disturbance) 
 
 ## Control System
 
-The control system consists of a disturbance observer and a control law. The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes {cite}`Nur2024`. For simplicity, only the grid-forming mode is considered in the following.
+The control system consists of a disturbance observer and a control law, see [Figure 1](fig:do_gfm_ctrl). The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes {cite}`Nur2024`. For simplicity, only the grid-forming mode is considered in the following.
+
+```{figure} ../figs/do_gfm_ctrl.svg
+---
+name: fig:do_gfm_ctrl
+class: only-light
+width: 100%
+align: center
+alt: Disturbance-observer-based grid-forming control
+---
+*Figure 1:* Disturbance-observer-based grid-forming control. The observer transforms the measured converter current $\ics$ into the controller coordinates, rotating at the nominal grid angular frequency, and estimates the quasi-static converter voltage $\hatvc$ and the power $\hatpg$. The observer uses the realized voltage obtained from the PWM, taking into account the voltage limitation and the computational delay. The control law also uses the converter current for the transparent current limitation.
+```
+
+```{figure} ../figs/do_gfm_ctrl.svg
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Disturbance-observer-based grid-forming control
+---
+*Figure 1:* Disturbance-observer-based grid-forming control. The observer transforms the measured converter current $\ics$ into the controller coordinates, rotating at the nominal grid angular frequency, and estimates the quasi-static converter voltage $\hatvc$ and the power $\hatpg$. The observer uses the realized voltage obtained from the PWM, taking into account the voltage limitation and the computational delay. The control law also uses the converter current for the transparent current limitation.
+```
 
 ### Disturbance Observer
 

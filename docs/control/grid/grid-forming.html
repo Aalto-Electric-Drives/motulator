@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Disturbance-Observer-Based Grid-Forming Control &#8212; motulator 0.8.0 documentation</title>
+    <title>Disturbance-Observer-Based Grid-Forming Control &#8212; motulator 0.8.1 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=d6acfc83"></script>
+    <script src="../../_static/documentation_options.js?v=6d507e9e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.8.0 documentation</p>
+    <p class="title logo__title">motulator 0.8.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -556,7 +556,21 @@
 </section>
 <section id="control-system">
 <h2>Control System<a class="headerlink" href="#control-system" title="Link to this heading">#</a></h2>
-<p>The control system consists of a disturbance observer and a control law. The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id36" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>. For simplicity, only the grid-forming mode is considered in the following.</p>
+<p>The control system consists of a disturbance observer and a control law, see <a class="reference internal" href="#fig-do-gfm-ctrl"><span class="std std-ref">Figure 1</span></a>. The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id36" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>. For simplicity, only the grid-forming mode is considered in the following.</p>
+<figure class="align-center" id="fig-do-gfm-ctrl">
+<a class="only-light reference internal image-reference" href="../../_images/do_gfm_ctrl.svg"><img alt="Disturbance-observer-based grid-forming control" class="only-light" src="../../_images/do_gfm_ctrl.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Disturbance-observer-based grid-forming control. The observer transforms the measured converter current <span class="math notranslate nohighlight">\(\ics\)</span> into the controller coordinates, rotating at the nominal grid angular frequency, and estimates the quasi-static converter voltage <span class="math notranslate nohighlight">\(\hatvc\)</span> and the power <span class="math notranslate nohighlight">\(\hatpg\)</span>. The observer uses the realized voltage obtained from the PWM, taking into account the voltage limitation and the computational delay. The control law also uses the converter current for the transparent current limitation.</span><a class="headerlink" href="#fig-do-gfm-ctrl" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id10">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/do_gfm_ctrl.svg"><img alt="Disturbance-observer-based grid-forming control" class="invert-colors-dark only-dark" src="../../_images/do_gfm_ctrl.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Disturbance-observer-based grid-forming control. The observer transforms the measured converter current <span class="math notranslate nohighlight">\(\ics\)</span> into the controller coordinates, rotating at the nominal grid angular frequency, and estimates the quasi-static converter voltage <span class="math notranslate nohighlight">\(\hatvc\)</span> and the power <span class="math notranslate nohighlight">\(\hatpg\)</span>. The observer uses the realized voltage obtained from the PWM, taking into account the voltage limitation and the computational delay. The control law also uses the converter current for the transparent current limitation.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 <section id="disturbance-observer">
 <h3>Disturbance Observer<a class="headerlink" href="#disturbance-observer" title="Link to this heading">#</a></h3>
 <p>Based on <a class="reference internal" href="#equation-system-model1">(1)</a>–<a class="reference internal" href="#equation-quasi-static-converter-voltage">(3)</a>, a disturbance observer for the grid voltage can be formed <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../bibliography.html#id11" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>, <a class="reference internal" href="../../bibliography.html#id30" title="Kukkola, Routimo, Hinkkanen, and Harnefors. A voltage-sensorless controller for grid converters. In IEEE PES ISGT Europe. 2021. doi:10.1109/ISGTEurope52324.2021.9640206.">Kukkola <em>et al.</em>, 2021</a>, <a class="reference internal" href="../../bibliography.html#id36" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span></p>

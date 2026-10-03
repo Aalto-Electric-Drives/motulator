@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Current Control &#8212; motulator 0.8.0 documentation</title>
+    <title>Current Control &#8212; motulator 0.8.1 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=d6acfc83"></script>
+    <script src="../../_static/documentation_options.js?v=6d507e9e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.8.0 documentation</p>
+    <p class="title logo__title">motulator 0.8.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -539,6 +539,21 @@
 <p class="admonition-title">Note</p>
 <p>This controller design assumes an L filter, but it can also be applied with LCL filters (see the <a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html"><span class="doc">10-kVA, LCL filter, GFL</span></a> example). If LCL-resonance damping and very low sampling frequencies are needed, the controller could be designed directly in the discrete-time domain taking the LCL filter dynamics into account <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id40" title="Rahman, Pirsto, Kukkola, Hinkkanen, Pérez-Estévez, and Doval-Gandoy. Equivalence of the integrator-based and disturbance-observer-based state-space current controllers for grid converters. IEEE Trans. Ind. Electron., 2021. doi:10.1109/TIE.2020.2988194.">Rahman <em>et al.</em>, 2021</a>]</span>.</p>
 </div>
+<p><a class="reference internal" href="#fig-gfl-ctrl"><span class="std std-ref">Figure 1</span></a> shows grid-following control, implemented in the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController" title="motulator.grid.control.CurrentVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.CurrentVectorController</span></code></a> class. The current reference is computed from the active-power and reactive-power references. The PLL, see <a class="reference internal" href="pll.html"><span class="doc">Phase-Locked Loop</span></a>, provides the feedback signals for the current controller, which is considered in the following.</p>
+<figure class="align-center" id="fig-gfl-ctrl">
+<a class="only-light reference internal image-reference" href="../../_images/gfl_ctrl.svg"><img alt="Grid-following control" class="only-light" src="../../_images/gfl_ctrl.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Grid-following control. The PLL transforms the measured converter current <span class="math notranslate nohighlight">\(\ics\)</span> into the estimated PCC voltage coordinates and estimates the angle <span class="math notranslate nohighlight">\(\thetac\)</span> and the angular speed <span class="math notranslate nohighlight">\(\omegac\)</span> of these coordinates. The PCC voltage estimate <span class="math notranslate nohighlight">\(\hatug\)</span> is used to compute the current reference and as feedforward in the current controller.</span><a class="headerlink" href="#fig-gfl-ctrl" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id5">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/gfl_ctrl.svg"><img alt="Grid-following control" class="invert-colors-dark only-dark" src="../../_images/gfl_ctrl.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Grid-following control. The PLL transforms the measured converter current <span class="math notranslate nohighlight">\(\ics\)</span> into the estimated PCC voltage coordinates and estimates the angle <span class="math notranslate nohighlight">\(\thetac\)</span> and the angular speed <span class="math notranslate nohighlight">\(\omegac\)</span> of these coordinates. The PCC voltage estimate <span class="math notranslate nohighlight">\(\hatug\)</span> is used to compute the current reference and as feedforward in the current controller.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 <section id="dof-pi-controller">
 <h2>2DOF PI Controller<a class="headerlink" href="#dof-pi-controller" title="Link to this heading">#</a></h2>
 <p>The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id12" title="Harnefors and Nee. Model-based current control of ac machines using the internal model control method. IEEE Trans. Ind. Appl., 1998. doi:10.1109/28.658735.">Harnefors and Nee, 1998</a>]</span> and the complex-vector design <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../bibliography.html#id7" title="Briz del Blanco, Degner, and Lorenz. Dynamic analysis of current regulators for AC motors using complex vectors. IEEE Trans. Ind. Appl., 1999. doi:10.1109/28.806058.">del Blanco <em>et al.</em>, 1999</a>]</span>. Here, only the complex-vector design is considered, see <a class="reference internal" href="../common/controllers.html#complex-vector-2dof-pi-controller"><span class="std std-ref">Complex-Vector 2DOF PI Controller</span></a>, which is compatible with the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> base class. The controller can be expressed in a state-space form as</p>

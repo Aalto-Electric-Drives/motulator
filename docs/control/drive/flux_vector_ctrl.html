@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Flux-Vector Control &#8212; motulator 0.8.0 documentation</title>
+    <title>Flux-Vector Control &#8212; motulator 0.8.1 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=d6acfc83"></script>
+    <script src="../../_static/documentation_options.js?v=6d507e9e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.8.0 documentation</p>
+    <p class="title logo__title">motulator 0.8.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -544,6 +544,21 @@
   <section class="tex2jax_ignore mathjax_ignore" id="flux-vector-control">
 <h1>Flux-Vector Control<a class="headerlink" href="#flux-vector-control" title="Link to this heading">#</a></h1>
 <p>Flux-vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id37" title="Pellegrino, Armando, and Guglielmi. Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region. IEEE Trans. Ind. Appl., 2009. doi:10.1109/TIA.2009.2027167.">Pellegrino <em>et al.</em>, 2009</a>]</span>. We use the control law that results from feedback linearization of the flux and torque dynamics <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id5" title="Awan, Hinkkanen, Bojoi, and Pellegrino. Stator-flux-oriented control of synchronous motors: a systematic design procedure. IEEE Trans. Ind. Appl., 2019. doi:10.1109/TIA.2019.2927316.">Awan <em>et al.</em>, 2019</a>]</span>.</p>
+<p><a class="reference internal" href="#fig-flux-vector-ctrl"><span class="std std-ref">Figure 1</span></a> shows the structure of flux-vector control. The reference generation, see <a class="reference internal" href="reference_gen.html"><span class="doc">Reference Generation</span></a>, computes the stator flux and torque references. The observer, see <a class="reference internal" href="observers.html"><span class="doc">Observers</span></a>, provides the estimates for the flux and torque controller, which is considered in the following.</p>
+<figure class="align-center" id="fig-flux-vector-ctrl">
+<a class="only-light reference internal image-reference" href="../../_images/flux_vector_ctrl.svg"><img alt="Flux-vector control" class="only-light" src="../../_images/flux_vector_ctrl.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Flux-vector control. For induction machines, the reference generation uses the estimates <span class="math notranslate nohighlight">\(\hatomegas\)</span> and <span class="math notranslate nohighlight">\(\hatabspsiR\)</span> instead of <span class="math notranslate nohighlight">\(\hatomegam\)</span>. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage <span class="math notranslate nohighlight">\(\usreflim\)</span> (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.</span><a class="headerlink" href="#fig-flux-vector-ctrl" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id10">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/flux_vector_ctrl.svg"><img alt="Flux-vector control" class="invert-colors-dark only-dark" src="../../_images/flux_vector_ctrl.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 1:</em> Flux-vector control. For induction machines, the reference generation uses the estimates <span class="math notranslate nohighlight">\(\hatomegas\)</span> and <span class="math notranslate nohighlight">\(\hatabspsiR\)</span> instead of <span class="math notranslate nohighlight">\(\hatomegam\)</span>. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage <span class="math notranslate nohighlight">\(\usreflim\)</span> (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
 <section id="for-induction-machines">
 <h2>For Induction Machines<a class="headerlink" href="#for-induction-machines" title="Link to this heading">#</a></h2>
 <section id="flux-and-torque-dynamics">

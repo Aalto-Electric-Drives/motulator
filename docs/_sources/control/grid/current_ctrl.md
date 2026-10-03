@@ -6,6 +6,29 @@ Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) curre
 This controller design assumes an L filter, but it can also be applied with LCL filters (see the {doc}`/grid_examples/grid_following/plot_10kva_lcl_gfl` example). If LCL-resonance damping and very low sampling frequencies are needed, the controller could be designed directly in the discrete-time domain taking the LCL filter dynamics into account {cite}`Rah2021`.
 ```
 
+[Figure 1](fig:gfl_ctrl) shows grid-following control, implemented in the {class}`motulator.grid.control.CurrentVectorController` class. The current reference is computed from the active-power and reactive-power references. The PLL, see {doc}`/control/grid/pll`, provides the feedback signals for the current controller, which is considered in the following.
+
+```{figure} ../figs/gfl_ctrl.svg
+---
+name: fig:gfl_ctrl
+class: only-light
+width: 100%
+align: center
+alt: Grid-following control
+---
+*Figure 1:* Grid-following control. The PLL transforms the measured converter current $\ics$ into the estimated PCC voltage coordinates and estimates the angle $\thetac$ and the angular speed $\omegac$ of these coordinates. The PCC voltage estimate $\hatug$ is used to compute the current reference and as feedforward in the current controller.
+```
+
+```{figure} ../figs/gfl_ctrl.svg
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Grid-following control
+---
+*Figure 1:* Grid-following control. The PLL transforms the measured converter current $\ics$ into the estimated PCC voltage coordinates and estimates the angle $\thetac$ and the angular speed $\omegac$ of these coordinates. The PCC voltage estimate $\hatug$ is used to compute the current reference and as feedforward in the current controller.
+```
+
 ## 2DOF PI Controller
 
 The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design {cite}`Har1998` and the complex-vector design {cite}`Bri1999`. Here, only the complex-vector design is considered, see {ref}`complex-vector-2dof-pi-controller`, which is compatible with the {class}`motulator.common.control.ComplexPIController` base class. The controller can be expressed in a state-space form as
