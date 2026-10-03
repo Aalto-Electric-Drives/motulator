@@ -220,6 +220,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -605,26 +606,27 @@
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.CarrierComparison">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CarrierComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2**12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_complex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CarrierComparison" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CarrierComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2**12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CarrierComparison" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></p>
 <p>Carrier comparison.</p>
-<p>This computes the the switching states and their durations based on the duty ratios.
-Instead of searching for zero crossings, the switching instants are explicitly
-computed in the beginning of each sampling period, allowing faster simulations.</p>
+<p>This computes the gate signals and their durations based on the duty ratios. Instead
+of searching for zero crossings, the switching instants are explicitly computed in
+the beginning of each sampling period, allowing faster simulations. The dead time
+delays the turn-on of the switches, i.e., each leg is blanked for <cite>t_d</cite> after its
+switching instant.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels, defaults to 2**12.</p></li>
-<li><p><strong>return_complex</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Complex switching state space vectors are returned if True. Otherwise phase
-switching states are returned, defaults to True.</p></li>
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CarrierComparison</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">carrier_cmp</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">return_complex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">carrier_cmp</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># First call gives rising edges</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Durations of the switching states</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span>
 <span class="go">array([0.00019995, 0.00040015, 0.00019995, 0.00019995])</span>
@@ -635,7 +637,7 @@ switching states are returned, defaults to True.</p></li>
 <span class="go">       [1, 0, 1],</span>
 <span class="go">       [1, 1, 1]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Second call gives falling edges</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">.001</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span>
 <span class="go">array([0.00019995, 0.00019995, 0.00040015, 0.00019995])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q_abc</span>
@@ -646,15 +648,19 @@ switching states are returned, defaults to True.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sum of the step times equals T_s</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">t_steps</span><span class="p">))</span>
 <span class="go">0.001</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># 50% duty ratios in all phases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span>
-<span class="go">array([0.0005, 0.    , 0.    , 0.0005])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Dead time blanks each leg after its switching instant</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">carrier_cmp</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">,</span> <span class="n">b_abc</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">t_steps</span> <span class="o">/</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># In ms</span>
+<span class="go">array([0.5, 0.1, 0.4])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">q_abc</span>
 <span class="go">array([[0, 0, 0],</span>
 <span class="go">       [0, 0, 0],</span>
-<span class="go">       [0, 0, 0],</span>
 <span class="go">       [1, 1, 1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b_abc</span>
+<span class="go">array([[0, 0, 0],</span>
+<span class="go">       [1, 1, 1],</span>
+<span class="go">       [0, 0, 0]])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -665,9 +671,10 @@ switching states are returned, defaults to True.</p></li>
 <dd><p>Base class for continuous-time system models.</p>
 <p>A model consists of subsystems and connections between them. The converter
 subsystem gets the switching state <cite>q_c_ab</cite>, which is held constant over each
-integration interval. The outputs are computed in the order of the <cite>subsystems</cite> list
-and passed to the connected inputs immediately. Hence, a subsystem whose outputs
-depend directly on its inputs must come after the subsystems providing these inputs.</p>
+integration interval. The PWM model includes the dead time <cite>converter.t_d</cite>. The
+outputs are computed in the order of the <cite>subsystems</cite> list and passed to the
+connected inputs immediately. Hence, a subsystem whose outputs depend directly on
+its inputs must come after the subsystems providing these inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

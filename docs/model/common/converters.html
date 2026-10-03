@@ -222,6 +222,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -590,6 +591,7 @@
 <p><span class="caption-text"><em>Figure 3:</em> Carrier comparison. The duty ratios <span class="math notranslate nohighlight">\(\dA\)</span>, <span class="math notranslate nohighlight">\(\dB\)</span>, and <span class="math notranslate nohighlight">\(\dC\)</span> are constant over the sampling period <span class="math notranslate nohighlight">\(\Ts\)</span> (or, optionally, over the switching period <span class="math notranslate nohighlight">\(\Tsw = 2\Ts\)</span>). The carrier signal is the same for all three phases and varies between 0 and 1.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
+<p>The converter parameter <code class="docutils literal notranslate"><span class="pre">t_d</span></code> delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time.</p>
 <p>The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is</p>
 <div class="math notranslate nohighlight" id="equation-carrier-comparison">
 <span class="eqno">(3)<a class="headerlink" href="#equation-carrier-comparison" title="Link to this equation">#</a></span>\[\begin{split}\ucs &amp;= \frac{2}{3}\left(\uAn + \uBn\e^{\jj 2\pi/3} + \uCn\e^{\jj 4\pi/3}\right) \\
@@ -607,6 +609,7 @@
 <div class="math notranslate nohighlight" id="equation-switching-cycle-averaging">
 <span class="eqno">(4)<a class="headerlink" href="#equation-switching-cycle-averaging" title="Link to this equation">#</a></span>\[    \ucs = \underbrace{\frac{2}{3}\left(\dA + \dB\e^{\jj 2\pi/3} + \dC\e^{\jj 4\pi/3}\right)}_{\dcs}\udc\]</div>
 <p>where <span class="math notranslate nohighlight">\(\dcs\)</span> is the duty ratio space vector. This ZOH is the default option in most <a class="reference internal" href="../../drive_examples/index.html"><span class="doc">Drives</span></a> and <a class="reference internal" href="../../grid_examples/index.html"><span class="doc">Grid Converters</span></a> examples.</p>
+<p>With the dead time, the ZOH uses the switching-cycle averaged on-times of the upper and lower switches, where pulses shorter than <code class="docutils literal notranslate"><span class="pre">t_d</span></code> are suppressed. The converter resolves the remaining blanked fraction using the current-direction function <code class="docutils literal notranslate"><span class="pre">sign</span></code>. The <a class="reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.dead_time_error" title="motulator.common.utils.dead_time_error"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.common.utils.dead_time_error()</span></code></a> function gives the corresponding duty-ratio error for the control system. The transients due to changes in the duty ratios are only modeled by carrier comparison.</p>
 </section>
 </section>
 

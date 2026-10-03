@@ -45,7 +45,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: CapacitiveDCBusConverter(u_dc, C_dc)
+.. py:class:: CapacitiveDCBusConverter(u_dc, C_dc, t_d = 0.0, sign = np.sign)
 
    Bases: :py:obj:`VoltageSourceConverter`
 
@@ -57,6 +57,11 @@ Package Contents
    :type u_dc: float
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
+   :param sign: Function of the phase currents (A) determining the leg states during blanking,
+                defaults to `np.sign`.
+   :type sign: Callable[[np.ndarray], np.ndarray], optional
 
 
 
@@ -973,7 +978,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc)
+.. py:class:: VoltageSourceConverter(u_dc, t_d = 0.0, sign = np.sign)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
@@ -981,8 +986,19 @@ Package Contents
    
    Lossless three-phase voltage-source converter with constant DC-bus voltage.
 
+   The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
+   neither of its switches conducts, the current direction determines which diode
+   conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
+   in the beginning of the blanking interval.
+
    :param u_dc: DC-bus voltage (V).
    :type u_dc: float
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
+   :param sign: Function of the phase currents (A) determining the leg states during blanking,
+                defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
+                used to model the effect of parasitic capacitances, for example.
+   :type sign: Callable[[np.ndarray], np.ndarray], optional
 
 
 
@@ -1103,6 +1119,30 @@ Package Contents
 
       
       Set external DC current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_gate_signals(q_abc, b_abc)
+
+      
+      Set the switching state based on the gate and blanking signals.
 
 
 

@@ -215,6 +215,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -468,6 +469,7 @@
 <span></span><span class="sd">"""Current-vector control methods for induction machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">cast</span>
@@ -546,7 +548,8 @@
 
 <span class="sd">        i_sd_nom = psi_s_nom/(L_M + L_sgm)</span>
 
-<span class="sd">    In the field-weakening operation, the flux-producing current component is::</span>
+<span class="sd">    If the saturation is modeled, the inductances are evaluated at `psi_s_nom`. In the</span>
+<span class="sd">    field-weakening operation, the flux-producing current component is::</span>
 
 <span class="sd">        i_s_ref.real = (k_fw/s)*(u_s_max - abs(u_s_ref))</span>
 
@@ -592,7 +595,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">=</span> <span class="n">i_s_max</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">k_u</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_nom</span> <span class="o">=</span> <span class="n">psi_s_nom</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span>
+        <span class="c1"># Magnetizing current at the nominal flux, taking the saturation into account</span>
+        <span class="n">par_nom</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+        <span class="n">par_nom</span><span class="o">.</span><span class="n">update_psi_s</span><span class="p">(</span><span class="n">psi_s_nom</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_nom</span> <span class="o">=</span> <span class="n">psi_s_nom</span> <span class="o">/</span> <span class="p">(</span><span class="n">par_nom</span><span class="o">.</span><span class="n">L_M</span> <span class="o">+</span> <span class="n">par_nom</span><span class="o">.</span><span class="n">L_sgm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_fw</span> <span class="o">=</span> <span class="n">k_fw</span> <span class="ow">or</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_R</span> <span class="o">/</span> <span class="p">(</span><span class="n">w_s_nom</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_sd_nom</span>  <span class="c1"># Integral state</span>
 
@@ -747,6 +753,7 @@
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
         <span class="n">cfg</span><span class="p">:</span> <span class="n">CurrentVectorControllerCfg</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>  <span class="c1"># The observer updates the saturation state of this copy</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span> <span class="o">=</span> <span class="n">CurrentReferenceGenerator</span><span class="p">(</span>

@@ -45,7 +45,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: CarrierComparison(N = 2**12, return_complex = True)
+.. py:class:: CarrierComparison(N = 2**12, t_d = 0.0)
 
    Bases: :py:obj:`PWM`
 
@@ -53,22 +53,23 @@ Package Contents
    
    Carrier comparison.
 
-   This computes the the switching states and their durations based on the duty ratios.
-   Instead of searching for zero crossings, the switching instants are explicitly
-   computed in the beginning of each sampling period, allowing faster simulations.
+   This computes the gate signals and their durations based on the duty ratios. Instead
+   of searching for zero crossings, the switching instants are explicitly computed in
+   the beginning of each sampling period, allowing faster simulations. The dead time
+   delays the turn-on of the switches, i.e., each leg is blanked for `t_d` after its
+   switching instant.
 
    :param N: Amount of the counter quantization levels, defaults to 2**12.
    :type N: int, optional
-   :param return_complex: Complex switching state space vectors are returned if True. Otherwise phase
-                          switching states are returned, defaults to True.
-   :type return_complex: bool, optional
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
 
    .. rubric:: Examples
 
    >>> from motulator.common.model import CarrierComparison
-   >>> carrier_cmp = CarrierComparison(return_complex=False)
+   >>> carrier_cmp = CarrierComparison()
    >>> # First call gives rising edges
-   >>> t_steps, q_abc = carrier_cmp(1e-3, [.4, .2, .8])
+   >>> t_steps, q_abc, _ = carrier_cmp(1e-3, [.4, .2, .8])
    >>> # Durations of the switching states
    >>> t_steps
    array([0.00019995, 0.00040015, 0.00019995, 0.00019995])
@@ -79,7 +80,7 @@ Package Contents
           [1, 0, 1],
           [1, 1, 1]])
    >>> # Second call gives falling edges
-   >>> t_steps, q_abc = carrier_cmp(.001, [.4, .2, .8])
+   >>> t_steps, q_abc, _ = carrier_cmp(1e-3, [.4, .2, .8])
    >>> t_steps
    array([0.00019995, 0.00019995, 0.00040015, 0.00019995])
    >>> q_abc
@@ -90,15 +91,19 @@ Package Contents
    >>> # Sum of the step times equals T_s
    >>> float(np.sum(t_steps))
    0.001
-   >>> # 50% duty ratios in all phases
-   >>> t_steps, q_abc = carrier_cmp(1e-3, [.5, .5, .5])
-   >>> t_steps
-   array([0.0005, 0.    , 0.    , 0.0005])
+   >>> # Dead time blanks each leg after its switching instant
+   >>> carrier_cmp = CarrierComparison(t_d=1e-4)
+   >>> t_steps, q_abc, b_abc = carrier_cmp(1e-3, [.5, .5, .5])
+   >>> np.round(t_steps / 1e-3, 3)  # In ms
+   array([0.5, 0.1, 0.4])
    >>> q_abc
    array([[0, 0, 0],
           [0, 0, 0],
-          [0, 0, 0],
           [1, 1, 1]])
+   >>> b_abc
+   array([[0, 0, 0],
+          [1, 1, 1],
+          [0, 0, 0]])
 
 
 
@@ -124,9 +129,10 @@ Package Contents
 
    A model consists of subsystems and connections between them. The converter
    subsystem gets the switching state `q_c_ab`, which is held constant over each
-   integration interval. The outputs are computed in the order of the `subsystems` list
-   and passed to the connected inputs immediately. Hence, a subsystem whose outputs
-   depend directly on its inputs must come after the subsystems providing these inputs.
+   integration interval. The PWM model includes the dead time `converter.t_d`. The
+   outputs are computed in the order of the `subsystems` list and passed to the
+   connected inputs immediately. Hence, a subsystem whose outputs depend directly on
+   its inputs must come after the subsystems providing these inputs.
 
    :param converter: Converter model.
    :type converter: VoltageSourceConverter

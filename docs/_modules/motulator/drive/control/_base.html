@@ -215,6 +215,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -563,6 +564,8 @@
 <span class="sd">        Vector controller whose input is the torque reference.</span>
 <span class="sd">    speed_ctrl : SpeedController | PIController | None</span>
 <span class="sd">        Speed controller. If not given or None, torque-control mode is used.</span>
+<span class="sd">    pwm : PWM, optional</span>
+<span class="sd">        Pulse-width modulator, defaults to `PWM()`.</span>
 
 <span class="sd">    """</span>
 
@@ -570,9 +573,10 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vector_ctrl</span><span class="p">:</span> <span class="n">VectorController</span><span class="p">,</span>
         <span class="n">speed_ctrl</span><span class="p">:</span> <span class="n">SpeedController</span> <span class="o">|</span> <span class="n">PIController</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">PWM</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">vector_ctrl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">speed_ctrl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
@@ -630,7 +634,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">()</span>
+        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
@@ -714,13 +718,17 @@
 <span class="sd">        V/Hz controller to be used in the drive control system.</span>
 <span class="sd">    slew_rate : float, optional</span>
 <span class="sd">        Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.</span>
+<span class="sd">    pwm : PWM, optional</span>
+<span class="sd">        Pulse-width modulator, defaults to `PWM(overmodulation=vhz_ctrl.pwm_mode)`.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vhz_ctrl</span><span class="p">:</span> <span class="n">VHzController</span><span class="p">,</span> <span class="n">slew_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">vhz_ctrl</span><span class="p">:</span> <span class="n">VHzController</span><span class="p">,</span> <span class="n">slew_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span> <span class="o">=</span> <span class="n">vhz_ctrl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">(</span><span class="n">overmodulation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">pwm_mode</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">PWM</span><span class="p">(</span><span class="n">overmodulation</span><span class="o">=</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">pwm_mode</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">(</span><span class="n">slew_rate</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># For storing ramp-limited speed reference</span>
@@ -754,7 +762,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">()</span>
+            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
             <span class="n">w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">)</span>
             <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span><span class="p">)</span>

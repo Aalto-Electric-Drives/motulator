@@ -41,6 +41,7 @@ Classes
    motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.ObserverBasedGridFormingControllerCfg
    motulator.grid.control.PLL
+   motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
    motulator.grid.control.PowerSynchronizationControllerCfg
 
@@ -346,7 +347,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None)
+.. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None, pwm = None)
 
    Bases: :py:obj:`motulator.common.control._base.ControlSystem`
 
@@ -362,6 +363,8 @@ Package Contents
    :type inner_ctrl: GridFormingController | GridFollowingController
    :param dc_bus_voltage_ctrl: DC-bus voltage controller. If not given, power-control mode is used.
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
+   :param pwm: Pulse-width modulator, defaults to `PWM()`.
+   :type pwm: PWM, optional
 
 
 
@@ -857,6 +860,239 @@ Package Contents
 
       
       Update integral states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True)
+
+   
+   Duty ratios and realized voltage for three-phase space-vector PWM.
+
+   This computes the duty ratios corresponding to standard space-vector PWM and
+   overmodulation [#Hav1999]_. The realized voltage is computed based on the measured
+   DC-bus voltage and the duty ratios. The digital delay effects are taken into account
+   in the realized voltage [#Bae2003]_.
+
+   Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
+   dead time and the voltage drops of the power devices) is modeled as a function of
+   the phase currents and duty ratios. The realized voltage is corrected for this
+   error using the measured currents, which correspond to the same instant as the
+   realized voltage, and the duty ratios of the corresponding sampling periods.
+   Furthermore, the error can be compensated for by feedforward, in which case the
+   currents are predicted to the middle of the next switching period using the same
+   angle compensation as for the voltage reference. Near the duty-ratio limits, the
+   feedforward may not fully cancel a duty-dependent error.
+
+   :param k_comp: Compensation factor for the angular delay effect, defaults to 1.5.
+   :type k_comp: float, optional
+   :param u_c0_ab: Initial voltage (V) in stationary coordinates. This is used to compute the
+                   realized voltage, defaults to 0.
+   :type u_c0_ab: float, optional
+   :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
+                          - "MPE": minimum phase error
+                          - "MME": minimum magnitude error
+                          - "six_step": six-step operation
+   :type overmodulation: Literal["MPE", "MME", "six_step"], optional
+   :param d_err: Duty-ratio error as a function of the phase currents (A) and duty ratios,
+                 i.e., the realized duty ratios are `d_abc - d_err(i_abc, d_abc)`, defaults
+                 to None (no error). For the dead time, use
+                 `motulator.common.utils.dead_time_error`, whose sampling period must equal
+                 that of the control system.
+   :type d_err: Callable[[np.ndarray, np.ndarray], np.ndarray], optional
+   :param feedforward: Compensate for `d_err` in the duty ratios, defaults to True.
+   :type feedforward: bool, optional
+
+   .. rubric:: References
+
+   .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
+      triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
+      https://doi.org/10.1109/28.777199
+
+   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+      2003, https://doi.org/10.1109/TIA.2003.810660
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(T_s, u_c_ref_ab, u_dc, w)
+
+      
+      Compute the duty ratios and the limited voltage reference.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param u_c_ref_ab: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ref_ab: complex
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
+      :param w: Angular speed of synchronous coordinates (rad/s).
+      :type w: float
+
+      :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
+                * **u_c_ab** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: duty_ratios(u_c_ref_ab, u_dc)
+
+      
+      Compute the duty ratios for three-phase space-vector PWM.
+
+      :param u_c_ref_ab: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ref_ab: complex
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
+
+      :returns: **d_abc** -- Duty ratios.
+      :rtype: list[float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_realized_voltage(i_c_ab, u_dc)
+
+      
+      Get the realized voltage.
+
+      The measured currents are also stored for the feedforward compensation of the
+      next duty ratios.
+
+      :param i_c_ab: Measured converter current (A) in stationary coordinates.
+      :type i_c_ab: complex
+      :param u_dc: Measured DC-bus voltage (V).
+      :type u_dc: float
+
+      :returns: Realized converter voltage (V) in stationary coordinates. The effect of the
+                digital delays on the angle are compensated for.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: six_step_overmodulation(u_c_ref_ab, u_dc)
+      :staticmethod:
+
+
+      
+      Overmodulation up to six-step operation.
+
+      This method modifies the angle of the voltage reference vector in the
+      overmodulation region such that the six-step operation is reached [#Bol1997]_.
+
+      :param u_c_ref_ab: Converter voltage reference (V) in stationary coordinates.
+      :type u_c_ref_ab: complex
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
+
+      :returns: **u_c_ref_ab** -- Modified converter voltage reference (V) in stationary coordinates.
+      :rtype: complex
+
+      .. rubric:: References
+
+      .. [#Bol1997] Bolognani, Zigliotto, "Novel digital continuous control of SVM
+         inverters in the overmodulation range," IEEE Trans. Ind. Appl., 1997,
+         https://doi.org/10.1109/28.568019
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(u_c_ab, d_abc)
+
+      
+      Update the realized voltage.
 
 
 

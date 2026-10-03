@@ -220,6 +220,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -635,6 +636,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.rhs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_external_dc_current"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_external_dc_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
 </ul>
 </li>
@@ -832,7 +834,7 @@ determined by an external function rather than by torque dynamics.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.model.FrequencyConverter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">FrequencyConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#FrequencyConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.FrequencyConverter" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">FrequencyConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U_g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#FrequencyConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.FrequencyConverter" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p>
 <p>Frequency converter with a six-pulse diode bridge.</p>
 <p>A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The diode
@@ -844,6 +846,9 @@ bridge is connected to the voltage-source inverter. The grid inductance is zero.
 <li><p><strong>L_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – DC-bus inductance (H).</p></li>
 <li><p><strong>U_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Grid voltage (V, line-line, rms).</p></li>
 <li><p><strong>f_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Grid frequency (Hz).</p></li>
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Function of the phase currents (A) determining the leg states during blanking,
+defaults to <cite>np.sign</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2023,12 +2028,22 @@ The default is <code class="docutils literal notranslate"><span class="pre">B_L<
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
 <p>Lossless three-phase voltage-source converter with constant DC-bus voltage.</p>
+<p>The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
+neither of its switches conducts, the current direction determines which diode
+conducts. The leg state is then <cite>(1 - sign(i))/2</cite>, where <cite>i</cite> is the phase current
+in the beginning of the blanking interval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – DC-bus voltage (V).</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – DC-bus voltage (V).</p></li>
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Function of the phase currents (A) determining the leg states during blanking,
+defaults to <cite>np.sign</cite>. A smooth function, such as <cite>2/pi*arctan(i/i_d)</cite>, can be
+used to model the effect of parasitic capacitances, for example.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py method">
@@ -2091,6 +2106,23 @@ The default is <code class="docutils literal notranslate"><span class="pre">B_L<
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>i_dc</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.set_gate_signals">
+<span class="sig-name descname"><span class="pre">set_gate_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_gate_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.set_gate_signals" title="Link to this definition">#</a></dt>
+<dd><p>Set the switching state based on the gate and blanking signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_abc</strong> (<em>numpy.ndarray</em>)</p></li>
+<li><p><strong>b_abc</strong> (<em>numpy.ndarray</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2284,6 +2316,7 @@ The default is <code class="docutils literal notranslate"><span class="pre">B_L<
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.rhs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_external_dc_current"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_external_dc_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
 </ul>
 </li>

@@ -215,6 +215,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -585,9 +586,10 @@
 
 <span class="sd">    A model consists of subsystems and connections between them. The converter</span>
 <span class="sd">    subsystem gets the switching state `q_c_ab`, which is held constant over each</span>
-<span class="sd">    integration interval. The outputs are computed in the order of the `subsystems` list</span>
-<span class="sd">    and passed to the connected inputs immediately. Hence, a subsystem whose outputs</span>
-<span class="sd">    depend directly on its inputs must come after the subsystems providing these inputs.</span>
+<span class="sd">    integration interval. The PWM model includes the dead time `converter.t_d`. The</span>
+<span class="sd">    outputs are computed in the order of the `subsystems` list and passed to the</span>
+<span class="sd">    connected inputs immediately. Hence, a subsystem whose outputs depend directly on</span>
+<span class="sd">    its inputs must come after the subsystems providing these inputs.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -627,7 +629,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">src</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">()</span> <span class="k">if</span> <span class="n">pwm</span> <span class="k">else</span> <span class="n">ZOH</span><span class="p">()</span>
+        <span class="n">t_d</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">t_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span> <span class="k">if</span> <span class="n">pwm</span> <span class="k">else</span> <span class="n">ZOH</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="n">subsystems</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="n">connections</span>

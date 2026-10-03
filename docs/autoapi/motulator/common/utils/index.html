@@ -220,6 +220,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -523,6 +524,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2line"><code class="docutils literal notranslate"><span class="pre">complex2line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.dead_time_error"><code class="docutils literal notranslate"><span class="pre">dead_time_error()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.line2complex"><code class="docutils literal notranslate"><span class="pre">line2complex()</span></code></a></li>
 </ul>
 </li>
@@ -567,7 +569,10 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.complex2line" title="motulator.common.utils.complex2line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">complex2line</span></code></a>(u)</p></td>
 <td><p>Transform a complex space vector to two line-to-line quantities.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.line2complex" title="motulator.common.utils.line2complex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line2complex</span></code></a>(u)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.dead_time_error" title="motulator.common.utils.dead_time_error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dead_time_error</span></code></a>(i_abc, d_abc, t_d, T_s[, sign])</p></td>
+<td><p>Compute the switching-cycle averaged duty-ratio error due to dead time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.line2complex" title="motulator.common.utils.line2complex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line2complex</span></code></a>(u)</p></td>
 <td><p>Transform two line-to-line quantities to a complex space vector.</p></td>
 </tr>
 </tbody>
@@ -681,6 +686,37 @@ data points.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.utils.dead_time_error">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">dead_time_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_dead_time.html#dead_time_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.dead_time_error" title="Link to this definition">#</a></dt>
+<dd><p>Compute the switching-cycle averaged duty-ratio error due to dead time.</p>
+<p>The realized duty ratios are <cite>d_abc - dead_time_error(…)</cite>. Away from the duty
+limits, the error is <cite>t_d/(2*T_s)*sign(i_abc)</cite>. Short pulses are suppressed if
+their duration is less than the dead time. Clamped legs have no error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_abc</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Phase currents (A).</p></li>
+<li><p><strong>d_abc</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Duty ratios in the range [0, 1].</p></li>
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Dead time (s).</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Sampling period (s), equal to the half carrier period. In the control system,
+this must equal the sampling period of the controller.</p></li>
+<li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Current-direction function, defaults to <cite>np.sign</cite>. A smooth approximation
+may be used, matching the converter model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Duty-ratio errors, including the effect of short pulses.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (3,)</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This averaged model assumes constant duty ratios and currents over a carrier
+period. It does not include transients due to changes in the switching commands.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="motulator.common.utils.line2complex">
 <span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">line2complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#line2complex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.line2complex" title="Link to this definition">#</a></dt>
 <dd><p>Transform two line-to-line quantities to a complex space vector.</p>
@@ -762,6 +798,7 @@ data points.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2line"><code class="docutils literal notranslate"><span class="pre">complex2line()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.dead_time_error"><code class="docutils literal notranslate"><span class="pre">dead_time_error()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.line2complex"><code class="docutils literal notranslate"><span class="pre">line2complex()</span></code></a></li>
 </ul>
 </li>

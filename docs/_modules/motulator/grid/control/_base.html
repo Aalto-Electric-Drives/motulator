@@ -215,6 +215,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -572,6 +573,8 @@
 <span class="sd">        Inner controller.</span>
 <span class="sd">    dc_bus_voltage_ctrl: DCBusVoltageController, optional</span>
 <span class="sd">        DC-bus voltage controller. If not given, power-control mode is used.</span>
+<span class="sd">    pwm : PWM, optional</span>
+<span class="sd">        Pulse-width modulator, defaults to `PWM()`.</span>
 
 <span class="sd">    """</span>
 
@@ -579,9 +582,10 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">inner_ctrl</span><span class="p">:</span> <span class="n">GridFormingController</span> <span class="o">|</span> <span class="n">GridFollowingController</span><span class="p">,</span>
         <span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span> <span class="n">DCBusVoltageController</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">PWM</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">PWM</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span> <span class="o">=</span> <span class="n">inner_ctrl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="o">=</span> <span class="n">dc_bus_voltage_ctrl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="p">:</span> <span class="n">ExternalReferences</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
@@ -660,7 +664,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">()</span>
+        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="k">return</span> <span class="n">fbk</span></div>

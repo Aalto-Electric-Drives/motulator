@@ -228,6 +228,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive at low speeds. The dead time of the converter is modeled, and its effect is compensated for in the control system. The magnetic saturation is included in the machine model and taken into account in the control system. The sensorless observer and the compensation method are similar to [#Hin2010]_.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_dead_time_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_im_dead_time_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, dead time, CVC</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html

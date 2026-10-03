@@ -44,6 +44,7 @@ Functions
    motulator.common.utils.abc2complex
    motulator.common.utils.complex2abc
    motulator.common.utils.complex2line
+   motulator.common.utils.dead_time_error
    motulator.common.utils.line2complex
 
 
@@ -198,6 +199,53 @@ Package Contents
    >>> y = complex2line(1-.5j)
    >>> y
    array([ 1.9330127, -0.8660254])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: dead_time_error(i_abc, d_abc, t_d, T_s, sign = np.sign)
+
+   
+   Compute the switching-cycle averaged duty-ratio error due to dead time.
+
+   The realized duty ratios are `d_abc - dead_time_error(...)`. Away from the duty
+   limits, the error is `t_d/(2*T_s)*sign(i_abc)`. Short pulses are suppressed if
+   their duration is less than the dead time. Clamped legs have no error.
+
+   :param i_abc: Phase currents (A).
+   :type i_abc: ndarray, shape (3,)
+   :param d_abc: Duty ratios in the range [0, 1].
+   :type d_abc: ndarray, shape (3,)
+   :param t_d: Dead time (s).
+   :type t_d: float
+   :param T_s: Sampling period (s), equal to the half carrier period. In the control system,
+               this must equal the sampling period of the controller.
+   :type T_s: float
+   :param sign: Current-direction function, defaults to `np.sign`. A smooth approximation
+                may be used, matching the converter model.
+   :type sign: Callable[[np.ndarray], np.ndarray], optional
+
+   :returns: Duty-ratio errors, including the effect of short pulses.
+   :rtype: ndarray, shape (3,)
+
+   .. rubric:: Notes
+
+   This averaged model assumes constant duty ratios and currents over a carrier
+   period. It does not include transients due to changes in the switching commands.
 
 
 

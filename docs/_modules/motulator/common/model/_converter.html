@@ -215,6 +215,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
@@ -508,15 +509,33 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Lossless three-phase voltage-source converter with constant DC-bus voltage.</span>
 
+<span class="sd">    The switches are ideal, except for the dead time. When a leg is blanked, i.e.,</span>
+<span class="sd">    neither of its switches conducts, the current direction determines which diode</span>
+<span class="sd">    conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current</span>
+<span class="sd">    in the beginning of the blanking interval.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    u_dc : float</span>
 <span class="sd">        DC-bus voltage (V).</span>
+<span class="sd">    t_d : float, optional</span>
+<span class="sd">        Dead time (s), defaults to 0.</span>
+<span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
+<span class="sd">        Function of the phase currents (A) determining the leg states during blanking,</span>
+<span class="sd">        defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be</span>
+<span class="sd">        used to model the effect of parasitic capacitances, for example.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sign</span> <span class="o">=</span> <span class="n">sign</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
@@ -527,6 +546,14 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set external DC current (A)."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="VoltageSourceConverter.set_gate_signals">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.set_gate_signals">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_gate_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the switching state based on the gate and blanking signals."""</span>
+        <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">q_abc</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">b_abc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_abc</span><span class="p">)))</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.compute_internal_dc_current">
@@ -619,11 +646,22 @@
 <span class="sd">        DC-bus voltage (V).</span>
 <span class="sd">    C_dc : float</span>
 <span class="sd">        DC-bus capacitance (F).</span>
+<span class="sd">    t_d : float, optional</span>
+<span class="sd">        Dead time (s), defaults to 0.</span>
+<span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
+<span class="sd">        Function of the phase currents (A) determining the leg states during blanking,</span>
+<span class="sd">        defaults to `np.sign`.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">sign</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">CapacitiveDCBusConverterStates</span> <span class="o">=</span> <span class="n">CapacitiveDCBusConverterStates</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span>
@@ -725,12 +763,25 @@
 <span class="sd">        Grid voltage (V, line-line, rms).</span>
 <span class="sd">    f_g : float</span>
 <span class="sd">        Grid frequency (Hz).</span>
+<span class="sd">    t_d : float, optional</span>
+<span class="sd">        Dead time (s), defaults to 0.</span>
+<span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
+<span class="sd">        Function of the phase currents (A) determining the leg states during blanking,</span>
+<span class="sd">        defaults to `np.sign`.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">L_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">U_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">f_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">L_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">U_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">f_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">U_g</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">sign</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_dc</span> <span class="o">=</span> <span class="n">L_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f_g</span>
@@ -746,7 +797,7 @@
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_g</span>
         <span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span>
         <span class="c1"># Output voltage of the diode bridge</span>
-        <span class="n">u_di</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">u_di</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">u_di</span></div>
 
 
@@ -811,8 +862,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_di</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">compute_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">)</span>
         <span class="c1"># Diode bridge switching states (-1, 0, 1)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">q_g_abc</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_g_abc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span>
         <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="c1"># Grid current space vector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_g_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q_g_abc</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_L</span>

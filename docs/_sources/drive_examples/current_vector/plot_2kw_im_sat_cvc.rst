@@ -124,7 +124,7 @@ Configure the control system.
     )
     # est_par = par  # Uncomment this line to use the perfectly known machine model
     cfg = control.CurrentVectorControllerCfg(
-        psi_s_nom=base.psi, i_s_max=1.5 * base.i, sensorless=True
+        psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, sensorless=True
     )
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
@@ -198,7 +198,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.296 seconds)
+   **Total running time of the script:** (0 minutes 5.641 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_sat_cvc.py:
