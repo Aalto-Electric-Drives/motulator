@@ -1,6 +1,7 @@
 """Current-vector control methods for induction machine drives."""
 
 from cmath import exp, phase
+from copy import copy
 from dataclasses import dataclass
 from math import pi, sqrt
 from typing import Callable, cast
@@ -74,7 +75,8 @@ class CurrentReferenceGenerator:
 
         i_sd_nom = psi_s_nom/(L_M + L_sgm)
 
-    In the field-weakening operation, the flux-producing current component is::
+    If the saturation is modeled, the inductances are evaluated at `psi_s_nom`. In the
+    field-weakening operation, the flux-producing current component is::
 
         i_s_ref.real = (k_fw/s)*(u_s_max - abs(u_s_ref))
 
@@ -120,7 +122,10 @@ class CurrentReferenceGenerator:
         self.par = par
         self.i_s_max = i_s_max
         self.k_u = k_u
-        self.i_sd_nom = psi_s_nom / (par.L_M + par.L_sgm)
+        # Magnetizing current at the nominal flux, taking the saturation into account
+        par_nom = copy(par)
+        par_nom.update_psi_s(psi_s_nom)
+        self.i_sd_nom = psi_s_nom / (par_nom.L_M + par_nom.L_sgm)
         self.k_fw = k_fw or 2 * par.R_R / (w_s_nom * par.L_sgm**2)
         self.i_sd_ref = self.i_sd_nom  # Integral state
 
@@ -263,6 +268,7 @@ class CurrentVectorController:
         par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: CurrentVectorControllerCfg,
     ) -> None:
+        par = copy(par)  # The observer updates the saturation state of this copy
         self.cfg = cfg
         self.sensorless = cfg.sensorless
         self.reference_gen = CurrentReferenceGenerator(

@@ -103,6 +103,8 @@ class GridConverterControlSystem(ControlSystem):
         Inner controller.
     dc_bus_voltage_ctrl: DCBusVoltageController, optional
         DC-bus voltage controller. If not given, power-control mode is used.
+    pwm : PWM, optional
+        Pulse-width modulator, defaults to `PWM()`.
 
     """
 
@@ -110,9 +112,10 @@ class GridConverterControlSystem(ControlSystem):
         self,
         inner_ctrl: GridFormingController | GridFollowingController,
         dc_bus_voltage_ctrl: DCBusVoltageController | None = None,
+        pwm: PWM | None = None,
     ) -> None:
         super().__init__()
-        self.pwm = PWM()
+        self.pwm = pwm if pwm is not None else PWM()
         self.inner_ctrl = inner_ctrl
         self.dc_bus_voltage_ctrl = dc_bus_voltage_ctrl
         self.ext_ref: ExternalReferences = ExternalReferences()
@@ -174,7 +177,7 @@ class GridConverterControlSystem(ControlSystem):
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
         fbk = self.inner_ctrl.get_feedback(u_c_ab, meas)
         fbk.u_dc = meas.u_dc
         return fbk

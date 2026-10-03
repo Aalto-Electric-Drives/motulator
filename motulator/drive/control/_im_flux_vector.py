@@ -1,5 +1,6 @@
 """Flux-vector control of induction machine drives."""
 
+from copy import copy
 from dataclasses import dataclass
 from math import inf, pi, sqrt
 from typing import Callable, Literal
@@ -299,6 +300,7 @@ class FluxVectorController:
         par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: FluxVectorControllerCfg,
     ) -> None:
+        par = copy(par)  # The observer updates the saturation state of this copy
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.tau_M_max, cfg.k_u, cfg.k_b
         )
@@ -414,6 +416,7 @@ class ObserverBasedVHzController:
         par: InductionMachineInvGammaPars | InductionMachinePars,
         cfg: ObserverBasedVHzControllerCfg,
     ) -> None:
+        par = copy(par)  # The observer updates the saturation state of this copy
         self.cfg = cfg
         self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(

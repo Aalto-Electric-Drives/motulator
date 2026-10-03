@@ -98,9 +98,10 @@ class Model:
 
     A model consists of subsystems and connections between them. The converter
     subsystem gets the switching state `q_c_ab`, which is held constant over each
-    integration interval. The outputs are computed in the order of the `subsystems` list
-    and passed to the connected inputs immediately. Hence, a subsystem whose outputs
-    depend directly on its inputs must come after the subsystems providing these inputs.
+    integration interval. The PWM model includes the dead time `converter.t_d`. The
+    outputs are computed in the order of the `subsystems` list and passed to the
+    connected inputs immediately. Hence, a subsystem whose outputs depend directly on
+    its inputs must come after the subsystems providing these inputs.
 
     Parameters
     ----------
@@ -140,7 +141,8 @@ class Model:
             self._outgoing[src].append((target, inp, out))
         self.t0: float = 0.0
         self.delay = Delay(delay)
-        self.pwm = CarrierComparison() if pwm else ZOH()
+        t_d = converter.t_d
+        self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
         self.converter = converter
         self.subsystems = subsystems
         self.connections = connections

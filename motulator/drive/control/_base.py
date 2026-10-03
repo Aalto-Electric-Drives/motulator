@@ -94,6 +94,8 @@ class VectorControlSystem(ControlSystem):
         Vector controller whose input is the torque reference.
     speed_ctrl : SpeedController | PIController | None
         Speed controller. If not given or None, torque-control mode is used.
+    pwm : PWM, optional
+        Pulse-width modulator, defaults to `PWM()`.
 
     """
 
@@ -101,9 +103,10 @@ class VectorControlSystem(ControlSystem):
         self,
         vector_ctrl: VectorController,
         speed_ctrl: SpeedController | PIController | None = None,
+        pwm: PWM | None = None,
     ) -> None:
         super().__init__()
-        self.pwm = PWM()
+        self.pwm = pwm if pwm is not None else PWM()
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
         self.ext_ref = ExternalReferences()
@@ -150,7 +153,7 @@ class VectorControlSystem(ControlSystem):
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage()
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
         fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M)
         fbk.u_dc = meas.u_dc
         return fbk
@@ -221,13 +224,17 @@ class VHzControlSystem(ControlSystem):
         V/Hz controller to be used in the drive control system.
     slew_rate : float, optional
         Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.
+    pwm : PWM, optional
+        Pulse-width modulator, defaults to `PWM(overmodulation=vhz_ctrl.pwm_mode)`.
 
     """
 
-    def __init__(self, vhz_ctrl: VHzController, slew_rate: float = inf) -> None:
+    def __init__(
+        self, vhz_ctrl: VHzController, slew_rate: float = inf, pwm: PWM | None = None
+    ) -> None:
         super().__init__()
         self.vhz_ctrl = vhz_ctrl
-        self.pwm = PWM(overmodulation=self.vhz_ctrl.pwm_mode)
+        self.pwm = pwm if pwm is not None else PWM(overmodulation=vhz_ctrl.pwm_mode)
         self.rate_limiter = RateLimiter(slew_rate)
         self.ext_ref = ExternalReferences()
         self._w_M_ref: float = 0  # For storing ramp-limited speed reference
@@ -253,7 +260,7 @@ class VHzControlSystem(ControlSystem):
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         if self.ext_ref.w_M is not None:
-            u_c_ab = self.pwm.get_realized_voltage()
+            u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
             w_M_ref = self.ext_ref.w_M(self.t)
             self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
             fbk = self.vhz_ctrl.get_feedback(u_c_ab, meas.i_c_ab, self._w_M_ref)

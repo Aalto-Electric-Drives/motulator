@@ -1,5 +1,6 @@
 """Controls for synchronous machine drives."""
 
+from motulator.common.control._pwm import PWM
 from motulator.drive.control._base import VectorControlSystem, VHzControlSystem
 from motulator.drive.control._common import PIController, SpeedController, SpeedObserver
 from motulator.drive.control._sm_current_vector import (
@@ -29,6 +30,7 @@ from motulator.drive.utils._parameters import (
 )
 
 __all__ = [
+    "PWM",
     "PIController",
     "CurrentVectorControllerCfg",
     "VHzControlSystem",
