@@ -239,7 +239,7 @@ class FrequencyConverter(VoltageSourceConverter):
         u_g_ab = self.u_g * state.exp_j_theta_g
         u_g_abc = complex2abc(u_g_ab)
         # Output voltage of the diode bridge
-        u_di = np.amax(u_g_abc, axis=0) - np.amin(u_g_abc, axis=0)
+        u_di = np.ptp(u_g_abc, axis=0)
         return u_g_ab, u_di
 
     def set_outputs(self, t: float) -> None:
@@ -293,8 +293,8 @@ class FrequencyConverterTimeSeries(
         self.u_g_ab, self.u_di = subsystem.compute_voltages(self)
         self.u_g_abc = complex2abc(self.u_g_ab)
         # Diode bridge switching states (-1, 0, 1)
-        self.q_g_abc = (np.amax(self.u_g_abc, axis=0) == self.u_g_abc).astype(int) - (
-            np.amin(self.u_g_abc, axis=0) == self.u_g_abc
+        self.q_g_abc = (self.u_g_abc.max(axis=0) == self.u_g_abc).astype(int) - (
+            self.u_g_abc.min(axis=0) == self.u_g_abc
         ).astype(int)
         # Grid current space vector
         self.i_g_ab = abc2complex(self.q_g_abc) * self.i_L
