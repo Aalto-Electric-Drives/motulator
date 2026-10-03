@@ -2,6 +2,29 @@
 
 Flux-vector control directly controls the stator flux magnitude and the electromagnetic torque, which simplifies reference generation especially in the field-weakening region {cite}`Pel2009`. We use the control law that results from feedback linearization of the flux and torque dynamics {cite}`Awa2019b`.
 
+[Figure 1](fig:flux_vector_ctrl) shows the structure of flux-vector control. The reference generation, see {doc}`/control/drive/reference_gen`, computes the stator flux and torque references. The observer, see {doc}`/control/drive/observers`, provides the estimates for the flux and torque controller, which is considered in the following.
+
+```{figure} ../figs/flux_vector_ctrl.svg
+---
+name: fig:flux_vector_ctrl
+class: only-light
+width: 100%
+align: center
+alt: Flux-vector control
+---
+*Figure 1:* Flux-vector control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ instead of $\hatomegam$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+```
+
+```{figure} ../figs/flux_vector_ctrl.svg
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Flux-vector control
+---
+*Figure 1:* Flux-vector control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ instead of $\hatomegam$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+```
+
 ## For Induction Machines
 
 ### Flux and Torque Dynamics

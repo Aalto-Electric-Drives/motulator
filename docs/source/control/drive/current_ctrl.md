@@ -2,6 +2,29 @@
 
 Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control is commonly used in three-phase AC machine drives {cite}`Har1998,Bri1999,Awa2019a`. This control structure allows compensating for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection.
 
+[Figure 1](fig:current_vector_ctrl) shows current-vector control, implemented in the {class}`motulator.drive.control.im.CurrentVectorController` and {class}`motulator.drive.control.sm.CurrentVectorController` classes. The reference generation, see {doc}`/control/drive/reference_gen`, computes the current reference from the torque reference. The observer, see {doc}`/control/drive/observers`, provides the feedback signals for the current controller.
+
+```{figure} ../figs/current_vector_ctrl.svg
+---
+name: fig:current_vector_ctrl
+class: only-light
+width: 100%
+align: center
+alt: Current-vector control
+---
+*Figure 1:* Current-vector control. The observer transforms the measured current $\iss$ into the controller coordinates and estimates their angle $\thetac$ and angular speed $\omegac$. For synchronous machines, estimated rotor coordinates are used, $\thetac = \hatthetam$, while for induction machines the coordinates rotate at the estimated stator angular frequency, $\omegac = \hatomegas$. For induction machines, the reference generation uses the rotor flux magnitude estimate $\hatabspsiR$ and the realized voltage reference instead of $\hatomegam$. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+```
+
+```{figure} ../figs/current_vector_ctrl.svg
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Current-vector control
+---
+*Figure 1:* Current-vector control. The observer transforms the measured current $\iss$ into the controller coordinates and estimates their angle $\thetac$ and angular speed $\omegac$. For synchronous machines, estimated rotor coordinates are used, $\thetac = \hatthetam$, while for induction machines the coordinates rotate at the estimated stator angular frequency, $\omegac = \hatomegas$. For induction machines, the reference generation uses the rotor flux magnitude estimate $\hatabspsiR$ and the realized voltage reference instead of $\hatomegam$. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+```
+
 A 2DOF PI current controller for induction machines is available in the {class}`motulator.drive.control.im.CurrentController` class and for synchronous machines in the {class}`motulator.drive.control.sm.CurrentController` class, both of which inherit from the {class}`motulator.common.control.ComplexPIController` class. In the following, current control of induction machines is first considered in detail. Then, the same principles are applied to synchronous machines.
 
 ## For Induction Machines
