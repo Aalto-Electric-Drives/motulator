@@ -8,7 +8,9 @@ strategies.
 
 from cmath import exp, phase
 from math import acos, floor, pi, sqrt
-from typing import Literal
+from typing import Callable, Literal
+
+import numpy as np
 
 from motulator.common.utils import abc2complex, complex2abc
 
@@ -23,6 +25,16 @@ class PWM:
     DC-bus voltage and the duty ratios. The digital delay effects are taken into account
     in the realized voltage [#Bae2003]_.
 
+    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
+    dead time and the voltage drops of the power devices) is modeled as a function of
+    the phase currents and duty ratios. The realized voltage is corrected for this
+    error using the measured currents, which correspond to the same instant as the
+    realized voltage, and the duty ratios of the corresponding sampling periods.
+    Furthermore, the error can be compensated for by feedforward, in which case the
+    currents are predicted to the middle of the next switching period using the same
+    angle compensation as for the voltage reference. Near the duty-ratio limits, the
+    feedforward may not fully cancel a duty-dependent error.
+
     Parameters
     ----------
     k_comp : float, optional
@@ -35,6 +47,14 @@ class PWM:
         - "MPE": minimum phase error
         - "MME": minimum magnitude error
         - "six_step": six-step operation
+    d_err : Callable[[np.ndarray, np.ndarray], np.ndarray], optional
+        Duty-ratio error as a function of the phase currents (A) and duty ratios,
+        i.e., the realized duty ratios are `d_abc - d_err(i_abc, d_abc)`, defaults
+        to None (no error). For the dead time, use
+        `motulator.common.utils.dead_time_error`, whose sampling period must equal
+        that of the control system.
+    feedforward : bool, optional
+        Compensate for `d_err` in the duty ratios, defaults to True.
 
     References
     ----------
@@ -53,11 +73,17 @@ class PWM:
         k_comp: float = 1.5,
         u_c0_ab: complex = 0j,
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
+        d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
+        feedforward: bool = True,
     ) -> None:
         self.k_comp = k_comp
         self.overmodulation = overmodulation
+        self.d_err = d_err
+        self.feedforward = feedforward
         self.realized_voltage = u_c0_ab
         self._old_u_c_ab = u_c0_ab
+        self._i_c_ab = 0j
+        self._d_abc = np.zeros((2, 3))
 
     @staticmethod
     def six_step_overmodulation(u_c_ref_ab: complex, u_dc: float) -> complex:
@@ -184,32 +210,55 @@ class PWM:
         # Duty ratios
         d_abc = self.duty_ratios(u_c_ref_ab, u_dc)
 
-        # Limited voltage reference
+        # Compensate for the duty-ratio error using the predicted currents
+        if self.d_err is not None and self.feedforward:
+            d = np.array(d_abc)
+            i_c_abc = complex2abc(exp(1j * theta_comp) * self._i_c_ab)
+            d_abc = list(np.clip(d + self.d_err(i_c_abc, d), 0, 1))
+
+        # Limited voltage reference, including the compensation
         u_c_ab = abc2complex(d_abc) * u_dc
 
         return d_abc, u_c_ab
 
-    def get_realized_voltage(self) -> complex:
+    def get_realized_voltage(self, i_c_ab: complex, u_dc: float) -> complex:
         """
         Get the realized voltage.
 
+        The measured currents are also stored for the feedforward compensation of the
+        next duty ratios.
+
+        Parameters
+        ----------
+        i_c_ab : complex
+            Measured converter current (A) in stationary coordinates.
+        u_dc : float
+            Measured DC-bus voltage (V).
+
         Returns
         -------
-        realized_voltage : complex
+        complex
             Realized converter voltage (V) in stationary coordinates. The effect of the
             digital delays on the angle are compensated for.
 
         """
-        return self.realized_voltage
+        self._i_c_ab = i_c_ab
+        if self.d_err is None:
+            return self.realized_voltage
+        i_abc = complex2abc(i_c_ab)
+        d_err = 0.5 * sum(self.d_err(i_abc, d) for d in self._d_abc)
+        return self.realized_voltage - u_dc * abc2complex(d_err)
 
-    def update(self, u_c_ab: complex) -> None:
+    def update(self, u_c_ab: complex, d_abc: list[float]) -> None:
         """Update the realized voltage."""
         self.realized_voltage = 0.5 * (self._old_u_c_ab + u_c_ab)
         self._old_u_c_ab = u_c_ab
+        self._d_abc[0] = self._d_abc[1]
+        self._d_abc[1] = d_abc
 
     def __call__(
         self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> list[float]:
         d_abc, u_c_ab = self.compute_output(T_s, u_c_ref_ab, u_dc, w)
-        self.update(u_c_ab)
+        self.update(u_c_ab, d_abc)
         return d_abc

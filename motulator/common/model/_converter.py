@@ -39,15 +39,33 @@ class VoltageSourceConverter(Subsystem):
     """
     Lossless three-phase voltage-source converter with constant DC-bus voltage.
 
+    The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
+    neither of its switches conducts, the current direction determines which diode
+    conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
+    in the beginning of the blanking interval.
+
     Parameters
     ----------
     u_dc : float
         DC-bus voltage (V).
+    t_d : float, optional
+        Dead time (s), defaults to 0.
+    sign : Callable[[np.ndarray], np.ndarray], optional
+        Function of the phase currents (A) determining the leg states during blanking,
+        defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
+        used to model the effect of parasitic capacitances, for example.
 
     """
 
-    def __init__(self, u_dc: float) -> None:
+    def __init__(
+        self,
+        u_dc: float,
+        t_d: float = 0.0,
+        sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+    ) -> None:
         self.u_dc = u_dc
+        self.t_d = t_d
+        self.sign = sign
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=u_dc)
         self.state = None
@@ -56,6 +74,11 @@ class VoltageSourceConverter(Subsystem):
     def set_external_dc_current(self, i_dc: Callable[[float], float]) -> None:
         """Set external DC current (A)."""
         raise NotImplementedError
+
+    def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
+        """Set the switching state based on the gate and blanking signals."""
+        i_abc = complex2abc(self.inp.i_c_ab)
+        self.inp.q_c_ab = abc2complex(q_abc + 0.5 * b_abc * (1 - self.sign(i_abc)))
 
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A)."""
@@ -129,11 +152,22 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
         DC-bus voltage (V).
     C_dc : float
         DC-bus capacitance (F).
+    t_d : float, optional
+        Dead time (s), defaults to 0.
+    sign : Callable[[np.ndarray], np.ndarray], optional
+        Function of the phase currents (A) determining the leg states during blanking,
+        defaults to `np.sign`.
 
     """
 
-    def __init__(self, u_dc: float, C_dc: float) -> None:
-        super().__init__(u_dc)
+    def __init__(
+        self,
+        u_dc: float,
+        C_dc: float,
+        t_d: float = 0.0,
+        sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+    ) -> None:
+        super().__init__(u_dc, t_d, sign)
         self.C_dc = C_dc
         self.state: CapacitiveDCBusConverterStates = CapacitiveDCBusConverterStates(
             self.u_dc
@@ -220,12 +254,25 @@ class FrequencyConverter(VoltageSourceConverter):
         Grid voltage (V, line-line, rms).
     f_g : float
         Grid frequency (Hz).
+    t_d : float, optional
+        Dead time (s), defaults to 0.
+    sign : Callable[[np.ndarray], np.ndarray], optional
+        Function of the phase currents (A) determining the leg states during blanking,
+        defaults to `np.sign`.
 
     """
 
-    def __init__(self, C_dc: float, L_dc: float, U_g: float, f_g: float) -> None:
+    def __init__(
+        self,
+        C_dc: float,
+        L_dc: float,
+        U_g: float,
+        f_g: float,
+        t_d: float = 0.0,
+        sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+    ) -> None:
         u_dc = sqrt(2) * U_g
-        super().__init__(u_dc)
+        super().__init__(u_dc, t_d, sign)
         self.C_dc = C_dc
         self.L_dc = L_dc
         self.w_g = 2 * np.pi * f_g

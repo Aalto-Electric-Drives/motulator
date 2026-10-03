@@ -2,7 +2,7 @@
 
 import os
 from dataclasses import dataclass
-from typing import Any, Callable, cast
+from typing import Any, Callable
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -154,13 +154,13 @@ class Simulation:
             # Control, computational delay, and carrier comparison
             T_s, ref_duty_ratio = self.ctrl(self.mdl)
             duty_ratio = self.mdl.delay(ref_duty_ratio)
-            t_steps, sw_states = self.mdl.pwm(T_s, duty_ratio)
+            t_steps, q_abc, b_abc = self.mdl.pwm(T_s, duty_ratio)
 
             # Loop over the sampling period T_s
             for i, t_step in enumerate(t_steps):
                 if t_step > 0:
                     # Set the switching state and get initial values
-                    self.mdl.converter.inp.q_c_ab = cast(complex, sw_states[i])
+                    self.mdl.converter.set_gate_signals(q_abc[i], b_abc[i])
                     state0 = self.mdl.get_initial_values()
 
                     # Set the integration time span
