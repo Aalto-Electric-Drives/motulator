@@ -30,7 +30,9 @@ k = 6
 activation = gn.Softmax
 
 # %%
-# Train the model.
+# Train the model. The FEM data is on a uniform grid, so the loss is dominated by the
+# saturated region. The loss of the data points whose current magnitude is below 12 A
+# is weighted by 10 to improve the accuracy at low currents.
 
 if not trained_path.exists():
     gn.train_gradnet(
@@ -39,9 +41,11 @@ if not trained_path.exists():
         save_model_path=trained_path,
         k=k,
         embed_dim=48,
-        epochs=1000,
+        epochs=3000,
         subsample=subsample,
         activation=activation,
+        i_low=12,
+        weight_low=10,
     )
 # %%
 # Load the dataset for visualization comparison.
