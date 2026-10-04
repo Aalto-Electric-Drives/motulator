@@ -31,14 +31,17 @@ class PWM:
     error using the measured currents, which correspond to the same instant as the
     realized voltage, and the duty ratios of the corresponding sampling periods.
     Furthermore, the error can be compensated for by feedforward, in which case the
-    currents are predicted to the middle of the next switching period using the same
-    angle compensation as for the voltage reference. Near the duty-ratio limits, the
-    feedforward may not fully cancel a duty-dependent error.
+    currents are predicted to the middle of the sampling period in which the duty ratios
+    are applied, assuming that they rotate at the angular speed of the synchronous
+    coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
+    duty-dependent error.
 
     Parameters
     ----------
     k_comp : float, optional
-        Compensation factor for the angular delay effect, defaults to 1.5.
+        Compensation factor for the angular delay effect on the voltage reference,
+        defaults to 1.5. Use 0 if the controller compensates for the delays itself,
+        e.g., in direct discrete-time designs.
     u_c0_ab : float, optional
         Initial voltage (V) in stationary coordinates. This is used to compute the
         realized voltage, defaults to 0.
@@ -55,6 +58,10 @@ class PWM:
         that of the control system.
     feedforward : bool, optional
         Compensate for `d_err` in the duty ratios, defaults to True.
+    k_pred : float, optional
+        Prediction factor of the currents for the feedforward compensation, defaults to
+        1.5, which corresponds to the middle of the sampling period in which the duty
+        ratios are applied after the computational delay of one sampling period.
 
     References
     ----------
@@ -75,8 +82,10 @@ class PWM:
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
         d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
         feedforward: bool = True,
+        k_pred: float = 1.5,
     ) -> None:
         self.k_comp = k_comp
+        self.k_pred = k_pred
         self.overmodulation = overmodulation
         self.d_err = d_err
         self.feedforward = feedforward
@@ -213,7 +222,7 @@ class PWM:
         # Compensate for the duty-ratio error using the predicted currents
         if self.d_err is not None and self.feedforward:
             d = np.array(d_abc)
-            i_c_abc = complex2abc(exp(1j * theta_comp) * self._i_c_ab)
+            i_c_abc = complex2abc(exp(1j * self.k_pred * T_s * w) * self._i_c_ab)
             d_abc = list(np.clip(d + self.d_err(i_c_abc, d), 0, 1))
 
         # Limited voltage reference, including the compensation
@@ -221,12 +230,16 @@ class PWM:
 
         return d_abc, u_c_ab
 
-    def get_realized_voltage(self, i_c_ab: complex, u_dc: float) -> complex:
+    def get_realized_voltage(
+        self, i_c_ab: complex, u_dc: float, *, average: bool = True
+    ) -> complex:
         """
         Get the realized voltage.
 
-        The measured currents are also stored for the feedforward compensation of the
-        next duty ratios.
+        This method is to be called at the sampling instant before the next duty ratios
+        are computed, and a computational delay of one sampling period is assumed. The
+        measured currents are also stored for the feedforward compensation of the next
+        duty ratios.
 
         Parameters
         ----------
@@ -234,20 +247,30 @@ class PWM:
             Measured converter current (A) in stationary coordinates.
         u_dc : float
             Measured DC-bus voltage (V).
+        average : bool, optional
+            If True (default), the average voltage of the previous and the ongoing
+            sampling periods is returned, which represents the voltage at the sampling
+            instant, as needed in continuous-time designs. If False, the voltage of the
+            ongoing sampling period is returned, as needed in hold-equivalent models of
+            direct discrete-time designs.
 
         Returns
         -------
         complex
-            Realized converter voltage (V) in stationary coordinates. The effect of the
-            digital delays on the angle are compensated for.
+            Realized converter voltage (V) in stationary coordinates. If `d_err` is
+            given, the voltage is corrected for it using the measured currents.
 
         """
         self._i_c_ab = i_c_ab
+        if average:
+            u_c_ab, d_abc = self.realized_voltage, self._d_abc
+        else:
+            u_c_ab, d_abc = self._old_u_c_ab, self._d_abc[1:]
         if self.d_err is None:
-            return self.realized_voltage
+            return u_c_ab
         i_abc = complex2abc(i_c_ab)
-        d_err = 0.5 * sum(self.d_err(i_abc, d) for d in self._d_abc)
-        return self.realized_voltage - u_dc * abc2complex(d_err)
+        d_err = sum(self.d_err(i_abc, d) for d in d_abc) / len(d_abc)
+        return u_c_ab - u_dc * abc2complex(d_err)
 
     def update(self, u_c_ab: complex, d_abc: list[float]) -> None:
         """Update the realized voltage."""

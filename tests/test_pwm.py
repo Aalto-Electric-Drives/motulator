@@ -6,7 +6,7 @@ import pytest
 from motulator.common.control import PWM
 from motulator.common.model._converter import VoltageSourceConverter
 from motulator.common.model._pwm import ZOH, CarrierComparison
-from motulator.common.utils import abc2complex, dead_time_error
+from motulator.common.utils import abc2complex, complex2abc, dead_time_error
 
 
 @pytest.mark.parametrize("pwm_cls", [ZOH, CarrierComparison], ids=["zoh", "carrier"])
@@ -67,7 +67,8 @@ def test_blanking_across_samples() -> None:
 @pytest.mark.parametrize("feedforward", [True, False], ids=["ff", "no_ff"])
 def test_realized_voltage(u_refs: tuple[float, float], feedforward: bool) -> None:
     """The realized voltage of the control system equals that of the system model,
-    also near the duty-ratio limits, where the error depends on the duty ratios."""
+    also near the duty-ratio limits, where the error depends on the duty ratios. Both
+    the average of the two periods and the voltage of the ongoing period are checked."""
     T_s, t_d, u_dc, i_c_ab = 1e-4, 2e-6, 540, 4 + 0j
     pwm = PWM(
         d_err=lambda i, d: dead_time_error(i, d, t_d, T_s), feedforward=feedforward
@@ -82,5 +83,25 @@ def test_realized_voltage(u_refs: tuple[float, float], feedforward: bool) -> Non
         converter.set_gate_signals(q_abc[0], b_abc[0])
         realized.append(u_dc * converter.inp.q_c_ab)
     assert pwm.get_realized_voltage(i_c_ab, u_dc) == pytest.approx(np.mean(realized))
+    assert pwm.get_realized_voltage(i_c_ab, u_dc, average=False) == pytest.approx(
+        realized[-1]
+    )
     if feedforward and u_refs[0] == u_refs[1]:
         assert np.mean(realized) == pytest.approx(u_refs[0])
+
+
+@pytest.mark.parametrize("k_comp", [0, 1.5])
+def test_feedforward_current_prediction(k_comp: float) -> None:
+    """The currents of the feedforward are predicted independently of k_comp."""
+    T_s, w, i_c_ab = 1e-4, 2 * np.pi * 50, 4 + 1j
+    currents = []
+
+    def d_err(i_abc: np.ndarray, d_abc: np.ndarray) -> np.ndarray:
+        currents.append(i_abc)
+        return np.zeros(3)
+
+    pwm = PWM(k_comp=k_comp, d_err=d_err)
+    pwm.get_realized_voltage(i_c_ab, 540)
+    pwm(T_s, 100, 540, w)
+    expected = complex2abc(np.exp(1.5j * w * T_s) * i_c_ab)
+    assert currents[-1] == pytest.approx(expected)
