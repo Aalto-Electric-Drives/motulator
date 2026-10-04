@@ -44,6 +44,7 @@ Neural-network flux and current maps (PyTorch) learned from measured or FEM data
 - SI units. Per-unit `BaseValues` are only used for plotting.
 - NumPy-style docstrings on public classes and functions (rendered by sphinx-autoapi). Line length is 88.
 - `BUILDING_DOCS=1` is set during the docs build and disables progress bars.
+- Avoid hacks. Do not attach undeclared attributes to objects (e.g., `vars(obj)[...] = ...` or `setattr`), monkey-patch objects, or bypass the type checker to get around an interface. Extend through the existing interfaces instead (subclass methods, dataclass fields, signal groups passed to `ControlSystem.save()`). If a clean solution needs a change in a base class, propose the change rather than working around it.
 
 ### Examples
 

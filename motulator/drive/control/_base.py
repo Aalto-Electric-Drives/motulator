@@ -171,10 +171,20 @@ class VectorControlSystem(ControlSystem):
         else:
             raise ValueError("Either speed or torque reference must be set")
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
-        u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
+        ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
         ref.w_M = w_M_ref  # Store the speed reference for later use
         return ref
+
+    def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
+        """
+        Compute the duty ratios from the stator voltage reference.
+
+        The reference is in the controller coordinates. Subclasses can override this
+        method, e.g., to control an output filter between the converter and the machine.
+
+        """
+        u_s_ab_ref = exp(1j * fbk.theta_c) * u_s_ref
+        return self.pwm(T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
@@ -271,10 +281,20 @@ class VHzControlSystem(ControlSystem):
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""
         ref = self.vhz_ctrl.compute_output(fbk)
-        u_s_ab_ref = exp(1j * fbk.theta_c) * ref.u_s
-        ref.d_abc = self.pwm(ref.T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
+        ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
         ref.w_M = self._w_M_ref  # Store the speed reference for later use
         return ref
+
+    def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
+        """
+        Compute the duty ratios from the stator voltage reference.
+
+        The reference is in the controller coordinates. Subclasses can override this
+        method, e.g., to control an output filter between the converter and the machine.
+
+        """
+        u_s_ab_ref = exp(1j * fbk.theta_c) * u_s_ref
+        return self.pwm(T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
