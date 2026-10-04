@@ -228,11 +228,14 @@ class ModelTimeSeries:
         ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
         for subsystem in mdl.subsystems:
             ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)
-        # Inputs from the connections and the signals derived from them
-        for (target, inp), (src, out) in mdl.connections.items():
-            setattr(ts[target], inp, np.array(getattr(ts[src], out)))
-        for subsystem in mdl.subsystems:
-            ts[subsystem].compute_input_derived_signals(self.t, subsystem)
+        # Inputs from the connections and the signals derived from them. The second
+        # pass propagates the signals corrected in the first pass (e.g., the stator
+        # current with core losses).
+        for _ in range(2):
+            for (target, inp), (src, out) in mdl.connections.items():
+                setattr(ts[target], inp, np.array(getattr(ts[src], out)))
+            for subsystem in mdl.subsystems:
+                ts[subsystem].compute_input_derived_signals(self.t, subsystem)
 
     def __getattr__(self, name: str) -> Any:
         """Support type checking for dynamic attributes."""
