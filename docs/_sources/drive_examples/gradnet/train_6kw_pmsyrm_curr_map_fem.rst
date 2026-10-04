@@ -66,11 +66,13 @@ Set up the paths and parameters.
     activation = gn.Softmax
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 33-36
 
-Train the model.
+Train the model. The FEM data is on a uniform grid, so the loss is dominated by the
+saturated region. The loss of the data points whose current magnitude is below 12 A
+is weighted by 10 to improve the accuracy at low currents.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-46
+.. GENERATED FROM PYTHON SOURCE LINES 36-50
 
 .. code-block:: Python
 
@@ -82,16 +84,18 @@ Train the model.
             save_model_path=trained_path,
             k=k,
             embed_dim=48,
-            epochs=1000,
+            epochs=3000,
             subsample=subsample,
             activation=activation,
+            i_low=12,
+            weight_low=10,
         )
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Load the dataset for visualization comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-62
+.. GENERATED FROM PYTHON SOURCE LINES 52-66
 
 .. code-block:: Python
 
@@ -110,11 +114,11 @@ Load the dataset for visualization comparison.
     val_data = (val_i, val_psi, val_theta, val_tau)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Load the GradNet model and create its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 68-72
 
 .. code-block:: Python
 
@@ -123,11 +127,11 @@ Load the GradNet model and create its callable.
     harm_map = gn.CurrentMapWithHarmonics(model, k=k)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Print statistical error metrics on validation data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-78
+.. GENERATED FROM PYTHON SOURCE LINES 74-82
 
 .. code-block:: Python
 

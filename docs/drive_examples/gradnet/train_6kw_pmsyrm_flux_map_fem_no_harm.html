@@ -541,7 +541,9 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset without spatial har
 </span><span class="w">
 </span><span class="n">activation</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-gradnet sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PNormGradient" title="motulator.drive.gradnet.PNormGradient"><span class="n">gn</span><span class="o">.</span><span class="n">PNormGradient</span></a><span class="w">
 </span></pre></div></div>
-<p>Train the model.</p>
+<p>Train the model. The FEM data is on a uniform grid, so the loss is dominated by the
+saturated region. The loss of the data points whose current magnitude is below 12 A
+is weighted by 10 to improve the accuracy at low currents.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="k">if</span> <span class="ow">not</span> <span class="n">trained_path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="p">)</span><span class="p">:</span><span class="w">
 </span>    <a class="sphx-glr-backref-module-motulator-drive-gradnet sphx-glr-backref-type-py-function reference internal" href="../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.train_gradnet" title="motulator.drive.gradnet.train_gradnet"><span class="n">gn</span><span class="o">.</span><span class="n">train_gradnet</span></a><span class="p">(</span><span class="w">
 </span>        <span class="n">dataset_path</span><span class="o">=</span><span class="n">dataset_path</span><span class="p">,</span><span class="w">
@@ -549,9 +551,11 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset without spatial har
 </span>        <span class="n">save_model_path</span><span class="o">=</span><span class="n">trained_path</span><span class="p">,</span><span class="w">
 </span>        <span class="n">is_flux_map</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="w">
 </span>        <span class="n">embed_dim</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="w">
-</span>        <span class="n">epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span><span class="w">
+</span>        <span class="n">epochs</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span><span class="w">
 </span>        <span class="n">subsample</span><span class="o">=</span><span class="n">subsample</span><span class="p">,</span><span class="w">
 </span>        <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span><span class="w">
+</span>        <span class="n">i_low</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span><span class="w">
+</span>        <span class="n">weight_low</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="w">
 </span>    <span class="p">)</span><span class="w">
 </span></pre></div></div>
 <p>Create the GradNet model and its callable.</p>

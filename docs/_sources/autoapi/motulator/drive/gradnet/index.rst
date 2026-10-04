@@ -725,7 +725,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: train_gradnet(dataset_path, base, is_flux_map=False, k = None, num_modules = 1, embed_dim = 12, batch_size = 128, epochs = 2000, lr = 0.001, save_model_path = None, subsample = 1, activation = None, device = None)
+.. py:function:: train_gradnet(dataset_path, base, is_flux_map=False, k = None, num_modules = 1, embed_dim = 12, batch_size = 128, epochs = 2000, lr = 0.001, save_model_path = None, subsample = 1, activation = None, device = None, *, i_low = 0.0, weight_low = 1.0)
 
    
    Train and save the GradNet model.
@@ -756,6 +756,17 @@ Package Contents
    :param device: Device to use for training. If None, automatically selects CUDA if available,
                   otherwise CPU.
    :type device: torch.device | None, optional
+   :param i_low: Current limit (A, peak value) defining the low-current region, defaults to 0.
+   :type i_low: float, optional
+   :param weight_low: Loss weight of the data points whose current magnitude is below `i_low`,
+                      defaults to 1 (unweighted loss). The low-current region is determined by the
+                      current of the data point for both flux and current maps. A weight above 1
+                      improves the accuracy at low currents, where a uniform data grid gives only a
+                      few points. The weights are normalized with their mean over the training set,
+                      so the loss of each batch is an unbiased estimate of the weighted loss of the
+                      whole set, which corresponds to repeating those points `weight_low` times in the
+                      dataset, except that the number of steps per epoch is unchanged.
+   :type weight_low: float, optional
 
 
 

@@ -66,11 +66,13 @@ Set up the paths and parameters.
     activation = gn.PNormGradient
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 33-36
 
-Train the model.
+Train the model. The FEM data is on a uniform grid, so the loss is dominated by the
+saturated region. The loss of the data points whose current magnitude is below 12 A
+is weighted by 10 to improve the accuracy at low currents.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-47
+.. GENERATED FROM PYTHON SOURCE LINES 36-51
 
 .. code-block:: Python
 
@@ -82,17 +84,19 @@ Train the model.
             save_model_path=trained_path,
             is_flux_map=True,
             embed_dim=12,
-            epochs=1000,
+            epochs=2000,
             subsample=subsample,
             activation=activation,
+            i_low=12,
+            weight_low=10,
         )
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Create the GradNet model and its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-54
+.. GENERATED FROM PYTHON SOURCE LINES 53-58
 
 .. code-block:: Python
 
@@ -102,11 +106,11 @@ Create the GradNet model and its callable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Load the dataset for comparison and split it into training and validation sets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-62
+.. GENERATED FROM PYTHON SOURCE LINES 60-66
 
 .. code-block:: Python
 
@@ -117,11 +121,11 @@ Load the dataset for comparison and split it into training and validation sets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Print statistical error metrics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-66
+.. GENERATED FROM PYTHON SOURCE LINES 68-70
 
 .. code-block:: Python
 
