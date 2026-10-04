@@ -137,8 +137,8 @@ class Simulation:
                 progress_bar.refresh()
                 progress_bar.close()
 
-        except FloatingPointError:
-            print(f"Invalid value encountered at {self.mdl.t0:.2f} s.")
+        except FloatingPointError as err:
+            print(f"Simulation stopped at {self.mdl.t0:.2f} s: {err}")
 
         # Post-process the solution data
         mdl_ts = ModelTimeSeries(self.mdl)
@@ -166,11 +166,10 @@ class Simulation:
                     # Set the integration time span
                     t_span = (self.mdl.t0, self.mdl.t0 + t_step)
 
-                    # Create array of evaluation times if N_eval is given
+                    # Create array of evaluation times if N_eval is given, including
+                    # the end point for the final state
                     if N_eval != 0:
-                        t_eval = np.linspace(
-                            t_span[0], t_span[1], N_eval, endpoint=False
-                        )
+                        t_eval = np.linspace(t_span[0], t_span[1], N_eval + 1)
                     else:
                         t_eval = None
 
@@ -178,9 +177,18 @@ class Simulation:
                     sol = solve_ivp(
                         self.mdl.rhs, t_span, state0, t_eval=t_eval, **self.cfg.solver
                     )
+                    if not sol.success:
+                        raise FloatingPointError(sol.message)
 
-                    # Set the new initial time and save the solution
+                    # Set the final state, since the last call to rhs may be at an
+                    # earlier instant (e.g., DOP853 with t_eval)
                     self.mdl.t0 = t_span[-1]
+                    self.mdl.set_states(sol.y[:, -1])
+                    self.mdl.set_outputs(self.mdl.t0)
+
+                    # Save the solution (excluding the end point if N_eval is given)
+                    if N_eval != 0:
+                        sol.t, sol.y = sol.t[:-1], sol.y[:, :-1]
                     self.mdl.save(sol)
 
             # Update progress after each control step
