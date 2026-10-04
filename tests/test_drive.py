@@ -67,6 +67,18 @@ def ipmsm_cvc(sensorless: bool) -> sm_control.VectorControlSystem:
     )
 
 
+def ipmsm_cvc_discrete() -> sm_control.VectorControlSystem:
+    par = sm_control.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, discrete=True)
+    return sm_control.VectorControlSystem(
+        sm_control.CurrentVectorController(par, cfg),
+        sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+        sm_control.PWM(k_comp=0, average=False),
+    )
+
+
 def ipmsm_signal_inj() -> sm_control.VectorControlSystem:
     par = sm_control.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
@@ -113,6 +125,7 @@ CASES = {
     "ipmsm_fvc_pwm": (lambda: ipmsm_drive(True), lambda: ipmsm_fvc(True)),
     "ipmsm_cvc_sensorless": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(True)),
     "ipmsm_cvc_sensored": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(False)),
+    "ipmsm_cvc_discrete": (lambda: ipmsm_drive(False), ipmsm_cvc_discrete),
     "ipmsm_signal_inj": (lambda: ipmsm_drive(False), ipmsm_signal_inj),
     "im_cvc_sensorless": (im_drive, im_cvc),
     "im_fvc_sensorless": (im_drive, im_fvc),
