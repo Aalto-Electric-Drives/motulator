@@ -39,6 +39,11 @@ class Trainer:
         Spatial harmonics order. If None, no harmonics are used.
     lr : float
         Learning rate for the optimizer.
+    i_low : float, optional
+        Current limit (p.u.) below which the data points are weighted by `weight_low`.
+    weight_low : float, optional
+        Loss weight of the data points with current magnitude below `i_low`. The
+        default 1.0 gives the unweighted loss.
 
     """
 
@@ -50,12 +55,22 @@ class Trainer:
         mode: Literal["current_map", "flux_map"],
         k: int | None,
         lr: float,
+        i_low: float = 0.0,
+        weight_low: float = 1.0,
     ) -> None:
         self.model = model
         self.data_loader = data_loader
         self.dataset = dataset
         self.mode = mode
         self.k = k
+        self.i_low = i_low
+        self.weight_low = weight_low
+        # Mean weight over the whole training set, which normalizes the loss so that
+        # each batch gives an unbiased estimate of the weighted loss of the whole set
+        self.w_mean = 1.0
+        if weight_low != 1.0:
+            w = self._point_weights(dataset.i_d, dataset.i_q)
+            self.w_mean = float(w.mean())
         self.optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
 
     def train_epoch(self) -> float:
@@ -78,12 +93,24 @@ class Trainer:
             return self._compute_loss_no_harmonics(batch)
         return self._compute_loss_with_harmonics(batch)
 
+    def _point_weights(self, i_d: Tensor, i_q: Tensor) -> Tensor:
+        """Return the loss weights of the data points with the given currents."""
+        is_low = i_d**2 + i_q**2 < self.i_low**2
+        return torch.where(is_low, self.weight_low, 1.0)
+
+    def _weights(self, batch: tuple[Tensor, ...]) -> Tensor | None:
+        """Return the normalized loss weights of the batch, or None if unweighted."""
+        if self.weight_low == 1.0:
+            return None
+        # The current of the data point is used in both modes
+        return self._point_weights(batch[2], batch[3]) / self.w_mean
+
     def _compute_loss_no_harmonics(self, batch: tuple[Tensor, ...]) -> Tensor:
         """Compute loss for a batch without spatial harmonics."""
         mode = cast(Literal["current_map", "flux_map"], self.mode)
         inputs, targets = self.dataset.prepare_batch(batch, mode)
         output = self.model(inputs)
-        return F.mse_loss(output, targets)
+        return _mse_loss(output, targets, self._weights(batch))
 
     def _compute_loss_with_harmonics(self, batch: tuple[Tensor, ...]) -> Tensor:
         """Compute loss for a batch with spatial harmonics."""
@@ -104,13 +131,24 @@ class Trainer:
         else:
             tau_m_theta_pred = dW_dtheta
 
-        loss_main = F.mse_loss(output[:, :2], targets)
-        loss_tau = F.mse_loss(tau_m_theta_pred, tau_m_theta)
+        w = self._weights(batch)
+        loss_main = _mse_loss(output[:, :2], targets, w)
+        loss_tau = _mse_loss(tau_m_theta_pred, tau_m_theta, w)
         return loss_main + loss_tau
 
 
+def _mse_loss(output: Tensor, targets: Tensor, w: Tensor | None) -> Tensor:
+    """Mean squared error, weighted over the data points if `w` is given."""
+    if w is None:
+        return F.mse_loss(output, targets)
+    err2 = (output - targets) ** 2
+    if err2.ndim > 1:
+        err2 = err2.mean(dim=1)
+    return (w * err2).mean()
+
+
 # %%
-def train_gradnet(
+def train_gradnet(  # noqa: PLR0913
     dataset_path: str | Path,
     base: BaseValues,
     is_flux_map=False,
@@ -124,6 +162,9 @@ def train_gradnet(
     subsample: int = 1,
     activation: Callable[[], torch.nn.Module] | None = None,
     device: torch.device | None = None,
+    *,
+    i_low: float = 0.0,
+    weight_low: float = 1.0,
 ) -> None:
     """
     Train and save the GradNet model.
@@ -156,6 +197,17 @@ def train_gradnet(
     device : torch.device | None, optional
         Device to use for training. If None, automatically selects CUDA if available,
         otherwise CPU.
+    i_low : float, optional
+        Current limit (A, peak value) defining the low-current region, defaults to 0.
+    weight_low : float, optional
+        Loss weight of the data points whose current magnitude is below `i_low`,
+        defaults to 1 (unweighted loss). The low-current region is determined by the
+        current of the data point for both flux and current maps. A weight above 1
+        improves the accuracy at low currents, where a uniform data grid gives only a
+        few points. The weights are normalized with their mean over the training set,
+        so the loss of each batch is an unbiased estimate of the weighted loss of the
+        whole set, which corresponds to repeating those points `weight_low` times in the
+        dataset, except that the number of steps per epoch is unchanged.
 
     """
     # Set random seed for reproducibility
@@ -198,7 +250,16 @@ def train_gradnet(
         i_base=dataset.i_base,
     ).to(device)
     _run_training_loop(
-        model, data_loader, mode, k, lr, epochs, activation, description="Training"
+        model,
+        data_loader,
+        mode,
+        k,
+        lr,
+        epochs,
+        activation,
+        description="Training",
+        i_low=i_low / dataset.i_base,
+        weight_low=weight_low,
     )
 
     # Print model parameters and weights
@@ -215,12 +276,21 @@ def train_gradnet(
 
 
 def _run_training_loop(
-    model, data_loader, mode, k, lr, epochs, activation, description="Epoch"
+    model,
+    data_loader,
+    mode,
+    k,
+    lr,
+    epochs,
+    activation,
+    description="Epoch",
+    i_low=0.0,
+    weight_low=1.0,
 ) -> None:
     """Helper to run training loop for a given data loader."""
     dataset = cast(BaseDataset | SpatialHarmonicsDataset, data_loader.dataset)
     _print_training_info(model, dataset, activation)
-    trainer = Trainer(model, data_loader, dataset, mode, k, lr)
+    trainer = Trainer(model, data_loader, dataset, mode, k, lr, i_low, weight_low)
     for epoch in trange(epochs, desc=description):
         total_loss = trainer.train_epoch()
         if epoch % (epochs // 10 if epochs > 10 else 1) == 0 or epoch == epochs - 1:
