@@ -1677,6 +1677,32 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: modulate(T_s, u_s_ref, fbk)
+
+      
+      Compute the duty ratios from the stator voltage reference.
+
+      The reference is in the controller coordinates. Subclasses can override this
+      method, e.g., to control an output filter between the converter and the machine.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: post_process()
 
       
@@ -1840,6 +1866,32 @@ Module Contents
       
       Get measurements from sensors.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: modulate(T_s, u_s_ref, fbk)
+
+      
+      Compute the duty ratios from the stator voltage reference.
+
+      The reference is in the controller coordinates. Subclasses can override this
+      method, e.g., to control an output filter between the converter and the machine.
 
 
 

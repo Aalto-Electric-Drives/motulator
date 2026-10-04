@@ -593,6 +593,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.set_speed_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.update"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.update()</span></code></a></li>
@@ -602,6 +603,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_speed_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.set_torque_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_torque_ref()</span></code></a></li>
@@ -1761,6 +1763,26 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.VHzControlSystem.modulate">
+<span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VHzControlSystem.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.VHzControlSystem.modulate" title="Link to this definition">#</a></dt>
+<dd><p>Compute the duty ratios from the stator voltage reference.</p>
+<p>The reference is in the controller coordinates. Subclasses can override this
+method, e.g., to control an output filter between the converter and the machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>u_s_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.VHzControlSystem.post_process">
 <span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VHzControlSystem.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.VHzControlSystem.post_process" title="Link to this definition">#</a></dt>
 <dd><p>Extend the post-process method.</p>
@@ -1859,6 +1881,26 @@ and flux-vector control).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Measurements</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.VectorControlSystem.modulate">
+<span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VectorControlSystem.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.VectorControlSystem.modulate" title="Link to this definition">#</a></dt>
+<dd><p>Compute the duty ratios from the stator voltage reference.</p>
+<p>The reference is in the controller coordinates. Subclasses can override this
+method, e.g., to control an output filter between the converter and the machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>u_s_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sequence[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2048,6 +2090,7 @@ and flux-vector control).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.set_speed_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VHzControlSystem.update"><code class="docutils literal notranslate"><span class="pre">VHzControlSystem.update()</span></code></a></li>
@@ -2057,6 +2100,7 @@ and flux-vector control).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_speed_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.VectorControlSystem.set_torque_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_torque_ref()</span></code></a></li>

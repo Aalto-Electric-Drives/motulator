@@ -569,6 +569,13 @@
         <span class="n">t_psi</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_a</span> <span class="o">/</span> <span class="n">c_tau</span> <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="n">t_tau</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">/</span> <span class="n">c_tau</span> <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
 
+        <span class="c1"># If c_tau &lt; 0, the torque cannot be controlled. In a PM machine with weak PMs,</span>
+        <span class="c1"># this occurs at a high flux and a small load angle (psi_s.real &gt; 0), where the</span>
+        <span class="c1"># flux is reduced until the torque becomes controllable again. Beyond the MTPV</span>
+        <span class="c1"># limit (psi_s.real &lt; 0 for PM machines), reducing the flux would not help.</span>
+        <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">psi_s_ref</span> <span class="o">=</span> <span class="mf">0.0</span>
+
         <span class="c1"># Error signals</span>
         <span class="n">e_psi</span> <span class="o">=</span> <span class="n">psi_s_ref</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span>
         <span class="n">e_tau</span> <span class="o">=</span> <span class="n">tau_M_ref</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span>
