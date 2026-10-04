@@ -62,6 +62,12 @@ class PWM:
         Prediction factor of the currents for the feedforward compensation, defaults to
         1.5, which corresponds to the middle of the sampling period in which the duty
         ratios are applied after the computational delay of one sampling period.
+    average : bool, optional
+        If True (default), the realized voltage is the average voltage of the previous
+        and the ongoing sampling periods, which represents the voltage at the sampling
+        instant, as needed in continuous-time designs. If False, it is the voltage of
+        the ongoing sampling period, as needed in the hold-equivalent models of direct
+        discrete-time designs, typically together with `k_comp = 0`.
 
     References
     ----------
@@ -83,9 +89,11 @@ class PWM:
         d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
         feedforward: bool = True,
         k_pred: float = 1.5,
+        average: bool = True,
     ) -> None:
         self.k_comp = k_comp
         self.k_pred = k_pred
+        self.average = average
         self.overmodulation = overmodulation
         self.d_err = d_err
         self.feedforward = feedforward
@@ -230,9 +238,7 @@ class PWM:
 
         return d_abc, u_c_ab
 
-    def get_realized_voltage(
-        self, i_c_ab: complex, u_dc: float, *, average: bool = True
-    ) -> complex:
+    def get_realized_voltage(self, i_c_ab: complex, u_dc: float) -> complex:
         """
         Get the realized voltage.
 
@@ -247,22 +253,17 @@ class PWM:
             Measured converter current (A) in stationary coordinates.
         u_dc : float
             Measured DC-bus voltage (V).
-        average : bool, optional
-            If True (default), the average voltage of the previous and the ongoing
-            sampling periods is returned, which represents the voltage at the sampling
-            instant, as needed in continuous-time designs. If False, the voltage of the
-            ongoing sampling period is returned, as needed in hold-equivalent models of
-            direct discrete-time designs.
 
         Returns
         -------
         complex
-            Realized converter voltage (V) in stationary coordinates. If `d_err` is
-            given, the voltage is corrected for it using the measured currents.
+            Realized converter voltage (V) in stationary coordinates, see `average`. If
+            `d_err` is given, the voltage is corrected for it using the measured
+            currents.
 
         """
         self._i_c_ab = i_c_ab
-        if average:
+        if self.average:
             u_c_ab, d_abc = self.realized_voltage, self._d_abc
         else:
             u_c_ab, d_abc = self._old_u_c_ab, self._d_abc[1:]
