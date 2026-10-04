@@ -532,6 +532,12 @@
 <span class="sd">        Prediction factor of the currents for the feedforward compensation, defaults to</span>
 <span class="sd">        1.5, which corresponds to the middle of the sampling period in which the duty</span>
 <span class="sd">        ratios are applied after the computational delay of one sampling period.</span>
+<span class="sd">    average : bool, optional</span>
+<span class="sd">        If True (default), the realized voltage is the average voltage of the previous</span>
+<span class="sd">        and the ongoing sampling periods, which represents the voltage at the sampling</span>
+<span class="sd">        instant, as needed in continuous-time designs. If False, it is the voltage of</span>
+<span class="sd">        the ongoing sampling period, as needed in the hold-equivalent models of direct</span>
+<span class="sd">        discrete-time designs, typically together with `k_comp = 0`.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -553,9 +559,11 @@
         <span class="n">d_err</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">feedforward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">k_pred</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
+        <span class="n">average</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">=</span> <span class="n">k_comp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_pred</span> <span class="o">=</span> <span class="n">k_pred</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">average</span> <span class="o">=</span> <span class="n">average</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">=</span> <span class="n">overmodulation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="o">=</span> <span class="n">d_err</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span> <span class="o">=</span> <span class="n">feedforward</span>
@@ -711,9 +719,7 @@
 
 <div class="viewcode-block" id="PWM.get_realized_voltage">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.common.control.PWM.get_realized_voltage">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_realized_voltage</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">average</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_realized_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the realized voltage.</span>
 
@@ -728,22 +734,17 @@
 <span class="sd">            Measured converter current (A) in stationary coordinates.</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            Measured DC-bus voltage (V).</span>
-<span class="sd">        average : bool, optional</span>
-<span class="sd">            If True (default), the average voltage of the previous and the ongoing</span>
-<span class="sd">            sampling periods is returned, which represents the voltage at the sampling</span>
-<span class="sd">            instant, as needed in continuous-time designs. If False, the voltage of the</span>
-<span class="sd">            ongoing sampling period is returned, as needed in hold-equivalent models of</span>
-<span class="sd">            direct discrete-time designs.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        complex</span>
-<span class="sd">            Realized converter voltage (V) in stationary coordinates. If `d_err` is</span>
-<span class="sd">            given, the voltage is corrected for it using the measured currents.</span>
+<span class="sd">            Realized converter voltage (V) in stationary coordinates, see `average`. If</span>
+<span class="sd">            `d_err` is given, the voltage is corrected for it using the measured</span>
+<span class="sd">            currents.</span>
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="n">i_c_ab</span>
-        <span class="k">if</span> <span class="n">average</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">average</span><span class="p">:</span>
             <span class="n">u_c_ab</span><span class="p">,</span> <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">u_c_ab</span><span class="p">,</span> <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
