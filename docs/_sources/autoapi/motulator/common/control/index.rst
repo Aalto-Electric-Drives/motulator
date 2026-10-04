@@ -509,7 +509,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True)
+.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -525,11 +525,14 @@ Package Contents
    error using the measured currents, which correspond to the same instant as the
    realized voltage, and the duty ratios of the corresponding sampling periods.
    Furthermore, the error can be compensated for by feedforward, in which case the
-   currents are predicted to the middle of the next switching period using the same
-   angle compensation as for the voltage reference. Near the duty-ratio limits, the
-   feedforward may not fully cancel a duty-dependent error.
+   currents are predicted to the middle of the sampling period in which the duty ratios
+   are applied, assuming that they rotate at the angular speed of the synchronous
+   coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
+   duty-dependent error.
 
-   :param k_comp: Compensation factor for the angular delay effect, defaults to 1.5.
+   :param k_comp: Compensation factor for the angular delay effect on the voltage reference,
+                  defaults to 1.5. Use 0 if the controller compensates for the delays itself,
+                  e.g., in direct discrete-time designs.
    :type k_comp: float, optional
    :param u_c0_ab: Initial voltage (V) in stationary coordinates. This is used to compute the
                    realized voltage, defaults to 0.
@@ -547,6 +550,10 @@ Package Contents
    :type d_err: Callable[[np.ndarray, np.ndarray], np.ndarray], optional
    :param feedforward: Compensate for `d_err` in the duty ratios, defaults to True.
    :type feedforward: bool, optional
+   :param k_pred: Prediction factor of the currents for the feedforward compensation, defaults to
+                  1.5, which corresponds to the middle of the sampling period in which the duty
+                  ratios are applied after the computational delay of one sampling period.
+   :type k_pred: float, optional
 
    .. rubric:: References
 
@@ -641,21 +648,29 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_realized_voltage(i_c_ab, u_dc)
+   .. py:method:: get_realized_voltage(i_c_ab, u_dc, *, average = True)
 
       
       Get the realized voltage.
 
-      The measured currents are also stored for the feedforward compensation of the
-      next duty ratios.
+      This method is to be called at the sampling instant before the next duty ratios
+      are computed, and a computational delay of one sampling period is assumed. The
+      measured currents are also stored for the feedforward compensation of the next
+      duty ratios.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
+      :param average: If True (default), the average voltage of the previous and the ongoing
+                      sampling periods is returned, which represents the voltage at the sampling
+                      instant, as needed in continuous-time designs. If False, the voltage of the
+                      ongoing sampling period is returned, as needed in hold-equivalent models of
+                      direct discrete-time designs.
+      :type average: bool, optional
 
-      :returns: Realized converter voltage (V) in stationary coordinates. The effect of the
-                digital delays on the angle are compensated for.
+      :returns: Realized converter voltage (V) in stationary coordinates. If `d_err` is
+                given, the voltage is corrected for it using the measured currents.
       :rtype: complex
 
 
