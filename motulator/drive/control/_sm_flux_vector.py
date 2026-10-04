@@ -101,6 +101,13 @@ class FluxTorqueController:
         t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau if c_tau > 0 else 1
         t_tau = 1j * fbk.psi_s / c_tau if c_tau > 0 else 0
 
+        # If c_tau < 0, the torque cannot be controlled. In a PM machine with weak PMs,
+        # this occurs at a high flux and a small load angle (psi_s.real > 0), where the
+        # flux is reduced until the torque becomes controllable again. Beyond the MTPV
+        # limit (psi_s.real < 0 for PM machines), reducing the flux would not help.
+        if c_tau < 0 and par.psi_f > 0 and fbk.psi_s.real > 0:
+            psi_s_ref = 0.0
+
         # Error signals
         e_psi = psi_s_ref - abs(fbk.psi_s)
         e_tau = tau_M_ref - fbk.tau_M
