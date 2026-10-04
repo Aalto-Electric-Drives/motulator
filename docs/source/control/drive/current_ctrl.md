@@ -187,3 +187,48 @@ label: sm_closed_loop
 where $\omegamo$ is the operating-point rotor angular speed. Assuming linear magnetics, the above dynamics are valid for the current as well, i.e., $\Delta\is(s)/\Delta \isref(s) = \Delta\psis(s)/\Delta \psisref(s)$.
 
 This control design corresponds to the implementation in the {class}`motulator.drive.control.sm.CurrentController` class.
+
+### Direct Discrete-Time Design
+
+When the closed-loop bandwidth is high compared with the sampling frequency, the computational delay and the zero-order hold degrade the continuous-time design. The flux-linkage-based current controller can also be designed directly in discrete time {cite}`Awa2019a`. Assume $\Rs = 0$ and the stator voltage constant in stationary coordinates over the sampling period $\Ts$. The hold-equivalent model of {eq}`sm_model` in rotor coordinates, including the computational delay of one sampling period, is
+
+```{math}
+---
+label: sm_discrete_model
+---
+    \psis(k+1) &= \Phi\left[\psis(k) + \Ts\us(k)\right] \\
+    \us(k+1) &= \Phi\usreflim(k)
+```
+
+where $\Phi = \e^{-\jj\omegam\Ts}$ is the rotation of the coordinates over the sampling period and $\us(k)$ is the realized voltage of the ongoing sampling period. The control law is
+
+```{math}
+---
+label: sm_discrete_cc
+---
+    \usref(k) &= \kT\hatpsisfcn(\isref) - k_1\hatpsisfcn(\is) - k_2\usreflim(k-1) + \uI(k) \\
+    \uI(k+1) &= \uI(k) + \Ts\kI\left[\hatpsisfcn(\isref) - \hatpsisfcn(\is)\right]
+```
+
+where the term with $k_2$ compensates for the computational delay. The complex-vector design
+
+```{math}
+---
+label: sm_discrete_gains
+---
+    \kT = \frac{1 - \beta}{\Phi^2\Ts} \qquad
+    \kI = \frac{(1 - \beta)(1 - \beta\Phi)}{\Phi^2\Ts^2} \qquad
+    k_1 = \frac{1 - \beta}{\Ts}\left(1 + \frac{1 - \beta}{\Phi} + \frac{1}{\Phi^2}\right) \qquad
+    k_2 = (1 - \beta)(1 + \Phi)
+```
+
+where $\beta = \e^{-\alphac\Ts}$, results in the closed-loop dynamics
+
+```{math}
+---
+label: sm_discrete_closed_loop
+---
+    \psis(k) = \frac{1 - \beta}{z(z - \beta)}\psisref(k)
+```
+
+where $z$ is the forward-shift operator. This design is implemented in the {class}`motulator.drive.control.sm.DiscreteCurrentController` class, which is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the controller compensates for the delays itself, the PWM is configured as `PWM(k_comp=0, average=False)`: the voltage reference is not rotated, and the realized voltage $\us(k)$ of the ongoing sampling period is fed back to the observer and to the anti-windup of the controller. Since the realized voltage becomes available one sampling period after the voltage reference is computed, the implementation uses the previous voltage reference in place of $\usreflim(k-1)$ in {eq}`sm_discrete_cc`, which is exact in the linear modulation range, and applies the anti-windup with a delay of one sampling period.
