@@ -65,6 +65,12 @@ class Trainer:
         self.k = k
         self.i_low = i_low
         self.weight_low = weight_low
+        # Mean weight over the whole training set, which normalizes the loss so that
+        # each batch gives an unbiased estimate of the weighted loss of the whole set
+        self.w_mean = 1.0
+        if weight_low != 1.0:
+            w = self._point_weights(dataset.i_d, dataset.i_q)
+            self.w_mean = float(w.mean())
         self.optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
 
     def train_epoch(self) -> float:
@@ -87,14 +93,17 @@ class Trainer:
             return self._compute_loss_no_harmonics(batch)
         return self._compute_loss_with_harmonics(batch)
 
+    def _point_weights(self, i_d: Tensor, i_q: Tensor) -> Tensor:
+        """Return the loss weights of the data points with the given currents."""
+        is_low = i_d**2 + i_q**2 < self.i_low**2
+        return torch.where(is_low, self.weight_low, 1.0)
+
     def _weights(self, batch: tuple[Tensor, ...]) -> Tensor | None:
-        """Return the loss weights of the batch, or None if unweighted."""
+        """Return the normalized loss weights of the batch, or None if unweighted."""
         if self.weight_low == 1.0:
             return None
         # The current of the data point is used in both modes
-        i_d, i_q = batch[2], batch[3]
-        is_low = i_d**2 + i_q**2 < self.i_low**2
-        return torch.where(is_low, self.weight_low, 1.0)
+        return self._point_weights(batch[2], batch[3]) / self.w_mean
 
     def _compute_loss_no_harmonics(self, batch: tuple[Tensor, ...]) -> Tensor:
         """Compute loss for a batch without spatial harmonics."""
@@ -135,7 +144,7 @@ def _mse_loss(output: Tensor, targets: Tensor, w: Tensor | None) -> Tensor:
     err2 = (output - targets) ** 2
     if err2.ndim > 1:
         err2 = err2.mean(dim=1)
-    return (w * err2).sum() / w.sum()
+    return (w * err2).mean()
 
 
 # %%
@@ -195,8 +204,10 @@ def train_gradnet(  # noqa: PLR0913
         defaults to 1 (unweighted loss). The low-current region is determined by the
         current of the data point for both flux and current maps. A weight above 1
         improves the accuracy at low currents, where a uniform data grid gives only a
-        few points. The weighted loss corresponds to repeating those points `weight_low`
-        times in the dataset, except that the number of steps per epoch is unchanged.
+        few points. The weights are normalized with their mean over the training set,
+        so the loss of each batch is an unbiased estimate of the weighted loss of the
+        whole set, which corresponds to repeating those points `weight_low` times in the
+        dataset, except that the number of steps per epoch is unchanged.
 
     """
     # Set random seed for reproducibility
