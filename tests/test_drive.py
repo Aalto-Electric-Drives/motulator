@@ -155,6 +155,7 @@ def test_speed_control(case: str) -> None:
     ctrl.set_speed_ref(lambda t: (t > 0.05) * w_M_ref)
     mdl.mechanics.set_external_load_torque(lambda t: (t > T_LOAD) * tau_L)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=T_STOP)
+    assert res.success
 
     # Averages over the last 50 ms, which remove the ripple caused by PWM
     end = res.mdl.t > T_STOP - 0.05
@@ -170,6 +171,19 @@ def test_speed_control(case: str) -> None:
     # The speed controller would hide errors in the torque control loop, so check the
     # torque reference too
     assert tau_M_ref == pytest.approx(tau_M, abs=0.05 * 14)
+
+
+@pytest.mark.filterwarnings("ignore::RuntimeWarning")
+def test_numerical_failure_is_flagged() -> None:
+    """A numerical failure stops the simulation and is flagged in the results."""
+    mdl = ipmsm_drive(pwm=False)
+    ctrl = ipmsm_fvc(sensorless=False)
+    ctrl.set_speed_ref(lambda t: 0.0)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.02) * 1e300)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.05)
+
+    assert not res.success
+    assert 0.01 < res.mdl.t[-1] < 0.03
 
 
 def test_observer_based_vhz() -> None:
