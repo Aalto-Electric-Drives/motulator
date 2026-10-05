@@ -164,13 +164,18 @@ class Simulation:
 
             # Loop over the sampling period T_s
             for i, t_step in enumerate(t_steps):
-                if t_step > 0:
+                # Integration time span, skipped if empty
+                t_span = (self.mdl.t0, self.mdl.t0 + t_step)
+                if t_span[1] > t_span[0]:
                     # Set the switching state and get initial values
                     self.mdl.converter.set_gate_signals(q_abc[i], b_abc[i])
                     state0 = self.mdl.get_initial_values()
 
-                    # Set the integration time span
-                    t_span = (self.mdl.t0, self.mdl.t0 + t_step)
+                    # Explicit Runge-Kutta methods try the whole interval as the first
+                    # step, which skips the estimation of the initial step size
+                    first_step = None
+                    if self.cfg.method in ("RK23", "RK45", "DOP853"):
+                        first_step = min(t_span[1] - t_span[0], self.cfg.max_step)
 
                     # Create array of evaluation times if N_eval is given, including
                     # the end point for the final state
@@ -181,7 +186,12 @@ class Simulation:
 
                     # Integrate over t_span
                     sol = solve_ivp(
-                        self.mdl.rhs, t_span, state0, t_eval=t_eval, **self.cfg.solver
+                        self.mdl.rhs,
+                        t_span,
+                        state0,
+                        t_eval=t_eval,
+                        first_step=first_step,
+                        **self.cfg.solver,
                     )
                     if not sol.success:
                         raise FloatingPointError(sol.message)

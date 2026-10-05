@@ -219,12 +219,11 @@ class GradNet(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # Add linear term and bias
-        mu = torch.cat([torch.exp(self.mu_log), x.new_zeros(self.non_mu_dim)], dim=0)
-        z = mu.view(1, -1) * x + self.bias
+        mu = F.pad(torch.exp(self.mu_log), (0, self.non_mu_dim))
+        z = mu * x + self.bias
         # Add modules
-        for i in range(self.num_modules):
-            out = self.blocks[i](x)
-            z += out
+        for block in self.blocks:
+            z += block(x)
         return z
 
     def jacobian(self, x: torch.Tensor) -> torch.Tensor:
@@ -242,10 +241,10 @@ class GradNet(nn.Module):
             Jacobian matrix (the Hessian of the underlying scalar state function).
 
         """
-        mu = torch.cat([torch.exp(self.mu_log), x.new_zeros(self.non_mu_dim)], dim=0)
+        mu = F.pad(torch.exp(self.mu_log), (0, self.non_mu_dim))
         jac = torch.diag(mu).expand(*x.shape[:-1], -1, -1)
-        for i in range(self.num_modules):
-            jac = jac + cast(GradNetModule, self.blocks[i]).jacobian(x)
+        for block in self.blocks:
+            jac = jac + cast(GradNetModule, block).jacobian(x)
         return jac
 
 
@@ -290,15 +289,6 @@ def load_gradnet(
 
 
 # %%
-def _complex_to_torch_inputs(z: complex | np.ndarray, ndmin: int = 1) -> torch.Tensor:
-    """Convert complex inputs to torch tensor with real and imaginary parts."""
-    z = np.array(z, ndmin=ndmin, dtype=np.complex64)
-    d = torch.from_numpy(np.real(z).astype(np.float32))
-    q = torch.from_numpy(np.imag(z).astype(np.float32))
-    return torch.stack((d, q), dim=-1)
-
-
-# %%
 class CurrentMap:
     """
     Callable wrapper for GradNet current map models.
@@ -317,6 +307,11 @@ class CurrentMap:
         self.in_base = model.psi_base.item()
         self.out_base = model.i_base.item()
 
+    def _inputs(self, x_dq: complex | np.ndarray) -> torch.Tensor:
+        """Per-unit inputs and their conjugates as (d, q) pairs, shape (2, ..., 2)."""
+        x = np.asarray(np.divide(x_dq, self.in_base), dtype=np.complex64)
+        return torch.view_as_real(torch.from_numpy(np.array([x, x.conj()])))
+
     def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """
         Evaluate the stator current at given stator flux linkage.
@@ -332,27 +327,12 @@ class CurrentMap:
             Stator current (A).
 
         """
-        # Create a batch of inputs and their conjugates
-        psi_s_dq = np.array(psi_s_dq, ndmin=1, dtype=np.complex64) / self.in_base
-        inputs_combined = np.concatenate([psi_s_dq, np.conj(psi_s_dq)], axis=0)
-        inputs = _complex_to_torch_inputs(inputs_combined)
-
-        with torch.no_grad():
-            outputs = self.model(inputs)
-
-        # Unpack outputs
-        i_d = outputs[..., 0].cpu().numpy()
-        i_q = outputs[..., 1].cpu().numpy()
-        i_s_dq = i_d + 1j * i_q
+        with torch.inference_mode():
+            y = torch.view_as_complex(self.model(self._inputs(psi_s_dq))).numpy()
 
         # Symmetrize
-        shape = np.shape(psi_s_dq)
-        n = shape[0] if shape else 1
-        i_s_dq = 0.5 * (i_s_dq[:n] + np.conj(i_s_dq[n:]))
-        # i_s_dq = i_s_dq[: psi_s_dq.shape[0]]  # No symmetrization
-        i_s_dq *= self.out_base
-
-        return i_s_dq[0] if i_s_dq.size == 1 else i_s_dq
+        i_s_dq = 0.5 * self.out_base * (y[0] + y[1].conj())
+        return i_s_dq.item() if i_s_dq.size == 1 else i_s_dq
 
     def jacobian(self, x_dq: complex | np.ndarray) -> np.ndarray:
         """
@@ -373,19 +353,13 @@ class CurrentMap:
             the output of the map, in SI units.
 
         """
-        # Create a batch of inputs and their conjugates
-        x = np.array(x_dq, ndmin=1, dtype=np.complex64).ravel() / self.in_base
-        n = x.size
-        inputs = _complex_to_torch_inputs(np.concatenate([x, np.conj(x)], axis=0))
-
-        with torch.no_grad():
-            jac = self.model.jacobian(inputs).cpu().numpy().astype(float)
+        with torch.inference_mode():
+            jac = self.model.jacobian(self._inputs(x_dq)).numpy().astype(float)
 
         # Symmetrize: the conjugation corresponds to S = diag(1, -1) on both sides
         s = np.array([1.0, -1.0])
-        jac = 0.5 * (jac[:n] + s[:, None] * jac[n:] * s[None, :])
-        jac *= self.out_base / self.in_base
-        return jac.reshape(*np.shape(x_dq), 2, 2)
+        jac = 0.5 * (jac[0] + s[:, None] * jac[1] * s[None, :])
+        return jac * (self.out_base / self.in_base)
 
 
 # %%
@@ -431,9 +405,16 @@ class CurrentMapWithHarmonics:
         self.i_base = model.i_base.item()
         self.psi_base = model.psi_base.item()
         self.tau_base = 1.5 * self.psi_base * self.i_base
+        self.in_base, self.out_base = self.psi_base, self.i_base
         self.model = model
         # Harmonic order
         self.k = k
+
+    def _torque(
+        self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
+    ) -> np.ndarray:
+        """Torque (p.u.) from the flux linkage x, current y, and the magnetic energy."""
+        return np.imag(y * x.conj()) - dW_dtheta
 
     def __call__(
         self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
@@ -454,57 +435,35 @@ class CurrentMapWithHarmonics:
             Stator current (A) and electromagnetic torque (Nm) per pole pair.
 
         """
-        # Create a batch of inputs and their conjugates
-        k = self.k
-        psi_s_dq, exp_j_theta_m = np.broadcast_arrays(psi_s_dq, exp_j_theta_m)
-        psi_s_dq = np.array(psi_s_dq, ndmin=1, dtype=np.complex64) / self.psi_base
-        exp_j_k_theta = np.array(exp_j_theta_m, ndmin=1, dtype=np.complex64) ** k
-        psi_s_dq_combined = np.concatenate([psi_s_dq, np.conj(psi_s_dq)], axis=0)
-        exp_j_k_theta_combined = np.concatenate(
-            [exp_j_k_theta, np.conj(exp_j_k_theta)], axis=0
+        # Per-unit input and the rotor-position input exp(j*k*theta_m) as (d, q, cos,
+        # sin), together with their conjugates
+        x, exp_j_k_theta = np.broadcast_arrays(
+            np.asarray(np.divide(psi_s_dq, self.in_base), dtype=np.complex64),
+            np.asarray(np.power(exp_j_theta_m, self.k), dtype=np.complex64),
         )
-        psi_inputs = _complex_to_torch_inputs(psi_s_dq_combined)
-        cos_k_theta = torch.from_numpy(
-            np.real(exp_j_k_theta_combined).astype(np.float32)
-        )
-        sin_k_theta = torch.from_numpy(
-            np.imag(exp_j_k_theta_combined).astype(np.float32)
-        )
-        inputs = torch.cat(
-            (psi_inputs, cos_k_theta.unsqueeze(-1), sin_k_theta.unsqueeze(-1)), dim=-1
-        )
+        z = np.stack([x, exp_j_k_theta], axis=-1)
+        inputs = torch.view_as_real(torch.from_numpy(np.array([z, z.conj()])))
 
-        with torch.no_grad():
-            outputs = self.model(inputs)
+        with torch.inference_mode():
+            outputs = self.model(inputs.flatten(-2)).unflatten(-1, (2, 2))
+            outputs = torch.view_as_complex(outputs).numpy()
 
-        # Unpack outputs
-        i_d = outputs[..., 0].cpu().numpy()
-        i_q = outputs[..., 1].cpu().numpy()
-        i_s_dq = i_d + 1j * i_q
-        dW_dcos = outputs[..., 2].cpu().numpy()
-        dW_dsin = outputs[..., 3].cpu().numpy()
-
-        # Symmetrize
-        shape = np.shape(psi_s_dq)
-        n = shape[0] if shape else 1
-        i_s_dq = 0.5 * (i_s_dq[:n] + np.conj(i_s_dq[n:]))
-        dW_dcos = 0.5 * (dW_dcos[:n] + dW_dcos[n:])
-        dW_dsin = 0.5 * (dW_dsin[:n] - dW_dsin[n:])
+        # Symmetrize the output and dW/dcos + j*dW/dsin of the state function W
+        outputs = 0.5 * (outputs[0] + outputs[1].conj())
+        y, dW = outputs[..., 0], outputs[..., 1]
 
         # Torque in per-unit
-        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
-        tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) - dW_dtheta
+        dW_dtheta = self.k * (exp_j_k_theta.conj() * dW).imag
+        tau_m = self._torque(x, y, dW_dtheta)
+
         # Scale back to physical units
-        i_s_dq *= self.i_base
-        tau_m *= self.tau_base
-        return (
-            i_s_dq[0] if i_s_dq.size == 1 else i_s_dq,
-            tau_m[0] if tau_m.size == 1 else tau_m,
-        )
+        y = self.out_base * y
+        tau_m = self.tau_base * tau_m
+        return (y.item(), tau_m.item()) if y.size == 1 else (y, tau_m)
 
 
 # %%
-class FluxMapWithHarmonics:
+class FluxMapWithHarmonics(CurrentMapWithHarmonics):
     """
     Callable wrapper for GradNet flux maps with spatial harmonics.
 
@@ -518,12 +477,14 @@ class FluxMapWithHarmonics:
     """
 
     def __init__(self, model: GradNet, k: int = 6) -> None:
-        self.i_base = model.i_base.item()
-        self.psi_base = model.psi_base.item()
-        self.tau_base = 1.5 * self.psi_base * self.i_base
-        self.model = model
-        # Harmonic order
-        self.k = k
+        super().__init__(model, k)
+        self.in_base, self.out_base = self.i_base, self.psi_base
+
+    def _torque(
+        self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
+    ) -> np.ndarray:
+        """Torque (p.u.) from the current x, flux linkage y, and the co-energy."""
+        return np.imag(x * y.conj()) + dW_dtheta
 
     def __call__(
         self, i_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
@@ -544,49 +505,4 @@ class FluxMapWithHarmonics:
             Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.
 
         """
-        # Create a batch of inputs and their conjugates
-        k = self.k
-        i_s_dq, exp_j_theta_m = np.broadcast_arrays(i_s_dq, exp_j_theta_m)
-        i_s_dq = np.array(i_s_dq, ndmin=1, dtype=np.complex64) / self.i_base
-        exp_j_k_theta = np.array(exp_j_theta_m, ndmin=1, dtype=np.complex64) ** k
-        i_s_dq_combined = np.concatenate([i_s_dq, np.conj(i_s_dq)], axis=0)
-        exp_j_k_theta_combined = np.concatenate(
-            [exp_j_k_theta, np.conj(exp_j_k_theta)], axis=0
-        )
-        i_inputs = _complex_to_torch_inputs(i_s_dq_combined)
-        cos_k_theta = torch.from_numpy(
-            np.real(exp_j_k_theta_combined).astype(np.float32)
-        )
-        sin_k_theta = torch.from_numpy(
-            np.imag(exp_j_k_theta_combined).astype(np.float32)
-        )
-        inputs = torch.cat(
-            (i_inputs, cos_k_theta.unsqueeze(-1), sin_k_theta.unsqueeze(-1)), dim=-1
-        )
-
-        with torch.no_grad():
-            outputs = self.model(inputs)
-
-        # Unpack outputs
-        psi_d = outputs[..., 0].cpu().numpy()
-        psi_q = outputs[..., 1].cpu().numpy()
-        psi_s_dq = psi_d + 1j * psi_q
-        dW_dcos = outputs[..., 2].cpu().numpy()
-        dW_dsin = outputs[..., 3].cpu().numpy()
-
-        # Symmetrize
-        n = i_s_dq.shape[0]
-        psi_s_dq = 0.5 * (psi_s_dq[:n] + np.conj(psi_s_dq[n:]))
-        dW_dcos = 0.5 * (dW_dcos[:n] + dW_dcos[n:])
-        dW_dsin = 0.5 * (dW_dsin[:n] - dW_dsin[n:])
-
-        # Torque in per-unit
-        dW_dtheta = k * (exp_j_k_theta.real * dW_dsin - exp_j_k_theta.imag * dW_dcos)
-        tau_m = np.imag(i_s_dq * np.conj(psi_s_dq)) + dW_dtheta
-        # Scale back to physical units
-        psi_s_dq *= self.psi_base
-        tau_m *= self.tau_base
-        return (
-            psi_s_dq[0] if psi_s_dq.size == 1 else psi_s_dq,
-            tau_m[0] if tau_m.size == 1 else tau_m,
-        )
+        return super().__call__(i_s_dq, exp_j_theta_m)
