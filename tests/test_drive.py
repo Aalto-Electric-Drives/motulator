@@ -319,3 +319,28 @@ def test_discrete_current_control_dead_time() -> None:
     end = res.ctrl.t > 0.15
     err = np.mean(res.ctrl.fbk.i_s[end] - res.ctrl.ref.i_s[end])
     assert abs(err) == pytest.approx(0, abs=0.05)  # Below 1 % of the nominal current
+
+
+@pytest.mark.parametrize("psi_f", [0.0, 0.05, 0.5])
+def test_pm_flux_of_single_precision_map(psi_f: float) -> None:
+    """The PM-flux linkage is found also if the map is evaluated in single precision."""
+
+    def i_s_dq_fcn(psi_s_dq: complex | np.ndarray) -> complex:
+        psi = np.complex64(psi_s_dq)
+        return complex((psi.real - np.float32(psi_f)) / 0.02 + 1j * psi.imag / 0.05)
+
+    par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.5, i_s_dq_fcn=i_s_dq_fcn)
+    assert par.psi_f == pytest.approx(psi_f, abs=1e-6)
+
+
+@pytest.mark.parametrize("psi_max", [0.8, np.inf], ids=["nan", "no_root"])
+def test_pm_flux_without_solution(psi_max: float) -> None:
+    """An error is raised if the d-axis current has no zero in the domain of the map."""
+
+    def i_s_dq_fcn(psi_s_dq: complex | np.ndarray) -> complex:
+        psi = complex(psi_s_dq)
+        i_d = (psi.real - 2e3) / 0.02 if psi.real < psi_max else np.nan
+        return complex(i_d, psi.imag / 0.05)
+
+    with pytest.raises(ValueError):
+        model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.5, i_s_dq_fcn=i_s_dq_fcn)
