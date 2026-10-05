@@ -30,6 +30,7 @@ class References(Protocol):
     d_abc: Sequence[float]  # Duty ratios for three-phase PWM
     tau_M: float | None  # Torque reference
     u_s: complex  # Stator voltage reference (controller coordinates)
+    u_s_lim: complex  # Limited stator voltage reference (controller coordinates)
     w_M: float | None  # Mechanical speed
 
 
@@ -172,6 +173,7 @@ class VectorControlSystem(ControlSystem):
             raise ValueError("Either speed or torque reference must be set")
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
         ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
+        ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
         ref.w_M = w_M_ref  # Store the speed reference for later use
         return ref
 
@@ -282,6 +284,7 @@ class VHzControlSystem(ControlSystem):
         """Compute controller output based on feedback."""
         ref = self.vhz_ctrl.compute_output(fbk)
         ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
+        ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
         ref.w_M = self._w_M_ref  # Store the speed reference for later use
         return ref
 

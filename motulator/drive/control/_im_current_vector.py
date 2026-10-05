@@ -8,7 +8,7 @@ from typing import Callable, cast
 
 import numpy as np
 
-from motulator.common.control import ComplexPIController
+from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import clip
 from motulator.drive.control._im_observers import (
@@ -29,6 +29,7 @@ class References:
     T_s: float = 0.0
     tau_M: float = 0.0
     u_s: complex = 0j
+    u_s_lim: complex = 0j
     i_s: complex = 0j
 
 
@@ -59,6 +60,41 @@ class CurrentController(ComplexPIController):
         k_i = alpha_c * alpha_i * par.L_sgm
         k_p = (alpha_c + alpha_i) * par.L_sgm
         super().__init__(k_p, k_i, k_t)
+
+
+# %%
+class DiscreteCurrentController(DiscreteComplexController):
+    """
+    Direct discrete-time current controller for induction machines.
+
+    The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
+    resistive voltage drop and the back-emf are disturbances, which the integral action
+    compensates for. The PWM must be configured with `k_comp=0`.
+
+    Parameters
+    ----------
+    par : InductionMachineInvGammaPars | InductionMachinePars
+        Machine model parameters.
+    alpha_c : float
+        Reference-tracking bandwidth (rad/s).
+    T_s : float
+        Sampling period (s).
+
+    """
+
+    def __init__(
+        self,
+        par: InductionMachineInvGammaPars | InductionMachinePars,
+        alpha_c: float,
+        T_s: float,
+    ) -> None:
+        self.par = par
+        super().__init__(alpha_c, T_s)
+
+    def compute_output(self, i_ref: complex, i: complex) -> complex:
+        # Extends the base class method by mapping the currents to the flux linkages
+        L_sgm = self.par.L_sgm
+        return super().compute_output(L_sgm * i_ref, L_sgm * i)
 
 
 # %%
@@ -207,7 +243,8 @@ class CurrentVectorControllerCfg:
     alpha_c : float, optional
         Current control reference-tracking bandwidth (rad/s), defaults to 2*pi*200.
     alpha_i : float, optional
-        Current control integral-action bandwidth (rad/s), defaults to `alpha_c`.
+        Current control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
+        used if `discrete` is True.
     alpha_o : float, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
         2*pi*30, keeping the default speed observer gain the same.
@@ -226,6 +263,10 @@ class CurrentVectorControllerCfg:
         If True, sensorless control is used, defaults to True.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
+    discrete : bool, optional
+        If True, the direct discrete-time current controller is used instead of the
+        continuous-time design, defaults to False. The PWM must then be configured
+        with `k_comp=0`.
 
     """
 
@@ -241,6 +282,7 @@ class CurrentVectorControllerCfg:
     J: float | None = None
     sensorless: bool = True
     T_s: float = 125e-6
+    discrete: bool = False
 
     def __post_init__(self) -> None:
         """Set alpha_o default based on J value."""
@@ -274,7 +316,11 @@ class CurrentVectorController:
         self.reference_gen = CurrentReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
-        self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
+        self.current_ctrl: CurrentController | DiscreteCurrentController
+        if cfg.discrete:
+            self.current_ctrl = DiscreteCurrentController(par, cfg.alpha_c, cfg.T_s)
+        else:
+            self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
             par, cast(float, cfg.alpha_o), cfg.k_o, cfg.sensorless, cfg.J
         )
@@ -310,13 +356,15 @@ class CurrentVectorController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc)
-        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
+        u_s = ref.u_s_lim if self.cfg.discrete else fbk.u_s
+        self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
         # Transformation to estimated rotor flux coordinates
         T = np.exp(-1j * np.angle(ts.fbk.psi_R))
         ts.ref.u_s = T * ts.ref.u_s
+        ts.ref.u_s_lim = T * ts.ref.u_s_lim
         ts.fbk.i_s = T * ts.fbk.i_s
         ts.ref.i_s = T * ts.ref.i_s
         ts.fbk.psi_s = T * ts.fbk.psi_s

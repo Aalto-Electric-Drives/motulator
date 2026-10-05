@@ -29,6 +29,7 @@ class References:
     tau_M: float = 0.0
     psi_s: float = 0.0
     u_s: complex = 0j
+    u_s_lim: complex = 0j
     i_s: complex = 0j
 
 
@@ -349,6 +350,7 @@ class FluxVectorController:
         # Transformation to estimated rotor flux coordinates
         T = np.exp(-1j * np.angle(ts.fbk.psi_R))
         ts.ref.u_s = T * ts.ref.u_s
+        ts.ref.u_s_lim = T * ts.ref.u_s_lim
         ts.fbk.i_s = T * ts.fbk.i_s
         ts.ref.i_s = T * ts.ref.i_s
         ts.fbk.psi_s = T * ts.fbk.psi_s
@@ -460,6 +462,7 @@ class ObserverBasedVHzController:
         # Transformation to estimated rotor flux coordinates
         T = np.exp(-1j * np.angle(ts.fbk.psi_R))
         ts.ref.u_s = T * ts.ref.u_s
+        ts.ref.u_s_lim = T * ts.ref.u_s_lim
         ts.fbk.i_s = T * ts.fbk.i_s
         ts.ref.i_s = T * ts.ref.i_s
         ts.fbk.psi_s = T * ts.fbk.psi_s

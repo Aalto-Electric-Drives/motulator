@@ -7,6 +7,7 @@ from motulator.drive.control._sm_current_vector import (
     CurrentController,
     CurrentVectorController,
     CurrentVectorControllerCfg,
+    DiscreteCurrentController,
 )
 from motulator.drive.control._sm_flux_vector import (
     FluxVectorController,
@@ -39,6 +40,7 @@ __all__ = [
     "SpeedFluxObserver",
     "CurrentController",
     "CurrentVectorController",
+    "DiscreteCurrentController",
     "FluxVectorController",
     "FluxVectorControllerCfg",
     "ObserverBasedVHzController",

@@ -187,3 +187,50 @@ label: sm_closed_loop
 where $\omegamo$ is the operating-point rotor angular speed. Assuming linear magnetics, the above dynamics are valid for the current as well, i.e., $\Delta\is(s)/\Delta \isref(s) = \Delta\psis(s)/\Delta \psisref(s)$.
 
 This control design corresponds to the implementation in the {class}`motulator.drive.control.sm.CurrentController` class.
+
+### Direct Discrete-Time Design
+
+When the closed-loop bandwidth is high compared with the sampling frequency, the computational delay and the zero-order hold degrade the continuous-time design. The flux-linkage-based current controller can also be designed directly in discrete time {cite}`Awa2019a`. Assume $\Rs = 0$ and the stator voltage constant in stationary coordinates over the sampling period $\Ts$. The hold-equivalent model of {eq}`sm_model` in rotor coordinates, including the computational delay of one sampling period, is
+
+```{math}
+---
+label: sm_discrete_model
+---
+    \psis(k+1) &= \Phi\left[\psis(k) + \Ts\us(k)\right] \\
+    \us(k+1) &= \Phi\usreflim(k)
+```
+
+where $\Phi = \e^{-\jj\omegam\Ts}$ is the rotation of the coordinates over the sampling period. The control law is
+
+```{math}
+---
+label: sm_discrete_cc
+---
+    \usref(k) &= \kT\hatpsisfcn(\isref) - k_1\hatpsisfcn(\is) - k_2\usreflim(k-1) + \uI(k) \\
+    \uI(k+1) &= \uI(k) + \Ts\kI\left[\hatpsisfcn(\isref) - \hatpsisfcn(\is)\right] - \frac{\Ts\kI}{\kT}\left[\usref(k) - \usreflim(k)\right]
+```
+
+where the term with $k_2$ compensates for the computational delay and the last term is the anti-windup. The complex-vector design
+
+```{math}
+---
+label: sm_discrete_gains
+---
+    \kT = \frac{1 - \beta}{\Phi^2\Ts} \qquad
+    \kI = \frac{(1 - \beta)(1 - \beta\Phi)}{\Phi^2\Ts^2} \qquad
+    k_1 = \frac{1 - \beta}{\Ts}\left(1 + \frac{1 - \beta}{\Phi} + \frac{1}{\Phi^2}\right) \qquad
+    k_2 = (1 - \beta)(1 + \Phi)
+```
+
+where $\beta = \e^{-\alphac\Ts}$, results in the closed-loop dynamics
+
+```{math}
+---
+label: sm_discrete_closed_loop
+---
+    \Delta\psis(k) = \frac{1 - \beta}{z(z - \beta)}\Delta\psisref(k)
+```
+
+where $z$ is the forward-shift operator. A constant rotor speed, an accurate flux linkage map, and no voltage limitation are assumed.
+
+This design is implemented in the {class}`motulator.drive.control.sm.DiscreteCurrentController` class, which is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the controller compensates for the delays itself, the PWM must be configured as `PWM(k_comp=0)`. The same design is available for induction machines in the {class}`motulator.drive.control.im.DiscreteCurrentController` class, where the leakage flux linkage $\hatLsgm\is$ replaces the flux linkage map. See the examples {doc}`/drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete` and {doc}`/drive_examples/current_vector/plot_2kw_im_cvc_discrete`.

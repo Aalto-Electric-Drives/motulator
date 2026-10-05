@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from math import inf, pi
 from typing import Callable, cast
 
-from motulator.common.control import ComplexPIController
+from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
@@ -31,6 +31,7 @@ class References:
     psi_s: float = 0.0
     i_s: complex = 0j
     u_s: complex = 0j
+    u_s_lim: complex = 0j
 
 
 # %%
@@ -81,6 +82,42 @@ class CurrentController(ComplexPIController):
 
 
 # %%
+class DiscreteCurrentController(DiscreteComplexController):
+    """
+    Direct discrete-time current controller for synchronous machines.
+
+    This implements the flux-linkage-based current controller designed directly in
+    discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
+    the flux linkages. The PWM must be configured with `k_comp=0`.
+
+    Parameters
+    ----------
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+        Machine model parameters.
+    alpha_c : float
+        Reference-tracking bandwidth (rad/s).
+    T_s : float
+        Sampling period (s).
+
+    """
+
+    def __init__(
+        self,
+        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        alpha_c: float,
+        T_s: float,
+    ) -> None:
+        self.par = par
+        super().__init__(alpha_c, T_s)
+
+    def compute_output(self, i_ref: complex, i: complex) -> complex:
+        # Extends the base class method by mapping the currents to the flux linkages
+        psi_ref = complex(self.par.psi_s_dq(i_ref)) - self.par.psi_f
+        psi = complex(self.par.psi_s_dq(i)) - self.par.psi_f
+        return super().compute_output(psi_ref, psi)
+
+
+# %%
 @dataclass
 class CurrentVectorControllerCfg:
     """
@@ -93,7 +130,8 @@ class CurrentVectorControllerCfg:
     alpha_c : float, optional
         Current-control bandwidth (rad/s), defaults to 2*pi*200.
     alpha_i : float, optional
-        Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`.
+        Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
+        used if `discrete` is True.
     alpha_o : float, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
         2*pi*50/3, keeping the default speed observer gain the same.
@@ -120,6 +158,10 @@ class CurrentVectorControllerCfg:
         If True, the online reference generation is used, defaults to False.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
+    discrete : bool, optional
+        If True, the direct discrete-time current controller is used instead of the
+        continuous-time design, defaults to False. The PWM must then be configured
+        with `k_comp=0`.
 
     """
 
@@ -138,6 +180,7 @@ class CurrentVectorControllerCfg:
     sensorless: bool = True
     online_ref: bool = False
     T_s: float = 125e-6
+    discrete: bool = False
 
     def __post_init__(self) -> None:
         """Set alpha_o default based on J value."""
@@ -178,7 +221,11 @@ class CurrentVectorController:
             cfg.k_mtpv,
             cfg.alpha_ref,
         )
-        self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
+        self.current_ctrl: CurrentController | DiscreteCurrentController
+        if cfg.discrete:
+            self.current_ctrl = DiscreteCurrentController(par, cfg.alpha_c, cfg.T_s)
+        else:
+            self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
             par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
         )
@@ -215,7 +262,8 @@ class CurrentVectorController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
+        u_s = ref.u_s_lim if self.cfg.discrete else fbk.u_s
+        self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
         self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:

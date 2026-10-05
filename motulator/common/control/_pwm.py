@@ -62,12 +62,6 @@ class PWM:
         Prediction factor of the currents for the feedforward compensation, defaults to
         1.5, which corresponds to the middle of the sampling period in which the duty
         ratios are applied after the computational delay of one sampling period.
-    average : bool, optional
-        If True (default), the realized voltage is the average voltage of the previous
-        and the ongoing sampling periods, which represents the voltage at the sampling
-        instant, as needed in continuous-time designs. If False, it is the voltage of
-        the ongoing sampling period, as needed in the hold-equivalent models of direct
-        discrete-time designs, typically together with `k_comp = 0`.
 
     References
     ----------
@@ -89,15 +83,14 @@ class PWM:
         d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
         feedforward: bool = True,
         k_pred: float = 1.5,
-        average: bool = True,
     ) -> None:
         self.k_comp = k_comp
         self.k_pred = k_pred
-        self.average = average
         self.overmodulation = overmodulation
         self.d_err = d_err
         self.feedforward = feedforward
         self.realized_voltage = u_c0_ab
+        self.limited_voltage = u_c0_ab
         self._old_u_c_ab = u_c0_ab
         self._i_c_ab = 0j
         self._d_abc = np.zeros((2, 3))
@@ -224,8 +217,9 @@ class PWM:
         if self.overmodulation == "six_step":
             u_c_ref_ab = self.six_step_overmodulation(u_c_ref_ab, u_dc)
 
-        # Duty ratios
+        # Duty ratios and the limited voltage reference, excluding the compensation
         d_abc = self.duty_ratios(u_c_ref_ab, u_dc)
+        self.limited_voltage = abc2complex(d_abc) * u_dc
 
         # Compensate for the duty-ratio error using the predicted currents
         if self.d_err is not None and self.feedforward:
@@ -257,21 +251,17 @@ class PWM:
         Returns
         -------
         complex
-            Realized converter voltage (V) in stationary coordinates, see `average`. If
-            `d_err` is given, the voltage is corrected for it using the measured
-            currents.
+            Realized converter voltage (V) in stationary coordinates, i.e., the average
+            voltage of the previous and the ongoing sampling periods. If `d_err` is
+            given, the voltage is corrected for it using the measured currents.
 
         """
         self._i_c_ab = i_c_ab
-        if self.average:
-            u_c_ab, d_abc = self.realized_voltage, self._d_abc
-        else:
-            u_c_ab, d_abc = self._old_u_c_ab, self._d_abc[1:]
         if self.d_err is None:
-            return u_c_ab
+            return self.realized_voltage
         i_abc = complex2abc(i_c_ab)
-        d_err = sum(self.d_err(i_abc, d) for d in d_abc) / len(d_abc)
-        return u_c_ab - u_dc * abc2complex(d_err)
+        d_err = 0.5 * sum(self.d_err(i_abc, d) for d in self._d_abc)
+        return self.realized_voltage - u_dc * abc2complex(d_err)
 
     def update(self, u_c_ab: complex, d_abc: list[float]) -> None:
         """Update the realized voltage."""
