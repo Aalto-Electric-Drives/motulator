@@ -91,6 +91,27 @@ def test_realized_voltage(
         assert expected == pytest.approx(u_refs[0])
 
 
+@pytest.mark.parametrize("average", [True, False], ids=["average", "ongoing"])
+def test_realized_voltage_follows_dc_bus(average: bool) -> None:
+    """The realized voltage uses the measured DC-bus voltage, also if it has changed
+    after the duty ratios were computed."""
+    T_s, i_c_ab = 1e-4, 4 + 0j
+    pwm = PWM()
+    converter = VoltageSourceConverter(600)
+    converter.inp.i_c_ab = i_c_ab
+    realized = []
+    for u_ref in (100, 50 + 80j):
+        pwm.get_realized_voltage(i_c_ab, 300)
+        d_abc = pwm(T_s, u_ref, 300, w=0)
+        _, q_abc, b_abc = ZOH()(T_s, d_abc)
+        converter.set_gate_signals(q_abc[0], b_abc[0])
+        realized.append(600 * converter.inp.q_c_ab)
+    expected = np.mean(realized) if average else realized[-1]
+    u_c_ab = pwm.get_realized_voltage(i_c_ab, 600, average=average)
+    assert u_c_ab == pytest.approx(expected)
+    assert realized[-1] == pytest.approx(2 * (50 + 80j))
+
+
 @pytest.mark.parametrize("k_comp", [0, 1.5])
 def test_feedforward_current_prediction(k_comp: float) -> None:
     """The currents of the feedforward are predicted independently of k_comp."""
