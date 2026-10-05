@@ -1,8 +1,9 @@
 """Three-phase voltage source model."""
 
+from collections.abc import Callable
 from dataclasses import InitVar, dataclass, field
 from math import pi, sqrt
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 

@@ -1,8 +1,9 @@
 """Classes and functions for training GradNet magnetic models."""
 
 import random
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Literal, cast
+from typing import Literal, cast
 
 import numpy as np
 import torch

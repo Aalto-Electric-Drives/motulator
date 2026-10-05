@@ -7,8 +7,9 @@ strategies.
 """
 
 from cmath import exp, phase
+from collections.abc import Callable
 from math import acos, floor, pi, sqrt
-from typing import Callable, Literal
+from typing import Literal
 
 import numpy as np
 

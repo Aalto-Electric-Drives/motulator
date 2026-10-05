@@ -3,9 +3,10 @@
 # ruff: noqa: PLR0912, PLR0915, E501
 # pylint: disable=too-many-branches,too-many-statements
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, Literal
+from typing import Any, Literal
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -429,7 +430,7 @@ class PlotOptions:
     surface_cmap: str = "viridis"
     latex: bool = False
     save_path: str | Path | None = None
-    savefig_kwargs: Dict[str, Any] = field(default_factory=dict)
+    savefig_kwargs: dict[str, Any] = field(default_factory=dict)
     loci_levels_source: Literal["ticks", "val", "trn"] = "ticks"
 
 

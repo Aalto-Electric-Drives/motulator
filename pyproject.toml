@@ -67,9 +67,10 @@ line-length = 88
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "B", "I", "PL"]
+select = ["E", "F", "B", "I", "PL", "UP"]
 ignore = ["PLR2004"]  # Ignore magic value warnings
 pylint = {max-args = 14}
+flake8-bugbear = {extend-immutable-calls = ["math.sqrt"]}
 
 [tool.ruff.format]
 quote-style = "double"
