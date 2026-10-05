@@ -13,7 +13,7 @@ from motulator.grid.model._ac_source import (
 
 
 # %%
-class GridConverterSystem(Model):
+class GridConverterSystem(Model[VoltageSourceConverter | CapacitiveDCBusConverter]):
     """
     Continuous-time model for grid-converter systems.
 
