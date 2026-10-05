@@ -95,9 +95,17 @@ def simulate(discrete: bool):
         control.CurrentVectorController(est_par, cfg), pwm=pwm
     )
     ctrl.set_torque_ref(
-        lambda t: nom.tau * (0.2 * (t > 0.12) + 0.1 * (t > 0.17) - 0.5 * (t > 0.22))
+        lambda t: (
+            nom.tau
+            * (
+                0.2 * (t > 0.05)
+                + 0.1 * (t > 0.12)
+                - 0.1 * (t > 0.13)
+                - 0.4 * (t > 0.14)
+            )
+        )
     )
-    return model.Simulation(mdl, ctrl).simulate(t_stop=0.27)
+    return model.Simulation(mdl, ctrl).simulate(t_stop=0.15)
 
 
 res_cont, res_disc = simulate(discrete=False), simulate(discrete=True)
@@ -116,7 +124,7 @@ ax2.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
 ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
 ax2.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
 ax2.set_xlabel("Time (s)")
-ax2.set_xlim(0.11, 0.27)
+ax2.set_xlim(0.115, 0.15)
 ax2.legend(loc="lower left")
 ax1.grid(True)
 ax2.grid(True)
