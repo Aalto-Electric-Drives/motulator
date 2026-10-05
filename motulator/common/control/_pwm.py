@@ -22,8 +22,8 @@ class PWM:
     Duty ratios and realized voltage for three-phase space-vector PWM.
 
     This computes the duty ratios corresponding to standard space-vector PWM and
-    overmodulation [#Hav1999]_. The realized voltage is computed based on the measured
-    DC-bus voltage and the duty ratios. The digital delay effects are taken into account
+    overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios
+    and the measured DC-bus voltage. The digital delay effects are taken into account
     in the realized voltage [#Bae2003]_.
 
     Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
@@ -43,9 +43,6 @@ class PWM:
         Compensation factor for the angular delay effect on the voltage reference,
         defaults to 1.5. Use 0 if the controller compensates for the delays itself,
         e.g., in direct discrete-time designs.
-    u_c0_ab : float, optional
-        Initial voltage (V) in stationary coordinates. This is used to compute the
-        realized voltage, defaults to 0.
     overmodulation : Literal["MPE", "MME", "six_step"], optional
         Overmodulation method, defaults to "MPE". Valid options are:
         - "MPE": minimum phase error
@@ -79,7 +76,6 @@ class PWM:
     def __init__(
         self,
         k_comp: float = 1.5,
-        u_c0_ab: complex = 0j,
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
         d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
         feedforward: bool = True,
@@ -90,11 +86,12 @@ class PWM:
         self.overmodulation = overmodulation
         self.d_err = d_err
         self.feedforward = feedforward
-        self.realized_voltage = u_c0_ab
-        self.limited_voltage = u_c0_ab
-        self._old_u_c_ab = u_c0_ab
+        self.limited_voltage = 0j
         self._i_c_ab = 0j
-        self._d_abc = np.zeros((2, 3))
+        # Duty ratios and voltages per DC-bus voltage of the previous and the ongoing
+        # sampling periods
+        self._d_abc = [np.zeros(3), np.zeros(3)]
+        self._q_ab = [0j, 0j]
 
     @staticmethod
     def six_step_overmodulation(u_c_ref_ab: complex, u_dc: float) -> complex:
@@ -241,8 +238,9 @@ class PWM:
 
         This method is to be called at the sampling instant before the next duty ratios
         are computed, and a computational delay of one sampling period is assumed. The
-        measured currents are also stored for the feedforward compensation of the next
-        duty ratios.
+        voltage is computed from the duty ratios of the previous and the ongoing
+        sampling periods and the measured DC-bus voltage. The measured currents are also
+        stored for the feedforward compensation of the next duty ratios.
 
         Parameters
         ----------
@@ -263,26 +261,24 @@ class PWM:
 
         """
         self._i_c_ab = i_c_ab
-        u_c_ab = self.realized_voltage if average else self._old_u_c_ab
-        if self.d_err is None:
-            return u_c_ab
-        i_abc = complex2abc(i_c_ab)
-        if average:
-            d_err = 0.5 * sum(self.d_err(i_abc, d) for d in self._d_abc)
-        else:
-            d_err = self.d_err(i_abc, self._d_abc[1])
-        return u_c_ab - u_dc * abc2complex(d_err)
+        k = 0 if average else 1
+        q_ab = self._q_ab[k:]
+        if self.d_err is not None:
+            i_abc = complex2abc(i_c_ab)
+            q_ab = [
+                q - abc2complex(self.d_err(i_abc, d))
+                for q, d in zip(q_ab, self._d_abc[k:], strict=True)
+            ]
+        return u_dc * sum(q_ab) / len(q_ab)
 
-    def update(self, u_c_ab: complex, d_abc: list[float]) -> None:
-        """Update the realized voltage."""
-        self.realized_voltage = 0.5 * (self._old_u_c_ab + u_c_ab)
-        self._old_u_c_ab = u_c_ab
-        self._d_abc[0] = self._d_abc[1]
-        self._d_abc[1] = d_abc
+    def update(self, d_abc: list[float]) -> None:
+        """Store the duty ratios of the next sampling period."""
+        self._d_abc = [self._d_abc[1], np.asarray(d_abc)]
+        self._q_ab = [self._q_ab[1], abc2complex(d_abc)]
 
     def __call__(
         self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> list[float]:
-        d_abc, u_c_ab = self.compute_output(T_s, u_c_ref_ab, u_dc, w)
-        self.update(u_c_ab, d_abc)
+        d_abc, _ = self.compute_output(T_s, u_c_ref_ab, u_dc, w)
+        self.update(d_abc)
         return d_abc
