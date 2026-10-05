@@ -67,11 +67,11 @@ est_par = control.SaturatedSynchronousMachinePars(
 )
 
 # %%
-# Simulate the drive in torque-control mode. A load machine ramps the speed up to 1.5
-# p.u. and keeps it constant, and the PWM is modeled. In the discrete-time design, the
-# controller compensates for the delays itself, so the PWM does not compensate for the
-# angle of the voltage reference, and it gives the realized voltage of the ongoing
-# sampling period instead of the average of two sampling periods.
+# Simulate the drive in torque-control mode. A load machine keeps the speed constant at
+# 1.5 p.u., and the PWM is modeled. In the discrete-time design, the controller
+# compensates for the delays itself, so the PWM does not compensate for the angle of the
+# voltage reference, and it gives the realized voltage of the ongoing sampling period
+# instead of the average of two sampling periods.
 
 
 def simulate(discrete: bool):
@@ -81,7 +81,7 @@ def simulate(discrete: bool):
         model.VoltageSourceConverter(u_dc=540),
         pwm=True,
     )
-    mdl.mechanics.set_external_rotor_speed(lambda t: 1.5 * base.w_M * min(t / 0.1, 1))
+    mdl.mechanics.set_external_rotor_speed(lambda t: 1.5 * base.w_M)
     cfg = control.CurrentVectorControllerCfg(
         i_s_max=2 * base.i,
         alpha_c=2 * pi * 500,
@@ -91,21 +91,21 @@ def simulate(discrete: bool):
         discrete=discrete,
     )
     pwm = control.PWM(k_comp=0, average=False) if discrete else None
-    ctrl = control.VectorControlSystem(
-        control.CurrentVectorController(est_par, cfg), pwm=pwm
-    )
+    vector_ctrl = control.CurrentVectorController(est_par, cfg)
+    vector_ctrl.observer.speed_observer.w_M = 1.5 * base.w_M  # Initial speed estimate
+    ctrl = control.VectorControlSystem(vector_ctrl, pwm=pwm)
     ctrl.set_torque_ref(
         lambda t: (
             nom.tau
             * (
-                0.2 * (t > 0.05)
-                + 0.1 * (t > 0.12)
-                - 0.1 * (t > 0.13)
-                - 0.4 * (t > 0.14)
+                0.2 * (t > 0.02)
+                + 0.1 * (t > 0.05)
+                - 0.1 * (t > 0.06)
+                - 0.4 * (t > 0.07)
             )
         )
     )
-    return model.Simulation(mdl, ctrl).simulate(t_stop=0.17)
+    return model.Simulation(mdl, ctrl).simulate(t_stop=0.1)
 
 
 res_cont, res_disc = simulate(discrete=False), simulate(discrete=True)
@@ -125,10 +125,11 @@ ax2.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
 ax3.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
 ax1.set_ylabel("Speed (p.u.)")
 ax1.set_ylim(1.47, 1.53)
+ax2.set_ylim(-0.5, -0.1)
 ax2.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
 ax3.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
 ax3.set_xlabel("Time (s)")
-ax3.set_xlim(0.115, 0.17)
+ax3.set_xlim(0.045, 0.1)
 ax1.legend(loc="lower left")
 ax3.legend(loc="lower left")
 for ax in (ax1, ax2, ax3):
