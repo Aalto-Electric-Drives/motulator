@@ -200,7 +200,7 @@ label: sm_discrete_model
     \us(k+1) &= \Phi\usreflim(k)
 ```
 
-where $\Phi = \e^{-\jj\omegam\Ts}$ is the rotation of the coordinates over the sampling period and $\us(k)$ is the realized voltage of the ongoing sampling period. The control law is
+where $\Phi = \e^{-\jj\omegam\Ts}$ is the rotation of the coordinates over the sampling period. The control law is
 
 ```{math}
 ---
@@ -228,7 +228,9 @@ where $\beta = \e^{-\alphac\Ts}$, results in the closed-loop dynamics
 ---
 label: sm_discrete_closed_loop
 ---
-    \psis(k) = \frac{1 - \beta}{z(z - \beta)}\psisref(k)
+    \Delta\psis(k) = \frac{1 - \beta}{z(z - \beta)}\Delta\psisref(k)
 ```
 
-where $z$ is the forward-shift operator. This design is implemented in the {class}`motulator.drive.control.sm.DiscreteCurrentController` class, which is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the controller compensates for the delays itself, the PWM is configured as `PWM(k_comp=0, average=False)`: the voltage reference is not rotated, and the realized voltage $\us(k)$ of the ongoing sampling period is fed back to the observer and to the controller. Since the limited voltage reference $\usreflim(k) = \Phi^{-1}\us(k+1)$ becomes available at the next sampling instant, the anti-windup correction of the integral state is applied at that instant before the voltage reference is computed, which is equivalent to {eq}`sm_discrete_cc`.
+where $z$ is the forward-shift operator. A constant rotor speed, an accurate flux linkage map, and no voltage limitation are assumed.
+
+This design is implemented in the {class}`motulator.drive.control.sm.DiscreteCurrentController` class, which is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the controller compensates for the delays itself, the PWM must be configured as `PWM(k_comp=0)`. The same design is available for induction machines in the {class}`motulator.drive.control.im.DiscreteCurrentController` class, where the leakage flux linkage $\hatLsgm\is$ replaces the flux linkage map. See the example {doc}`/drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete`.

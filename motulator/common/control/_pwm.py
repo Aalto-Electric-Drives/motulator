@@ -98,6 +98,7 @@ class PWM:
         self.d_err = d_err
         self.feedforward = feedforward
         self.realized_voltage = u_c0_ab
+        self.limited_voltage = u_c0_ab
         self._old_u_c_ab = u_c0_ab
         self._i_c_ab = 0j
         self._d_abc = np.zeros((2, 3))
@@ -224,8 +225,9 @@ class PWM:
         if self.overmodulation == "six_step":
             u_c_ref_ab = self.six_step_overmodulation(u_c_ref_ab, u_dc)
 
-        # Duty ratios
+        # Duty ratios and the limited voltage reference, excluding the compensation
         d_abc = self.duty_ratios(u_c_ref_ab, u_dc)
+        self.limited_voltage = abc2complex(d_abc) * u_dc
 
         # Compensate for the duty-ratio error using the predicted currents
         if self.d_err is not None and self.feedforward:

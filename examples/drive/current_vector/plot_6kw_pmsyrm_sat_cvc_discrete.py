@@ -67,11 +67,9 @@ est_par = control.SaturatedSynchronousMachinePars(
 )
 
 # %%
-# Simulate the drive in torque-control mode. A load machine keeps the speed constant at
-# 1.5 p.u., and the PWM is modeled. In the discrete-time design, the controller
-# compensates for the delays itself, so the PWM does not compensate for the angle of the
-# voltage reference, and it gives the realized voltage of the ongoing sampling period
-# instead of the average of two sampling periods.
+# Simulate the drive in torque-control mode at the constant speed of 1.5 p.u. The
+# discrete-time design compensates for the delays itself, which is taken into account
+# in the PWM configuration.
 
 
 def simulate(discrete: bool):
@@ -90,7 +88,7 @@ def simulate(discrete: bool):
         T_s=200e-6,
         discrete=discrete,
     )
-    pwm = control.PWM(k_comp=0, average=False) if discrete else None
+    pwm = control.PWM(k_comp=0) if discrete else None
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
     vector_ctrl.observer.speed_observer.w_M = 1.5 * base.w_M  # Initial speed estimate
     ctrl = control.VectorControlSystem(vector_ctrl, pwm=pwm)
@@ -116,7 +114,8 @@ res_cont, res_disc = simulate(discrete=False), simulate(discrete=True)
 _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 7), sharex=True)
 for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete")]:
     t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
-    ax1.plot(t, res.ctrl.fbk.w_M / base.w_M, ls, ds="steps-post", label=label)
+    w_M = res.ctrl.fbk.w_M / base.w_M
+    ax1.plot(t, w_M, ls, ds="steps-post", label=f"estimate, {label}")
     ax2.plot(t, i_s.real, ls, ds="steps-post", label=label)
     ax3.plot(t, i_s.imag, ls, ds="steps-post", label=label)
 i_s_ref = res_disc.ctrl.ref.i_s / base.i
@@ -137,9 +136,9 @@ for ax in (ax1, ax2, ax3):
 plt.show()
 
 # %%
-# At this bandwidth, the continuous-time design is sensitive to the model errors and
-# results in poorly damped oscillations, while the discrete-time design is robust. In
-# the largest steps, the voltage is limited.
+# At this bandwidth, the continuous-time design is sensitive to the errors in the flux
+# linkage map, resulting in poorly damped oscillations, while the discrete-time design
+# remains well damped. In the largest steps, the voltage is limited.
 #
 # .. rubric:: References
 #

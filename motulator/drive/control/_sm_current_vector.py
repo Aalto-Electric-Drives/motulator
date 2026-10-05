@@ -1,11 +1,10 @@
 """Current-vector control methods for synchronous machine drives."""
 
-from cmath import exp
 from dataclasses import dataclass
 from math import inf, pi
 from typing import Callable, cast
 
-from motulator.common.control import ComplexPIController
+from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
@@ -32,6 +31,7 @@ class References:
     psi_s: float = 0.0
     i_s: complex = 0j
     u_s: complex = 0j
+    u_s_lim: complex = 0j
 
 
 # %%
@@ -82,25 +82,13 @@ class CurrentController(ComplexPIController):
 
 
 # %%
-class DiscreteCurrentController:
+class DiscreteCurrentController(DiscreteComplexController):
     """
     Direct discrete-time current controller for synchronous machines.
 
     This implements the flux-linkage-based current controller designed directly in
     discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
-    the flux linkages, which takes saliency and magnetic saturation into account. The
-    design is based on the hold-equivalent machine model in the controller coordinates,
-    i.e., the stator voltage is constant in stationary coordinates over the sampling
-    period, and the computational delay of one sampling period is included. The stator
-    resistance is omitted from the model, and the integral action compensates for the
-    resistive voltage drop. The complex-vector design gives the reference-tracking
-    dynamics ``psi(k) = (1 - beta)/(z*(z - beta))*psi_ref(k)``, where ``beta =
-    exp(-alpha_c*T_s)``.
-
-    The voltage reference is applied as such, so the PWM should be configured with
-    `k_comp=0` and `average=False`, the realized voltage then being that of the ongoing
-    sampling period. This voltage, i.e., the limited voltage reference of the previous
-    sampling period, is used in the state feedback and in the anti-windup.
+    the flux linkages. The PWM must be configured with `k_comp=0`.
 
     Parameters
     ----------
@@ -120,76 +108,13 @@ class DiscreteCurrentController:
         T_s: float,
     ) -> None:
         self.par = par
-        self.T_s = T_s
-        self.beta = exp(-alpha_c * T_s).real
-        # States
-        self.u_i: complex = 0j  # Integral state
-        self.u_ref_old: complex = 0j  # Voltage reference of the previous period
-        self.w_c: float = 0.0  # Angular speed of the coordinates
-        # Workspace variables
-        self._e: complex = 0j
-        self._u_i: complex = 0j
-        self._u_ref: complex = 0j
+        super().__init__(alpha_c, T_s)
 
-    def _gains(self, w_c: float) -> tuple[complex, complex, complex, complex]:
-        """Gains of the complex-vector design, see (20) and (22) in [#Awa2019a]_."""
-        T_s, beta = self.T_s, self.beta
-        Phi = exp(-1j * w_c * T_s)  # Rotation of the coordinates over T_s
-        k_t = (1 - beta) / (Phi**2 * T_s)
-        k_i = (1 - beta) * (1 - beta * Phi) / (Phi**2 * T_s**2)
-        k_1 = (1 - beta) * (1 + (1 - beta) / Phi + 1 / Phi**2) / T_s
-        k_2 = (1 - beta) * (1 + Phi)
-        return k_t, k_i, k_1, k_2
-
-    def compute_output(self, i_ref: complex, i: complex, u: complex) -> complex:
-        """
-        Compute the controller output.
-
-        Parameters
-        ----------
-        i_ref : complex
-            Current reference (A).
-        i : complex
-            Current feedback (A).
-        u : complex
-            Realized voltage (V) of the ongoing sampling period, i.e., the limited
-            voltage reference of the previous sampling period rotated to the present
-            coordinates.
-
-        Returns
-        -------
-        complex
-            Voltage reference (V).
-
-        """
-        T_s = self.T_s
-        k_t, k_i, k_1, k_2 = self._gains(self.w_c)
+    def compute_output(self, i_ref: complex, i: complex) -> complex:
+        # Extends the base class method by mapping the currents to the flux linkages
         psi_ref = complex(self.par.psi_s_dq(i_ref)) - self.par.psi_f
         psi = complex(self.par.psi_s_dq(i)) - self.par.psi_f
-        # Limited voltage reference of the previous sampling period in its coordinates
-        u_old = exp(1j * self.w_c * T_s) * u
-        # Anti-windup for the previous sampling period
-        self._u_i = self.u_i - T_s * k_i / k_t * (self.u_ref_old - u_old)
-        self._e = psi_ref - psi
-        self._u_ref = k_t * psi_ref - k_1 * psi - k_2 * u_old + self._u_i
-        return self._u_ref
-
-    def update(self, T_s: float, w_c: float) -> None:
-        """
-        Update the states.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s), which must equal the design value.
-        w_c : float
-            Angular speed of the coordinates (rad/s).
-
-        """
-        _, k_i, _, _ = self._gains(self.w_c)
-        self.u_i = self._u_i + T_s * k_i * self._e
-        self.u_ref_old = self._u_ref
-        self.w_c = w_c
+        return super().compute_output(psi_ref, psi)
 
 
 # %%
@@ -235,8 +160,8 @@ class CurrentVectorControllerCfg:
         Sampling period (s), defaults to 125e-6.
     discrete : bool, optional
         If True, the direct discrete-time current controller is used instead of the
-        continuous-time design, defaults to False. The PWM should then be configured
-        with `k_comp=0` and `average=False`.
+        continuous-time design, defaults to False. The PWM must then be configured
+        with `k_comp=0`.
 
     """
 
@@ -331,19 +256,14 @@ class CurrentVectorController:
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
-        if isinstance(self.current_ctrl, DiscreteCurrentController):
-            ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s, fbk.u_s)
-        else:
-            ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
+        ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        if isinstance(self.current_ctrl, DiscreteCurrentController):
-            self.current_ctrl.update(ref.T_s, fbk.w_c)
-        else:
-            self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
+        u_s = ref.u_s_lim if self.cfg.discrete else fbk.u_s
+        self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
         self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:

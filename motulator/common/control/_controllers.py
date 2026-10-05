@@ -1,5 +1,6 @@
 """Common functions and classes for controls."""
 
+from cmath import exp
 from math import inf
 
 from motulator.common.utils._utils import clip
@@ -172,6 +173,104 @@ class ComplexPIController:
 
         """
         self.u_i += T_s * (self.alpha_i + 1j * w_c) * (u - self.v)
+
+
+# %%
+class DiscreteComplexController:
+    """
+    Direct discrete-time 2DOF complex-vector controller.
+
+    This implements a 2DOF complex-vector controller designed directly in discrete time
+    [#Awa2019]_. The controlled system is an integrator in coordinates rotating at the
+    angular speed `w_c`. Its hold-equivalent model, including the computational delay of
+    one sampling period, is::
+
+        i(k + 1) = Phi*(i(k) + T_s*u(k))
+        u(k + 1) = Phi*u_lim(k)
+
+    where `i` is the feedback signal, `u` is the realized output, `u_lim` is the limited
+    controller output, and ``Phi = exp(-1j*w_c*T_s)``. The design gives the
+    reference-tracking dynamics ``i(k) = (1 - beta)/(z*(z - beta))*i_ref(k)``, where
+    ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances. The
+    controller compensates for the delays itself, so the PWM must be configured with
+    `k_comp=0`.
+
+    Parameters
+    ----------
+    alpha_c : float
+        Reference-tracking bandwidth (rad/s).
+    T_s : float
+        Sampling period (s).
+
+    References
+    ----------
+    .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+       https://doi.org/10.1109/TIA.2019.2919258
+
+    """
+
+    def __init__(self, alpha_c: float, T_s: float) -> None:
+        self.T_s = T_s
+        self.beta = exp(-alpha_c * T_s).real
+        # States
+        self.u_i: complex = 0j  # Integral state
+        self.u_lim: complex = 0j  # Limited output of the previous sampling period
+        self.w_c: float = 0.0  # Angular speed of the coordinates
+        # Workspace variables
+        self._e: complex = 0j
+        self._u: complex = 0j
+
+    def _gains(self, w_c: float) -> tuple[complex, complex, complex, complex]:
+        """Gains of the complex-vector design, see (20) and (22) in [#Awa2019]_."""
+        T_s, beta = self.T_s, self.beta
+        Phi = exp(-1j * w_c * T_s)  # Rotation of the coordinates over T_s
+        k_t = (1 - beta) / (Phi**2 * T_s)
+        k_i = (1 - beta) * (1 - beta * Phi) / (Phi**2 * T_s**2)
+        k_1 = (1 - beta) * (1 + (1 - beta) / Phi + 1 / Phi**2) / T_s
+        k_2 = (1 - beta) * (1 + Phi)
+        return k_t, k_i, k_1, k_2
+
+    def compute_output(self, i_ref: complex, i: complex) -> complex:
+        """
+        Compute the controller output.
+
+        Parameters
+        ----------
+        i_ref : complex
+            Reference signal.
+        i : complex
+            Feedback signal.
+
+        Returns
+        -------
+        u : complex
+            Controller output.
+
+        """
+        k_t, _, k_1, k_2 = self._gains(self.w_c)
+        self._e = i_ref - i
+        self._u = k_t * i_ref - k_1 * i - k_2 * self.u_lim + self.u_i
+        return self._u
+
+    def update(self, T_s: float, u: complex, w_c: float) -> None:
+        """
+        Update the states.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s), which must equal the design value.
+        u : complex
+            Limited controller output.
+        w_c : float
+            Angular speed of the coordinates (rad/s).
+
+        """
+        k_t, k_i, _, _ = self._gains(self.w_c)
+        self.u_i += T_s * k_i * (self._e - (self._u - u) / k_t)
+        self.u_lim = u
+        self.w_c = w_c
 
 
 # %%

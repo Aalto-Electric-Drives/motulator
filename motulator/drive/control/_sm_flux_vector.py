@@ -30,6 +30,7 @@ class References:
     tau_M: float = 0.0
     psi_s: float = 0.0
     u_s: complex = 0j
+    u_s_lim: complex = 0j
     i_s: complex = 0j
 
 
