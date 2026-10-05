@@ -65,18 +65,12 @@ def test_blanking_across_samples() -> None:
 
 @pytest.mark.parametrize("u_refs", [(100, 100), (100, 356.4)], ids=["linear", "limit"])
 @pytest.mark.parametrize("feedforward", [True, False], ids=["ff", "no_ff"])
-@pytest.mark.parametrize("average", [True, False], ids=["average", "ongoing"])
-def test_realized_voltage(
-    u_refs: tuple[float, float], feedforward: bool, average: bool
-) -> None:
+def test_realized_voltage(u_refs: tuple[float, float], feedforward: bool) -> None:
     """The realized voltage of the control system equals that of the system model,
-    also near the duty-ratio limits, where the error depends on the duty ratios. Both
-    the average of the two periods and the voltage of the ongoing period are checked."""
+    also near the duty-ratio limits, where the error depends on the duty ratios."""
     T_s, t_d, u_dc, i_c_ab = 1e-4, 2e-6, 540, 4 + 0j
     pwm = PWM(
-        d_err=lambda i, d: dead_time_error(i, d, t_d, T_s),
-        feedforward=feedforward,
-        average=average,
+        d_err=lambda i, d: dead_time_error(i, d, t_d, T_s), feedforward=feedforward
     )
     converter = VoltageSourceConverter(u_dc, t_d=t_d)
     converter.inp.i_c_ab = i_c_ab
@@ -87,8 +81,7 @@ def test_realized_voltage(
         _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, d_abc)
         converter.set_gate_signals(q_abc[0], b_abc[0])
         realized.append(u_dc * converter.inp.q_c_ab)
-    expected = np.mean(realized) if average else realized[-1]
-    assert pwm.get_realized_voltage(i_c_ab, u_dc) == pytest.approx(expected)
+    assert pwm.get_realized_voltage(i_c_ab, u_dc) == pytest.approx(np.mean(realized))
     if feedforward and u_refs[0] == u_refs[1]:
         assert np.mean(realized) == pytest.approx(u_refs[0])
 
