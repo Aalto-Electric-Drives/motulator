@@ -184,38 +184,28 @@ class GridConverterControlSystem(ControlSystem):
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller outputs based on feedback."""
-        # Determine control mode
-        is_gfm = self.ext_ref.v_c is not None
-        is_gfl = self.ext_ref.q_g is not None
-        is_power_ctrl = self.ext_ref.p_g is not None
-        is_dc_bus_ctrl = self.ext_ref.u_dc is not None
+        ext_ref = self.ext_ref
 
-        if is_gfm and is_power_ctrl:
-            # Grid-forming power control mode
-            v_c_ref = get_value(self.ext_ref.v_c, self.t)
-            p_g_ref = get_value(self.ext_ref.p_g, self.t)
-            ref = self.inner_ctrl.compute_output(p_g_ref, v_c_ref, fbk)
-        elif is_gfm and is_dc_bus_ctrl and self.dc_bus_voltage_ctrl:
-            # Grid-forming DC-bus voltage control mode
-            v_c_ref = get_value(self.ext_ref.v_c, self.t)
-            u_dc_ref = get_value(self.ext_ref.u_dc, self.t)
-            p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
-            ref = self.inner_ctrl.compute_output(p_g_ref, v_c_ref, fbk)
-            ref.u_dc = u_dc_ref
-        elif is_gfl and is_power_ctrl:
-            # Grid-following power control mode
-            q_g_ref = get_value(self.ext_ref.q_g, self.t)
-            p_g_ref = get_value(self.ext_ref.p_g, self.t)
-            ref = self.inner_ctrl.compute_output(p_g_ref, q_g_ref, fbk)
-        elif is_gfl and is_dc_bus_ctrl and self.dc_bus_voltage_ctrl:
-            # Grid-following DC-bus voltage control mode
-            q_g_ref = get_value(self.ext_ref.q_g, self.t)
-            u_dc_ref = get_value(self.ext_ref.u_dc, self.t)
-            p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
-            ref = self.inner_ctrl.compute_output(p_g_ref, q_g_ref, fbk)
-            ref.u_dc = u_dc_ref
+        # Second reference: AC voltage (grid forming) or reactive power (grid following)
+        if ext_ref.v_c is not None:
+            v_c_or_q_g_ref = get_value(ext_ref.v_c, self.t)
+        elif ext_ref.q_g is not None:
+            v_c_or_q_g_ref = get_value(ext_ref.q_g, self.t)
         else:
             raise ValueError("No valid control mode configuration detected")
+
+        # Active power reference: external or from the DC-bus voltage controller
+        u_dc_ref = None
+        if ext_ref.p_g is not None:
+            p_g_ref = get_value(ext_ref.p_g, self.t)
+        elif ext_ref.u_dc is not None and self.dc_bus_voltage_ctrl:
+            u_dc_ref = get_value(ext_ref.u_dc, self.t)
+            p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
+        else:
+            raise ValueError("No valid control mode configuration detected")
+
+        ref = self.inner_ctrl.compute_output(p_g_ref, v_c_or_q_g_ref, fbk)
+        ref.u_dc = u_dc_ref
         u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
         ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
         return ref
