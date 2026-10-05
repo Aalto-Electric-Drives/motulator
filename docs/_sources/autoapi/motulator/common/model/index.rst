@@ -387,6 +387,13 @@ Package Contents
 
       :type: Any
 
+   .. attribute:: success
+
+      False if the simulation stopped before the stop time due to a numerical
+      failure, in which case the results cover the time until the failure.
+
+      :type: bool
+
 
 
 

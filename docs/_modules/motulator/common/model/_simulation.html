@@ -535,11 +535,15 @@
 <span class="sd">        Results from the continuous-time model.</span>
 <span class="sd">    ctrl : Any</span>
 <span class="sd">        Results from the digital control system.</span>
+<span class="sd">    success : bool</span>
+<span class="sd">        False if the simulation stopped before the stop time due to a numerical</span>
+<span class="sd">        failure, in which case the results cover the time until the failure.</span>
 
 <span class="sd">    """</span>
 
     <span class="n">mdl</span><span class="p">:</span> <span class="n">ModelTimeSeries</span>
-    <span class="n">ctrl</span><span class="p">:</span> <span class="n">Any</span></div>
+    <span class="n">ctrl</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">success</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 
 
@@ -592,39 +596,40 @@
 <span class="sd">            points is selected by the solver.</span>
 
 <span class="sd">        """</span>
+        <span class="n">progress_bar</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_progress</span><span class="p">:</span>
+            <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+                <span class="n">total</span><span class="o">=</span><span class="n">t_stop</span><span class="p">,</span>
+                <span class="n">desc</span><span class="o">=</span><span class="s2">"Simulation"</span><span class="p">,</span>
+                <span class="n">unit</span><span class="o">=</span><span class="s2">"s"</span><span class="p">,</span>
+                <span class="n">bar_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{l_bar}{bar}</span><span class="s2">| </span><span class="si">{n:.2f}</span><span class="s2">/</span><span class="si">{total:.2f}</span><span class="s2"> </span><span class="si">{unit}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">update_progress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">progress_bar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="n">t_stop</span><span class="p">)</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># Initialize outputs based on initial states</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
             <span class="c1"># Main simulation loop</span>
-            <span class="n">progress_bar</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_progress</span><span class="p">:</span>
-                <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
-                    <span class="n">total</span><span class="o">=</span><span class="n">t_stop</span><span class="p">,</span>
-                    <span class="n">desc</span><span class="o">=</span><span class="s2">"Simulation"</span><span class="p">,</span>
-                    <span class="n">unit</span><span class="o">=</span><span class="s2">"s"</span><span class="p">,</span>
-                    <span class="n">bar_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{l_bar}{bar}</span><span class="s2">| </span><span class="si">{n:.2f}</span><span class="s2">/</span><span class="si">{total:.2f}</span><span class="s2"> </span><span class="si">{unit}</span><span class="s2">"</span><span class="p">,</span>
-                <span class="p">)</span>
-
-            <span class="k">def</span><span class="w"> </span><span class="nf">update_progress</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">progress_bar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">progress_bar</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="n">t_stop</span><span class="p">)</span>
-                    <span class="n">progress_bar</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
-
             <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation_loop</span><span class="p">(</span><span class="n">t_stop</span><span class="p">,</span> <span class="n">update_progress</span><span class="p">,</span> <span class="n">N_eval</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">progress_bar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">progress_bar</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">t_stop</span>
-                <span class="n">progress_bar</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
-                <span class="n">progress_bar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
         <span class="k">except</span> <span class="ne">FloatingPointError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Simulation stopped at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="n">err</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">update_progress</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">progress_bar</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Simulation stopped at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
         <span class="c1"># Post-process the solution data</span>
         <span class="n">mdl_ts</span> <span class="o">=</span> <span class="n">ModelTimeSeries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="p">)</span>
         <span class="n">ctrl_ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">SimulationResults</span><span class="p">(</span><span class="n">mdl_ts</span><span class="p">,</span> <span class="n">ctrl_ts</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">SimulationResults</span><span class="p">(</span><span class="n">mdl_ts</span><span class="p">,</span> <span class="n">ctrl_ts</span><span class="p">,</span> <span class="n">success</span><span class="o">=</span><span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
     <span class="nd">@np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">invalid</span><span class="o">=</span><span class="s2">"raise"</span><span class="p">)</span>
