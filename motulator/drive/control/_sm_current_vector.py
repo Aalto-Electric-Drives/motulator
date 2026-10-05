@@ -238,17 +238,20 @@ class CurrentVectorController:
     def get_feedback(
         self,
         u_s_ab: complex,
+        u_s_zoh_ab: complex,
         i_s_ab: complex,
         w_M_meas: float | None,
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
         if self.sensorless:
-            return self.observer.compute_output(u_s_ab, i_s_ab)
+            return self.observer.compute_output(u_s_ab, i_s_ab, u_s_zoh_ab=u_s_zoh_ab)
         if theta_M_meas is None:
             raise ValueError("Rotor angle must be provided in sensored mode")
         eps = position_error(self.par.n_p, theta_M_meas, self.observer.theta_m)
-        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
+        return self.observer.compute_output(
+            u_s_ab, i_s_ab, eps, 1.0, u_s_zoh_ab=u_s_zoh_ab
+        )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""

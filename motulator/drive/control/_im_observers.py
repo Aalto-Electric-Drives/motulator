@@ -20,7 +20,8 @@ class ObserverOutputs:
 
     u_dc: float = 0.0  # DC-bus voltage
     i_s: complex = 0j  # Stator current
-    u_s: complex = 0j  # Stator voltage
+    u_s: complex = 0j  # Stator voltage (average of previous and ongoing periods)
+    u_s_zoh: complex = 0j  # Stator voltage (average of the ongoing period)
     psi_s: complex = 0j  # Stator flux estimate
     psi_R: complex = 0j  # Rotor flux estimate
     tau_M: float = 0.0  # Electromagnetic torque estimate
@@ -94,6 +95,8 @@ class FluxObserver:
         w_M: float,
         eps_ext: float = 0.0,
         h: float = 0.0,
+        *,
+        u_s_zoh_ab: complex,
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
@@ -101,7 +104,8 @@ class FluxObserver:
         Parameters
         ----------
         u_s_ab : complex
-            Stator voltage (V) in stator coordinates.
+            Stator voltage (V) in stator coordinates, averaged over the previous and
+            the ongoing sampling periods.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -111,6 +115,9 @@ class FluxObserver:
         h : float, optional
             Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
             based error signal is used exclusively.
+        u_s_zoh_ab : complex
+            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+            period.
 
         Returns
         -------
@@ -127,6 +134,7 @@ class FluxObserver:
         # Current and voltage vectors in estimated rotor coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
         out.u_s = exp(-1j * out.theta_c) * u_s_ab
+        out.u_s_zoh = exp(-1j * out.theta_c) * u_s_zoh_ab
 
         # Mechanical and electrical angular speeds of the rotor
         out.w_M = w_M
@@ -232,7 +240,13 @@ class SpeedFluxObserver:
         self.flux_observer = FluxObserver(par, k_o)
 
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, eps_ext: float = 0.0, h: float = 0.0
+        self,
+        u_s_ab: complex,
+        i_s_ab: complex,
+        eps_ext: float = 0.0,
+        h: float = 0.0,
+        *,
+        u_s_zoh_ab: complex,
     ) -> ObserverOutputs:
         """
         Compute feedback signals with speed estimation.
@@ -240,7 +254,8 @@ class SpeedFluxObserver:
         Parameters
         ----------
         u_s_ab : complex
-            Stator voltage (V) in stator coordinates.
+            Stator voltage (V) in stator coordinates, averaged over the previous and
+            the ongoing sampling periods.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         eps_ext : float, optional
@@ -248,6 +263,9 @@ class SpeedFluxObserver:
         h : float, optional
             Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
             based error signal is used exclusively.
+        u_s_zoh_ab : complex
+            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+            period.
 
         Returns
         -------
@@ -256,7 +274,9 @@ class SpeedFluxObserver:
 
         """
         w_M, tau_L = self.speed_observer.compute_output()
-        out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M, eps_ext, h)
+        out = self.flux_observer.compute_output(
+            u_s_ab, i_s_ab, w_M, eps_ext, h, u_s_zoh_ab=u_s_zoh_ab
+        )
         out.tau_L = tau_L
         return out
 

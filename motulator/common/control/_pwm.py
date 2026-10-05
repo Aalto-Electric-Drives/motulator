@@ -233,7 +233,9 @@ class PWM:
 
         return d_abc, u_c_ab
 
-    def get_realized_voltage(self, i_c_ab: complex, u_dc: float) -> complex:
+    def get_realized_voltage(
+        self, i_c_ab: complex, u_dc: float, *, average: bool = True
+    ) -> complex:
         """
         Get the realized voltage.
 
@@ -248,21 +250,28 @@ class PWM:
             Measured converter current (A) in stationary coordinates.
         u_dc : float
             Measured DC-bus voltage (V).
+        average : bool, optional
+            If True, the average voltage of the previous and the ongoing sampling
+            periods is returned. If False, the voltage of the ongoing sampling period
+            is returned. Defaults to True.
 
         Returns
         -------
         complex
-            Realized converter voltage (V) in stationary coordinates, i.e., the average
-            voltage of the previous and the ongoing sampling periods. If `d_err` is
+            Realized converter voltage (V) in stationary coordinates. If `d_err` is
             given, the voltage is corrected for it using the measured currents.
 
         """
         self._i_c_ab = i_c_ab
+        u_c_ab = self.realized_voltage if average else self._old_u_c_ab
         if self.d_err is None:
-            return self.realized_voltage
+            return u_c_ab
         i_abc = complex2abc(i_c_ab)
-        d_err = 0.5 * sum(self.d_err(i_abc, d) for d in self._d_abc)
-        return self.realized_voltage - u_dc * abc2complex(d_err)
+        if average:
+            d_err = 0.5 * sum(self.d_err(i_abc, d) for d in self._d_abc)
+        else:
+            d_err = self.d_err(i_abc, self._d_abc[1])
+        return u_c_ab - u_dc * abc2complex(d_err)
 
     def update(self, u_c_ab: complex, d_abc: list[float]) -> None:
         """Update the realized voltage."""

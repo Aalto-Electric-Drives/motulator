@@ -62,6 +62,7 @@ class VectorController[Ref, Fbk](Protocol):
     def get_feedback(
         self,
         u_s_ab: complex,
+        u_s_zoh_ab: complex,
         i_s_ab: complex,
         w_M_meas: float | None,
         theta_M_meas: float | None,
@@ -156,7 +157,12 @@ class VectorControlSystem(ControlSystem):
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
-        fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M)
+        u_c_zoh_ab = self.pwm.get_realized_voltage(
+            meas.i_c_ab, meas.u_dc, average=False
+        )
+        fbk = self.vector_ctrl.get_feedback(
+            u_c_ab, u_c_zoh_ab, meas.i_c_ab, meas.w_M, meas.theta_M
+        )
         fbk.u_dc = meas.u_dc
         return fbk
 
@@ -210,7 +216,9 @@ class VHzController[Ref, Fbk](Protocol):
     T_s: float
     pwm_mode: Literal["MPE", "MME", "six_step"]
 
-    def get_feedback(self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float) -> Fbk:
+    def get_feedback(
+        self, u_s_ab: complex, u_s_zoh_ab: complex, i_s_ab: complex, w_M_ref: float
+    ) -> Fbk:
         """Get feedback signals from measurements."""
         ...
 
@@ -274,9 +282,14 @@ class VHzControlSystem(ControlSystem):
         """Get feedback signals."""
         if self.ext_ref.w_M is not None:
             u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+            u_c_zoh_ab = self.pwm.get_realized_voltage(
+                meas.i_c_ab, meas.u_dc, average=False
+            )
             w_M_ref = self.ext_ref.w_M(self.t)
             self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
-            fbk = self.vhz_ctrl.get_feedback(u_c_ab, meas.i_c_ab, self._w_M_ref)
+            fbk = self.vhz_ctrl.get_feedback(
+                u_c_ab, u_c_zoh_ab, meas.i_c_ab, self._w_M_ref
+            )
             fbk.u_dc = meas.u_dc
             return fbk
         raise ValueError("Speed reference must be set")
