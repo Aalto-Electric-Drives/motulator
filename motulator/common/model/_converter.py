@@ -57,6 +57,8 @@ class VoltageSourceConverter(Subsystem):
 
     """
 
+    n_legs: int = 3
+
     def __init__(
         self,
         u_dc: float,

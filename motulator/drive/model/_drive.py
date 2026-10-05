@@ -12,7 +12,7 @@ from motulator.drive.model._mechanics import (
 
 
 # %%
-class Drive(Model):
+class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
     """
     Continuous-time system model for a machine drive.
 

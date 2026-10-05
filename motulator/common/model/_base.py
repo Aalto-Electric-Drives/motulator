@@ -1,15 +1,12 @@
 """Base classes for models."""
 
 from dataclasses import InitVar, dataclass, field
-from typing import TYPE_CHECKING, Any, Protocol
+from typing import Any, Protocol
 
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
 from motulator.common.model._pwm import ZOH, CarrierComparison
-
-if TYPE_CHECKING:
-    from motulator.common.model._converter import VoltageSourceConverter
 
 
 # %%
@@ -83,6 +80,36 @@ class Subsystem[
         ...
 
 
+class ConverterInputs(Protocol):
+    """Protocol for converter inputs."""
+
+    q_c_ab: Any  # Switching state, held constant over each integration interval
+
+
+class Converter(Subsystem, Protocol):
+    """
+    Protocol defining the interface for converters.
+
+    In addition to the subsystem interface, a converter provides the number of legs,
+    the dead time, and a method for setting the switching state `inp.q_c_ab` based on
+    the gate and blanking signals from the PWM model. The format of the switching state
+    is up to the converter (e.g., a complex space vector in a three-phase converter).
+
+    """
+
+    n_legs: int  # Number of legs
+    t_d: float  # Dead time (s)
+
+    @property
+    def inp(self) -> ConverterInputs:
+        """Input variables."""
+        ...
+
+    def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
+        """Set the switching state based on the gate and blanking signals."""
+        ...
+
+
 # %%
 @dataclass
 class ModelStateHistory:
@@ -92,20 +119,21 @@ class ModelStateHistory:
     q_c_ab: list[complex] = field(default_factory=list)
 
 
-class Model:
+class Model[C: Converter]:
     """
     Base class for continuous-time system models.
 
     A model consists of subsystems and connections between them. The converter
     subsystem gets the switching state `q_c_ab`, which is held constant over each
-    integration interval. The PWM model includes the dead time `converter.t_d`. The
+    integration interval. The PWM model includes the dead time `converter.t_d`, and the
+    computational delay is sized according to the number of legs `converter.n_legs`. The
     outputs are computed in the order of the `subsystems` list and passed to the
     connected inputs immediately. Hence, a subsystem whose outputs depend directly on
     its inputs must come after the subsystems providing these inputs.
 
     Parameters
     ----------
-    converter : VoltageSourceConverter
+    converter : Converter
         Converter model.
     subsystems : list[Subsystem]
         All subsystems, including the converter.
@@ -120,7 +148,7 @@ class Model:
 
     def __init__(
         self,
-        converter: "VoltageSourceConverter",
+        converter: C,
         subsystems: list[Subsystem],
         connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
         pwm: bool = False,
@@ -140,10 +168,10 @@ class Model:
                 )
             self._outgoing[src].append((target, inp, out))
         self.t0: float = 0.0
-        self.delay = Delay(delay)
+        self.delay = Delay(delay, converter.n_legs)
         t_d = converter.t_d
         self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
-        self.converter = converter
+        self.converter: C = converter
         self.subsystems = subsystems
         self.connections = connections
         self._history = ModelStateHistory()
