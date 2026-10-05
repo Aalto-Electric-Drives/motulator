@@ -20,7 +20,8 @@ class ObserverOutputs:
 
     u_dc: float = 0.0  # DC-bus voltage
     i_s: complex = 0j  # Stator current
-    u_s: complex = 0j  # Stator voltage
+    u_s: complex = 0j  # Stator voltage (average of previous and ongoing periods)
+    u_s_zoh: complex = 0j  # Stator voltage (average of the ongoing period)
     psi_s: complex = 0j  # Stator flux linkage estimate
     e_o: complex = 0j  # Flux estimation error signal
     eps: float = 0  # Mechanical position estimation error signal
@@ -130,6 +131,8 @@ class FluxObserver:
         w_M: float,
         eps_ext: float = 0.0,
         h: float = 0.0,
+        *,
+        u_s_zoh_ab: complex,
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
@@ -137,7 +140,8 @@ class FluxObserver:
         Parameters
         ----------
         u_s_ab : complex
-            Stator voltage (V) in stator coordinates.
+            Stator voltage (V) in stator coordinates, averaged over the previous and
+            the ongoing sampling periods.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -147,6 +151,9 @@ class FluxObserver:
         h : float, optional
             Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
             based error signal is used exclusively.
+        u_s_zoh_ab : complex
+            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+            period.
 
         Returns
         -------
@@ -168,6 +175,7 @@ class FluxObserver:
         # Current and voltage vectors in (estimated) rotor coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
         out.u_s = exp(-1j * out.theta_c) * u_s_ab
+        out.u_s_zoh = exp(-1j * out.theta_c) * u_s_zoh_ab
 
         # Flux estimation error
         psi_s_dq = complex(self.par.psi_s_dq(out.i_s))
@@ -202,9 +210,12 @@ class FluxObserver:
         else:
             k_o2 = (1 - out.h) * k_o1
 
-        # Update the state estimates
-        v = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s
-        self.psi_s += T_s * (v + k_o1 * out.e_o + k_o2 * out.e_o.conjugate())
+        # Update the state estimates. The flux is integrated in stator coordinates
+        # using the average voltage of the ongoing sampling period and then rotated to
+        # the coordinates of the next step.
+        v = out.u_s_zoh - par.R_s * out.i_s
+        v_err = k_o1 * out.e_o + k_o2 * out.e_o.conjugate()
+        self.psi_s = exp(-1j * T_s * out.w_c) * (out.psi_s + T_s * (v + v_err))
         self.theta_m = wrap(self.theta_m + T_s * out.w_c)
         self.par.psi_f += T_s * self.k_f(out.w_m) * out.eps_f
 
@@ -265,7 +276,13 @@ class SpeedFluxObserver:
         return self.flux_observer.theta_m
 
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, eps_ext: float = 0.0, h: float = 0.0
+        self,
+        u_s_ab: complex,
+        i_s_ab: complex,
+        eps_ext: float = 0.0,
+        h: float = 0.0,
+        *,
+        u_s_zoh_ab: complex,
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
@@ -273,7 +290,8 @@ class SpeedFluxObserver:
         Parameters
         ----------
         u_s_ab : complex
-            Stator voltage (V) in stator coordinates.
+            Stator voltage (V) in stator coordinates, averaged over the previous and
+            the ongoing sampling periods.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         eps_ext : float, optional
@@ -281,6 +299,9 @@ class SpeedFluxObserver:
         h : float, optional
             Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
             based error signal is used exclusively.
+        u_s_zoh_ab : complex
+            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+            period.
 
         Returns
         -------
@@ -289,7 +310,9 @@ class SpeedFluxObserver:
 
         """
         w_M, tau_L = self.speed_observer.compute_output()
-        out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M, eps_ext, h)
+        out = self.flux_observer.compute_output(
+            u_s_ab, i_s_ab, w_M, eps_ext, h, u_s_zoh_ab=u_s_zoh_ab
+        )
         out.tau_L = tau_L
         return out
 

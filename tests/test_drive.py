@@ -365,3 +365,18 @@ def test_flux_map_scalar_lookup(d_range: np.ndarray) -> None:
     rng = np.random.default_rng(0)
     i_s_dq = rng.uniform(-15, 15, 50) + 1j * rng.uniform(-10, 20, 50)
     assert [flux_map(i) for i in i_s_dq] == pytest.approx(flux_map(i_s_dq))
+
+
+@pytest.mark.parametrize("w_M", [-500.0, 500.0])
+def test_sm_flux_observer_update(w_M: float) -> None:
+    """The flux update integrates the ongoing-period voltage in stator coordinates."""
+    par = sm_control.SynchronousMachinePars(n_p=2, R_s=0, L_d=0.03, L_q=0.01, psi_f=0)
+    observer = sm_control.FluxObserver(par, 0, lambda w_m: 0, lambda w_m: 0)
+    T_s, u_s_zoh_ab = 125e-6, 100 * np.exp(1j)
+    psi_s_ab = 0j
+    for _ in range(10):
+        # The averaged voltage (here zero) must not affect the flux estimate
+        out = observer.compute_output(0j, 0j, w_M, u_s_zoh_ab=u_s_zoh_ab)
+        assert np.exp(1j * out.theta_c) * out.psi_s == pytest.approx(psi_s_ab)
+        observer.update(T_s, out)
+        psi_s_ab += T_s * u_s_zoh_ab
