@@ -178,7 +178,7 @@ Package Contents
 
 .. py:class:: GridConverterSystem(converter, ac_filter, ac_source, pwm = False, delay = 1)
 
-   Bases: :py:obj:`motulator.common.model._base.Model`
+   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`motulator.common.model._converter.VoltageSourceConverter | motulator.common.model._converter.CapacitiveDCBusConverter`\ ]
 
 
    

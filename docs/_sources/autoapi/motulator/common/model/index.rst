@@ -129,13 +129,14 @@ Package Contents
 
    A model consists of subsystems and connections between them. The converter
    subsystem gets the switching state `q_c_ab`, which is held constant over each
-   integration interval. The PWM model includes the dead time `converter.t_d`. The
+   integration interval. The PWM model includes the dead time `converter.t_d`, and the
+   computational delay is sized according to the number of legs `converter.n_legs`. The
    outputs are computed in the order of the `subsystems` list and passed to the
    connected inputs immediately. Hence, a subsystem whose outputs depend directly on
    its inputs must come after the subsystems providing these inputs.
 
    :param converter: Converter model.
-   :type converter: VoltageSourceConverter
+   :type converter: Converter
    :param subsystems: All subsystems, including the converter.
    :type subsystems: list[Subsystem]
    :param connections: Connections as `{(target, input_name): (source, output_name)}`.

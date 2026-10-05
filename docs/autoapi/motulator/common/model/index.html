@@ -673,14 +673,15 @@ switching instant.</p>
 <dd><p>Base class for continuous-time system models.</p>
 <p>A model consists of subsystems and connections between them. The converter
 subsystem gets the switching state <cite>q_c_ab</cite>, which is held constant over each
-integration interval. The PWM model includes the dead time <cite>converter.t_d</cite>. The
+integration interval. The PWM model includes the dead time <cite>converter.t_d</cite>, and the
+computational delay is sized according to the number of legs <cite>converter.n_legs</cite>. The
 outputs are computed in the order of the <cite>subsystems</cite> list and passed to the
 connected inputs immediately. Hence, a subsystem whose outputs depend directly on
 its inputs must come after the subsystems providing these inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>converter</strong> (<a class="reference internal" href="../../drive/model/index.html#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a>) – Converter model.</p></li>
+<li><p><strong>converter</strong> (<em>Converter</em>) – Converter model.</p></li>
 <li><p><strong>subsystems</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>]</em>) – All subsystems, including the converter.</p></li>
 <li><p><strong>connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>]</em><em>]</em>) – Connections as <cite>{(target, input_name): (source, output_name)}</cite>.</p></li>
 <li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable PWM model, defaults to False.</p></li>

@@ -54,7 +54,7 @@ Package Contents
 
 .. py:class:: Drive(machine, mechanics, converter, lc_filter = None, pwm = False, delay = 1)
 
-   Bases: :py:obj:`motulator.common.model._base.Model`
+   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`motulator.common.model._converter.VoltageSourceConverter | motulator.common.model._converter.FrequencyConverter`\ ]
 
 
    

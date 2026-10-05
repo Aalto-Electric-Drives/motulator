@@ -471,15 +471,12 @@
 <span></span><span class="sd">"""Base classes for models."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate._ivp.ivp</span><span class="w"> </span><span class="kn">import</span> <span class="n">OdeResult</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZOH</span><span class="p">,</span> <span class="n">CarrierComparison</span>
-
-<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoltageSourceConverter</span>
 
 
 <span class="c1"># %%</span>
@@ -571,6 +568,36 @@
 
 
 
+<span class="k">class</span><span class="w"> </span><span class="nc">ConverterInputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for converter inputs."""</span>
+
+    <span class="n">q_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Switching state, held constant over each integration interval</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Converter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Protocol defining the interface for converters.</span>
+
+<span class="sd">    In addition to the subsystem interface, a converter provides the number of legs,</span>
+<span class="sd">    the dead time, and a method for setting the switching state `inp.q_c_ab` based on</span>
+<span class="sd">    the gate and blanking signals from the PWM model. The format of the switching state</span>
+<span class="sd">    is up to the converter (e.g., a complex space vector in a three-phase converter).</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">n_legs</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Number of legs</span>
+    <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Dead time (s)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConverterInputs</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Input variables."""</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_gate_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the switching state based on the gate and blanking signals."""</span>
+        <span class="o">...</span>
+
+
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelStateHistory</span><span class="p">:</span>
@@ -582,20 +609,21 @@
 
 <div class="viewcode-block" id="Model">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">[</span><span class="n">C</span><span class="p">:</span> <span class="n">Converter</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for continuous-time system models.</span>
 
 <span class="sd">    A model consists of subsystems and connections between them. The converter</span>
 <span class="sd">    subsystem gets the switching state `q_c_ab`, which is held constant over each</span>
-<span class="sd">    integration interval. The PWM model includes the dead time `converter.t_d`. The</span>
+<span class="sd">    integration interval. The PWM model includes the dead time `converter.t_d`, and the</span>
+<span class="sd">    computational delay is sized according to the number of legs `converter.n_legs`. The</span>
 <span class="sd">    outputs are computed in the order of the `subsystems` list and passed to the</span>
 <span class="sd">    connected inputs immediately. Hence, a subsystem whose outputs depend directly on</span>
 <span class="sd">    its inputs must come after the subsystems providing these inputs.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    converter : VoltageSourceConverter</span>
+<span class="sd">    converter : Converter</span>
 <span class="sd">        Converter model.</span>
 <span class="sd">    subsystems : list[Subsystem]</span>
 <span class="sd">        All subsystems, including the converter.</span>
@@ -610,7 +638,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">converter</span><span class="p">:</span> <span class="s2">"VoltageSourceConverter"</span><span class="p">,</span>
+        <span class="n">converter</span><span class="p">:</span> <span class="n">C</span><span class="p">,</span>
         <span class="n">subsystems</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">],</span>
         <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
         <span class="n">pwm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -630,10 +658,10 @@
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">src</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">converter</span><span class="o">.</span><span class="n">n_legs</span><span class="p">)</span>
         <span class="n">t_d</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">t_d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span> <span class="k">if</span> <span class="n">pwm</span> <span class="k">else</span> <span class="n">ZOH</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span> <span class="o">=</span> <span class="n">converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">:</span> <span class="n">C</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="n">subsystems</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="n">connections</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_history</span> <span class="o">=</span> <span class="n">ModelStateHistory</span><span class="p">()</span>
