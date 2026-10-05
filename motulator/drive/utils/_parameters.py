@@ -11,6 +11,32 @@ EPS: float = 1e-3
 
 
 # %%
+def _solve_pm_flux(i_d: Callable[[float], float]) -> float:
+    """
+    Solve the PM-flux linkage from i_d(psi_f) = 0.
+
+    The d-axis current is a monotonically increasing function of the d-axis flux
+    linkage. The root is bracketed by doubling the upper bound and then found using
+    Brent's method. No derivatives are needed, so the solution does not depend on the
+    numerical precision of the map (e.g., single-precision neural networks).
+
+    """
+    i_lo = i_d(0.0)
+    if i_lo >= 0:  # No permanent magnets
+        return 0.0
+    psi_lo, psi_hi = 0.0, EPS
+    while (i_hi := i_d(psi_hi)) < 0 and psi_hi < 1e3:
+        psi_lo, psi_hi = psi_hi, 2 * psi_hi
+    # Accept only a converged root within a finite bracket, e.g., not NaN values
+    # outside the domain of the map
+    if np.isfinite(i_lo) and i_hi >= 0:
+        sol = root_scalar(i_d, bracket=(psi_lo, psi_hi), method="brentq")
+        if sol.converged:
+            return sol.root
+    raise ValueError("The PM-flux linkage cannot be solved from the current map")
+
+
+# %%
 class BaseSynchronousMachinePars(Protocol):
     """Base class for synchronous machine parameters."""
 
@@ -224,9 +250,9 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
 
     def __post_init__(self) -> None:
         if self.i_s_dq_fcn is not None:
-            self.psi_f = root_scalar(
-                lambda psi_d: np.real(self.i_s_dq(psi_d)), x0=0, method="newton"
-            ).root
+            self.psi_f = _solve_pm_flux(
+                lambda psi_d: float(np.real(self.i_s_dq(psi_d)))
+            )
         elif self.psi_s_dq_fcn is not None:
             self.psi_f = complex(self.psi_s_dq_fcn(0j)).real
             # Following are needed only for iterative current computation, if used
@@ -333,9 +359,9 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     psi_f: float = field(init=False, default=0.0)
 
     def __post_init__(self) -> None:
-        self.psi_f = root_scalar(
-            lambda psi_d: np.real(self.i_s_dq(psi_d, 1.0)), x0=0, method="newton"
-        ).root
+        self.psi_f = _solve_pm_flux(
+            lambda psi_d: float(np.real(self.i_s_dq(psi_d, 1.0)))
+        )
         if self.psi_f < EPS:  # No permanent magnets
             self.psi_f = 0.0
 
