@@ -1,5 +1,6 @@
 """Manipulate flux linkage and current lookup tables of synchronous machines."""
 
+from bisect import bisect_right
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
@@ -8,6 +9,28 @@ from typing import Literal, cast
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator, griddata
 from scipy.io import loadmat
+
+
+# %%
+def _interp_bilinear(
+    d_grid: list[float], q_grid: list[float], values: np.ndarray, x: float, y: float
+) -> complex:
+    """
+    Bilinear interpolation at a single point on a strictly ascending grid.
+
+    This gives the same result as `RegularGridInterpolator` with `method="linear"` and
+    `fill_value=None`, i.e., the edge cells are extrapolated linearly, but avoids its
+    overhead for a single point.
+
+    """
+    i = min(max(bisect_right(d_grid, x) - 1, 0), len(d_grid) - 2)
+    j = min(max(bisect_right(q_grid, y) - 1, 0), len(q_grid) - 2)
+    t_d = (x - d_grid[i]) / (d_grid[i + 1] - d_grid[i])
+    t_q = (y - q_grid[j]) / (q_grid[j + 1] - q_grid[j])
+    (v00, v01), (v10, v11) = values[i : i + 2, j : j + 2].tolist()
+    v0 = v00 + t_q * (v01 - v00)
+    v1 = v10 + t_q * (v11 - v10)
+    return complex(v0 + t_d * (v1 - v0))
 
 
 # %%
@@ -166,6 +189,10 @@ class MagneticModel:
             fill_value=None,  # type: ignore
         )
 
+        # Faster interpolation of single points on a strictly ascending grid
+        d_grid, q_grid = np.asarray(d_range).tolist(), np.asarray(q_range).tolist()
+        fast = all(len(g) > 1 and np.all(np.diff(g) > 0) for g in (d_grid, q_grid))
+
         # Create a wrapper function that accepts complex inputs
         def lookup_fcn(dq_input: complex | np.ndarray) -> complex | np.ndarray:
             """
@@ -184,6 +211,14 @@ class MagneticModel:
             """
             if np.isscalar(dq_input) or isinstance(dq_input, complex):
                 # Handle scalar complex input
+                if fast:
+                    return _interp_bilinear(
+                        d_grid,
+                        q_grid,
+                        new_out,
+                        dq_input.real,  # type: ignore
+                        dq_input.imag,  # type: ignore
+                    )
                 points = np.array(
                     [
                         [

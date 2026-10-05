@@ -16,6 +16,7 @@ import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.utils import dead_time_error
 from motulator.drive import model
+from motulator.drive.utils import MagneticModel
 
 T_STOP = 0.6
 T_LOAD = 0.3
@@ -344,3 +345,23 @@ def test_pm_flux_without_solution(psi_max: float) -> None:
 
     with pytest.raises(ValueError):
         model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.5, i_s_dq_fcn=i_s_dq_fcn)
+
+
+@pytest.mark.parametrize(
+    "d_range",
+    [
+        np.linspace(-10, 10, 21),
+        np.array([-10, -4, -1, 0, 2, 10]),
+        np.linspace(10, -10, 21),
+    ],
+    ids=["uniform", "nonuniform", "descending"],
+)
+def test_flux_map_scalar_lookup(d_range: np.ndarray) -> None:
+    """Scalar lookups equal the array lookups, also outside the grid."""
+    d, q = np.meshgrid(np.linspace(-12, 12, 25), np.linspace(-6, 16, 23), indexing="ij")
+    i_s_dq = d + 1j * q
+    flux_map = MagneticModel(i_s_dq, 0.05 * i_s_dq / (1 + 0.01 * abs(i_s_dq) ** 2))
+    flux_map = flux_map.create_interpolated_model(d_range, np.linspace(-5, 15, 11))
+    rng = np.random.default_rng(0)
+    i_s_dq = rng.uniform(-15, 15, 50) + 1j * rng.uniform(-10, 20, 50)
+    assert [flux_map(i) for i in i_s_dq] == pytest.approx(flux_map(i_s_dq))
