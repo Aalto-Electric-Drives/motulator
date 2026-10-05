@@ -105,29 +105,34 @@ def simulate(discrete: bool):
             )
         )
     )
-    return model.Simulation(mdl, ctrl).simulate(t_stop=0.15)
+    return model.Simulation(mdl, ctrl).simulate(t_stop=0.17)
 
 
 res_cont, res_disc = simulate(discrete=False), simulate(discrete=True)
 
 # %%
-# Plot the current responses in per-unit values.
+# Plot the speed estimates and the current responses in per-unit values.
 
-_, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
+_, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 7), sharex=True)
 for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete")]:
     t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
-    ax1.plot(t, i_s.real, ls, ds="steps-post", label=label)
-    ax2.plot(t, i_s.imag, ls, ds="steps-post", label=label)
+    ax1.plot(t, res.ctrl.fbk.w_M / base.w_M, ls, ds="steps-post", label=label)
+    ax2.plot(t, i_s.real, ls, ds="steps-post", label=label)
+    ax3.plot(t, i_s.imag, ls, ds="steps-post", label=label)
 i_s_ref = res_disc.ctrl.ref.i_s / base.i
-ax1.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
-ax2.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
-ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
-ax2.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
-ax2.set_xlabel("Time (s)")
-ax2.set_xlim(0.115, 0.15)
-ax2.legend(loc="lower left")
-ax1.grid(True)
-ax2.grid(True)
+ax1.plot(res_disc.mdl.t, res_disc.mdl.machine.w_M / base.w_M, "k:", label="actual")
+ax2.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
+ax3.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
+ax1.set_ylabel("Speed (p.u.)")
+ax1.set_ylim(1.47, 1.53)
+ax2.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
+ax3.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
+ax3.set_xlabel("Time (s)")
+ax3.set_xlim(0.115, 0.17)
+ax1.legend(loc="lower left")
+ax3.legend(loc="lower left")
+for ax in (ax1, ax2, ax3):
+    ax.grid(True)
 plt.show()
 
 # %%
