@@ -1,8 +1,9 @@
 """Base control system for grid converters."""
 
 from cmath import exp
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Callable, Protocol, Sequence
+from typing import Protocol
 
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._pwm import PWM

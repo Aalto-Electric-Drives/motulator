@@ -1,9 +1,10 @@
 """Base control systems for machine drives."""
 
 from cmath import exp
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from math import inf
-from typing import Callable, Literal, Protocol, Sequence
+from typing import Literal, Protocol
 
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter

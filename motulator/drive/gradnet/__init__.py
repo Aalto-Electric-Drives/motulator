@@ -48,5 +48,4 @@ __all__ = [
     "print_flux_map_errors_meas",
     "train_gradnet",
     "load_gradnet",
-    "get_training_data",
 ]

@@ -1,8 +1,9 @@
 """Current-vector control methods for synchronous machine drives."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable, cast
+from typing import cast
 
 from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries

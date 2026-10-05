@@ -1,8 +1,9 @@
 """Manipulate flux linkage and current lookup tables of synchronous machines."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable, Literal, cast
+from typing import Literal, cast
 
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator, griddata

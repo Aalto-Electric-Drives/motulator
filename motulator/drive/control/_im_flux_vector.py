@@ -1,9 +1,10 @@
 """Flux-vector control of induction machine drives."""
 
+from collections.abc import Callable
 from copy import copy
 from dataclasses import dataclass
 from math import inf, pi, sqrt
-from typing import Callable, Literal
+from typing import Literal
 
 import numpy as np
 

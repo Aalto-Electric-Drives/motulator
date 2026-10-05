@@ -1,8 +1,9 @@
 """Flux-vector control of synchronous machine drives."""
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from math import inf, pi
-from typing import Callable, Literal, cast
+from typing import Literal, cast
 
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (

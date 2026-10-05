@@ -1,8 +1,9 @@
 """Continuous-time models for mechanical subsystems."""
 
 from cmath import phase
+from collections.abc import Callable
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Callable
+from typing import Any
 
 import numpy as np
 

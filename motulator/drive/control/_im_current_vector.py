@@ -1,10 +1,11 @@
 """Current-vector control methods for induction machine drives."""
 
 from cmath import exp, phase
+from collections.abc import Callable
 from copy import copy
 from dataclasses import dataclass
 from math import pi, sqrt
-from typing import Callable, cast
+from typing import cast
 
 import numpy as np
 

@@ -1,7 +1,8 @@
 """Common dataclasses usable in models and control of machine drives."""
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable, Protocol, Tuple, cast
+from typing import Protocol, cast
 
 import numpy as np
 from scipy.optimize import root, root_scalar
@@ -21,7 +22,7 @@ class BaseSynchronousMachinePars(Protocol):
         self,
         psi_s_dq: complex | np.ndarray,
         exp_j_theta_m: complex | np.ndarray | None = None,
-    ) -> Tuple[complex | np.ndarray, float | np.ndarray]:
+    ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """
         Magnetic map as a function of flux linkage and electrical rotor angle.
 
@@ -326,7 +327,7 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     R_s: float
     magnetic_map_fcn: Callable[
         [complex | np.ndarray, complex | np.ndarray],
-        Tuple[complex | np.ndarray, float | np.ndarray],
+        tuple[complex | np.ndarray, float | np.ndarray],
     ]
     G_c: float = 0.0
     psi_f: float = field(init=False, default=0.0)
@@ -342,7 +343,7 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         self,
         psi_s_dq: complex | np.ndarray,
         exp_j_theta_m: complex | np.ndarray | None = None,
-    ) -> Tuple[complex | np.ndarray, float | np.ndarray]:
+    ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """
         Magnetic map.
 
