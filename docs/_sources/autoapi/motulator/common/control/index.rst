@@ -34,6 +34,7 @@ Classes
 
    motulator.common.control.ComplexPIController
    motulator.common.control.ControlSystem
+   motulator.common.control.DiscreteComplexController
    motulator.common.control.PIController
    motulator.common.control.PWM
    motulator.common.control.RateLimiter
@@ -401,6 +402,115 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: DiscreteComplexController(alpha_c, T_s)
+
+   
+   Direct discrete-time 2DOF complex-vector controller.
+
+   This implements a 2DOF complex-vector controller designed directly in discrete time
+   [#Awa2019]_. The controlled system is an integrator in coordinates rotating at the
+   angular speed `w_c`. Its hold-equivalent model, including the computational delay of
+   one sampling period, is::
+
+       i(k + 1) = Phi*(i(k) + T_s*u(k))
+       u(k + 1) = Phi*u_lim(k)
+
+   where `i` is the feedback signal, `u` is the realized output, `u_lim` is the limited
+   controller output, and ``Phi = exp(-1j*w_c*T_s)``. The design gives the
+   reference-tracking dynamics ``i(k) = (1 - beta)/(z*(z - beta))*i_ref(k)``, where
+   ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances. The
+   controller compensates for the delays itself, so the PWM must be configured with
+   `k_comp=0`.
+
+   :param alpha_c: Reference-tracking bandwidth (rad/s).
+   :type alpha_c: float
+   :param T_s: Sampling period (s).
+   :type T_s: float
+
+   .. rubric:: References
+
+   .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+      saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+      https://doi.org/10.1109/TIA.2019.2919258
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(i_ref, i)
+
+      
+      Compute the controller output.
+
+      :param i_ref: Reference signal.
+      :type i_ref: complex
+      :param i: Feedback signal.
+      :type i: complex
+
+      :returns: **u** -- Controller output.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(T_s, u, w_c)
+
+      
+      Update the states.
+
+      :param T_s: Sampling period (s), which must equal the design value.
+      :type T_s: float
+      :param u: Limited controller output.
+      :type u: complex
+      :param w_c: Angular speed of the coordinates (rad/s).
+      :type w_c: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: PIController(k_p, k_i, k_t = None, u_max = inf)
 
    
@@ -509,7 +619,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, average = True)
+.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -554,12 +664,6 @@ Package Contents
                   1.5, which corresponds to the middle of the sampling period in which the duty
                   ratios are applied after the computational delay of one sampling period.
    :type k_pred: float, optional
-   :param average: If True (default), the realized voltage is the average voltage of the previous
-                   and the ongoing sampling periods, which represents the voltage at the sampling
-                   instant, as needed in continuous-time designs. If False, it is the voltage of
-                   the ongoing sampling period, as needed in the hold-equivalent models of direct
-                   discrete-time designs, typically together with `k_comp = 0`.
-   :type average: bool, optional
 
    .. rubric:: References
 
@@ -669,9 +773,9 @@ Package Contents
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: Realized converter voltage (V) in stationary coordinates, see `average`. If
-                `d_err` is given, the voltage is corrected for it using the measured
-                currents.
+      :returns: Realized converter voltage (V) in stationary coordinates, i.e., the average
+                voltage of the previous and the ongoing sampling periods. If `d_err` is
+                given, the voltage is corrected for it using the measured currents.
       :rtype: complex
 
 

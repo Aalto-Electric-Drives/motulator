@@ -218,7 +218,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -532,12 +534,6 @@
 <span class="sd">        Prediction factor of the currents for the feedforward compensation, defaults to</span>
 <span class="sd">        1.5, which corresponds to the middle of the sampling period in which the duty</span>
 <span class="sd">        ratios are applied after the computational delay of one sampling period.</span>
-<span class="sd">    average : bool, optional</span>
-<span class="sd">        If True (default), the realized voltage is the average voltage of the previous</span>
-<span class="sd">        and the ongoing sampling periods, which represents the voltage at the sampling</span>
-<span class="sd">        instant, as needed in continuous-time designs. If False, it is the voltage of</span>
-<span class="sd">        the ongoing sampling period, as needed in the hold-equivalent models of direct</span>
-<span class="sd">        discrete-time designs, typically together with `k_comp = 0`.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -559,15 +555,14 @@
         <span class="n">d_err</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">feedforward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">k_pred</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
-        <span class="n">average</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">=</span> <span class="n">k_comp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_pred</span> <span class="o">=</span> <span class="n">k_pred</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">average</span> <span class="o">=</span> <span class="n">average</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">=</span> <span class="n">overmodulation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="o">=</span> <span class="n">d_err</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span> <span class="o">=</span> <span class="n">feedforward</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limited_voltage</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
@@ -702,8 +697,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">==</span> <span class="s2">"six_step"</span><span class="p">:</span>
             <span class="n">u_c_ref_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">six_step_overmodulation</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
 
-        <span class="c1"># Duty ratios</span>
+        <span class="c1"># Duty ratios and the limited voltage reference, excluding the compensation</span>
         <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">duty_ratios</span><span class="p">(</span><span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limited_voltage</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_dc</span>
 
         <span class="c1"># Compensate for the duty-ratio error using the predicted currents</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span><span class="p">:</span>
@@ -738,21 +734,17 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        complex</span>
-<span class="sd">            Realized converter voltage (V) in stationary coordinates, see `average`. If</span>
-<span class="sd">            `d_err` is given, the voltage is corrected for it using the measured</span>
-<span class="sd">            currents.</span>
+<span class="sd">            Realized converter voltage (V) in stationary coordinates, i.e., the average</span>
+<span class="sd">            voltage of the previous and the ongoing sampling periods. If `d_err` is</span>
+<span class="sd">            given, the voltage is corrected for it using the measured currents.</span>
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="n">i_c_ab</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">average</span><span class="p">:</span>
-            <span class="n">u_c_ab</span><span class="p">,</span> <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">u_c_ab</span><span class="p">,</span> <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">u_c_ab</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span>
         <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">)</span>
-        <span class="n">d_err</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_err</span><span class="p">(</span><span class="n">i_abc</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">d_abc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">u_c_ab</span> <span class="o">-</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_err</span><span class="p">)</span></div>
+        <span class="n">d_err</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_err</span><span class="p">(</span><span class="n">i_abc</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">-</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_err</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PWM.update">

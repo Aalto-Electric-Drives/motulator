@@ -880,7 +880,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, average = True)
+.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -925,12 +925,6 @@ Package Contents
                   1.5, which corresponds to the middle of the sampling period in which the duty
                   ratios are applied after the computational delay of one sampling period.
    :type k_pred: float, optional
-   :param average: If True (default), the realized voltage is the average voltage of the previous
-                   and the ongoing sampling periods, which represents the voltage at the sampling
-                   instant, as needed in continuous-time designs. If False, it is the voltage of
-                   the ongoing sampling period, as needed in the hold-equivalent models of direct
-                   discrete-time designs, typically together with `k_comp = 0`.
-   :type average: bool, optional
 
    .. rubric:: References
 
@@ -1040,9 +1034,9 @@ Package Contents
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: Realized converter voltage (V) in stationary coordinates, see `average`. If
-                `d_err` is given, the voltage is corrected for it using the measured
-                currents.
+      :returns: Realized converter voltage (V) in stationary coordinates, i.e., the average
+                voltage of the previous and the ongoing sampling periods. If `d_err` is
+                given, the voltage is corrected for it using the measured currents.
       :rtype: complex
 
 

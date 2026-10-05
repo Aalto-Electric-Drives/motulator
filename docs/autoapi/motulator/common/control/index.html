@@ -223,7 +223,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -535,6 +537,11 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ControlSystem.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.compute_output"><code class="docutils literal notranslate"><span class="pre">PIController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.update"><code class="docutils literal notranslate"><span class="pre">PIController.update()</span></code></a></li>
@@ -576,16 +583,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ControlSystem</span></code></a></p></td>
 <td><p>Base class for control systems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.DiscreteComplexController" title="motulator.common.control.DiscreteComplexController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a></p></td>
+<td><p>Direct discrete-time 2DOF complex-vector controller.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.RateLimiter" title="motulator.common.control.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.RateLimiter" title="motulator.common.control.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
 <td><p>Rate limiter.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></p></td>
 <td><p>Container for control system's discrete-time data.</p></td>
 </tr>
 </tbody>
@@ -806,6 +816,81 @@ signals. The class provides methods for saving, post-processing, and clearing da
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.control.DiscreteComplexController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">DiscreteComplexController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#DiscreteComplexController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.DiscreteComplexController" title="Link to this definition">#</a></dt>
+<dd><p>Direct discrete-time 2DOF complex-vector controller.</p>
+<p>This implements a 2DOF complex-vector controller designed directly in discrete time
+<a class="footnote-reference brackets" href="#awa2019" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The controlled system is an integrator in coordinates rotating at the
+angular speed <cite>w_c</cite>. Its hold-equivalent model, including the computational delay of
+one sampling period, is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">Phi</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">T_s</span><span class="o">*</span><span class="n">u</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+<span class="n">u</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">Phi</span><span class="o">*</span><span class="n">u_lim</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <cite>i</cite> is the feedback signal, <cite>u</cite> is the realized output, <cite>u_lim</cite> is the limited
+controller output, and <code class="docutils literal notranslate"><span class="pre">Phi</span> <span class="pre">=</span> <span class="pre">exp(-1j*w_c*T_s)</span></code>. The design gives the
+reference-tracking dynamics <code class="docutils literal notranslate"><span class="pre">i(k)</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">-</span> <span class="pre">beta)/(z*(z</span> <span class="pre">-</span> <span class="pre">beta))*i_ref(k)</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">beta</span> <span class="pre">=</span> <span class="pre">exp(-alpha_c*T_s)</span></code>. The integral action compensates for disturbances. The
+controller compensates for the delays itself, so the PWM must be configured with
+<cite>k_comp=0</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Reference-tracking bandwidth (rad/s).</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Sampling period (s).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="awa2019" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
+saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.DiscreteComplexController.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#DiscreteComplexController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.DiscreteComplexController.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute the controller output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Reference signal.</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Feedback signal.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>u</strong> – Controller output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)">complex</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.DiscreteComplexController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#DiscreteComplexController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.DiscreteComplexController.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Sampling period (s), which must equal the design value.</p></li>
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Limited controller output.</p></li>
+<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Angular speed of the coordinates (rad/s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.PIController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#PIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController" title="Link to this definition">#</a></dt>
 <dd><p>2DOF PI controller.</p>
@@ -874,12 +959,12 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.PWM">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c0_ab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c0_ab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
-overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The realized voltage is computed based on the measured
+overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The realized voltage is computed based on the measured
 DC-bus voltage and the duty ratios. The digital delay effects are taken into account
-in the realized voltage <a class="footnote-reference brackets" href="#bae2003" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+in the realized voltage <a class="footnote-reference brackets" href="#bae2003" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
 <p>Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
 dead time and the voltage drops of the power devices) is modeled as a function of
 the phase currents and duty ratios. The realized voltage is corrected for this
@@ -911,24 +996,19 @@ that of the control system.</p></li>
 <li><p><strong>k_pred</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Prediction factor of the currents for the feedforward compensation, defaults to
 1.5, which corresponds to the middle of the sampling period in which the duty
 ratios are applied after the computational delay of one sampling period.</p></li>
-<li><p><strong>average</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True (default), the realized voltage is the average voltage of the previous
-and the ongoing sampling periods, which represents the voltage at the sampling
-instant, as needed in continuous-time designs. If False, it is the voltage of
-the ongoing sampling period, as needed in the hold-equivalent models of direct
-discrete-time designs, typically together with <cite>k_comp = 0</cite>.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation characteristics of
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="bae2003" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Bae, Sul, “A compensation method for time delay of full-digital
 synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.810660">https://doi.org/10.1109/TIA.2003.810660</a></p>
@@ -996,9 +1076,9 @@ duty ratios.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Realized converter voltage (V) in stationary coordinates, see <cite>average</cite>. If
-<cite>d_err</cite> is given, the voltage is corrected for it using the measured
-currents.</p>
+<dd class="field-even"><p>Realized converter voltage (V) in stationary coordinates, i.e., the average
+voltage of the previous and the ongoing sampling periods. If <cite>d_err</cite> is
+given, the voltage is corrected for it using the measured currents.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)">complex</a></p>
@@ -1011,7 +1091,7 @@ currents.</p>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1029,7 +1109,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -1140,6 +1220,11 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.run_control_loop"><code class="docutils literal notranslate"><span class="pre">ControlSystem.run_control_loop()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.save"><code class="docutils literal notranslate"><span class="pre">ControlSystem.save()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ControlSystem.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">

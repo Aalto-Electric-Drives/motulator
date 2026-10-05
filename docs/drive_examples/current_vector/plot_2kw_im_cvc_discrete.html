@@ -1,0 +1,700 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2.2-kW IM, discrete-time current control &#8212; motulator 0.8.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=c83e6b79" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=ebd526be" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../_static/documentation_options.js?v=6d507e9e"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'drive_examples/current_vector/plot_2kw_im_cvc_discrete';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="5.6-kW saturated PM-SyRM, CVC" href="plot_6kw_pmsyrm_sat_cvc.html" />
+    <link rel="prev" title="2.2-kW saturated IM, CVC" href="plot_2kw_im_sat_cvc.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.8.1 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Drives</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Current-Vector Control</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../gradnet/index.html">GradNet Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.html">5.6-kW PM-SyRM, train flux map, FEM data, no spatial harmonics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/train_6kw_pmsyrm_curr_map_fem.html">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_28kw_pmsyrm_flux_map_meas.html">28-kW PM-SyRM, train flux map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_flux_map_meas.html">5.6-kW PM-SyRM, train flux map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_curr_map_meas.html">5.6-kW PM-SyRM, train current map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_28kw_pmsyrm_curr_map_meas.html">28-kW PM-SyRM, train current map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/identification/index.html">Output Admittance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/identification/plot_10kva_gfl_identification.html">10-kVA, GFL, converter output admittance identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/identification/plot_13kva_do_gfm_identification.html">12.5-kVA, DO-GFM, converter output admittance identification</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/induction_machine.html">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/synchronous_machine.html">Synchronous Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/common/control_system.html">Control System Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/drive/reference_gen.html">Reference Generation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../autoapi/motulator/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/common/utils/index.html">motulator.common.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/index.html">motulator.drive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html">motulator.drive.control.im</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../autoapi/motulator/grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/control/index.html">motulator.grid.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/model/index.html">motulator.grid.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/grid/utils/index.html">motulator.grid.utils</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aalto-Electric-Drives/motulator" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/drive_examples/current_vector/plot_2kw_im_cvc_discrete.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>2.2-kW IM, discrete-time current control</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-drive-examples-current-vector-plot-2kw-im-cvc-discrete-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code.</p>
+</div>
+<section class="sphx-glr-example-title" id="kw-im-discrete-time-current-control">
+<span id="sphx-glr-drive-examples-current-vector-plot-2kw-im-cvc-discrete-py"></span><h1>2.2-kW IM, discrete-time current control<a class="headerlink" href="#kw-im-discrete-time-current-control" title="Link to this heading">#</a></h1>
+<p>This example compares the continuous-time and direct discrete-time designs of the
+current controller in sensorless current-vector control of a 2.2-kW induction machine
+(IM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·700 rad/s,
+which is high compared with the sampling frequency.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a><span class="w">
+</span><span class="w">
+</span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="nn">.</span><span class="nn">pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span><span class="w">
+</span><span class="w">
+</span><span class="kn">import</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="nn">.</span><span class="nn">control</span><span class="nn">.</span><span class="nn">im</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">control</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span><span class="w">
+</span></pre></div></div>
+<p>Compute base values based on the nominal values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">nom</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><span class="n">utils</span><span class="o">.</span><span class="n">NominalValues</span></a><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">2.2e3</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">14.6</span><span class="p">)</span><span class="w">
+</span><span class="n">base</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-utils-BaseValues sphx-glr-backref-type-py-method reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.BaseValues.from_nominal" title="motulator.drive.utils.BaseValues.from_nominal"><span class="n">utils</span><span class="o">.</span><span class="n">BaseValues</span><span class="o">.</span><span class="n">from_nominal</span></a><span class="p">(</span><span class="n">nom</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<p>Configure the machine parameters.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><span class="n">model</span><span class="o">.</span><span class="n">InductionMachineInvGammaPars</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">0.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">0.224</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span><span class="n">est_par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-control-im sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><span class="n">control</span><span class="o">.</span><span class="n">InductionMachineInvGammaPars</span></a><span class="p">(</span><span class="w">
+</span>    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">0.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">0.224</span><span class="w">
+</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<p>Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
+discrete-time design compensates for the delays itself, which is taken into account
+in the PWM configuration.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="n">discrete</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <span class="n">mdl</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.Drive" title="motulator.drive.model.Drive"><span class="n">model</span><span class="o">.</span><span class="n">Drive</span></a><span class="p">(</span><span class="w">
+</span>        <a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><span class="n">model</span><span class="o">.</span><span class="n">InductionMachine</span></a><span class="p">(</span><span class="n">par</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>        <a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><span class="n">model</span><span class="o">.</span><span class="n">ExternalRotorSpeed</span></a><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>        <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span></a><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">)</span><span class="p">,</span><span class="w">
+</span>        <span class="n">pwm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="w">
+</span>    <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_rotor_speed</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">*</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="p">)</span><span class="w">
+</span>    <span class="n">cfg</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-control-im sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentVectorControllerCfg" title="motulator.drive.control.im.CurrentVectorControllerCfg"><span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorControllerCfg</span></a><span class="p">(</span><span class="w">
+</span>        <span class="n">psi_s_nom</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span><span class="w">
+</span>        <span class="n">i_s_max</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span><span class="w">
+</span>        <span class="n">alpha_c</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a> <span class="o">*</span> <span class="mi">700</span><span class="p">,</span><span class="w">
+</span>        <span class="n">T_s</span><span class="o">=</span><span class="mf">200e-6</span><span class="p">,</span><span class="w">
+</span>        <span class="n">discrete</span><span class="o">=</span><span class="n">discrete</span><span class="p">,</span><span class="w">
+</span>    <span class="p">)</span><span class="w">
+</span>    <span class="n">pwm</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-control sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.PWM" title="motulator.common.control.PWM"><span class="n">control</span><span class="o">.</span><span class="n">PWM</span></a><span class="p">(</span><span class="n">k_comp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">discrete</span> <span class="k">else</span> <span class="kc">None</span><span class="w">
+</span>    <span class="n">vector_ctrl</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-control-im sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentVectorController" title="motulator.drive.control.im.CurrentVectorController"><span class="n">control</span><span class="o">.</span><span class="n">CurrentVectorController</span></a><span class="p">(</span><span class="n">est_par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span><span class="w">
+</span>    <span class="n">vector_ctrl</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a>  <span class="c1"># Initial speed estimate</span><span class="w">
+</span>    <span class="n">ctrl</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-control sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><span class="n">control</span><span class="o">.</span><span class="n">VectorControlSystem</span></a><span class="p">(</span><span class="n">vector_ctrl</span><span class="p">,</span> <span class="n">pwm</span><span class="o">=</span><span class="n">pwm</span><span class="p">)</span><span class="w">
+</span>    <span class="n">ctrl</span><span class="o">.</span><span class="n">set_torque_ref</span><span class="p">(</span><span class="w">
+</span>        <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a> <span class="o">*</span> <span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.32</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.34</span><span class="p">)</span><span class="p">)</span><span class="w">
+</span>    <span class="p">)</span><span class="w">
+</span>    <span class="k">return</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><span class="n">model</span><span class="o">.</span><span class="n">Simulation</span></a><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">0.37</span><span class="p">)</span><span class="w">
+</span><span class="w">
+</span><span class="w">
+</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_cont</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_disc</span></a> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">discrete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="p">,</span> <span class="n">simulate</span><span class="p">(</span><span class="n">discrete</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<p>Plot the current responses in per-unit values.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="w">
+</span><span class="k">for</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">ls</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a> <span class="ow">in</span> <span class="p">[</span><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_cont</span></a><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">--</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">continuous</span><span class="s2">&quot;</span><span class="p">)</span><span class="p">,</span> <span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_disc</span></a><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">-</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">discrete</span><span class="s2">&quot;</span><span class="p">)</span><span class="p">]</span><span class="p">:</span><span class="w">
+</span>    <span class="n">t</span><span class="p">,</span> <span class="n">i_s</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="w">
+</span>    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i_s</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">ls</span></a><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">steps-post</span><span class="s2">&quot;</span><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a><span class="p">)</span><span class="w">
+</span>    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i_s</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">ls</span></a><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">steps-post</span><span class="s2">&quot;</span><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a><span class="p">)</span><span class="w">
+</span><span class="n">i_s_ref</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_disc</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="w">
+</span><span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i_s_ref</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">k:</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">steps-post</span><span class="s2">&quot;</span><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a><span class="o">=</span><span class="s2">&quot;</span><span class="s2">reference</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i_s_ref</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">k:</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ds</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">steps-post</span><span class="s2">&quot;</span><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a><span class="o">=</span><span class="s2">&quot;</span><span class="s2">reference</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="s2">$i_</span><span class="s2">\</span><span class="s2">mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span><span class="w">
+</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;</span><span class="s2">$i_</span><span class="s2">\</span><span class="s2">mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;</span><span class="s2">Time (s)</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.29</span><span class="p">,</span> <span class="mf">0.37</span><span class="p">)</span><span class="w">
+</span><span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">lower left</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
+</span><span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span><span class="p">:</span><span class="w">
+</span>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="w">
+</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="p">)</span><span class="w">
+</span></pre></div></div>
+<img src="../../_images/sphx_glr_plot_2kw_im_cvc_discrete_001.png" srcset="../../_images/sphx_glr_plot_2kw_im_cvc_discrete_001.png" alt="plot 2kw im cvc discrete" class = "sphx-glr-single-img"/><p>At this bandwidth, the continuous-time design results in poorly damped oscillations,
+while the discrete-time design is well damped.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.989 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-im-cvc-discrete-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/59c5cc6d5223b902c54768d63ccd8003/plot_2kw_im_cvc_discrete.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_im_cvc_discrete.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/4baabdd2e092fdab80f1a475b8a13614/plot_2kw_im_cvc_discrete.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_2kw_im_cvc_discrete.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-zip docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/de0c464fd82c190fe7bff298631e3633/plot_2kw_im_cvc_discrete.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">plot_2kw_im_cvc_discrete.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="plot_2kw_im_sat_cvc.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">2.2-kW saturated IM, CVC</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="plot_6kw_pmsyrm_sat_cvc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">5.6-kW saturated PM-SyRM, CVC</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

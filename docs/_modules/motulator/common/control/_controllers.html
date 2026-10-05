@@ -218,7 +218,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -468,6 +470,7 @@
   <h1>Source code for motulator.common.control._controllers</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Common functions and classes for controls."""</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">clip</span>
@@ -656,6 +659,113 @@
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_c</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="DiscreteComplexController">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiscreteComplexController</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Direct discrete-time 2DOF complex-vector controller.</span>
+
+<span class="sd">    This implements a 2DOF complex-vector controller designed directly in discrete time</span>
+<span class="sd">    [#Awa2019]_. The controlled system is an integrator in coordinates rotating at the</span>
+<span class="sd">    angular speed `w_c`. Its hold-equivalent model, including the computational delay of</span>
+<span class="sd">    one sampling period, is::</span>
+
+<span class="sd">        i(k + 1) = Phi*(i(k) + T_s*u(k))</span>
+<span class="sd">        u(k + 1) = Phi*u_lim(k)</span>
+
+<span class="sd">    where `i` is the feedback signal, `u` is the realized output, `u_lim` is the limited</span>
+<span class="sd">    controller output, and ``Phi = exp(-1j*w_c*T_s)``. The design gives the</span>
+<span class="sd">    reference-tracking dynamics ``i(k) = (1 - beta)/(z*(z - beta))*i_ref(k)``, where</span>
+<span class="sd">    ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances. The</span>
+<span class="sd">    controller compensates for the delays itself, so the PWM must be configured with</span>
+<span class="sd">    `k_comp=0`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha_c : float</span>
+<span class="sd">        Reference-tracking bandwidth (rad/s).</span>
+<span class="sd">    T_s : float</span>
+<span class="sd">        Sampling period (s).</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of</span>
+<span class="sd">       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,</span>
+<span class="sd">       https://doi.org/10.1109/TIA.2019.2919258</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">T_s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beta</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha_c</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+        <span class="c1"># States</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Integral state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_lim</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Limited output of the previous sampling period</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angular speed of the coordinates</span>
+        <span class="c1"># Workspace variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_e</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_gains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Gains of the complex-vector design, see (20) and (22) in [#Awa2019]_."""</span>
+        <span class="n">T_s</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span>
+        <span class="n">Phi</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_c</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>  <span class="c1"># Rotation of the coordinates over T_s</span>
+        <span class="n">k_t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Phi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>
+        <span class="n">k_i</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">Phi</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Phi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">T_s</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">k_1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">/</span> <span class="n">Phi</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">Phi</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">T_s</span>
+        <span class="n">k_2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">Phi</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">k_t</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">k_1</span><span class="p">,</span> <span class="n">k_2</span>
+
+<div class="viewcode-block" id="DiscreteComplexController.compute_output">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController.compute_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Compute the controller output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        i_ref : complex</span>
+<span class="sd">            Reference signal.</span>
+<span class="sd">        i : complex</span>
+<span class="sd">            Feedback signal.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u : complex</span>
+<span class="sd">            Controller output.</span>
+
+<span class="sd">        """</span>
+        <span class="n">k_t</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">k_1</span><span class="p">,</span> <span class="n">k_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_e</span> <span class="o">=</span> <span class="n">i_ref</span> <span class="o">-</span> <span class="n">i</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u</span> <span class="o">=</span> <span class="n">k_t</span> <span class="o">*</span> <span class="n">i_ref</span> <span class="o">-</span> <span class="n">k_1</span> <span class="o">*</span> <span class="n">i</span> <span class="o">-</span> <span class="n">k_2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_lim</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u</span></div>
+
+
+<div class="viewcode-block" id="DiscreteComplexController.update">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Update the states.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period (s), which must equal the design value.</span>
+<span class="sd">        u : complex</span>
+<span class="sd">            Limited controller output.</span>
+<span class="sd">        w_c : float</span>
+<span class="sd">            Angular speed of the coordinates (rad/s).</span>
+
+<span class="sd">        """</span>
+        <span class="n">k_t</span><span class="p">,</span> <span class="n">k_i</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gains</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">k_i</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_e</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_u</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span> <span class="o">/</span> <span class="n">k_t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_lim</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">w_c</span></div>
 </div>
 
 

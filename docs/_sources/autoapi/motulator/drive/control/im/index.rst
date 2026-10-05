@@ -20,6 +20,7 @@ Classes
    motulator.drive.control.im.CurrentReferenceGenerator
    motulator.drive.control.im.CurrentVectorController
    motulator.drive.control.im.CurrentVectorControllerCfg
+   motulator.drive.control.im.DiscreteCurrentController
    motulator.drive.control.im.FluxObserver
    motulator.drive.control.im.FluxVectorController
    motulator.drive.control.im.FluxVectorControllerCfg
@@ -328,7 +329,8 @@ Module Contents
    :type i_s_max: float
    :param alpha_c: Current control reference-tracking bandwidth (rad/s), defaults to 2*pi*200.
    :type alpha_c: float, optional
-   :param alpha_i: Current control integral-action bandwidth (rad/s), defaults to `alpha_c`.
+   :param alpha_i: Current control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
+                   used if `discrete` is True.
    :type alpha_i: float, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
                    2*pi*30, keeping the default speed observer gain the same.
@@ -348,6 +350,10 @@ Module Contents
    :type sensorless: bool, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
+   :param discrete: If True, the direct discrete-time current controller is used instead of the
+                    continuous-time design, defaults to False. The PWM must then be configured
+                    with `k_comp=0`.
+   :type discrete: bool, optional
 
 
 
@@ -365,6 +371,73 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
+
+.. py:class:: DiscreteCurrentController(par, alpha_c, T_s)
+
+   Bases: :py:obj:`motulator.common.control.DiscreteComplexController`
+
+
+   
+   Direct discrete-time current controller for induction machines.
+
+   The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
+   resistive voltage drop and the back-emf are disturbances, which the integral action
+   compensates for. The PWM must be configured with `k_comp=0`.
+
+   :param par: Machine model parameters.
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :param alpha_c: Reference-tracking bandwidth (rad/s).
+   :type alpha_c: float
+   :param T_s: Sampling period (s).
+   :type T_s: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(i_ref, i)
+
+      
+      Compute the controller output.
+
+      :param i_ref: Reference signal.
+      :type i_ref: complex
+      :param i: Feedback signal.
+      :type i: complex
+
+      :returns: **u** -- Controller output.
+      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: FluxObserver(par, k_o)
 
@@ -1050,7 +1123,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, average = True)
+.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -1095,12 +1168,6 @@ Module Contents
                   1.5, which corresponds to the middle of the sampling period in which the duty
                   ratios are applied after the computational delay of one sampling period.
    :type k_pred: float, optional
-   :param average: If True (default), the realized voltage is the average voltage of the previous
-                   and the ongoing sampling periods, which represents the voltage at the sampling
-                   instant, as needed in continuous-time designs. If False, it is the voltage of
-                   the ongoing sampling period, as needed in the hold-equivalent models of direct
-                   discrete-time designs, typically together with `k_comp = 0`.
-   :type average: bool, optional
 
    .. rubric:: References
 
@@ -1210,9 +1277,9 @@ Module Contents
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
 
-      :returns: Realized converter voltage (V) in stationary coordinates, see `average`. If
-                `d_err` is given, the voltage is corrected for it using the measured
-                currents.
+      :returns: Realized converter voltage (V) in stationary coordinates, i.e., the average
+                voltage of the previous and the ongoing sampling periods. If `d_err` is
+                given, the voltage is corrected for it using the measured currents.
       :rtype: complex
 
 

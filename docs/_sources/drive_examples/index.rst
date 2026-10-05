@@ -279,6 +279,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example compares the continuous-time and direct discrete-time designs of the current controller in sensorless current-vector control of a 2.2-kW induction machine (IM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·700 rad/s, which is high compared with the sampling frequency.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_cvc_discrete_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_im_cvc_discrete`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, discrete-time current control</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of the same 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux- vector control example. See /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc for the machine model, flux-map data, and saturation-model description. This example demonstrates online reference generation in current-vector control, which allows the optimal current references to be generated in real time [#Sar2026]_.">
 
 .. only:: html
@@ -291,6 +308,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5.6-kW saturated PM-SyRM, CVC</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example compares the continuous-time and direct discrete-time designs of the current controller [#Awa2019]_ in sensorless current-vector control of a saturated 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·500 rad/s, which is high compared with the sampling frequency.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_sat_cvc_discrete_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5.6-kW saturated PM-SyRM, discrete-time current control</div>
     </div>
 
 
