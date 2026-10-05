@@ -60,11 +60,15 @@ class SimulationResults:
         Results from the continuous-time model.
     ctrl : Any
         Results from the digital control system.
+    success : bool
+        False if the simulation stopped before the stop time due to a numerical
+        failure, in which case the results cover the time until the failure.
 
     """
 
     mdl: ModelTimeSeries
     ctrl: Any
+    success: bool = True
 
 
 class Simulation:
@@ -112,39 +116,40 @@ class Simulation:
             points is selected by the solver.
 
         """
+        progress_bar = None
+        if self.show_progress:
+            progress_bar = tqdm(
+                total=t_stop,
+                desc="Simulation",
+                unit="s",
+                bar_format="{l_bar}{bar}| {n:.2f}/{total:.2f} {unit}",
+            )
+
+        def update_progress() -> None:
+            if progress_bar is not None:
+                progress_bar.n = min(self.mdl.t0, t_stop)
+                progress_bar.refresh()
+
+        error = None
         try:
             # Initialize outputs based on initial states
             self.mdl.set_outputs(0.0)
 
             # Main simulation loop
-            progress_bar = None
-            if self.show_progress:
-                progress_bar = tqdm(
-                    total=t_stop,
-                    desc="Simulation",
-                    unit="s",
-                    bar_format="{l_bar}{bar}| {n:.2f}/{total:.2f} {unit}",
-                )
-
-            def update_progress() -> None:
-                if progress_bar is not None:
-                    progress_bar.n = min(self.mdl.t0, t_stop)
-                    progress_bar.refresh()
-
             self._run_simulation_loop(t_stop, update_progress, N_eval)
-
-            if progress_bar is not None:
-                progress_bar.n = t_stop
-                progress_bar.refresh()
-                progress_bar.close()
-
         except FloatingPointError as err:
-            print(f"Simulation stopped at {self.mdl.t0:.2f} s: {err}")
+            error = err
+        finally:
+            update_progress()
+            if progress_bar is not None:
+                progress_bar.close()
+        if error is not None:
+            print(f"Simulation stopped at {self.mdl.t0:.2f} s: {error}")
 
         # Post-process the solution data
         mdl_ts = ModelTimeSeries(self.mdl)
         ctrl_ts = self.ctrl.post_process()
-        return SimulationResults(mdl_ts, ctrl_ts)
+        return SimulationResults(mdl_ts, ctrl_ts, success=error is None)
 
     @np.errstate(invalid="raise")
     def _run_simulation_loop(
