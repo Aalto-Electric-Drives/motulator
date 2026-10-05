@@ -230,6 +230,8 @@ class SignalInjectionController(CurrentVectorController):
         U_inj: float = 250,
         N_inj: int = 1,
     ) -> None:
+        if cfg.discrete:
+            raise ValueError("Signal injection requires the continuous-time design")
         super().__init__(par, cfg)
         self.sensorless = True
         self.observer = SignalInjectionObserver(
@@ -237,15 +239,8 @@ class SignalInjectionController(CurrentVectorController):
         )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
-        ref = References(T_s=self.T_s, tau_M=tau_M_ref)
-        ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
-            ref.tau_M, fbk.w_m, fbk.u_dc
-        )
-        ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
-        ref.u_s = (
-            self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-            + self.observer.injection.u_sd_inj
-        )
+        ref = super().compute_output(tau_M_ref, fbk)
+        ref.u_s += self.observer.injection.u_sd_inj
         return ref
 
     def post_process(self, ts: TimeSeries) -> None:

@@ -199,3 +199,36 @@ def test_pm_flux_adaptation_keeps_parameters() -> None:
 
     assert par.psi_f == 0.545
     assert res.ctrl.fbk.psi_f[-1] != 0.545  # The estimate is adapted
+
+
+@pytest.mark.parametrize("w", [0, 2000, -6000])
+def test_discrete_current_control(w: float) -> None:
+    """Designed dynamics in the linear range and recovery from voltage limitation."""
+    T_s, L, alpha_c = 200e-6, 0.01, 2 * pi * 500
+    par = sm_control.SynchronousMachinePars(n_p=1, R_s=0, L_d=L, L_q=L, psi_f=0)
+    ctrl = sm_control.DiscreteCurrentController(par, alpha_c, T_s)
+    ctrl.update(T_s, w)  # Initial angular speed of the coordinates
+    pwm = sm_control.PWM(k_comp=0, average=False)
+
+    def run(i_ref: float, n: int, u_dc: float, psi_ab: complex, theta: float):
+        # Exact hold-equivalent plant for R_s = 0 in stationary coordinates
+        i = np.zeros(n, complex)
+        for k in range(n):
+            u_ab = pwm.get_realized_voltage(psi_ab / L, u_dc)
+            i[k] = np.exp(-1j * theta) * psi_ab / L
+            u_ref = ctrl.compute_output(i_ref, i[k], np.exp(-1j * theta) * u_ab)
+            pwm(T_s, np.exp(1j * theta) * u_ref, u_dc, w)
+            ctrl.update(T_s, w)
+            psi_ab, theta = psi_ab + T_s * u_ab, theta + w * T_s
+        return i, psi_ab, theta
+
+    # Step in the linear range, compared with (1 - beta)/(z*(z - beta))
+    i, psi_ab, theta = run(1, 50, 1000, 0j, 0)
+    beta = np.exp(-alpha_c * T_s)
+    k = np.arange(50)
+    assert i == pytest.approx(np.where(k > 1, 1 - beta ** (k - 1.0), 0), abs=1e-9)
+    # Unreachable reference under voltage limitation, then back to zero
+    _, psi_ab, theta = run(50, 1000, 173, psi_ab, theta)
+    i, _, _ = run(0, 500, 173, psi_ab, theta)
+    assert abs(ctrl.u_i) < 1e-3
+    assert abs(i[-1]) < 1e-3

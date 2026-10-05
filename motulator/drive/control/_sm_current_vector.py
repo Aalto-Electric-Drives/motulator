@@ -99,8 +99,8 @@ class DiscreteCurrentController:
 
     The voltage reference is applied as such, so the PWM should be configured with
     `k_comp=0` and `average=False`, the realized voltage then being that of the ongoing
-    sampling period. The anti-windup uses this voltage, which becomes available one
-    sampling period after the voltage reference is computed.
+    sampling period. This voltage, i.e., the limited voltage reference of the previous
+    sampling period, is used in the state feedback and in the anti-windup.
 
     Parameters
     ----------
@@ -128,6 +128,7 @@ class DiscreteCurrentController:
         self.w_c: float = 0.0  # Angular speed of the coordinates
         # Workspace variables
         self._e: complex = 0j
+        self._u_i: complex = 0j
         self._u_ref: complex = 0j
 
     def _gains(self, w_c: float) -> tuple[complex, complex, complex, complex]:
@@ -140,7 +141,7 @@ class DiscreteCurrentController:
         k_2 = (1 - beta) * (1 + Phi)
         return k_t, k_i, k_1, k_2
 
-    def compute_output(self, i_ref: complex, i: complex) -> complex:
+    def compute_output(self, i_ref: complex, i: complex, u: complex) -> complex:
         """
         Compute the controller output.
 
@@ -150,6 +151,10 @@ class DiscreteCurrentController:
             Current reference (A).
         i : complex
             Current feedback (A).
+        u : complex
+            Realized voltage (V) of the ongoing sampling period, i.e., the limited
+            voltage reference of the previous sampling period rotated to the present
+            coordinates.
 
         Returns
         -------
@@ -157,14 +162,19 @@ class DiscreteCurrentController:
             Voltage reference (V).
 
         """
-        k_t, _, k_1, k_2 = self._gains(self.w_c)
+        T_s = self.T_s
+        k_t, k_i, k_1, k_2 = self._gains(self.w_c)
         psi_ref = complex(self.par.psi_s_dq(i_ref)) - self.par.psi_f
         psi = complex(self.par.psi_s_dq(i)) - self.par.psi_f
+        # Limited voltage reference of the previous sampling period in its coordinates
+        u_old = exp(1j * self.w_c * T_s) * u
+        # Anti-windup for the previous sampling period
+        self._u_i = self.u_i - T_s * k_i / k_t * (self.u_ref_old - u_old)
         self._e = psi_ref - psi
-        self._u_ref = k_t * psi_ref - k_1 * psi - k_2 * self.u_ref_old + self.u_i
+        self._u_ref = k_t * psi_ref - k_1 * psi - k_2 * u_old + self._u_i
         return self._u_ref
 
-    def update(self, T_s: float, u: complex, w_c: float) -> None:
+    def update(self, T_s: float, w_c: float) -> None:
         """
         Update the states.
 
@@ -172,20 +182,12 @@ class DiscreteCurrentController:
         ----------
         T_s : float
             Sampling period (s), which must equal the design value.
-        u : complex
-            Realized voltage (V) of the ongoing sampling period, i.e., the limited
-            voltage reference of the previous sampling period rotated to the present
-            coordinates.
         w_c : float
             Angular speed of the coordinates (rad/s).
 
         """
-        k_t, k_i, _, _ = self._gains(self.w_c)
-        # Anti-windup for the previous sampling period, whose realized voltage is known
-        u_lim_old = exp(1j * self.w_c * T_s) * u
-        self.u_i -= T_s * k_i / k_t * (self.u_ref_old - u_lim_old)
-        # Integral action and the states for the next sampling period
-        self.u_i += T_s * k_i * self._e
+        _, k_i, _, _ = self._gains(self.w_c)
+        self.u_i = self._u_i + T_s * k_i * self._e
         self.u_ref_old = self._u_ref
         self.w_c = w_c
 
@@ -329,13 +331,19 @@ class CurrentVectorController:
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
-        ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
+        if isinstance(self.current_ctrl, DiscreteCurrentController):
+            ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s, fbk.u_s)
+        else:
+            ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
+        if isinstance(self.current_ctrl, DiscreteCurrentController):
+            self.current_ctrl.update(ref.T_s, fbk.w_c)
+        else:
+            self.current_ctrl.update(ref.T_s, fbk.u_s, fbk.w_c)
         self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:

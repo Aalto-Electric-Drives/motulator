@@ -207,10 +207,10 @@ where $\Phi = \e^{-\jj\omegam\Ts}$ is the rotation of the coordinates over the s
 label: sm_discrete_cc
 ---
     \usref(k) &= \kT\hatpsisfcn(\isref) - k_1\hatpsisfcn(\is) - k_2\usreflim(k-1) + \uI(k) \\
-    \uI(k+1) &= \uI(k) + \Ts\kI\left[\hatpsisfcn(\isref) - \hatpsisfcn(\is)\right]
+    \uI(k+1) &= \uI(k) + \Ts\kI\left[\hatpsisfcn(\isref) - \hatpsisfcn(\is)\right] - \frac{\Ts\kI}{\kT}\left[\usref(k) - \usreflim(k)\right]
 ```
 
-where the term with $k_2$ compensates for the computational delay. The complex-vector design
+where the term with $k_2$ compensates for the computational delay and the last term is the anti-windup. The complex-vector design
 
 ```{math}
 ---
@@ -231,4 +231,4 @@ label: sm_discrete_closed_loop
     \psis(k) = \frac{1 - \beta}{z(z - \beta)}\psisref(k)
 ```
 
-where $z$ is the forward-shift operator. This design is implemented in the {class}`motulator.drive.control.sm.DiscreteCurrentController` class, which is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the controller compensates for the delays itself, the PWM is configured as `PWM(k_comp=0, average=False)`: the voltage reference is not rotated, and the realized voltage $\us(k)$ of the ongoing sampling period is fed back to the observer and to the anti-windup of the controller. Since the realized voltage becomes available one sampling period after the voltage reference is computed, the implementation uses the previous voltage reference in place of $\usreflim(k-1)$ in {eq}`sm_discrete_cc`, which is exact in the linear modulation range, and applies the anti-windup with a delay of one sampling period.
+where $z$ is the forward-shift operator. This design is implemented in the {class}`motulator.drive.control.sm.DiscreteCurrentController` class, which is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the controller compensates for the delays itself, the PWM is configured as `PWM(k_comp=0, average=False)`: the voltage reference is not rotated, and the realized voltage $\us(k)$ of the ongoing sampling period is fed back to the observer and to the controller. Since the limited voltage reference $\usreflim(k) = \Phi^{-1}\us(k+1)$ becomes available at the next sampling instant, the anti-windup correction of the integral state is applied at that instant before the voltage reference is computed, which is equivalent to {eq}`sm_discrete_cc`.
