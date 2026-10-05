@@ -481,6 +481,32 @@
 
 
 <span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_solve_pm_flux</span><span class="p">(</span><span class="n">i_d</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Solve the PM-flux linkage from i_d(psi_f) = 0.</span>
+
+<span class="sd">    The d-axis current is a monotonically increasing function of the d-axis flux</span>
+<span class="sd">    linkage. The root is bracketed by doubling the upper bound and then found using</span>
+<span class="sd">    Brent's method. No derivatives are needed, so the solution does not depend on the</span>
+<span class="sd">    numerical precision of the map (e.g., single-precision neural networks).</span>
+
+<span class="sd">    """</span>
+    <span class="n">i_lo</span> <span class="o">=</span> <span class="n">i_d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i_lo</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="n">psi_lo</span><span class="p">,</span> <span class="n">psi_hi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">EPS</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">i_hi</span> <span class="o">:=</span> <span class="n">i_d</span><span class="p">(</span><span class="n">psi_hi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">psi_hi</span> <span class="o">&lt;</span> <span class="mf">1e3</span><span class="p">:</span>
+        <span class="n">psi_lo</span><span class="p">,</span> <span class="n">psi_hi</span> <span class="o">=</span> <span class="n">psi_hi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">psi_hi</span>
+    <span class="c1"># Accept only a converged root within a finite bracket, e.g., not NaN values</span>
+    <span class="c1"># outside the domain of the map</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">i_lo</span><span class="p">)</span> <span class="ow">and</span> <span class="n">i_hi</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">i_d</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="p">(</span><span class="n">psi_lo</span><span class="p">,</span> <span class="n">psi_hi</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"brentq"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sol</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">sol</span><span class="o">.</span><span class="n">root</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The PM-flux linkage cannot be solved from the current map"</span><span class="p">)</span>
+
+
+<span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseSynchronousMachinePars</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Base class for synchronous machine parameters."""</span>
 
@@ -711,9 +737,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
-                <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"newton"</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">_solve_pm_flux</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">)))</span>
+            <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
             <span class="c1"># Following are needed only for iterative current computation, if used</span>
@@ -835,9 +861,9 @@
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)),</span> <span class="n">x0</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"newton"</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="n">_solve_pm_flux</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">psi_d</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_d</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)))</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="mf">0.0</span>
 

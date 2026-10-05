@@ -645,13 +645,18 @@
 
             <span class="c1"># Loop over the sampling period T_s</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t_step</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t_steps</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">t_step</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Integration time span, skipped if empty</span>
+                <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span> <span class="o">+</span> <span class="n">t_step</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
                     <span class="c1"># Set the switching state and get initial values</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">set_gate_signals</span><span class="p">(</span><span class="n">q_abc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">b_abc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                     <span class="n">state0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
 
-                    <span class="c1"># Set the integration time span</span>
-                    <span class="n">t_span</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span> <span class="o">+</span> <span class="n">t_step</span><span class="p">)</span>
+                    <span class="c1"># Explicit Runge-Kutta methods try the whole interval as the first</span>
+                    <span class="c1"># step, which skips the estimation of the initial step size</span>
+                    <span class="n">first_step</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">method</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"RK23"</span><span class="p">,</span> <span class="s2">"RK45"</span><span class="p">,</span> <span class="s2">"DOP853"</span><span class="p">):</span>
+                        <span class="n">first_step</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">t_span</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_span</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">max_step</span><span class="p">)</span>
 
                     <span class="c1"># Create array of evaluation times if N_eval is given, including</span>
                     <span class="c1"># the end point for the final state</span>
@@ -662,7 +667,12 @@
 
                     <span class="c1"># Integrate over t_span</span>
                     <span class="n">sol</span> <span class="o">=</span> <span class="n">solve_ivp</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span> <span class="n">t_span</span><span class="p">,</span> <span class="n">state0</span><span class="p">,</span> <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">solver</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span>
+                        <span class="n">t_span</span><span class="p">,</span>
+                        <span class="n">state0</span><span class="p">,</span>
+                        <span class="n">t_eval</span><span class="o">=</span><span class="n">t_eval</span><span class="p">,</span>
+                        <span class="n">first_step</span><span class="o">=</span><span class="n">first_step</span><span class="p">,</span>
+                        <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">FloatingPointError</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>

@@ -246,7 +246,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
+   .. py:method:: get_feedback(u_s_ab, u_s_zoh_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
       Get the feedback signals.
@@ -489,12 +489,13 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, eps_ext = 0.0, h = 0.0)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, eps_ext = 0.0, h = 0.0, *, u_s_zoh_ab)
 
       
       Compute the feedback signals for the control system.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates.
+      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the previous and
+                     the ongoing sampling periods.
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
@@ -505,6 +506,9 @@ Module Contents
       :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
                 based error signal is used exclusively.
       :type h: float, optional
+      :param u_s_zoh_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+                         period.
+      :type u_s_zoh_ab: complex
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
@@ -611,7 +615,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
+   .. py:method:: get_feedback(u_s_ab, u_s_zoh_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
       Get the feedback signals.
@@ -902,7 +906,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_ref)
+   .. py:method:: get_feedback(u_s_ab, u_s_zoh_ab, i_s_ab, w_M_ref)
 
       
       Get feedback signals.
@@ -1123,14 +1127,14 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, u_c0_ab = 0j, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
+.. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
 
    This computes the duty ratios corresponding to standard space-vector PWM and
-   overmodulation [#Hav1999]_. The realized voltage is computed based on the measured
-   DC-bus voltage and the duty ratios. The digital delay effects are taken into account
+   overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios
+   and the measured DC-bus voltage. The digital delay effects are taken into account
    in the realized voltage [#Bae2003]_.
 
    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
@@ -1148,9 +1152,6 @@ Module Contents
                   defaults to 1.5. Use 0 if the controller compensates for the delays itself,
                   e.g., in direct discrete-time designs.
    :type k_comp: float, optional
-   :param u_c0_ab: Initial voltage (V) in stationary coordinates. This is used to compute the
-                   realized voltage, defaults to 0.
-   :type u_c0_ab: float, optional
    :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
                           - "MPE": minimum phase error
                           - "MME": minimum magnitude error
@@ -1262,23 +1263,27 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_realized_voltage(i_c_ab, u_dc)
+   .. py:method:: get_realized_voltage(i_c_ab, u_dc, *, average = True)
 
       
       Get the realized voltage.
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      measured currents are also stored for the feedforward compensation of the next
-      duty ratios.
+      voltage is computed from the duty ratios of the previous and the ongoing
+      sampling periods and the measured DC-bus voltage. The measured currents are also
+      stored for the feedforward compensation of the next duty ratios.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
+      :param average: If True, the average voltage of the previous and the ongoing sampling
+                      periods is returned. If False, the voltage of the ongoing sampling period
+                      is returned. Defaults to True.
+      :type average: bool, optional
 
-      :returns: Realized converter voltage (V) in stationary coordinates, i.e., the average
-                voltage of the previous and the ongoing sampling periods. If `d_err` is
+      :returns: Realized converter voltage (V) in stationary coordinates. If `d_err` is
                 given, the voltage is corrected for it using the measured currents.
       :rtype: complex
 
@@ -1342,10 +1347,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(u_c_ab, d_abc)
+   .. py:method:: update(d_abc)
 
       
-      Update the realized voltage.
+      Store the duty ratios of the next sampling period.
 
 
 
@@ -1499,12 +1504,13 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0, *, u_s_zoh_ab)
 
       
       Compute feedback signals with speed estimation.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates.
+      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the previous and
+                     the ongoing sampling periods.
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
@@ -1513,6 +1519,9 @@ Module Contents
       :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
                 based error signal is used exclusively.
       :type h: float, optional
+      :param u_s_zoh_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+                         period.
+      :type u_s_zoh_ab: complex
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs

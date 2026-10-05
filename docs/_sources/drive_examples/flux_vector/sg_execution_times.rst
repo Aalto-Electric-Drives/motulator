@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:14.461** total execution time for 5 files **from drive_examples/flux_vector**:
+**00:59.849** total execution time for 5 files **from drive_examples/flux_vector**:
 
 .. container::
 
@@ -32,18 +32,18 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py` (``plot_6kw_pmsyrm_sat_fvc.py``)
-     - 00:25.933
-     - 0.0
    * - :ref:`sphx_glr_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py` (``plot_5kw_pmsyrm_thor_sat_fvc.py``)
-     - 00:18.969
+     - 00:18.304
+     - 0.0
+   * - :ref:`sphx_glr_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py` (``plot_6kw_pmsyrm_sat_fvc.py``)
+     - 00:15.113
      - 0.0
    * - :ref:`sphx_glr_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py` (``plot_7kw_syrm_sat_fvc.py``)
-     - 00:14.049
+     - 00:12.470
      - 0.0
    * - :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_ipmsm_fvc.py` (``plot_2kw_ipmsm_fvc.py``)
-     - 00:08.839
+     - 00:07.722
      - 0.0
    * - :ref:`sphx_glr_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py` (``plot_2kw_im_sat_fvc.py``)
-     - 00:06.672
+     - 00:06.239
      - 0.0

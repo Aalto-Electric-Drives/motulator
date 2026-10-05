@@ -615,7 +615,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># State</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">u_s_zoh_ab</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute output."""</span>
         <span class="c1"># Unpack and initialize the output signals</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
@@ -627,6 +629,7 @@
         <span class="c1"># Current and voltage vectors in (estimated) rotor coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_zoh_ab</span>
 
         <span class="c1"># Compute the mechanical position error signal</span>
         <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">injection</span><span class="o">.</span><span class="n">compute_error</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span>

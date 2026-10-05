@@ -490,7 +490,8 @@
 
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC-bus voltage</span>
     <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator current</span>
-    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator voltage</span>
+    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator voltage (average of previous and ongoing periods)</span>
+    <span class="n">u_s_zoh</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator voltage (average of the ongoing period)</span>
     <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator flux estimate</span>
     <span class="n">psi_R</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Rotor flux estimate</span>
     <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electromagnetic torque estimate</span>
@@ -568,6 +569,8 @@
         <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">u_s_zoh_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the feedback signals for the control system.</span>
@@ -575,7 +578,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        u_s_ab : complex</span>
-<span class="sd">            Stator voltage (V) in stator coordinates.</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the previous and</span>
+<span class="sd">            the ongoing sampling periods.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
@@ -585,6 +589,9 @@
 <span class="sd">        h : float, optional</span>
 <span class="sd">            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-</span>
 <span class="sd">            based error signal is used exclusively.</span>
+<span class="sd">        u_s_zoh_ab : complex</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling</span>
+<span class="sd">            period.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -601,6 +608,7 @@
         <span class="c1"># Current and voltage vectors in estimated rotor coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_zoh_ab</span>
 
         <span class="c1"># Mechanical and electrical angular speeds of the rotor</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M</span>
@@ -715,7 +723,13 @@
 <div class="viewcode-block" id="SpeedFluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">u_s_zoh_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute feedback signals with speed estimation.</span>
@@ -723,7 +737,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        u_s_ab : complex</span>
-<span class="sd">            Stator voltage (V) in stator coordinates.</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the previous and</span>
+<span class="sd">            the ongoing sampling periods.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        eps_ext : float, optional</span>
@@ -731,6 +746,9 @@
 <span class="sd">        h : float, optional</span>
 <span class="sd">            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-</span>
 <span class="sd">            based error signal is used exclusively.</span>
+<span class="sd">        u_s_zoh_ab : complex</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling</span>
+<span class="sd">            period.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -739,7 +757,9 @@
 
 <span class="sd">        """</span>
         <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">()</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span>
+            <span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">u_s_zoh_ab</span><span class="o">=</span><span class="n">u_s_zoh_ab</span>
+        <span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">tau_L</span>
         <span class="k">return</span> <span class="n">out</span></div>
 

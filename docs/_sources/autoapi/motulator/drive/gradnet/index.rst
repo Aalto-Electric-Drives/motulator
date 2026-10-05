@@ -234,6 +234,9 @@ Package Contents
 
 .. py:class:: FluxMapWithHarmonics(model, k = 6)
 
+   Bases: :py:obj:`CurrentMapWithHarmonics`
+
+
    
    Callable wrapper for GradNet flux maps with spatial harmonics.
 

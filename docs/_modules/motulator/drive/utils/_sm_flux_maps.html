@@ -470,6 +470,7 @@
   <h1>Source code for motulator.drive.utils._sm_flux_maps</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Manipulate flux linkage and current lookup tables of synchronous machines."""</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">bisect</span><span class="w"> </span><span class="kn">import</span> <span class="n">bisect_right</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -478,6 +479,28 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegularGridInterpolator</span><span class="p">,</span> <span class="n">griddata</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadmat</span>
+
+
+<span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interp_bilinear</span><span class="p">(</span>
+    <span class="n">d_grid</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">q_grid</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Bilinear interpolation at a single point on a strictly ascending grid.</span>
+
+<span class="sd">    This gives the same result as `RegularGridInterpolator` with `method="linear"` and</span>
+<span class="sd">    `fill_value=None`, i.e., the edge cells are extrapolated linearly, but avoids its</span>
+<span class="sd">    overhead for a single point.</span>
+
+<span class="sd">    """</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">bisect_right</span><span class="p">(</span><span class="n">d_grid</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">d_grid</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">bisect_right</span><span class="p">(</span><span class="n">q_grid</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_grid</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">t_d</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">d_grid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">d_grid</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">d_grid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">t_q</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">q_grid</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">q_grid</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q_grid</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="p">(</span><span class="n">v00</span><span class="p">,</span> <span class="n">v01</span><span class="p">),</span> <span class="p">(</span><span class="n">v10</span><span class="p">,</span> <span class="n">v11</span><span class="p">)</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">j</span> <span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">v00</span> <span class="o">+</span> <span class="n">t_q</span> <span class="o">*</span> <span class="p">(</span><span class="n">v01</span> <span class="o">-</span> <span class="n">v00</span><span class="p">)</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">v10</span> <span class="o">+</span> <span class="n">t_q</span> <span class="o">*</span> <span class="p">(</span><span class="n">v11</span> <span class="o">-</span> <span class="n">v10</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">v0</span> <span class="o">+</span> <span class="n">t_d</span> <span class="o">*</span> <span class="p">(</span><span class="n">v1</span> <span class="o">-</span> <span class="n">v0</span><span class="p">))</span>
 
 
 <span class="c1"># %%</span>
@@ -649,6 +672,10 @@
             <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
         <span class="p">)</span>
 
+        <span class="c1"># Faster interpolation of single points on a strictly ascending grid</span>
+        <span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">fast</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="p">(</span><span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span><span class="p">))</span>
+
         <span class="c1"># Create a wrapper function that accepts complex inputs</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">lookup_fcn</span><span class="p">(</span><span class="n">dq_input</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">"""</span>
@@ -667,6 +694,14 @@
 <span class="sd">            """</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dq_input</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
                 <span class="c1"># Handle scalar complex input</span>
+                <span class="k">if</span> <span class="n">fast</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">_interp_bilinear</span><span class="p">(</span>
+                        <span class="n">d_grid</span><span class="p">,</span>
+                        <span class="n">q_grid</span><span class="p">,</span>
+                        <span class="n">new_out</span><span class="p">,</span>
+                        <span class="n">dq_input</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                        <span class="n">dq_input</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                    <span class="p">)</span>
                 <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
                     <span class="p">[</span>
                         <span class="p">[</span>

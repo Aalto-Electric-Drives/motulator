@@ -494,8 +494,8 @@
 <span class="sd">    Duty ratios and realized voltage for three-phase space-vector PWM.</span>
 
 <span class="sd">    This computes the duty ratios corresponding to standard space-vector PWM and</span>
-<span class="sd">    overmodulation [#Hav1999]_. The realized voltage is computed based on the measured</span>
-<span class="sd">    DC-bus voltage and the duty ratios. The digital delay effects are taken into account</span>
+<span class="sd">    overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios</span>
+<span class="sd">    and the measured DC-bus voltage. The digital delay effects are taken into account</span>
 <span class="sd">    in the realized voltage [#Bae2003]_.</span>
 
 <span class="sd">    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the</span>
@@ -515,9 +515,6 @@
 <span class="sd">        Compensation factor for the angular delay effect on the voltage reference,</span>
 <span class="sd">        defaults to 1.5. Use 0 if the controller compensates for the delays itself,</span>
 <span class="sd">        e.g., in direct discrete-time designs.</span>
-<span class="sd">    u_c0_ab : float, optional</span>
-<span class="sd">        Initial voltage (V) in stationary coordinates. This is used to compute the</span>
-<span class="sd">        realized voltage, defaults to 0.</span>
 <span class="sd">    overmodulation : Literal["MPE", "MME", "six_step"], optional</span>
 <span class="sd">        Overmodulation method, defaults to "MPE". Valid options are:</span>
 <span class="sd">        - "MPE": minimum phase error</span>
@@ -551,7 +548,6 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">k_comp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span>
-        <span class="n">u_c0_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span>
         <span class="n">overmodulation</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"MPE"</span><span class="p">,</span> <span class="s2">"MME"</span><span class="p">,</span> <span class="s2">"six_step"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"MPE"</span><span class="p">,</span>
         <span class="n">d_err</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">feedforward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -562,11 +558,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">=</span> <span class="n">overmodulation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="o">=</span> <span class="n">d_err</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">feedforward</span> <span class="o">=</span> <span class="n">feedforward</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">limited_voltage</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span> <span class="o">=</span> <span class="n">u_c0_ab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">limited_voltage</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="c1"># Duty ratios and voltages per DC-bus voltage of the previous and the ongoing</span>
+        <span class="c1"># sampling periods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q_ab</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span><span class="p">]</span>
 
 <div class="viewcode-block" id="PWM.six_step_overmodulation">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.common.control.PWM.six_step_overmodulation">[docs]</a>
@@ -716,14 +713,17 @@
 
 <div class="viewcode-block" id="PWM.get_realized_voltage">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.common.control.PWM.get_realized_voltage">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_realized_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_realized_voltage</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">average</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the realized voltage.</span>
 
 <span class="sd">        This method is to be called at the sampling instant before the next duty ratios</span>
 <span class="sd">        are computed, and a computational delay of one sampling period is assumed. The</span>
-<span class="sd">        measured currents are also stored for the feedforward compensation of the next</span>
-<span class="sd">        duty ratios.</span>
+<span class="sd">        voltage is computed from the duty ratios of the previous and the ongoing</span>
+<span class="sd">        sampling periods and the measured DC-bus voltage. The measured currents are also</span>
+<span class="sd">        stored for the feedforward compensation of the next duty ratios.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -731,38 +731,43 @@
 <span class="sd">            Measured converter current (A) in stationary coordinates.</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            Measured DC-bus voltage (V).</span>
+<span class="sd">        average : bool, optional</span>
+<span class="sd">            If True, the average voltage of the previous and the ongoing sampling</span>
+<span class="sd">            periods is returned. If False, the voltage of the ongoing sampling period</span>
+<span class="sd">            is returned. Defaults to True.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        complex</span>
-<span class="sd">            Realized converter voltage (V) in stationary coordinates, i.e., the average</span>
-<span class="sd">            voltage of the previous and the ongoing sampling periods. If `d_err` is</span>
+<span class="sd">            Realized converter voltage (V) in stationary coordinates. If `d_err` is</span>
 <span class="sd">            given, the voltage is corrected for it using the measured currents.</span>
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="n">i_c_ab</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span>
-        <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">)</span>
-        <span class="n">d_err</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_err</span><span class="p">(</span><span class="n">i_abc</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">-</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_err</span><span class="p">)</span></div>
+        <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">average</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="n">q_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q_ab</span><span class="p">[</span><span class="n">k</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">)</span>
+            <span class="n">q_ab</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">q</span> <span class="o">-</span> <span class="n">abc2complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_err</span><span class="p">(</span><span class="n">i_abc</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">q_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="n">k</span><span class="p">:],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">q_ab</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PWM.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.common.control.PWM.update">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Update the realized voltage."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">realized_voltage</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span> <span class="o">+</span> <span class="n">u_c_ab</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_old_u_c_ab</span> <span class="o">=</span> <span class="n">u_c_ab</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">d_abc</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Store the duty ratios of the next sampling period."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q_ab</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_q_ab</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)]</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-        <span class="n">d_abc</span><span class="p">,</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">)</span>
+        <span class="n">d_abc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_c_ref_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">d_abc</span></div>
 
 </pre></div>

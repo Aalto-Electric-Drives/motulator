@@ -832,12 +832,13 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_zoh_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
+<li><p><strong>u_s_zoh_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
 <li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
@@ -988,17 +989,20 @@ Trans. Power Electron., 2010, <a class="reference external" href="https://doi.or
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.FluxObserver.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_zoh_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute the feedback signals for the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates, averaged over the previous and
+the ongoing sampling periods.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Rotor speed (mechanical rad/s), typically from the speed observer.</p></li>
 <li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – External rotor speed error signal (mechanical rad/s), defaults to 0.</p></li>
 <li><p><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Weight of <cite>eps_ext</cite> in the range [0, 1], defaults to 0, i.e., the model-
 based error signal is used exclusively.</p></li>
+<li><p><strong>u_s_zoh_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+period.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1072,12 +1076,13 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorController.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController.get_feedback" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_zoh_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
+<li><p><strong>u_s_zoh_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
 <li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
@@ -1274,12 +1279,13 @@ the stator flux and torque channels is used <a class="footnote-reference bracket
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.ObserverBasedVHzController.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ObserverBasedVHzController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ObserverBasedVHzController.get_feedback" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_zoh_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ObserverBasedVHzController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ObserverBasedVHzController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
+<li><p><strong>u_s_zoh_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
 <li><p><strong>w_M_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
@@ -1413,11 +1419,11 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.PWM">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c0_ab</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
-overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. The realized voltage is computed based on the measured
-DC-bus voltage and the duty ratios. The digital delay effects are taken into account
+overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. The realized voltage is computed from the duty ratios
+and the measured DC-bus voltage. The digital delay effects are taken into account
 in the realized voltage <a class="footnote-reference brackets" href="#bae2003" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <p>Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
 dead time and the voltage drops of the power devices) is modeled as a function of
@@ -1435,8 +1441,6 @@ duty-dependent error.</p>
 <li><p><strong>k_comp</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Compensation factor for the angular delay effect on the voltage reference,
 defaults to 1.5. Use 0 if the controller compensates for the delays itself,
 e.g., in direct discrete-time designs.</p></li>
-<li><p><strong>u_c0_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Initial voltage (V) in stationary coordinates. This is used to compute the
-realized voltage, defaults to 0.</p></li>
 <li><p><strong>overmodulation</strong> (<em>Literal</em><em>[</em><em>&quot;MPE&quot;</em><em>, </em><em>&quot;MME&quot;</em><em>, </em><em>&quot;six_step&quot;</em><em>]</em><em>, </em><em>optional</em>) – Overmodulation method, defaults to “MPE”. Valid options are:
 - “MPE”: minimum phase error
 - “MME”: minimum magnitude error
@@ -1516,22 +1520,25 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.PWM.get_realized_voltage">
-<span class="sig-name descname"><span class="pre">get_realized_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.get_realized_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM.get_realized_voltage" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_realized_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.get_realized_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM.get_realized_voltage" title="Link to this definition">#</a></dt>
 <dd><p>Get the realized voltage.</p>
 <p>This method is to be called at the sampling instant before the next duty ratios
 are computed, and a computational delay of one sampling period is assumed. The
-measured currents are also stored for the feedforward compensation of the next
-duty ratios.</p>
+voltage is computed from the duty ratios of the previous and the ongoing
+sampling periods and the measured DC-bus voltage. The measured currents are also
+stored for the feedforward compensation of the next duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Measured converter current (A) in stationary coordinates.</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Measured DC-bus voltage (V).</p></li>
+<li><p><strong>average</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the average voltage of the previous and the ongoing sampling
+periods is returned. If False, the voltage of the ongoing sampling period
+is returned. Defaults to True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Realized converter voltage (V) in stationary coordinates, i.e., the average
-voltage of the previous and the ongoing sampling periods. If <cite>d_err</cite> is
+<dd class="field-even"><p>Realized converter voltage (V) in stationary coordinates. If <cite>d_err</cite> is
 given, the voltage is corrected for it using the measured currents.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1573,14 +1580,11 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.PWM.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM.update" title="Link to this definition">#</a></dt>
-<dd><p>Update the realized voltage.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM.update" title="Link to this definition">#</a></dt>
+<dd><p>Store the duty ratios of the next sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p></li>
-<li><p><strong>d_abc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>d_abc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1667,16 +1671,19 @@ mechanical system model is not used.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_zoh_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute feedback signals with speed estimation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates.</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates, averaged over the previous and
+the ongoing sampling periods.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – External rotor speed error signal (mechanical rad/s), defaults to 0.</p></li>
 <li><p><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Weight of <cite>eps_ext</cite> in the range [0, 1], defaults to 0, i.e., the model-
 based error signal is used exclusively.</p></li>
+<li><p><strong>u_s_zoh_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+period.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
