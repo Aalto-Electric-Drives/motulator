@@ -496,7 +496,8 @@
 
 <span class="sd">    This injects a square-wave voltage in the estimated d-axis direction and computes</span>
 <span class="sd">    the mechanical position error signal by demodulating the current response. Cross-</span>
-<span class="sd">    saturation errors are compensated for using flux maps.</span>
+<span class="sd">    saturation errors are compensated for using flux maps. The computational delay of</span>
+<span class="sd">    one sampling period is taken into account in the demodulation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -530,6 +531,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">=</span> <span class="n">T_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_psi_sq_history</span><span class="p">:</span> <span class="n">deque</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">deque</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">N_inj</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Injection voltages of the two previous sampling periods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sd_inj_history</span><span class="p">:</span> <span class="n">deque</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">deque</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">maxlen</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_inj_counter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -542,7 +545,9 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_psi_sq_history</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inj</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eps</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inj_counter</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># Due to the computational delay of one sampling period, the applied injection</span>
+        <span class="c1"># voltage changes its sign one sampling period after the counter wraps around</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inj_counter</span> <span class="o">!=</span> <span class="mi">1</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inj</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eps</span>
 
         <span class="c1"># Compute the second difference over two injection half-periods</span>
@@ -552,9 +557,11 @@
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psi_sq_history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inj</span><span class="p">]</span>
         <span class="p">)</span>
 
-        <span class="c1"># Update the error signal at injection voltage transitions</span>
-        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">d_psi_sq</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inj</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">)</span>
+        <span class="c1"># Update the error signal at the transitions of the applied injection voltage,</span>
+        <span class="c1"># using the voltage applied over the previous sampling period</span>
+        <span class="n">u_sd_inj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_sd_inj_history</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u_sd_inj</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">d_psi_sq</span> <span class="o">/</span> <span class="p">(</span><span class="n">u_sd_inj</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inj</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_eps</span> <span class="o">=</span> <span class="mf">0.0</span>
 
@@ -562,6 +569,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Toggle the injection voltage, whose amplitude is scaled by `scale`."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_sd_inj_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_sd_inj</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_inj_counter</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inj_counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_inj</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inj_counter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_sign</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_sign</span>
