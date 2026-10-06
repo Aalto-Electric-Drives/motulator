@@ -228,7 +228,7 @@ system model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.232 seconds)
+   **Total running time of the script:** (0 minutes 21.615 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:

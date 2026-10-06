@@ -4,8 +4,7 @@
 
 This example simulates sensorless vector control of a saturated 6.7-kW synchronous
 reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop
-is used. Cross-saturation errors are compensated for using flux maps. Square-wave
-signal injection with a simple phase-locked loop is used.
+is used. Cross-saturation errors are compensated for using flux maps.
 
 """
 
@@ -38,9 +37,10 @@ mdl = model.Drive(machine, mechanics, converter)
 # %%
 # Configure the control system.
 
-# Compute rectilinear current and flux maps
+# Compute rectilinear current and flux maps. The grid covers the MTPV locus, which the
+# reference generator computes up to the MTPA flux at the maximum current.
 psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 32)
-psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 32)
+psi_q_range = np.linspace(-base.psi, base.psi, 64)
 curr_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range)
 flux_map = curr_map.invert()
 

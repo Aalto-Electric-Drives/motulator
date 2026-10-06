@@ -23,10 +23,9 @@
 
 This example simulates sensorless vector control of a saturated 6.7-kW synchronous
 reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop
-is used. Cross-saturation errors are compensated for using flux maps. Square-wave
-signal injection with a simple phase-locked loop is used.
+is used. Cross-saturation errors are compensated for using flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-19
+.. GENERATED FROM PYTHON SOURCE LINES 12-18
 
 .. code-block:: Python
 
@@ -43,11 +42,11 @@ signal injection with a simple phase-locked loop is used.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-25
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -62,11 +61,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-27
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-38
+.. GENERATED FROM PYTHON SOURCE LINES 26-37
 
 .. code-block:: Python
 
@@ -88,18 +87,19 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-40
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-56
+.. GENERATED FROM PYTHON SOURCE LINES 39-56
 
 .. code-block:: Python
 
 
-    # Compute rectilinear current and flux maps
+    # Compute rectilinear current and flux maps. The grid covers the MTPV locus, which the
+    # reference generator computes up to the MTPA flux at the maximum current.
     psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 32)
-    psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 32)
+    psi_q_range = np.linspace(-base.psi, base.psi, 64)
     curr_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range)
     flux_map = curr_map.invert()
 
@@ -206,7 +206,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 13.937 seconds)
+   **Total running time of the script:** (0 minutes 22.873 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py:

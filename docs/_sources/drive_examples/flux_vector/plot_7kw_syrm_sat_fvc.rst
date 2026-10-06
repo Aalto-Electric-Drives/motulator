@@ -88,14 +88,15 @@ Configure the system model.
 
 Configure the control system, including the saturation model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-59
+.. GENERATED FROM PYTHON SOURCE LINES 36-60
 
 .. code-block:: Python
 
 
-    # Compute a rectilinear flux map
+    # Compute a rectilinear flux map. The grid covers the MTPV locus, which the reference
+    # generator computes up to the MTPA flux at the maximum current.
     psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 256)
-    psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 256)
+    psi_q_range = np.linspace(-base.psi, base.psi, 256)
     flux_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range).invert()
 
     # Plot the flux maps
@@ -139,11 +140,11 @@ Configure the control system, including the saturation model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Plot control characteristics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-70
+.. GENERATED FROM PYTHON SOURCE LINES 62-71
 
 .. code-block:: Python
 
@@ -194,11 +195,11 @@ Plot control characteristics.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 72-73
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 73-77
 
 .. code-block:: Python
 
@@ -213,11 +214,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 78-79
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 79-83
 
 .. code-block:: Python
 
@@ -240,7 +241,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.712 seconds)
+   **Total running time of the script:** (0 minutes 12.551 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py:
