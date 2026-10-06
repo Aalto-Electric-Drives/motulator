@@ -7,7 +7,8 @@ sign errors but tolerate retuning of the controllers.
 
 """
 
-from math import pi
+from dataclasses import astuple, replace
+from math import pi, tanh
 
 import numpy as np
 import pytest
@@ -229,6 +230,73 @@ def test_pm_flux_adaptation_keeps_parameters() -> None:
 
     assert par.psi_f == 0.545
     assert res.ctrl.fbk.psi_f[-1] != 0.545  # The estimate is adapted
+
+
+@pytest.mark.parametrize("online_ref", [False, True])
+def test_syrm_torque_step_at_start(online_ref: bool) -> None:
+    """A torque step at start-up magnetizes the SyRM within the current limit."""
+    par = sm_control.SynchronousMachinePars(
+        n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0
+    )
+    cfg = sm_control.CurrentVectorControllerCfg(
+        i_s_max=30, psi_s_min=0.2, online_ref=online_ref
+    )
+    ctrl = sm_control.VectorControlSystem(sm_control.CurrentVectorController(par, cfg))
+    mdl = model.Drive(
+        model.SynchronousMachine(par),
+        model.MechanicalSystem(J=0.015),
+        model.VoltageSourceConverter(u_dc=540),
+    )
+    ctrl.set_torque_ref(lambda t: 10.0)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.1)
+
+    assert np.max(np.abs(res.mdl.machine.i_s_ab)) < 30
+    assert res.mdl.machine.tau_M[-1] == pytest.approx(10.0, rel=0.05)
+    # A SyRM cannot produce torque without flux
+    with pytest.raises(ValueError):
+        sm_control.CurrentVectorController(par, replace(cfg, psi_s_min=None))
+
+
+@pytest.mark.parametrize("two_mass", [False, True])
+def test_scalar_mechanics_functions(two_mass: bool) -> None:
+    """The load torque and friction functions are called with scalar arguments."""
+
+    def B_L(w: float) -> float:
+        return 0.01 * tanh(w)
+
+    def tau_L(t: float) -> float:
+        return 7.0 if t > 0.05 else 0.0
+
+    mechanics = (
+        model.TwoMassMechanicalSystem(J_M=0.005, J_L=0.01, K_S=700, C_S=0.01, B_L=B_L)
+        if two_mass
+        else model.MechanicalSystem(J=0.015, B_L=B_L)
+    )
+    par = model.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    mdl = model.Drive(
+        model.SynchronousMachine(par), mechanics, model.VoltageSourceConverter(u_dc=540)
+    )
+    ctrl = ipmsm_cvc(sensorless=False)
+    ctrl.set_speed_ref(lambda t: 20.0)
+    mdl.mechanics.set_external_load_torque(tau_L)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.1)
+
+    assert res.success
+    w_L = (res.mdl.mechanics.w_L if two_mass else res.mdl.mechanics.w_M)[-1]
+    assert res.mdl.mechanics.tau_L_tot[-1] == pytest.approx(7.0 + B_L(w_L) * w_L)
+
+
+def test_im_parameter_conversion_round_trip() -> None:
+    """The Γ and inverse-Γ parameter conversions preserve all the parameters."""
+    par = model.InductionMachinePars(
+        n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245, G_c=0.02
+    )
+    par_inv = model.InductionMachineInvGammaPars.from_gamma_pars(par)
+    assert par_inv.G_c == par.G_c
+    par_back = model.InductionMachinePars.from_inv_gamma_pars(par_inv)
+    assert astuple(par_back) == pytest.approx(astuple(par))
 
 
 @pytest.mark.parametrize("w", [0, 2000, -6000])

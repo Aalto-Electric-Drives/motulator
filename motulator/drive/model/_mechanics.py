@@ -16,8 +16,8 @@ from motulator.common.utils._utils import empty_array, get_value
 class Inputs:
     """Input variables."""
 
-    tau_M: float | None = None
-    tau_L: Callable[[float], float] = lambda t: 0.0 * t
+    tau_M: float = 0.0
+    tau_L: Callable[[float], float] = lambda t: 0.0
 
 
 @dataclass
@@ -78,11 +78,9 @@ class MechanicalSystem(Subsystem):
         """Set external rotor speed (rad/s)."""
         raise NotImplementedError
 
-    def compute_total_load_torque(self, t: Any, state: Any) -> Any:
+    def compute_total_load_torque(self, t: float, w_M: float) -> float:
         """Total load torque (Nm)."""
-        B_L = get_value(self.B_L, state.w_M)
-        tau_L_tot = B_L * state.w_M.real + self.inp.tau_L(t)
-        return tau_L_tot
+        return get_value(self.B_L, w_M) * w_M + self.inp.tau_L(t)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -92,7 +90,7 @@ class MechanicalSystem(Subsystem):
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
         state, inp = self.state, self.inp
-        tau_L_tot = self.compute_total_load_torque(t, state)
+        tau_L_tot = self.compute_total_load_torque(t, state.w_M.real)
         d_exp_j_theta_M = 1j * state.w_M * state.exp_j_theta_M
         d_w_M = (inp.tau_M - tau_L_tot) / self.J
         return [d_exp_j_theta_M, d_w_M]
@@ -129,7 +127,12 @@ class MechanicalSystemTimeSeries(SubsystemTimeSeries):
     def __post_init__(self, t: np.ndarray, subsystem: MechanicalSystem) -> None:
         self.w_M = np.real(np.array(subsystem._history.w_M))
         self.exp_j_theta_M = np.array(subsystem._history.exp_j_theta_M)
-        self.tau_L_tot = subsystem.compute_total_load_torque(t, self)
+        self.tau_L_tot = np.array(
+            [
+                subsystem.compute_total_load_torque(t_k, w_M_k)
+                for t_k, w_M_k in zip(t, self.w_M, strict=True)
+            ]
+        )
         self.theta_M = np.angle(self.exp_j_theta_M)
 
 
@@ -206,12 +209,13 @@ class TwoMassMechanicalSystem(Subsystem):
         """Set external rotor speed (rad/s)."""
         raise NotImplementedError
 
-    def compute_torques(self, t: Any, state: Any) -> tuple[Any, Any]:
-        """Compute shaft and load torques (Nm)."""
-        B_L = get_value(self.B_L, state.w_L)
-        tau_S = self.K_S * state.theta_ML + self.C_S * (state.w_M - state.w_L)
-        tau_L_tot = B_L * state.w_L + self.inp.tau_L(t)
-        return tau_S, tau_L_tot
+    def compute_shaft_torque(self, theta_ML: Any, w_M: Any, w_L: Any) -> Any:
+        """Shaft torque (Nm)."""
+        return self.K_S * theta_ML + self.C_S * (w_M - w_L)
+
+    def compute_total_load_torque(self, t: float, w_L: float) -> float:
+        """Total load torque (Nm)."""
+        return get_value(self.B_L, w_L) * w_L + self.inp.tau_L(t)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -221,7 +225,8 @@ class TwoMassMechanicalSystem(Subsystem):
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
         state, inp = self.state, self.inp
-        tau_S, tau_L_tot = self.compute_torques(t, state)
+        tau_S = self.compute_shaft_torque(state.theta_ML, state.w_M, state.w_L)
+        tau_L_tot = self.compute_total_load_torque(t, state.w_L.real)
         d_exp_j_theta_M = 1j * state.w_M * state.exp_j_theta_M
         d_w_M = (inp.tau_M - tau_S) / self.J_M
         d_w_L = (tau_S - tau_L_tot) / self.J_L
@@ -274,7 +279,13 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
         self.exp_j_theta_M = np.array(subsystem._history.exp_j_theta_M)
         self.w_L = np.real(np.array(subsystem._history.w_L))
         self.theta_ML = np.real(np.array(subsystem._history.theta_ML))
-        self.tau_S, self.tau_L_tot = subsystem.compute_torques(t, self)
+        self.tau_S = subsystem.compute_shaft_torque(self.theta_ML, self.w_M, self.w_L)
+        self.tau_L_tot = np.array(
+            [
+                subsystem.compute_total_load_torque(t_k, w_L_k)
+                for t_k, w_L_k in zip(t, self.w_L, strict=True)
+            ]
+        )
         self.theta_M = np.angle(self.exp_j_theta_M)
 
 

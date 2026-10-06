@@ -320,6 +320,10 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
 
         i_s0 = (psi_s_dq.real - self.psi_f) / self.L_d0 + 1j * psi_s_dq.imag / self.L_q0
         sol = root(error, [i_s0.real, i_s0.imag], jac=jac, method="hybr")
+        # The residual is checked instead of sol.success, since the solver reports no
+        # progress at the rounding error, e.g., of single-precision maps
+        if np.hypot(*sol.fun) > 1e-5 * max(abs(psi_s_dq), 0.1):
+            raise ValueError(f"Flux linkage {psi_s_dq} not invertible: {sol.message}")
         return sol.x[0] + 1j * sol.x[1]
 
 
@@ -624,4 +628,4 @@ class InductionMachineInvGammaPars:
         R_R = g**2 * par.R_r
         L_sgm = g * par.L_ell
         L_M = g * par.L_s
-        return cls(R_s=par.R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, n_p=par.n_p)
+        return cls(R_s=par.R_s, R_R=R_R, L_sgm=L_sgm, L_M=L_M, n_p=par.n_p, G_c=par.G_c)

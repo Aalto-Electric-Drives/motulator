@@ -57,7 +57,8 @@ class ReferenceGenerator:
     i_s_max : float
         Maximum stator current (A).
     psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`.
+        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+        machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional
@@ -100,6 +101,8 @@ class ReferenceGenerator:
         self.alpha = alpha_ref
 
         psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
+        if par.psi_f == 0 and psi_s_min <= 0:
+            raise ValueError("psi_s_min must be positive for machines without PMs.")
         self.psi_s_limits = (psi_s_min, psi_s_max)
 
         # Generate LUTs
@@ -122,10 +125,12 @@ class ReferenceGenerator:
         self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
         self.tau_M_cl = cl.tau_M_vs_psi_s_abs
 
-        # Current-reference state, initialized at the zero-torque operating point
-        self.i_s_ref = complex(self.i_s_mtpa(0.0))
+        # Current-reference state, initialized at the zero-torque operating point of the
+        # minimum flux
         if par.psi_f == 0:
-            self.i_s_ref = EPS * i_s_max
+            self.i_s_ref = complex(psi_s_min / par.incr_ind_mat(0j)[0, 0])
+        else:
+            self.i_s_ref = complex(self.i_s_mtpa(0.0))
 
         self.tau_M_ref = 0.0
         self.psi_s_ref = self.psi_s_limits[0]
@@ -246,7 +251,8 @@ class ReferenceGeneratorOnline:
     i_s_max : float
         Maximum stator current (A).
     psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`.
+        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+        machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional
@@ -274,6 +280,8 @@ class ReferenceGeneratorOnline:
         self.alpha = alpha_ref
 
         psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
+        if par.psi_f == 0 and psi_s_min <= 0:
+            raise ValueError("psi_s_min must be positive for machines without PMs.")
         self.psi_s_limits = (psi_s_min, psi_s_max)
 
         # Dynamic tracking states

@@ -72,6 +72,9 @@ class ControlLoci:
     the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
     compared to [#Var2022]_, but otherwise the concepts are equivalent.
 
+    The d axis is assumed to be aligned with the PM flux, in which case `L_q >= L_d`,
+    or, in machines without PMs, with the maximum inductance, i.e., `L_d > L_q`.
+
     References
     ----------
     .. [#Mor1994] Morimoto, Sanada, Takeda, "Wide-speed operation of interior permanent
@@ -133,7 +136,9 @@ class ControlLoci:
             gamma_range = (0.5 * np.pi, np.pi)
 
         if mtpa_cond(gamma_range[0]) * mtpa_cond(gamma_range[1]) > 0:
-            return 0.0  # No root in the range
+            raise ValueError(
+                "No MTPA solution found. Check the alignment of the d axis, see Notes."
+            )
         return root_scalar(mtpa_cond, bracket=gamma_range, method="brentq").root
 
     def compute_mtpa_locus(self, i_s_max: float, num: int = NUM) -> MTPALocus:
