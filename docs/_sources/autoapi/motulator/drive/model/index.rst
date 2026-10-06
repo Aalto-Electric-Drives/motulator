@@ -1043,7 +1043,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_total_load_torque(t, state)
+   .. py:method:: compute_total_load_torque(t, w_M)
 
       
       Total load torque (Nm).
@@ -1967,10 +1967,34 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_torques(t, state)
+   .. py:method:: compute_shaft_torque(theta_ML, w_M, w_L)
 
       
-      Compute shaft and load torques (Nm).
+      Shaft torque (Nm).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_total_load_torque(t, w_L)
+
+      
+      Total load torque (Nm).
 
 
 

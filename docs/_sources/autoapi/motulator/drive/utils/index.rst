@@ -197,6 +197,9 @@ Package Contents
    the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
    compared to [#Var2022]_, but otherwise the concepts are equivalent.
 
+   The d axis is assumed to be aligned with the PM flux, in which case `L_q >= L_d`,
+   or, in machines without PMs, with the maximum inductance, i.e., `L_d > L_q`.
+
    .. rubric:: References
 
    .. [#Mor1994] Morimoto, Sanada, Takeda, "Wide-speed operation of interior permanent

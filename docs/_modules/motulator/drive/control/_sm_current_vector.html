@@ -627,7 +627,8 @@
 <span class="sd">    k_f : Callable[[float], float], optional</span>
 <span class="sd">        PM-flux estimation gain as a function of the rotor angular speed.</span>
 <span class="sd">    psi_s_min : float, optional</span>
-<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.</span>
+<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be</span>
+<span class="sd">        positive for machines without PMs.</span>
 <span class="sd">    psi_s_max : float, optional</span>
 <span class="sd">        Maximum stator flux (Vs), defaults to `inf`.</span>
 <span class="sd">    k_u : float, optional</span>

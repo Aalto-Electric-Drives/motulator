@@ -620,7 +620,8 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_torques"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_torques()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_shaft_torque()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_total_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_position()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_speed()</span></code></a></li>
@@ -1369,17 +1370,17 @@ The default is <code class="docutils literal notranslate"><span class="pre">B_L<
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.compute_total_load_torque">
-<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
 <dd><p>Total load torque (Nm).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>Any</em>)</p></li>
-<li><p><strong>state</strong> (<em>Any</em>)</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Any</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1899,18 +1900,36 @@ The default is <code class="docutils literal notranslate"><span class="pre">B_L<
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.compute_torques">
-<span class="sig-name descname"><span class="pre">compute_torques</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_torques"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_torques" title="Link to this definition">#</a></dt>
-<dd><p>Compute shaft and load torques (Nm).</p>
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque">
+<span class="sig-name descname"><span class="pre">compute_shaft_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta_ML</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_shaft_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque" title="Link to this definition">#</a></dt>
+<dd><p>Shaft torque (Nm).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<em>Any</em>)</p></li>
-<li><p><strong>state</strong> (<em>Any</em>)</p></li>
+<li><p><strong>theta_ML</strong> (<em>Any</em>)</p></li>
+<li><p><strong>w_M</strong> (<em>Any</em>)</p></li>
+<li><p><strong>w_L</strong> (<em>Any</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[Any, Any]</p>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque">
+<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
+<dd><p>Total load torque (Nm).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>w_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2300,7 +2319,8 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_torques"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_torques()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_shaft_torque()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_total_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_position()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_speed()</span></code></a></li>

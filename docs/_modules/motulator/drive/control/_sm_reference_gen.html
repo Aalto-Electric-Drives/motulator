@@ -529,7 +529,8 @@
 <span class="sd">    i_s_max : float</span>
 <span class="sd">        Maximum stator current (A).</span>
 <span class="sd">    psi_s_min : float, optional</span>
-<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f`.</span>
+<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for</span>
+<span class="sd">        machines without PMs.</span>
 <span class="sd">    psi_s_max : float, optional</span>
 <span class="sd">        Maximum stator flux (Vs), defaults to `inf`.</span>
 <span class="sd">    k_u : float, optional</span>
@@ -572,6 +573,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_ref</span>
 
         <span class="n">psi_s_min</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="k">if</span> <span class="n">psi_s_min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">psi_s_min</span>
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">psi_s_min</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"psi_s_min must be positive for machines without PMs."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_limits</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s_min</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="p">)</span>
 
         <span class="c1"># Generate LUTs</span>
@@ -594,10 +597,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_cl</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">i_s_dq_vs_psi_s_abs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_cl</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">tau_M_vs_psi_s_abs</span>
 
-        <span class="c1"># Current-reference state, initialized at the zero-torque operating point</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpa</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+        <span class="c1"># Current-reference state, initialized at the zero-torque operating point of the</span>
+        <span class="c1"># minimum flux</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="n">EPS</span> <span class="o">*</span> <span class="n">i_s_max</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">psi_s_min</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_mtpa</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_M_ref</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -730,7 +735,8 @@
 <span class="sd">    i_s_max : float</span>
 <span class="sd">        Maximum stator current (A).</span>
 <span class="sd">    psi_s_min : float, optional</span>
-<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f`.</span>
+<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for</span>
+<span class="sd">        machines without PMs.</span>
 <span class="sd">    psi_s_max : float, optional</span>
 <span class="sd">        Maximum stator flux (Vs), defaults to `inf`.</span>
 <span class="sd">    k_u : float, optional</span>
@@ -758,6 +764,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha_ref</span>
 
         <span class="n">psi_s_min</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="k">if</span> <span class="n">psi_s_min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">psi_s_min</span>
+        <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">psi_s_min</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"psi_s_min must be positive for machines without PMs."</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_limits</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s_min</span><span class="p">,</span> <span class="n">psi_s_max</span><span class="p">)</span>
 
         <span class="c1"># Dynamic tracking states</span>

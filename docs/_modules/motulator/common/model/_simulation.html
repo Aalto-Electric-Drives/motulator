@@ -612,8 +612,8 @@
 
         <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># Initialize outputs based on initial states</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="c1"># Initialize outputs based on the current states</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span>
 
             <span class="c1"># Main simulation loop</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_run_simulation_loop</span><span class="p">(</span><span class="n">t_stop</span><span class="p">,</span> <span class="n">update_progress</span><span class="p">,</span> <span class="n">N_eval</span><span class="p">)</span>

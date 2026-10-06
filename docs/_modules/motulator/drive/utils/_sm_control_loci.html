@@ -544,6 +544,9 @@
 <span class="sd">    the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as</span>
 <span class="sd">    compared to [#Var2022]_, but otherwise the concepts are equivalent.</span>
 
+<span class="sd">    The d axis is assumed to be aligned with the PM flux, in which case `L_q &gt;= L_d`,</span>
+<span class="sd">    or, in machines without PMs, with the maximum inductance, i.e., `L_d &gt; L_q`.</span>
+
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
 <span class="sd">    .. [#Mor1994] Morimoto, Sanada, Takeda, "Wide-speed operation of interior permanent</span>
@@ -607,7 +610,9 @@
             <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">mtpa_cond</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">mtpa_cond</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">0.0</span>  <span class="c1"># No root in the range</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"No MTPA solution found. Check the alignment of the d axis, see Notes."</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">mtpa_cond</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="n">gamma_range</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"brentq"</span><span class="p">)</span><span class="o">.</span><span class="n">root</span></div>
 
 

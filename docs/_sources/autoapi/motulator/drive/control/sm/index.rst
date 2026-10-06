@@ -262,7 +262,8 @@ Module Contents
    :type k_o: Callable[[float], float], optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
    :type k_f: Callable[[float], float], optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
+                     positive for machines without PMs.
    :type psi_s_min: float, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -653,7 +654,8 @@ Module Contents
    :type k_o: Callable[[float], float] | None, optional
    :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
    :type k_f: Callable[[float], float] | None, optional
-   :param psi_s_min: Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere.
+   :param psi_s_min: Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere. It must be
+                     positive for machines without PMs.
    :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -835,7 +837,8 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
    :type k_mtpv: float, optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
+                     positive for machines without PMs.
    :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -1313,7 +1316,8 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+                     machines without PMs.
    :type psi_s_min: float, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -1462,7 +1466,8 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+                     machines without PMs.
    :type psi_s_min: float, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
