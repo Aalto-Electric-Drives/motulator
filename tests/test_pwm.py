@@ -132,8 +132,9 @@ def test_feedforward_current_prediction(k_comp: float) -> None:
 @pytest.mark.parametrize("t_d", [0, 2e-6], ids=["no_d_err", "dead_time"])
 def test_min_pulse(t_d: float) -> None:
     """The duty ratios of the switching legs are in [d_min, 1 - d_min], those of the
-    clamped legs are 0 or 1, and the realized voltage equals that of the system model,
-    also in overmodulation."""
+    clamped legs are 0 or 1, the limited voltage reference includes the minimum
+    pulses, and the realized voltage equals that of the system model, also in
+    overmodulation."""
     T_s, u_dc, d_min = 1e-4, 540, 0.04
     d_err = None if t_d == 0 else lambda i, d: dead_time_error(i, d, t_d, T_s)
     pwm = PWM(d_err=d_err, d_min=d_min)
@@ -154,6 +155,7 @@ def test_min_pulse(t_d: float) -> None:
         limited += np.sum(~switching | (d == d_min) | (d == 1 - d_min))
         if t_d == 0:  # Rounded to the nearest
             assert np.all(np.abs(d - d_ref) <= d_min / 2 + 1e-12)
+            assert pwm.limited_voltage == pytest.approx(u_dc * abc2complex(d))
         _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, list(d))
         converter.set_gate_signals(q_abc[0], b_abc[0])
         u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=False)
@@ -175,18 +177,20 @@ def test_min_pulse_dead_time() -> None:
     d_comp = np.clip(d_ref + d_err(i_abc, d_ref), 0, 1)  # [0.022, 0.002, 0.995]
     # Rounding the compensated duty ratio would give d_min = 0.04 in phase a, whose
     # realized duty ratio 0.03 is farther from the reference 0.012 than 0
-    assert pwm.limit_pulses(list(d_comp), d_ref, i_abc) == [0, 0, 1]
+    assert pwm.limit_pulses(list(d_comp), d_ref, i_abc)[0] == [0, 0, 1]
     # Without the compensation, the duty ratios are rounded to the nearest
     d = [0.022, 0.002, 0.995]
-    assert pwm.limit_pulses(d, np.array(d)) == [d_min, 0, 1]
+    assert pwm.limit_pulses(d, np.array(d))[0] == [d_min, 0, 1]
     # Exhaustively, the realized duty ratio is the nearest among the allowed ones
     rng = np.random.default_rng(1)
     for _ in range(200):
         d_ref = rng.uniform(0, 1, 3) ** 4 * rng.choice([1, -1], 3) % 1
         i_abc = rng.uniform(-5, 5, 3)
         d_comp = np.clip(d_ref + d_err(i_abc, d_ref), 0, 1)
-        d = np.array(pwm.limit_pulses(list(d_comp), d_ref, i_abc))
+        d_lim, d_realized = pwm.limit_pulses(list(d_comp), d_ref, i_abc)
+        d = np.array(d_lim)
         realized = d - d_err(i_abc, d)
+        assert d_realized == pytest.approx(np.where(d != d_comp, realized, d_ref))
         for k in np.flatnonzero((0 < d_comp) & (d_comp < 1) & (d != d_comp)):
             for d_k in (0.0, d_min, 1 - d_min, 1.0):
                 if abs(d_k - d_comp[k]) <= d_min:
