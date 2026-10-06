@@ -166,7 +166,8 @@ class FluxVectorControllerCfg:
     k_f : Callable[[float], float] | None, optional
         PM-flux estimation gain as a function of the rotor angular speed.
     psi_s_min : float | None, optional
-        Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere.
+        Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere. It must be
+        positive for machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional
@@ -339,7 +340,8 @@ class ObserverBasedVHzControllerCfg:
     k_mtpv : float, optional
         MTPV margin, defaults to 0.9.
     psi_s_min : float | None, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
+        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
+        positive for machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     T_s : float, optional

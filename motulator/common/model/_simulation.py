@@ -132,8 +132,8 @@ class Simulation:
 
         error = None
         try:
-            # Initialize outputs based on initial states
-            self.mdl.set_outputs(0.0)
+            # Initialize outputs based on the current states
+            self.mdl.set_outputs(self.mdl.t0)
 
             # Main simulation loop
             self._run_simulation_loop(t_stop, update_progress, N_eval)

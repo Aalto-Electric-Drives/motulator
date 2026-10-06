@@ -143,7 +143,8 @@ class CurrentVectorControllerCfg:
     k_f : Callable[[float], float], optional
         PM-flux estimation gain as a function of the rotor angular speed.
     psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere.
+        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
+        positive for machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional
