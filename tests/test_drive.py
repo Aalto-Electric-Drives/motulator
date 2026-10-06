@@ -81,16 +81,17 @@ def ipmsm_cvc_discrete() -> sm_control.VectorControlSystem:
     )
 
 
-def ipmsm_signal_inj() -> sm_control.VectorControlSystem:
+def ipmsm_signal_inj(N_inj: int = 1) -> sm_control.VectorControlSystem:
     par = sm_control.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
     )
-    # Signal injection is always sensorless, regardless of the cfg
+    # Signal injection is always sensorless, regardless of the cfg. The sampling period
+    # is scaled to keep the injection frequency at 4 kHz.
     cfg = sm_control.CurrentVectorControllerCfg(
-        i_s_max=6.5, alpha_o=2 * pi * 40, sensorless=False
+        i_s_max=6.5, alpha_o=2 * pi * 40, sensorless=False, T_s=125e-6 / N_inj
     )
     return sm_control.VectorControlSystem(
-        sm_control.SignalInjectionController(par, cfg),
+        sm_control.SignalInjectionController(par, cfg, N_inj=N_inj),
         sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
     )
 
@@ -140,6 +141,7 @@ CASES = {
     "ipmsm_cvc_sensored": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(False)),
     "ipmsm_cvc_discrete": (lambda: ipmsm_drive(False), ipmsm_cvc_discrete),
     "ipmsm_signal_inj": (lambda: ipmsm_drive(False), ipmsm_signal_inj),
+    "ipmsm_signal_inj_n3": (lambda: ipmsm_drive(False), lambda: ipmsm_signal_inj(3)),
     "im_cvc_sensorless": (im_drive, im_cvc),
     "im_cvc_discrete": (im_drive, im_cvc_discrete),
     "im_fvc_sensorless": (im_drive, im_fvc),
