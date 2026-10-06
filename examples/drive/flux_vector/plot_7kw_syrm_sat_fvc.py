@@ -34,9 +34,10 @@ mdl = model.Drive(machine, mechanics, converter)
 # %%
 # Configure the control system, including the saturation model.
 
-# Compute a rectilinear flux map
+# Compute a rectilinear flux map. The grid covers the MTPV locus, which the reference
+# generator computes up to the MTPA flux at the maximum current.
 psi_d_range = np.linspace(-1.5 * base.psi, 1.5 * base.psi, 256)
-psi_q_range = np.linspace(-0.5 * base.psi, 0.5 * base.psi, 256)
+psi_q_range = np.linspace(-base.psi, base.psi, 256)
 flux_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range).invert()
 
 # Plot the flux maps
