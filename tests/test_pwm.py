@@ -154,7 +154,7 @@ def test_min_pulse(t_d: float) -> None:
         limited += np.sum(~switching | (d == d_min) | (d == 1 - d_min))
         if t_d == 0:  # Rounded to the nearest
             assert np.all(np.abs(d - d_ref) <= d_min / 2 + 1e-12)
-        _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, d)
+        _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, list(d))
         converter.set_gate_signals(q_abc[0], b_abc[0])
         u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=False)
         assert u_c_ab == pytest.approx(u_dc * converter.inp.q_c_ab)
