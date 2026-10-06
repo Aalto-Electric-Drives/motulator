@@ -26,7 +26,8 @@ class SquareWaveInjection:
 
     This injects a square-wave voltage in the estimated d-axis direction and computes
     the mechanical position error signal by demodulating the current response. Cross-
-    saturation errors are compensated for using flux maps.
+    saturation errors are compensated for using flux maps. The computational delay of
+    one sampling period is taken into account in the demodulation.
 
     Parameters
     ----------
@@ -60,6 +61,8 @@ class SquareWaveInjection:
         self._sign: float = 1.0
         self._T_s = T_s
         self._psi_sq_history: deque[float] = deque(maxlen=2 * N_inj + 1)
+        # Injection voltages of the two previous sampling periods
+        self._u_sd_inj_history: deque[float] = deque([0.0, 0.0], maxlen=2)
         self._eps: float = 0.0
         self._inj_counter: int = 0
 
@@ -72,7 +75,9 @@ class SquareWaveInjection:
 
         if len(self._psi_sq_history) < 2 * self.N_inj + 1:
             return self._eps
-        if self._inj_counter != 0:
+        # Due to the computational delay of one sampling period, the applied injection
+        # voltage changes its sign one sampling period after the counter wraps around
+        if self._inj_counter != 1 % self.N_inj:
             return self._eps
 
         # Compute the second difference over two injection half-periods
@@ -82,9 +87,11 @@ class SquareWaveInjection:
             + self._psi_sq_history[-1 - 2 * self.N_inj]
         )
 
-        # Update the error signal at injection voltage transitions
-        if abs(self.u_sd_inj) > 0:
-            self._eps = self.k * d_psi_sq / (self.u_sd_inj * self.N_inj * self._T_s)
+        # Update the error signal at the transitions of the applied injection voltage,
+        # using the voltage applied over the previous sampling period
+        u_sd_inj = self._u_sd_inj_history[0]
+        if abs(u_sd_inj) > 0:
+            self._eps = self.k * d_psi_sq / (u_sd_inj * self.N_inj * self._T_s)
         else:
             self._eps = 0.0
 
@@ -92,6 +99,7 @@ class SquareWaveInjection:
 
     def update(self, T_s: float, scale: float = 1.0) -> None:
         """Toggle the injection voltage, whose amplitude is scaled by `scale`."""
+        self._u_sd_inj_history.append(self.u_sd_inj)
         self._inj_counter = (self._inj_counter + 1) % self.N_inj
         if self._inj_counter == 0:
             self._sign = -self._sign
