@@ -567,6 +567,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.compute_output"><code class="docutils literal notranslate"><span class="pre">PWM.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.duty_ratios"><code class="docutils literal notranslate"><span class="pre">PWM.duty_ratios()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.get_realized_voltage"><code class="docutils literal notranslate"><span class="pre">PWM.get_realized_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.limit_pulses"><code class="docutils literal notranslate"><span class="pre">PWM.limit_pulses()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.six_step_overmodulation"><code class="docutils literal notranslate"><span class="pre">PWM.six_step_overmodulation()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.update"><code class="docutils literal notranslate"><span class="pre">PWM.update()</span></code></a></li>
 </ul>
@@ -1335,7 +1336,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.PWM">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.PWM" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
 overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. The realized voltage is computed from the duty ratios
@@ -1351,6 +1352,16 @@ currents are predicted to the middle of the sampling period in which the duty ra
 are applied, assuming that they rotate at the angular speed of the synchronous
 coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
 duty-dependent error.</p>
+<p>Optionally, the pulses are limited to a minimum width, e.g., due to the gate
+drivers <a class="footnote-reference brackets" href="#wel2006" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
+<cite>[d_min, 1 - d_min]</cite>, while the duty ratios 0 and 1 (a leg not switching) are not
+limited. A duty ratio in the range <cite>(0, d_min)</cite> is rounded to 0 (the pulse is
+dropped) or to <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to <cite>1 - d_min</cite> or 1,
+whichever gives the realized duty ratio nearer to the duty ratio of the voltage
+reference. If the duty-ratio error is compensated for, the realized duty ratios are
+those given by <cite>d_err</cite>, so that the compensation also accounts for the minimum
+pulses. The limited voltage reference and the realized voltage are computed from
+the limited duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1370,6 +1381,10 @@ that of the control system.</p></li>
 <li><p><strong>k_pred</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Prediction factor of the currents for the feedforward compensation, defaults to
 1.5, which corresponds to the middle of the sampling period in which the duty
 ratios are applied after the computational delay of one sampling period.</p></li>
+<li><p><strong>d_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0
+(no limit). The duty ratio applies to a sampling period (a half of the carrier
+period), so the shortest pulse is <cite>d_min*T_s</cite> when a leg starts or stops
+switching and about <cite>2*d_min*T_s</cite> otherwise.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1386,6 +1401,12 @@ triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <p>Bae, Sul, “A compensation method for time delay of full-digital
 synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.810660">https://doi.org/10.1109/TIA.2003.810660</a></p>
+</aside>
+<aside class="footnote brackets" id="wel2006" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">9</a><span class="fn-bracket">]</span></span>
+<p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
+minimum pulse-width limitations in two-level PWM voltage source inverters,”
+Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
 </aside>
 </aside>
 <dl class="py method">
@@ -1464,11 +1485,45 @@ given, the voltage is corrected for it using the measured currents.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.PWM.limit_pulses">
+<span class="sig-name descname"><span class="pre">limit_pulses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_abc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.limit_pulses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.PWM.limit_pulses" title="Link to this definition">#</a></dt>
+<dd><p>Limit the duty ratios of the switching legs to <cite>[d_min, 1 - d_min]</cite>.</p>
+<p>A duty ratio in the range <cite>(0, d_min)</cite> is replaced by 0 or <cite>d_min</cite>, and in the
+range <cite>(1 - d_min, 1)</cite> by <cite>1 - d_min</cite> or 1, whichever gives the realized duty
+ratio nearer to the reference (if equally near, the leg switches). The duty
+ratios 0 and 1 are not changed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d_abc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Duty ratios, including the compensation of the duty-ratio error.</p></li>
+<li><p><strong>d_ref</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Duty ratios of the voltage reference, i.e., the realized duty ratios aimed
+at.</p></li>
+<li><p><strong>i_abc</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Phase currents (A) for the duty-ratio error <cite>d_err</cite>, if it is compensated
+for, in which case the realized duty ratios are <cite>d_abc - d_err(i_abc,
+d_abc)</cite>. Defaults to None, in which case the realized duty ratios are
+<cite>d_abc</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>d_abc</strong> (<em>list[float]</em>) – Limited duty ratios.</p></li>
+<li><p><strong>d_realized</strong> (<em>ndarray, shape (3,)</em>) – Realized duty ratios: <cite>d_ref</cite> for the legs whose duty ratios were not
+changed and the realized duty ratios of the limited legs.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a>], numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.PWM.six_step_overmodulation">
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1486,7 +1541,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">9</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">10</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -1518,8 +1573,8 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 given torque reference. The MTPA locus as well as the current, voltage and MTPV
 limits are taken into account. This class can be used also for a saturated machine
 model. The flux and torque references are computed using pre-computed lookup tables
-<a class="footnote-reference brackets" href="#mey2006" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2018" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>. The current reference is generated dynamically using a
-tracking law <a class="footnote-reference brackets" href="#sar2026" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>, needed only for current-vector control.</p>
+<a class="footnote-reference brackets" href="#mey2006" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2018" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>. The current reference is generated dynamically using a
+tracking law <a class="footnote-reference brackets" href="#sar2026" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>, needed only for current-vector control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1537,20 +1592,20 @@ well below the sampling frequency to maintain a numerical margin.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="mey2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">10</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">11</a><span class="fn-bracket">]</span></span>
 <p>Meyer, Böcker, “Optimum control for interior permanent magnet
 synchronous motors (IPMSM) in constant torque and flux weakening range,” Proc.
 EPE-PEMC, 2006, <a class="reference external" href="https://doi.org/10.1109/EPEPEMC.2006.4778413">https://doi.org/10.1109/EPEPEMC.2006.4778413</a></p>
 </aside>
 <aside class="footnote brackets" id="awa2018" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">11</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">12</a><span class="fn-bracket">]</span></span>
 <p>Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
 saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2862410">https://doi.org/10.1109/TIA.2018.2862410</a></p>
 </aside>
 <aside class="footnote brackets" id="sar2026" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id14">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
+<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id15">1</a>,<a role="doc-backlink" href="#id16">2</a>)</span>
 <p>Sarén, Hartikainen, Piippo, Hinkkanen, “Decoupled online feedforward
 generation of optimal references for saturated synchronous machine drives,”
 2026, <a class="reference external" href="https://arxiv.org/abs/2607.08528">https://arxiv.org/abs/2607.08528</a></p>
@@ -1617,7 +1672,7 @@ reference state. The state is updated in the <cite>update</cite> method.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ReferenceGeneratorOnline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_mtpv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_ref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGeneratorOnline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGeneratorOnline" title="Link to this definition">#</a></dt>
 <dd><p>Optimal feedforward online reference generator for synchronous machines.</p>
 <p>This class tracks online in a feedforward manner the optimal flux, limited torque,
-and current references from a given torque reference <a class="footnote-reference brackets" href="#sar2026" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>. The MTPA locus as
+and current references from a given torque reference <a class="footnote-reference brackets" href="#sar2026" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>. The MTPA locus as
 well as the current, voltage, and MTPV limits are taken into account. This class can
 be used also for a saturated machine model. The current reference is only needed for
 current-vector control.</p>
@@ -1776,10 +1831,10 @@ algorithm. This is less efficient, but may be convenient in some special cases.<
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control._sm_current_vector.CurrentVectorController</span></code></p>
 <p>Sensorless controller with signal injection for synchronous machine drives.</p>
 <p>This class implements a square-wave signal injection for low-speed operation
-according to <a class="footnote-reference brackets" href="#kim2012" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>. Cross-saturation errors are compensated for using flux
-maps <a class="footnote-reference brackets" href="#you2018" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>. A related adjustable-frequency method is presented in <a class="footnote-reference brackets" href="#yu2022" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a>.
+according to <a class="footnote-reference brackets" href="#kim2012" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>. Cross-saturation errors are compensated for using flux
+maps <a class="footnote-reference brackets" href="#you2018" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a>. A related adjustable-frequency method is presented in <a class="footnote-reference brackets" href="#yu2022" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a>.
 If the inertia of the mechanical system is provided, the speed is estimated using
-the speed observer based on the mechanical model <a class="footnote-reference brackets" href="#kim2003" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a>, otherwise the phase-
+the speed observer based on the mechanical model <a class="footnote-reference brackets" href="#kim2003" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a>, otherwise the phase-
 locked loop is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1796,26 +1851,26 @@ requires reducing <cite>cfg.alpha_o</cite> accordingly.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="kim2012" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">13</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">14</a><span class="fn-bracket">]</span></span>
 <p>Kim, Ha, Sul, “PWM switching frequency signal injection sensorless
 method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
 </aside>
 <aside class="footnote brackets" id="you2018" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">14</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">15</a><span class="fn-bracket">]</span></span>
 <p>Yousefi-Talouki, Pescetto, Pellegrino, Boldea, “Combined active flux
 and high-frequency injection methods for sensorless direct-flux vector control of
 synchronous reluctance machines,” IEEE Trans. Power Electron., 2018,
 <a class="reference external" href="https://doi.org/10.1109/TPEL.2017.2697209">https://doi.org/10.1109/TPEL.2017.2697209</a></p>
 </aside>
 <aside class="footnote brackets" id="yu2022" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">15</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">16</a><span class="fn-bracket">]</span></span>
 <p>Yu, Wang, “Position sensorless control of IPMSM using adjustable
 frequency setting square-wave voltage injection,” IEEE Trans. Power Electron.,
 2022, <a class="reference external" href="https://doi.org/10.1109/TPEL.2022.3179611">https://doi.org/10.1109/TPEL.2022.3179611</a></p>
 </aside>
 <aside class="footnote brackets" id="kim2003" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">16</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">17</a><span class="fn-bracket">]</span></span>
 <p>Kim, Harke, Lorenz, “Sensorless control of interior permanent-magnet
 machine drives with zero-phase lag position estimation,” IEEE Trans. Ind. Appl.,
 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.818966">https://doi.org/10.1109/TIA.2003.818966</a></p>
@@ -1957,7 +2012,7 @@ period.</p></li>
 <dd><p>Speed observer.</p>
 <p>This observer estimates the mechanical rotor speed based on the mechanical system
 model and the error signal. If the inertia of the mechanical system is provided, the
-load torque is als estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a>.</p>
+load torque is als estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1973,7 +2028,7 @@ torque estimation is not used.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="lor1991" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">17</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">18</a><span class="fn-bracket">]</span></span>
 <p>Lorenz, Van Patten, “High-resolution velocity estimation for
 all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
@@ -2443,6 +2498,7 @@ method, e.g., to control an output filter between the converter and the machine.
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.compute_output"><code class="docutils literal notranslate"><span class="pre">PWM.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.duty_ratios"><code class="docutils literal notranslate"><span class="pre">PWM.duty_ratios()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.get_realized_voltage"><code class="docutils literal notranslate"><span class="pre">PWM.get_realized_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.limit_pulses"><code class="docutils literal notranslate"><span class="pre">PWM.limit_pulses()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.six_step_overmodulation"><code class="docutils literal notranslate"><span class="pre">PWM.six_step_overmodulation()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.PWM.update"><code class="docutils literal notranslate"><span class="pre">PWM.update()</span></code></a></li>
 </ul>

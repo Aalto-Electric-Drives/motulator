@@ -1127,7 +1127,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5)
+.. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -1147,6 +1147,17 @@ Module Contents
    are applied, assuming that they rotate at the angular speed of the synchronous
    coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
    duty-dependent error.
+
+   Optionally, the pulses are limited to a minimum width, e.g., due to the gate
+   drivers [#Wel2006]_: the duty ratio of a switching leg is in the range
+   `[d_min, 1 - d_min]`, while the duty ratios 0 and 1 (a leg not switching) are not
+   limited. A duty ratio in the range `(0, d_min)` is rounded to 0 (the pulse is
+   dropped) or to `d_min`, and in the range `(1 - d_min, 1)` to `1 - d_min` or 1,
+   whichever gives the realized duty ratio nearer to the duty ratio of the voltage
+   reference. If the duty-ratio error is compensated for, the realized duty ratios are
+   those given by `d_err`, so that the compensation also accounts for the minimum
+   pulses. The limited voltage reference and the realized voltage are computed from
+   the limited duty ratios.
 
    :param k_comp: Compensation factor for the angular delay effect on the voltage reference,
                   defaults to 1.5. Use 0 if the controller compensates for the delays itself,
@@ -1169,6 +1180,11 @@ Module Contents
                   1.5, which corresponds to the middle of the sampling period in which the duty
                   ratios are applied after the computational delay of one sampling period.
    :type k_pred: float, optional
+   :param d_min: Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0
+                 (no limit). The duty ratio applies to a sampling period (a half of the carrier
+                 period), so the shortest pulse is `d_min*T_s` when a leg starts or stops
+                 switching and about `2*d_min*T_s` otherwise.
+   :type d_min: float, optional
 
    .. rubric:: References
 
@@ -1179,6 +1195,10 @@ Module Contents
    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
       2003, https://doi.org/10.1109/TIA.2003.810660
+
+   .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
+      minimum pulse-width limitations in two-level PWM voltage source inverters,"
+      Proc. IEEE IAS Annu. Meeting, 2006, https://doi.org/10.1109/IAS.2006.256630
 
 
 
@@ -1286,6 +1306,49 @@ Module Contents
       :returns: Realized converter voltage (V) in stationary coordinates. If `d_err` is
                 given, the voltage is corrected for it using the measured currents.
       :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: limit_pulses(d_abc, d_ref, i_abc = None)
+
+      
+      Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`.
+
+      A duty ratio in the range `(0, d_min)` is replaced by 0 or `d_min`, and in the
+      range `(1 - d_min, 1)` by `1 - d_min` or 1, whichever gives the realized duty
+      ratio nearer to the reference (if equally near, the leg switches). The duty
+      ratios 0 and 1 are not changed.
+
+      :param d_abc: Duty ratios, including the compensation of the duty-ratio error.
+      :type d_abc: list[float]
+      :param d_ref: Duty ratios of the voltage reference, i.e., the realized duty ratios aimed
+                    at.
+      :type d_ref: ndarray, shape (3,)
+      :param i_abc: Phase currents (A) for the duty-ratio error `d_err`, if it is compensated
+                    for, in which case the realized duty ratios are `d_abc - d_err(i_abc,
+                    d_abc)`. Defaults to None, in which case the realized duty ratios are
+                    `d_abc`.
+      :type i_abc: ndarray, shape (3,), optional
+
+      :returns: * **d_abc** (*list[float]*) -- Limited duty ratios.
+                * **d_realized** (*ndarray, shape (3,)*) -- Realized duty ratios: `d_ref` for the legs whose duty ratios were not
+                  changed and the realized duty ratios of the limited legs.
 
 
 
