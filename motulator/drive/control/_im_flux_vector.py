@@ -236,8 +236,8 @@ class FluxVectorControllerCfg:
         speed estimation gain the same.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
-    tau_M_max : float
-        Maximum torque reference (Nm).
+    tau_M_max : float, optional
+        Maximum torque reference (Nm), defaults to `inf`.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_b : float, optional

@@ -160,7 +160,7 @@ class FluxVectorControllerCfg:
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
         keeps the speed estimation gain the same.
-    alpha_ref: float, optional
+    alpha_ref : float, optional
         Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float] | None, optional
         Observer gain as a function of the rotor angular speed.
@@ -333,7 +333,7 @@ class ObserverBasedVHzControllerCfg:
         Filter bandwidth (rad/s), defaults to 2*pi*1.
     alpha_o : float, optional
         Angle estimation pole (rad/s), defaults to 2*pi*200.
-    k_o : Callable[[float], complex], optional
+    k_o : Callable[[float], float] | None, optional
         Observer gain as a function of the rotor angular speed.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
