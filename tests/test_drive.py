@@ -209,6 +209,47 @@ def test_observer_based_vhz() -> None:
     assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
 
 
+def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
+    """Speed-estimation gain k_w of the observer created by the configuration."""
+    if machine == "sm":
+        par = sm_control.SynchronousMachinePars(
+            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+        )
+        if ctrl == "fvc":
+            cfg = sm_control.FluxVectorControllerCfg(i_s_max=6.5, **kwargs)
+            observer = sm_control.FluxVectorController(par, cfg).observer
+        else:
+            cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, **kwargs)
+            observer = sm_control.CurrentVectorController(par, cfg).observer
+    elif ctrl == "fvc":
+        cfg = im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6, **kwargs)
+        observer = im_control.FluxVectorController(im_par(), cfg).observer
+    else:
+        cfg = im_control.CurrentVectorControllerCfg(
+            psi_s_nom=1.04, i_s_max=10.6, **kwargs
+        )
+        observer = im_control.CurrentVectorController(im_par(), cfg).observer
+    return observer.speed_observer.k_w
+
+
+@pytest.mark.parametrize("sensorless", [True, False])
+@pytest.mark.parametrize("machine", ["sm", "im"])
+def test_default_speed_observer_gain(machine: str, sensorless: bool) -> None:
+    """Default speed-estimation gain is the same in FVC and CVC, with and without J."""
+    k_w = [
+        speed_observer_gain(machine, ctrl, sensorless=sensorless, J=J)
+        for ctrl in ("fvc", "cvc")
+        for J in (None, 0.015)
+    ]
+    assert k_w == pytest.approx([k_w[0]] * len(k_w))
+    # An explicitly given alpha_o is used as such
+    alpha_o = 2 * pi * 20
+    k_w_explicit = speed_observer_gain(
+        machine, "cvc", sensorless=sensorless, alpha_o=alpha_o
+    )
+    assert k_w_explicit == pytest.approx(alpha_o**2 if machine == "sm" else alpha_o)
+
+
 def test_pm_flux_adaptation_keeps_parameters() -> None:
     """PM-flux adaptation does not modify the parameter object given by the user."""
     par = sm_control.SynchronousMachinePars(
