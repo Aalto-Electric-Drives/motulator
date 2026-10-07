@@ -490,7 +490,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    data_path : str</span>
 <span class="sd">        Path to the npz file containing the dataset.</span>
-<span class="sd">    base : BaseValues</span>
+<span class="sd">    base : ~motulator.drive.utils.BaseValues</span>
 <span class="sd">        Base values of target machine</span>
 <span class="sd">    subsample : int, optional</span>
 <span class="sd">        Subsampling rate, defaults to 1 (no subsampling).</span>
@@ -571,7 +571,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    data_path : str</span>
 <span class="sd">        Path to the npz file containing the dataset.</span>
-<span class="sd">    base : BaseValues</span>
+<span class="sd">    base : ~motulator.drive.utils.BaseValues</span>
 <span class="sd">        Base values of target machine</span>
 <span class="sd">    subsample : int, optional</span>
 <span class="sd">        Subsampling rate, defaults to 1 (no subsampling).</span>
@@ -598,7 +598,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">i_d</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">i_q</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>  <span class="c1"># Electrical angle (rad)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tau_m_theta</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>  <span class="c1"># -dW_dtheta per pole pair (Nm)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tau_m_theta</span><span class="p">[</span><span class="n">index</span><span class="p">],</span>  <span class="c1"># -dW_dtheta per pole pair (p.u.)</span>
         <span class="p">)</span>
 
 
@@ -633,10 +633,24 @@
 <span class="sd">    This function re-instantiates the dataset with the same parameters to reproduce</span>
 <span class="sd">    the training set. Validation data is the set difference (complement).</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataset_path : str</span>
+<span class="sd">        Path to the npz file containing the dataset.</span>
+<span class="sd">    base : ~motulator.drive.utils.BaseValues</span>
+<span class="sd">        Base values of the target machine. They are only needed to re-instantiate the</span>
+<span class="sd">        dataset; the returned data are not normalized.</span>
+<span class="sd">    subsample : int, optional</span>
+<span class="sd">        Subsampling rate used in the training, defaults to 1 (no subsampling).</span>
+<span class="sd">    other_keys : list[str] | None, optional</span>
+<span class="sd">        Additional fields of the npz file to be returned after the flux linkage and</span>
+<span class="sd">        current, defaults to None (no additional fields).</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    tuple</span>
-<span class="sd">         ((train_psi, train_i, ...), (val_psi, val_i, ...))</span>
+<span class="sd">         ((train_psi, train_i, ...), (val_psi, val_i, ...)), where the arrays are</span>
+<span class="sd">         flattened and in the units of the npz file.</span>
 
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">other_keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

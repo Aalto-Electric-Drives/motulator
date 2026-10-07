@@ -228,14 +228,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_const_current_locus(i_s_max, gamma_range = (np.pi, 0.5 * np.pi), num = NUM)
+   .. py:method:: compute_const_current_locus(i_s_max, gamma_range = None, num = NUM)
 
       
       Compute the constant current locus.
 
       :param i_s_max: Current limit (A).
       :type i_s_max: float
-      :param gamma_range: Range of the current angle (electrical rad), defaults to (pi, pi/2).
+      :param gamma_range: Range of the current angle (electrical rad), defaults to (pi, pi/2) for PM
+                          machines and (pi/2, 0) for machines without PMs. If the first element is
+                          NaN (no MTPV), the range starts from pi or pi/2, respectively.
       :type gamma_range: tuple, optional
       :param num: Number of points.
       :type num: int, optional
@@ -591,10 +593,10 @@ Package Contents
 
    .. attribute:: lookup_fcn
 
-      Linear interpolation function that evaluates the map at arbitrary points. Takes
-      complex inputs (d + j*q) and returns interpolated output values. For flux maps,
-      maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function
-      extrapolates outside the map range.
+      Function that evaluates the map at arbitrary points. Takes complex inputs
+      (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;
+      for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
+      function, which extrapolates outside the map range, is created from the data.
 
       :type: Callable[[complex | np.ndarray], complex | np.ndarray], optional
 
@@ -1092,7 +1094,7 @@ Package Contents
    flux is along the d axis.
 
    :param fname: MATLAB file name.
-   :type fname: str
+   :type fname: Path | str
    :param add_negative_q_axis: Adds the negative q-axis data based on the symmetry, defaults to True.
    :type add_negative_q_axis: bool, optional
 
@@ -1264,13 +1266,16 @@ Package Contents
    :type lims: dict[str, tuple[float, float]], optional
    :param ticks: Axis tick locations. Keys should be 'x', 'y', 'z'.
    :type ticks: dict[str, ArrayLike], optional
-   :param raw_data: Raw data for comparison (shown as scatter points).
-   :type raw_data: MagneticModel | list[MagneticModel], optional
+   :param raw_data: Raw data for comparison (shown as scatter points). A tuple of arrays is
+                    interpreted as `(i_s_dq, psi_s_dq)` in SI units.
+   :type raw_data: MagneticModel | list[MagneticModel | tuple], optional
    :param raw_marker: Marker style for raw data.
    :type raw_marker: str | list[str], optional
    :param raw_color: Marker color for raw data.
    :type raw_color: str | list[str], optional
-   :param axlim_clip: Whether to clip the axes limits to the data limits, defaults to True.
+   :param axlim_clip: Whether to hide the parts of the surface and wireframe outside the axis view
+                      limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's
+                      3D plotting functions.
    :type axlim_clip: bool, optional
    :param surface_cmap: Colormap for the surface plot, defaults to "viridis".
    :type surface_cmap: str, optional

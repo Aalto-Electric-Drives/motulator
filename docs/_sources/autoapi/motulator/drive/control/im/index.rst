@@ -51,7 +51,7 @@ Module Contents
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param alpha_c: Reference-tracking bandwidth (rad/s).
-   :type alpha_c: float, optional
+   :type alpha_c: float
    :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_c`.
    :type alpha_i: float, optional
 
@@ -72,7 +72,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CurrentReferenceGenerator(par, psi_s_nom, i_s_max, w_s_nom, k_u = 1.0, k_fw = 0.0)
+.. py:class:: CurrentReferenceGenerator(par, psi_s_nom, i_s_max, w_s_nom, k_u, k_fw)
 
    
    Current reference generator.
@@ -98,18 +98,18 @@ Module Contents
    producing current component `i_s_ref.imag` is limited based on the maximum stator
    current and the breakdown slip.
 
-   :param machine_pars: Machine model parameters.
-   :type machine_pars: InductionMachineInvGammaPars | InductionMachinePars
+   :param par: Machine model parameters.
+   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
    :param w_s_nom: Nominal stator angular frequency (rad/s).
-   :type w_s_nom: float, optional
-   :param k_u: Voltage utilization factor, defaults to 1.
-   :type k_u: float, optional
-   :param k_fw: Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
-   :type k_fw: float, optional
+   :type w_s_nom: float
+   :param k_u: Voltage utilization factor.
+   :type k_u: float
+   :param k_fw: Field-weakening gain (1/H). If zero, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
+   :type k_fw: float
 
    .. rubric:: References
 
@@ -172,7 +172,7 @@ Module Contents
 
       :param T_s: Sampling time (s).
       :type T_s: float
-      :param u_s_ref: Realized (limited) stator voltage reference (V).
+      :param u_s_ref: Unlimited stator voltage reference (V).
       :type u_s_ref: complex
       :param u_dc: DC-link voltage (V).
       :type u_dc: float
@@ -332,8 +332,9 @@ Module Contents
    :param alpha_i: Current control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
                    used if `discrete` is True.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
-                   2*pi*30, keeping the default speed observer gain the same.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
+                   otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
+                   speed estimation gain the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
@@ -702,13 +703,14 @@ Module Contents
    :type alpha_psi: float, optional
    :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_tau`.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation poles (rad/s). If `None`, the default depends on the operation
-                   mode and the inertia `J`.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
+                   otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
+                   speed estimation gain the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
-   :param tau_M_max: Maximum torque reference (Nm).
-   :type tau_M_max: float
+   :param tau_M_max: Maximum torque reference (Nm), defaults to `inf`.
+   :type tau_M_max: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
    :param k_b: Breakdown torque margin, defaults to 0.9.
@@ -756,8 +758,10 @@ Module Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), defaults to 0 (no core losses). It is connected
+               across the stator EMF `u_s - R_s*i_s`, i.e., between the stator resistance and
+               the leakage inductance, which corresponds to the core-loss branch in parallel
+               with the magnetizing branch of the Γ model.
    :type G_c: float, optional
 
    .. attribute:: R_sgm
@@ -1220,7 +1224,7 @@ Module Contents
    .. py:method:: compute_output(T_s, u_c_ref_ab, u_dc, w)
 
       
-      Compute the duty ratios and the limited voltage reference.
+      Compute the duty ratios and the corresponding voltage.
 
       :param T_s: Sampling period (s).
       :type T_s: float
@@ -1232,7 +1236,9 @@ Module Contents
       :type w: float
 
       :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
-                * **u_c_ab** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
+                * **u_c_ab** (*complex*) -- Voltage (V) in stationary coordinates corresponding to the duty ratios
+                  `d_abc`, i.e., the limited voltage reference with the delay-compensating
+                  angle advance and the duty-ratio error compensation (if used) included.
 
 
 
@@ -1434,7 +1440,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, psi_s_nom, i_s_max, tau_M_max = inf, k_u = 1.0, k_b = 1.0)
+.. py:class:: ReferenceGenerator(par, psi_s_nom, i_s_max, tau_M_max, k_u, k_b)
 
    
    Reference generator for flux-vector control.
@@ -1445,12 +1451,12 @@ Module Contents
    :type psi_s_nom: float
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param tau_M_max: Maximum torque reference (Nm), defaults to `inf`.
-   :type tau_M_max: float, optional
-   :param k_u: Voltage utilization factor, defaults to 1.
-   :type k_u: float, optional
-   :param k_b: Breakdown torque margin, defaults to 1.
-   :type k_b: float, optional
+   :param tau_M_max: Maximum torque reference (Nm).
+   :type tau_M_max: float
+   :param k_u: Voltage utilization factor.
+   :type k_u: float
+   :param k_b: Breakdown torque margin.
+   :type k_b: float
 
 
 
@@ -1638,7 +1644,7 @@ Module Contents
 
    This observer estimates the mechanical rotor speed based on the mechanical system
    model and the error signal. If the inertia of the mechanical system is provided, the
-   load torque is als estimated, avoiding lag in the speed estimate [#Lor1991]_.
+   load torque is also estimated, avoiding lag in the speed estimate [#Lor1991]_.
 
    :param k_w: Speed-estimation gain (rad/s or (rad/s)² for induction machines or for
                synchronous machines, respectively).
@@ -1646,9 +1652,9 @@ Module Contents
    :param k_tau: Load-torque estimation gain (Nm or Nm/s for induction machines or for
                  synchronous machines, respectively).
    :type k_tau: float
-   :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the load
-             torque estimation is not used.
-   :type J: float | None, optional
+   :param J: Inertia of the mechanical system (kgm²). If None, the load torque estimation is
+             not used.
+   :type J: float | None
 
    .. rubric:: References
 

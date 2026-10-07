@@ -201,10 +201,9 @@ Package Contents
    :param t1: Additional simulation time for reaching sinusoidal steady-state during signal
               injection (s), defaults to 0.05.
    :type t1: float, optional
-   :param T_s: Sampling period of the control system (s), defaults to 125e-6.
-   :type T_s: float, optional
-   :param N_eval: Number of evenly spaced data points the solver should return for each controller
-                  sampling period, defaults to 10.
+   :param N_eval: Number of evenly spaced data points the solver should return for each
+                  integration interval, i.e., for each sampling period or, if carrier comparison
+                  is used, for each switching interval, defaults to 10.
    :type N_eval: int, optional
    :param n_periods_excitation: Number of excitation signal periods used in calculating the DFT, defaults to 4.
    :type n_periods_excitation: int, optional
@@ -215,7 +214,7 @@ Package Contents
                         all available CPU cores in the system. Defaults to True.
    :type multiprocess: bool, optional
    :param filename: If given, the identification result is saved in
-                    ``data/{date}_{time}_{filename}`` (relative to the project root directory),
+                    ``data/{date}_{time}_{filename}`` (relative to the current working directory),
                     defaults to None. The file format is set by the `filetype` parameter.
    :type filename: str | None, optional
    :param filetype: The filetype for saving identification results, defaults to "csv". Valid options
@@ -223,8 +222,6 @@ Package Contents
                     - "csv": save results in .csv-format
                     - "mat": save results in MATLAB .mat-format
    :type filetype: Literal["csv", "mat"], optional
-   :param delay: Number of samples for modeling the computational delay, defaults to 1.
-   :type delay: int, optional
    :param use_window: Whether to use window function for calculating DFT, defaults to True.
    :type use_window: bool, optional
    :param variable_amplitude: Whether to increase the excitation signal amplitude with the frequency, defaults

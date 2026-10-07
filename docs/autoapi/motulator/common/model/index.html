@@ -793,9 +793,10 @@ and for computing the signals that depend directly on the inputs.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t_stop</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Simulation stop time, defaults to 1.</p></li>
-<li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Number of evenly spaced data points to be returned by the solver for each
-sampling period. Defaults to 0, in which case the number and spacing of
-points is selected by the solver.</p></li>
+<li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of evenly spaced data points to be returned by the solver for each
+integration interval, i.e., for each sampling period or, if carrier
+comparison is used, for each switching interval. Defaults to 0, in which
+case the number and spacing of points is selected by the solver.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>

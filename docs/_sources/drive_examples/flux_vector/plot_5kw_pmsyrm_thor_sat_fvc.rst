@@ -102,8 +102,8 @@ Plot the maps in per-unit values.
 
 
     # sphinx_gallery_thumbnail_number = 3
-    utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
-    utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
+    utils.plot_map(fem_flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
+    utils.plot_map(fem_flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2)})
 
 
 
@@ -138,7 +138,7 @@ Two-dimensional presentation of flux maps.
 .. code-block:: Python
 
 
-    utils.plot_flux_vs_current(fem_flux_map, base, lims=(-2, 2))
+    utils.plot_flux_vs_current(fem_flux_map, base, x_lims=(-2, 2))
 
 
 
@@ -190,13 +190,12 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-91
+.. GENERATED FROM PYTHON SOURCE LINES 77-90
 
 .. code-block:: Python
 
 
-    # Create the flux and current maps for the control system
-    fem_curr_map = fem_flux_map.invert()
+    # Use the FEM flux map in the control system
     est_par = control.SaturatedSynchronousMachinePars(
         n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map
     )
@@ -215,11 +214,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-93
+.. GENERATED FROM PYTHON SOURCE LINES 91-92
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-96
+.. GENERATED FROM PYTHON SOURCE LINES 92-95
 
 .. code-block:: Python
 
@@ -233,11 +232,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 96-97
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-102
+.. GENERATED FROM PYTHON SOURCE LINES 97-101
 
 .. code-block:: Python
 
@@ -260,7 +259,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.143 seconds)
+   **Total running time of the script:** (0 minutes 10.943 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_5kw_pmsyrm_thor_sat_fvc.py:

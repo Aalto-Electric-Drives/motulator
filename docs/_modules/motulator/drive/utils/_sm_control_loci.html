@@ -722,10 +722,7 @@
 <div class="viewcode-block" id="ControlLoci.compute_const_current_locus">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_const_current_locus">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_const_current_locus</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">gamma_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span>
-        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">NUM</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">NUM</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CurrentLimitLocus</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the constant current locus.</span>
@@ -735,7 +732,9 @@
 <span class="sd">        i_s_max : float</span>
 <span class="sd">            Current limit (A).</span>
 <span class="sd">        gamma_range : tuple, optional</span>
-<span class="sd">            Range of the current angle (electrical rad), defaults to (pi, pi/2).</span>
+<span class="sd">            Range of the current angle (electrical rad), defaults to (pi, pi/2) for PM</span>
+<span class="sd">            machines and (pi/2, 0) for machines without PMs. If the first element is</span>
+<span class="sd">            NaN (no MTPV), the range starts from pi or pi/2, respectively.</span>
 <span class="sd">        num : int, optional</span>
 <span class="sd">            Number of points.</span>
 
@@ -745,8 +744,11 @@
 <span class="sd">            Constant current locus data.</span>
 
 <span class="sd">        """</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>  <span class="c1"># No MTPV</span>
-            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">gamma_start</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="k">if</span> <span class="n">gamma_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_start</span><span class="p">,</span> <span class="n">gamma_start</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>  <span class="c1"># No MTPV</span>
+            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_start</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">*</span><span class="n">gamma_range</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
 

@@ -495,7 +495,7 @@
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InductionMachineInputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Base class for machine inputs."""</span>
+<span class="w">    </span><span class="sd">"""Machine inputs."""</span>
 
     <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Mechanical rotor speed (rad/s)</span>
@@ -723,7 +723,9 @@
 
 <span class="sd">    This model is internally represented in rotor coordinates, which results in the</span>
 <span class="sd">    simplest implementation. The interfaces are in stator coordinates. The magnetic</span>
-<span class="sd">    saturation can be modeled by providing a nonlinear current map `par.i_s_dq`.</span>
+<span class="sd">    saturation can be modeled by providing a nonlinear current map, either as</span>
+<span class="sd">    `i_s_dq_fcn` in `SaturatedSynchronousMachinePars` or, including spatial harmonics,</span>
+<span class="sd">    as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`.</span>
 <span class="sd">    Optionally, eddy-current core losses can be modeled by means of a constant core-loss</span>
 <span class="sd">    conductance `G_c`, connected in parallel with the magnetizing branch.</span>
 

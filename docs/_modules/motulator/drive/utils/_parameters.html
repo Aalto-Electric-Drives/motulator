@@ -614,7 +614,12 @@
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Solve for the current given the flux linkage using root finding."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Compute the current from the flux linkage.</span>
+
+<span class="sd">        Root finding on the flux map is used if no current map is available.</span>
+
+<span class="sd">        """</span>
         <span class="o">...</span>
 
 
@@ -687,7 +692,7 @@
 <div class="viewcode-block" id="SynchronousMachinePars.iterate_i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.iterate_i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Compute the current from the flux linkage using root finding."""</span>
+<span class="w">        </span><span class="sd">"""Compute the current from the flux linkage in closed form."""</span>
         <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span></div>
 </div>
 
@@ -732,8 +737,8 @@
     <span class="n">psi_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="n">L_d0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">L_q0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">L_d0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">L_q0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -799,10 +804,11 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.iterate_i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Compute the current from the flux linkage using root finding.</span>
+<span class="sd">        Compute the current from the flux linkage.</span>
 
-<span class="sd">        The current is computed iteratively from the flux map using a root-finding</span>
-<span class="sd">        algorithm. This is less efficient, but may be convenient in some special cases.</span>
+<span class="sd">        The current map is used if available. Otherwise, the current is computed</span>
+<span class="sd">        iteratively from the flux map using a root-finding algorithm, which is less</span>
+<span class="sd">        efficient but may be convenient in some special cases.</span>
 
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -934,6 +940,7 @@
 <div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Not implemented for the model with spatial harmonics."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"This method is not implemented"</span><span class="p">)</span></div>
 </div>
 
@@ -948,11 +955,11 @@
 <span class="sd">    Γ-model parameters of an induction machine.</span>
 
 <span class="sd">    This contains Γ-model parameters of an induction machine. The main-flux saturation</span>
-<span class="sd">    saturation can also be modeled by providing a callable `L_s` parameter. For</span>
-<span class="sd">    convenience, the class also provides the corresponding inverse-Γ model parameters,</span>
-<span class="sd">    which can be used in control systems. If the saturation is modeled, these inverse-Γ</span>
-<span class="sd">    parameters depend on the stator flux linkage magnitude `psi_s` that should be</span>
-<span class="sd">    updated by calling the `update_psi_s` method.</span>
+<span class="sd">    can also be modeled by providing a callable `L_s` parameter. For convenience, the</span>
+<span class="sd">    class also provides the corresponding inverse-Γ model parameters, which can be used</span>
+<span class="sd">    in control systems. If the saturation is modeled, these inverse-Γ parameters depend</span>
+<span class="sd">    on the stator flux linkage magnitude `psi_s` that should be updated by calling the</span>
+<span class="sd">    `update_psi_s` method.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -970,6 +977,9 @@
 <span class="sd">    G_c : float, optional</span>
 <span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
 <span class="sd">        defaults to 0 (no core losses).</span>
+<span class="sd">    psi_s : float, optional</span>
+<span class="sd">        Stator flux linkage magnitude (Vs), at which the callable `L_s` is evaluated,</span>
+<span class="sd">        defaults to 0. It can be updated by calling the `update_psi_s` method.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -1092,8 +1102,10 @@
 <span class="sd">    L_M : float</span>
 <span class="sd">        Magnetizing inductance (H).</span>
 <span class="sd">    G_c : float, optional</span>
-<span class="sd">        Core-loss conductance (S), modeled in parallel with the magnetizing branch,</span>
-<span class="sd">        defaults to 0 (no core losses).</span>
+<span class="sd">        Core-loss conductance (S), defaults to 0 (no core losses). It is connected</span>
+<span class="sd">        across the stator EMF `u_s - R_s*i_s`, i.e., between the stator resistance and</span>
+<span class="sd">        the leakage inductance, which corresponds to the core-loss branch in parallel</span>
+<span class="sd">        with the magnetizing branch of the Γ model.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>

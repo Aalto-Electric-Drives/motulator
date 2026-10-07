@@ -1035,8 +1035,10 @@ the main-flux saturation, use the <cite>InductionMachinePars</cite> class instea
 <li><p><strong>R_R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Rotor resistance (Ω).</p></li>
 <li><p><strong>L_sgm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Leakage inductance (H).</p></li>
 <li><p><strong>L_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Magnetizing inductance (H).</p></li>
-<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-defaults to 0 (no core losses).</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), defaults to 0 (no core losses). It is connected
+across the stator EMF <cite>u_s - R_s*i_s</cite>, i.e., between the stator resistance and
+the leakage inductance, which corresponds to the core-loss branch in parallel
+with the magnetizing branch of the Γ model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1121,11 +1123,11 @@ defaults to 0 (no core losses).</p></li>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">InductionMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.InductionMachinePars" title="Link to this definition">#</a></dt>
 <dd><p>Γ-model parameters of an induction machine.</p>
 <p>This contains Γ-model parameters of an induction machine. The main-flux saturation
-saturation can also be modeled by providing a callable <cite>L_s</cite> parameter. For
-convenience, the class also provides the corresponding inverse-Γ model parameters,
-which can be used in control systems. If the saturation is modeled, these inverse-Γ
-parameters depend on the stator flux linkage magnitude <cite>psi_s</cite> that should be
-updated by calling the <cite>update_psi_s</cite> method.</p>
+can also be modeled by providing a callable <cite>L_s</cite> parameter. For convenience, the
+class also provides the corresponding inverse-Γ model parameters, which can be used
+in control systems. If the saturation is modeled, these inverse-Γ parameters depend
+on the stator flux linkage magnitude <cite>psi_s</cite> that should be updated by calling the
+<cite>update_psi_s</cite> method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1137,6 +1139,8 @@ updated by calling the <cite>update_psi_s</cite> method.</p>
 linkage magnitude (Vs).</p></li>
 <li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
 defaults to 0 (no core losses).</p></li>
+<li><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Stator flux linkage magnitude (Vs), at which the callable <cite>L_s</cite> is evaluated,
+defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1532,9 +1536,10 @@ defaults to 0 (no core losses).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SaturatedSynchronousMachinePars.iterate_i_s_dq">
 <span class="sig-name descname"><span class="pre">iterate_i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.iterate_i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SaturatedSynchronousMachinePars.iterate_i_s_dq" title="Link to this definition">#</a></dt>
-<dd><p>Compute the current from the flux linkage using root finding.</p>
-<p>The current is computed iteratively from the flux map using a root-finding
-algorithm. This is less efficient, but may be convenient in some special cases.</p>
+<dd><p>Compute the current from the flux linkage.</p>
+<p>The current map is used if available. Otherwise, the current is computed
+iteratively from the flux map using a root-finding algorithm, which is less
+efficient but may be convenient in some special cases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p>
@@ -1583,9 +1588,10 @@ algorithm. This is less efficient, but may be convenient in some special cases.<
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t_stop</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Simulation stop time, defaults to 1.</p></li>
-<li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Number of evenly spaced data points to be returned by the solver for each
-sampling period. Defaults to 0, in which case the number and spacing of
-points is selected by the solver.</p></li>
+<li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Number of evenly spaced data points to be returned by the solver for each
+integration interval, i.e., for each sampling period or, if carrier
+comparison is used, for each switching interval. Defaults to 0, in which
+case the number and spacing of points is selected by the solver.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1657,7 +1663,7 @@ defaults to 0 (no core losses).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">iterate_i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq" title="Link to this definition">#</a></dt>
-<dd><p>Solve for the current given the flux linkage using root finding.</p>
+<dd><p>Not implemented for the model with spatial harmonics.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p>
@@ -1718,7 +1724,9 @@ pole pair.</p>
 <p>Synchronous machine model.</p>
 <p>This model is internally represented in rotor coordinates, which results in the
 simplest implementation. The interfaces are in stator coordinates. The magnetic
-saturation can be modeled by providing a nonlinear current map <cite>par.i_s_dq</cite>.
+saturation can be modeled by providing a nonlinear current map, either as
+<cite>i_s_dq_fcn</cite> in <cite>SaturatedSynchronousMachinePars</cite> or, including spatial harmonics,
+as <cite>magnetic_map_fcn</cite> in <cite>SpatialSaturatedSynchronousMachinePars</cite>.
 Optionally, eddy-current core losses can be modeled by means of a constant core-loss
 conductance <cite>G_c</cite>, connected in parallel with the magnetizing branch.</p>
 <dl class="field-list simple">
@@ -1853,7 +1861,7 @@ defaults to 0 (no core losses).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachinePars.iterate_i_s_dq">
 <span class="sig-name descname"><span class="pre">iterate_i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars.iterate_i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachinePars.iterate_i_s_dq" title="Link to this definition">#</a></dt>
-<dd><p>Compute the current from the flux linkage using root finding.</p>
+<dd><p>Compute the current from the flux linkage in closed form.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>)</p>

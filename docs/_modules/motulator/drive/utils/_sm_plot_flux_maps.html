@@ -487,8 +487,8 @@
 
 
 <span class="c1"># %%</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot_style</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Setup plot style and return figure size and pu_vals flag."""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot_style</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Set up the plot style and return the figure size."""</span>
     <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
         <span class="n">set_latex_style</span><span class="p">()</span>
         <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.4</span>
@@ -654,14 +654,17 @@
 <span class="sd">        Axis limits. Keys should be 'x', 'y', 'z'.</span>
 <span class="sd">    ticks : dict[str, ArrayLike], optional</span>
 <span class="sd">        Axis tick locations. Keys should be 'x', 'y', 'z'.</span>
-<span class="sd">    raw_data : MagneticModel | list[MagneticModel], optional</span>
-<span class="sd">        Raw data for comparison (shown as scatter points).</span>
+<span class="sd">    raw_data : MagneticModel | list[MagneticModel | tuple], optional</span>
+<span class="sd">        Raw data for comparison (shown as scatter points). A tuple of arrays is</span>
+<span class="sd">        interpreted as `(i_s_dq, psi_s_dq)` in SI units.</span>
 <span class="sd">    raw_marker : str | list[str], optional</span>
 <span class="sd">        Marker style for raw data.</span>
 <span class="sd">    raw_color : str | list[str], optional</span>
 <span class="sd">        Marker color for raw data.</span>
 <span class="sd">    axlim_clip : bool, optional</span>
-<span class="sd">        Whether to clip the axes limits to the data limits, defaults to True.</span>
+<span class="sd">        Whether to hide the parts of the surface and wireframe outside the axis view</span>
+<span class="sd">        limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's</span>
+<span class="sd">        3D plotting functions.</span>
 <span class="sd">    surface_cmap : str, optional</span>
 <span class="sd">        Colormap for the surface plot, defaults to "viridis".</span>
 <span class="sd">    latex : bool, optional</span>

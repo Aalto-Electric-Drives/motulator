@@ -590,10 +590,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        t_stop : float, optional</span>
 <span class="sd">            Simulation stop time, defaults to 1.</span>
-<span class="sd">        N_eval : int | None, optional</span>
+<span class="sd">        N_eval : int, optional</span>
 <span class="sd">            Number of evenly spaced data points to be returned by the solver for each</span>
-<span class="sd">            sampling period. Defaults to 0, in which case the number and spacing of</span>
-<span class="sd">            points is selected by the solver.</span>
+<span class="sd">            integration interval, i.e., for each sampling period or, if carrier</span>
+<span class="sd">            comparison is used, for each switching interval. Defaults to 0, in which</span>
+<span class="sd">            case the number and spacing of points is selected by the solver.</span>
 
 <span class="sd">        """</span>
         <span class="n">progress_bar</span> <span class="o">=</span> <span class="kc">None</span>

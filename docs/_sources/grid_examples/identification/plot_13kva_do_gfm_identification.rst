@@ -60,7 +60,7 @@ Compute base values based on the nominal values.
 
 Configure the identification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-33
+.. GENERATED FROM PYTHON SOURCE LINES 21-32
 
 .. code-block:: Python
 
@@ -70,8 +70,7 @@ Configure the identification.
         f_start=1,
         f_stop=10e3,
         n_freqs=100,
-        T_s=1 / 10e3,
-        # Uncomment the row below to save identification results in "project root"/data
+        # Uncomment the row below to save the results in ./data of the working directory
         # filename="do-gfm_admittance",
         filetype="csv",
     )
@@ -83,11 +82,11 @@ Configure the identification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-41
+.. GENERATED FROM PYTHON SOURCE LINES 34-40
 
 .. code-block:: Python
 
@@ -104,11 +103,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-59
+.. GENERATED FROM PYTHON SOURCE LINES 42-58
 
 .. code-block:: Python
 
@@ -120,7 +119,7 @@ Configure the control system.
         R_a=0.2 * base.Z,
         u_nom=base.u,
         w_nom=base.w,
-        T_s=identification_cfg.T_s,
+        T_s=1 / 10e3,
     )
     inner_ctrl = control.ObserverBasedGridFormingController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
@@ -135,11 +134,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-61
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-66
+.. GENERATED FROM PYTHON SOURCE LINES 60-65
 
 .. code-block:: Python
 
@@ -182,7 +181,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 45.493 seconds)
+   **Total running time of the script:** (3 minutes 48.978 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_13kva_do_gfm_identification.py:

@@ -51,17 +51,9 @@ if not trained_path.exists():
 # Load the dataset for visualization comparison.
 
 # Get the training and validation data (complement) from the helper function
-# Note: get_training_data returns (psi, i, ...), but we need (i, psi, ...)
-(trn_psi, trn_i, trn_theta, trn_tau), (val_psi, val_i, val_theta, val_tau) = (
-    gn.get_training_data(
-        str(dataset_path),
-        base=base,
-        subsample=subsample,
-        other_keys=["theta_m", "tau_m"],
-    )
+_, val_data = gn.get_training_data(
+    str(dataset_path), base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
 )
-trn_data = (trn_i, trn_psi, trn_theta, trn_tau)
-val_data = (val_i, val_psi, val_theta, val_tau)
 
 # %%
 # Load the GradNet model and create its callable.
@@ -72,10 +64,5 @@ harm_map = gn.CurrentMapWithHarmonics(model, k=k)
 # %%
 # Print statistical error metrics on validation data.
 
-val_dict = {
-    "i_s_dq": val_i,
-    "psi_s_dq": val_psi,
-    "theta_m": val_theta,
-    "tau_m": val_tau,
-}
+val_dict = dict(zip(["psi_s_dq", "i_s_dq", "theta_m", "tau_m"], val_data, strict=True))
 gn.print_current_map_errors_fem(map_fcn=harm_map, raw_data=val_dict, base=base)

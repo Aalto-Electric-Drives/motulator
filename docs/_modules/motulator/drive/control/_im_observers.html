@@ -468,12 +468,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for motulator.drive.control._im_observers</h1><div class="highlight"><pre>
-<span></span><span class="sd">"""Common control functions and classes for for induction machine drives."""</span>
+<span></span><span class="sd">"""Observers for induction machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedObserver</span>
@@ -605,7 +605,7 @@
         <span class="c1"># Initialize the output signals</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
 
-        <span class="c1"># Current and voltage vectors in estimated rotor coordinates</span>
+        <span class="c1"># Current and voltage vectors in synchronous coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
         <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_zoh_ab</span>
@@ -775,9 +775,17 @@
 
 
 <span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_sensorless_k_o</span><span class="p">(</span>
+    <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Default observer gain for sensorless drives."""</span>
+    <span class="c1"># The machine parameters are read at each call, since saturation changes them</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_m</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">create_speed_flux_observer</span><span class="p">(</span>
     <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
-    <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -794,9 +802,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    par : InductionMachineInvGammaPars | InductionMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
-<span class="sd">    alpha_o : float, optional</span>
-<span class="sd">        Speed estimation pole (rad/s). If `None`, it defaults to 2*pi*40 in sensorless</span>
-<span class="sd">        mode and 2*pi*400 in sensored mode.</span>
+<span class="sd">    alpha_o : float</span>
+<span class="sd">        Speed estimation pole (rad/s).</span>
 <span class="sd">    k_o : Callable[[float], complex], optional</span>
 <span class="sd">        Observer gain as a function of the electrical angular rotor speed. If `None`, it</span>
 <span class="sd">        defaults to ``lambda w_m: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``</span>
@@ -814,19 +821,12 @@
 <span class="sd">        Flux observer with speed estimation.</span>
 
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">alpha_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">alpha_o</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">40</span> <span class="k">if</span> <span class="n">sensorless</span> <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">default_k_o_sensorless</span><span class="p">(</span><span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_m</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">default_k_o_sensored</span><span class="p">(</span><span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
         <span class="k">return</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_m</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">sensorless</span><span class="p">:</span>
-        <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_k_o_sensorless</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_k_o_sensored</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
+    <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_sensorless_k_o</span><span class="p">(</span><span class="n">par</span><span class="p">)</span> <span class="k">if</span> <span class="n">sensorless</span> <span class="k">else</span> <span class="n">default_k_o_sensored</span>
 
     <span class="k">return</span> <span class="n">SpeedFluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">k_o</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
 
@@ -848,8 +848,8 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    k_o : Callable[[float], complex], optional</span>
 <span class="sd">        Observer gain as a function of the electrical angular speed of the rotor,</span>
-<span class="sd">        defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``</span>
-<span class="sd">        (except for the case ``L_M = inf``, where ``k_o1 = 1`` and ``k_o2 = 0``).</span>
+<span class="sd">        defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``.</span>
+<span class="sd">        Ignored in the case ``L_M = inf``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -860,11 +860,7 @@
     <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">L_M</span> <span class="o">==</span> <span class="n">inf</span><span class="p">:</span>  <span class="c1"># Pure open-loop V/Hz control, used with h = 1</span>
         <span class="k">return</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">w_m</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">default_k_o</span><span class="p">(</span><span class="n">w_m</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">w_m</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_m</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_k_o</span>
+    <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_sensorless_k_o</span><span class="p">(</span><span class="n">par</span><span class="p">)</span> <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">k_o</span>
 
     <span class="k">return</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">k_o</span><span class="p">)</span>
 </pre></div>

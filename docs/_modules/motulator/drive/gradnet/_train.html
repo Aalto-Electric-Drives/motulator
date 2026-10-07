@@ -646,6 +646,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    dataset_path : str | Path</span>
 <span class="sd">        Path to the training data file (npz format).</span>
+<span class="sd">    base : ~motulator.drive.utils.BaseValues</span>
+<span class="sd">        Base values of the target machine. The training data are normalized with the</span>
+<span class="sd">        base current and flux linkage, which are also stored in the model.</span>
 <span class="sd">    is_flux_map : bool, optional</span>
 <span class="sd">        Whether the model is a flux map or current map, defaults to False.</span>
 <span class="sd">    k : int | None, optional</span>
@@ -702,7 +705,7 @@
     <span class="n">in_dim</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">2</span>
     <span class="n">mu_dim</span> <span class="o">=</span> <span class="mi">2</span>
 
-    <span class="c1"># Base values are inferred from the dataset</span>
+    <span class="c1"># Per-unit data, normalized with the given base values</span>
     <span class="n">data_loader</span> <span class="o">=</span> <span class="n">get_loader</span><span class="p">(</span>
         <span class="n">dataset_path</span><span class="o">=</span><span class="n">dataset_path</span><span class="p">,</span>
         <span class="n">base</span><span class="o">=</span><span class="n">base</span><span class="p">,</span>

@@ -471,6 +471,7 @@
 <span></span><span class="sd">"""Power-synchronization control for grid converters."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
@@ -493,6 +494,7 @@
     <span class="n">p_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Duty ratios (set by the control system)</span>
 
 
 <span class="nd">@dataclass</span>
@@ -504,6 +506,7 @@
     <span class="n">p_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angle of the coordinate system (rad)</span>
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angular speed of the coordinate system (rad/s)</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC-bus voltage (set by the control system)</span>
 
 
 <div class="viewcode-block" id="PowerSynchronizationControllerCfg">
@@ -602,7 +605,8 @@
         <span class="c1"># Power droop</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_p_psc</span> <span class="o">*</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_g</span><span class="p">)</span>
 
-        <span class="c1"># Optionally, use of reference feedforward for d-axis current</span>
+        <span class="c1"># Current reference: feedforward from the power reference in the d-axis and</span>
+        <span class="c1"># the low-pass-filtered current in the q-axis</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c_flt</span><span class="o">.</span><span class="n">imag</span>
         <span class="c1"># ref.i_c = self.i_c_flt  # Conventional PSC</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span><span class="p">)</span>

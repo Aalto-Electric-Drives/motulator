@@ -528,18 +528,19 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    i_s_max : float</span>
 <span class="sd">        Maximum stator current (A).</span>
-<span class="sd">    psi_s_min : float, optional</span>
-<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for</span>
+<span class="sd">    psi_s_min : float | None</span>
+<span class="sd">        Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for</span>
 <span class="sd">        machines without PMs.</span>
-<span class="sd">    psi_s_max : float, optional</span>
-<span class="sd">        Maximum stator flux (Vs), defaults to `inf`.</span>
-<span class="sd">    k_u : float, optional</span>
-<span class="sd">        Voltage utilization factor, defaults to 1.</span>
-<span class="sd">    k_mtpv : float, optional</span>
-<span class="sd">        MTPV margin, defaults to 1.</span>
-<span class="sd">    alpha_ref : float, optional</span>
-<span class="sd">        Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100. It should be</span>
-<span class="sd">        well below the sampling frequency to maintain a numerical margin.</span>
+<span class="sd">    psi_s_max : float</span>
+<span class="sd">        Maximum stator flux (Vs).</span>
+<span class="sd">    k_u : float</span>
+<span class="sd">        Voltage utilization factor.</span>
+<span class="sd">    k_mtpv : float</span>
+<span class="sd">        MTPV margin.</span>
+<span class="sd">    alpha_ref : float</span>
+<span class="sd">        Bandwidth of the current-reference tracking (rad/s), needed only for</span>
+<span class="sd">        current-vector control. It should be well below the sampling frequency to</span>
+<span class="sd">        maintain a numerical margin.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -561,11 +562,11 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
         <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">psi_s_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span>
-        <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">alpha_ref</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">psi_s_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">k_u</span>
@@ -631,7 +632,7 @@
 <span class="sd">        tau_M_ref : float</span>
 <span class="sd">            Torque reference (Nm).</span>
 <span class="sd">        w_m : float</span>
-<span class="sd">            Mechanical angular speed (rad/s).</span>
+<span class="sd">            Electrical angular speed (rad/s).</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            DC-link voltage (V).</span>
 
@@ -696,7 +697,7 @@
 <span class="sd">            Sampling period (s).</span>
 
 <span class="sd">        """</span>
-        <span class="c1"># The current reference is a state , driven toward the stored flux and torque</span>
+        <span class="c1"># The current reference is a state, driven toward the stored flux and torque</span>
         <span class="c1"># references by the tracking law [#Sar2026]_.</span>
         <span class="n">psi_s</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_ref</span><span class="p">)</span>
         <span class="n">psi_s_abs</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span>
@@ -734,17 +735,17 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    i_s_max : float</span>
 <span class="sd">        Maximum stator current (A).</span>
-<span class="sd">    psi_s_min : float, optional</span>
-<span class="sd">        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for</span>
+<span class="sd">    psi_s_min : float | None</span>
+<span class="sd">        Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for</span>
 <span class="sd">        machines without PMs.</span>
-<span class="sd">    psi_s_max : float, optional</span>
-<span class="sd">        Maximum stator flux (Vs), defaults to `inf`.</span>
-<span class="sd">    k_u : float, optional</span>
-<span class="sd">        Voltage utilization factor, defaults to 1.</span>
-<span class="sd">    k_mtpv : float, optional</span>
-<span class="sd">        MTPV margin, defaults to 1.</span>
-<span class="sd">    alpha_ref : float, optional</span>
-<span class="sd">        Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100.</span>
+<span class="sd">    psi_s_max : float</span>
+<span class="sd">        Maximum stator flux (Vs).</span>
+<span class="sd">    k_u : float</span>
+<span class="sd">        Voltage utilization factor.</span>
+<span class="sd">    k_mtpv : float</span>
+<span class="sd">        MTPV margin.</span>
+<span class="sd">    alpha_ref : float</span>
+<span class="sd">        Bandwidth of the reference tracking (rad/s).</span>
 
 <span class="sd">    """</span>
 
@@ -752,11 +753,11 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
         <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">psi_s_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span>
-        <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">alpha_ref</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">psi_s_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">psi_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">k_mtpv</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">k_u</span>
@@ -843,7 +844,7 @@
 <span class="sd">        tau_M_ref : float</span>
 <span class="sd">            Torque reference (Nm).</span>
 <span class="sd">        w_m : float</span>
-<span class="sd">            Mechanical angular speed (rad/s).</span>
+<span class="sd">            Electrical angular speed (rad/s).</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            DC-link voltage (V).</span>
 

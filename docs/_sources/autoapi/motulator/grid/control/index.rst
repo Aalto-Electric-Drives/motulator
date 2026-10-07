@@ -537,7 +537,7 @@ Package Contents
       Set the external active power reference.
 
       :param ref_fcn: Active power reference (W), constant or a function of time.
-      :type ref_fcn: Callable[[float], float]
+      :type ref_fcn: float | Callable[[float], float]
 
 
 
@@ -973,7 +973,7 @@ Package Contents
    .. py:method:: compute_output(T_s, u_c_ref_ab, u_dc, w)
 
       
-      Compute the duty ratios and the limited voltage reference.
+      Compute the duty ratios and the corresponding voltage.
 
       :param T_s: Sampling period (s).
       :type T_s: float
@@ -985,7 +985,9 @@ Package Contents
       :type w: float
 
       :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
-                * **u_c_ab** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
+                * **u_c_ab** (*complex*) -- Voltage (V) in stationary coordinates corresponding to the duty ratios
+                  `d_abc`, i.e., the limited voltage reference with the delay-compensating
+                  angle advance and the duty-ratio error compensation (if used) included.
 
 
 

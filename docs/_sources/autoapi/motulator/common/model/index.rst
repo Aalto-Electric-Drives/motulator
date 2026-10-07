@@ -348,9 +348,10 @@ Package Contents
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
-                     sampling period. Defaults to 0, in which case the number and spacing of
-                     points is selected by the solver.
-      :type N_eval: int | None, optional
+                     integration interval, i.e., for each sampling period or, if carrier
+                     comparison is used, for each switching interval. Defaults to 0, in which
+                     case the number and spacing of points is selected by the solver.
+      :type N_eval: int, optional
 
 
 

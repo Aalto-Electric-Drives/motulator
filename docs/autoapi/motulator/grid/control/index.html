@@ -923,7 +923,7 @@ signals, and reference signals.</p>
 <dd><p>Set the external active power reference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ref_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Active power reference (W), constant or a function of time.</p>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>) – Active power reference (W), constant or a function of time.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1223,7 +1223,7 @@ Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.control.PWM.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PWM.compute_output" title="Link to this definition">#</a></dt>
-<dd><p>Compute the duty ratios and the limited voltage reference.</p>
+<dd><p>Compute the duty ratios and the corresponding voltage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1236,7 +1236,9 @@ Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>d_abc</strong> (<em>list[float]</em>) – Duty ratios for the next sampling period.</p></li>
-<li><p><strong>u_c_ab</strong> (<em>complex</em>) – Limited voltage reference (V) in stationary coordinates.</p></li>
+<li><p><strong>u_c_ab</strong> (<em>complex</em>) – Voltage (V) in stationary coordinates corresponding to the duty ratios
+<cite>d_abc</cite>, i.e., the limited voltage reference with the delay-compensating
+angle advance and the duty-ratio error compensation (if used) included.</p></li>
 </ul>
 </p>
 </dd>

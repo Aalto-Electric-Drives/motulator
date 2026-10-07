@@ -207,13 +207,11 @@ Package Contents
    
    Callable wrapper for GradNet flux-linkage map models.
 
-   The map is symmetrized about the d-axis to ensure physical consistency.
+   The map returns the stator flux linkage (Vs) at the given stator current (A). It
+   is symmetrized about the d-axis to ensure physical consistency.
 
    :param model: Trained GradNet model for the flux-linkage map.
    :type model: GradNet
-
-   :returns: Stator flux linkage (Vs).
-   :rtype: complex | np.ndarray
 
 
 
@@ -270,7 +268,7 @@ Package Contents
    
    p-norm gradient activation function.
 
-   Defined as the gradient of S(z) = (1 + sum(z_n**p))**(1/p)/beta, where p is a
+   Defined as the gradient of S(z) = (1 + sum((beta*z_n)**p))**(1/p)/beta, where p is a
    positive even integer. This potential function corresponds to a smooth p-norm, which
    is convex, thus guaranteeing monotonicity.
 
@@ -321,7 +319,7 @@ Package Contents
    Options for plotting functions.
 
    :param base: Base values for per-unit conversion. If None, SI values are used.
-   :type base: BaseValues | None, optional
+   :type base: ~motulator.drive.utils.BaseValues | None, optional
    :param lims: Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax)}.
    :type lims: dict[str, tuple[float, float]] | None, optional
    :param ticks: Axis ticks as {'x': [x1, x2, ...], 'y': [y1, y2, ...]}.
@@ -465,7 +463,19 @@ Package Contents
    This function re-instantiates the dataset with the same parameters to reproduce
    the training set. Validation data is the set difference (complement).
 
-   :returns: ((train_psi, train_i, ...), (val_psi, val_i, ...))
+   :param dataset_path: Path to the npz file containing the dataset.
+   :type dataset_path: str
+   :param base: Base values of the target machine. They are only needed to re-instantiate the
+                dataset; the returned data are not normalized.
+   :type base: ~motulator.drive.utils.BaseValues
+   :param subsample: Subsampling rate used in the training, defaults to 1 (no subsampling).
+   :type subsample: int, optional
+   :param other_keys: Additional fields of the npz file to be returned after the flux linkage and
+                      current, defaults to None (no additional fields).
+   :type other_keys: list[str] | None, optional
+
+   :returns: ((train_psi, train_i, ...), (val_psi, val_i, ...)), where the arrays are
+             flattened and in the units of the npz file.
    :rtype: tuple
 
 
@@ -525,7 +535,7 @@ Package Contents
    :param component: Component of the flux linkage or current to plot.
    :type component: {"d", "q"}
    :param base: Base values for per-unit conversion. If None, unity base values are used.
-   :type base: BaseValues | None, optional
+   :type base: ~motulator.drive.utils.BaseValues | None, optional
    :param lims: Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax), 'z': (zmin, zmax)}.
    :type lims: dict[str, tuple[float, float]] | None, optional
    :param ticks: Axis ticks as {'x': [x1, x2, ...], 'y': [y1, y2, ...], 'z': [z1, z2, ...]}.
@@ -579,9 +589,9 @@ Package Contents
    :type output: {"psi_d", "psi_q", "tau_m"}, optional
    :param input_type: Type of the fixed input value, defaults to "i_s_dq".
    :type input_type: {"i_s_dq", "psi_s_dq"}, optional
-   :param val_data: Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+   :param val_data: Validation data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
    :type val_data: tuple, optional
-   :param trn_data: Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+   :param trn_data: Training data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
    :type trn_data: tuple, optional
    :param opts: Plotting options.
    :type opts: PlotOptions, optional
@@ -620,9 +630,9 @@ Package Contents
    :type input: {"i_d", "i_q", "psi_d", "psi_q"}, optional
    :param output: Output quantity to plot, defaults to "tau_m".
    :type output: {"psi_d", "psi_q", "tau_m", "i_d", "i_q"}, optional
-   :param val_data: Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+   :param val_data: Validation data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
    :type val_data: tuple, optional
-   :param trn_data: Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+   :param trn_data: Training data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
    :type trn_data: tuple, optional
    :param opts: Plotting options.
    :type opts: PlotOptions, optional
@@ -647,7 +657,7 @@ Package Contents
 .. py:function:: print_current_map_errors_meas(current_map, data, base = None)
 
    
-   Print per-unit error metrics for a measured current map.
+   Print error metrics for a measured current map.
 
 
 
@@ -670,7 +680,7 @@ Package Contents
 .. py:function:: print_flux_map_errors_meas(flux_map, data, base = None)
 
    
-   Print per-unit error metrics for a measured flux map.
+   Print error metrics for a measured flux map.
 
 
 
@@ -735,6 +745,9 @@ Package Contents
 
    :param dataset_path: Path to the training data file (npz format).
    :type dataset_path: str | Path
+   :param base: Base values of the target machine. The training data are normalized with the
+                base current and flux linkage, which are also stored in the model.
+   :type base: ~motulator.drive.utils.BaseValues
    :param is_flux_map: Whether the model is a flux map or current map, defaults to False.
    :type is_flux_map: bool, optional
    :param k: Spatial harmonics order. If None, no harmonics are used, defaults to None.

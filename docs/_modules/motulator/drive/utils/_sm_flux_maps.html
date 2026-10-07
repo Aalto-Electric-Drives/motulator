@@ -518,10 +518,10 @@
 <span class="sd">    psi_s_dq : np.ndarray</span>
 <span class="sd">        Complex array of stator flux linkage (Vs).</span>
 <span class="sd">    lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional</span>
-<span class="sd">        Linear interpolation function that evaluates the map at arbitrary points. Takes</span>
-<span class="sd">        complex inputs (d + j*q) and returns interpolated output values. For flux maps,</span>
-<span class="sd">        maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function</span>
-<span class="sd">        extrapolates outside the map range.</span>
+<span class="sd">        Function that evaluates the map at arbitrary points. Takes complex inputs</span>
+<span class="sd">        (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;</span>
+<span class="sd">        for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation</span>
+<span class="sd">        function, which extrapolates outside the map range, is created from the data.</span>
 <span class="sd">    tau_M : np.ndarray, optional</span>
 <span class="sd">        Array of electromagnetic torque (Nm).</span>
 <span class="sd">    type : Literal["current_map", "flux_map"], optional</span>
@@ -1017,7 +1017,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    fname : str</span>
+<span class="sd">    fname : Path | str</span>
 <span class="sd">        MATLAB file name.</span>
 <span class="sd">    add_negative_q_axis : bool, optional</span>
 <span class="sd">        Adds the negative q-axis data based on the symmetry, defaults to True.</span>

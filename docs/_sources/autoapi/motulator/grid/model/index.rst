@@ -53,7 +53,7 @@ Package Contents
    
    Lossless voltage-source converter with capacitive DC-bus dynamics.
 
-   :param u_dc: DC-bus voltage (V).
+   :param u_dc: Initial DC-bus voltage (V).
    :type u_dc: float
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
@@ -673,9 +673,10 @@ Package Contents
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
-                     sampling period. Defaults to 0, in which case the number and spacing of
-                     points is selected by the solver.
-      :type N_eval: int | None, optional
+                     integration interval, i.e., for each sampling period or, if carrier
+                     comparison is used, for each switching interval. Defaults to 0, in which
+                     case the number and spacing of points is selected by the solver.
+      :type N_eval: int, optional
 
 
 
@@ -859,6 +860,8 @@ Package Contents
    :type u_ed: float, optional
    :param u_eq: Magnitude of q-axis excitation signal (V), defaults to 0.
    :type u_eq: float, optional
+   :param f_e: Frequency of excitation signal (Hz), defaults to 0.
+   :type f_e: float, optional
 
    .. rubric:: Notes
 

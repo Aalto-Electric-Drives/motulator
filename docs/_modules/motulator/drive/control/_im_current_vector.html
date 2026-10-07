@@ -471,7 +471,7 @@
 <span></span><span class="sd">"""Current-vector control methods for induction machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
@@ -502,6 +502,8 @@
     <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">u_s_lim</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Speed reference (set by the control system)</span>
+    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Duty ratios (set by the control system)</span>
 
 
 <span class="c1"># %%</span>
@@ -515,7 +517,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    par : InductionMachineInvGammaPars | InductionMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
-<span class="sd">    alpha_c : float, optional</span>
+<span class="sd">    alpha_c : float</span>
 <span class="sd">        Reference-tracking bandwidth (rad/s).</span>
 <span class="sd">    alpha_i : float, optional</span>
 <span class="sd">        Integral action bandwidth (rad/s), defaults to `alpha_c`.</span>
@@ -607,18 +609,18 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    machine_pars : InductionMachineInvGammaPars | InductionMachinePars</span>
+<span class="sd">    par : InductionMachineInvGammaPars | InductionMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    psi_s_nom : float</span>
 <span class="sd">        Nominal stator flux linkage (Vs).</span>
 <span class="sd">    i_s_max : float</span>
 <span class="sd">        Maximum stator current (A).</span>
-<span class="sd">    w_s_nom : float, optional</span>
+<span class="sd">    w_s_nom : float</span>
 <span class="sd">        Nominal stator angular frequency (rad/s).</span>
-<span class="sd">    k_u : float, optional</span>
-<span class="sd">        Voltage utilization factor, defaults to 1.</span>
-<span class="sd">    k_fw : float, optional</span>
-<span class="sd">        Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.</span>
+<span class="sd">    k_u : float</span>
+<span class="sd">        Voltage utilization factor.</span>
+<span class="sd">    k_fw : float</span>
+<span class="sd">        Field-weakening gain (1/H). If zero, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -634,8 +636,8 @@
         <span class="n">psi_s_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">i_s_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">w_s_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">k_fw</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">k_u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">k_fw</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">=</span> <span class="n">i_s_max</span>
@@ -705,7 +707,7 @@
 <span class="sd">        T_s : float</span>
 <span class="sd">            Sampling time (s).</span>
 <span class="sd">        u_s_ref : complex</span>
-<span class="sd">            Realized (limited) stator voltage reference (V).</span>
+<span class="sd">            Unlimited stator voltage reference (V).</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            DC-link voltage (V).</span>
 
@@ -737,8 +739,9 @@
 <span class="sd">        Current control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not</span>
 <span class="sd">        used if `discrete` is True.</span>
 <span class="sd">    alpha_o : float, optional</span>
-<span class="sd">        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise</span>
-<span class="sd">        2*pi*30, keeping the default speed observer gain the same.</span>
+<span class="sd">        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,</span>
+<span class="sd">        otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the</span>
+<span class="sd">        speed estimation gain the same.</span>
 <span class="sd">    k_o : Callable[[float], complex], optional</span>
 <span class="sd">        Observer gain as a function of the rotor angular speed.</span>
 <span class="sd">    w_s_nom : float, optional</span>
@@ -776,10 +779,10 @@
     <span class="n">discrete</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set alpha_o default based on J value."""</span>
+<span class="w">        </span><span class="sd">"""Set alpha_o default based on J value and operation mode."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># To keep the speed observer gain k_w the same</span>
-            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">60</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">60</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span>
+            <span class="c1"># With J, the double pole at alpha/2 keeps the speed gain k_w the same</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">alpha</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">alpha</span></div>
 
 

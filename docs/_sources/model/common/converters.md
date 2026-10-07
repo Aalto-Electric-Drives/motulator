@@ -2,7 +2,7 @@
 
 ## Model
 
-[Figure 1](fig:inverter) shows a three-phase two-level voltage-source converter, where $\udc$ is the DC-bus voltage, $\idc$ is the external DC current, and $\Cdc$ is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. This model is provided in the {class}`motulator.drive.model.VoltageSourceConverter` class. It can be extended with a diode bridge model, see {doc}`/model/drive/diode_bridge`.
+[Figure 1](fig:inverter) shows a three-phase two-level voltage-source converter, where $\udc$ is the DC-bus voltage, $\idc$ is the external DC current, and $\Cdc$ is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. The model with a constant DC-bus voltage is provided in the {class}`motulator.drive.model.VoltageSourceConverter` class. It can be extended with a diode bridge model, see {doc}`/model/drive/diode_bridge`.
 
 ```{figure} ../figs/inverter.svg
 ---
@@ -48,7 +48,7 @@ alt: Voltage-source converter and carrier comparison
 *Figure 2:* Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states $\qA = 1$, $\qB = 0$, and $\qC = 0$.
 ```
 
-By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, if the DC bus is fed from an external current source $\idc$, the DC-bus dynamics are modeled as
+By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, if the DC bus is fed from an external current source $\idc$, the DC-bus dynamics are modeled in the {class}`motulator.grid.model.CapacitiveDCBusConverter` class as
 
 ```{math}
 ---
@@ -80,7 +80,7 @@ width: 100%
 align: center
 alt: Carrier comparison
 ---
-*Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$ (or, optionally, over the switching period $\Tsw = 2\Ts$). The carrier signal is the same for all three phases and varies between 0 and 1.
+*Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
 ```
 
 ```{figure} ../figs/carrier_comparison.svg
@@ -90,7 +90,7 @@ width: 100%
 align: center
 alt: Carrier comparison
 ---
-*Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$ (or, optionally, over the switching period $\Tsw = 2\Ts$). The carrier signal is the same for all three phases and varies between 0 and 1.
+*Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
 ```
 
 The converter parameter `t_d` delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time.

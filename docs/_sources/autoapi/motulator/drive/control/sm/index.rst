@@ -253,8 +253,9 @@ Module Contents
    :param alpha_i: Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
                    used if `discrete` is True.
    :type alpha_i: float, optional
-   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
-                   2*pi*50/3, keeping the default speed observer gain the same.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
+                   otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
+                   keeps the speed estimation gain the same.
    :type alpha_o: float, optional
    :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_ref: float, optional
@@ -375,16 +376,17 @@ Module Contents
    Observer for synchronous machines in estimated rotor coordinates.
 
    This observer estimates the stator flux linkage, the rotor angle, and (optionally)
-   the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]. The observer
-   gain decouples the electrical and mechanical dynamics and allows placing the poles
-   of the corresponding linearized estimation error dynamics. The rotor angle is
-   tracked using a position error signal, which is either computed internally from the
-   back-EMF-based flux estimation error or supplied externally, e.g., from the measured
-   rotor angle. The weight `h` of the external signal, given to `compute_output`,
-   selects between these: `h = 0` gives purely model-based (sensorless) operation,
-   `h = 1` relies on the external signal alone, and intermediate values blend the two.
-   The magnetic saturation is taken into account based on the provided machine model.
-   The PM-flux linkage can also be estimated [#Tuo2018]_.
+   the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]_. The
+   observer gain decouples the electrical and mechanical dynamics and allows placing
+   the poles of the corresponding linearized estimation error dynamics. The rotor angle
+   is tracked using a position error signal, which is either computed internally from
+   the back-EMF-based flux estimation error or supplied externally, e.g., from the
+   measured rotor angle. The weight `h` of the external signal, given to
+   `compute_output`, selects between these: `h = 0` gives purely model-based
+   (sensorless) operation, `h = 1` relies on the external signal alone, and
+   intermediate values blend the two. The magnetic saturation is taken into account
+   based on the provided machine model. The PM-flux linkage can also be estimated
+   [#Tuo2018]_.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -393,7 +395,7 @@ Module Contents
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float]
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
-   :type k_f: Callable[[float], float], optional
+   :type k_f: Callable[[float], float]
 
    .. rubric:: References
 
@@ -645,8 +647,9 @@ Module Contents
    :type alpha_psi: float | None, optional
    :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_tau`.
    :type alpha_i: float | None, optional
-   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `J` is None, otherwise
-                   2*pi*50/3, keeping the default speed observer gain the same.
+   :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
+                   otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
+                   keeps the speed estimation gain the same.
    :type alpha_o: float | None, optional
    :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_ref: float, optional
@@ -832,7 +835,7 @@ Module Contents
    :param alpha_o: Angle estimation pole (rad/s), defaults to 2*pi*200.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], complex], optional
+   :type k_o: Callable[[float], float] | None, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
@@ -1086,7 +1089,7 @@ Module Contents
    .. py:method:: compute_output(T_s, u_c_ref_ab, u_dc, w)
 
       
-      Compute the duty ratios and the limited voltage reference.
+      Compute the duty ratios and the corresponding voltage.
 
       :param T_s: Sampling period (s).
       :type T_s: float
@@ -1098,7 +1101,9 @@ Module Contents
       :type w: float
 
       :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
-                * **u_c_ab** (*complex*) -- Limited voltage reference (V) in stationary coordinates.
+                * **u_c_ab** (*complex*) -- Voltage (V) in stationary coordinates corresponding to the duty ratios
+                  `d_abc`, i.e., the limited voltage reference with the delay-compensating
+                  angle advance and the duty-ratio error compensation (if used) included.
 
 
 
@@ -1300,7 +1305,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_ref = 2 * pi * 100)
+.. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
 
    
    Optimal feedforward reference generator for synchronous machines.
@@ -1316,18 +1321,19 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+   :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
                      machines without PMs.
-   :type psi_s_min: float, optional
-   :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
-   :type psi_s_max: float, optional
-   :param k_u: Voltage utilization factor, defaults to 1.
-   :type k_u: float, optional
-   :param k_mtpv: MTPV margin, defaults to 1.
-   :type k_mtpv: float, optional
-   :param alpha_ref: Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100. It should be
-                     well below the sampling frequency to maintain a numerical margin.
-   :type alpha_ref: float, optional
+   :type psi_s_min: float | None
+   :param psi_s_max: Maximum stator flux (Vs).
+   :type psi_s_max: float
+   :param k_u: Voltage utilization factor.
+   :type k_u: float
+   :param k_mtpv: MTPV margin.
+   :type k_mtpv: float
+   :param alpha_ref: Bandwidth of the current-reference tracking (rad/s), needed only for
+                     current-vector control. It should be well below the sampling frequency to
+                     maintain a numerical margin.
+   :type alpha_ref: float
 
    .. rubric:: References
 
@@ -1399,7 +1405,7 @@ Module Contents
 
       :param tau_M_ref: Torque reference (Nm).
       :type tau_M_ref: float
-      :param w_m: Mechanical angular speed (rad/s).
+      :param w_m: Electrical angular speed (rad/s).
       :type w_m: float
       :param u_dc: DC-link voltage (V).
       :type u_dc: float
@@ -1451,7 +1457,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGeneratorOnline(par, i_s_max, psi_s_min = None, psi_s_max = inf, k_u = 1.0, k_mtpv = 1.0, alpha_ref = 2 * pi * 100)
+.. py:class:: ReferenceGeneratorOnline(par, i_s_max, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
 
    
    Optimal feedforward online reference generator for synchronous machines.
@@ -1466,17 +1472,17 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+   :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
                      machines without PMs.
-   :type psi_s_min: float, optional
-   :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
-   :type psi_s_max: float, optional
-   :param k_u: Voltage utilization factor, defaults to 1.
-   :type k_u: float, optional
-   :param k_mtpv: MTPV margin, defaults to 1.
-   :type k_mtpv: float, optional
-   :param alpha_ref: Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100.
-   :type alpha_ref: float, optional
+   :type psi_s_min: float | None
+   :param psi_s_max: Maximum stator flux (Vs).
+   :type psi_s_max: float
+   :param k_u: Voltage utilization factor.
+   :type k_u: float
+   :param k_mtpv: MTPV margin.
+   :type k_mtpv: float
+   :param alpha_ref: Bandwidth of the reference tracking (rad/s).
+   :type alpha_ref: float
 
 
 
@@ -1526,7 +1532,7 @@ Module Contents
 
       :param tau_M_ref: Torque reference (Nm).
       :type tau_M_ref: float
-      :param w_m: Mechanical angular speed (rad/s).
+      :param w_m: Electrical angular speed (rad/s).
       :type w_m: float
       :param u_dc: DC-link voltage (V).
       :type u_dc: float
@@ -1675,10 +1681,11 @@ Module Contents
    .. py:method:: iterate_i_s_dq(psi_s_dq)
 
       
-      Compute the current from the flux linkage using root finding.
+      Compute the current from the flux linkage.
 
-      The current is computed iteratively from the flux map using a root-finding
-      algorithm. This is less efficient, but may be convenient in some special cases.
+      The current map is used if available. Otherwise, the current is computed
+      iteratively from the flux map using a root-finding algorithm, which is less
+      efficient but may be convenient in some special cases.
 
 
 
@@ -1739,7 +1746,9 @@ Module Contents
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param cfg: Current-vector control configuration.
+   :param cfg: Current-vector control configuration. The drive is always sensorless, and the
+               fields `sensorless`, `k_o`, and `k_f` are not used. Since the default of
+               `alpha_o` depends on `sensorless`, keep `sensorless=True` or give `alpha_o`.
    :type cfg: CurrentVectorControllerCfg
    :param U_inj: Injected voltage amplitude (V), defaults to 250.
    :type U_inj: float, optional
@@ -1884,11 +1893,11 @@ Module Contents
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param alpha_o: Speed-estimation pole (rad/s).
-   :type alpha_o: float, optional
+   :type alpha_o: float
    :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], float], optional
+   :type k_o: Callable[[float], float]
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
-   :type k_f: Callable[[float], float], optional
+   :type k_f: Callable[[float], float]
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
@@ -2006,7 +2015,7 @@ Module Contents
 
    This observer estimates the mechanical rotor speed based on the mechanical system
    model and the error signal. If the inertia of the mechanical system is provided, the
-   load torque is als estimated, avoiding lag in the speed estimate [#Lor1991]_.
+   load torque is also estimated, avoiding lag in the speed estimate [#Lor1991]_.
 
    :param k_w: Speed-estimation gain (rad/s or (rad/s)² for induction machines or for
                synchronous machines, respectively).
@@ -2014,9 +2023,9 @@ Module Contents
    :param k_tau: Load-torque estimation gain (Nm or Nm/s for induction machines or for
                  synchronous machines, respectively).
    :type k_tau: float
-   :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the load
-             torque estimation is not used.
-   :type J: float | None, optional
+   :param J: Inertia of the mechanical system (kgm²). If None, the load torque estimation is
+             not used.
+   :type J: float | None
 
    .. rubric:: References
 
@@ -2186,7 +2195,7 @@ Module Contents
    .. py:method:: iterate_i_s_dq(psi_s_dq)
 
       
-      Compute the current from the flux linkage using root finding.
+      Compute the current from the flux linkage in closed form.
 
 
 

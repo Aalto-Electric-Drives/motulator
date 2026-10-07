@@ -576,7 +576,7 @@
 <span class="sd">        Sampled rectilinear-grid map data.</span>
 <span class="sd">    component : {"d", "q"}</span>
 <span class="sd">        Component of the flux linkage or current to plot.</span>
-<span class="sd">    base : BaseValues | None, optional</span>
+<span class="sd">    base : ~motulator.drive.utils.BaseValues | None, optional</span>
 <span class="sd">        Base values for per-unit conversion. If None, unity base values are used.</span>
 <span class="sd">    lims : dict[str, tuple[float, float]] | None, optional</span>
 <span class="sd">        Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax), 'z': (zmin, zmax)}.</span>
@@ -636,7 +636,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">zlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span> <span class="k">if</span> <span class="n">pu_vals</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)"</span>
 
-    <span class="c1"># Surface and wireframe</span>
+    <span class="c1"># Surface</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">surface_cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
     <span class="c1"># Constant-current loci overlays: i_d=const and i_q=const.</span>
@@ -879,7 +879,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    base : BaseValues | None, optional</span>
+<span class="sd">    base : ~motulator.drive.utils.BaseValues | None, optional</span>
 <span class="sd">        Base values for per-unit conversion. If None, SI values are used.</span>
 <span class="sd">    lims : dict[str, tuple[float, float]] | None, optional</span>
 <span class="sd">        Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax)}.</span>
@@ -924,11 +924,11 @@
 <span class="w">    </span><span class="sd">"""Helper to extract points matching the fixed input value."""</span>
     <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-    <span class="c1"># Check data length to handle cases without theta_m and tau_m</span>
+    <span class="c1"># Data is (psi_s_dq, i_s_dq, theta_m, tau_m) or (psi_s_dq, i_s_dq), in the order of</span>
+    <span class="c1"># get_training_data</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">tau_m</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">theta_m</span><span class="p">,</span> <span class="n">tau_m</span> <span class="o">=</span> <span class="n">data</span>
     <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="c1"># Assume data is (psi_s_dq, i_s_dq), only for flux maps case</span>
         <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span>
         <span class="n">theta_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">))</span>  <span class="c1"># Dummy theta</span>
         <span class="n">tau_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">))</span>  <span class="c1"># Dummy tau</span>
@@ -1063,9 +1063,9 @@
 <span class="sd">    output : {"psi_d", "psi_q", "tau_m", "i_d", "i_q"}, optional</span>
 <span class="sd">        Output quantity to plot, defaults to "tau_m".</span>
 <span class="sd">    val_data : tuple, optional</span>
-<span class="sd">        Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</span>
+<span class="sd">        Validation data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).</span>
 <span class="sd">    trn_data : tuple, optional</span>
-<span class="sd">        Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</span>
+<span class="sd">        Training data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).</span>
 <span class="sd">    opts : PlotOptions, optional</span>
 <span class="sd">        Plotting options.</span>
 
@@ -1326,9 +1326,9 @@
 <span class="sd">    input_type : {"i_s_dq", "psi_s_dq"}, optional</span>
 <span class="sd">        Type of the fixed input value, defaults to "i_s_dq".</span>
 <span class="sd">    val_data : tuple, optional</span>
-<span class="sd">        Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</span>
+<span class="sd">        Validation data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).</span>
 <span class="sd">    trn_data : tuple, optional</span>
-<span class="sd">        Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).</span>
+<span class="sd">        Training data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).</span>
 <span class="sd">    opts : PlotOptions, optional</span>
 <span class="sd">        Plotting options.</span>
 
@@ -1370,8 +1370,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_points</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-        <span class="c1"># Assumption: data is always (i, psi, theta, tau)</span>
-        <span class="n">i_s_dq_data</span><span class="p">,</span> <span class="n">psi_s_dq_data</span><span class="p">,</span> <span class="n">theta_m_data</span><span class="p">,</span> <span class="n">tau_m_data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="c1"># Data is (psi_s_dq, i_s_dq, theta_m, tau_m), in the order of get_training_data</span>
+        <span class="n">psi_s_dq_data</span><span class="p">,</span> <span class="n">i_s_dq_data</span><span class="p">,</span> <span class="n">theta_m_data</span><span class="p">,</span> <span class="n">tau_m_data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="n">d_exact</span><span class="p">,</span> <span class="n">q_exact</span> <span class="o">=</span> <span class="n">fixed_value</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">fixed_value</span><span class="o">.</span><span class="n">imag</span>
 
         <span class="c1"># Select target array for filtering based on input_type</span>

@@ -68,7 +68,7 @@ width: 100%
 align: center
 alt: Synchronous machine model
 ---
-*Figure 2:* Block diagram of the machine model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.
+*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the optional spatial harmonics are omitted in this figure, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
 ```
 
 ```{figure} ../figs/sm_block_rot.svg
@@ -78,7 +78,7 @@ width: 100%
 align: center
 alt: Synchronous machine model
 ---
-*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the spatial harmonics are omitted, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
+*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the optional spatial harmonics are omitted in this figure, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
 ```
 
 ```{figure} ../figs/sm_block_stat.svg
@@ -103,7 +103,7 @@ alt: Synchronous machine model seen from stator coordinates
 ```
 
 ```{note}
-Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ would also depend on the angle $\thetam$. This effect is typically omitted in dynamic models and not implemented here.
+Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ also depend on the angle $\thetam$. This effect is typically omitted in dynamic models, but it can optionally be included in the machine model using the {class}`motulator.drive.model.SpatialSaturatedSynchronousMachinePars` class, see the example {doc}`/drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
 ```
 
 ### Linear Magnetic Model

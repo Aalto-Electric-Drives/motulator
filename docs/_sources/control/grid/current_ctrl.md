@@ -41,7 +41,7 @@ label: grid_cc
     \ucref &= \kT\icref - \kP\ic + \mathbf{u}_\mathrm{i}
 ```
 
-where $\ucref$ is the output of the controller, i.e., the converter voltage reference, $\ic$ is the measured converter current, $\icref$ is the converter current reference, $\mathbf{u}_\mathrm{i}$ is the integral state, and $\omegac = \hatomegag$ is the angular speed of the coordinate system. Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
+where $\ucref$ is the output of the controller, i.e., the converter voltage reference, $\ic$ is the measured converter current, $\icref$ is the converter current reference, $\mathbf{u}_\mathrm{i}$ is the integral state, and $\omegac$ is the angular speed of the coordinate system, obtained from the PLL (equal to $\hatomegag$ in the steady state). Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
 
 ## Closed-Loop System Analysis
 
@@ -94,7 +94,7 @@ label: grid_cc_gain_selection
     \kT = \alphac \hat L
 ```
 
-where $\alpha_\mathrm{s}$ is the closed-loop reference-tracking bandwidth, $\alphai$ is the integral action bandwidth, and $\hat L$ is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Gc_grid` and {eq}`Yc_grid` reduce to
+where $\alphac$ is the closed-loop reference-tracking bandwidth, $\alphai$ is the integral action bandwidth, and $\hat L$ is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Gc_grid` and {eq}`Yc_grid` reduce to
 
 ```{math}
 ---

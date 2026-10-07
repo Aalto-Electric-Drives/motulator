@@ -134,23 +134,15 @@ Train the model.
 
 Load the dataset for visualization comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-68
+.. GENERATED FROM PYTHON SOURCE LINES 54-60
 
 .. code-block:: Python
 
 
     # Get the training and validation data (complement) from the helper function
-    # Note: get_training_data returns (psi, i, ...), but we need (i, psi, ...)
-    (trn_psi, trn_i, trn_theta, trn_tau), (val_psi, val_i, val_theta, val_tau) = (
-        gn.get_training_data(
-            str(dataset_path),
-            base=base,
-            subsample=subsample,
-            other_keys=["theta_m", "tau_m"],
-        )
+    trn_data, val_data = gn.get_training_data(
+        str(dataset_path), base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
     )
-    trn_data = (trn_i, trn_psi, trn_theta, trn_tau)
-    val_data = (val_i, val_psi, val_theta, val_tau)
 
 
 
@@ -159,11 +151,11 @@ Load the dataset for visualization comparison.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Load the GradNet model and create its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-74
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -178,11 +170,11 @@ Load the GradNet model and create its callable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Evaluate the model at single point.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-85
+.. GENERATED FROM PYTHON SOURCE LINES 68-77
 
 .. code-block:: Python
 
@@ -211,11 +203,11 @@ Evaluate the model at single point.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-87
+.. GENERATED FROM PYTHON SOURCE LINES 78-79
 
 Plot torque surface.
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-110
+.. GENERATED FROM PYTHON SOURCE LINES 79-102
 
 .. code-block:: Python
 
@@ -254,11 +246,11 @@ Plot torque surface.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 103-104
 
 Plot torque vs angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-127
+.. GENERATED FROM PYTHON SOURCE LINES 104-119
 
 .. code-block:: Python
 
@@ -289,21 +281,16 @@ Plot torque vs angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-129
+.. GENERATED FROM PYTHON SOURCE LINES 120-121
 
 Print statistical error metrics on validation data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-137
+.. GENERATED FROM PYTHON SOURCE LINES 121-124
 
 .. code-block:: Python
 
 
-    val_dict = {
-        "i_s_dq": val_i,
-        "psi_s_dq": val_psi,
-        "theta_m": val_theta,
-        "tau_m": val_tau,
-    }
+    val_dict = dict(zip(["psi_s_dq", "i_s_dq", "theta_m", "tau_m"], val_data, strict=True))
     gn.print_flux_map_errors_fem(map_fcn=harm_map, raw_data=val_dict, base=base)
 
 
@@ -315,7 +302,7 @@ Print statistical error metrics on validation data.
 
     Error metrics:
     Flux linkage: rmse=0.018 p.u., max=0.071 p.u., std=0.009 p.u.
-    Torque: rmse=0.015 p.u., max=0.106 p.u., std=0.010 p.u.
+    Torque: rmse=0.031 p.u., max=0.211 p.u., std=0.021 p.u.
 
 
 
@@ -323,7 +310,7 @@ Print statistical error metrics on validation data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.448 seconds)
+   **Total running time of the script:** (0 minutes 0.295 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_fem_harm.py:

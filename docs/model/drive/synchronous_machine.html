@@ -575,14 +575,14 @@
 <a class="only-light reference internal image-reference" href="../../_images/sm_block_rot.svg"><img alt="Synchronous machine model" class="only-light" src="../../_images/sm_block_rot.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the machine model in rotor coordinates. The magnetic model includes the flux equation (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#fig-sm-block-rot" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes <a class="reference internal" href="#equation-sm-current">(2)</a> and <a class="reference internal" href="#equation-sm-torque">(3)</a>. Since the optional spatial harmonics are omitted in this figure, the current <span class="math notranslate nohighlight">\(\is\)</span> and the torque <span class="math notranslate nohighlight">\(\tauM\)</span> do not depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>.</span><a class="headerlink" href="#fig-sm-block-rot" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id12">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/sm_block_rot.svg"><img alt="Synchronous machine model" class="invert-colors-dark only-dark" src="../../_images/sm_block_rot.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes <a class="reference internal" href="#equation-sm-current">(2)</a> and <a class="reference internal" href="#equation-sm-torque">(3)</a>. Since the spatial harmonics are omitted, the current <span class="math notranslate nohighlight">\(\is\)</span> and the torque <span class="math notranslate nohighlight">\(\tauM\)</span> do not depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>.</span><a class="headerlink" href="#id12" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes <a class="reference internal" href="#equation-sm-current">(2)</a> and <a class="reference internal" href="#equation-sm-torque">(3)</a>. Since the optional spatial harmonics are omitted in this figure, the current <span class="math notranslate nohighlight">\(\is\)</span> and the torque <span class="math notranslate nohighlight">\(\tauM\)</span> do not depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>.</span><a class="headerlink" href="#id12" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="fig-sm-block-stat">
@@ -601,7 +601,7 @@
 </figure>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Due to the spatial harmonics, the stator current <span class="math notranslate nohighlight">\(\is = \isfcn(\psis, \thetam)\)</span> and the electromagnetic torque <span class="math notranslate nohighlight">\(\tauM = \tauM(\psis,\thetam)\)</span> would also depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>. This effect is typically omitted in dynamic models and not implemented here.</p>
+<p>Due to the spatial harmonics, the stator current <span class="math notranslate nohighlight">\(\is = \isfcn(\psis, \thetam)\)</span> and the electromagnetic torque <span class="math notranslate nohighlight">\(\tauM = \tauM(\psis,\thetam)\)</span> also depend on the angle <span class="math notranslate nohighlight">\(\thetam\)</span>. This effect is typically omitted in dynamic models, but it can optionally be included in the machine model using the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedSynchronousMachinePars" title="motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SpatialSaturatedSynchronousMachinePars</span></code></a> class, see the example <a class="reference internal" href="../../drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html"><span class="doc">5.6-kW PM-SyRM, GradNet from FEM data, FVC</span></a>.</p>
 </div>
 <section id="linear-magnetic-model">
 <h3>Linear Magnetic Model<a class="headerlink" href="#linear-magnetic-model" title="Link to this heading">#</a></h3>

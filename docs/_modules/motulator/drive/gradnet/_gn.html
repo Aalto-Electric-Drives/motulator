@@ -534,7 +534,7 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    p-norm gradient activation function.</span>
 
-<span class="sd">    Defined as the gradient of S(z) = (1 + sum(z_n**p))**(1/p)/beta, where p is a</span>
+<span class="sd">    Defined as the gradient of S(z) = (1 + sum((beta*z_n)**p))**(1/p)/beta, where p is a</span>
 <span class="sd">    positive even integer. This potential function corresponds to a smooth p-norm, which</span>
 <span class="sd">    is convex, thus guaranteeing monotonicity.</span>
 
@@ -681,6 +681,13 @@
 <span class="sd">        Activation factory used by GradNet modules, defaults to Softmax.</span>
 <span class="sd">    mu_log0 : float, optional</span>
 <span class="sd">        Initial value for the linear term coefficients in log-domain, defaults to 1.0.</span>
+<span class="sd">    psi_base : float, optional</span>
+<span class="sd">        Base value of the flux linkage (Vs), defaults to 1.0. The network operates in</span>
+<span class="sd">        per-unit quantities. The base values are stored in the model and used by the</span>
+<span class="sd">        map wrappers (e.g., `CurrentMap`) to convert between SI units and per-unit</span>
+<span class="sd">        quantities.</span>
+<span class="sd">    i_base : float, optional</span>
+<span class="sd">        Base value of the current (A), defaults to 1.0.</span>
 
 <span class="sd">    """</span>
 
@@ -872,17 +879,13 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Callable wrapper for GradNet flux-linkage map models.</span>
 
-<span class="sd">    The map is symmetrized about the d-axis to ensure physical consistency.</span>
+<span class="sd">    The map returns the stator flux linkage (Vs) at the given stator current (A). It</span>
+<span class="sd">    is symmetrized about the d-axis to ensure physical consistency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model : GradNet</span>
 <span class="sd">        Trained GradNet model for the flux-linkage map.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    complex | np.ndarray</span>
-<span class="sd">        Stator flux linkage (Vs).</span>
 
 <span class="sd">    """</span>
 

@@ -43,13 +43,13 @@ fem_flux_map = utils.import_syre_data(p / "thor.mat")
 # Plot the maps in per-unit values.
 
 # sphinx_gallery_thumbnail_number = 3
-utils.plot_map(fem_flux_map, "d", base, x_lims=(-2, 2), y_lims=(-2, 2))
-utils.plot_map(fem_flux_map, "q", base, x_lims=(-2, 2), y_lims=(-2, 2))
+utils.plot_map(fem_flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
+utils.plot_map(fem_flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2)})
 
 # %%
 # Two-dimensional presentation of flux maps.
 
-utils.plot_flux_vs_current(fem_flux_map, base, lims=(-2, 2))
+utils.plot_flux_vs_current(fem_flux_map, base, x_lims=(-2, 2))
 
 # %%
 # Configure the system model.
@@ -75,8 +75,7 @@ mdl = model.Drive(machine, mechanics, converter)
 # %%
 # Configure the control system.
 
-# Create the flux and current maps for the control system
-fem_curr_map = fem_flux_map.invert()
+# Use the FEM flux map in the control system
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.2, psi_s_dq_fcn=fem_flux_map
 )
