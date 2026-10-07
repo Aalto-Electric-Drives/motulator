@@ -32,11 +32,6 @@ def print_errors(name: str, y_true, y_pred, scale: float, unit: str = " p.u.") -
     )
 
 
-def print_errors_pu(name: str, y_true, y_pred, scale: float) -> None:
-    """Print per-unit RMSE/max/std of |y_pred - y_true|/scale."""
-    print_errors(name, y_true, y_pred, scale=scale, unit=" p.u.")
-
-
 def _split_meas_tuple_or_dict(data) -> tuple[np.ndarray, np.ndarray]:
     """Return (psi_s_dq, i_s_dq) from either a tuple or an np.load dict-like."""
     if isinstance(data, tuple) or isinstance(data, list):
@@ -48,19 +43,21 @@ def _split_meas_tuple_or_dict(data) -> tuple[np.ndarray, np.ndarray]:
 def print_current_map_errors_meas(
     current_map, data, base: BaseValues | None = None
 ) -> None:
-    """Print per-unit error metrics for a measured current map."""
+    """Print error metrics for a measured current map."""
+    unit = " p.u." if base is not None else ""
     base = _get_base_values(base)
     psi_s_dq, i_s_dq = _split_meas_tuple_or_dict(data)
     i_pred = current_map(psi_s_dq)
-    print_errors_pu("Current-map error metrics", i_s_dq, i_pred, scale=base.i)
+    print_errors("Current-map error metrics", i_s_dq, i_pred, base.i, unit=unit)
 
 
 def print_flux_map_errors_meas(flux_map, data, base: BaseValues | None = None) -> None:
-    """Print per-unit error metrics for a measured flux map."""
+    """Print error metrics for a measured flux map."""
+    unit = " p.u." if base is not None else ""
     base = _get_base_values(base)
     psi_s_dq, i_s_dq = _split_meas_tuple_or_dict(data)
     psi_pred = flux_map(i_s_dq)
-    print_errors_pu("Flux-map error metrics", psi_s_dq, psi_pred, scale=base.psi)
+    print_errors("Flux-map error metrics", psi_s_dq, psi_pred, base.psi, unit=unit)
 
 
 # %%
@@ -76,7 +73,8 @@ def print_flux_map_errors_fem(map_fcn, raw_data, base) -> None:
     print("Error metrics:")
     psi_pred, tau_pred = map_fcn(i_s_dq, np.exp(1j * theta_m))
     print_errors("Flux linkage", psi_s_dq, psi_pred, base.psi, unit=unit)
-    print_errors("Torque", tau_m, tau_pred, base.tau, unit=unit)
+    # The torque values are per pole pair
+    print_errors("Torque", tau_m, tau_pred, base.tau / base.n_p, unit=unit)
 
 
 def print_current_map_errors_fem(map_fcn, raw_data, base) -> None:
@@ -91,4 +89,5 @@ def print_current_map_errors_fem(map_fcn, raw_data, base) -> None:
     print("Error metrics:")
     i_pred, tau_pred = map_fcn(psi_s_dq, np.exp(1j * theta_m))
     print_errors("Current", i_s_dq, i_pred, base.i, unit=unit)
-    print_errors("Torque", tau_m, tau_pred, base.tau, unit=unit)
+    # The torque values are per pole pair
+    print_errors("Torque", tau_m, tau_pred, base.tau / base.n_p, unit=unit)
