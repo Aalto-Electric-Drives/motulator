@@ -134,10 +134,10 @@ class CurrentReferenceGenerator:
         Maximum stator current (A).
     w_s_nom : float
         Nominal stator angular frequency (rad/s).
-    k_u : float, optional
-        Voltage utilization factor, defaults to 1.
-    k_fw : float, optional
-        Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
+    k_u : float
+        Voltage utilization factor.
+    k_fw : float
+        Field-weakening gain (1/H). If zero, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
 
     References
     ----------
@@ -153,8 +153,8 @@ class CurrentReferenceGenerator:
         psi_s_nom: float,
         i_s_max: float,
         w_s_nom: float,
-        k_u: float = 1.0,
-        k_fw: float = 0.0,
+        k_u: float,
+        k_fw: float,
     ) -> None:
         self.par = par
         self.i_s_max = i_s_max

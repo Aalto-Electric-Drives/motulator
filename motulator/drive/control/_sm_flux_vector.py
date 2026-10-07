@@ -386,8 +386,8 @@ class ObserverBasedVHzController:
         self.cfg = cfg
         self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
-            par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv
-        )
+            par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv, 0.0
+        )  # The current reference is not used, so its tracking bandwidth is zero
         self.flux_torque_ctrl = FluxTorqueController(par, cfg.alpha_psi, cfg.alpha_tau)
         self.observer = create_vhz_observer(par, cfg.alpha_o, cfg.k_o)
         self.alpha_f: float = cfg.alpha_f
