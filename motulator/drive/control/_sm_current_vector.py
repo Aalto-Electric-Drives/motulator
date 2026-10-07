@@ -1,6 +1,6 @@
 """Current-vector control methods for synchronous machine drives."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from math import inf, pi, sqrt
 from typing import cast
@@ -33,6 +33,8 @@ class References:
     i_s: complex = 0j
     u_s: complex = 0j
     u_s_lim: complex = 0j
+    w_M: float | None = None  # Speed reference (set by the control system)
+    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
 
 # %%

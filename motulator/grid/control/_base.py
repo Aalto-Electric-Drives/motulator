@@ -27,6 +27,7 @@ class References(Protocol):
     T_s: float
     d_abc: Sequence[float]
     p_g: float
+    u_c: complex  # Converter voltage reference (controller coordinates)
     u_dc: float | None
 
 
