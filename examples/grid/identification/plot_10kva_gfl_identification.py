@@ -24,7 +24,6 @@ identification_cfg = utils.IdentificationCfg(
     f_start=1,
     f_stop=10e3,
     n_freqs=100,
-    T_s=1 / 10e3,
     # Uncomment the row below to save the results in ./data of the working directory
     # filename="gfl_admittance",
     filetype="csv",
@@ -42,7 +41,7 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 # Configure the control system.
 
 cfg = control.CurrentVectorControllerCfg(
-    i_max=1.5 * base.i, L=0.2 * base.L, T_s=identification_cfg.T_s
+    i_max=1.5 * base.i, L=0.2 * base.L, T_s=1 / 10e3
 )
 inner_ctrl = control.CurrentVectorController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)

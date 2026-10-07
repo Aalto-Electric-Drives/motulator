@@ -24,7 +24,6 @@ identification_cfg = utils.IdentificationCfg(
     f_start=1,
     f_stop=10e3,
     n_freqs=100,
-    T_s=1 / 10e3,
     # Uncomment the row below to save the results in ./data of the working directory
     # filename="do-gfm_admittance",
     filetype="csv",
@@ -48,7 +47,7 @@ cfg = control.ObserverBasedGridFormingControllerCfg(
     R_a=0.2 * base.Z,
     u_nom=base.u,
     w_nom=base.w,
-    T_s=identification_cfg.T_s,
+    T_s=1 / 10e3,
 )
 inner_ctrl = control.ObserverBasedGridFormingController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)

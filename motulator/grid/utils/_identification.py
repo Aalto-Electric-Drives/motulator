@@ -12,8 +12,8 @@ from typing import Any, Literal
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle
+from scipy.integrate import trapezoid
 from scipy.io import savemat
-from scipy.signal.windows import blackman
 
 from motulator.common.model._pwm import CarrierComparison
 from motulator.common.utils._plotting import set_latex_style, set_screen_style
@@ -54,11 +54,10 @@ class IdentificationCfg:
     t1 : float, optional
         Additional simulation time for reaching sinusoidal steady-state during signal
         injection (s), defaults to 0.05.
-    T_s : float, optional
-        Sampling period of the control system (s), defaults to 125e-6.
     N_eval : int, optional
-        Number of evenly spaced data points the solver should return for each controller
-        sampling period, defaults to 10.
+        Number of evenly spaced data points the solver should return for each
+        integration interval, i.e., for each sampling period or, if carrier comparison
+        is used, for each switching interval, defaults to 10.
     n_periods_excitation : int, optional
         Number of excitation signal periods used in calculating the DFT, defaults to 4.
     n_periods_init : int, optional
@@ -76,8 +75,6 @@ class IdentificationCfg:
         are:
         - "csv": save results in .csv-format
         - "mat": save results in MATLAB .mat-format
-    delay : int, optional
-        Number of samples for modeling the computational delay, defaults to 1.
     use_window : bool, optional
         Whether to use window function for calculating DFT, defaults to True.
     variable_amplitude : bool, optional
@@ -98,14 +95,12 @@ class IdentificationCfg:
     manual_freqs: np.ndarray | None = None
     t0: float = 1.0
     t1: float = 0.05
-    T_s: float = 125e-6
     N_eval: int = 10
     n_periods_excitation: int = 4
     n_periods_init: int = 1
     multiprocess: bool = True
     filename: str | None = None
     filetype: Literal["csv", "mat"] = "csv"
-    delay: int = 1
     use_window: bool = True
     variable_amplitude: bool = True
     amplitude_multiplier: float = 5.0
@@ -217,26 +212,35 @@ def save_mat(data: IdentificationResults, filename: str) -> None:
 
 
 def dft(
-    cfg: IdentificationCfg, u: np.ndarray, f: float, initial_simulation: bool = False
+    cfg: IdentificationCfg,
+    t: np.ndarray,
+    u: np.ndarray,
+    f: float,
+    initial_simulation: bool = False,
 ) -> complex:
     """
-    Single-frequency discrete Fourier transform.
+    Single-frequency Fourier transform.
 
-    Calculates the frequency component y at frequency f from input signal u, using the
-    discrete Fourier transform algorithm.
+    Calculates the complex amplitude of the frequency component f of the signal u over
+    the last periods of the signal. The transform is computed with the trapezoidal rule
+    from the time instants t, which need not be evenly spaced.
 
     """
     n_periods = cfg.n_periods_init if initial_simulation else cfg.n_periods_excitation
-    n = int(n_periods * cfg.N_eval / (f * cfg.T_s))
+    T = n_periods / f
+    t_start = t[-1] - T
+
+    # Window of the last n_periods, starting from the value interpolated at t_start
+    k = np.searchsorted(t, t_start, side="right")
+    u_start = np.interp(t_start, t, np.real(u)) + 1j * np.interp(t_start, t, np.imag(u))
+    t = np.concatenate(([t_start], t[k:]))
+    u = np.concatenate(([u_start], u[k:]))
 
     if cfg.use_window and not initial_simulation:
-        u = u[-n:] * blackman(n, False)
-    else:
-        u = u[-n:]
+        x = 2 * np.pi * (t - t_start) / T
+        u = u * (0.42 - 0.5 * np.cos(x) + 0.08 * np.cos(2 * x))  # Blackman window
 
-    w = 2 * np.pi * f
-    y = 2 / n * np.sum(u * np.exp(-1j * w * cfg.T_s / cfg.N_eval * np.arange(n)))
-    return y
+    return 2 / T * trapezoid(u * np.exp(-2j * np.pi * f * t), t)
 
 
 def copy_state(sim: model.Simulation) -> tuple[Any, Any]:
@@ -261,10 +265,11 @@ def pre_process(
 
     # Calculate fundamental-frequency quantities in the operating point
     f_nom = w_g * 0.5 / np.pi
-    i_g0 = 0.5 * (dft(cfg, res.mdl.ac_filter.i_g_ab, f_nom, initial_simulation=True))
-    e_g0 = 0.5 * (dft(cfg, res.mdl.ac_filter.e_g_ab, f_nom, initial_simulation=True))
-    u_g0 = 0.5 * (dft(cfg, res.mdl.ac_filter.u_g_ab, f_nom, initial_simulation=True))
-    u_c0 = 0.5 * (dft(cfg, res.mdl.ac_filter.u_c_ab, f_nom, initial_simulation=True))
+    t, filt = res.mdl.t, res.mdl.ac_filter
+    i_g0 = 0.5 * dft(cfg, t, filt.i_g_ab, f_nom, initial_simulation=True)
+    e_g0 = 0.5 * dft(cfg, t, filt.e_g_ab, f_nom, initial_simulation=True)
+    u_g0 = 0.5 * dft(cfg, t, filt.u_g_ab, f_nom, initial_simulation=True)
+    u_c0 = 0.5 * dft(cfg, t, filt.u_c_ab, f_nom, initial_simulation=True)
 
     # Align coordinates with PCC voltage vector
     theta = np.angle(u_g0)
@@ -280,10 +285,11 @@ def pre_process(
     ac_filter.R_g = 0.0
     ac_source = model.ThreePhaseSourceWithSignalInjection(w_g=w_g, e_g=np.abs(u_g0))
     pwm = isinstance(mdl.pwm, CarrierComparison)
+    delay = len(mdl.delay.data)
     mdl = model.GridConverterSystem(
-        converter, ac_filter, ac_source, pwm=pwm, delay=cfg.delay
+        converter, ac_filter, ac_source, pwm=pwm, delay=delay
     )
-    sim = model.Simulation(mdl, ctrl, show_progress=False)
+    sim = model.Simulation(mdl, deepcopy(ctrl), show_progress=False)
     res = sim.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
 
     operating_point = [i_g0, e_g0, u_g0, u_c0]
@@ -307,11 +313,12 @@ def identify(
     # Transform the voltage and current to synchronous coordinates and
     # calculate the DFT
     u_g1 = np.conj(res_d.mdl.ac_source.exp_j_theta_g) * res_d.mdl.ac_filter.u_g_ab
-    u_gd1 = dft(cfg, u_g1.real, f_e)
-    u_gq1 = dft(cfg, u_g1.imag, f_e)
+    t = res_d.mdl.t
+    u_gd1 = dft(cfg, t, u_g1.real, f_e)
+    u_gq1 = dft(cfg, t, u_g1.imag, f_e)
     i_g1 = np.conj(res_d.mdl.ac_source.exp_j_theta_g) * res_d.mdl.ac_filter.i_g_ab
-    i_gd1 = dft(cfg, i_g1.real, f_e)
-    i_gq1 = dft(cfg, i_g1.imag, f_e)
+    i_gd1 = dft(cfg, t, i_g1.real, f_e)
+    i_gq1 = dft(cfg, t, i_g1.imag, f_e)
 
     # 2: q-axis injection
     mdl, ctrl = copy_state(sim)
@@ -322,11 +329,12 @@ def identify(
 
     # DFT
     u_g2 = np.conj(res_q.mdl.ac_source.exp_j_theta_g) * res_q.mdl.ac_filter.u_g_ab
-    u_gd2 = dft(cfg, u_g2.real, f_e)
-    u_gq2 = dft(cfg, u_g2.imag, f_e)
+    t = res_q.mdl.t
+    u_gd2 = dft(cfg, t, u_g2.real, f_e)
+    u_gq2 = dft(cfg, t, u_g2.imag, f_e)
     i_g2 = np.conj(res_q.mdl.ac_source.exp_j_theta_g) * res_q.mdl.ac_filter.i_g_ab
-    i_gd2 = dft(cfg, i_g2.real, f_e)
-    i_gq2 = dft(cfg, i_g2.imag, f_e)
+    i_gd2 = dft(cfg, t, i_g2.real, f_e)
+    i_gq2 = dft(cfg, t, i_g2.imag, f_e)
 
     # Calculate the elements of the output admittance matrix
     I = np.array([[i_gd1, i_gd2], [i_gq1, i_gq2]])  # noqa: E741
