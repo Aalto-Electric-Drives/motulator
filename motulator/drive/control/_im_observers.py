@@ -3,7 +3,7 @@
 from cmath import exp
 from collections.abc import Callable
 from dataclasses import dataclass
-from math import inf, pi
+from math import inf
 
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import SpeedObserver
@@ -287,9 +287,17 @@ class SpeedFluxObserver:
 
 
 # %%
+def default_sensorless_k_o(
+    par: InductionMachineInvGammaPars | InductionMachinePars,
+) -> Callable[[float], complex]:
+    """Default observer gain for sensorless drives."""
+    # The machine parameters are read at each call, since saturation changes them
+    return lambda w_m: (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
+
+
 def create_speed_flux_observer(
     par: InductionMachineInvGammaPars | InductionMachinePars,
-    alpha_o: float | None = None,
+    alpha_o: float,
     k_o: Callable[[float], complex] | None = None,
     sensorless: bool = True,
     J: float | None = None,
@@ -306,9 +314,8 @@ def create_speed_flux_observer(
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
-    alpha_o : float, optional
-        Speed estimation pole (rad/s). If `None`, it defaults to 2*pi*40 in sensorless
-        mode and 2*pi*400 in sensored mode.
+    alpha_o : float
+        Speed estimation pole (rad/s).
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the electrical angular rotor speed. If `None`, it
         defaults to ``lambda w_m: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``
@@ -326,19 +333,12 @@ def create_speed_flux_observer(
         Flux observer with speed estimation.
 
     """
-    if alpha_o is None:
-        alpha_o = 2 * pi * 40 if sensorless else 2 * pi * 400
-
-    def default_k_o_sensorless(w_m: float) -> complex:
-        return (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
 
     def default_k_o_sensored(w_m: float) -> complex:
         return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
 
-    if sensorless:
-        k_o = default_k_o_sensorless if k_o is None else k_o
-    else:
-        k_o = default_k_o_sensored if k_o is None else k_o
+    if k_o is None:
+        k_o = default_sensorless_k_o(par) if sensorless else default_k_o_sensored
 
     return SpeedFluxObserver(par, alpha_o, k_o, J)
 
@@ -372,10 +372,6 @@ def create_vhz_observer(
     if par.L_M == inf:  # Pure open-loop V/Hz control, used with h = 1
         return FluxObserver(par, lambda w_m: 1)
 
-    def default_k_o(w_m: float) -> complex:
-        return (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
-
-    if k_o is None:
-        k_o = default_k_o
+    k_o = default_sensorless_k_o(par) if k_o is None else k_o
 
     return FluxObserver(par, k_o)
