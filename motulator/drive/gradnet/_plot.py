@@ -101,7 +101,7 @@ def plot_maps(
         Sampled rectilinear-grid map data.
     component : {"d", "q"}
         Component of the flux linkage or current to plot.
-    base : BaseValues | None, optional
+    base : ~motulator.drive.utils.BaseValues | None, optional
         Base values for per-unit conversion. If None, unity base values are used.
     lims : dict[str, tuple[float, float]] | None, optional
         Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax), 'z': (zmin, zmax)}.
@@ -161,7 +161,7 @@ def plot_maps(
         else:
             zlabel = r"$i_\mathrm{q}$ (p.u.)" if pu_vals else r"$i_\mathrm{q}$ (A)"
 
-    # Surface and wireframe
+    # Surface
     ax.plot_surface(x, y, z, cmap=surface_cmap, alpha=0.5)
 
     # Constant-current loci overlays: i_d=const and i_q=const.
@@ -401,7 +401,7 @@ class PlotOptions:
 
     Parameters
     ----------
-    base : BaseValues | None, optional
+    base : ~motulator.drive.utils.BaseValues | None, optional
         Base values for per-unit conversion. If None, SI values are used.
     lims : dict[str, tuple[float, float]] | None, optional
         Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax)}.

@@ -20,7 +20,7 @@ class BaseDataset(Dataset):
     ----------
     data_path : str
         Path to the npz file containing the dataset.
-    base : BaseValues
+    base : ~motulator.drive.utils.BaseValues
         Base values of target machine
     subsample : int, optional
         Subsampling rate, defaults to 1 (no subsampling).
@@ -101,7 +101,7 @@ class SpatialHarmonicsDataset(BaseDataset):
     ----------
     data_path : str
         Path to the npz file containing the dataset.
-    base : BaseValues
+    base : ~motulator.drive.utils.BaseValues
         Base values of target machine
     subsample : int, optional
         Subsampling rate, defaults to 1 (no subsampling).
@@ -128,7 +128,7 @@ class SpatialHarmonicsDataset(BaseDataset):
             self.i_d[index],
             self.i_q[index],
             self.theta_m[index],  # Electrical angle (rad)
-            self.tau_m_theta[index],  # -dW_dtheta per pole pair (Nm)
+            self.tau_m_theta[index],  # -dW_dtheta per pole pair (p.u.)
         )
 
 
@@ -161,10 +161,24 @@ def get_training_data(
     This function re-instantiates the dataset with the same parameters to reproduce
     the training set. Validation data is the set difference (complement).
 
+    Parameters
+    ----------
+    dataset_path : str
+        Path to the npz file containing the dataset.
+    base : ~motulator.drive.utils.BaseValues
+        Base values of the target machine. They are only needed to re-instantiate the
+        dataset; the returned data are not normalized.
+    subsample : int, optional
+        Subsampling rate used in the training, defaults to 1 (no subsampling).
+    other_keys : list[str] | None, optional
+        Additional fields of the npz file to be returned after the flux linkage and
+        current, defaults to None (no additional fields).
+
     Returns
     -------
     tuple
-         ((train_psi, train_i, ...), (val_psi, val_i, ...))
+         ((train_psi, train_i, ...), (val_psi, val_i, ...)), where the arrays are
+         flattened and in the units of the npz file.
 
     """
     if other_keys is None:

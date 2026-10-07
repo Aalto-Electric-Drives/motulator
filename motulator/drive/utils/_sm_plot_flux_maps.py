@@ -17,8 +17,8 @@ from motulator.drive.utils._sm_flux_maps import MagneticModel
 
 
 # %%
-def _setup_plot_style(latex: bool) -> tuple[tuple[float, float], bool]:
-    """Setup plot style and return figure size and pu_vals flag."""
+def _setup_plot_style(latex: bool) -> tuple[float, float]:
+    """Set up the plot style and return the figure size."""
     if latex:
         set_latex_style()
         width = plt.rcParams["figure.figsize"][0] * 1.4
@@ -182,14 +182,17 @@ def plot_map(
         Axis limits. Keys should be 'x', 'y', 'z'.
     ticks : dict[str, ArrayLike], optional
         Axis tick locations. Keys should be 'x', 'y', 'z'.
-    raw_data : MagneticModel | list[MagneticModel], optional
-        Raw data for comparison (shown as scatter points).
+    raw_data : MagneticModel | list[MagneticModel | tuple], optional
+        Raw data for comparison (shown as scatter points). A tuple of arrays is
+        interpreted as `(i_s_dq, psi_s_dq)` in SI units.
     raw_marker : str | list[str], optional
         Marker style for raw data.
     raw_color : str | list[str], optional
         Marker color for raw data.
     axlim_clip : bool, optional
-        Whether to clip the axes limits to the data limits, defaults to True.
+        Whether to hide the parts of the surface and wireframe outside the axis view
+        limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's
+        3D plotting functions.
     surface_cmap : str, optional
         Colormap for the surface plot, defaults to "viridis".
     latex : bool, optional

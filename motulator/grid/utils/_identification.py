@@ -69,7 +69,7 @@ class IdentificationCfg:
         all available CPU cores in the system. Defaults to True.
     filename : str | None, optional
         If given, the identification result is saved in
-        ``data/{date}_{time}_{filename}`` (relative to the project root directory),
+        ``data/{date}_{time}_{filename}`` (relative to the current working directory),
         defaults to None. The file format is set by the `filetype` parameter.
     filetype : Literal["csv", "mat"], optional
         The filetype for saving identification results, defaults to "csv". Valid options

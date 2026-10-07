@@ -209,7 +209,7 @@ class PWM:
         self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> tuple[list[float], complex]:
         """
-        Compute the duty ratios and the limited voltage reference.
+        Compute the duty ratios and the corresponding voltage.
 
         Parameters
         ----------
@@ -227,7 +227,9 @@ class PWM:
         d_abc : list[float]
             Duty ratios for the next sampling period.
         u_c_ab : complex
-            Limited voltage reference (V) in stationary coordinates.
+            Voltage (V) in stationary coordinates corresponding to the duty ratios
+            `d_abc`, i.e., the limited voltage reference with the delay-compensating
+            angle advance and the duty-ratio error compensation (if used) included.
 
         """
         # Advance the angle due to the computational delay (N*T_s) and the ZOH (PWM)

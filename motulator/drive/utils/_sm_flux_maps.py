@@ -46,10 +46,10 @@ class MagneticModel:
     psi_s_dq : np.ndarray
         Complex array of stator flux linkage (Vs).
     lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional
-        Linear interpolation function that evaluates the map at arbitrary points. Takes
-        complex inputs (d + j*q) and returns interpolated output values. For flux maps,
-        maps i_s_dq → psi_s_dq; for current maps, maps psi_s_dq → i_s_dq. The function
-        extrapolates outside the map range.
+        Function that evaluates the map at arbitrary points. Takes complex inputs
+        (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;
+        for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
+        function, which extrapolates outside the map range, is created from the data.
     tau_M : np.ndarray, optional
         Array of electromagnetic torque (Nm).
     type : Literal["current_map", "flux_map"], optional
@@ -515,7 +515,7 @@ def import_syre_data(
 
     Parameters
     ----------
-    fname : str
+    fname : Path | str
         MATLAB file name.
     add_negative_q_axis : bool, optional
         Adds the negative q-axis data based on the symmetry, defaults to True.

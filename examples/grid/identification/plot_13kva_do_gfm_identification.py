@@ -25,7 +25,7 @@ identification_cfg = utils.IdentificationCfg(
     f_stop=10e3,
     n_freqs=100,
     T_s=1 / 10e3,
-    # Uncomment the row below to save identification results in "project root"/data
+    # Uncomment the row below to save the results in ./data of the working directory
     # filename="do-gfm_admittance",
     filetype="csv",
 )

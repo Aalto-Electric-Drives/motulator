@@ -56,7 +56,7 @@ class PNormGradient(nn.Module):
     """
     p-norm gradient activation function.
 
-    Defined as the gradient of S(z) = (1 + sum(z_n**p))**(1/p)/beta, where p is a
+    Defined as the gradient of S(z) = (1 + sum((beta*z_n)**p))**(1/p)/beta, where p is a
     positive even integer. This potential function corresponds to a smooth p-norm, which
     is convex, thus guaranteeing monotonicity.
 
@@ -187,6 +187,13 @@ class GradNet(nn.Module):
         Activation factory used by GradNet modules, defaults to Softmax.
     mu_log0 : float, optional
         Initial value for the linear term coefficients in log-domain, defaults to 1.0.
+    psi_base : float, optional
+        Base value of the flux linkage (Vs), defaults to 1.0. The network operates in
+        per-unit quantities. The base values are stored in the model and used by the
+        map wrappers (e.g., `CurrentMap`) to convert between SI units and per-unit
+        quantities.
+    i_base : float, optional
+        Base value of the current (A), defaults to 1.0.
 
     """
 
@@ -367,17 +374,13 @@ class FluxMap(CurrentMap):
     """
     Callable wrapper for GradNet flux-linkage map models.
 
-    The map is symmetrized about the d-axis to ensure physical consistency.
+    The map returns the stator flux linkage (Vs) at the given stator current (A). It
+    is symmetrized about the d-axis to ensure physical consistency.
 
     Parameters
     ----------
     model : GradNet
         Trained GradNet model for the flux-linkage map.
-
-    Returns
-    -------
-    complex | np.ndarray
-        Stator flux linkage (Vs).
 
     """
 

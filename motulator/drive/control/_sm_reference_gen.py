@@ -157,7 +157,7 @@ class ReferenceGenerator:
         tau_M_ref : float
             Torque reference (Nm).
         w_m : float
-            Mechanical angular speed (rad/s).
+            Electrical angular speed (rad/s).
         u_dc : float
             DC-link voltage (V).
 
@@ -216,7 +216,7 @@ class ReferenceGenerator:
             Sampling period (s).
 
         """
-        # The current reference is a state , driven toward the stored flux and torque
+        # The current reference is a state, driven toward the stored flux and torque
         # references by the tracking law [#Sar2026]_.
         psi_s, tau_M = self._evaluate(self.i_s_ref)
         psi_s_abs = abs(psi_s)
@@ -357,7 +357,7 @@ class ReferenceGeneratorOnline:
         tau_M_ref : float
             Torque reference (Nm).
         w_m : float
-            Mechanical angular speed (rad/s).
+            Electrical angular speed (rad/s).
         u_dc : float
             DC-link voltage (V).
 
