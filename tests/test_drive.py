@@ -17,7 +17,7 @@ import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.utils import dead_time_error
 from motulator.drive import model
-from motulator.drive.utils import MagneticModel
+from motulator.drive.utils import ControlLoci, MagneticModel
 
 T_STOP = 0.6
 T_LOAD = 0.3
@@ -443,6 +443,18 @@ def test_pm_flux_of_single_precision_map(psi_f: float) -> None:
 
     par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.5, i_s_dq_fcn=i_s_dq_fcn)
     assert par.psi_f == pytest.approx(psi_f, abs=1e-6)
+    repr(par)  # Fields set only for a flux map have defaults
+
+
+@pytest.mark.parametrize("psi_f", [0.0, 0.5])
+def test_const_current_locus_default_range(psi_f: float) -> None:
+    """The default current-limit locus covers the motoring quadrant of the machine."""
+    par = model.SynchronousMachinePars(
+        n_p=2, R_s=0.5, L_d=0.04 if psi_f == 0 else 0.02, L_q=0.006, psi_f=psi_f
+    )
+    locus = ControlLoci(par).compute_const_current_locus(10.0)
+    assert np.all(locus.tau_M >= -1e-9)
+    assert np.max(locus.tau_M) > 0
 
 
 @pytest.mark.parametrize("psi_max", [0.8, np.inf], ids=["nan", "no_root"])

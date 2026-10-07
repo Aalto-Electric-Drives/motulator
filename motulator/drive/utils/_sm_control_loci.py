@@ -236,10 +236,7 @@ class ControlLoci:
         )
 
     def compute_const_current_locus(
-        self,
-        i_s_max: float,
-        gamma_range: tuple[Any, Any] = (np.pi, 0.5 * np.pi),
-        num: int = NUM,
+        self, i_s_max: float, gamma_range: tuple[Any, Any] | None = None, num: int = NUM
     ) -> CurrentLimitLocus:
         """
         Compute the constant current locus.
@@ -249,7 +246,9 @@ class ControlLoci:
         i_s_max : float
             Current limit (A).
         gamma_range : tuple, optional
-            Range of the current angle (electrical rad), defaults to (pi, pi/2).
+            Range of the current angle (electrical rad), defaults to (pi, pi/2) for PM
+            machines and (pi/2, 0) for machines without PMs. If the first element is
+            NaN (no MTPV), the range starts from pi or pi/2, respectively.
         num : int, optional
             Number of points.
 
@@ -259,8 +258,11 @@ class ControlLoci:
             Constant current locus data.
 
         """
-        if np.isnan(gamma_range[0]):  # No MTPV
-            gamma_range = (np.pi, gamma_range[-1])
+        gamma_start = 0.5 * np.pi if self.par.psi_f == 0 else np.pi
+        if gamma_range is None:
+            gamma_range = (gamma_start, gamma_start - 0.5 * np.pi)
+        elif np.isnan(gamma_range[0]):  # No MTPV
+            gamma_range = (gamma_start, gamma_range[-1])
 
         gamma = np.linspace(*gamma_range, num)
 

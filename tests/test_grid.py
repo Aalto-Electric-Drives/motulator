@@ -10,7 +10,8 @@ import numpy as np
 import pytest
 
 from motulator.common.model import SimulationResults
-from motulator.grid import control, model
+from motulator.grid import control, model, utils
+from motulator.grid.utils._identification import dft
 
 U_NOM = np.sqrt(2 / 3) * 400  # Peak phase voltage
 W_NOM = 2 * np.pi * 50
@@ -65,3 +66,12 @@ def test_grid_forming() -> None:
 
     p_g, _ = grid_powers(res, 0.35)
     assert p_g == pytest.approx(p_g_ref, abs=0.02 * 10e3)
+
+
+def test_dft_of_unevenly_sampled_signal() -> None:
+    """The DFT of the identification finds a sinusoid sampled at uneven instants."""
+    cfg = utils.IdentificationCfg(abs_u_e=1.0)
+    t = np.sort(np.random.default_rng(0).uniform(0, 0.1, 4000))
+    u = 2.0 * np.cos(2 * np.pi * 50 * t + 0.3)
+    y = dft(cfg, t, u, 50.0, initial_simulation=True)
+    assert y == pytest.approx(2.0 * np.exp(0.3j), rel=1e-3)

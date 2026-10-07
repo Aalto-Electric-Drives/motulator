@@ -206,7 +206,9 @@ class SignalInjectionController(CurrentVectorController):
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
-        Current-vector control configuration.
+        Current-vector control configuration. The drive is always sensorless, and the
+        fields `sensorless`, `k_o`, and `k_f` are not used. Since the default of
+        `alpha_o` depends on `sensorless`, keep `sensorless=True` or give `alpha_o`.
     U_inj : float, optional
         Injected voltage amplitude (V), defaults to 250.
     N_inj : int, optional

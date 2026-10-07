@@ -1,6 +1,7 @@
 """Power-synchronization control for grid converters."""
 
 from cmath import exp
+from collections.abc import Sequence
 from dataclasses import dataclass
 from math import pi
 from typing import cast
@@ -23,6 +24,7 @@ class References:
     p_g: float = 0.0
     w_c: float = 0.0
     u_dc: float | None = None
+    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
 
 @dataclass
@@ -34,6 +36,7 @@ class Feedbacks:
     p_g: float = 0.0
     theta_c: float = 0.0  # Angle of the coordinate system (rad)
     w_c: float = 0.0  # Angular speed of the coordinate system (rad/s)
+    u_dc: float = 0.0  # DC-bus voltage (set by the control system)
 
 
 @dataclass

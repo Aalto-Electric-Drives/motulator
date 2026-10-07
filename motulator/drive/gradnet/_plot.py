@@ -445,11 +445,11 @@ def extract_surface_plot_points(
     """Helper to extract points matching the fixed input value."""
     if data is None:
         return np.array([]), np.array([]), np.array([])
-    # Check data length to handle cases without theta_m and tau_m
+    # Data is (psi_s_dq, i_s_dq, theta_m, tau_m) or (psi_s_dq, i_s_dq), in the order of
+    # get_training_data
     if len(data) == 4:
-        i_s_dq, psi_s_dq, theta_m, tau_m = data
+        psi_s_dq, i_s_dq, theta_m, tau_m = data
     elif len(data) == 2:
-        # Assume data is (psi_s_dq, i_s_dq), only for flux maps case
         psi_s_dq, i_s_dq = data
         theta_m = np.zeros_like(np.real(i_s_dq))  # Dummy theta
         tau_m = np.zeros_like(np.real(i_s_dq))  # Dummy tau
@@ -582,9 +582,9 @@ def plot_surface_vs_current_and_angle(
     output : {"psi_d", "psi_q", "tau_m", "i_d", "i_q"}, optional
         Output quantity to plot, defaults to "tau_m".
     val_data : tuple, optional
-        Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+        Validation data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
     trn_data : tuple, optional
-        Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+        Training data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
     opts : PlotOptions, optional
         Plotting options.
 
@@ -842,9 +842,9 @@ def plot_output_vs_angle(
     input_type : {"i_s_dq", "psi_s_dq"}, optional
         Type of the fixed input value, defaults to "i_s_dq".
     val_data : tuple, optional
-        Validation data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+        Validation data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
     trn_data : tuple, optional
-        Training data tuple containing (i_s_dq, psi_s_dq, theta_m, tau_m).
+        Training data tuple containing (psi_s_dq, i_s_dq, theta_m, tau_m).
     opts : PlotOptions, optional
         Plotting options.
 
@@ -886,8 +886,8 @@ def plot_output_vs_angle(
     def extract_points(data: tuple | None) -> tuple[np.ndarray, np.ndarray]:
         if data is None:
             return np.array([]), np.array([])
-        # Assumption: data is always (i, psi, theta, tau)
-        i_s_dq_data, psi_s_dq_data, theta_m_data, tau_m_data = data
+        # Data is (psi_s_dq, i_s_dq, theta_m, tau_m), in the order of get_training_data
+        psi_s_dq_data, i_s_dq_data, theta_m_data, tau_m_data = data
         d_exact, q_exact = fixed_value.real, fixed_value.imag
 
         # Select target array for filtering based on input_type

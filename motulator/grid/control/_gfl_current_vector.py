@@ -1,6 +1,7 @@
 """Grid-following control methods."""
 
 from cmath import exp
+from collections.abc import Sequence
 from dataclasses import dataclass
 from math import pi, sqrt
 
@@ -35,6 +36,7 @@ class PLLOutputSignals:
     p_g: float = 0.0
     q_g: float = 0.0
     eps: float = 0.0
+    u_dc: float = 0.0  # DC-bus voltage (set by the control system)
 
 
 class PLL:
@@ -133,6 +135,7 @@ class References:
     p_g: float = 0.0
     q_g: float = 0.0
     u_dc: float | None = None
+    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
 
 @dataclass
