@@ -247,8 +247,9 @@ class CurrentVectorControllerCfg:
         Current control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
         used if `discrete` is True.
     alpha_o : float, optional
-        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `J` is None, otherwise
-        2*pi*30, keeping the default speed observer gain the same.
+        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
+        otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
+        speed estimation gain the same.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
     w_s_nom : float, optional
@@ -286,10 +287,10 @@ class CurrentVectorControllerCfg:
     discrete: bool = False
 
     def __post_init__(self) -> None:
-        """Set alpha_o default based on J value."""
+        """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
-            # To keep the speed observer gain k_w the same
-            alpha = 2 * pi * 60
+            alpha = 2 * pi * 60 if self.sensorless else 2 * pi * 400
+            # With J, the double pole at alpha/2 keeps the speed gain k_w the same
             self.alpha_o = alpha if self.J is None else 0.5 * alpha
 
 

@@ -67,16 +67,17 @@ class FluxObserver:
     Observer for synchronous machines in estimated rotor coordinates.
 
     This observer estimates the stator flux linkage, the rotor angle, and (optionally)
-    the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]. The observer
-    gain decouples the electrical and mechanical dynamics and allows placing the poles
-    of the corresponding linearized estimation error dynamics. The rotor angle is
-    tracked using a position error signal, which is either computed internally from the
-    back-EMF-based flux estimation error or supplied externally, e.g., from the measured
-    rotor angle. The weight `h` of the external signal, given to `compute_output`,
-    selects between these: `h = 0` gives purely model-based (sensorless) operation,
-    `h = 1` relies on the external signal alone, and intermediate values blend the two.
-    The magnetic saturation is taken into account based on the provided machine model.
-    The PM-flux linkage can also be estimated [#Tuo2018]_.
+    the PM-flux linkage. The design is based on [#Hin2018]_ and [#Tuo2018]_. The
+    observer gain decouples the electrical and mechanical dynamics and allows placing
+    the poles of the corresponding linearized estimation error dynamics. The rotor angle
+    is tracked using a position error signal, which is either computed internally from
+    the back-EMF-based flux estimation error or supplied externally, e.g., from the
+    measured rotor angle. The weight `h` of the external signal, given to
+    `compute_output`, selects between these: `h = 0` gives purely model-based
+    (sensorless) operation, `h = 1` relies on the external signal alone, and
+    intermediate values blend the two. The magnetic saturation is taken into account
+    based on the provided machine model. The PM-flux linkage can also be estimated
+    [#Tuo2018]_.
 
     Parameters
     ----------
@@ -86,7 +87,7 @@ class FluxObserver:
         Rotor angle estimation gain (rad/s).
     k_o : Callable[[float], float]
         Observer gain as a function of the rotor angular speed.
-    k_f : Callable[[float], float], optional
+    k_f : Callable[[float], float]
         PM-flux estimation gain (V) as a function of the rotor angular speed.
 
     References
@@ -236,11 +237,11 @@ class SpeedFluxObserver:
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
-    alpha_o : float, optional
+    alpha_o : float
         Speed-estimation pole (rad/s).
-    k_o : Callable[[float], float], optional
+    k_o : Callable[[float], float]
         Observer gain as a function of the rotor angular speed.
-    k_f : Callable[[float], float], optional
+    k_f : Callable[[float], float]
         PM-flux estimation gain (V) as a function of the rotor angular speed.
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
@@ -322,9 +323,19 @@ class SpeedFluxObserver:
         self.flux_observer.update(T_s, out)
 
 
+def default_sensorless_k_o(
+    par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+) -> Callable[[float], float]:
+    """Default observer gain for sensorless drives."""
+    # Poles at zero speed are located at s = 0 and s = -2*sigma0
+    L_s0 = par.incr_ind_mat(0)
+    sigma0 = 0.25 * par.R_s * (1 / L_s0[0, 0] + 1 / L_s0[1, 1])
+    return lambda w_m: sigma0 + 0.2 * abs(w_m)
+
+
 def create_speed_flux_observer(
     par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-    alpha_o: float = 2 * pi * 100,
+    alpha_o: float,
     k_o: Callable[[float], float] | None = None,
     k_f: Callable[[float], float] | None = None,
     sensorless: bool = True,
@@ -340,12 +351,12 @@ def create_speed_flux_observer(
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
-    alpha_o : float, optional
-        Speed estimation pole (rad/s), defaults to 2*pi*100.
+    alpha_o : float
+        Speed estimation pole (rad/s).
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor speed, defaults to ``lambda w_m:
-        0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else ``lambda
-        w_m: 2*pi*15``.
+        0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if `sensorless` else ``lambda w_m:
+        2*pi*15``. The inductances are the incremental inductances at zero current.
     k_f : Callable[[float], float], optional
         PM-flux estimation gain (V) as a function of the rotor speed, defaults to zero,
         ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:
@@ -360,26 +371,19 @@ def create_speed_flux_observer(
     Returns
     -------
     SpeedFluxObserver
-        Sensorless flux observer with speed estimation.
+        Flux observer with speed estimation.
 
     """
-    if sensorless:
-        # Poles at zero speed are located s = 0 and s = -2*sigma0
-        L_s0 = par.incr_ind_mat(0)
-        sigma0 = 0.25 * par.R_s * (1 / L_s0[0, 0] + 1 / L_s0[1, 1])
-
-        k_o = (lambda w_m: sigma0 + 0.2 * abs(w_m)) if k_o is None else k_o
-        k_f = (lambda w_m: 0) if k_f is None else k_f
-    else:
-        k_o = (lambda w_m: 2 * pi * 15) if k_o is None else k_o
-        k_f = (lambda w_m: 0) if k_f is None else k_f
+    if k_o is None:
+        k_o = default_sensorless_k_o(par) if sensorless else (lambda w_m: 2 * pi * 15)
+    k_f = (lambda w_m: 0) if k_f is None else k_f
 
     return SpeedFluxObserver(par, alpha_o, k_o, k_f, J)
 
 
 def create_vhz_observer(
     par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-    k_theta: float = 2 * pi * 200,
+    k_theta: float,
     k_o: Callable[[float], float] | None = None,
 ) -> FluxObserver:
     """
@@ -389,12 +393,12 @@ def create_vhz_observer(
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
-    k_theta : float, optional
-        Angle estimation gain (rad/s), defaults to 2*pi*200.
+    k_theta : float
+        Angle estimation gain (rad/s).
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor angular speed, defaults to ``lambda
-        w_m: 0.25*(R_s*(L_d + L_q)/(L_d*L_q) + 0.2*abs(w_m))`` if `sensorless` else
-        ``lambda w_m: 2*pi*15``.
+        w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)``. The inductances are the
+        incremental inductances at zero current.
 
     Returns
     -------
@@ -402,9 +406,6 @@ def create_vhz_observer(
         Sensorless observer without speed estimation.
 
     """
-    L_s0 = par.incr_ind_mat(0)
-    sigma0 = 0.25 * par.R_s * (1 / L_s0[0, 0] + 1 / L_s0[1, 1])
-
-    k_o = (lambda w_m: sigma0 + 0.2 * abs(w_m)) if k_o is None else k_o
+    k_o = default_sensorless_k_o(par) if k_o is None else k_o
 
     return FluxObserver(par, k_theta, k_o, lambda w_m: 0)

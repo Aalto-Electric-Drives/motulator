@@ -4,7 +4,7 @@ from collections.abc import Callable
 from copy import copy
 from dataclasses import dataclass
 from math import inf, pi, sqrt
-from typing import Literal
+from typing import Literal, cast
 
 import numpy as np
 
@@ -231,12 +231,13 @@ class FluxVectorControllerCfg:
     alpha_i : float, optional
         Integral action bandwidth (rad/s), defaults to `alpha_tau`.
     alpha_o : float, optional
-        Speed estimation poles (rad/s). If `None`, the default depends on the operation
-        mode and the inertia `J`.
+        Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
+        otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
+        speed estimation gain the same.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
-    tau_M_max : float
-        Maximum torque reference (Nm).
+    tau_M_max : float, optional
+        Maximum torque reference (Nm), defaults to `inf`.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_b : float, optional
@@ -268,9 +269,8 @@ class FluxVectorControllerCfg:
     def __post_init__(self) -> None:
         """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
-            # Note: If J is not given, alpha_o is halved to keep the default speed
-            # observer gain k_w the same.
             alpha = 2 * pi * 60 if self.sensorless else 2 * pi * 400
+            # With J, the double pole at alpha/2 keeps the speed gain k_w the same
             self.alpha_o = alpha if self.J is None else 0.5 * alpha
 
 
@@ -312,7 +312,7 @@ class FluxVectorController:
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
         self.observer = create_speed_flux_observer(
-            par, cfg.alpha_o, cfg.k_o, cfg.sensorless, cfg.J
+            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.sensorless, cfg.J
         )
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s

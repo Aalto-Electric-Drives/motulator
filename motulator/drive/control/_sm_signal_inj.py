@@ -118,12 +118,13 @@ class SignalInjectionObserver:
         Machine model parameters.
     alpha_o : float
         Pole location (rad/s).
-    U_inj : float, optional
+    U_inj : float
         Injected voltage amplitude (V).
     T_s : float
         Sampling period (s).
     J : float | None, optional
-        Inertia (kgm²), if not None, a speed observer is used.
+        Inertia (kgm²). If given, the speed observer uses the mechanical model,
+        otherwise the phase-locked loop is used. Defaults to None.
     N_inj : int, optional
         Number of sampling periods per injection voltage half-period, defaults to 1.
 
