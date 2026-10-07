@@ -443,6 +443,8 @@ def test_pm_flux_of_single_precision_map(psi_f: float) -> None:
 
     par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.5, i_s_dq_fcn=i_s_dq_fcn)
     assert par.psi_f == pytest.approx(psi_f, abs=1e-6)
+    repr(par)  # Fields set only for a flux map have defaults
+
 
 
 @pytest.mark.parametrize("psi_max", [0.8, np.inf], ids=["nan", "no_root"])

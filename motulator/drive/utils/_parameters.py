@@ -250,8 +250,8 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     psi_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
     G_c: float = 0.0
     psi_f: float = field(init=False, default=0.0)
-    L_d0: float = field(init=False)
-    L_q0: float = field(init=False)
+    L_d0: float = field(init=False, default=np.nan)
+    L_q0: float = field(init=False, default=np.nan)
 
     def __post_init__(self) -> None:
         if self.i_s_dq_fcn is not None:
