@@ -162,6 +162,8 @@ class ThreePhaseSourceWithSignalInjection(Subsystem):
         Magnitude of d-axis excitation signal (V), defaults to 0.
     u_eq : float, optional
         Magnitude of q-axis excitation signal (V), defaults to 0.
+    f_e : float, optional
+        Frequency of excitation signal (Hz), defaults to 0.
 
     Notes
     -----

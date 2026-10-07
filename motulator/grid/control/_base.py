@@ -127,7 +127,7 @@ class GridConverterControlSystem(ControlSystem):
 
         Parameters
         ----------
-        ref_fcn : Callable[[float], float]
+        ref_fcn : float | Callable[[float], float]
             Active power reference (W), constant or a function of time.
 
         """

@@ -174,6 +174,9 @@ def train_gradnet(  # noqa: PLR0913
     ----------
     dataset_path : str | Path
         Path to the training data file (npz format).
+    base : ~motulator.drive.utils.BaseValues
+        Base values of the target machine. The training data are normalized with the
+        base current and flux linkage, which are also stored in the model.
     is_flux_map : bool, optional
         Whether the model is a flux map or current map, defaults to False.
     k : int | None, optional
@@ -230,7 +233,7 @@ def train_gradnet(  # noqa: PLR0913
     in_dim = 4 if k is not None else 2
     mu_dim = 2
 
-    # Base values are inferred from the dataset
+    # Per-unit data, normalized with the given base values
     data_loader = get_loader(
         dataset_path=dataset_path,
         base=base,

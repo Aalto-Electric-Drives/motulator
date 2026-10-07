@@ -110,10 +110,11 @@ class Simulation:
         ----------
         t_stop : float, optional
             Simulation stop time, defaults to 1.
-        N_eval : int | None, optional
+        N_eval : int, optional
             Number of evenly spaced data points to be returned by the solver for each
-            sampling period. Defaults to 0, in which case the number and spacing of
-            points is selected by the solver.
+            integration interval, i.e., for each sampling period or, if carrier
+            comparison is used, for each switching interval. Defaults to 0, in which
+            case the number and spacing of points is selected by the solver.
 
         """
         progress_bar = None

@@ -50,9 +50,9 @@ alt: Reference generation for induction machines
 
 ## For Synchronous Machines
 
-For synchronous machines, the {class}`motulator.drive.control.sm.ReferenceGenerator` class implements the optimal reference generation that can be used both with current-vector control and flux-vector control. [Figure 2](fig:sm_ref_gen) illustrates this method, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL) {cite}`Mey2006, Awa2018`. [Figure 3](fig:flux_vs_torque) shows an example of the optimal reference characteristics for a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). See also the {ref}`mtpa_mtpv` document and the {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc` example for more details.
+For synchronous machines, the {class}`motulator.drive.control.sm.ReferenceGenerator` class implements the optimal reference generation that can be used both with current-vector control and flux-vector control. [Figure 2](fig:sm_ref_gen) illustrates this method, including field weakening, maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limitation (CL) {cite}`Mey2006, Awa2018`. [Figure 3](fig:flux_vs_torque) shows an example of the optimal reference characteristics for a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). See also the {ref}`mtpa_mtpv` document and the {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc` example for more details.
 
-Note that the reference generation of flux-vector control is simpler than that of current-vector control, since the two-dimensional transformation to the current reference is avoided. For simplicity, we compute this transformation to the current vector using the root-finding method, while other approaches such as a two-dimensional lookup table could be used.
+Note that the reference generation of flux-vector control is simpler than that of current-vector control, since the two-dimensional transformation to the current reference is avoided. Here, the current reference is driven toward the flux and torque references by a dynamic tracking law with the bandwidth $\alpha_\mathrm{ref}$, while other approaches such as a two-dimensional lookup table could be used.
 
 ```{figure} ../figs/sm_ref_gen.svg
 ---
@@ -62,7 +62,7 @@ width: 100%
 align: center
 alt: Reference generation for synchronous machines
 ---
-*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 2](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control.
+*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 3](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control.
 ```
 
 ```{figure} ../figs/sm_ref_gen.svg
@@ -72,7 +72,7 @@ width: 100%
 align: center
 alt: Reference generation for synchronous machines
 ---
-*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-power-per-voltage (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 3](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control.
+*Figure 2:* Optimal reference generation for synchronous machines, including field weakening, maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limitation (CL). These are single-dimensional lookup tables, see the example in [Figure 3](fig:flux_vs_torque). Two-dimensional transformation to the current reference is needed only in the case of current-vector control.
 ```
 
 ```{figure} ../figs/flux_vs_torque.svg

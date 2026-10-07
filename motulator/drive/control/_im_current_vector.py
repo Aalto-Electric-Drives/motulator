@@ -43,7 +43,7 @@ class CurrentController(ComplexPIController):
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
-    alpha_c : float, optional
+    alpha_c : float
         Reference-tracking bandwidth (rad/s).
     alpha_i : float, optional
         Integral action bandwidth (rad/s), defaults to `alpha_c`.
@@ -126,13 +126,13 @@ class CurrentReferenceGenerator:
 
     Parameters
     ----------
-    machine_pars : InductionMachineInvGammaPars | InductionMachinePars
+    par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     psi_s_nom : float
         Nominal stator flux linkage (Vs).
     i_s_max : float
         Maximum stator current (A).
-    w_s_nom : float, optional
+    w_s_nom : float
         Nominal stator angular frequency (rad/s).
     k_u : float, optional
         Voltage utilization factor, defaults to 1.
@@ -219,7 +219,7 @@ class CurrentReferenceGenerator:
         T_s : float
             Sampling time (s).
         u_s_ref : complex
-            Realized (limited) stator voltage reference (V).
+            Unlimited stator voltage reference (V).
         u_dc : float
             DC-link voltage (V).
 

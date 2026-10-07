@@ -122,7 +122,8 @@ class PowerSynchronizationController:
         # Power droop
         fbk.w_c = ref.w_c = self.cfg.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
 
-        # Optionally, use of reference feedforward for d-axis current
+        # Current reference: feedforward from the power reference in the d-axis and
+        # the low-pass-filtered current in the q-axis
         ref.i_c = ref.p_g / (1.5 * ref.v_c) + 1j * self.i_c_flt.imag
         # ref.i_c = self.i_c_flt  # Conventional PSC
         ref.i_c = self.current_limiter(ref.i_c)

@@ -28,7 +28,7 @@ class Inputs:
 # %%
 @dataclass
 class LFilterOutputs:
-    """Base class for outputs."""
+    """Outputs of the L filter."""
 
     i_c_ab: complex
 
@@ -159,7 +159,7 @@ class LCLFilterStates:
 
 @dataclass
 class LCLFilterOutputs:
-    """Base class for outputs."""
+    """Outputs of the LCL filter."""
 
     i_c_ab: complex
     u_f_ab: complex

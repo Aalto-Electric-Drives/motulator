@@ -63,11 +63,11 @@ A two-mass mechanical system is modeled in the {class}`motulator.drive.model.Two
 label: mech_two_mass
 ---
     \JM\frac{\D\omegaM}{\D t} &= \tauM - \tauS \\
-    \JL\frac{\D\omegaL}{\D t} &= \tauS - \tauL \\
+    \JL\frac{\D\omegaL}{\D t} &= \tauS - \tauLtot \\
     \frac{\D\thetaML}{\D t} &= \omegaM - \omegaL
 ```
 
-where $\omegaL$ is the angular speed of the load, $\thetaML = \thetaM - \thetaL$ is the twist angle, $\JM$ is the moment of inertia of the machine, and $\JL$ is the moment of inertia of the load. The shaft torque is
+where $\omegaL$ is the angular speed of the load, $\thetaML = \thetaM - \thetaL$ is the twist angle, $\JM$ is the moment of inertia of the machine, and $\JL$ is the moment of inertia of the load. Similarly to {eq}`total_load_torque`, the total load torque is $\tauLtot = \BL\omegaL + \tauL$, where the friction coefficient may depend on the load speed, $\BL = \BL(\omegaL)$. The shaft torque is
 
 ```{math}
 ---

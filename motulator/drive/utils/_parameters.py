@@ -144,7 +144,12 @@ class BaseSynchronousMachinePars(Protocol):
         ...
 
     def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
-        """Solve for the current given the flux linkage using root finding."""
+        """
+        Compute the current from the flux linkage.
+
+        Root finding on the flux map is used if no current map is available.
+
+        """
         ...
 
 
@@ -204,7 +209,7 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
         return np.array([[self.L_d, 0], [0, self.L_q]])
 
     def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
-        """Compute the current from the flux linkage using root finding."""
+        """Compute the current from the flux linkage in closed form."""
         return complex(self.i_s_dq(psi_s_dq))
 
 
@@ -301,10 +306,11 @@ class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
 
     def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
         """
-        Compute the current from the flux linkage using root finding.
+        Compute the current from the flux linkage.
 
-        The current is computed iteratively from the flux map using a root-finding
-        algorithm. This is less efficient, but may be convenient in some special cases.
+        The current map is used if available. Otherwise, the current is computed
+        iteratively from the flux map using a root-finding algorithm, which is less
+        efficient but may be convenient in some special cases.
 
         """
         if self.i_s_dq_fcn is not None:
@@ -418,6 +424,7 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         raise NotImplementedError("Incremental inductance matrix is not implemented")
 
     def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
+        """Not implemented for the model with spatial harmonics."""
         raise NotImplementedError("This method is not implemented")
 
 
@@ -428,11 +435,11 @@ class InductionMachinePars:
     Γ-model parameters of an induction machine.
 
     This contains Γ-model parameters of an induction machine. The main-flux saturation
-    saturation can also be modeled by providing a callable `L_s` parameter. For
-    convenience, the class also provides the corresponding inverse-Γ model parameters,
-    which can be used in control systems. If the saturation is modeled, these inverse-Γ
-    parameters depend on the stator flux linkage magnitude `psi_s` that should be
-    updated by calling the `update_psi_s` method.
+    can also be modeled by providing a callable `L_s` parameter. For convenience, the
+    class also provides the corresponding inverse-Γ model parameters, which can be used
+    in control systems. If the saturation is modeled, these inverse-Γ parameters depend
+    on the stator flux linkage magnitude `psi_s` that should be updated by calling the
+    `update_psi_s` method.
 
     Parameters
     ----------
@@ -450,6 +457,9 @@ class InductionMachinePars:
     G_c : float, optional
         Core-loss conductance (S), modeled in parallel with the magnetizing branch,
         defaults to 0 (no core losses).
+    psi_s : float, optional
+        Stator flux linkage magnitude (Vs), at which the callable `L_s` is evaluated,
+        defaults to 0. It can be updated by calling the `update_psi_s` method.
 
     Attributes
     ----------
@@ -563,8 +573,10 @@ class InductionMachineInvGammaPars:
     L_M : float
         Magnetizing inductance (H).
     G_c : float, optional
-        Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-        defaults to 0 (no core losses).
+        Core-loss conductance (S), defaults to 0 (no core losses). It is connected
+        across the stator EMF `u_s - R_s*i_s`, i.e., between the stator resistance and
+        the leakage inductance, which corresponds to the core-loss branch in parallel
+        with the magnetizing branch of the Γ model.
 
     Attributes
     ----------

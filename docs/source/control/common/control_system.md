@@ -26,7 +26,7 @@ In discrete-time control systems, the signals are collected into these key objec
 : Contains signals used by controllers, including both measured quantities (`fbk.u_dc`) and estimated values (such as `fbk.psi_s` for stator flux linkage). The `fbk` object is saved at each controller time step.
 
 `ref`
-: Contains reference signals, both external references (such as `ref.w_m` for speed reference) and internally generated control outputs (such as `ref.d_abc` for converter duty ratios). The `ref` object is saved at each controller time step.
+: Contains reference signals, both external references (such as `ref.w_M` for speed reference) and internally generated control outputs (such as `ref.d_abc` for converter duty ratios). The `ref` object is saved at each controller time step.
 
 The objects `fbk` and `ref` may propagate through multiple control blocks (implemented as classes), with each block potentially adding or modifying signals.
 

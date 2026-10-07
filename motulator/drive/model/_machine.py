@@ -25,7 +25,7 @@ from motulator.drive.utils._parameters import (
 # %%
 @dataclass
 class InductionMachineInputs:
-    """Base class for machine inputs."""
+    """Machine inputs."""
 
     u_s_ab: complex = 0j
     w_M: float = 0.0  # Mechanical rotor speed (rad/s)
@@ -233,7 +233,9 @@ class SynchronousMachine(Subsystem):
 
     This model is internally represented in rotor coordinates, which results in the
     simplest implementation. The interfaces are in stator coordinates. The magnetic
-    saturation can be modeled by providing a nonlinear current map `par.i_s_dq`.
+    saturation can be modeled by providing a nonlinear current map, either as
+    `i_s_dq_fcn` in `SaturatedSynchronousMachinePars` or, including spatial harmonics,
+    as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`.
     Optionally, eddy-current core losses can be modeled by means of a constant core-loss
     conductance `G_c`, connected in parallel with the magnetizing branch.
 
