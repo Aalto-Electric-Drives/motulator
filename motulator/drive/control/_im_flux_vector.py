@@ -157,12 +157,12 @@ class ReferenceGenerator:
         Nominal stator flux linkage (Vs).
     i_s_max : float
         Maximum stator current (A).
-    tau_M_max : float, optional
-        Maximum torque reference (Nm), defaults to `inf`.
-    k_u : float, optional
-        Voltage utilization factor, defaults to 1.
-    k_b : float, optional
-        Breakdown torque margin, defaults to 1.
+    tau_M_max : float
+        Maximum torque reference (Nm).
+    k_u : float
+        Voltage utilization factor.
+    k_b : float
+        Breakdown torque margin.
 
     """
 
@@ -171,9 +171,9 @@ class ReferenceGenerator:
         par: InductionMachineInvGammaPars | InductionMachinePars,
         psi_s_nom: float,
         i_s_max: float,
-        tau_M_max: float = inf,
-        k_u: float = 1.0,
-        k_b: float = 1.0,
+        tau_M_max: float,
+        k_u: float,
+        k_b: float,
     ) -> None:
         self.par = par
         self.psi_s_nom = psi_s_nom

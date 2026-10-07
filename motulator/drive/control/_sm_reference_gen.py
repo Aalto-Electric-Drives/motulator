@@ -56,18 +56,19 @@ class ReferenceGenerator:
         Machine model parameters.
     i_s_max : float
         Maximum stator current (A).
-    psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+    psi_s_min : float | None
+        Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
         machines without PMs.
-    psi_s_max : float, optional
-        Maximum stator flux (Vs), defaults to `inf`.
-    k_u : float, optional
-        Voltage utilization factor, defaults to 1.
-    k_mtpv : float, optional
-        MTPV margin, defaults to 1.
-    alpha_ref : float, optional
-        Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100. It should be
-        well below the sampling frequency to maintain a numerical margin.
+    psi_s_max : float
+        Maximum stator flux (Vs).
+    k_u : float
+        Voltage utilization factor.
+    k_mtpv : float
+        MTPV margin.
+    alpha_ref : float
+        Bandwidth of the current-reference tracking (rad/s), needed only for
+        current-vector control. It should be well below the sampling frequency to
+        maintain a numerical margin.
 
     References
     ----------
@@ -89,11 +90,11 @@ class ReferenceGenerator:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         i_s_max: float,
-        psi_s_min: float | None = None,
-        psi_s_max: float = inf,
-        k_u: float = 1.0,
-        k_mtpv: float = 1.0,
-        alpha_ref: float = 2 * pi * 100,
+        psi_s_min: float | None,
+        psi_s_max: float,
+        k_u: float,
+        k_mtpv: float,
+        alpha_ref: float,
     ) -> None:
         self.par = par
         self.k_u = k_u
@@ -250,17 +251,17 @@ class ReferenceGeneratorOnline:
         Machine model parameters.
     i_s_max : float
         Maximum stator current (A).
-    psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f`. It must be positive for
+    psi_s_min : float | None
+        Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
         machines without PMs.
-    psi_s_max : float, optional
-        Maximum stator flux (Vs), defaults to `inf`.
-    k_u : float, optional
-        Voltage utilization factor, defaults to 1.
-    k_mtpv : float, optional
-        MTPV margin, defaults to 1.
-    alpha_ref : float, optional
-        Bandwidth of the reference tracking (rad/s), defaults to 2*pi*100.
+    psi_s_max : float
+        Maximum stator flux (Vs).
+    k_u : float
+        Voltage utilization factor.
+    k_mtpv : float
+        MTPV margin.
+    alpha_ref : float
+        Bandwidth of the reference tracking (rad/s).
 
     """
 
@@ -268,11 +269,11 @@ class ReferenceGeneratorOnline:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         i_s_max: float,
-        psi_s_min: float | None = None,
-        psi_s_max: float = inf,
-        k_u: float = 1.0,
-        k_mtpv: float = 1.0,
-        alpha_ref: float = 2 * pi * 100,
+        psi_s_min: float | None,
+        psi_s_max: float,
+        k_u: float,
+        k_mtpv: float,
+        alpha_ref: float,
     ) -> None:
         self.par = par
         self.k_u = k_u
