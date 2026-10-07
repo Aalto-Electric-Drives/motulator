@@ -365,7 +365,7 @@ label: sm_tilde_psis_sensored
     \frac{\D \Delta\tildepsis}{\D t} = -(\koa + \jj\omegamo)\Delta\tildepsis
 ```
 
-where $\Delta$ marks the small-signal quantities, the subscript 0 marks the operating-point quantities, and $\tildepsis = \psis - \hatpsis$ is the estimation error. The pole can be arbitrarily placed via the gain $\koa$. Well-damped dynamics are obtained simply with a real gain, $\koa = \sigma$, resulting in the pole at $s = -\sigma - \jj\omegamo$, where $\sigma = 2\pi \cdot 15$ rad/s is used as the default value in the {class}`motulator.drive.control.sm.FluxObserver` class in sensored drives.
+where $\Delta$ marks the small-signal quantities, the subscript 0 marks the operating-point quantities, and $\tildepsis = \psis - \hatpsis$ is the estimation error. The pole can be arbitrarily placed via the gain $\koa$. Well-damped dynamics are obtained simply with a real gain, $\koa = \sigma$, resulting in the pole at $s = -\sigma - \jj\omegamo$, where $\sigma = 2\pi \cdot 15$ rad/s is used as the default value in sensored drives, if the observer gain `k_o` is not given in the controller configuration.
 
 (sm_obs_sensorless)=
 
@@ -390,7 +390,11 @@ label: sigma_sensorless
     \sigma = \frac{\beta}{2} + \zeta_\infty |\hatomegam |
 ```
 
-where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed, one pole is placed at $s = 0$ and another at $s = -\beta$. Unstable double pole at $s = 0$ is avoided, enabling stable start of the machine.
+where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed, one pole is placed at $s = 0$ and another at $s = -\beta$. Unstable double pole at $s = 0$ is avoided, enabling stable start of the machine. If the observer gain `k_o` is not given in the controller configuration, the default values $\zeta_\infty = 0.2$ and $\beta = (\hatRs/2)(1/\hat{L}_\mathrm{dd} + 1/\hat{L}_\mathrm{qq})$ are used, where the incremental inductances are evaluated at zero current.
+
+```{note}
+The choice of $\beta$ is a compromise. It damps the flux estimation error near zero speed, but it increases the sensitivity to parameter errors at low speeds. In the linearized steady state, the rotor-angle estimation error caused by an error in the flux map scales with $\sigma/|\omegamo| = \zeta_\infty + \beta/(2|\omegamo|)$, and the error caused by an error in the stator resistance with $\sigma/\omegamo^2$. In simulations of sensorless low-speed operation, a moderately underestimated d-axis flux linkage (e.g., the PM-flux linkage) was less harmful than an overestimated one.
+```
 
 Since the gain $\kob$ decouples the flux estimation from the rotor angle only to the extent that the model-based error signal is used, it is scheduled with the same weight $h$ as in {eq}`sm_obs_eps`, i.e., $\kob = (1 - h)\sigma\hatpsiaux/\hatpsiaux^*$. This reduces to {eq}`k1k2_sensorless` for $h = 0$ and to $\kob = 0$ for $h = 1$ (the sensored case above), interpolating between them in between.
 

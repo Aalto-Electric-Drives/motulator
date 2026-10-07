@@ -47,7 +47,7 @@ class SpeedObserver:
 
     This observer estimates the mechanical rotor speed based on the mechanical system
     model and the error signal. If the inertia of the mechanical system is provided, the
-    load torque is als estimated, avoiding lag in the speed estimate [#Lor1991]_.
+    load torque is also estimated, avoiding lag in the speed estimate [#Lor1991]_.
 
     Parameters
     ----------
@@ -57,9 +57,9 @@ class SpeedObserver:
     k_tau : float
         Load-torque estimation gain (Nm or Nm/s for induction machines or for
         synchronous machines, respectively).
-    J : float | None, optional
-        Inertia of the mechanical system (kgm²). Defaults to None, which means the load
-        torque estimation is not used.
+    J : float | None
+        Inertia of the mechanical system (kgm²). If None, the load torque estimation is
+        not used.
 
     References
     ----------

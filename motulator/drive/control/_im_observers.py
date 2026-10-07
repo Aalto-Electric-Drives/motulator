@@ -1,4 +1,4 @@
-"""Common control functions and classes for for induction machine drives."""
+"""Observers for induction machine drives."""
 
 from cmath import exp
 from collections.abc import Callable
@@ -131,7 +131,7 @@ class FluxObserver:
         # Initialize the output signals
         out = ObserverOutputs(psi_s=self.psi_s, theta_c=self.theta_c, h=h)
 
-        # Current and voltage vectors in estimated rotor coordinates
+        # Current and voltage vectors in synchronous coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
         out.u_s = exp(-1j * out.theta_c) * u_s_ab
         out.u_s_zoh = exp(-1j * out.theta_c) * u_s_zoh_ab
@@ -360,8 +360,8 @@ def create_vhz_observer(
         Machine model parameters.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the electrical angular speed of the rotor,
-        defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``
-        (except for the case ``L_M = inf``, where ``k_o1 = 1`` and ``k_o2 = 0``).
+        defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``.
+        Ignored in the case ``L_M = inf``.
 
     Returns
     -------
