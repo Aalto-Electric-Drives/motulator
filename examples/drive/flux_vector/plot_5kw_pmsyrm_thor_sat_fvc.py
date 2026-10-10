@@ -21,13 +21,12 @@ mechanical-model-based speed observer.
 from pathlib import Path
 
 import numpy as np
-from scipy.interpolate import LinearNDInterpolator
 
 import motulator.drive.control.sm as control
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=220, I=15.6, f=85, P=5.07e3, tau=19)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
@@ -54,18 +53,9 @@ utils.plot_flux_vs_current(fem_flux_map, base, x_lims=(-2, 2))
 # %%
 # Configure the system model.
 
-# Create the current map interpolator directly from the FEM data
-points = np.column_stack(
-    (np.real(fem_flux_map.psi_s_dq.ravel()), np.imag(fem_flux_map.psi_s_dq.ravel()))
-)
-mdl_curr_map = LinearNDInterpolator(points, fem_flux_map.i_s_dq.ravel())
-
-# Machine model parameters
-par = model.SaturatedSynchronousMachinePars(
-    n_p=2,
-    R_s=0.2,
-    i_s_dq_fcn=lambda psi_s_dq: mdl_curr_map((np.real(psi_s_dq), np.imag(psi_s_dq))),
-)
+# Create the machine model
+fem_curr_map = fem_flux_map.invert()
+par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.2, i_s_dq_fcn=fem_curr_map)
 machine = model.SynchronousMachine(par)
 k = 0.25 * nom.tau / base.w_M**2  # Quadratic load torque profile
 mechanics = model.MechanicalSystem(J=2 * 0.0042, B_L=lambda w_M: k * abs(w_M))

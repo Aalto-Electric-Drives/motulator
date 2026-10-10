@@ -6,7 +6,9 @@ This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous relu
 machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for
 both the machine model and the control system. The machine model uses a GradNet
 current map with spatial harmonics, while the control system uses a GradNet flux map
-without spatial harmonics.
+without spatial harmonics. The models are trained in
+:doc:`/drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem` and
+:doc:`/drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm`.
 
 """
 
@@ -21,7 +23,7 @@ import motulator.drive.gradnet as gn
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=460, I=8.8, f=60, P=5.6e3, tau=29.7)
 base = utils.BaseValues.from_nominal(nom, n_p=2)

@@ -3,7 +3,8 @@
 =======================================================
 
 This example demonstrates converter output admittance identification using a 10-kVA
-grid-following (GFL) converter.
+grid-following (GFL) converter. The converter and grid models are the same as in
+:doc:`/grid_examples/grid_following/plot_10kva_gfl`.
 
 """
 

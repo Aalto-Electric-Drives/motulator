@@ -15,7 +15,7 @@ import motulator.drive.control.im as control
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
@@ -41,7 +41,7 @@ par = model.InductionMachinePars(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=L_s)
 machine = model.InductionMachine(par)
 mechanics = model.MechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter, pwm=False, delay=1)
+mdl = model.Drive(machine, mechanics, converter)
 
 # %%
 # Configure the control system.
@@ -56,7 +56,6 @@ cfg = control.CurrentVectorControllerCfg(
 )
 vector_ctrl = control.CurrentVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
-# speed_ctrl = control.PIController(k_p=1, k_i=1)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%
@@ -75,7 +74,7 @@ mdl.mechanics.set_external_load_torque(lambda t: (t > 0.75) * nom.tau)
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=1.5)
-utils.plot(res, base)  # Plot results in per-unit values
+utils.plot(res, base)
 
 # %%
 # .. rubric:: References

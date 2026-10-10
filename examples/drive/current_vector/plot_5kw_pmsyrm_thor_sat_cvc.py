@@ -26,7 +26,7 @@ import motulator.drive.control.sm as control
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=220, I=15.6, f=85, P=5.07e3, tau=19)
 base = utils.BaseValues.from_nominal(nom, n_p=2)

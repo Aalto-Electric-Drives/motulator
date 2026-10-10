@@ -29,9 +29,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 par = model.InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
 )
-est_par = control.InductionMachineInvGammaPars(
-    n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-)
+est_par = par  # Assume accurate model parameter estimates
 
 # %%
 # Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
@@ -74,7 +72,7 @@ for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete
     t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
     ax1.plot(t, i_s.real, ls, ds="steps-post", label=label)
     ax2.plot(t, i_s.imag, ls, ds="steps-post", label=label)
-i_s_ref = res_disc.ctrl.ref.i_s / base.i
+t, i_s_ref = res_disc.ctrl.t, res_disc.ctrl.ref.i_s / base.i
 ax1.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
 ax2.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
 ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
