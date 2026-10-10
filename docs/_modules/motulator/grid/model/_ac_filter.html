@@ -204,6 +204,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
@@ -482,7 +483,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">complex2line</span><span class="p">,</span> <span class="n">empty_array</span>
 
 
@@ -538,16 +539,29 @@
 <span class="sd">        Grid inductance (H), defaults to 0.</span>
 <span class="sd">    R_g : float, optional</span>
 <span class="sd">        Grid resistance (Ω), defaults to 0.</span>
+<span class="sd">    i_c_sensor : Sensor, optional</span>
+<span class="sd">        Converter phase-current sensors, defaults to an ideal measurement.</span>
+<span class="sd">    u_g_sensor : Sensor, optional</span>
+<span class="sd">        Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal</span>
+<span class="sd">        measurement.</span>
 
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">L_f</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">R_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">L_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">R_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">L_f</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">R_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">L_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">R_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">i_c_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">u_g_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">=</span> <span class="n">L_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_f</span> <span class="o">=</span> <span class="n">R_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span> <span class="o">=</span> <span class="n">L_g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_g</span> <span class="o">=</span> <span class="n">R_g</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_c_sensor</span> <span class="o">=</span> <span class="n">i_c_sensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span> <span class="o">=</span> <span class="n">u_g_sensor</span>
         <span class="c1"># The following initial conditions are needed for computing the PCC voltage,</span>
         <span class="c1"># which has direct feedthrough. The PCC voltage is used only as a feedback</span>
         <span class="c1"># signal for the control system (but not coupled to the solution of the</span>
@@ -593,15 +607,16 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure the converter phase currents (A)."""</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span></div>
+        <span class="n">i_c_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">i_c_abc</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c_sensor</span><span class="p">(</span><span class="n">i_c_abc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LFilter.meas_pcc_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_pcc_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""</span>
-        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">complex2line</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
+        <span class="n">u_g_line</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">u_g_line</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span><span class="p">(</span><span class="n">u_g_line</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LFilter.create_time_series">
@@ -694,6 +709,12 @@
 <span class="sd">        Grid resistance (Ω), defaults to 0.</span>
 <span class="sd">    u_f0_ab : complex, optional</span>
 <span class="sd">        Initial value of the filter capacitor voltage (V), defaults to 0.</span>
+<span class="sd">    i_c_sensor : Sensor, optional</span>
+<span class="sd">        Converter phase-current sensors, defaults to an ideal measurement.</span>
+<span class="sd">    u_g_sensor : Sensor, optional</span>
+<span class="sd">        Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal</span>
+<span class="sd">        measurement.</span>
+
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -706,6 +727,8 @@
         <span class="n">L_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">R_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">u_f0_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">i_c_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">u_g_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_fc</span> <span class="o">=</span> <span class="n">L_fc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">=</span> <span class="n">L_fg</span>
@@ -714,6 +737,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">R_fg</span> <span class="o">=</span> <span class="n">R_fg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span> <span class="o">=</span> <span class="n">L_g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_g</span> <span class="o">=</span> <span class="n">R_g</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_c_sensor</span> <span class="o">=</span> <span class="n">i_c_sensor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span> <span class="o">=</span> <span class="n">u_g_sensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">LCLFilterStates</span> <span class="o">=</span> <span class="n">LCLFilterStates</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_f0_ab</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
         <span class="c1"># The following initial conditions are needed for computing the PCC voltage,</span>
         <span class="c1"># which has direct feedthrough. The PCC voltage is used only as a feedback</span>
@@ -767,7 +792,8 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure the converter phase currents (A)."""</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span></div>
+        <span class="n">i_c_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">i_c_abc</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c_sensor</span><span class="p">(</span><span class="n">i_c_abc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.meas_pcc_voltages">
@@ -777,8 +803,8 @@
 <span class="sd">        Measure the line-to-line voltages u_ab and u_bc (V) at the point of common</span>
 <span class="sd">        coupling (PCC).</span>
 <span class="sd">        """</span>
-        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">complex2line</span><span class="p">(</span><span class="n">u_g_ab</span><span class="p">)</span></div>
+        <span class="n">u_g_line</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">u_g_line</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span><span class="p">(</span><span class="n">u_g_line</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.meas_grid_currents">

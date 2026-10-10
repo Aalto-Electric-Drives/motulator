@@ -204,6 +204,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
@@ -485,6 +486,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">empty_array</span>
 
 
@@ -527,6 +529,8 @@
 <span class="sd">        Function of the phase currents (A) determining the leg states during blanking,</span>
 <span class="sd">        defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be</span>
 <span class="sd">        used to model the effect of parasitic capacitances, for example.</span>
+<span class="sd">    u_dc_sensor : Sensor, optional</span>
+<span class="sd">        DC-bus voltage sensor, defaults to an ideal measurement.</span>
 
 <span class="sd">    """</span>
 
@@ -537,10 +541,12 @@
         <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
+        <span class="n">u_dc_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sign</span> <span class="o">=</span> <span class="n">sign</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc_sensor</span> <span class="o">=</span> <span class="n">u_dc_sensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
@@ -579,7 +585,9 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure converter DC-bus voltage (V)."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc_sensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_dc_sensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.rhs">
@@ -656,6 +664,8 @@
 <span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
 <span class="sd">        Function of the phase currents (A) determining the leg states during blanking,</span>
 <span class="sd">        defaults to `np.sign`.</span>
+<span class="sd">    u_dc_sensor : Sensor, optional</span>
+<span class="sd">        DC-bus voltage sensor, defaults to an ideal measurement.</span>
 
 <span class="sd">    """</span>
 
@@ -665,8 +675,9 @@
         <span class="n">C_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
+        <span class="n">u_dc_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">sign</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">u_dc_sensor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">CapacitiveDCBusConverterStates</span> <span class="o">=</span> <span class="n">CapacitiveDCBusConverterStates</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span>
@@ -773,6 +784,8 @@
 <span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
 <span class="sd">        Function of the phase currents (A) determining the leg states during blanking,</span>
 <span class="sd">        defaults to `np.sign`.</span>
+<span class="sd">    u_dc_sensor : Sensor, optional</span>
+<span class="sd">        DC-bus voltage sensor, defaults to an ideal measurement.</span>
 
 <span class="sd">    """</span>
 
@@ -784,9 +797,10 @@
         <span class="n">f_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
+        <span class="n">u_dc_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">U_g</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">sign</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">t_d</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">u_dc_sensor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L_dc</span> <span class="o">=</span> <span class="n">L_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f_g</span>

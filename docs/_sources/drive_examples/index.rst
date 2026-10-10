@@ -69,6 +69,23 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive with nonideal current sensors. The phase currents are measured with offsets, gain errors, and noise. Apart from the sensors and the speed reference, the drive is the same as in /drive_examples/flux_vector/plot_2kw_ipmsm_fvc.">
+
+.. only:: html
+
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_sensor_errors_fvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, current-sensor errors, FVC</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW induction machine (IM) drive. The magnetic saturation is included in the machine model and taken into account in the control system. This example also applies the mechanical-model-based speed observer.">
 
 .. only:: html

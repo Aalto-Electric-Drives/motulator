@@ -36,6 +36,7 @@ Classes
    motulator.grid.model.GridConverterSystem
    motulator.grid.model.LCLFilter
    motulator.grid.model.LFilter
+   motulator.grid.model.Sensor
    motulator.grid.model.Simulation
    motulator.grid.model.ThreePhaseSource
    motulator.grid.model.ThreePhaseSourceWithSignalInjection
@@ -45,7 +46,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: CapacitiveDCBusConverter(u_dc, C_dc, t_d = 0.0, sign = np.sign)
+.. py:class:: CapacitiveDCBusConverter(u_dc, C_dc, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`VoltageSourceConverter`
 
@@ -62,6 +63,8 @@ Package Contents
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
                 defaults to `np.sign`.
    :type sign: Callable[[np.ndarray], np.ndarray], optional
+   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
+   :type u_dc_sensor: Sensor, optional
 
 
 
@@ -212,7 +215,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: LCLFilter(L_fc, L_fg, C_f, R_fc = 0.0, R_fg = 0.0, L_g = 0.0, R_g = 0.0, u_f0_ab = 0j)
+.. py:class:: LCLFilter(L_fc, L_fg, C_f, R_fc = 0.0, R_fg = 0.0, L_g = 0.0, R_g = 0.0, u_f0_ab = 0j, i_c_sensor = None, u_g_sensor = None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -240,6 +243,11 @@ Package Contents
    :type R_g: float, optional
    :param u_f0_ab: Initial value of the filter capacitor voltage (V), defaults to 0.
    :type u_f0_ab: complex, optional
+   :param i_c_sensor: Converter phase-current sensors, defaults to an ideal measurement.
+   :type i_c_sensor: Sensor, optional
+   :param u_g_sensor: Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
+                      measurement.
+   :type u_g_sensor: Sensor, optional
 
 
 
@@ -451,7 +459,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: LFilter(L_f, R_f = 0.0, L_g = 0.0, R_g = 0.0)
+.. py:class:: LFilter(L_f, R_f = 0.0, L_g = 0.0, R_g = 0.0, i_c_sensor = None, u_g_sensor = None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -472,6 +480,11 @@ Package Contents
    :type L_g: float, optional
    :param R_g: Grid resistance (Ω), defaults to 0.
    :type R_g: float, optional
+   :param i_c_sensor: Converter phase-current sensors, defaults to an ideal measurement.
+   :type i_c_sensor: Sensor, optional
+   :param u_g_sensor: Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
+                      measurement.
+   :type u_g_sensor: Sensor, optional
 
 
 
@@ -633,6 +646,53 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: Sensor
+
+   
+   Sensor with a gain error, an offset, and additive Gaussian noise.
+
+   The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
+   signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
+   independently for each channel at each sample. The parameters are scalars or arrays
+   with one element per channel (e.g., per phase), in the units of the measured
+   signal. The noise represents the sampled signal, i.e., `std` is the standard
+   deviation of the samples after the anti-aliasing filter and the A/D conversion.
+
+   :param gain: Gain, defaults to 1.
+   :type gain: array_like, optional
+   :param offset: Offset, defaults to 0.
+   :type offset: array_like, optional
+   :param std: Standard deviation of the noise, defaults to 0.
+   :type std: array_like, optional
+   :param rng: Random number generator, defaults to an unseeded generator. For reproducible
+               results, pass the same seeded generator to all sensors. Sensors with separate
+               generators of the same seed would produce identical noise.
+   :type rng: numpy.random.Generator, optional
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.model import Sensor
+   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0])
+   >>> sensor([1.0, -0.5, -0.5])
+   array([ 1.02, -0.4 , -0.5 ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None)
 
@@ -981,7 +1041,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc, t_d = 0.0, sign = np.sign)
+.. py:class:: VoltageSourceConverter(u_dc, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
@@ -1002,6 +1062,8 @@ Package Contents
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
                 used to model the effect of parasitic capacitances, for example.
    :type sign: Callable[[np.ndarray], np.ndarray], optional
+   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
+   :type u_dc_sensor: Sensor, optional
 
 
 

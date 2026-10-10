@@ -204,6 +204,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
@@ -481,7 +482,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
@@ -544,6 +545,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    par : InductionMachinePars | InductionMachineInvGammaPars</span>
 <span class="sd">        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.</span>
+<span class="sd">    i_s_sensor : Sensor, optional</span>
+<span class="sd">        Phase-current sensors, defaults to an ideal measurement.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -566,11 +569,14 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachinePars</span> <span class="o">|</span> <span class="n">InductionMachineInvGammaPars</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachinePars</span> <span class="o">|</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
+        <span class="n">i_s_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">):</span>
             <span class="n">par</span> <span class="o">=</span> <span class="n">InductionMachinePars</span><span class="o">.</span><span class="n">from_inv_gamma_pars</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_sensor</span> <span class="o">=</span> <span class="n">i_s_sensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">InductionMachineInputs</span> <span class="o">=</span> <span class="n">InductionMachineInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">InductionMachineStates</span> <span class="o">=</span> <span class="n">InductionMachineStates</span><span class="p">()</span>
         <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">i_r_ab</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
@@ -616,7 +622,8 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.meas_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure phase currents (A)."""</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span></div>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">i_s_abc</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_sensor</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="InductionMachine.create_time_series">
@@ -734,6 +741,8 @@
 <span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars \</span>
 <span class="sd">        | SpatialSaturatedSynchronousMachinePars</span>
 <span class="sd">        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.</span>
+<span class="sd">    i_s_sensor : Sensor, optional</span>
+<span class="sd">        Phase-current sensors, defaults to an ideal measurement.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -750,8 +759,10 @@
         <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span>
         <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span>
         <span class="o">|</span> <span class="n">SpatialSaturatedSynchronousMachinePars</span><span class="p">,</span>
+        <span class="n">i_s_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_sensor</span> <span class="o">=</span> <span class="n">i_s_sensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">SynchronousMachineInputs</span> <span class="o">=</span> <span class="n">SynchronousMachineInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">SynchronousMachineStates</span> <span class="o">=</span> <span class="n">SynchronousMachineStates</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
         <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
@@ -801,7 +812,8 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.meas_currents">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_currents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure phase currents (A)."""</span>
-        <span class="k">return</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span></div>
+        <span class="n">i_s_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">i_s_abc</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_sensor</span><span class="p">(</span><span class="n">i_s_abc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SynchronousMachine.create_time_series">

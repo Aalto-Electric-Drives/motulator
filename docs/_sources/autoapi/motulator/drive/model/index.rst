@@ -41,6 +41,7 @@ Classes
    motulator.drive.model.LCFilter
    motulator.drive.model.MechanicalSystem
    motulator.drive.model.SaturatedSynchronousMachinePars
+   motulator.drive.model.Sensor
    motulator.drive.model.Simulation
    motulator.drive.model.SpatialSaturatedSynchronousMachinePars
    motulator.drive.model.SynchronousMachine
@@ -289,7 +290,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: FrequencyConverter(C_dc, L_dc, U_g, f_g, t_d = 0.0, sign = np.sign)
+.. py:class:: FrequencyConverter(C_dc, L_dc, U_g, f_g, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`VoltageSourceConverter`
 
@@ -313,6 +314,8 @@ Package Contents
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
                 defaults to `np.sign`.
    :type sign: Callable[[np.ndarray], np.ndarray], optional
+   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
+   :type u_dc_sensor: Sensor, optional
 
 
 
@@ -427,7 +430,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: InductionMachine(par)
+.. py:class:: InductionMachine(par, i_s_sensor = None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -445,6 +448,8 @@ Package Contents
 
    :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
    :type par: InductionMachinePars | InductionMachineInvGammaPars
+   :param i_s_sensor: Phase-current sensors, defaults to an ideal measurement.
+   :type i_s_sensor: Sensor, optional
 
    .. rubric:: Notes
 
@@ -863,7 +868,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: LCFilter(L_f, C_f, R_f = 0.0)
+.. py:class:: LCFilter(L_f, C_f, R_f = 0.0, i_c_sensor = None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -877,6 +882,8 @@ Package Contents
    :type C_f: float
    :param R_f: Series resistance (Ω) of the inductor, defaults to 0.
    :type R_f: float, optional
+   :param i_c_sensor: Converter phase-current sensors, defaults to an ideal measurement.
+   :type i_c_sensor: Sensor, optional
 
 
 
@@ -946,7 +953,7 @@ Package Contents
    .. py:method:: meas_currents()
 
       
-      Measure the converter phase currents.
+      Measure the converter phase currents (A).
 
 
 
@@ -1387,6 +1394,53 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: Sensor
+
+   
+   Sensor with a gain error, an offset, and additive Gaussian noise.
+
+   The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
+   signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
+   independently for each channel at each sample. The parameters are scalars or arrays
+   with one element per channel (e.g., per phase), in the units of the measured
+   signal. The noise represents the sampled signal, i.e., `std` is the standard
+   deviation of the samples after the anti-aliasing filter and the A/D conversion.
+
+   :param gain: Gain, defaults to 1.
+   :type gain: array_like, optional
+   :param offset: Offset, defaults to 0.
+   :type offset: array_like, optional
+   :param std: Standard deviation of the noise, defaults to 0.
+   :type std: array_like, optional
+   :param rng: Random number generator, defaults to an unseeded generator. For reproducible
+               results, pass the same seeded generator to all sensors. Sensors with separate
+               generators of the same seed would produce identical noise.
+   :type rng: numpy.random.Generator, optional
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.model import Sensor
+   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0])
+   >>> sensor([1.0, -0.5, -0.5])
+   array([ 1.02, -0.4 , -0.5 ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None)
 
    
@@ -1638,7 +1692,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SynchronousMachine(par)
+.. py:class:: SynchronousMachine(par, i_s_sensor = None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -1656,6 +1710,8 @@ Package Contents
 
    :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars         | SpatialSaturatedSynchronousMachinePars
+   :param i_s_sensor: Phase-current sensors, defaults to an ideal measurement.
+   :type i_s_sensor: Sensor, optional
 
    .. rubric:: Notes
 
@@ -2242,7 +2298,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc, t_d = 0.0, sign = np.sign)
+.. py:class:: VoltageSourceConverter(u_dc, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
@@ -2263,6 +2319,8 @@ Package Contents
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
                 used to model the effect of parasitic capacitances, for example.
    :type sign: Callable[[np.ndarray], np.ndarray], optional
+   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
+   :type u_dc_sensor: Sensor, optional
 
 
 

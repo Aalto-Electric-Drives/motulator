@@ -35,6 +35,7 @@ Classes
    motulator.common.model.CarrierComparison
    motulator.common.model.Model
    motulator.common.model.ModelTimeSeries
+   motulator.common.model.Sensor
    motulator.common.model.Simulation
    motulator.common.model.SimulationResults
    motulator.common.model.SolverCfg
@@ -291,6 +292,53 @@ Package Contents
    The time series of each subsystem is stored as an attribute (e.g., `machine`). It
    also contains the time series of the subsystem inputs, which are used for plotting
    and for computing the signals that depend directly on the inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Sensor
+
+   
+   Sensor with a gain error, an offset, and additive Gaussian noise.
+
+   The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
+   signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
+   independently for each channel at each sample. The parameters are scalars or arrays
+   with one element per channel (e.g., per phase), in the units of the measured
+   signal. The noise represents the sampled signal, i.e., `std` is the standard
+   deviation of the samples after the anti-aliasing filter and the A/D conversion.
+
+   :param gain: Gain, defaults to 1.
+   :type gain: array_like, optional
+   :param offset: Offset, defaults to 0.
+   :type offset: array_like, optional
+   :param std: Standard deviation of the noise, defaults to 0.
+   :type std: array_like, optional
+   :param rng: Random number generator, defaults to an unseeded generator. For reproducible
+               results, pass the same seeded generator to all sensors. Sensors with separate
+               generators of the same seed would produce identical noise.
+   :type rng: numpy.random.Generator, optional
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.model import Sensor
+   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0])
+   >>> sensor([1.0, -0.5, -0.5])
+   array([ 1.02, -0.4 , -0.5 ])
 
 
 
