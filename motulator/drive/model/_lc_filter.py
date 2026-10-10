@@ -5,7 +5,7 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import Subsystem, SubsystemTimeSeries
+from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
 from motulator.common.utils._utils import complex2abc, complex2line, empty_array
 
 
@@ -54,13 +54,18 @@ class LCFilter(Subsystem):
         Filter capacitance (F).
     R_f : float, optional
         Series resistance (Ω) of the inductor, defaults to 0.
+    i_c_sensor : Sensor, optional
+        Converter phase-current sensors, defaults to an ideal measurement.
 
     """
 
-    def __init__(self, L_f: float, C_f: float, R_f: float = 0.0) -> None:
+    def __init__(
+        self, L_f: float, C_f: float, R_f: float = 0.0, i_c_sensor: Sensor | None = None
+    ) -> None:
         self.L_f = L_f
         self.C_f = C_f
         self.R_f = R_f
+        self.i_c_sensor = i_c_sensor
         self.state: States = States()
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(self.state.i_c_ab, self.state.u_f_ab)
@@ -82,8 +87,9 @@ class LCFilter(Subsystem):
         return [d_i_c_ab, d_u_f_ab]
 
     def meas_currents(self) -> Any:
-        """Measure the converter phase currents."""
-        return complex2abc(self.out.i_c_ab)
+        """Measure the converter phase currents (A)."""
+        i_c_abc = complex2abc(self.out.i_c_ab)
+        return i_c_abc if self.i_c_sensor is None else self.i_c_sensor(i_c_abc)
 
     def meas_capacitor_voltages(self) -> Any:
         """Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""

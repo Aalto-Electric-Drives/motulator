@@ -1,6 +1,7 @@
 """Continuous-time machine drive models."""
 
 from motulator.common.model._converter import FrequencyConverter, VoltageSourceConverter
+from motulator.common.model._sensor import Sensor
 from motulator.common.model._simulation import Simulation
 from motulator.drive.model._drive import Drive
 from motulator.drive.model._lc_filter import LCFilter
@@ -28,6 +29,7 @@ __all__ = [
     "LCFilter",
     "MechanicalSystem",
     "SaturatedSynchronousMachinePars",
+    "Sensor",
     "Simulation",
     "SpatialSaturatedSynchronousMachinePars",
     "SynchronousMachine",

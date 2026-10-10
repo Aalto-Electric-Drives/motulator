@@ -12,7 +12,7 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import Subsystem, SubsystemTimeSeries
+from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
 from motulator.common.utils._utils import complex2abc, complex2line, empty_array
 
 
@@ -66,16 +66,29 @@ class LFilter(Subsystem):
         Grid inductance (H), defaults to 0.
     R_g : float, optional
         Grid resistance (Ω), defaults to 0.
+    i_c_sensor : Sensor, optional
+        Converter phase-current sensors, defaults to an ideal measurement.
+    u_g_sensor : Sensor, optional
+        Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
+        measurement.
 
     """
 
     def __init__(
-        self, L_f: float, R_f: float = 0.0, L_g: float = 0.0, R_g: float = 0.0
+        self,
+        L_f: float,
+        R_f: float = 0.0,
+        L_g: float = 0.0,
+        R_g: float = 0.0,
+        i_c_sensor: Sensor | None = None,
+        u_g_sensor: Sensor | None = None,
     ) -> None:
         self.L_f = L_f
         self.R_f = R_f
         self.L_g = L_g
         self.R_g = R_g
+        self.i_c_sensor = i_c_sensor
+        self.u_g_sensor = u_g_sensor
         # The following initial conditions are needed for computing the PCC voltage,
         # which has direct feedthrough. The PCC voltage is used only as a feedback
         # signal for the control system (but not coupled to the solution of the
@@ -110,12 +123,13 @@ class LFilter(Subsystem):
 
     def meas_currents(self) -> Any:
         """Measure the converter phase currents (A)."""
-        return complex2abc(self.state.i_c_ab)
+        i_c_abc = complex2abc(self.state.i_c_ab)
+        return i_c_abc if self.i_c_sensor is None else self.i_c_sensor(i_c_abc)
 
     def meas_pcc_voltages(self) -> Any:
         """Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""
-        u_g_ab = self.pcc_voltage(self.state, self.inp)
-        return complex2line(u_g_ab)
+        u_g_line = complex2line(self.pcc_voltage(self.state, self.inp))
+        return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
 
     def create_time_series(self, t: np.ndarray) -> tuple[str, "LFilterTimeSeries"]:
         """Create time series from state list."""
@@ -201,6 +215,12 @@ class LCLFilter(Subsystem):
         Grid resistance (Ω), defaults to 0.
     u_f0_ab : complex, optional
         Initial value of the filter capacitor voltage (V), defaults to 0.
+    i_c_sensor : Sensor, optional
+        Converter phase-current sensors, defaults to an ideal measurement.
+    u_g_sensor : Sensor, optional
+        Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
+        measurement.
+
     """
 
     def __init__(
@@ -213,6 +233,8 @@ class LCLFilter(Subsystem):
         L_g: float = 0.0,
         R_g: float = 0.0,
         u_f0_ab: complex = 0j,
+        i_c_sensor: Sensor | None = None,
+        u_g_sensor: Sensor | None = None,
     ) -> None:
         self.L_fc = L_fc
         self.L_fg = L_fg
@@ -221,6 +243,8 @@ class LCLFilter(Subsystem):
         self.R_fg = R_fg
         self.L_g = L_g
         self.R_g = R_g
+        self.i_c_sensor = i_c_sensor
+        self.u_g_sensor = u_g_sensor
         self.state: LCLFilterStates = LCLFilterStates(0j, u_f0_ab, 0j)
         # The following initial conditions are needed for computing the PCC voltage,
         # which has direct feedthrough. The PCC voltage is used only as a feedback
@@ -263,15 +287,16 @@ class LCLFilter(Subsystem):
 
     def meas_currents(self) -> Any:
         """Measure the converter phase currents (A)."""
-        return complex2abc(self.state.i_c_ab)
+        i_c_abc = complex2abc(self.state.i_c_ab)
+        return i_c_abc if self.i_c_sensor is None else self.i_c_sensor(i_c_abc)
 
     def meas_pcc_voltages(self) -> Any:
         """
         Measure the line-to-line voltages u_ab and u_bc (V) at the point of common
         coupling (PCC).
         """
-        u_g_ab = self.pcc_voltage(self.state, self.inp)
-        return complex2line(u_g_ab)
+        u_g_line = complex2line(self.pcc_voltage(self.state, self.inp))
+        return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
 
     def meas_grid_currents(self) -> Any:
         """Measure the grid phase currents (A)."""

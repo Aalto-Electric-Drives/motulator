@@ -15,6 +15,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model._base import Subsystem
+from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import abc2complex, complex2abc, empty_array
 
 
@@ -55,6 +56,8 @@ class VoltageSourceConverter(Subsystem):
         Function of the phase currents (A) determining the leg states during blanking,
         defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
         used to model the effect of parasitic capacitances, for example.
+    u_dc_sensor : Sensor, optional
+        DC-bus voltage sensor, defaults to an ideal measurement.
 
     """
 
@@ -65,10 +68,12 @@ class VoltageSourceConverter(Subsystem):
         u_dc: float,
         t_d: float = 0.0,
         sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+        u_dc_sensor: Sensor | None = None,
     ) -> None:
         self.u_dc = u_dc
         self.t_d = t_d
         self.sign = sign
+        self.u_dc_sensor = u_dc_sensor
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=u_dc)
         self.state = None
@@ -93,7 +98,9 @@ class VoltageSourceConverter(Subsystem):
 
     def meas_dc_voltage(self) -> float:
         """Measure converter DC-bus voltage (V)."""
-        return self.out.u_dc
+        if self.u_dc_sensor is None:
+            return self.out.u_dc
+        return float(self.u_dc_sensor(self.out.u_dc))
 
     def rhs(self, t: float) -> list[complex]:
         """Default empty implementation."""
@@ -160,6 +167,8 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
     sign : Callable[[np.ndarray], np.ndarray], optional
         Function of the phase currents (A) determining the leg states during blanking,
         defaults to `np.sign`.
+    u_dc_sensor : Sensor, optional
+        DC-bus voltage sensor, defaults to an ideal measurement.
 
     """
 
@@ -169,8 +178,9 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
         C_dc: float,
         t_d: float = 0.0,
         sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+        u_dc_sensor: Sensor | None = None,
     ) -> None:
-        super().__init__(u_dc, t_d, sign)
+        super().__init__(u_dc, t_d, sign, u_dc_sensor)
         self.C_dc = C_dc
         self.state: CapacitiveDCBusConverterStates = CapacitiveDCBusConverterStates(
             self.u_dc
@@ -262,6 +272,8 @@ class FrequencyConverter(VoltageSourceConverter):
     sign : Callable[[np.ndarray], np.ndarray], optional
         Function of the phase currents (A) determining the leg states during blanking,
         defaults to `np.sign`.
+    u_dc_sensor : Sensor, optional
+        DC-bus voltage sensor, defaults to an ideal measurement.
 
     """
 
@@ -273,9 +285,10 @@ class FrequencyConverter(VoltageSourceConverter):
         f_g: float,
         t_d: float = 0.0,
         sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+        u_dc_sensor: Sensor | None = None,
     ) -> None:
         u_dc = sqrt(2) * U_g
-        super().__init__(u_dc, t_d, sign)
+        super().__init__(u_dc, t_d, sign, u_dc_sensor)
         self.C_dc = C_dc
         self.L_dc = L_dc
         self.w_g = 2 * np.pi * f_g
