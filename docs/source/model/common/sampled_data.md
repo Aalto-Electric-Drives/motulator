@@ -27,4 +27,6 @@ As mentioned, the physical components of a machine drive or a grid converter sys
 
 A discrete-time control system (named `ctrl` in the examples) contains control algorithms, such as a speed controller and a current controller. The reference signals $\mathbf{r}(k)$ could contain, e.g., a speed reference of an electric machine or a power reference of a grid converter. The feedback signals $\mathbf{y}(k)$ typically contain at least the measured DC-bus voltage and converter phase currents.
 
+By default, the sensors are ideal. Nonideal sensors can be modeled with the {class}`motulator.common.model.Sensor` class, which adds a gain error, an offset, and white Gaussian noise to the sampled signals. A sensor is a parameter of the subsystem whose signals it measures, e.g., `i_s_sensor` of a machine model or `u_dc_sensor` of a converter model.
+
 Digital control systems typically have a computational delay of one sampling period, $N=1$. If desired, the value of $N$ can be changed in simulations. [Figure 1](fig:system) includes carrier comparison, which realizes pulse-width modulation (PWM). If the switching ripple is not of interest in simulations, the carrier comparison can be replaced with a zero-order hold (ZOH).
