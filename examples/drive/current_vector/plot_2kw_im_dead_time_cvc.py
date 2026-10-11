@@ -26,11 +26,9 @@ nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
-# Away from the duty-ratio limits, the duty-ratio error caused by the dead time `t_d` is
-# `t_d/(2*T_s)*sign(i)` in each phase, where `i` is the phase current and `T_s` is the
-# half carrier period, equal to the sampling period. As in [#Hin2010]_, the signum
-# function is replaced with a smooth arctangent function, which approximates the
-# effect of the parasitic capacitances of the power devices at low currents.
+# The dead time causes a duty-ratio error that depends on the sign of the phase current.
+# As in [#Hin2010]_, the signum function is replaced with a smooth arctangent function,
+# which approximates the effect of the parasitic capacitances at low currents.
 
 t_d = 2e-6  # Dead time (s)
 T_s = 125e-6  # Sampling period (s)

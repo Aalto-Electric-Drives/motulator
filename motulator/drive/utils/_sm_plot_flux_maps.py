@@ -5,6 +5,7 @@ from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import MaxNLocator
 from numpy.typing import ArrayLike
 
 from motulator.common.utils._plotting import (
@@ -133,7 +134,9 @@ def _configure_3d_axes(
     if z_lims is not None:
         ax.set_zlim(z_lims)  # type: ignore
 
-    # Set axis ticks
+    # Set axis ticks, by default at most five intervals per axis
+    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+        axis.set_major_locator(MaxNLocator(nbins=5, steps=[1, 2, 2.5, 5, 10]))
     if ticks is not None:
         x_ticks = ticks.get("x")
         y_ticks = ticks.get("y")
