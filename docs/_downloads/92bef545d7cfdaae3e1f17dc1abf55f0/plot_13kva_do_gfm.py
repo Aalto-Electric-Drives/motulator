@@ -5,7 +5,9 @@
 This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM)
 converter, connected to a weak grid. The converter output voltage and the active power
 are directly controlled. Grid synchronization is provided by the disturbance observer.
-A transparent current controller is included for current limitation.
+A transparent current controller is included for current limitation. A grid-voltage
+sag in this weak grid is simulated in
+:doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
 
 """
 
@@ -50,10 +52,7 @@ ctrl.set_power_ref(
 )
 
 # Uncomment line below to simulate operation in rectifier mode
-# ctrl.ext_ref.p_g = lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P
-
-# A grid-voltage sag in this weak grid is simulated in the example
-# plot_13kva_do_gfm_sag.py, where the active-power reference limitation is used.
+# ctrl.set_power_ref(lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P)
 
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.

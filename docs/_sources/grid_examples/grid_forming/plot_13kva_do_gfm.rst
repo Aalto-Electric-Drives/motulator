@@ -24,9 +24,11 @@
 This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM)
 converter, connected to a weak grid. The converter output voltage and the active power
 are directly controlled. Grid synchronization is provided by the disturbance observer.
-A transparent current controller is included for current limitation.
+A transparent current controller is included for current limitation. A grid-voltage
+sag in this weak grid is simulated in
+:doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-15
+.. GENERATED FROM PYTHON SOURCE LINES 15-17
 
 .. code-block:: Python
 
@@ -39,11 +41,11 @@ A transparent current controller is included for current limitation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 18-19
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 19-23
 
 .. code-block:: Python
 
@@ -58,11 +60,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-29
+.. GENERATED FROM PYTHON SOURCE LINES 25-31
 
 .. code-block:: Python
 
@@ -79,11 +81,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-31
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-43
+.. GENERATED FROM PYTHON SOURCE LINES 33-45
 
 .. code-block:: Python
 
@@ -106,11 +108,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-58
+.. GENERATED FROM PYTHON SOURCE LINES 47-57
 
 .. code-block:: Python
 
@@ -122,10 +124,7 @@ Set the references for converter output voltage magnitude and active power.
     )
 
     # Uncomment line below to simulate operation in rectifier mode
-    # ctrl.ext_ref.p_g = lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P
-
-    # A grid-voltage sag in this weak grid is simulated in the example
-    # plot_13kva_do_gfm_sag.py, where the active-power reference limitation is used.
+    # ctrl.set_power_ref(lambda t: ((t > 0.2) - (t > 0.7) * 2 + (t > 1.2)) * nom.P)
 
 
 
@@ -134,11 +133,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-65
+.. GENERATED FROM PYTHON SOURCE LINES 59-64
 
 .. code-block:: Python
 
@@ -174,7 +173,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.247 seconds)
+   **Total running time of the script:** (0 minutes 4.993 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm.py:

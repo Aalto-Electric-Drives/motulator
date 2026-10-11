@@ -204,7 +204,7 @@ Plot the speed estimates and the current responses in per-unit values.
         ax1.plot(t, w_M, ls, ds="steps-post", label=f"estimate, {label}")
         ax2.plot(t, i_s.real, ls, ds="steps-post", label=label)
         ax3.plot(t, i_s.imag, ls, ds="steps-post", label=label)
-    i_s_ref = res_disc.ctrl.ref.i_s / base.i
+    t, i_s_ref = res_disc.ctrl.t, res_disc.ctrl.ref.i_s / base.i
     ax1.plot(res_disc.mdl.t, res_disc.mdl.machine.w_M / base.w_M, "k:", label="actual")
     ax2.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
     ax3.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
@@ -248,7 +248,7 @@ remains well damped. In the largest steps, the voltage is limited.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.886 seconds)
+   **Total running time of the script:** (0 minutes 2.645 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py:

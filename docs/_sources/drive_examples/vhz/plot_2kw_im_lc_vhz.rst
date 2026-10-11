@@ -44,7 +44,7 @@ equipped with an output LC filter.
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-20
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 20-24
 
@@ -206,7 +206,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.961 seconds)
+   **Total running time of the script:** (0 minutes 6.680 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_lc_vhz.py:

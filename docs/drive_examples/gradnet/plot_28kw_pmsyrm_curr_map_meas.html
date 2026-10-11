@@ -208,7 +208,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
@@ -216,10 +215,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -525,7 +524,9 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="kw-pm-syrm-train-current-map-measured-data">
 <span id="sphx-glr-drive-examples-gradnet-plot-28kw-pmsyrm-curr-map-meas-py"></span><h1>28-kW PM-SyRM, train current map, measured data<a class="headerlink" href="#kw-pm-syrm-train-current-map-measured-data" title="Link to this heading">#</a></h1>
 <p>This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance
-machine (Brusa HSM1.10.18.04) from a measured dataset.</p>
+machine (Brusa HSM1.10.18.04) from a measured dataset.
+The procedure is the same as in
+<a class="reference internal" href="plot_6kw_pmsyrm_curr_map_meas.html"><span class="doc">5.6-kW PM-SyRM, train current map, measured data</span></a>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-class reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="pathlib.Path"><span class="n">Path</span></a><span class="w">
 </span><span class="w">
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="w">
@@ -533,7 +534,7 @@ machine (Brusa HSM1.10.18.04) from a measured dataset.</p>
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="nn">.</span><span class="nn">gradnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gn</span><span class="w">
 </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span><span class="w">
 </span></pre></div></div>
-<p>Set nominal and base values, needed for figures only.</p>
+<p>Compute base values based on the nominal values.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">nom</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><span class="n">utils</span><span class="o">.</span><span class="n">NominalValues</span></a><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="mi">283</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mi">78</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">408</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">25e3</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">49</span><span class="p">)</span><span class="w">
 </span><span class="n">base</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-utils-BaseValues sphx-glr-backref-type-py-method reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.BaseValues.from_nominal" title="motulator.drive.utils.BaseValues.from_nominal"><span class="n">utils</span><span class="o">.</span><span class="n">BaseValues</span><span class="o">.</span><span class="n">from_nominal</span></a><span class="p">(</span><span class="n">nom</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
@@ -612,7 +613,7 @@ machine (Brusa HSM1.10.18.04) from a measured dataset.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Current-map error metrics: rmse=0.032 p.u., max=0.133 p.u., std=0.019 p.u.
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.676 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.653 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-gradnet-plot-28kw-pmsyrm-curr-map-meas-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/75ef716a18cfe96b732932f6f26eb213/plot_28kw_pmsyrm_curr_map_meas.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_28kw_pmsyrm_curr_map_meas.ipynb</span></code></a></p>

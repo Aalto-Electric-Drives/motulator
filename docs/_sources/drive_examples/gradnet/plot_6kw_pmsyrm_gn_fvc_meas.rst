@@ -23,9 +23,11 @@
 
 This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
 machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
-spatial harmonics are used for both the machine model and the control system.
+spatial harmonics are used for both the machine model and the control system. The
+models are trained in :doc:`/drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas` and
+:doc:`/drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-20
+.. GENERATED FROM PYTHON SOURCE LINES 14-22
 
 .. code-block:: Python
 
@@ -44,11 +46,11 @@ spatial harmonics are used for both the machine model and the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-26
+.. GENERATED FROM PYTHON SOURCE LINES 24-28
 
 .. code-block:: Python
 
@@ -63,11 +65,11 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-28
+.. GENERATED FROM PYTHON SOURCE LINES 29-30
 
 Determine the path of the current script.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-31
+.. GENERATED FROM PYTHON SOURCE LINES 30-33
 
 .. code-block:: Python
 
@@ -81,12 +83,12 @@ Determine the path of the current script.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-34
+.. GENERATED FROM PYTHON SOURCE LINES 34-36
 
 Configure the system model using the GradNet current map, without spatial harmonics,
 trained on the measured dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-45
+.. GENERATED FROM PYTHON SOURCE LINES 36-47
 
 .. code-block:: Python
 
@@ -108,12 +110,12 @@ trained on the measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-48
+.. GENERATED FROM PYTHON SOURCE LINES 48-50
 
 Configure the control system using the GradNet flux map, without spatial harmonics,
 trained on the measured dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-64
+.. GENERATED FROM PYTHON SOURCE LINES 50-66
 
 .. code-block:: Python
 
@@ -140,11 +142,11 @@ trained on the measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-74
+.. GENERATED FROM PYTHON SOURCE LINES 68-76
 
 .. code-block:: Python
 
@@ -194,11 +196,11 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-76
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-80
+.. GENERATED FROM PYTHON SOURCE LINES 78-82
 
 .. code-block:: Python
 
@@ -213,11 +215,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 81-82
+.. GENERATED FROM PYTHON SOURCE LINES 83-84
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 84-88
 
 .. code-block:: Python
 
@@ -240,7 +242,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 36.332 seconds)
+   **Total running time of the script:** (0 minutes 35.799 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_gn_fvc_meas.py:

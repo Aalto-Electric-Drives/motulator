@@ -118,7 +118,7 @@ for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete
     ax1.plot(t, w_M, ls, ds="steps-post", label=f"estimate, {label}")
     ax2.plot(t, i_s.real, ls, ds="steps-post", label=label)
     ax3.plot(t, i_s.imag, ls, ds="steps-post", label=label)
-i_s_ref = res_disc.ctrl.ref.i_s / base.i
+t, i_s_ref = res_disc.ctrl.t, res_disc.ctrl.ref.i_s / base.i
 ax1.plot(res_disc.mdl.t, res_disc.mdl.machine.w_M / base.w_M, "k:", label="actual")
 ax2.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
 ax3.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")

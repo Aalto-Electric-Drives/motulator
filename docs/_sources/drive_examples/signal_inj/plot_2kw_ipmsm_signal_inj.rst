@@ -174,7 +174,7 @@ Plot also the angles.
         label=r"$\hat \vartheta_\mathrm{m}$",
     )
     plt.legend()
-    plt.xlim(0, 4)
+    plt.xlim(0, t_stop)
     plt.xlabel("Time (s)")
     plt.ylabel("Electrical angle (rad)")
     plt.show()
@@ -193,7 +193,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 17.537 seconds)
+   **Total running time of the script:** (0 minutes 16.651 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_2kw_ipmsm_signal_inj.py:

@@ -23,8 +23,10 @@
 
 This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance
 machine (Brusa HSM1.10.18.04) from a measured dataset.
+The procedure is the same as in
+:doc:`/drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-17
+.. GENERATED FROM PYTHON SOURCE LINES 11-19
 
 .. code-block:: Python
 
@@ -43,11 +45,11 @@ machine (Brusa HSM1.10.18.04) from a measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
-Set nominal and base values, needed for figures only.
+Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -62,11 +64,11 @@ Set nominal and base values, needed for figures only.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Set up the paths and parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-33
+.. GENERATED FROM PYTHON SOURCE LINES 27-35
 
 .. code-block:: Python
 
@@ -85,11 +87,11 @@ Set up the paths and parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Train the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-47
+.. GENERATED FROM PYTHON SOURCE LINES 37-49
 
 .. code-block:: Python
 
@@ -112,11 +114,11 @@ Train the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the GradNet model and its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-53
+.. GENERATED FROM PYTHON SOURCE LINES 51-55
 
 .. code-block:: Python
 
@@ -131,11 +133,11 @@ Create the GradNet model and its callable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Load the dataset for comparison and split it into training and validation sets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-60
+.. GENERATED FROM PYTHON SOURCE LINES 57-62
 
 .. code-block:: Python
 
@@ -151,11 +153,11 @@ Load the dataset for comparison and split it into training and validation sets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Plot the current map.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-98
+.. GENERATED FROM PYTHON SOURCE LINES 64-100
 
 .. code-block:: Python
 
@@ -219,11 +221,11 @@ Plot the current map.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-100
+.. GENERATED FROM PYTHON SOURCE LINES 101-102
 
 Print statistical error metrics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-102
+.. GENERATED FROM PYTHON SOURCE LINES 102-104
 
 .. code-block:: Python
 
@@ -245,7 +247,7 @@ Print statistical error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.676 seconds)
+   **Total running time of the script:** (0 minutes 0.653 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_28kw_pmsyrm_curr_map_meas.py:

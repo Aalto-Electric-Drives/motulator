@@ -4,7 +4,8 @@
 
 This example simulates sensorless vector control of a saturated 6.7-kW synchronous
 reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop
-is used. Cross-saturation errors are compensated for using flux maps.
+is used, as in :doc:`/drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj`.
+Cross-saturation errors are compensated for using flux maps.
 
 """
 
@@ -84,7 +85,7 @@ plt.plot(
     label=r"$\hat \vartheta_\mathrm{m}$",
 )
 plt.legend()
-plt.xlim(0, 4)
+plt.xlim(0, t_stop)
 plt.xlabel("Time (s)")
 plt.ylabel("Electrical angle (rad)")
 plt.show()

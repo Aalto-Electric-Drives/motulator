@@ -45,7 +45,7 @@ reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial ha
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-19
 
-Set nominal and base values.
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-23
 
@@ -310,7 +310,7 @@ Print statistical error metrics on validation data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.438 seconds)
+   **Total running time of the script:** (0 minutes 0.421 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_fem_harm.py:

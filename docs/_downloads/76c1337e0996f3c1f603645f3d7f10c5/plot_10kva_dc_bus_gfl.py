@@ -2,10 +2,9 @@
 10-kVA, DC bus, GFL
 ===================
 
-This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter
-and a strong grid. The DC-bus dynamics are modeled. The control system includes a DC-bus
-voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current
-reference generator, and a PI-type current controller.
+This example extends :doc:`/grid_examples/grid_following/plot_10kva_gfl` by modeling
+the DC-bus dynamics. The control system additionally includes a DC-bus voltage
+controller.
 
 """
 

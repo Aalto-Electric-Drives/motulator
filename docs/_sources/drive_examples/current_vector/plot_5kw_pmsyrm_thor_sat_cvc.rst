@@ -54,7 +54,7 @@ accelerations is avoided, allowing to increase the speed-control bandwidth.
 
 .. GENERATED FROM PYTHON SOURCE LINES 29-30
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 30-34
 
@@ -273,7 +273,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 19.025 seconds)
+   **Total running time of the script:** (0 minutes 17.842 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py:

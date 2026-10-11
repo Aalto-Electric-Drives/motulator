@@ -44,7 +44,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a saturated 6.7-kW synchronous reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop is used. Cross-saturation errors are compensated for using flux maps.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a saturated 6.7-kW synchronous reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop is used, as in /drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj. Cross-saturation errors are compensated for using flux maps.">
 
 .. only:: html
 

@@ -14,7 +14,7 @@ import motulator.drive.control.sm as control
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=370, I=15.5, f=105.8, P=6.7e3, tau=20.1)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
@@ -41,8 +41,8 @@ psi_q_range = np.linspace(-base.psi, base.psi, 256)
 flux_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range).invert()
 
 # Plot the flux maps
-utils.plot_map(flux_map, "d", base)
-utils.plot_map(flux_map, "q", base)
+utils.plot_map(flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
+utils.plot_map(flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2), "z": (-0.5, 0.5)})
 
 # Parameter estimates
 est_par = control.SaturatedSynchronousMachinePars(

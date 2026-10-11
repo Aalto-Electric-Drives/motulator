@@ -21,10 +21,12 @@
 12.5-kVA, RFPSC-GFM
 ===================
 
-This example simulates grid-forming (GFM) converter using reference-feedforward
-power-synchronization control (RFPSC). The converter is connected to a weak grid.
+This example simulates a 12.5-kVA grid-forming (GFM) converter using
+reference-feedforward power-synchronization control (RFPSC). The converter is connected
+to a weak grid. The converter and grid models are the same as in
+:doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-13
+.. GENERATED FROM PYTHON SOURCE LINES 13-15
 
 .. code-block:: Python
 
@@ -37,11 +39,11 @@ power-synchronization control (RFPSC). The converter is connected to a weak grid
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-15
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-19
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
@@ -56,11 +58,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-27
+.. GENERATED FROM PYTHON SOURCE LINES 23-29
 
 .. code-block:: Python
 
@@ -77,11 +79,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-37
+.. GENERATED FROM PYTHON SOURCE LINES 31-39
 
 .. code-block:: Python
 
@@ -100,11 +102,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 40-41
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-48
+.. GENERATED FROM PYTHON SOURCE LINES 41-50
 
 .. code-block:: Python
 
@@ -124,11 +126,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-55
+.. GENERATED FROM PYTHON SOURCE LINES 52-57
 
 .. code-block:: Python
 
@@ -164,7 +166,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.170 seconds)
+   **Total running time of the script:** (0 minutes 4.927 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_rfpsc_gfm.py:

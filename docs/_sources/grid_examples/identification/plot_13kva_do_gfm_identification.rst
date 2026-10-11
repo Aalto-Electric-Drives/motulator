@@ -22,9 +22,10 @@
 ============================================================
 
 This example demonstrates converter output admittance identification using a 12.5-kVA
-disturbance-observer-based grid-forming (DO-GFM) converter.
+disturbance-observer-based grid-forming (DO-GFM) converter. The converter and grid
+models are the same as in :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-13
+.. GENERATED FROM PYTHON SOURCE LINES 12-14
 
 .. code-block:: Python
 
@@ -37,11 +38,11 @@ disturbance-observer-based grid-forming (DO-GFM) converter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-15
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-19
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
@@ -56,11 +57,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the identification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-32
+.. GENERATED FROM PYTHON SOURCE LINES 22-33
 
 .. code-block:: Python
 
@@ -82,11 +83,11 @@ Configure the identification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-40
+.. GENERATED FROM PYTHON SOURCE LINES 35-41
 
 .. code-block:: Python
 
@@ -103,11 +104,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-58
+.. GENERATED FROM PYTHON SOURCE LINES 43-59
 
 .. code-block:: Python
 
@@ -134,11 +135,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-65
+.. GENERATED FROM PYTHON SOURCE LINES 61-66
 
 .. code-block:: Python
 
@@ -181,7 +182,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 38.015 seconds)
+   **Total running time of the script:** (5 minutes 30.181 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_13kva_do_gfm_identification.py:

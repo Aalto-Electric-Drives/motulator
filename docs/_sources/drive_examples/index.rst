@@ -120,23 +120,6 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
-
-.. only:: html
-
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, FVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test.">
 
 .. only:: html
@@ -228,18 +211,18 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
     :alt:
 
-  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
+  :doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, CVC</div>
     </div>
 
 
@@ -262,6 +245,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html
@@ -274,23 +274,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, CVC</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, CVC</div>
     </div>
 
 
@@ -524,7 +507,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a saturated 6.7-kW synchronous reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop is used. Cross-saturation errors are compensated for using flux maps.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless vector control of a saturated 6.7-kW synchronous reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop is used, as in /drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj. Cross-saturation errors are compensated for using flux maps.">
 
 .. only:: html
 
@@ -604,7 +587,7 @@ These examples use our physics-constrained neural-network framework for dynamic 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics. The models are trained in /drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem and /drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.">
 
 .. only:: html
 
@@ -621,7 +604,7 @@ These examples use our physics-constrained neural-network framework for dynamic 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system. The models are trained in /drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas and /drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas.">
 
 .. only:: html
 
@@ -638,7 +621,7 @@ These examples use our physics-constrained neural-network framework for dynamic 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset. The procedure is the same as in /drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas.">
 
 .. only:: html
 
@@ -689,7 +672,7 @@ These examples use our physics-constrained neural-network framework for dynamic 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance machine (Brusa HSM1.10.18.04) from a measured dataset. The procedure is the same as in /drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas.">
 
 .. only:: html
 

@@ -71,7 +71,7 @@ plt.plot(
     label=r"$\hat \vartheta_\mathrm{m}$",
 )
 plt.legend()
-plt.xlim(0, 4)
+plt.xlim(0, t_stop)
 plt.xlabel("Time (s)")
 plt.ylabel("Electrical angle (rad)")
 plt.show()

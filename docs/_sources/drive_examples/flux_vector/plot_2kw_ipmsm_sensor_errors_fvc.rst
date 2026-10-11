@@ -47,7 +47,7 @@ and the speed reference, the drive is the same as in
 
 .. GENERATED FROM PYTHON SOURCE LINES 22-23
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 23-27
 
@@ -156,20 +156,13 @@ to 0.5 p.u. and then, under the load, decreased to 0.1 p.u.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-78
+.. GENERATED FROM PYTHON SOURCE LINES 68-71
 
-Simulate the drive and plot the results. The control system computes its flux and
-torque estimates from the measured currents, so the current-sensor errors appear in
-the actual torque. In synchronous coordinates, the offsets cause a ripple at the
-stator frequency, and the gain mismatch between the phases causes a ripple at twice
-the stator frequency. Therefore, the ripple frequency follows the speed. An offset or
-a gain error common to all three phases would cause no ripple: the common offset is a
-zero-sequence component, which is removed in the space-vector transformation, and the
-common gain error only scales the currents. Note that the currents in the figure are
-the measured currents in the estimated rotor coordinates, while the torque `tau_m` is
-the actual torque of the machine model.
+Simulate the drive and plot the results. The offsets cause a torque ripple at the
+stator frequency and the gain mismatch at twice the stator frequency. The plotted
+currents are the measured ones, while the torque is the actual one.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 71-75
 
 .. code-block:: Python
 
@@ -192,7 +185,7 @@ the actual torque of the machine model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.599 seconds)
+   **Total running time of the script:** (0 minutes 8.240 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sensor_errors_fvc.py:

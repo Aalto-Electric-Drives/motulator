@@ -21,12 +21,11 @@
 10-kVA, DC bus, GFL
 ===================
 
-This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter
-and a strong grid. The DC-bus dynamics are modeled. The control system includes a DC-bus
-voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current
-reference generator, and a PI-type current controller.
+This example extends :doc:`/grid_examples/grid_following/plot_10kva_gfl` by modeling
+the DC-bus dynamics. The control system additionally includes a DC-bus voltage
+controller.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-17
+.. GENERATED FROM PYTHON SOURCE LINES 12-16
 
 .. code-block:: Python
 
@@ -41,11 +40,11 @@ reference generator, and a PI-type current controller.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
@@ -60,11 +59,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-31
+.. GENERATED FROM PYTHON SOURCE LINES 24-30
 
 .. code-block:: Python
 
@@ -81,11 +80,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-41
+.. GENERATED FROM PYTHON SOURCE LINES 32-40
 
 .. code-block:: Python
 
@@ -104,11 +103,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-51
+.. GENERATED FROM PYTHON SOURCE LINES 42-50
 
 .. code-block:: Python
 
@@ -127,11 +126,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-58
+.. GENERATED FROM PYTHON SOURCE LINES 52-57
 
 .. code-block:: Python
 
@@ -167,7 +166,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.095 seconds)
+   **Total running time of the script:** (0 minutes 1.049 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py:

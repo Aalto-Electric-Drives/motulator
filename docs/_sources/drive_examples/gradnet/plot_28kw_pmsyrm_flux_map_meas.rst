@@ -23,8 +23,10 @@
 
 This example trains a GradNet flux-linkage map for a 10-pole 28-kW PM synchronous
 reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.
+The procedure is the same as in
+:doc:`/drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-17
+.. GENERATED FROM PYTHON SOURCE LINES 11-19
 
 .. code-block:: Python
 
@@ -43,11 +45,11 @@ reluctance machine (Brusa HSM1.10.18.04) from a measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
-Get nominal and base values, needed for figures only.
+Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -62,11 +64,11 @@ Get nominal and base values, needed for figures only.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Set up the paths and parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-33
+.. GENERATED FROM PYTHON SOURCE LINES 27-35
 
 .. code-block:: Python
 
@@ -85,11 +87,11 @@ Set up the paths and parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Train the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-48
+.. GENERATED FROM PYTHON SOURCE LINES 37-50
 
 .. code-block:: Python
 
@@ -113,11 +115,11 @@ Train the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Create the GradNet model and its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-54
+.. GENERATED FROM PYTHON SOURCE LINES 52-56
 
 .. code-block:: Python
 
@@ -132,11 +134,11 @@ Create the GradNet model and its callable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Load the dataset for comparison and split it into training and validation sets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-61
+.. GENERATED FROM PYTHON SOURCE LINES 58-63
 
 .. code-block:: Python
 
@@ -152,11 +154,11 @@ Load the dataset for comparison and split it into training and validation sets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Plot the flux map.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-99
+.. GENERATED FROM PYTHON SOURCE LINES 65-101
 
 .. code-block:: Python
 
@@ -220,11 +222,11 @@ Plot the flux map.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-101
+.. GENERATED FROM PYTHON SOURCE LINES 102-103
 
 Print error metrics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-103
+.. GENERATED FROM PYTHON SOURCE LINES 103-105
 
 .. code-block:: Python
 
@@ -246,7 +248,7 @@ Print error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.652 seconds)
+   **Total running time of the script:** (0 minutes 0.630 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_28kw_pmsyrm_flux_map_meas.py:

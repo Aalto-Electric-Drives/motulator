@@ -48,7 +48,7 @@ observer and the compensation method are similar to [#Hin2010]_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 23-24
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 24-28
 
@@ -65,21 +65,19 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-34
+.. GENERATED FROM PYTHON SOURCE LINES 29-32
 
-Away from the duty-ratio limits, the duty-ratio error caused by the dead time `t_d` is
-`t_d/(2*T_s)*sign(i)` in each phase, where `i` is the phase current and `T_s` is the
-half carrier period, equal to the sampling period. As in [#Hin2010]_, the signum
-function is replaced with a smooth arctangent function, which approximates the
-effect of the parasitic capacitances of the power devices at low currents.
+The dead time causes a duty-ratio error that depends on the sign of the phase current.
+As in [#Hin2010]_, the signum function is replaced with a smooth arctangent function,
+which approximates the effect of the parasitic capacitances at low currents.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-44
+.. GENERATED FROM PYTHON SOURCE LINES 32-42
 
 .. code-block:: Python
 
 
     t_d = 2e-6  # Dead time (s)
-    T_s = 125e-6  # Sampling period (s), the default value in CurrentVectorControllerCfg
+    T_s = 125e-6  # Sampling period (s)
 
 
     def smooth_sign(i):
@@ -94,13 +92,13 @@ effect of the parasitic capacitances of the power devices at low currents.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-48
+.. GENERATED FROM PYTHON SOURCE LINES 43-46
 
 Configure the system model. The Γ-equivalent machine model with main-flux saturation
 is used. The parameters are based on the measured data of a 2.2-kW machine
 [#Qu2012]_. The dead time is a parameter of the converter.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-63
+.. GENERATED FROM PYTHON SOURCE LINES 46-61
 
 .. code-block:: Python
 
@@ -126,13 +124,13 @@ is used. The parameters are based on the measured data of a 2.2-kW machine
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-67
+.. GENERATED FROM PYTHON SOURCE LINES 62-65
 
 Configure the control system. If the duty-ratio error is given, the PWM compensates
 for it, and the realized voltage fed to the observer includes it. The speed
 reference is reversed under the load torque, leading to the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-81
+.. GENERATED FROM PYTHON SOURCE LINES 65-79
 
 .. code-block:: Python
 
@@ -141,7 +139,7 @@ reference is reversed under the load torque, leading to the regenerating mode.
     def create_control_system(pwm=None):
         est_par = par  # Assume the machine model is perfectly known
         cfg = control.CurrentVectorControllerCfg(
-            psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, sensorless=True
+            psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, T_s=T_s, sensorless=True
         )
         vector_ctrl = control.CurrentVectorController(est_par, cfg)
         speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
@@ -157,13 +155,13 @@ reference is reversed under the load torque, leading to the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-85
+.. GENERATED FROM PYTHON SOURCE LINES 80-83
 
 Simulate without the compensation. The voltage error caused by the dead time
 corrupts the flux and speed estimates. After the speed reversal, the drive fails in
 the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-90
+.. GENERATED FROM PYTHON SOURCE LINES 83-88
 
 .. code-block:: Python
 
@@ -184,12 +182,12 @@ the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-93
+.. GENERATED FROM PYTHON SOURCE LINES 89-91
 
 Simulate with the compensation, using the same duty-ratio error model as in the
 system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-101
+.. GENERATED FROM PYTHON SOURCE LINES 91-99
 
 .. code-block:: Python
 
@@ -213,7 +211,7 @@ system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-111
+.. GENERATED FROM PYTHON SOURCE LINES 100-109
 
 .. rubric:: References
 
@@ -228,7 +226,7 @@ system model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.910 seconds)
+   **Total running time of the script:** (0 minutes 21.141 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:

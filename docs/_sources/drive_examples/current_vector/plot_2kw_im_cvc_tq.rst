@@ -88,14 +88,12 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-46
+.. GENERATED FROM PYTHON SOURCE LINES 36-44
 
 .. code-block:: Python
 
 
-    est_par = control.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    est_par = par  # Assume accurate model parameter estimates
     cfg = control.CurrentVectorControllerCfg(
         psi_s_nom=base.psi, i_s_max=1.5 * base.i, sensorless=True
     )
@@ -109,11 +107,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Set the torque reference and the actual speed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-54
+.. GENERATED FROM PYTHON SOURCE LINES 46-52
 
 .. code-block:: Python
 
@@ -130,11 +128,11 @@ Set the torque reference and the actual speed.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-60
+.. GENERATED FROM PYTHON SOURCE LINES 54-58
 
 .. code-block:: Python
 
@@ -157,7 +155,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.859 seconds)
+   **Total running time of the script:** (0 minutes 6.508 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_tq.py:

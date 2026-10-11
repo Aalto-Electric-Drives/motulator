@@ -42,7 +42,7 @@ synchronous reluctance machine (SyRM) drive.
 
 .. GENERATED FROM PYTHON SOURCE LINES 17-18
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-22
 
@@ -100,8 +100,8 @@ Configure the control system, including the saturation model.
     flux_map = curr_map.as_magnetic_model(psi_d_range, psi_q_range).invert()
 
     # Plot the flux maps
-    utils.plot_map(flux_map, "d", base)
-    utils.plot_map(flux_map, "q", base)
+    utils.plot_map(flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
+    utils.plot_map(flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2), "z": (-0.5, 0.5)})
 
     # Parameter estimates
     est_par = control.SaturatedSynchronousMachinePars(
@@ -241,7 +241,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.525 seconds)
+   **Total running time of the script:** (0 minutes 11.907 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py:

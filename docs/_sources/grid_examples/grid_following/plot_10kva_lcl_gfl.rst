@@ -21,12 +21,11 @@
 10-kVA, LCL filter, GFL
 =======================
 
-This example simulates a 10-kVA grid-following (GFL) converter connected to a strong
-grid through an LCL filter. The control system includes a phase-locked loop (PLL) to
-synchronize with the grid, a current reference generator, and a PI-type current
-controller. The LCL-filter dynamics are not taken into account in the control system.
+This example modifies :doc:`/grid_examples/grid_following/plot_10kva_gfl` by connecting
+the converter to the grid through an LCL filter. The LCL-filter dynamics are not taken
+into account in the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-15
+.. GENERATED FROM PYTHON SOURCE LINES 12-14
 
 .. code-block:: Python
 
@@ -39,11 +38,11 @@ controller. The LCL-filter dynamics are not taken into account in the control sy
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
@@ -58,11 +57,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-31
+.. GENERATED FROM PYTHON SOURCE LINES 22-30
 
 .. code-block:: Python
 
@@ -81,11 +80,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-41
+.. GENERATED FROM PYTHON SOURCE LINES 32-40
 
 .. code-block:: Python
 
@@ -104,11 +103,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Set external references.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-48
+.. GENERATED FROM PYTHON SOURCE LINES 42-47
 
 .. code-block:: Python
 
@@ -124,11 +123,11 @@ Set external references.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Create the simulation object and simulate it.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-54
+.. GENERATED FROM PYTHON SOURCE LINES 49-53
 
 .. code-block:: Python
 
@@ -143,11 +142,11 @@ Create the simulation object and simulate it.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Plot the results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-59
+.. GENERATED FROM PYTHON SOURCE LINES 55-58
 
 .. code-block:: Python
 
@@ -181,7 +180,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.107 seconds)
+   **Total running time of the script:** (0 minutes 1.082 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_lcl_gfl.py:

@@ -68,7 +68,7 @@ Compute base values based on the nominal values.
 
 Configure the machine parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-36
+.. GENERATED FROM PYTHON SOURCE LINES 28-34
 
 .. code-block:: Python
 
@@ -76,9 +76,7 @@ Configure the machine parameters.
     par = model.InductionMachineInvGammaPars(
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
-    est_par = control.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    est_par = par  # Assume accurate model parameter estimates
 
 
 
@@ -87,13 +85,13 @@ Configure the machine parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-40
+.. GENERATED FROM PYTHON SOURCE LINES 35-38
 
 Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
 discrete-time design compensates for the delays itself, which is taken into account
 in the PWM configuration.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-69
+.. GENERATED FROM PYTHON SOURCE LINES 38-67
 
 .. code-block:: Python
 
@@ -133,11 +131,11 @@ in the PWM configuration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Plot the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-90
+.. GENERATED FROM PYTHON SOURCE LINES 69-88
 
 .. code-block:: Python
 
@@ -147,7 +145,7 @@ Plot the current responses in per-unit values.
         t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
         ax1.plot(t, i_s.real, ls, ds="steps-post", label=label)
         ax2.plot(t, i_s.imag, ls, ds="steps-post", label=label)
-    i_s_ref = res_disc.ctrl.ref.i_s / base.i
+    t, i_s_ref = res_disc.ctrl.t, res_disc.ctrl.ref.i_s / base.i
     ax1.plot(t, i_s_ref.real, "k:", ds="steps-post", label="reference")
     ax2.plot(t, i_s_ref.imag, "k:", ds="steps-post", label="reference")
     ax1.set_ylabel(r"$i_\mathrm{d}$ (p.u.)")
@@ -172,7 +170,7 @@ Plot the current responses in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-93
+.. GENERATED FROM PYTHON SOURCE LINES 89-91
 
 At this bandwidth, the continuous-time design results in poorly damped oscillations,
 while the discrete-time design is well damped.
@@ -180,7 +178,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.556 seconds)
+   **Total running time of the script:** (0 minutes 4.375 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:

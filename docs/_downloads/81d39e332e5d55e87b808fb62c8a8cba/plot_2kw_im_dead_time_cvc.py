@@ -20,20 +20,18 @@ from motulator.common.utils import dead_time_error
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
-# Away from the duty-ratio limits, the duty-ratio error caused by the dead time `t_d` is
-# `t_d/(2*T_s)*sign(i)` in each phase, where `i` is the phase current and `T_s` is the
-# half carrier period, equal to the sampling period. As in [#Hin2010]_, the signum
-# function is replaced with a smooth arctangent function, which approximates the
-# effect of the parasitic capacitances of the power devices at low currents.
+# The dead time causes a duty-ratio error that depends on the sign of the phase current.
+# As in [#Hin2010]_, the signum function is replaced with a smooth arctangent function,
+# which approximates the effect of the parasitic capacitances at low currents.
 
 t_d = 2e-6  # Dead time (s)
-T_s = 125e-6  # Sampling period (s), the default value in CurrentVectorControllerCfg
+T_s = 125e-6  # Sampling period (s)
 
 
 def smooth_sign(i):
@@ -69,7 +67,7 @@ def create_model():
 def create_control_system(pwm=None):
     est_par = par  # Assume the machine model is perfectly known
     cfg = control.CurrentVectorControllerCfg(
-        psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, sensorless=True
+        psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, T_s=T_s, sensorless=True
     )
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)

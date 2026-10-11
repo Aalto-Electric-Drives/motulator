@@ -45,7 +45,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-19
 
-Set nominal and base values.
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-23
 
@@ -246,7 +246,7 @@ Print error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.437 seconds)
+   **Total running time of the script:** (0 minutes 0.423 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_meas.py:

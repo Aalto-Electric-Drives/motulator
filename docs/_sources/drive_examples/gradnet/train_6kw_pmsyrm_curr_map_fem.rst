@@ -37,7 +37,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmon
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-17
 
-Set nominal and base values.
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 17-21
 

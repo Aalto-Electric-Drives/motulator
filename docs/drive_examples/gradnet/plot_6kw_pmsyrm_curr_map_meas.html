@@ -208,7 +208,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
@@ -216,10 +215,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -533,7 +532,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.</p>
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="nn">.</span><span class="nn">gradnet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gn</span><span class="w">
 </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span><span class="w">
 </span></pre></div></div>
-<p>Set nominal and base values.</p>
+<p>Compute base values based on the nominal values.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">nom</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.NominalValues" title="motulator.drive.utils.NominalValues"><span class="n">utils</span><span class="o">.</span><span class="n">NominalValues</span></a><span class="p">(</span><span class="n">U</span><span class="o">=</span><span class="mi">460</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="mf">8.8</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="mf">5.6e3</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">29.7</span><span class="p">)</span><span class="w">
 </span><span class="n">base</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-utils-BaseValues sphx-glr-backref-type-py-method reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.BaseValues.from_nominal" title="motulator.drive.utils.BaseValues.from_nominal"><span class="n">utils</span><span class="o">.</span><span class="n">BaseValues</span><span class="o">.</span><span class="n">from_nominal</span></a><span class="p">(</span><span class="n">nom</span><span class="p">,</span> <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
@@ -612,7 +611,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Current-map error metrics: rmse=0.016 p.u., max=0.079 p.u., std=0.010 p.u.
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.484 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.463 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-gradnet-plot-6kw-pmsyrm-curr-map-meas-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/c2276c832fdb23af0f6a06c5df274748/plot_6kw_pmsyrm_curr_map_meas.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_6kw_pmsyrm_curr_map_meas.ipynb</span></code></a></p>

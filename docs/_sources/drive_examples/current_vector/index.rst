@@ -72,18 +72,18 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
 
 .. only:: html
 
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
     :alt:
 
-  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
+  :doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, CVC</div>
     </div>
 
 
@@ -106,6 +106,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html
@@ -118,23 +135,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, CVC</div>
-    </div>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_sat_cvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, CVC</div>
     </div>
 
 
@@ -202,10 +202,10 @@ These examples are for current-vector control (CVC) of induction and synchronous
    /drive_examples/current_vector/plot_7kw_syrm_cvc
    /drive_examples/current_vector/plot_2kw_im_cvc_tq
    /drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc
-   /drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt
-   /drive_examples/current_vector/plot_2kw_im_dead_time_cvc
-   /drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc
    /drive_examples/current_vector/plot_2kw_im_sat_cvc
+   /drive_examples/current_vector/plot_2kw_im_dead_time_cvc
+   /drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt
+   /drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc
    /drive_examples/current_vector/plot_2kw_im_cvc_discrete
    /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc
    /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete

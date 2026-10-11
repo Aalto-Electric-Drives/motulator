@@ -99,23 +99,6 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
-
-.. only:: html
-
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_5kw_pmsyrm_thor_sat_fvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, FVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. The machine model is parametrized using the flux map data, measured using the constant-speed test.">
 
 .. only:: html
@@ -145,6 +128,5 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
    /drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc
    /drive_examples/flux_vector/plot_2kw_im_sat_fvc
    /drive_examples/flux_vector/plot_7kw_syrm_sat_fvc
-   /drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc
    /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc
 

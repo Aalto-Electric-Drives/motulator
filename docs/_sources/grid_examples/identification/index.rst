@@ -25,7 +25,7 @@ These examples demonstrate numerical identification of grid converter output adm
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 10-kVA grid-following (GFL) converter.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 10-kVA grid-following (GFL) converter. The converter and grid models are the same as in /grid_examples/grid_following/plot_10kva_gfl.">
 
 .. only:: html
 
@@ -42,7 +42,7 @@ These examples demonstrate numerical identification of grid converter output adm
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter. The converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm.">
 
 .. only:: html
 

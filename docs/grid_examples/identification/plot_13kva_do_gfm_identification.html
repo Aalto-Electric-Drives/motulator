@@ -208,7 +208,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
@@ -216,10 +215,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -525,7 +524,8 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="kva-do-gfm-converter-output-admittance-identification">
 <span id="sphx-glr-grid-examples-identification-plot-13kva-do-gfm-identification-py"></span><h1>12.5-kVA, DO-GFM, converter output admittance identification<a class="headerlink" href="#kva-do-gfm-converter-output-admittance-identification" title="Link to this heading">#</a></h1>
 <p>This example demonstrates converter output admittance identification using a 12.5-kVA
-disturbance-observer-based grid-forming (DO-GFM) converter.</p>
+disturbance-observer-based grid-forming (DO-GFM) converter. The converter and grid
+models are the same as in <a class="reference internal" href="../grid_forming/plot_13kva_do_gfm.html"><span class="doc">12.5-kVA, DO-GFM</span></a>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">control</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span><span class="w">
 </span></pre></div></div>
 <p>Compute base values based on the nominal values.</p>
@@ -576,7 +576,7 @@ disturbance-observer-based grid-forming (DO-GFM) converter.</p>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_identification_002.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_identification_002.png" alt="plot 13kva do gfm identification" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_plot_13kva_do_gfm_identification_003.png" srcset="../../_images/sphx_glr_plot_13kva_do_gfm_identification_003.png" alt="plot 13kva do gfm identification" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (5 minutes 38.015 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (5 minutes 30.181 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-grid-examples-identification-plot-13kva-do-gfm-identification-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/520bb5cd851c33806567c577d9615a28/plot_13kva_do_gfm_identification.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_13kva_do_gfm_identification.ipynb</span></code></a></p>

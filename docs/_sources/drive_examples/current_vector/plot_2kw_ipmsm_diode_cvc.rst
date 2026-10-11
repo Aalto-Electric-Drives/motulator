@@ -43,7 +43,7 @@ rectifier.
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-19
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 19-23
 
@@ -190,7 +190,7 @@ quantities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.121 seconds)
+   **Total running time of the script:** (0 minutes 10.595 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py:

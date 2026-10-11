@@ -25,11 +25,9 @@ This example simulates sensorless current-vector control (CVC) of a 2.2-kW induc
 motor (IM) drive. The magnetic saturation is included in the machine model, while the
 control system uses constant parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-17
+.. GENERATED FROM PYTHON SOURCE LINES 12-15
 
 .. code-block:: Python
-
-    from math import pi
 
     import motulator.drive.control.im as control
     from motulator.drive import model, utils
@@ -41,11 +39,11 @@ control system uses constant parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 16-17
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 17-21
 
 .. code-block:: Python
 
@@ -60,12 +58,12 @@ Compute base values based on the nominal values (just for figures).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-26
+.. GENERATED FROM PYTHON SOURCE LINES 22-24
 
 The main-flux saturation in the system model is modeled based on [#Qu2012]_. The
 default parameters correspond to the measured data of a 2.2-kW machine.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-33
+.. GENERATED FROM PYTHON SOURCE LINES 24-31
 
 .. code-block:: Python
 
@@ -83,11 +81,11 @@ default parameters correspond to the measured data of a 2.2-kW machine.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-46
+.. GENERATED FROM PYTHON SOURCE LINES 33-44
 
 .. code-block:: Python
 
@@ -100,7 +98,7 @@ Configure the system model.
     machine = model.InductionMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
     converter = model.VoltageSourceConverter(u_dc=540)
-    mdl = model.Drive(machine, mechanics, converter, pwm=False, delay=1)
+    mdl = model.Drive(machine, mechanics, converter)
 
 
 
@@ -109,11 +107,14 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-48
+.. GENERATED FROM PYTHON SOURCE LINES 45-49
 
-Configure the control system.
+Configure the control system. The speed controller is a standard PI controller with
+directly given gains. Alternatively, `SpeedController` sets the gains of a 2DOF PI
+controller based on the inertia estimate and the bandwidth, which avoids the overshoot
+in the speed reference tracking.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-62
+.. GENERATED FROM PYTHON SOURCE LINES 49-62
 
 .. code-block:: Python
 
@@ -127,8 +128,7 @@ Configure the control system.
         psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, sensorless=True
     )
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
-    speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
-    # speed_ctrl = control.PIController(k_p=1, k_i=1)
+    speed_ctrl = control.PIController(k_p=1, k_i=10)
     ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 
@@ -173,7 +173,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
     sim = model.Simulation(mdl, ctrl)
     res = sim.simulate(t_stop=1.5)
-    utils.plot(res, base)  # Plot results in per-unit values
+    utils.plot(res, base)
 
 
 
@@ -198,7 +198,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.703 seconds)
+   **Total running time of the script:** (0 minutes 5.540 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_sat_cvc.py:

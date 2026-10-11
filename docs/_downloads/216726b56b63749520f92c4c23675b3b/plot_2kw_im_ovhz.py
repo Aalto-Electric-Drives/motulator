@@ -33,9 +33,7 @@ mdl = model.Drive(machine, mechanics, converter)
 # %%
 # Configure the control system.
 
-est_par = control.InductionMachineInvGammaPars(
-    n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-)
+est_par = par  # Assume accurate model parameter estimates
 cfg = control.ObserverBasedVHzControllerCfg(psi_s_nom=base.psi, i_s_max=1.5 * base.i)
 vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
 ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 120)

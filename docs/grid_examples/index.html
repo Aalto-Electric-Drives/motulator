@@ -212,7 +212,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../drive_examples/flux_vector/plot_5kw_pmsyrm_thor_sat_fvc.html">5.1-kW saturated PM-SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
 </details></li>
@@ -220,10 +219,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -539,10 +538,10 @@
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"></div><section id="grid-following-control">
 <h2>Grid-Following Control<a class="headerlink" href="#grid-following-control" title="Link to this heading">#</a></h2>
 <p>These examples demonstrate grid-following (GFL) control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass-filtered grid voltage.</p>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The LCL-filter dynamics are not taken into account in the control system."><img alt="" src="../_images/sphx_glr_plot_10kva_lcl_gfl_thumb.png" />
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example modifies /grid_examples/grid_following/plot_10kva_gfl by connecting the converter to the grid through an LCL filter. The LCL-filter dynamics are not taken into account in the control system."><img alt="" src="../_images/sphx_glr_plot_10kva_lcl_gfl_thumb.png" />
 <p><a class="reference internal" href="grid_following/plot_10kva_lcl_gfl.html"><span class="doc">10-kVA, LCL filter, GFL</span></a></p>
   <div class="sphx-glr-thumbnail-title">10-kVA, LCL filter, GFL</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter and a strong grid. The DC-bus dynamics are modeled. The control system includes a DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller."><img alt="" src="../_images/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example extends /grid_examples/grid_following/plot_10kva_gfl by modeling the DC-bus dynamics. The control system additionally includes a DC-bus voltage controller."><img alt="" src="../_images/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png" />
 <p><a class="reference internal" href="grid_following/plot_10kva_dc_bus_gfl.html"><span class="doc">10-kVA, DC bus, GFL</span></a></p>
   <div class="sphx-glr-thumbnail-title">10-kVA, DC bus, GFL</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-based current controller."><img alt="" src="../_images/sphx_glr_plot_10kva_gfl_thumb.png" />
@@ -563,13 +562,13 @@
 <p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming converter control based on a disturbance observer, “IEEE Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
 </aside>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates grid-forming (GFM) converter using reference-feedforward power-synchronization control (RFPSC). The converter is connected to a weak grid."><img alt="" src="../_images/sphx_glr_plot_13kva_rfpsc_gfm_thumb.png" />
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA grid-forming (GFM) converter using reference-feedforward power-synchronization control (RFPSC). The converter is connected to a weak grid. The converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm."><img alt="" src="../_images/sphx_glr_plot_13kva_rfpsc_gfm_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_rfpsc_gfm.html"><span class="doc">12.5-kVA, RFPSC-GFM</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, RFPSC-GFM</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter, connected to a weak grid. The converter output voltage and the active power are directly controlled. Grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter, connected to a weak grid. The converter output voltage and the active power are directly controlled. Grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation. A grid-voltage sag in this weak grid is simulated in /grid_examples/grid_forming/plot_13kva_do_gfm_sag."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_do_gfm.html"><span class="doc">12.5-kVA, DO-GFM</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter during a grid-voltage sag in a weak grid. The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u. The active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_. Without this limitation (i.e., if i_d_max is not given), the converter loses synchronism during the sag."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_sag_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter during a grid-voltage sag in a weak grid. Apart from the sag, the converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm. The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u. The active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_sag_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_sag.html"><span class="doc">12.5-kVA, DO-GFM, grid-voltage sag</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM, grid-voltage sag</div>
 </div></div></section>
@@ -583,10 +582,10 @@
 <p>Määttä, Kukkola, Seppänen, Hinkkanen, “Open-source Python tool for grid converter output admittance identification,” 2026, <a class="reference external" href="https://arxiv.org/abs/2607.10653">https://arxiv.org/abs/2607.10653</a></p>
 </aside>
 </aside>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 10-kVA grid-following (GFL) converter."><img alt="" src="../_images/sphx_glr_plot_10kva_gfl_identification_thumb.png" />
+<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 10-kVA grid-following (GFL) converter. The converter and grid models are the same as in /grid_examples/grid_following/plot_10kva_gfl."><img alt="" src="../_images/sphx_glr_plot_10kva_gfl_identification_thumb.png" />
 <p><a class="reference internal" href="identification/plot_10kva_gfl_identification.html"><span class="doc">10-kVA, GFL, converter output admittance identification</span></a></p>
   <div class="sphx-glr-thumbnail-title">10-kVA, GFL, converter output admittance identification</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_identification_thumb.png" />
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter. The converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_identification_thumb.png" />
 <p><a class="reference internal" href="identification/plot_13kva_do_gfm_identification.html"><span class="doc">12.5-kVA, DO-GFM, converter output admittance identification</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM, converter output admittance identification</div>
 </div></div><div class="toctree-wrapper compound">

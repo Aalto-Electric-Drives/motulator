@@ -21,7 +21,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to a strong grid through an LCL filter. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller. The LCL-filter dynamics are not taken into account in the control system.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example modifies /grid_examples/grid_following/plot_10kva_gfl by connecting the converter to the grid through an LCL filter. The LCL-filter dynamics are not taken into account in the control system.">
 
 .. only:: html
 
@@ -38,7 +38,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter and a strong grid. The DC-bus dynamics are modeled. The control system includes a DC-bus voltage controller, a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-type current controller.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example extends /grid_examples/grid_following/plot_10kva_gfl by modeling the DC-bus dynamics. The control system additionally includes a DC-bus voltage controller.">
 
 .. only:: html
 

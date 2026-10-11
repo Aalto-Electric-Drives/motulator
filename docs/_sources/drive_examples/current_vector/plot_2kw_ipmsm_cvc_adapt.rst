@@ -46,7 +46,7 @@ error of 25%.
 
 .. GENERATED FROM PYTHON SOURCE LINES 21-22
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 22-26
 
@@ -177,7 +177,7 @@ Plot the actual and estimated values for flux linkages.
     plt.plot(
         res.ctrl.t, abs(res.ctrl.fbk.psi_s) / base.psi, label=r"$\hat{\psi}_\mathrm{s}$"
     )
-    plt.axhline(0.545 / base.psi, color="k", linestyle=":", label=r"$\psi_\mathrm{f}$")
+    plt.axhline(par.psi_f / base.psi, color="k", linestyle=":", label=r"$\psi_\mathrm{f}$")
     plt.plot(res.ctrl.t, res.ctrl.fbk.psi_f / base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
     plt.xlabel("Time (s)")
     plt.ylabel("Flux linkage (p.u.)")
@@ -210,7 +210,7 @@ Plot the actual and estimated values for flux linkages.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.531 seconds)
+   **Total running time of the script:** (0 minutes 5.318 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py:

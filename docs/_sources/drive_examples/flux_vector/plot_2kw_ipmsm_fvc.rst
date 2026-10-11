@@ -42,7 +42,7 @@ permanent-magnet synchronous machine (IPMSM) drive.
 
 .. GENERATED FROM PYTHON SOURCE LINES 17-18
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 18-22
 
@@ -149,7 +149,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.719 seconds)
+   **Total running time of the script:** (0 minutes 7.383 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_fvc.py:

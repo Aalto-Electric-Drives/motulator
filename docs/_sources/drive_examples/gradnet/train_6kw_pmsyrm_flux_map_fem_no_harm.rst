@@ -37,7 +37,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset without spatial har
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-17
 
-Set nominal and base values.
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 17-21
 
@@ -108,24 +108,22 @@ Create the GradNet model and its callable.
 
 .. GENERATED FROM PYTHON SOURCE LINES 59-60
 
-Load the dataset for comparison and split it into training and validation sets.
+Load the validation data, i.e., the complement of the training data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-66
+.. GENERATED FROM PYTHON SOURCE LINES 60-64
 
 .. code-block:: Python
 
 
-    train_data, val_data = gn.get_training_data(
-        str(dataset_path), base=base, subsample=subsample
-    )
+    _, val_data = gn.get_training_data(str(dataset_path), base=base, subsample=subsample)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Print statistical error metrics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-70
+.. GENERATED FROM PYTHON SOURCE LINES 66-68
 
 .. code-block:: Python
 

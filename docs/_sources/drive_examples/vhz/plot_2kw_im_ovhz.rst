@@ -87,14 +87,12 @@ Configure the system model.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-43
+.. GENERATED FROM PYTHON SOURCE LINES 35-41
 
 .. code-block:: Python
 
 
-    est_par = control.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    est_par = par  # Assume accurate model parameter estimates
     cfg = control.ObserverBasedVHzControllerCfg(psi_s_nom=base.psi, i_s_max=1.5 * base.i)
     vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
     ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 120)
@@ -106,11 +104,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-50
+.. GENERATED FROM PYTHON SOURCE LINES 43-48
 
 .. code-block:: Python
 
@@ -126,11 +124,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-56
+.. GENERATED FROM PYTHON SOURCE LINES 50-54
 
 .. code-block:: Python
 
@@ -153,7 +151,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.188 seconds)
+   **Total running time of the script:** (0 minutes 3.038 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_ovhz.py:

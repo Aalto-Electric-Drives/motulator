@@ -22,9 +22,10 @@
 =======================================================
 
 This example demonstrates converter output admittance identification using a 10-kVA
-grid-following (GFL) converter.
+grid-following (GFL) converter. The converter and grid models are the same as in
+:doc:`/grid_examples/grid_following/plot_10kva_gfl`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 11-13
+.. GENERATED FROM PYTHON SOURCE LINES 12-14
 
 .. code-block:: Python
 
@@ -37,11 +38,11 @@ grid-following (GFL) converter.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-15
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-19
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
@@ -56,11 +57,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-21
+.. GENERATED FROM PYTHON SOURCE LINES 21-22
 
 Configure the identification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-32
+.. GENERATED FROM PYTHON SOURCE LINES 22-33
 
 .. code-block:: Python
 
@@ -82,11 +83,11 @@ Configure the identification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 34-35
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-40
+.. GENERATED FROM PYTHON SOURCE LINES 35-41
 
 .. code-block:: Python
 
@@ -103,11 +104,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-53
+.. GENERATED FROM PYTHON SOURCE LINES 43-54
 
 .. code-block:: Python
 
@@ -129,11 +130,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-60
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: Python
 
@@ -176,7 +177,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 46.136 seconds)
+   **Total running time of the script:** (5 minutes 39.383 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_10kva_gfl_identification.py:

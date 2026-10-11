@@ -23,9 +23,10 @@
 
 This example simulates sensorless vector control of a saturated 6.7-kW synchronous
 reluctance machine (SyRM). Square-wave signal injection with a simple phase-locked loop
-is used. Cross-saturation errors are compensated for using flux maps.
+is used, as in :doc:`/drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj`.
+Cross-saturation errors are compensated for using flux maps.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-18
+.. GENERATED FROM PYTHON SOURCE LINES 13-19
 
 .. code-block:: Python
 
@@ -42,11 +43,11 @@ is used. Cross-saturation errors are compensated for using flux maps.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-20
+.. GENERATED FROM PYTHON SOURCE LINES 20-21
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 20-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-25
 
 .. code-block:: Python
 
@@ -61,11 +62,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-37
+.. GENERATED FROM PYTHON SOURCE LINES 27-38
 
 .. code-block:: Python
 
@@ -87,11 +88,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-56
+.. GENERATED FROM PYTHON SOURCE LINES 40-57
 
 .. code-block:: Python
 
@@ -119,11 +120,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-68
+.. GENERATED FROM PYTHON SOURCE LINES 59-69
 
 .. code-block:: Python
 
@@ -144,11 +145,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-70
+.. GENERATED FROM PYTHON SOURCE LINES 70-71
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-75
+.. GENERATED FROM PYTHON SOURCE LINES 71-76
 
 .. code-block:: Python
 
@@ -169,11 +170,11 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Plot also the angles.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-91
+.. GENERATED FROM PYTHON SOURCE LINES 78-92
 
 .. code-block:: Python
 
@@ -187,7 +188,7 @@ Plot also the angles.
         label=r"$\hat \vartheta_\mathrm{m}$",
     )
     plt.legend()
-    plt.xlim(0, 4)
+    plt.xlim(0, t_stop)
     plt.xlabel("Time (s)")
     plt.ylabel("Electrical angle (rad)")
     plt.show()
@@ -206,7 +207,7 @@ Plot also the angles.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.249 seconds)
+   **Total running time of the script:** (0 minutes 22.309 seconds)
 
 
 .. _sphx_glr_download_drive_examples_signal_inj_plot_7kw_syrm_signal_inj.py:

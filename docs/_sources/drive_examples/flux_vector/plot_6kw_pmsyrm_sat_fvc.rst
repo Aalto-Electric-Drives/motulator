@@ -56,7 +56,7 @@ limited due to the comparatively large q-axis inductance.
 
 .. GENERATED FROM PYTHON SOURCE LINES 30-31
 
-Compute base values based on the nominal values (just for figures).
+Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 31-35
 
@@ -366,7 +366,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.123 seconds)
+   **Total running time of the script:** (0 minutes 14.491 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:
