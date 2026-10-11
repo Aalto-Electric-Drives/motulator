@@ -19,7 +19,7 @@ import motulator.drive.control.sm as control
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
 base = utils.BaseValues.from_nominal(nom, n_p=3)
@@ -65,16 +65,9 @@ ctrl.set_speed_ref(lambda t: ((t > 0.2) * 0.5 - (t > 1.2) * 0.4) * base.w_M)
 mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
 
 # %%
-# Simulate the drive and plot the results. The control system computes its flux and
-# torque estimates from the measured currents, so the current-sensor errors appear in
-# the actual torque. In synchronous coordinates, the offsets cause a ripple at the
-# stator frequency, and the gain mismatch between the phases causes a ripple at twice
-# the stator frequency. Therefore, the ripple frequency follows the speed. An offset or
-# a gain error common to all three phases would cause no ripple: the common offset is a
-# zero-sequence component, which is removed in the space-vector transformation, and the
-# common gain error only scales the currents. Note that the currents in the figure are
-# the measured currents in the estimated rotor coordinates, while the torque `tau_m` is
-# the actual torque of the machine model.
+# Simulate the drive and plot the results. The offsets cause a torque ripple at the
+# stator frequency and the gain mismatch at twice the stator frequency. The plotted
+# currents are the measured ones, while the torque is the actual one.
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=2)

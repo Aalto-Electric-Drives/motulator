@@ -2,10 +2,9 @@
 10-kVA, LCL filter, GFL
 =======================
 
-This example simulates a 10-kVA grid-following (GFL) converter connected to a strong
-grid through an LCL filter. The control system includes a phase-locked loop (PLL) to
-synchronize with the grid, a current reference generator, and a PI-type current
-controller. The LCL-filter dynamics are not taken into account in the control system.
+This example modifies :doc:`/grid_examples/grid_following/plot_10kva_gfl` by connecting
+the converter to the grid through an LCL filter. The LCL-filter dynamics are not taken
+into account in the control system.
 
 """
 

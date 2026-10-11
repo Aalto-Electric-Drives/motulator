@@ -18,7 +18,7 @@ import motulator.drive.control.sm as control
 from motulator.drive import model, utils
 
 # %%
-# Compute base values based on the nominal values (just for figures).
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
 base = utils.BaseValues.from_nominal(nom, n_p=3)
@@ -74,7 +74,7 @@ plt.plot(
 plt.plot(
     res.ctrl.t, abs(res.ctrl.fbk.psi_s) / base.psi, label=r"$\hat{\psi}_\mathrm{s}$"
 )
-plt.axhline(0.545 / base.psi, color="k", linestyle=":", label=r"$\psi_\mathrm{f}$")
+plt.axhline(par.psi_f / base.psi, color="k", linestyle=":", label=r"$\psi_\mathrm{f}$")
 plt.plot(res.ctrl.t, res.ctrl.fbk.psi_f / base.psi, label=r"$\hat{\psi}_\mathrm{f}$")
 plt.xlabel("Time (s)")
 plt.ylabel("Flux linkage (p.u.)")

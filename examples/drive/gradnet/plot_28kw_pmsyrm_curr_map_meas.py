@@ -4,6 +4,8 @@
 
 This example trains a GradNet current map for a 10-pole 28-kW PM synchronous reluctance
 machine (Brusa HSM1.10.18.04) from a measured dataset.
+The procedure is the same as in
+:doc:`/drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas`.
 
 """
 
@@ -15,7 +17,7 @@ import motulator.drive.gradnet as gn
 from motulator.drive import utils
 
 # %%
-# Set nominal and base values, needed for figures only.
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=283, I=78, f=408, P=25e3, tau=49)
 base = utils.BaseValues.from_nominal(nom, n_p=5)

@@ -13,7 +13,7 @@ import motulator.drive.gradnet as gn
 from motulator.drive import utils
 
 # %%
-# Set nominal and base values.
+# Compute base values based on the nominal values.
 
 nom = utils.NominalValues(U=460, I=8.8, f=60, P=5.6e3, tau=29.7)
 base = utils.BaseValues.from_nominal(nom, n_p=2)

@@ -2,8 +2,10 @@
 12.5-kVA, RFPSC-GFM
 ===================
 
-This example simulates grid-forming (GFM) converter using reference-feedforward
-power-synchronization control (RFPSC). The converter is connected to a weak grid.
+This example simulates a 12.5-kVA grid-forming (GFM) converter using
+reference-feedforward power-synchronization control (RFPSC). The converter is connected
+to a weak grid. The converter and grid models are the same as in
+:doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`.
 
 """
 
