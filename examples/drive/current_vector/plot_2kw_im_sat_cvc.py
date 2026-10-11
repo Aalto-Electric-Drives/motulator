@@ -9,8 +9,6 @@ control system uses constant parameters.
 """
 
 # %%
-from math import pi
-
 import motulator.drive.control.im as control
 from motulator.drive import model, utils
 
@@ -44,7 +42,10 @@ converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system.
+# Configure the control system. The speed controller is a standard PI controller with
+# directly given gains. Alternatively, `SpeedController` sets the gains of a 2DOF PI
+# controller based on the inertia estimate and the bandwidth, which avoids the overshoot
+# in the speed reference tracking.
 
 # Machine model parameter estimates
 est_par = control.InductionMachineInvGammaPars(
@@ -55,7 +56,7 @@ cfg = control.CurrentVectorControllerCfg(
     psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, sensorless=True
 )
 vector_ctrl = control.CurrentVectorController(est_par, cfg)
-speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
+speed_ctrl = control.PIController(k_p=1, k_i=10)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%

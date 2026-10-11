@@ -7,8 +7,7 @@ converter during a grid-voltage sag in a weak grid. Apart from the sag, the conv
 and grid models are the same as in :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`.
 The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u.
 The active-power reference is limited to a realizable level, prioritizing the reactive
-current [#Maa2026]_. Without this limitation (i.e., if `i_d_max` is not given), the
-converter loses synchronism during the sag.
+current [#Maa2026]_.
 
 """
 
