@@ -244,8 +244,8 @@ class SpeedFluxObserver:
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
     T_s : float
-        Sampling period (s). The discrete-time poles are placed at
-        ``exp(-alpha_o*T_s)``.
+        Sampling period (s). The poles of the ideal sensored estimation-error dynamics
+        are placed at ``exp(-alpha_o*T_s)``.
 
     """
 

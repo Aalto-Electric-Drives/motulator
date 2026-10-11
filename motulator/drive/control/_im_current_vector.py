@@ -251,7 +251,7 @@ class CurrentVectorControllerCfg:
     alpha_o : float, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
-        speed estimation gain the same.
+        speed estimation gain approximately the same.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the rotor angular speed.
     w_s_nom : float, optional
@@ -292,7 +292,7 @@ class CurrentVectorControllerCfg:
         """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
             alpha = 2 * pi * 60 if self.sensorless else 2 * pi * 400
-            # With J, the double pole at alpha/2 keeps the speed gain k_w the same
+            # With J, the double pole at alpha/2 keeps the speed gain k_w about the same
             self.alpha_o = alpha if self.J is None else 0.5 * alpha
 
 

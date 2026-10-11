@@ -162,7 +162,7 @@ class FluxVectorControllerCfg:
     alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
-        keeps the speed estimation gain the same.
+        keeps the speed estimation gain approximately the same.
     alpha_ref : float, optional
         Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float] | None, optional
@@ -211,7 +211,7 @@ class FluxVectorControllerCfg:
         """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
             alpha = 2 * pi * 50 if self.sensorless else 2 * pi * 400
-            # With J, the triple pole at alpha/sqrt(3) keeps the speed gain k_w the same
+            # With J, the triple pole at alpha/sqrt(3) keeps the gain k_w about the same
             self.alpha_o = alpha if self.J is None else alpha / sqrt(3)
 
 

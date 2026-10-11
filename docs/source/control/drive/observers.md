@@ -31,7 +31,7 @@ which corresponds to a first-order low-pass filter of the true speed. The full-o
 
 The observer structure {eq}`speed_obs` was originally proposed for sensored servo drives {cite}`Lor1991` and for signal-injection methods {cite}`Kim2003`. We use it also in model-based sensorless control, where the error signal comes from the flux observer instead of a measured speed or position.
 
-The speed observer is updated using the forward Euler method. To place the discrete-time poles at $z = \e^{-\alphao\Ts}$, the pole $\alphao$ is replaced with $(1 - \e^{-\alphao\Ts})/\Ts$ in the gain formulas below.
+The speed observer is updated using the forward Euler method. To place the poles of the ideal sensored estimation-error dynamics at $z = \e^{-\alphao\Ts}$, the pole $\alphao$ is replaced with $(1 - \e^{-\alphao\Ts})/\Ts$ in the gain formulas below.
 
 ## For Induction Machines
 

@@ -583,3 +583,34 @@ def test_speed_observer_poles(machine: str, J: float | None) -> None:
     # The states are updated using the forward Euler method
     z = np.linalg.eigvals(np.eye(len(A)) + T_s * A)
     assert z == pytest.approx(np.full(len(A), np.exp(-alpha_o * T_s)), abs=1e-4)
+
+
+@pytest.mark.parametrize("machine", ["sm", "im"])
+def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
+    """The default sensored speed estimation is stable at T_s = 1 ms."""
+    if machine == "im":
+        cfg = im_control.FluxVectorControllerCfg(
+            psi_s_nom=1.04, i_s_max=10.6, sensorless=False, T_s=1e-3
+        )
+        vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
+        mdl = im_drive()
+    else:
+        par = sm_control.SynchronousMachinePars(
+            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+        )
+        cfg = sm_control.FluxVectorControllerCfg(
+            i_s_max=6.5, sensorless=False, T_s=1e-3
+        )
+        vector_ctrl = sm_control.FluxVectorController(par, cfg)
+        mdl = ipmsm_drive(False)
+    ctrl = im_control.VectorControlSystem(
+        vector_ctrl, im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
+    )
+    ctrl.set_speed_ref(lambda t: 50.0 * (t > 0.05))
+    mdl.mechanics.set_external_load_torque(lambda t: 7.0 * (t > 0.3))
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.6)
+
+    end = res.ctrl.t > 0.55
+    w_M = np.interp(res.ctrl.t, res.mdl.t, res.mdl.machine.w_M)
+    assert np.mean(w_M[end]) == pytest.approx(50.0, abs=0.5)
+    assert res.ctrl.fbk.w_M[end] == pytest.approx(w_M[end], abs=0.5)
