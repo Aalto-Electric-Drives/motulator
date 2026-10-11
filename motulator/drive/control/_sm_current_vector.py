@@ -232,7 +232,13 @@ class CurrentVectorController:
         else:
             self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
-            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
+            par,
+            cast(float, cfg.alpha_o),
+            cfg.k_o,
+            cfg.k_f,
+            cfg.sensorless,
+            cfg.J,
+            T_s=cfg.T_s,
         )
         self.par = par
         self.cfg = cfg

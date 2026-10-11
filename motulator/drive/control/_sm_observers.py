@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from math import pi
 
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver, hold_equivalent
+from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -243,6 +243,9 @@ class SpeedFluxObserver:
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
+    T_s : float
+        Sampling period (s). The discrete-time poles are placed at
+        ``exp(-alpha_o*T_s)``.
 
     """
 
@@ -253,8 +256,11 @@ class SpeedFluxObserver:
         k_o: Callable[[float], float],
         k_f: Callable[[float], float],
         J: float | None = None,
+        *,
+        T_s: float,
     ) -> None:
         # Configure observer gains for critically damped dynamics
+        alpha_o = matched_pole(alpha_o, T_s)
         if J is None:
             k_theta = 2 * alpha_o
             k_w = alpha_o**2
@@ -326,6 +332,8 @@ def create_speed_flux_observer(
     k_f: Callable[[float], float] | None = None,
     sensorless: bool = True,
     J: float | None = None,
+    *,
+    T_s: float,
 ) -> SpeedFluxObserver:
     """
     Create a flux observer with speed estimation.
@@ -353,6 +361,8 @@ def create_speed_flux_observer(
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
+    T_s : float
+        Sampling period (s), see {class}`SpeedFluxObserver`.
 
     Returns
     -------
@@ -364,7 +374,7 @@ def create_speed_flux_observer(
         k_o = default_sensorless_k_o(par) if sensorless else (lambda w_m: 2 * pi * 15)
     k_f = (lambda w_m: 0) if k_f is None else k_f
 
-    return SpeedFluxObserver(par, alpha_o, k_o, k_f, J)
+    return SpeedFluxObserver(par, alpha_o, k_o, k_f, J, T_s=T_s)
 
 
 def create_vhz_observer(

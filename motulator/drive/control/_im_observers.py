@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from math import inf
 
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver, hold_equivalent
+from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
@@ -229,6 +229,9 @@ class SpeedFluxObserver:
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
+    T_s : float
+        Sampling period (s). The discrete-time poles are placed at
+        ``exp(-alpha_o*T_s)``.
 
     """
 
@@ -238,8 +241,11 @@ class SpeedFluxObserver:
         alpha_o: float,
         k_o: Callable[[float], complex],
         J: float | None = None,
+        *,
+        T_s: float,
     ) -> None:
         # Configure observer gains for critically damped dynamics
+        alpha_o = matched_pole(alpha_o, T_s)
         if J is None:
             k_w = alpha_o
             k_tau = 0.0
@@ -301,6 +307,8 @@ def create_speed_flux_observer(
     k_o: Callable[[float], complex] | None = None,
     sensorless: bool = True,
     J: float | None = None,
+    *,
+    T_s: float,
 ) -> SpeedFluxObserver:
     """
     Create a flux observer with speed estimation.
@@ -326,6 +334,8 @@ def create_speed_flux_observer(
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
+    T_s : float
+        Sampling period (s), see {class}`SpeedFluxObserver`.
 
     Returns
     -------
@@ -340,7 +350,7 @@ def create_speed_flux_observer(
     if k_o is None:
         k_o = default_sensorless_k_o(par) if sensorless else default_k_o_sensored
 
-    return SpeedFluxObserver(par, alpha_o, k_o, J)
+    return SpeedFluxObserver(par, alpha_o, k_o, J, T_s=T_s)
 
 
 def create_vhz_observer(
