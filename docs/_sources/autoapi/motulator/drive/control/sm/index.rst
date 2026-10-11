@@ -169,7 +169,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, u_s_zoh_ab, i_s_ab, w_M_meas, theta_M_meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
       Get the feedback signals.
@@ -385,8 +385,8 @@ Module Contents
    `compute_output`, selects between these: `h = 0` gives purely model-based
    (sensorless) operation, `h = 1` relies on the external signal alone, and
    intermediate values blend the two. The magnetic saturation is taken into account
-   based on the provided machine model. The PM-flux linkage can also be estimated
-   [#Tuo2018]_.
+   based on the provided machine model. The flux estimate is corrected and predicted
+   using a hold-equivalent discrete-time model, cf. [#Hin2018]_.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -424,13 +424,13 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, eps_ext = 0.0, h = 0.0, *, u_s_zoh_ab)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, w_M, eps_ext = 0.0, h = 0.0)
 
       
       Compute the feedback signals for the control system.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the previous and
-                     the ongoing sampling periods.
+      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
+                     sampling period, i.e., from this sampling instant to the next one.
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
@@ -441,9 +441,6 @@ Module Contents
       :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
                 based error signal is used exclusively.
       :type h: float, optional
-      :param u_s_zoh_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
-                         period.
-      :type u_s_zoh_ab: complex
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
@@ -562,7 +559,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, u_s_zoh_ab, i_s_ab, w_M_meas, theta_M_meas)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
       Get the feedback signals.
@@ -747,7 +744,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_feedback(u_s_ab, u_s_zoh_ab, i_s_ab, w_M_ref)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_ref)
 
       
       Get feedback signals.
@@ -1919,13 +1916,13 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0, *, u_s_zoh_ab)
+   .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0)
 
       
       Compute the feedback signals for the control system.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the previous and
-                     the ongoing sampling periods.
+      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
+                     sampling period, i.e., from this sampling instant to the next one.
       :type u_s_ab: complex
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
@@ -1934,9 +1931,6 @@ Module Contents
       :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
                 based error signal is used exclusively.
       :type h: float, optional
-      :param u_s_zoh_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
-                         period.
-      :type u_s_zoh_ab: complex
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs

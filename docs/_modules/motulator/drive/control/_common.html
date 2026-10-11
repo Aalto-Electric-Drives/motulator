@@ -470,7 +470,10 @@
   <h1>Source code for motulator.drive.control._common</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Common control functions and classes for machine drives."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span>
 
@@ -586,6 +589,38 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">d_tau_L</span></div>
 </div>
 
+
+
+<span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hold_equivalent</span><span class="p">(</span><span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Hold-equivalent discretization of a vector integrator in rotating coordinates.</span>
+
+<span class="sd">    The coefficients discretize ``d(psi)/dt = u + v - 1j*w_c*psi``, where `psi` is in</span>
+<span class="sd">    coordinates rotating at `w_c`, assuming that `u` is constant in stator coordinates</span>
+<span class="sd">    and `v` is constant in the rotating coordinates over the sampling period. Then,</span>
+<span class="sd">    ``psi(k+1) = Phi*(psi(k) + T_s*u(k)) + Gamma*v(k)``, where `u(k)` and `v(k)` are in</span>
+<span class="sd">    the coordinates at the instant `k`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    T_s : float</span>
+<span class="sd">        Sampling period (s).</span>
+<span class="sd">    w_c : float</span>
+<span class="sd">        Angular speed of the coordinate system (rad/s).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Phi : complex</span>
+<span class="sd">        Rotation over the sampling period, ``exp(-1j*w_c*T_s)``.</span>
+<span class="sd">    Gamma : complex</span>
+<span class="sd">        Input gain of the rotating-coordinate input, ``(1 - Phi)/(1j*w_c)``.</span>
+
+<span class="sd">    """</span>
+    <span class="c1"># Half-angle form, requiring a single sine-cosine pair</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">w_c</span> <span class="o">*</span> <span class="n">T_s</span>
+    <span class="n">exp_jx</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">exp_jx</span> <span class="o">*</span> <span class="n">exp_jx</span><span class="p">,</span> <span class="n">T_s</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">pi</span><span class="p">))</span> <span class="o">*</span> <span class="n">exp_jx</span>
 </pre></div>
 
                 </article>
