@@ -55,12 +55,10 @@ class FluxObserver:
     follows the same weight. The main-flux saturation can be taken into account by
     providing the saturation model via `InductionMachinePars`.
 
-    At each sampling instant, the flux estimate is corrected and then predicted to the
-    next instant using the hold-equivalent model, in which the rotation is exact, the
-    stator voltage is constant in stator coordinates, and the other terms are constant
-    in the observer coordinates, cf. [#Bot1993]_, [#Hin2018]_. The estimation error is
-    the difference between the rotor flux predictions of the current model and the
-    voltage model, cf. [#Bot1993]_.
+    The flux estimate is corrected and predicted using a hold-equivalent discrete-time
+    model, and the estimation error is the difference between the rotor flux
+    predictions of the current model and the voltage model, cf. [#Bot1993]_,
+    [#Hin2018]_.
 
     Parameters
     ----------

@@ -431,7 +431,7 @@ The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\
 
 ## Discrete-Time Implementation
 
-The flux observers {eq}`im_obs` and {eq}`sm_obs` are implemented in discrete time with the sampling period $\Ts$. At each sampling instant $k$, the flux estimate is first corrected,
+The flux observers {eq}`im_obs` and {eq}`sm_obs` are implemented in discrete time. The equations below are given for a constant sampling period $\Ts$. At each sampling instant $k$, the flux estimate is first corrected,
 
 ```{math}
 ---
@@ -459,7 +459,7 @@ label: obs_discrete_coeff
     \Gamma = \frac{1 - \Phi}{\jj\omegac}
 ```
 
-All vectors are in the observer coordinates at the instant $k$ (in synchronous machines, $\is'$ and $\us'$ are used). The rotation is exact for any $\omegac\Ts$, which keeps the estimates accurate even at high stator frequencies compared with the sampling frequency. In synchronous machines, the estimation error {eq}`sm_eo` is algebraic and needs no discretization.
+All vectors are in the observer coordinates at the instant $k$ (in synchronous machines, $\is'$ and $\us'$ are used). The exact rotation avoids the discretization error in the coordinate transformation, which is particularly useful at high stator frequencies relative to the sampling frequency. In synchronous machines, the estimation error {eq}`sm_eo` is algebraic and needs no discretization.
 
 In induction machines, the current derivative in {eq}`im_eo` is avoided by predicting the rotor flux also with the current model $\D\psiR/\D t = \RR\is - [\alpha + \jj(\omegac - \omegam)]\psiR$, which follows from {eq}`im_model_obs`. Its hold-equivalent model, with the exact rotation at $\omegac - \hatomegam$, gives
 
@@ -479,4 +479,4 @@ label: im_obs_discrete_eo
     \eo(k) = \frac{\hat{\boldsymbol{\uppsi}}_\mathrm{R,cm}(k) - \hatpsiR(k)}{\Ts}
 ```
 
-which approaches {eq}`im_eo` as $\Ts \rightarrow 0$. For $\koa = 1$ and $\kob = 0$, the corrected rotor flux equals the current-model prediction. A similar structure, in which the voltage is assumed to be constant in synchronous coordinates, is used in {cite}`Bot1993`.
+which approaches {eq}`im_eo` as $\Ts \rightarrow 0$. For $\koa = 1$ and $\kob = 0$, the corrected rotor flux equals the current-model prediction. If the sampling period varies, the estimation error is accumulated over the previous sampling period, whose length is then used in the correction {eq}`obs_discrete_corr`. A similar structure, in which the voltage is assumed to be constant in synchronous coordinates, is used in {cite}`Bot1993`.

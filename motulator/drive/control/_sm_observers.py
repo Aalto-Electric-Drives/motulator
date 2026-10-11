@@ -78,11 +78,8 @@ class FluxObserver:
     `compute_output`, selects between these: `h = 0` gives purely model-based
     (sensorless) operation, `h = 1` relies on the external signal alone, and
     intermediate values blend the two. The magnetic saturation is taken into account
-    based on the provided machine model. The PM-flux linkage can also be estimated
-    [#Tuo2018]_. At each sampling instant, the flux estimate is corrected and then
-    predicted to the next instant using the hold-equivalent model, in which the stator
-    voltage is constant in stator coordinates and the resistive voltage drop is constant
-    in the observer coordinates, cf. [#Hin2018]_.
+    based on the provided machine model. The flux estimate is corrected and predicted
+    using a hold-equivalent discrete-time model, cf. [#Hin2018]_.
 
     Parameters
     ----------
