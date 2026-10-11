@@ -1,6 +1,9 @@
 """Common control functions and classes for machine drives."""
 
-from math import inf
+from cmath import exp
+from math import inf, pi
+
+import numpy as np
 
 from motulator.common.control._controllers import PIController
 
@@ -104,3 +107,35 @@ class SpeedObserver:
 
         self.w_M += T_s * d_w_M
         self.tau_L += T_s * d_tau_L
+
+
+# %%
+def hold_equivalent(T_s: float, w_c: float) -> tuple[complex, complex]:
+    """
+    Hold-equivalent discretization of a vector integrator in rotating coordinates.
+
+    The coefficients discretize ``d(psi)/dt = u + v - 1j*w_c*psi``, where `psi` is in
+    coordinates rotating at `w_c`, assuming that `u` is constant in stator coordinates
+    and `v` is constant in the rotating coordinates over the sampling period. Then,
+    ``psi(k+1) = Phi*(psi(k) + T_s*u(k)) + Gamma*v(k)``, where `u(k)` and `v(k)` are in
+    the coordinates at the instant `k`.
+
+    Parameters
+    ----------
+    T_s : float
+        Sampling period (s).
+    w_c : float
+        Angular speed of the coordinate system (rad/s).
+
+    Returns
+    -------
+    Phi : complex
+        Rotation over the sampling period, ``exp(-1j*w_c*T_s)``.
+    Gamma : complex
+        Input gain of the rotating-coordinate input, ``(1 - Phi)/(1j*w_c)``.
+
+    """
+    # Half-angle form, requiring a single sine-cosine pair
+    x = 0.5 * w_c * T_s
+    exp_jx = exp(-1j * x)
+    return exp_jx * exp_jx, T_s * float(np.sinc(x / pi)) * exp_jx
