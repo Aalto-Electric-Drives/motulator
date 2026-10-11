@@ -154,9 +154,7 @@ class SignalInjectionObserver:
         self.theta_m: float = 0.0  # State
         self.par = par
 
-    def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, *, u_s_zoh_ab: complex
-    ) -> ObserverOutputs:
+    def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
         """Compute output."""
         # Unpack and initialize the output signals
         par = self.par
@@ -167,8 +165,7 @@ class SignalInjectionObserver:
 
         # Current and voltage vectors in (estimated) rotor coordinates
         out.i_s = exp(-1j * out.theta_m) * i_s_ab
-        out.u_s = exp(-1j * out.theta_m) * u_s_ab
-        out.u_s_zoh = exp(-1j * out.theta_m) * u_s_zoh_ab
+        out.u_s_zoh = exp(-1j * out.theta_m) * u_s_ab
 
         # Compute the mechanical position error signal
         out.eps = self.injection.compute_error(i_s_ab, out.theta_m)

@@ -495,14 +495,13 @@ def test_sm_flux_observer_update(w_M: float) -> None:
     """The flux update integrates the ongoing-period voltage in stator coordinates."""
     par = sm_control.SynchronousMachinePars(n_p=2, R_s=0, L_d=0.03, L_q=0.01, psi_f=0)
     observer = sm_control.FluxObserver(par, 0, lambda w_m: 0, lambda w_m: 0)
-    T_s, u_s_zoh_ab = 125e-6, 100 * np.exp(1j)
+    T_s, u_s_ab = 125e-6, 100 * np.exp(1j)
     psi_s_ab = 0j
     for _ in range(10):
-        # The averaged voltage (here zero) must not affect the flux estimate
-        out = observer.compute_output(0j, 0j, w_M, u_s_zoh_ab=u_s_zoh_ab)
+        out = observer.compute_output(u_s_ab, 0j, w_M)
         assert np.exp(1j * out.theta_c) * out.psi_s == pytest.approx(psi_s_ab)
         observer.update(T_s, out)
-        psi_s_ab += T_s * u_s_zoh_ab
+        psi_s_ab += T_s * u_s_ab
 
 
 def test_im_flux_observer_at_low_sampling_rate() -> None:
@@ -539,7 +538,7 @@ def test_im_flux_observer_current_model() -> None:
     psi_R = []
     for T in T_s:
         # At zero speed and with zero voltage, the voltage model keeps the flux constant
-        out = observer.compute_output(0j, i_s, 0, 0, 1, u_s_zoh_ab=0j)
+        out = observer.compute_output(0j, i_s, 0, 0, 1)
         psi_R.append(out.psi_R)
         observer.update(T, out)
     # The estimate lags the correction by one step
