@@ -428,3 +428,55 @@ label: sm_speed_obs_ro_lin
 ```
 
 The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\koomega = \alphao^2$, where $\alphao$ is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth {cite}`Tii2025a`.
+
+## Discrete-Time Implementation
+
+The flux observers {eq}`im_obs` and {eq}`sm_obs` are implemented in discrete time with the sampling period $\Ts$. At each sampling instant $k$, the flux estimate is first corrected,
+
+```{math}
+---
+label: obs_discrete_corr
+---
+    \hatpsis^+(k) = \hatpsis(k) + \Ts\left[\koa\eo(k) + \kob\eo^*(k)\right]
+```
+
+and then predicted to the next sampling instant using the hold-equivalent model, cf. {cite}`Bot1993,Hin2018`. Over the sampling period, the coordinates rotate at the constant angular speed $\omegac$, the realized stator voltage is constant in stator coordinates, and the resistive voltage drop is constant in the observer coordinates, which gives
+
+```{math}
+---
+label: obs_discrete
+---
+    \hatpsis(k+1) = \Phi\left[\hatpsis^+(k) + \Ts\us(k)\right] - \Gamma\hatRs\is(k)
+```
+
+where $\us(k)$ is the realized voltage averaged over the sampling period from $k$ to $k + 1$ and
+
+```{math}
+---
+label: obs_discrete_coeff
+---
+    \Phi = \e^{-\jj\omegac\Ts} \qquad
+    \Gamma = \frac{1 - \Phi}{\jj\omegac}
+```
+
+All vectors are in the observer coordinates at the instant $k$ (in synchronous machines, $\is'$ and $\us'$ are used). The rotation is exact for any $\omegac\Ts$, which keeps the estimates accurate even at high stator frequencies compared with the sampling frequency. In synchronous machines, the estimation error {eq}`sm_eo` is algebraic and needs no discretization.
+
+In induction machines, the current derivative in {eq}`im_eo` is avoided by predicting the rotor flux also with the current model $\D\psiR/\D t = \RR\is - [\alpha + \jj(\omegac - \omegam)]\psiR$, which follows from {eq}`im_model_obs`. Its hold-equivalent model, with the exact rotation at $\omegac - \hatomegam$, gives
+
+```{math}
+---
+label: im_obs_discrete_cm
+---
+    \hat{\boldsymbol{\uppsi}}_\mathrm{R,cm}(k+1) = \Phi_\mathrm{r}\hatpsiR^+(k) + \Gamma_\mathrm{r}\left[\hatRR\is(k) - \hatalpha\hatpsiR^+(k)\right]
+```
+
+where $\hatpsiR^+(k) = \hatpsis^+(k) - \hatLsgm\is(k)$, and $\Phi_\mathrm{r}$ and $\Gamma_\mathrm{r}$ are given by {eq}`obs_discrete_coeff` with $\omegac$ replaced by $\omegac - \hatomegam$. The estimation error is the difference between the rotor flux predictions of the current model and the voltage model,
+
+```{math}
+---
+label: im_obs_discrete_eo
+---
+    \eo(k) = \frac{\hat{\boldsymbol{\uppsi}}_\mathrm{R,cm}(k) - \hatpsiR(k)}{\Ts}
+```
+
+which approaches {eq}`im_eo` as $\Ts \rightarrow 0$. For $\koa = 1$ and $\kob = 0$, the corrected rotor flux equals the current-model prediction. A similar structure, in which the voltage is assumed to be constant in synchronous coordinates, is used in {cite}`Bot1993`.

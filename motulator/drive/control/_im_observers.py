@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from math import inf
 
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver
+from motulator.drive.control._common import SpeedObserver, hold_equivalent
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
@@ -53,6 +53,13 @@ class FluxObserver:
     follows the same weight. The main-flux saturation can be taken into account by
     providing the saturation model via `InductionMachinePars`.
 
+    At each sampling instant, the flux estimate is corrected and then predicted to the
+    next instant using the hold-equivalent model, in which the rotation is exact, the
+    stator voltage is constant in stator coordinates, and the other terms are constant
+    in the observer coordinates, cf. [#Bot1993]_, [#Hin2018]_. The estimation error is
+    the difference between the rotor flux predictions of the current model and the
+    voltage model, cf. [#Bot1993]_.
+
     Parameters
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
@@ -72,6 +79,14 @@ class FluxObserver:
        stator-resistance adaptation for speed-sensorless induction motor drives," IEEE
        Trans. Power Electron., 2010, https://doi.org/10.1109/TPEL.2009.2039650
 
+    .. [#Bot1993] Bottura, Silvino, de Resende, "A flux observer for induction machines
+       based on a time-variant discrete model," IEEE Trans. Ind. Appl., 1993,
+       https://doi.org/10.1109/28.216543
+
+    .. [#Hin2018] Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, "Observers for
+       sensorless synchronous motor drives: Framework for design and analysis," IEEE
+       Trans. Ind. Appl., 2018, https://doi.org/10.1109/TIA.2018.2858753
+
     """
 
     def __init__(
@@ -86,7 +101,7 @@ class FluxObserver:
         self.theta_c: float = 0.0
         # Other memory variables
         self._T_s: float = 0.0
-        self._old_i_s: complex = 0j
+        self._psi_R_pred: complex = 0j  # Rotor flux predicted by the current model
 
     def compute_output(
         self,
@@ -141,7 +156,7 @@ class FluxObserver:
         out.w_m = par.n_p * w_M
 
         # Rotor flux estimate
-        out.psi_R = out.psi_s - par.L_sgm * self._old_i_s
+        out.psi_R = out.psi_s - par.L_sgm * out.i_s
 
         # Slip angular frequency
         prod = out.psi_s * out.psi_R.conjugate()
@@ -151,14 +166,10 @@ class FluxObserver:
         out.w_c = out.w_s = out.w_m + out.w_r
         # out.w_c = out.w_m  # Use rotor coordinates instead of synchronous coordinates
 
-        # Estimation error
-        d_i_s = (out.i_s - self._old_i_s) / self._T_s if self._T_s > 0 else 0.0
-        out.e_o = (
-            par.L_sgm * d_i_s
-            - out.u_s
-            + (par.R_sgm + 1j * out.w_c * par.L_sgm) * out.i_s
-            - (par.alpha - 1j * out.w_m) * out.psi_R
-        )
+        # Estimation error, i.e., the difference between the rotor flux predictions of
+        # the current model and the voltage model
+        if self._T_s > 0:
+            out.e_o = (self._psi_R_pred - out.psi_R) / self._T_s
 
         # Torque estimate
         if par.L_sgm > 0:
@@ -183,18 +194,24 @@ class FluxObserver:
         proj = out.psi_R / out.psi_R.conjugate() if abs(out.psi_R) > 0.0 else 0.0
         k_o2 = (1 - out.h) * self.k_o(out.w_m) * proj
 
-        # Update the states
+        # Correct the flux estimate at the sampling instant. The estimation error has
+        # accumulated over the previous sampling period, whose length scales it.
         v_err = k_o1 * out.e_o + k_o2 * out.e_o.conjugate()
-        d_psi_s = out.u_s - par.R_s * out.i_s - 1j * out.w_c * out.psi_s + v_err
-        self.psi_s += T_s * d_psi_s
+        psi_s = out.psi_s + self._T_s * v_err
+        psi_R = psi_s - par.L_sgm * out.i_s
+
+        # Predict the voltage model and the current model to the next sampling instant.
+        # The stator voltage is constant in stator coordinates, while the other terms
+        # are constant in the observer coordinates.
+        Phi, Gamma = hold_equivalent(T_s, out.w_c)
+        self.psi_s = Phi * (psi_s + T_s * out.u_s_zoh) - Gamma * par.R_s * out.i_s
+        Phi, Gamma = hold_equivalent(T_s, out.w_c - out.w_m)
+        self._psi_R_pred = Phi * psi_R + Gamma * (par.R_R * out.i_s - par.alpha * psi_R)
         self.theta_c = wrap(self.theta_c + T_s * out.w_c)
 
         # Update the saturation model for the next sampling period
         self.par.update_psi_s(abs(self.psi_s))
-
-        # Update the sampling period and the old current value
         self._T_s = T_s
-        self._old_i_s = out.i_s
 
 
 # %%

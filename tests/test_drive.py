@@ -503,3 +503,46 @@ def test_sm_flux_observer_update(w_M: float) -> None:
         assert np.exp(1j * out.theta_c) * out.psi_s == pytest.approx(psi_s_ab)
         observer.update(T_s, out)
         psi_s_ab += T_s * u_s_zoh_ab
+
+
+def test_im_flux_observer_at_low_sampling_rate() -> None:
+    """The flux estimate is accurate even if w_s*T_s = 0.3 (50 Hz at 1 kHz)."""
+    w_M = 150.0
+    par = model.InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
+    )
+    mdl = model.Drive(
+        model.InductionMachine(par),
+        model.ExternalRotorSpeed(),
+        model.VoltageSourceConverter(u_dc=540),
+    )
+    mdl.mechanics.set_external_rotor_speed(lambda t: w_M)
+    cfg = im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6, T_s=1e-3)
+    vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
+    vector_ctrl.observer.speed_observer.w_M = w_M
+    ctrl = im_control.VectorControlSystem(vector_ctrl)
+    ctrl.set_torque_ref(lambda t: 7.0)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.5)
+
+    end = res.ctrl.t > 0.4
+    psi_s = np.interp(res.ctrl.t, res.mdl.t, np.abs(res.mdl.machine.psi_s_ab))
+    assert abs(res.ctrl.fbk.psi_s[end]) == pytest.approx(psi_s[end], rel=5e-3)
+
+
+def test_im_flux_observer_current_model() -> None:
+    """The gain k_o = 1 with h = 1 gives the current model, also if T_s varies."""
+    par = im_control.InductionMachineInvGammaPars(
+        n_p=2, R_s=0, R_R=2.1, L_sgm=0.021, L_M=0.224
+    )
+    observer = im_control.FluxObserver(par, lambda w_m: 1)
+    T_s, i_s = [1e-3, 2e-3, 0.5e-3, 1e-3] * 5, 5.0
+    psi_R = []
+    for T in T_s:
+        # At zero speed and with zero voltage, the voltage model keeps the flux constant
+        out = observer.compute_output(0j, i_s, 0, 0, 1, u_s_zoh_ab=0j)
+        psi_R.append(out.psi_R)
+        observer.update(T, out)
+    # The estimate lags the correction by one step
+    for k in range(2, len(T_s) - 1):
+        cm = psi_R[k] + T_s[k - 1] * (par.R_R * i_s - par.alpha * psi_R[k])
+        assert psi_R[k + 1] == pytest.approx(cm)

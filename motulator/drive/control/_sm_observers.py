@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from math import pi
 
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver
+from motulator.drive.control._common import SpeedObserver, hold_equivalent
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -77,7 +77,10 @@ class FluxObserver:
     (sensorless) operation, `h = 1` relies on the external signal alone, and
     intermediate values blend the two. The magnetic saturation is taken into account
     based on the provided machine model. The PM-flux linkage can also be estimated
-    [#Tuo2018]_.
+    [#Tuo2018]_. At each sampling instant, the flux estimate is corrected and then
+    predicted to the next instant using the hold-equivalent model, in which the stator
+    voltage is constant in stator coordinates and the resistive voltage drop is constant
+    in the observer coordinates, cf. [#Hin2018]_.
 
     Parameters
     ----------
@@ -211,12 +214,13 @@ class FluxObserver:
         else:
             k_o2 = (1 - out.h) * k_o1
 
-        # Update the state estimates. The flux is integrated in stator coordinates
-        # using the average voltage of the ongoing sampling period and then rotated to
-        # the coordinates of the next step.
-        v = out.u_s_zoh - par.R_s * out.i_s
+        # Correct the flux estimate at the sampling instant and predict it to the next
+        # sampling instant. The stator voltage is constant in stator coordinates, while
+        # the resistive voltage drop is constant in the observer coordinates.
         v_err = k_o1 * out.e_o + k_o2 * out.e_o.conjugate()
-        self.psi_s = exp(-1j * T_s * out.w_c) * (out.psi_s + T_s * (v + v_err))
+        psi_s = out.psi_s + T_s * v_err
+        Phi, Gamma = hold_equivalent(T_s, out.w_c)
+        self.psi_s = Phi * (psi_s + T_s * out.u_s_zoh) - Gamma * par.R_s * out.i_s
         self.theta_m = wrap(self.theta_m + T_s * out.w_c)
         self.par.psi_f += T_s * self.k_f(out.w_m) * out.eps_f
 
