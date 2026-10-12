@@ -5,6 +5,9 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from math import inf, pi
 
+import numpy as np
+
+from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
@@ -255,6 +258,11 @@ class SpeedFluxObserver:
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_o)
 
+    @property
+    def w_M(self) -> float:
+        """Mechanical angular rotor speed estimate (rad/s)."""
+        return self.speed_observer.w_M
+
     def compute_output(
         self, u_s_ab: complex, i_s_ab: complex, eps_ext: float = 0.0, h: float = 0.0
     ) -> ObserverOutputs:
@@ -289,6 +297,38 @@ class SpeedFluxObserver:
         """Update state observers."""
         self.speed_observer.update(T_s, out.eps, out.tau_M)
         self.flux_observer.update(T_s, out)
+
+
+def compute_feedback(
+    observer: SpeedFluxObserver,
+    sensorless: bool,
+    u_s_ab: complex,
+    i_s_ab: complex,
+    w_M_meas: float | None,
+) -> ObserverOutputs:
+    """
+    Compute the feedback signals in sensorless or sensored mode.
+
+    In sensored mode, the measured rotor speed gives the external speed error signal,
+    which is used exclusively (`h = 1`).
+
+    """
+    if sensorless:
+        return observer.compute_output(u_s_ab, i_s_ab)
+    if w_M_meas is None:
+        raise ValueError("Rotor speed must be provided in sensored mode")
+    return observer.compute_output(u_s_ab, i_s_ab, w_M_meas - observer.w_M, 1.0)
+
+
+def to_rotor_flux_coordinates(ts: TimeSeries) -> None:
+    """Transform the controller time series to estimated rotor flux coordinates."""
+    T = np.exp(-1j * np.angle(ts.fbk.psi_R))
+    ts.ref.u_s = T * ts.ref.u_s
+    ts.ref.u_s_lim = T * ts.ref.u_s_lim
+    ts.fbk.i_s = T * ts.fbk.i_s
+    ts.ref.i_s = T * ts.ref.i_s
+    ts.fbk.psi_s = T * ts.fbk.psi_s
+    ts.fbk.psi_R = T * ts.fbk.psi_R
 
 
 # %%

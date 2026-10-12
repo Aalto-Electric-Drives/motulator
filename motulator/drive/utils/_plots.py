@@ -127,7 +127,7 @@ def _plot_voltages(ax, ctrl, base: BaseValues) -> None:
 
 def _plot_flux_linkages(ax, ctrl, mdl, base: BaseValues) -> None:
     """Plot flux linkages."""
-    if hasattr(ctrl.ref, "psi_s"):
+    if hasattr(ctrl.ref, "psi_s") and np.any(ctrl.ref.psi_s):
         ax.plot(
             ctrl.t,
             np.abs(ctrl.ref.psi_s) / base.psi,

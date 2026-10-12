@@ -1,17 +1,21 @@
 """Flux-vector control of synchronous machine drives."""
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from math import inf, pi
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.control._pwm import PWM
-from motulator.drive.control._common import matched_pole
+from motulator.drive.control._common import (
+    FluxTorqueControllerBase,
+    References,
+    matched_pole,
+)
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
+    compute_feedback,
     create_speed_flux_observer,
     create_vhz_observer,
-    position_error,
 )
 from motulator.drive.control._sm_reference_gen import (
     ReferenceGenerator,
@@ -24,33 +28,9 @@ from motulator.drive.utils._parameters import (
 
 
 # %%
-@dataclass
-class References:
-    """Reference signals for flux-vector control."""
-
-    T_s: float = 0.0
-    tau_M: float = 0.0
-    psi_s: float = 0.0
-    u_s: complex = 0j
-    u_s_lim: complex = 0j
-    i_s: complex = 0j
-    w_M: float | None = None  # Speed reference (set by the control system)
-    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
-
-
-# %%
-@dataclass
-class Gains:
-    """Control gains for flux and torque controller."""
-
-    alpha_psi: float
-    alpha_tau: float
-    alpha_i: float
-
-
-class FluxTorqueController:
+class FluxTorqueController(FluxTorqueControllerBase):
     """
-    Flux and torque controller.
+    Flux and torque controller for synchronous machines.
 
     Parameters
     ----------
@@ -72,15 +52,9 @@ class FluxTorqueController:
         alpha_tau: float,
         alpha_i: float = 0.0,
     ) -> None:
+        super().__init__(par, alpha_psi, alpha_tau, alpha_i)
         self.par = par
-        # Integral states
-        self.x_psi: complex = alpha_i * par.psi_f
-        self.x_tau: complex = 0j
-        # Workspace variables
-        self._i_a: complex = 0j
-        self._v: complex = 0j
-        # Gains
-        self.gain = Gains(alpha_psi, alpha_tau, alpha_i)
+        self.x_psi = alpha_i * par.psi_f
 
     def _aux_current(self, psi_s: complex, i_s: complex) -> complex:
         """Auxiliary current vector."""
@@ -95,52 +69,16 @@ class FluxTorqueController:
         self, psi_s_ref: float, tau_M_ref: float, fbk: ObserverOutputs
     ) -> complex:
         """Calculate the voltage reference."""
-        par = self.par
-        gain = self.gain
-
-        # Auxiliary current and torque-production factor
         i_a = self._aux_current(fbk.psi_s, fbk.i_s)
-        c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
-
-        # Directions
-        t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau if c_tau > 0 else 1
-        t_tau = 1j * fbk.psi_s / c_tau if c_tau > 0 else 0
-
-        # If c_tau < 0, the torque cannot be controlled. In a PM machine with weak PMs,
-        # this occurs at a high flux and a small load angle (psi_s.real > 0), where the
-        # flux is reduced until the torque becomes controllable again. Beyond the MTPV
-        # limit (psi_s.real < 0 for PM machines), reducing the flux would not help.
-        if c_tau < 0 and par.psi_f > 0 and fbk.psi_s.real > 0:
+        # If the torque-production factor is negative, the torque cannot be controlled.
+        # In a PM machine with weak PMs, this occurs at a high flux and a small load
+        # angle (psi_s.real > 0), where the flux is reduced until the torque becomes
+        # controllable again. Beyond the MTPV limit (psi_s.real < 0 for PM machines),
+        # reducing the flux would not help.
+        c_tau_negative = (i_a * fbk.psi_s.conjugate()).real < 0
+        if c_tau_negative and self.par.psi_f > 0 and fbk.psi_s.real > 0:
             psi_s_ref = 0.0
-
-        # Error signals
-        e_psi = psi_s_ref - abs(fbk.psi_s)
-        e_tau = tau_M_ref - fbk.tau_M
-        e_u = gain.alpha_psi * e_psi * t_psi + gain.alpha_tau * e_tau * t_tau
-        u_i = self.x_psi * t_psi + self.x_tau * t_tau
-        e_v = u_i - gain.alpha_i * (abs(fbk.psi_s) * t_psi + fbk.tau_M * t_tau)
-
-        # Voltage reference
-        v = par.R_s * fbk.i_s + 1j * fbk.w_m * fbk.psi_s + e_v
-        u_s_ref = v + e_u
-
-        # Workspace variables for the update method
-        self._i_a = i_a
-        self._v = v
-
-        return u_s_ref
-
-    def update(self, T_s: float, fbk: ObserverOutputs) -> None:
-        """Update the integral state."""
-        par = self.par
-        gain = self.gain
-        # Error signal and gains
-        e = fbk.u_s - self._v
-        k_psi = gain.alpha_i / abs(fbk.psi_s) if abs(fbk.psi_s) > 0 else 0
-        k_tau = 1.5 * par.n_p * gain.alpha_i
-        # Update the integral states
-        self.x_psi += T_s * k_psi * (fbk.psi_s * e.conjugate()).real
-        self.x_tau += T_s * k_tau * (1j * self._i_a * e.conjugate()).real
+        return self._compute_voltage_ref(psi_s_ref, tau_M_ref, fbk, i_a, fbk.w_m)
 
 
 # %%
@@ -289,12 +227,9 @@ class FluxVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        if self.sensorless:
-            return self.observer.compute_output(u_s_ab, i_s_ab)
-        if theta_M_meas is None:
-            raise ValueError("Rotor angle must be provided in sensored mode")
-        eps = position_error(self.par.n_p, theta_M_meas, self.observer.theta_m)
-        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
+        return compute_feedback(
+            self.observer, self.sensorless, u_s_ab, i_s_ab, theta_M_meas
+        )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""

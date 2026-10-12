@@ -314,6 +314,29 @@ class SpeedFluxObserver:
         self.flux_observer.update(T_s, out)
 
 
+def compute_feedback(
+    observer: SpeedFluxObserver,
+    sensorless: bool,
+    u_s_ab: complex,
+    i_s_ab: complex,
+    theta_M_meas: float | None,
+) -> ObserverOutputs:
+    """
+    Compute the feedback signals in sensorless or sensored mode.
+
+    In sensored mode, the measured rotor angle gives the external position error
+    signal, which is used exclusively (`h = 1`).
+
+    """
+    if sensorless:
+        return observer.compute_output(u_s_ab, i_s_ab)
+    if theta_M_meas is None:
+        raise ValueError("Rotor angle must be provided in sensored mode")
+    n_p = observer.flux_observer.par.n_p
+    eps = position_error(n_p, theta_M_meas, observer.theta_m)
+    return observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
+
+
 def default_sensorless_k_o(
     par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
 ) -> Callable[[float], float]:

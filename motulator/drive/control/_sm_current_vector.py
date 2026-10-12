@@ -1,15 +1,16 @@
 """Current-vector control methods for synchronous machine drives."""
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from math import inf, pi
 
 from motulator.common.control import PWM, ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
+from motulator.drive.control._common import References
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
+    compute_feedback,
     create_speed_flux_observer,
-    position_error,
 )
 from motulator.drive.control._sm_reference_gen import (
     ReferenceGenerator,
@@ -19,21 +20,6 @@ from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
-
-
-# %%
-@dataclass
-class References:
-    """Reference signals."""
-
-    T_s: float = 0.0
-    tau_M: float = 0.0
-    psi_s: float = 0.0
-    i_s: complex = 0j
-    u_s: complex = 0j
-    u_s_lim: complex = 0j
-    w_M: float | None = None  # Speed reference (set by the control system)
-    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
 
 # %%
@@ -250,12 +236,9 @@ class CurrentVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        if self.sensorless:
-            return self.observer.compute_output(u_s_ab, i_s_ab)
-        if theta_M_meas is None:
-            raise ValueError("Rotor angle must be provided in sensored mode")
-        eps = position_error(self.par.n_p, theta_M_meas, self.observer.theta_m)
-        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
+        return compute_feedback(
+            self.observer, self.sensorless, u_s_ab, i_s_ab, theta_M_meas
+        )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""

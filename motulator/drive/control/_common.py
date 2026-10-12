@@ -1,11 +1,157 @@
 """Common control functions and classes for machine drives."""
 
 from cmath import exp
+from collections.abc import Sequence
+from dataclasses import dataclass
 from math import expm1, inf, pi
+from typing import Protocol
 
 import numpy as np
 
 from motulator.common.control._controllers import PIController
+from motulator.drive.utils._parameters import (
+    InductionMachineInvGammaPars,
+    InductionMachinePars,
+    SaturatedSynchronousMachinePars,
+    SynchronousMachinePars,
+)
+
+
+# %%
+@dataclass
+class References:
+    """Reference signals of the drive controllers."""
+
+    T_s: float = 0.0  # Sampling period for the next control step
+    tau_M: float = 0.0  # Torque reference
+    psi_s: float = 0.0  # Stator flux magnitude reference (not used in IM CVC)
+    i_s: complex = 0j  # Stator current reference (only used in CVC)
+    u_s: complex = 0j  # Stator voltage reference
+    u_s_lim: complex = 0j  # Limited voltage reference (set by the control system)
+    w_M: float | None = None  # Speed reference (set by the control system)
+    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
+
+
+# %%
+class FluxTorqueFeedbacks(Protocol):
+    """Protocol defining the feedback signals of the flux and torque controller."""
+
+    i_s: complex  # Stator current
+    u_s: complex  # Stator voltage
+    psi_s: complex  # Stator flux linkage estimate
+    tau_M: float  # Electromagnetic torque estimate
+
+
+@dataclass
+class Gains:
+    """Control gains of the flux and torque controller."""
+
+    alpha_psi: float
+    alpha_tau: float
+    alpha_i: float
+
+
+class FluxTorqueControllerBase:
+    """
+    Base class of the flux and torque controllers.
+
+    The stator flux magnitude and the electromagnetic torque are controlled in the
+    directions that decouple the two channels. The directions depend on the auxiliary
+    current, which the machine-specific subclasses compute in `compute_output`.
+
+    Parameters
+    ----------
+    par : SynchronousMachinePars | SaturatedSynchronousMachinePars | \
+        InductionMachineInvGammaPars | InductionMachinePars
+        Machine model parameters.
+    alpha_psi : float
+        Flux-control bandwidth (rad/s).
+    alpha_tau : float
+        Torque-control bandwidth (rad/s).
+    alpha_i : float, optional
+        Integral action bandwidth (rad/s), defaults to 0.
+
+    """
+
+    def __init__(
+        self,
+        par: SynchronousMachinePars
+        | SaturatedSynchronousMachinePars
+        | InductionMachineInvGammaPars
+        | InductionMachinePars,
+        alpha_psi: float,
+        alpha_tau: float,
+        alpha_i: float = 0.0,
+    ) -> None:
+        self.par = par
+        self.gain = Gains(alpha_psi, alpha_tau, alpha_i)
+        # Integral states
+        self.x_psi: float = 0.0
+        self.x_tau: float = 0.0
+        # Workspace variables for the update method
+        self._i_a: complex = 0j
+        self._u_ff: complex = 0j
+
+    def _compute_voltage_ref(
+        self,
+        psi_s_ref: float,
+        tau_M_ref: float,
+        fbk: FluxTorqueFeedbacks,
+        i_a: complex,
+        w: float,
+    ) -> complex:
+        """
+        Compute the voltage reference.
+
+        Parameters
+        ----------
+        psi_s_ref : float
+            Stator flux magnitude reference (Vs).
+        tau_M_ref : float
+            Torque reference (Nm).
+        fbk : FluxTorqueFeedbacks
+            Feedback signals.
+        i_a : complex
+            Auxiliary current (A). If zero, only the flux is controlled.
+        w : float
+            Angular speed (rad/s) of the back-emf term ``1j*w*psi_s``.
+
+        Returns
+        -------
+        complex
+            Voltage reference (V).
+
+        """
+        par, gain = self.par, self.gain
+
+        # Torque-production factor and directions
+        c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
+        t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau if c_tau > 0 else 1.0
+        t_tau = 1j * fbk.psi_s / c_tau if c_tau > 0 else 0j
+
+        # Error signals
+        e_psi = psi_s_ref - abs(fbk.psi_s)
+        e_tau = tau_M_ref - fbk.tau_M
+        e_u = gain.alpha_psi * e_psi * t_psi + gain.alpha_tau * e_tau * t_tau
+        u_i = self.x_psi * t_psi + self.x_tau * t_tau
+        e_v = u_i - gain.alpha_i * (abs(fbk.psi_s) * t_psi + fbk.tau_M * t_tau)
+
+        # Voltage reference, consisting of the feedforward and integral action (u_ff)
+        # and the proportional action (e_u)
+        u_ff = par.R_s * fbk.i_s + 1j * w * fbk.psi_s + e_v
+        self._i_a, self._u_ff = i_a, u_ff
+        return u_ff + e_u
+
+    def update(self, T_s: float, fbk: FluxTorqueFeedbacks) -> None:
+        """Update the integral states."""
+        par, gain = self.par, self.gain
+        # Error signal and gains
+        u_err = fbk.u_s - self._u_ff
+        k_psi = gain.alpha_i / abs(fbk.psi_s) if abs(fbk.psi_s) > 0 else 0.0
+        k_tau = 1.5 * par.n_p * gain.alpha_i
+        # Update the integral states
+        self.x_psi += T_s * k_psi * (fbk.psi_s * u_err.conjugate()).real
+        self.x_tau += T_s * k_tau * (1j * self._i_a * u_err.conjugate()).real
 
 
 # %%

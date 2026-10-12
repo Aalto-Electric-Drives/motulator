@@ -5,11 +5,10 @@ from collections import deque
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver, matched_pole
+from motulator.drive.control._common import References, SpeedObserver, matched_pole
 from motulator.drive.control._sm_current_vector import (
     CurrentVectorController,
     CurrentVectorControllerCfg,
-    References,
 )
 from motulator.drive.control._sm_observers import ObserverOutputs, default_alpha_o
 from motulator.drive.utils._parameters import (

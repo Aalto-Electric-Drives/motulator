@@ -1,38 +1,25 @@
 """Current-vector control methods for induction machine drives."""
 
 from cmath import exp, phase
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from copy import copy
 from dataclasses import dataclass
 from math import pi, sqrt
 
-import numpy as np
-
 from motulator.common.control import PWM, ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import clip
+from motulator.drive.control._common import References
 from motulator.drive.control._im_observers import (
     ObserverOutputs,
+    compute_feedback,
     create_speed_flux_observer,
+    to_rotor_flux_coordinates,
 )
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
 )
-
-
-# %%
-@dataclass
-class References:
-    """Reference signals for current-vector control."""
-
-    T_s: float = 0.0
-    tau_M: float = 0.0
-    u_s: complex = 0j
-    u_s_lim: complex = 0j
-    i_s: complex = 0j
-    w_M: float | None = None  # Speed reference (set by the control system)
-    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
 
 # %%
@@ -340,12 +327,9 @@ class CurrentVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        if self.sensorless:
-            return self.observer.compute_output(u_s_ab, i_s_ab)
-        if w_M_meas is None:
-            raise ValueError("Rotor speed must be provided in sensored mode")
-        eps = w_M_meas - self.observer.speed_observer.w_M
-        return self.observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
+        return compute_feedback(
+            self.observer, self.sensorless, u_s_ab, i_s_ab, w_M_meas
+        )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -367,11 +351,4 @@ class CurrentVectorController:
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
-        # Transformation to estimated rotor flux coordinates
-        T = np.exp(-1j * np.angle(ts.fbk.psi_R))
-        ts.ref.u_s = T * ts.ref.u_s
-        ts.ref.u_s_lim = T * ts.ref.u_s_lim
-        ts.fbk.i_s = T * ts.fbk.i_s
-        ts.ref.i_s = T * ts.ref.i_s
-        ts.fbk.psi_s = T * ts.fbk.psi_s
-        ts.fbk.psi_R = T * ts.fbk.psi_R
+        to_rotor_flux_coordinates(ts)
