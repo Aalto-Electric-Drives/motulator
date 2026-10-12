@@ -60,6 +60,22 @@ def set_latex_style() -> None:
 
 
 # %%
+def set_style(latex: bool) -> None:
+    """Configure matplotlib for LaTeX documents or for screen viewing."""
+    if latex:
+        set_latex_style()
+    else:
+        set_screen_style()
+
+
+def setup_time_series_plot(latex: bool) -> tuple[float, float]:
+    """Set the style and return the figure size (width, height) for time series."""
+    set_style(latex)
+    width, height = plt.rcParams["figure.figsize"]
+    return width, height * (2.2 if latex else 1.8)
+
+
+# %%
 def configure_axes(
     axes: list,
     t_lims: tuple[float, float] | None,

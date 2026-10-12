@@ -40,13 +40,6 @@ class LFilterStates:
     i_c_ab: complex = 0j
 
 
-@dataclass
-class LFilterStateHistory:
-    """State history."""
-
-    i_c_ab: list[complex] = field(default_factory=list)
-
-
 class LFilter(Subsystem):
     """
     Model of an L filter and an inductive-resistive grid.
@@ -97,7 +90,6 @@ class LFilter(Subsystem):
         self.inp: Inputs = Inputs()
         self.state: LFilterStates = LFilterStates()
         self.out: LFilterOutputs = LFilterOutputs(self.state.i_c_ab)
-        self._history: LFilterStateHistory = LFilterStateHistory()
 
     def pcc_voltage(self, state: Any, inp: Any) -> Any:
         """Compute the voltage at the point of common coupling (PCC)."""
@@ -153,7 +145,7 @@ class LFilterTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: LFilter) -> None:
         """Compute output time series from the states."""
-        self.i_c_ab = np.array(subsystem._history.i_c_ab)
+        self.i_c_ab = np.array(subsystem._history["i_c_ab"])
         self.i_g_ab = self.i_c_ab
 
     def compute_input_derived_signals(self, t: np.ndarray, subsystem: LFilter) -> None:
@@ -178,15 +170,6 @@ class LCLFilterOutputs:
     i_c_ab: complex
     u_f_ab: complex
     i_g_ab: complex
-
-
-@dataclass
-class LCLFilterStateHistory:
-    """LCL filter state history."""
-
-    i_c_ab: list[complex] = field(default_factory=list)
-    u_f_ab: list[complex] = field(default_factory=list)
-    i_g_ab: list[complex] = field(default_factory=list)
 
 
 class LCLFilter(Subsystem):
@@ -253,7 +236,6 @@ class LCLFilter(Subsystem):
         self.out: LCLFilterOutputs = LCLFilterOutputs(
             self.state.i_c_ab, self.state.u_f_ab, self.state.i_g_ab
         )
-        self._history: LCLFilterStateHistory = LCLFilterStateHistory()
 
     def pcc_voltage(self, state: Any, inp: Any) -> Any:
         """Compute the voltage at the point of common coupling (PCC)."""
@@ -329,9 +311,9 @@ class LCLFilterTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: LCLFilter) -> None:
         """Compute output time series from the states."""
-        self.i_c_ab = np.array(subsystem._history.i_c_ab)
-        self.i_g_ab = np.array(subsystem._history.i_g_ab)
-        self.u_f_ab = np.array(subsystem._history.u_f_ab)
+        self.i_c_ab = np.array(subsystem._history["i_c_ab"])
+        self.i_g_ab = np.array(subsystem._history["i_g_ab"])
+        self.u_f_ab = np.array(subsystem._history["u_f_ab"])
 
     def compute_input_derived_signals(
         self, t: np.ndarray, subsystem: LCLFilter

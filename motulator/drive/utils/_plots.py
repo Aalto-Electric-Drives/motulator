@@ -10,24 +10,10 @@ from motulator.common.model._simulation import SimulationResults
 from motulator.common.utils._plotting import (
     configure_axes,
     save_and_show,
-    set_latex_style,
-    set_screen_style,
+    set_style,
+    setup_time_series_plot,
 )
 from motulator.common.utils._utils import BaseValues, complex2abc
-
-
-# %%
-def _setup_plot(latex: bool) -> tuple[float, float]:
-    """Setup plot style and return figure dimensions."""
-    if latex:
-        set_latex_style()
-        height = plt.rcParams["figure.figsize"][1] * 2.2
-    else:
-        set_screen_style()
-        height = plt.rcParams["figure.figsize"][1] * 1.8
-
-    width = plt.rcParams["figure.figsize"][0]
-    return width, height
 
 
 # %%
@@ -209,7 +195,7 @@ def plot(
         M = r"\mathrm{m}"
 
     # Setup plot style and dimensions
-    width, height = _setup_plot(latex)
+    width, height = setup_time_series_plot(latex)
 
     # Set time limits
     if t_lims is None:
@@ -321,10 +307,7 @@ def plot_stator_waveforms(
 
     """
     # Setup plot style
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+    set_style(latex)
 
     # Process base values
     if base is None:
@@ -420,10 +403,7 @@ def plot_dc_bus_waveforms(
         return
 
     # Setup plot style
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+    set_style(latex)
 
     # Process base values
     if base is None:

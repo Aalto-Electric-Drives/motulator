@@ -26,13 +26,6 @@ class Outputs:
     exp_j_theta_g: complex = complex(1)
 
 
-@dataclass
-class StateHistory:
-    """State history."""
-
-    exp_j_theta_g: list[complex] = field(default_factory=list)
-
-
 class ThreePhaseSource(Subsystem):
     """
     Three-phase source model.
@@ -77,7 +70,6 @@ class ThreePhaseSource(Subsystem):
         self.inp = None
         self.state: States = States()
         self.out: Outputs = Outputs()
-        self._history: StateHistory = StateHistory()
 
     def generate_space_vector(self, t: Any, exp_j_theta_g: Any) -> Any:
         """Generate the space vector in stationary coordinates."""
@@ -119,7 +111,7 @@ class ThreePhaseSourceTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: ThreePhaseSource) -> None:
         """Compute output time series from the states."""
-        self.exp_j_theta_g = np.array(subsystem._history.exp_j_theta_g)
+        self.exp_j_theta_g = np.array(subsystem._history["exp_j_theta_g"])
         self.w_g = np.vectorize(get_value)(subsystem.w_g, t)
         self.theta_g = np.angle(self.exp_j_theta_g)
         self.e_g_ab = subsystem.generate_space_vector(t, self.exp_j_theta_g)
@@ -131,14 +123,6 @@ class SignalInjectionStates:
 
     exp_j_theta_g: complex = complex(1)
     exp_j_theta_e: complex = complex(1)
-
-
-@dataclass
-class SignalInjectionStateHistory:
-    """State history."""
-
-    exp_j_theta_g: list[complex] = field(default_factory=list)
-    exp_j_theta_e: list[complex] = field(default_factory=list)
 
 
 class ThreePhaseSourceWithSignalInjection(Subsystem):
@@ -190,7 +174,6 @@ class ThreePhaseSourceWithSignalInjection(Subsystem):
         self.inp = None
         self.state: SignalInjectionStates = SignalInjectionStates()
         self.out: Outputs = Outputs()
-        self._history: SignalInjectionStateHistory = SignalInjectionStateHistory()
 
     def generate_space_vector(
         self, t: Any, exp_j_theta_g: Any, exp_j_theta_e: Any
@@ -239,8 +222,8 @@ class SignalInjectionTimeSeries(SubsystemTimeSeries):
         self, t: np.ndarray, subsystem: ThreePhaseSourceWithSignalInjection
     ) -> None:
         """Compute output time series from the states."""
-        self.exp_j_theta_g = np.array(subsystem._history.exp_j_theta_g)
-        self.exp_j_theta_e = np.array(subsystem._history.exp_j_theta_e)
+        self.exp_j_theta_g = np.array(subsystem._history["exp_j_theta_g"])
+        self.exp_j_theta_e = np.array(subsystem._history["exp_j_theta_e"])
         self.w_g = np.vectorize(get_value)(subsystem.w_g, t)
         self.theta_g = np.angle(self.exp_j_theta_g)
         self.e_g_ab = subsystem.generate_space_vector(

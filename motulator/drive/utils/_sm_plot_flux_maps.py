@@ -12,6 +12,7 @@ from motulator.common.utils._plotting import (
     save_and_show,
     set_latex_style,
     set_screen_style,
+    set_style,
 )
 from motulator.common.utils._utils import BaseValues
 from motulator.drive.utils._sm_flux_maps import MagneticModel
@@ -331,10 +332,7 @@ def plot_flux_vs_current(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+    set_style(latex)
 
     # Check if the base values were given
     pu_vals = base is not None

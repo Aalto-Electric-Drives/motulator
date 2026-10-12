@@ -17,8 +17,15 @@ from motulator.drive.control._im_flux_vector import (
     ObserverBasedVHzControllerCfg,
     ReferenceGenerator,
 )
-from motulator.drive.control._im_observers import FluxObserver, SpeedFluxObserver
-from motulator.drive.utils._parameters import InductionMachineInvGammaPars
+from motulator.drive.control._im_observers import (
+    FluxObserver,
+    ObserverOutputs,
+    SpeedFluxObserver,
+)
+from motulator.drive.utils._parameters import (
+    InductionMachineInvGammaPars,
+    InductionMachinePars,
+)
 
 __all__ = [
     "PWM",
@@ -32,8 +39,10 @@ __all__ = [
     "FluxVectorController",
     "FluxVectorControllerCfg",
     "InductionMachineInvGammaPars",
+    "InductionMachinePars",
     "ObserverBasedVHzController",
     "ObserverBasedVHzControllerCfg",
+    "ObserverOutputs",
     "PIController",
     "ReferenceGenerator",
     "SpeedController",

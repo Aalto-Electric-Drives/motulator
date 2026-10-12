@@ -22,16 +22,9 @@ class SubsystemStates(Protocol):
     """Protocol for subsystem states."""
 
 
-class SubsystemStateHistory(Protocol):
-    """Protocol for subsystem state histories."""
-
-
-class Subsystem[
-    Inp: SubsystemInputs,
-    Out: SubsystemOutputs,
-    State: SubsystemStates,
-    History: SubsystemStateHistory,
-](Protocol):
+class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemStates](
+    Protocol
+):
     """
     Protocol defining the interface for all subsystems.
 
@@ -39,14 +32,16 @@ class Subsystem[
     be used with different input, output, state, and history types. The class provides
     methods for setting states, outputs, and computing state derivatives. It also
     provides methods for extending the state history and creating time-series
-    representations of the subsystem.
+    representations of the subsystem. The state history is a dict of lists, keyed by
+    the names of the state fields. The model initializes it by `init_state_history`
+    and extends it by `extend_state_history`.
 
     """
 
     inp: Inp | None
     out: Out
     state: State | None
-    _history: History | None
+    _history: dict[str, list[complex]]
 
     def set_states(self, state_list: list[complex], index: int) -> int:
         """Set states from the state list."""
@@ -64,15 +59,16 @@ class Subsystem[
         """Compute state derivatives."""
         ...
 
+    def init_state_history(self) -> None:
+        """Initialize the state history with an empty list for each state field."""
+        states = vars(self.state) if self.state is not None else {}
+        self._history = {name: [] for name in states}
+
     def extend_state_history(self, sol_y: list[list[float]], index: int) -> int:
         """Extend the state history with values from solver output."""
-        if self._history is not None:
-            for attr, value in vars(self._history).items():
-                if isinstance(value, list):
-                    value.extend(sol_y[index])
-                else:
-                    setattr(self._history, attr, list(sol_y[index]))
-                index += 1
+        for name in self._history:
+            self._history[name].extend(sol_y[index])
+            index += 1
         return index
 
     def create_time_series(self, t: np.ndarray) -> tuple[str, "SubsystemTimeSeries"]:
@@ -175,6 +171,8 @@ class Model[C: Converter]:
         self.subsystems = subsystems
         self.connections = connections
         self._history = ModelStateHistory()
+        for subsystem in subsystems:
+            subsystem.init_state_history()
 
     def get_initial_values(self) -> list[complex]:
         """Get initial values of all subsystems before the solver."""

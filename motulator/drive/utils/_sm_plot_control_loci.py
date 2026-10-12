@@ -7,11 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from cycler import cycler
 
-from motulator.common.utils._plotting import (
-    save_and_show,
-    set_latex_style,
-    set_screen_style,
-)
+from motulator.common.utils._plotting import save_and_show, set_style
 from motulator.common.utils._utils import BaseValues
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
@@ -25,10 +21,7 @@ def _setup_plot(
     i_s_vals: Any, latex: bool, base: BaseValues | None = None
 ) -> tuple[np.ndarray, bool, BaseValues]:
     """Setup common plot parameters."""
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+    set_style(latex)
     pu_vals = base is not None
     # Use SI units if no base values are given
     if base is None:
