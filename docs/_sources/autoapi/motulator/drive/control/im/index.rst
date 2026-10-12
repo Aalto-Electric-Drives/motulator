@@ -1729,6 +1729,31 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:property:: w_M
+      :type: float
+
+      
+      Mechanical angular rotor speed estimate (rad/s).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: SpeedObserver(k_w, k_tau, J)
 
    
@@ -1828,7 +1853,7 @@ Module Contents
 
 .. py:class:: VHzControlSystem(vhz_ctrl, slew_rate = inf, pwm = None)
 
-   Bases: :py:obj:`motulator.common.control._base.ControlSystem`
+   Bases: :py:obj:`DriveControlSystem`
 
 
    
@@ -1858,54 +1883,6 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(fbk)
-
-      
-      Compute controller output based on feedback.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_feedback(meas)
-
-      
-      Get feedback signals.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: get_measurement(mdl)
 
       
@@ -1930,63 +1907,11 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: modulate(T_s, u_s_ref, fbk)
-
-      
-      Compute the duty ratios from the stator voltage reference.
-
-      The reference is in the controller coordinates. Subclasses can override this
-      method, e.g., to control an output filter between the converter and the machine.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: post_process()
 
       
       Extend the post-process method.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_speed_ref(ref_fcn)
-
-      
-      Set the external speed reference.
-
-      :param ref_fcn: Speed reference (mechanical rad/s) as a function of time.
-      :type ref_fcn: Callable[[float], float]
 
 
 
@@ -2032,7 +1957,7 @@ Module Contents
 
 .. py:class:: VectorControlSystem(vector_ctrl, speed_ctrl = None, pwm = None)
 
-   Bases: :py:obj:`motulator.common.control._base.ControlSystem`
+   Bases: :py:obj:`DriveControlSystem`
 
 
    
@@ -2066,54 +1991,6 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(fbk)
-
-      
-      Compute controller output based on feedback.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_feedback(meas)
-
-      
-      Get feedback signals.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: get_measurement(mdl)
 
       
@@ -2138,63 +2015,11 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: modulate(T_s, u_s_ref, fbk)
-
-      
-      Compute the duty ratios from the stator voltage reference.
-
-      The reference is in the controller coordinates. Subclasses can override this
-      method, e.g., to control an output filter between the converter and the machine.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: post_process()
 
       
       Extend the post-process method.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_speed_ref(ref_fcn)
-
-      
-      Set the external speed reference for speed-control mode.
-
-      :param ref_fcn: Speed reference (mechanical rad/s) as a function of time.
-      :type ref_fcn: Callable[[float], float]
 
 
 

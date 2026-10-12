@@ -471,11 +471,157 @@
 <span></span><span class="sd">"""Common control functions and classes for machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">expm1</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
+    <span class="n">InductionMachinePars</span><span class="p">,</span>
+    <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+    <span class="n">SynchronousMachinePars</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">References</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Reference signals of the drive controllers."""</span>
+
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Sampling period for the next control step</span>
+    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Torque reference</span>
+    <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Stator flux magnitude reference (not used in IM CVC)</span>
+    <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator current reference (only used in CVC)</span>
+    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Stator voltage reference</span>
+    <span class="n">u_s_lim</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Limited voltage reference (set by the control system)</span>
+    <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Speed reference (set by the control system)</span>
+    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Duty ratios (set by the control system)</span>
+
+
+<span class="c1"># %%</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FluxTorqueFeedbacks</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol defining the feedback signals of the flux and torque controller."""</span>
+
+    <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator current</span>
+    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator voltage</span>
+    <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator flux linkage estimate</span>
+    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Electromagnetic torque estimate</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Gains</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Control gains of the flux and torque controller."""</span>
+
+    <span class="n">alpha_psi</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">alpha_tau</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FluxTorqueControllerBase</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Base class of the flux and torque controllers.</span>
+
+<span class="sd">    The stator flux magnitude and the electromagnetic torque are controlled in the</span>
+<span class="sd">    directions that decouple the two channels. The directions depend on the auxiliary</span>
+<span class="sd">    current, which the machine-specific subclasses compute in `compute_output`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars | \</span>
+<span class="sd">        InductionMachineInvGammaPars | InductionMachinePars</span>
+<span class="sd">        Machine model parameters.</span>
+<span class="sd">    alpha_psi : float</span>
+<span class="sd">        Flux-control bandwidth (rad/s).</span>
+<span class="sd">    alpha_tau : float</span>
+<span class="sd">        Torque-control bandwidth (rad/s).</span>
+<span class="sd">    alpha_i : float, optional</span>
+<span class="sd">        Integral action bandwidth (rad/s), defaults to 0.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span>
+        <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span>
+        <span class="o">|</span> <span class="n">InductionMachineInvGammaPars</span>
+        <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
+        <span class="n">alpha_psi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha_tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="n">Gains</span><span class="p">(</span><span class="n">alpha_psi</span><span class="p">,</span> <span class="n">alpha_tau</span><span class="p">,</span> <span class="n">alpha_i</span><span class="p">)</span>
+        <span class="c1"># Integral states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_psi</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_tau</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># Workspace variables for the update method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_i_a</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_ff</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_voltage_ref</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">psi_s_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">fbk</span><span class="p">:</span> <span class="n">FluxTorqueFeedbacks</span><span class="p">,</span>
+        <span class="n">i_a</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Compute the voltage reference.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s_ref : float</span>
+<span class="sd">            Stator flux magnitude reference (Vs).</span>
+<span class="sd">        tau_M_ref : float</span>
+<span class="sd">            Torque reference (Nm).</span>
+<span class="sd">        fbk : FluxTorqueFeedbacks</span>
+<span class="sd">            Feedback signals.</span>
+<span class="sd">        i_a : complex</span>
+<span class="sd">            Auxiliary current (A). If zero, only the flux is controlled.</span>
+<span class="sd">        w : float</span>
+<span class="sd">            Angular speed (rad/s) of the back-emf term ``1j*w*psi_s``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex</span>
+<span class="sd">            Voltage reference (V).</span>
+
+<span class="sd">        """</span>
+        <span class="n">par</span><span class="p">,</span> <span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span>
+
+        <span class="c1"># Torque-production factor and directions</span>
+        <span class="n">c_tau</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">i_a</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">t_psi</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_a</span> <span class="o">/</span> <span class="n">c_tau</span> <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
+        <span class="n">t_tau</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">/</span> <span class="n">c_tau</span> <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="n">j</span>
+
+        <span class="c1"># Error signals</span>
+        <span class="n">e_psi</span> <span class="o">=</span> <span class="n">psi_s_ref</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">e_tau</span> <span class="o">=</span> <span class="n">tau_M_ref</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span>
+        <span class="n">e_u</span> <span class="o">=</span> <span class="n">gain</span><span class="o">.</span><span class="n">alpha_psi</span> <span class="o">*</span> <span class="n">e_psi</span> <span class="o">*</span> <span class="n">t_psi</span> <span class="o">+</span> <span class="n">gain</span><span class="o">.</span><span class="n">alpha_tau</span> <span class="o">*</span> <span class="n">e_tau</span> <span class="o">*</span> <span class="n">t_tau</span>
+        <span class="n">u_i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_psi</span> <span class="o">*</span> <span class="n">t_psi</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_tau</span> <span class="o">*</span> <span class="n">t_tau</span>
+        <span class="n">e_v</span> <span class="o">=</span> <span class="n">u_i</span> <span class="o">-</span> <span class="n">gain</span><span class="o">.</span><span class="n">alpha_i</span> <span class="o">*</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">*</span> <span class="n">t_psi</span> <span class="o">+</span> <span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">*</span> <span class="n">t_tau</span><span class="p">)</span>
+
+        <span class="c1"># Voltage reference, consisting of the feedforward and integral action (u_ff)</span>
+        <span class="c1"># and the proportional action (e_u)</span>
+        <span class="n">u_ff</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">e_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_i_a</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_ff</span> <span class="o">=</span> <span class="n">i_a</span><span class="p">,</span> <span class="n">u_ff</span>
+        <span class="k">return</span> <span class="n">u_ff</span> <span class="o">+</span> <span class="n">e_u</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">FluxTorqueFeedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update the integral states."""</span>
+        <span class="n">par</span><span class="p">,</span> <span class="n">gain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span>
+        <span class="c1"># Error signal and gains</span>
+        <span class="n">u_err</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_ff</span>
+        <span class="n">k_psi</span> <span class="o">=</span> <span class="n">gain</span><span class="o">.</span><span class="n">alpha_i</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="n">k_tau</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">gain</span><span class="o">.</span><span class="n">alpha_i</span>
+        <span class="c1"># Update the integral states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_psi</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">k_psi</span> <span class="o">*</span> <span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">*</span> <span class="n">u_err</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_tau</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">k_tau</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_a</span> <span class="o">*</span> <span class="n">u_err</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
 
 
 <span class="c1"># %%</span>

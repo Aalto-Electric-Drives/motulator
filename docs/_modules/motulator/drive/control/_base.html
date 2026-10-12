@@ -557,159 +557,6 @@
         <span class="o">...</span>
 
 
-<div class="viewcode-block" id="VectorControlSystem">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">VectorControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Vector control system.</span>
-
-<span class="sd">    This class defines the interface for drive control systems. It is a generic class</span>
-<span class="sd">    that can be used with different inner controllers (such as current-vector control</span>
-<span class="sd">    and flux-vector control).</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    vector_ctrl : VectorController</span>
-<span class="sd">        Vector controller whose input is the torque reference.</span>
-<span class="sd">    speed_ctrl : SpeedController | PIController | None, optional</span>
-<span class="sd">        Speed controller. If None (default), torque-control mode is used.</span>
-<span class="sd">    pwm : PWM, optional</span>
-<span class="sd">        Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.</span>
-
-<span class="sd">    """</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">vector_ctrl</span><span class="p">:</span> <span class="n">VectorController</span><span class="p">,</span>
-        <span class="n">speed_ctrl</span><span class="p">:</span> <span class="n">SpeedController</span> <span class="o">|</span> <span class="n">PIController</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vector_ctrl</span><span class="o">.</span><span class="n">default_pwm</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">vector_ctrl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">speed_ctrl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
-
-<div class="viewcode-block" id="VectorControlSystem.set_torque_ref">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.set_torque_ref">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_torque_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Set the external torque reference for torque-control mode.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        ref_fcn : Callable[[float], float]</span>
-<span class="sd">            Torque reference (Nm) as a function of time.</span>
-
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.set_speed_ref">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.set_speed_ref">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_speed_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Set the external speed reference for speed-control mode.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        ref_fcn : Callable[[float], float]</span>
-<span class="sd">            Speed reference (mechanical rad/s) as a function of time.</span>
-
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.get_measurement">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.get_measurement">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get measurements from sensors."""</span>
-        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
-            <span class="n">w_M</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">theta_M</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">w_M</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
-            <span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_position</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.get_feedback">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.get_feedback">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
-        <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
-        <span class="c1"># control laws use the voltage averaged over the previous and ongoing periods</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
-        <span class="k">return</span> <span class="n">fbk</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.compute_output">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.compute_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Compute controller output based on feedback."""</span>
-        <span class="c1"># Speed-control mode</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-            <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">w_M_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_M</span><span class="p">)</span>
-        <span class="c1"># Torque-control mode</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">w_M_ref</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Either speed or torque reference must be set"</span><span class="p">)</span>
-        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">limited_voltage</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M_ref</span>  <span class="c1"># Store the speed reference for later use</span>
-        <span class="k">return</span> <span class="n">ref</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.modulate">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.modulate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Compute the duty ratios from the stator voltage reference.</span>
-
-<span class="sd">        The reference is in the controller coordinates. Subclasses can override this</span>
-<span class="sd">        method, e.g., to control an output filter between the converter and the machine.</span>
-
-<span class="sd">        """</span>
-        <span class="n">u_s_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ref</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.update">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.update">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Update controller states."""</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="VectorControlSystem.post_process">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.post_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeSeries</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Extend the post-process method."""</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ts</span></div>
-</div>
-
-
-
-<span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">VHzController</span><span class="p">[</span><span class="n">Ref</span><span class="p">,</span> <span class="n">Fbk</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol defining the interface for V/Hz controllers."""</span>
 
@@ -736,9 +583,192 @@
         <span class="o">...</span>
 
 
+<span class="c1"># %%</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DriveControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Base class for drive control systems.</span>
+
+<span class="sd">    This class implements the parts common to the drive control systems: the feedback</span>
+<span class="sd">    voltages, the modulation, and the speed reference. Subclasses implement</span>
+<span class="sd">    `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`</span>
+<span class="sd">    and `_compute_inner_output`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pwm : PWM</span>
+<span class="sd">        Pulse-width modulator.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_speed_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set the external speed reference.</span>
+
+<span class="sd">        In vector control, the speed reference is used in speed-control mode, i.e., if</span>
+<span class="sd">        the speed controller is given.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_fcn : Callable[[float], float]</span>
+<span class="sd">            Speed reference (mechanical rad/s) as a function of time.</span>
+
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">ref_fcn</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get the feedback signals from the inner controller."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_inner_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the references, including the speed reference `w_M`."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
+        <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
+        <span class="c1"># control laws use the voltage averaged over the previous and ongoing periods</span>
+        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inner_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
+        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
+        <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
+        <span class="k">return</span> <span class="n">fbk</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute controller output based on feedback."""</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_inner_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">limited_voltage</span>
+        <span class="k">return</span> <span class="n">ref</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Compute the duty ratios from the stator voltage reference.</span>
+
+<span class="sd">        The reference is in the controller coordinates. Subclasses can override this</span>
+<span class="sd">        method, e.g., to control an output filter between the converter and the machine.</span>
+
+<span class="sd">        """</span>
+        <span class="n">u_s_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ref</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="VectorControlSystem">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VectorControlSystem</span><span class="p">(</span><span class="n">DriveControlSystem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Vector control system.</span>
+
+<span class="sd">    This class defines the interface for drive control systems. It is a generic class</span>
+<span class="sd">    that can be used with different inner controllers (such as current-vector control</span>
+<span class="sd">    and flux-vector control).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    vector_ctrl : VectorController</span>
+<span class="sd">        Vector controller whose input is the torque reference.</span>
+<span class="sd">    speed_ctrl : SpeedController | PIController | None, optional</span>
+<span class="sd">        Speed controller. If None (default), torque-control mode is used.</span>
+<span class="sd">    pwm : PWM, optional</span>
+<span class="sd">        Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">vector_ctrl</span><span class="p">:</span> <span class="n">VectorController</span><span class="p">,</span>
+        <span class="n">speed_ctrl</span><span class="p">:</span> <span class="n">SpeedController</span> <span class="o">|</span> <span class="n">PIController</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vector_ctrl</span><span class="o">.</span><span class="n">default_pwm</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">vector_ctrl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">speed_ctrl</span>
+
+<div class="viewcode-block" id="VectorControlSystem.set_torque_ref">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.set_torque_ref">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_torque_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set the external torque reference for torque-control mode.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ref_fcn : Callable[[float], float]</span>
+<span class="sd">            Torque reference (Nm) as a function of time.</span>
+
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
+
+
+<div class="viewcode-block" id="VectorControlSystem.get_measurement">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.get_measurement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get measurements from sensors."""</span>
+        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
+            <span class="n">w_M</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">theta_M</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">w_M</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
+            <span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_position</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span>
+            <span class="n">u_s_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">theta_M</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_inner_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
+        <span class="c1"># Speed-control mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">w_M_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_M</span><span class="p">)</span>
+        <span class="c1"># Torque-control mode</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w_M_ref</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">tau_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Either speed or torque reference must be set"</span><span class="p">)</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M_ref</span>
+        <span class="k">return</span> <span class="n">ref</span>
+
+<div class="viewcode-block" id="VectorControlSystem.update">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update controller states."""</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">and</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VectorControlSystem.post_process">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TimeSeries</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Extend the post-process method."""</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">post_process</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ts</span></div>
+</div>
+
+
+
+<span class="c1"># %%</span>
 <div class="viewcode-block" id="VHzControlSystem">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">VHzControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VHzControlSystem</span><span class="p">(</span><span class="n">DriveControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    V/Hz control system.</span>
 
@@ -756,27 +786,10 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">vhz_ctrl</span><span class="p">:</span> <span class="n">VHzController</span><span class="p">,</span> <span class="n">slew_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">default_pwm</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span> <span class="o">=</span> <span class="n">vhz_ctrl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">default_pwm</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">(</span><span class="n">slew_rate</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># For storing ramp-limited speed reference</span>
-
-<div class="viewcode-block" id="VHzControlSystem.set_speed_ref">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.set_speed_ref">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_speed_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Set the external speed reference.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        ref_fcn : Callable[[float], float]</span>
-<span class="sd">            Speed reference (mechanical rad/s) as a function of time.</span>
-
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
-
 
 <div class="viewcode-block" id="VHzControlSystem.get_measurement">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.get_measurement">[docs]</a>
@@ -787,49 +800,17 @@
         <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="VHzControlSystem.get_feedback">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.get_feedback">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">)</span>
-            <span class="c1"># Voltages as in VectorControlSystem.get_feedback</span>
-            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span>
-                <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-            <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span><span class="p">)</span>
-            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
-            <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
-            <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
-            <span class="k">return</span> <span class="n">fbk</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Speed reference must be set"</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Speed reference must be set"</span><span class="p">)</span>
+        <span class="n">w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limiter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span><span class="p">)</span>
 
-
-<div class="viewcode-block" id="VHzControlSystem.compute_output">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.compute_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Compute controller output based on feedback."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_inner_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vhz_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">limited_voltage</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span>  <span class="c1"># Store the speed reference for later use</span>
-        <span class="k">return</span> <span class="n">ref</span></div>
-
-
-<div class="viewcode-block" id="VHzControlSystem.modulate">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.modulate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Compute the duty ratios from the stator voltage reference.</span>
-
-<span class="sd">        The reference is in the controller coordinates. Subclasses can override this</span>
-<span class="sd">        method, e.g., to control an output filter between the converter and the machine.</span>
-
-<span class="sd">        """</span>
-        <span class="n">u_s_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ref</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span></div>
-
+        <span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_w_M_ref</span>
+        <span class="k">return</span> <span class="n">ref</span>
 
 <div class="viewcode-block" id="VHzControlSystem.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.update">[docs]</a>
