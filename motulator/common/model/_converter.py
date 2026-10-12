@@ -16,7 +16,12 @@ import numpy as np
 
 from motulator.common.model._base import Subsystem
 from motulator.common.model._sensor import Sensor
-from motulator.common.utils._utils import abc2complex, complex2abc, empty_array
+from motulator.common.utils._utils import (
+    abc2complex,
+    complex2abc,
+    empty_array,
+    get_value,
+)
 
 
 # %%
@@ -78,8 +83,8 @@ class VoltageSourceConverter(Subsystem):
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=u_dc)
         self.state = None
 
-    def set_external_dc_current(self, i_dc: Callable[[float], float]) -> None:
-        """Set external DC current (A)."""
+    def set_external_dc_current(self, i_dc: float | Callable[[float], float]) -> None:
+        """Set external DC current (A), constant or a function of time."""
         raise NotImplementedError
 
     def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
@@ -178,8 +183,8 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
             self.u_dc
         )
 
-    def set_external_dc_current(self, i_dc: Callable[[float], float]) -> None:
-        """Set external DC current (A)."""
+    def set_external_dc_current(self, i_dc: float | Callable[[float], float]) -> None:
+        """Set external DC current (A), constant or a function of time."""
         self.inp.i_dc = i_dc
 
     def set_outputs(self, t: float) -> None:
@@ -189,12 +194,7 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives for DC-bus voltage."""
-        if callable(self.inp.i_dc):
-            i_dc = self.inp.i_dc(t)
-        elif isinstance(self.inp.i_dc, (int, float)):
-            i_dc = self.inp.i_dc
-        else:
-            i_dc = 0.0
+        i_dc = 0.0 if self.inp.i_dc is None else get_value(self.inp.i_dc, t)
         i_dc_int = self.compute_internal_dc_current(self.inp)
         d_u_dc = (i_dc - i_dc_int) / self.C_dc
         return [d_u_dc]

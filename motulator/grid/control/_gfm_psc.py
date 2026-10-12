@@ -3,8 +3,7 @@
 from cmath import exp
 from collections.abc import Sequence
 from dataclasses import dataclass
-from math import pi
-from typing import cast
+from math import pi, sqrt
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
@@ -46,12 +45,12 @@ class PowerSynchronizationControllerCfg:
 
     Parameters
     ----------
-    u_nom : float
-        Nominal grid voltage (V), line-to-neutral peak value.
-    w_nom : float
-        Nominal grid angular frequency (rad/s).
     i_max : float
         Maximum current (A), peak value.
+    u_nom : float, optional
+        Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
+    w_nom : float, optional
+        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     R : float, optional
         Total series resistance (Ω), defaults to 0.
     R_a : float | None, optional
@@ -63,17 +62,13 @@ class PowerSynchronizationControllerCfg:
 
     """
 
-    u_nom: float
-    w_nom: float
     i_max: float
+    u_nom: float = sqrt(2 / 3) * 400
+    w_nom: float = 2 * pi * 50
     R: float = 0.0
     R_a: float | None = None
     w_b: float = 2 * pi * 5
     T_s: float = 125e-6
-
-    def __post_init__(self) -> None:
-        if self.R_a is None:
-            self.R_a = 0.25 * self.u_nom / self.i_max
 
 
 class PowerSynchronizationController:
@@ -102,7 +97,7 @@ class PowerSynchronizationController:
         self.theta_c: float = 0.0
         self.i_c_flt: complex = 0j
         self.current_limiter = CurrentLimiter(cfg.i_max)
-        self.R_a = cast(float, cfg.R_a)  # Resolved in the configuration's __post_init__
+        self.R_a = 0.25 * cfg.u_nom / cfg.i_max if cfg.R_a is None else cfg.R_a
         self.k_p_psc = cfg.w_nom * self.R_a / (1.5 * cfg.u_nom**2)
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Feedbacks:

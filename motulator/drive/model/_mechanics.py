@@ -17,7 +17,7 @@ class Inputs:
     """Input variables."""
 
     tau_M: float = 0.0
-    tau_L: Callable[[float], float] = lambda t: 0.0
+    tau_L: float | Callable[[float], float] = 0.0
 
 
 @dataclass
@@ -61,17 +61,17 @@ class MechanicalSystem(Subsystem):
         self.J = J
         self.B_L = B_L
 
-    def set_external_load_torque(self, tau_L: Callable[[float], float]) -> None:
-        """Set external load torque (Nm)."""
+    def set_external_load_torque(self, tau_L: float | Callable[[float], float]) -> None:
+        """Set external load torque (Nm), constant or a function of time."""
         self.inp.tau_L = tau_L
 
     def set_external_rotor_speed(self, _) -> None:
-        """Set external rotor speed (rad/s)."""
+        """Set external rotor speed (rad/s), constant or a function of time."""
         raise NotImplementedError
 
     def compute_total_load_torque(self, t: float, w_M: float) -> float:
         """Total load torque (Nm)."""
-        return get_value(self.B_L, w_M) * w_M + self.inp.tau_L(t)
+        return get_value(self.B_L, w_M) * w_M + get_value(self.inp.tau_L, t)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -179,12 +179,12 @@ class TwoMassMechanicalSystem(Subsystem):
             exp_j_theta_M=self.state.exp_j_theta_M, w_M=self.state.w_M.real
         )
 
-    def set_external_load_torque(self, tau_L: Callable[[float], float]) -> None:
-        """Set external load torque (Nm)."""
+    def set_external_load_torque(self, tau_L: float | Callable[[float], float]) -> None:
+        """Set external load torque (Nm), constant or a function of time."""
         self.inp.tau_L = tau_L
 
     def set_external_rotor_speed(self, _) -> None:
-        """Set external rotor speed (rad/s)."""
+        """Set external rotor speed (rad/s), constant or a function of time."""
         raise NotImplementedError
 
     def compute_shaft_torque(self, theta_ML: Any, w_M: Any, w_L: Any) -> Any:
@@ -193,7 +193,7 @@ class TwoMassMechanicalSystem(Subsystem):
 
     def compute_total_load_torque(self, t: float, w_L: float) -> float:
         """Total load torque (Nm)."""
-        return get_value(self.B_L, w_L) * w_L + self.inp.tau_L(t)
+        return get_value(self.B_L, w_L) * w_L + get_value(self.inp.tau_L, t)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -288,20 +288,20 @@ class ExternalRotorSpeed(Subsystem):
         self.inp: Inputs = Inputs()
         self.state: ExternalRotorSpeedStates = ExternalRotorSpeedStates()
         self.out: Outputs = Outputs(exp_j_theta_M=self.state.exp_j_theta_M, w_M=0.0)
-        self.w_M = lambda t: 0.0  # External input
+        self.w_M: float | Callable[[float], float] = 0.0  # External input
 
-    def set_external_rotor_speed(self, w_M: Callable[[float], float]) -> None:
-        """Set external rotor speed (rad/s)."""
+    def set_external_rotor_speed(self, w_M: float | Callable[[float], float]) -> None:
+        """Set external rotor speed (rad/s), constant or a function of time."""
         self.w_M = w_M
 
-    def set_external_load_torque(self, tau_L: Callable[[float], float]) -> None:
-        """Set external load torque (Nm)."""
+    def set_external_load_torque(self, tau_L: float | Callable[[float], float]) -> None:
+        """Set external load torque (Nm), constant or a function of time."""
         raise NotImplementedError
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         # External rotor speed is fed directly to the output
-        self.out.w_M = self.w_M(t)
+        self.out.w_M = get_value(self.w_M, t)
         self.out.exp_j_theta_M = self.state.exp_j_theta_M
 
     def rhs(self, t: float) -> list[complex]:
@@ -338,6 +338,6 @@ class ExternalRotorSpeedTimeSeries(SubsystemTimeSeries):
     theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: ExternalRotorSpeed) -> None:
-        self.w_M = np.array([subsystem.w_M(t) for t in t])
+        self.w_M = np.array([get_value(subsystem.w_M, t_k) for t_k in t])
         self.exp_j_theta_M = np.array(subsystem._history["exp_j_theta_M"])
         self.theta_M = np.angle(self.exp_j_theta_M)
