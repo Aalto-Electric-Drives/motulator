@@ -1,24 +1,26 @@
 """Functions and classes for converter output admittance identification."""
 
 import multiprocessing as mp
+from collections.abc import Iterable
+from contextlib import nullcontext
 from copy import deepcopy
 from dataclasses import dataclass, field
-from datetime import datetime
-from os import environ, makedirs
-from os.path import exists, join
+from functools import partial
+from os import environ
 from time import time
-from typing import Any, Literal
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle
 from scipy.integrate import trapezoid
-from scipy.io import savemat
 
-from motulator.common.model._pwm import CarrierComparison
+from motulator.common.model import SolverCfg
 from motulator.common.utils._plotting import set_style
 from motulator.common.utils._utils import empty_array, get_value
 from motulator.grid import control, model, utils
+
+STEPS_PER_PERIOD = 10  # Minimum number of solver steps per excitation period
 
 
 # %%
@@ -30,24 +32,14 @@ class IdentificationCfg:
     Parameters
     ----------
     abs_u_e : float
-        Magnitude of the voltage excitation (V).
-    f_start : float, optional
-        Starting frequency of the voltage excitation (Hz, in dq-coordinates), defaults
-        to 1.
-    f_stop : float, optional
-        End frequency of the voltage excitation (Hz, in dq-coordinates), defaults to
-        10e3.
-    n_freqs : int, optional
-        Number of frequencies for measurement, defaults to 100.
-    spacing : Literal["log", "lin"], optional
-        The spacing used for creating the array of measurement frequencies, defaults to
-        "log". Valid options are:
-        - "log": logarithmic spacing
-        - "lin": linear spacing
-    manual_freqs : ndarray | None, optional
-        Manually specified array of frequencies (Hz) to measure admittance at. If set to
-        None, f_start, f_stop and n_freqs parameters are used to create the array of
-        frequencies. Defaults to None.
+        Magnitude of the voltage excitation (V) at the first frequency.
+    freqs : ndarray, optional
+        Excitation frequencies (Hz, in dq-coordinates), defaults to 100 logarithmically
+        spaced frequencies from 1 Hz to 10 kHz.
+    amplitude_multiplier : float, optional
+        Excitation magnitude at the last frequency relative to the first one, defaults
+        to 5. The magnitude changes linearly over the frequency array. Use 1 for a
+        constant magnitude.
     t0 : float, optional
         Stop time for initial simulating to the operating point (s), defaults to 1.0.
         Should be set large enough to reach steady-state.
@@ -64,63 +56,23 @@ class IdentificationCfg:
         Number of fundamental periods to include for calculating operating-point
         vectors, defaults to 1.
     multiprocess : bool, optional
-        If set to True, multiprocessing.Pool() is used to run the identification using
-        all available CPU cores in the system. Defaults to True.
-    filename : str | None, optional
-        If given, the identification result is saved in
-        ``data/{date}_{time}_{filename}`` (relative to the current working directory),
-        defaults to None. The file format is set by the `filetype` parameter.
-    filetype : Literal["csv", "mat"], optional
-        The filetype for saving identification results, defaults to "csv". Valid options
-        are:
-        - "csv": save results in .csv-format
-        - "mat": save results in MATLAB .mat-format
+        If True, the frequencies are simulated in parallel using all available CPU
+        cores, defaults to True.
     use_window : bool, optional
         Whether to use window function for calculating DFT, defaults to True.
-    variable_amplitude : bool, optional
-        Whether to increase the excitation signal amplitude with the frequency, defaults
-        to True.
-    amplitude_multiplier : float, optional
-        Gain value to set how much the excitation signal amplitude is increased at the
-        highest frequency compared to the lowest if `variable_amplitude` is set to True.
-        Defaults to 5.0.
 
     """
 
     abs_u_e: float
-    f_start: float = 1
-    f_stop: float = 10e3
-    n_freqs: int = 100
-    spacing: Literal["log", "lin"] = "log"
-    manual_freqs: np.ndarray | None = None
+    freqs: np.ndarray = field(default_factory=lambda: np.geomspace(1, 10e3, 100))
+    amplitude_multiplier: float = 5.0
     t0: float = 1.0
     t1: float = 0.05
     N_eval: int = 10
     n_periods_excitation: int = 4
     n_periods_init: int = 1
     multiprocess: bool = True
-    filename: str | None = None
-    filetype: Literal["csv", "mat"] = "csv"
     use_window: bool = True
-    variable_amplitude: bool = True
-    amplitude_multiplier: float = 5.0
-
-    def __post_init__(self) -> None:
-        # Create array of frequencies if not specified
-        if self.manual_freqs is None:
-            if self.spacing == "lin":
-                self.freqs = np.linspace(self.f_start, self.f_stop, self.n_freqs)
-            else:
-                self.freqs = np.geomspace(self.f_start, self.f_stop, self.n_freqs)
-        else:
-            self.freqs = self.manual_freqs
-        # Increase excitation signal amplitude with the frequency if configured
-        if self.variable_amplitude:
-            self.amplitudes = self.abs_u_e * np.linspace(
-                1.0, self.amplitude_multiplier, np.size(self.freqs)
-            )
-        else:
-            self.amplitudes = np.full(np.size(self.freqs), self.abs_u_e)
 
 
 @dataclass
@@ -131,7 +83,8 @@ class IdentificationResults:
     Contains fields for excitation signal frequency `f_e`, elements of the output
     admittance matrix `[Y_dd, Y_qd; Y_dq, Y_qq]`, and the following operating-point
     vectors (in synchronous coordinates aligned with the PCC voltage): grid current
-    `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`.
+    `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`. The
+    results can be saved, e.g., by ``scipy.io.savemat(path, dataclasses.asdict(res))``.
 
     """
 
@@ -147,62 +100,6 @@ class IdentificationResults:
 
 
 # %%
-def save_csv(data: IdentificationResults, filename: str) -> None:
-    """Save the identification results in a .csv-file."""
-    # Create the data directory if it doesn't exist
-    makedirs("data", exist_ok=True)
-
-    # Create the file path
-    timestamp = datetime.now().strftime("%Y%m%d_%H.%M_")
-    filepath = join("data", timestamp + filename + ".csv")
-
-    # Check if file already exists
-    if exists(filepath):
-        print("Warning: Overwriting already existing file")
-
-    # Get field names from the IdentificationResults dataclass
-    field_names = list(data.__dataclass_fields__.keys())
-
-    # Save data to CSV file
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(",".join(field_names) + "\n")
-        n_rows = len(data.f_e)
-
-        for i in range(n_rows):
-            row = []
-            for field_name in field_names:
-                value = getattr(data, field_name)
-
-                # Only write scalar values once in the first row
-                if isinstance(value, np.ndarray):
-                    row.append(str(value[i]))
-                else:
-                    row.append(str(value) if i == 0 else "")
-
-            f.write(",".join(row) + "\n")
-
-    print(f"Data successfully exported to {timestamp + filename}")
-
-
-def save_mat(data: IdentificationResults, filename: str) -> None:
-    """Save the identification results in a .mat-file."""
-    # Create the data directory if it doesn't exist
-    makedirs("data", exist_ok=True)
-
-    # Convert the data class to dict
-    data_dict = dict(data.__dict__.items())
-    # Create the file path
-    timestamp = datetime.now().strftime("%Y%m%d_%H.%M_")
-    filepath = join("data", timestamp + filename + ".mat")
-
-    # Check if file already exists
-    if exists(filepath):
-        print("Warning: Overwriting already existing file")
-
-    savemat(filepath, data_dict)
-    print(f"Data successfully exported to {timestamp + filename}")
-
-
 def dft(
     cfg: IdentificationCfg,
     t: np.ndarray,
@@ -235,129 +132,75 @@ def dft(
     return 2 / T * trapezoid(u * np.exp(-2j * np.pi * f * t), t)
 
 
-def copy_state(sim: model.Simulation) -> tuple[Any, Any]:
-    """Make a copy of the simulation state."""
-    mdl = deepcopy(sim.mdl)
-    ctrl = deepcopy(sim.ctrl)
-    return mdl, ctrl
-
-
 def pre_process(
     cfg: IdentificationCfg,
     mdl: model.GridConverterSystem,
     ctrl: control.GridConverterControlSystem,
-) -> tuple[model.Simulation, list[Any]]:
-    """Simulate the system to the desired operating point."""
-    # Create Simulation object and simulate
+) -> tuple[
+    model.GridConverterSystem, control.GridConverterControlSystem, IdentificationResults
+]:
+    """Simulate the system to the operating point."""
+    # Simulate the original system to the operating point
     w_g = get_value(mdl.ac_source.w_g, 0)
     T_nom = 2 * np.pi / w_g
     t_stop = np.ceil(cfg.t0 / T_nom) * T_nom + cfg.n_periods_init * T_nom
     sim = model.Simulation(deepcopy(mdl), deepcopy(ctrl), show_progress=False)
     res = sim.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
 
-    # Calculate fundamental-frequency quantities in the operating point
+    # Fundamental-frequency vectors in coordinates aligned with the PCC voltage
     f_nom = w_g * 0.5 / np.pi
     t, filt = res.mdl.t, res.mdl.ac_filter
-    i_g0 = 0.5 * dft(cfg, t, filt.i_g_ab, f_nom, initial_simulation=True)
-    e_g0 = 0.5 * dft(cfg, t, filt.e_g_ab, f_nom, initial_simulation=True)
-    u_g0 = 0.5 * dft(cfg, t, filt.u_g_ab, f_nom, initial_simulation=True)
-    u_c0 = 0.5 * dft(cfg, t, filt.u_c_ab, f_nom, initial_simulation=True)
+    vectors = [
+        0.5 * dft(cfg, t, x, f_nom, initial_simulation=True)
+        for x in (filt.i_g_ab, filt.e_g_ab, filt.u_g_ab, filt.u_c_ab)
+    ]
+    i_g0, e_g0, u_g0, u_c0 = np.exp(-1j * np.angle(vectors[2])) * np.array(vectors)
+    operating_point = IdentificationResults(i_g0=i_g0, e_g0=e_g0, u_g0=u_g0, u_c0=u_c0)
 
-    # Align coordinates with PCC voltage vector
-    theta = np.angle(u_g0)
-    i_g0 = i_g0 * np.exp(-1j * theta)
-    e_g0 = e_g0 * np.exp(-1j * theta)
-    u_g0 = u_g0 * np.exp(-1j * theta)
-    u_c0 = u_c0 * np.exp(-1j * theta)
-
-    # Create new system model and simulate to steady state
-    converter = deepcopy(mdl.converter)
+    # The PCC voltage is imposed by a stiff source with signal injection at the
+    # operating point: the grid impedance is removed, and the source has the PCC
+    # voltage magnitude and the initial frequency of the original source
     ac_filter = deepcopy(mdl.ac_filter)
-    ac_filter.L_g = 0.0
-    ac_filter.R_g = 0.0
+    ac_filter.L_g, ac_filter.R_g = 0.0, 0.0
     ac_source = model.ThreePhaseSourceWithSignalInjection(w_g=w_g, e_g=np.abs(u_g0))
-    pwm = isinstance(mdl.pwm, CarrierComparison)
-    delay = len(mdl.delay.data)
-    mdl = model.GridConverterSystem(
-        converter, ac_filter, ac_source, pwm=pwm, delay=delay
-    )
-    sim = model.Simulation(mdl, deepcopy(ctrl), show_progress=False)
-    res = sim.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
+    mdl_inj = model.GridConverterSystem(deepcopy(mdl.converter), ac_filter, ac_source)
+    mdl_inj.pwm, mdl_inj.delay = deepcopy(mdl.pwm), deepcopy(mdl.delay)
+    ctrl_inj = deepcopy(ctrl)
+    sim = model.Simulation(mdl_inj, ctrl_inj, show_progress=False)
+    sim.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
 
-    operating_point = [i_g0, e_g0, u_g0, u_c0]
-
-    return sim, operating_point
+    return mdl_inj, ctrl_inj, operating_point
 
 
 def identify(
-    cfg: IdentificationCfg, sim: model.Simulation, i: int, f_e: float
-) -> list[Any]:
-    """Calculate the output admittance at a single frequency."""
-    # 1: d-axis injection
-    mdl, ctrl = copy_state(sim)
-    mdl.ac_source.f_e = f_e
-    mdl.ac_source.u_ed = cfg.amplitudes[i]
-    # Set new stop time and simulate
-    t_stop = mdl.t0 + cfg.t1 + cfg.n_periods_excitation / f_e
-    sim_d = model.Simulation(mdl, ctrl, show_progress=False)
-    res_d = sim_d.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
-
-    # Transform the voltage and current to synchronous coordinates and
-    # calculate the DFT
-    u_g1 = np.conj(res_d.mdl.ac_source.exp_j_theta_g) * res_d.mdl.ac_filter.u_g_ab
-    t = res_d.mdl.t
-    u_gd1 = dft(cfg, t, u_g1.real, f_e)
-    u_gq1 = dft(cfg, t, u_g1.imag, f_e)
-    i_g1 = np.conj(res_d.mdl.ac_source.exp_j_theta_g) * res_d.mdl.ac_filter.i_g_ab
-    i_gd1 = dft(cfg, t, i_g1.real, f_e)
-    i_gq1 = dft(cfg, t, i_g1.imag, f_e)
-
-    # 2: q-axis injection
-    mdl, ctrl = copy_state(sim)
-    mdl.ac_source.f_e = f_e
-    mdl.ac_source.u_eq = cfg.amplitudes[i]
-    sim_q = model.Simulation(mdl, ctrl, show_progress=False)
-    res_q = sim_q.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
-
-    # DFT
-    u_g2 = np.conj(res_q.mdl.ac_source.exp_j_theta_g) * res_q.mdl.ac_filter.u_g_ab
-    t = res_q.mdl.t
-    u_gd2 = dft(cfg, t, u_g2.real, f_e)
-    u_gq2 = dft(cfg, t, u_g2.imag, f_e)
-    i_g2 = np.conj(res_q.mdl.ac_source.exp_j_theta_g) * res_q.mdl.ac_filter.i_g_ab
-    i_gd2 = dft(cfg, t, i_g2.real, f_e)
-    i_gq2 = dft(cfg, t, i_g2.imag, f_e)
-
-    # Calculate the elements of the output admittance matrix
-    I = np.array([[i_gd1, i_gd2], [i_gq1, i_gq2]])  # noqa: E741
-    U = np.array([[u_gd1, u_gd2], [u_gq1, u_gq2]])
-    inv_U = np.linalg.inv(U)
-    Y_c = -I @ inv_U
-
-    Y_dd = Y_c[0, 0]
-    Y_qd = Y_c[0, 1]
-    Y_dq = Y_c[1, 0]
-    Y_qq = Y_c[1, 1]
-    return [i, f_e, Y_dd, Y_qd, Y_dq, Y_qq]
-
-
-def post_process(
-    results: list[list[Any]], operating_point: list[Any]
-) -> IdentificationResults:
-    """Save the identification results and information about the operating point."""
-    results_array = np.vstack(results)
-    res = IdentificationResults(
-        f_e=np.real(results_array[:, 1]),
-        Y_dd=results_array[:, 2],
-        Y_qd=results_array[:, 3],
-        Y_dq=results_array[:, 4],
-        Y_qq=results_array[:, 5],
-        i_g0=operating_point[0],
-        e_g0=operating_point[1],
-        u_g0=operating_point[2],
-        u_c0=operating_point[3],
-    )
-    return res
+    cfg: IdentificationCfg,
+    mdl0: model.GridConverterSystem,
+    ctrl0: control.GridConverterControlSystem,
+    excitation: tuple[float, float],
+) -> np.ndarray:
+    """Compute the output admittance matrix at a single frequency."""
+    f_e, abs_u_e = excitation
+    U, I = np.zeros((2, 2), complex), np.zeros((2, 2), complex)  # noqa: E741
+    # Inject the excitation in the d- and q-axes, one at a time
+    for k, u_e in enumerate((abs_u_e, 1j * abs_u_e)):
+        mdl, ctrl = deepcopy(mdl0), deepcopy(ctrl0)
+        source = mdl.ac_source
+        assert isinstance(source, model.ThreePhaseSourceWithSignalInjection)
+        source.f_e, source.u_e = f_e, u_e
+        t_stop = mdl.t0 + cfg.t1 + cfg.n_periods_excitation / f_e
+        # The excitation is computed analytically, so the step size is limited to
+        # resolve its response, also at frequencies near the sampling frequency
+        solver_cfg = SolverCfg(max_step=1 / (STEPS_PER_PERIOD * f_e))
+        sim = model.Simulation(mdl, ctrl, show_progress=False, cfg=solver_cfg)
+        res = sim.simulate(t_stop=t_stop, N_eval=cfg.N_eval)
+        # Voltage and current in synchronous coordinates
+        exp_j_theta_g = res.mdl.ac_source.exp_j_theta_g
+        u_g = np.conj(exp_j_theta_g) * res.mdl.ac_filter.u_g_ab
+        i_g = np.conj(exp_j_theta_g) * res.mdl.ac_filter.i_g_ab
+        t = res.mdl.t
+        U[:, k] = dft(cfg, t, u_g.real, f_e), dft(cfg, t, u_g.imag, f_e)
+        I[:, k] = dft(cfg, t, i_g.real, f_e), dft(cfg, t, i_g.imag, f_e)
+    return -I @ np.linalg.inv(U)
 
 
 # %%
@@ -369,74 +212,62 @@ def run_identification(
     """
     Run the identification.
 
+    The system is first simulated to the operating point. Then, the output admittance
+    of the converter is identified at the PCC: the PCC voltage is imposed by a stiff
+    voltage source, whose magnitude and frequency equal those of the operating point,
+    and small-signal voltage excitations are injected in the d- and q-axes. The grid
+    impedance of `mdl` as well as any time variation and negative-sequence component of
+    its source only affect the operating point.
+
     Parameters
     ----------
     cfg : IdentificationCfg
-        Dataclass object containing the identification configuration.
+        Identification configuration.
     mdl : GridConverterSystem
-        Continuous-time system model object.
+        Continuous-time system model.
     ctrl : GridConverterControlSystem
-        Discrete-time control system object.
+        Discrete-time control system.
 
     Returns
     -------
-    res : IdentificationResults
-        Dataclass object containing the results from the identification, along with
-        information about the operating point.
+    IdentificationResults
+        Admittance matrix elements and the operating point.
+
+    Notes
+    -----
+    With carrier-comparison PWM, background switching harmonics can bias the identified
+    admittance at the excitation frequency. Results near switching harmonics and their
+    sidebands may depend strongly on the excitation amplitude and its phase relative to
+    the carrier, even when the numerical solution has converged.
 
     """
-    results = []
-    sim_op, operating_point = pre_process(cfg, mdl, ctrl)
-    t_start = time()
-
-    show_progress = False if environ.get("BUILDING_DOCS") == "1" else True
+    mdl_inj, ctrl_inj, res = pre_process(cfg, mdl, ctrl)
+    show_progress = environ.get("BUILDING_DOCS") != "1"
     if show_progress:
         print("Start identification...")
+    t_start = time()
 
-    index = 1
-    freqs = np.size(cfg.freqs)
-
-    def collect_result(result: list[Any]) -> None:
-        nonlocal index
-        results.append(result)
-        if show_progress:
-            print(f"\rFrequencies simulated: {index}/{freqs}", end="")
-        index += 1
-
-    def custom_error_callback(error: Any) -> None:
-        print(f"Error during multiprocessing: {str(error)}")
-
-    if cfg.multiprocess:
-        # Create the multiprocessing pool using all available CPUs
-        with mp.Pool(mp.cpu_count()) as pool:
-            async_results = []
-            for i, f_e in enumerate(cfg.freqs):
-                async_result = pool.apply_async(
-                    identify,
-                    args=[cfg, sim_op, i, f_e],
-                    error_callback=custom_error_callback,
-                    callback=collect_result,
-                )
-                async_results.append(async_result)
-            # Wait for all tasks to complete
-            [result.get() for result in async_results]
-        # Sort the results list along the first element (index i)
-        results.sort(key=lambda x: x[0])
-    else:
-        # Run only in single thread
-        for i, f_e in enumerate(cfg.freqs):
-            result = identify(cfg, sim_op, i=i, f_e=f_e)
-            collect_result(result)
-
+    n_freqs = np.size(cfg.freqs)
+    amplitudes = cfg.abs_u_e * np.linspace(1.0, cfg.amplitude_multiplier, n_freqs)
+    excitations = zip(cfg.freqs, amplitudes, strict=True)
+    task = partial(identify, cfg, mdl_inj, ctrl_inj)
+    Y = []
+    with mp.Pool() if cfg.multiprocess else nullcontext() as pool:
+        # Results in the order of the frequencies
+        results: Iterable[np.ndarray] = (
+            pool.imap(task, excitations) if pool else map(task, excitations)
+        )
+        for k, Y_k in enumerate(results, start=1):
+            Y.append(Y_k)
+            if show_progress:
+                print(f"\rFrequencies simulated: {k}/{n_freqs}", end="")
     if show_progress:
         print(f"\nExecution time: {(time() - t_start):.2f} s")
-    res = post_process(results, operating_point)
-    if cfg.filename is not None:
-        if cfg.filetype == "csv":
-            save_csv(res, cfg.filename)
-        elif cfg.filetype == "mat":
-            save_mat(res, cfg.filename)
 
+    Y_c = np.array(Y)
+    res.f_e = np.array(cfg.freqs, dtype=float)  # A copy, independent of cfg
+    res.Y_dd, res.Y_qd = Y_c[:, 0, 0], Y_c[:, 0, 1]
+    res.Y_dq, res.Y_qq = Y_c[:, 1, 0], Y_c[:, 1, 1]
     return res
 
 
