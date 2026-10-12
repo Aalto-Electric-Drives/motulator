@@ -9,6 +9,8 @@ grid-following (GFL) converter. The converter and grid models are the same as in
 """
 
 # %%
+import numpy as np
+
 from motulator.grid import control, model, utils
 
 # %%
@@ -21,13 +23,7 @@ base = utils.BaseValues.from_nominal(nom)
 # Configure the identification.
 
 identification_cfg = utils.IdentificationCfg(
-    abs_u_e=0.01 * base.u,
-    f_start=1,
-    f_stop=10e3,
-    n_freqs=100,
-    # Uncomment the row below to save the results in ./data of the working directory
-    # filename="gfl_admittance",
-    filetype="csv",
+    abs_u_e=0.01 * base.u, freqs=np.geomspace(1, 10e3, 100)
 )
 
 # %%
@@ -56,5 +52,9 @@ ctrl.set_reactive_power_ref(0.5 * base.p)
 
 if __name__ == "__main__":
     res = utils.run_identification(identification_cfg, mdl, ctrl)
+    # To save the results, e.g., in MATLAB format:
+    # from dataclasses import asdict
+    # from scipy.io import savemat
+    # savemat("gfl_admittance.mat", asdict(res))
     utils.plot_identification(res, plot_style="re_im")
     utils.plot_vector_identification(res, base)

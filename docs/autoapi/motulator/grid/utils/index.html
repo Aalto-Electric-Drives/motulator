@@ -682,19 +682,12 @@ factor and efficiency being less than unity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>abs_u_e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Magnitude of the voltage excitation (V).</p></li>
-<li><p><strong>f_start</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Starting frequency of the voltage excitation (Hz, in dq-coordinates), defaults
-to 1.</p></li>
-<li><p><strong>f_stop</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – End frequency of the voltage excitation (Hz, in dq-coordinates), defaults to
-10e3.</p></li>
-<li><p><strong>n_freqs</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of frequencies for measurement, defaults to 100.</p></li>
-<li><p><strong>spacing</strong> (<em>Literal</em><em>[</em><em>&quot;log&quot;</em><em>, </em><em>&quot;lin&quot;</em><em>]</em><em>, </em><em>optional</em>) – The spacing used for creating the array of measurement frequencies, defaults to
-“log”. Valid options are:
-- “log”: logarithmic spacing
-- “lin”: linear spacing</p></li>
-<li><p><strong>manual_freqs</strong> (<em>ndarray</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Manually specified array of frequencies (Hz) to measure admittance at. If set to
-None, f_start, f_stop and n_freqs parameters are used to create the array of
-frequencies. Defaults to None.</p></li>
+<li><p><strong>abs_u_e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Magnitude of the voltage excitation (V) at the first frequency.</p></li>
+<li><p><strong>freqs</strong> (<em>ndarray</em><em>, </em><em>optional</em>) – Excitation frequencies (Hz, in dq-coordinates), defaults to 100 logarithmically
+spaced frequencies from 1 Hz to 10 kHz.</p></li>
+<li><p><strong>amplitude_multiplier</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Excitation magnitude at the last frequency relative to the first one, defaults
+to 5. The magnitude changes linearly over the frequency array. Use 1 for a
+constant magnitude.</p></li>
 <li><p><strong>t0</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Stop time for initial simulating to the operating point (s), defaults to 1.0.
 Should be set large enough to reach steady-state.</p></li>
 <li><p><strong>t1</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Additional simulation time for reaching sinusoidal steady-state during signal
@@ -705,21 +698,9 @@ is used, for each switching interval, defaults to 10.</p></li>
 <li><p><strong>n_periods_excitation</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of excitation signal periods used in calculating the DFT, defaults to 4.</p></li>
 <li><p><strong>n_periods_init</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of fundamental periods to include for calculating operating-point
 vectors, defaults to 1.</p></li>
-<li><p><strong>multiprocess</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If set to True, multiprocessing.Pool() is used to run the identification using
-all available CPU cores in the system. Defaults to True.</p></li>
-<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – If given, the identification result is saved in
-<code class="docutils literal notranslate"><span class="pre">data/{date}_{time}_{filename}</span></code> (relative to the current working directory),
-defaults to None. The file format is set by the <cite>filetype</cite> parameter.</p></li>
-<li><p><strong>filetype</strong> (<em>Literal</em><em>[</em><em>&quot;csv&quot;</em><em>, </em><em>&quot;mat&quot;</em><em>]</em><em>, </em><em>optional</em>) – The filetype for saving identification results, defaults to “csv”. Valid options
-are:
-- “csv”: save results in .csv-format
-- “mat”: save results in MATLAB .mat-format</p></li>
+<li><p><strong>multiprocess</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the frequencies are simulated in parallel using all available CPU
+cores, defaults to True.</p></li>
 <li><p><strong>use_window</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use window function for calculating DFT, defaults to True.</p></li>
-<li><p><strong>variable_amplitude</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to increase the excitation signal amplitude with the frequency, defaults
-to True.</p></li>
-<li><p><strong>amplitude_multiplier</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Gain value to set how much the excitation signal amplitude is increased at the
-highest frequency compared to the lowest if <cite>variable_amplitude</cite> is set to True.
-Defaults to 5.0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -732,7 +713,8 @@ Defaults to 5.0.</p></li>
 <p>Contains fields for excitation signal frequency <cite>f_e</cite>, elements of the output
 admittance matrix <cite>[Y_dd, Y_qd; Y_dq, Y_qq]</cite>, and the following operating-point
 vectors (in synchronous coordinates aligned with the PCC voltage): grid current
-<cite>i_g0</cite>, grid voltage <cite>e_g0</cite>, PCC voltage <cite>u_g0</cite> and converter voltage <cite>u_c0</cite>.</p>
+<cite>i_g0</cite>, grid voltage <cite>e_g0</cite>, PCC voltage <cite>u_g0</cite> and converter voltage <cite>u_c0</cite>. The
+results can be saved, e.g., by <code class="docutils literal notranslate"><span class="pre">scipy.io.savemat(path,</span> <span class="pre">dataclasses.asdict(res))</span></code>.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -903,22 +885,32 @@ in SI units.</p></li>
 <dt class="sig sig-object py" id="motulator.grid.utils.run_identification">
 <span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">run_identification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_identification.html#run_identification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.run_identification" title="Link to this definition">#</a></dt>
 <dd><p>Run the identification.</p>
+<p>The system is first simulated to the operating point. Then, the output admittance
+of the converter is identified at the PCC: the PCC voltage is imposed by a stiff
+voltage source, whose magnitude and frequency equal those of the operating point,
+and small-signal voltage excitations are injected in the d- and q-axes. The grid
+impedance of <cite>mdl</cite> as well as any time variation and negative-sequence component of
+its source only affect the operating point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.utils.IdentificationCfg" title="motulator.grid.utils.IdentificationCfg"><em>IdentificationCfg</em></a>) – Dataclass object containing the identification configuration.</p></li>
-<li><p><strong>mdl</strong> (<a class="reference internal" href="../model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><em>GridConverterSystem</em></a>) – Continuous-time system model object.</p></li>
-<li><p><strong>ctrl</strong> (<a class="reference internal" href="../control/index.html#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><em>GridConverterControlSystem</em></a>) – Discrete-time control system object.</p></li>
+<li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.utils.IdentificationCfg" title="motulator.grid.utils.IdentificationCfg"><em>IdentificationCfg</em></a>) – Identification configuration.</p></li>
+<li><p><strong>mdl</strong> (<a class="reference internal" href="../model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><em>GridConverterSystem</em></a>) – Continuous-time system model.</p></li>
+<li><p><strong>ctrl</strong> (<a class="reference internal" href="../control/index.html#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><em>GridConverterControlSystem</em></a>) – Discrete-time control system.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>res</strong> – Dataclass object containing the results from the identification, along with
-information about the operating point.</p>
+<dd class="field-even"><p>Admittance matrix elements and the operating point.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.utils.IdentificationResults" title="motulator.grid.utils.IdentificationResults">IdentificationResults</a></p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>With carrier-comparison PWM, background switching harmonics can bias the identified
+admittance at the excitation frequency. Results near switching harmonics and their
+sidebands may depend strongly on the excitation amplitude and its phase relative to
+the carrier, even when the numerical solution has converged.</p>
 </dd></dl>
 
 </section>

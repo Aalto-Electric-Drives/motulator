@@ -177,25 +177,15 @@ Package Contents
    
    Configuration parameters for converter output admittance identification.
 
-   :param abs_u_e: Magnitude of the voltage excitation (V).
+   :param abs_u_e: Magnitude of the voltage excitation (V) at the first frequency.
    :type abs_u_e: float
-   :param f_start: Starting frequency of the voltage excitation (Hz, in dq-coordinates), defaults
-                   to 1.
-   :type f_start: float, optional
-   :param f_stop: End frequency of the voltage excitation (Hz, in dq-coordinates), defaults to
-                  10e3.
-   :type f_stop: float, optional
-   :param n_freqs: Number of frequencies for measurement, defaults to 100.
-   :type n_freqs: int, optional
-   :param spacing: The spacing used for creating the array of measurement frequencies, defaults to
-                   "log". Valid options are:
-                   - "log": logarithmic spacing
-                   - "lin": linear spacing
-   :type spacing: Literal["log", "lin"], optional
-   :param manual_freqs: Manually specified array of frequencies (Hz) to measure admittance at. If set to
-                        None, f_start, f_stop and n_freqs parameters are used to create the array of
-                        frequencies. Defaults to None.
-   :type manual_freqs: ndarray | None, optional
+   :param freqs: Excitation frequencies (Hz, in dq-coordinates), defaults to 100 logarithmically
+                 spaced frequencies from 1 Hz to 10 kHz.
+   :type freqs: ndarray, optional
+   :param amplitude_multiplier: Excitation magnitude at the last frequency relative to the first one, defaults
+                                to 5. The magnitude changes linearly over the frequency array. Use 1 for a
+                                constant magnitude.
+   :type amplitude_multiplier: float, optional
    :param t0: Stop time for initial simulating to the operating point (s), defaults to 1.0.
               Should be set large enough to reach steady-state.
    :type t0: float, optional
@@ -211,27 +201,11 @@ Package Contents
    :param n_periods_init: Number of fundamental periods to include for calculating operating-point
                           vectors, defaults to 1.
    :type n_periods_init: int, optional
-   :param multiprocess: If set to True, multiprocessing.Pool() is used to run the identification using
-                        all available CPU cores in the system. Defaults to True.
+   :param multiprocess: If True, the frequencies are simulated in parallel using all available CPU
+                        cores, defaults to True.
    :type multiprocess: bool, optional
-   :param filename: If given, the identification result is saved in
-                    ``data/{date}_{time}_{filename}`` (relative to the current working directory),
-                    defaults to None. The file format is set by the `filetype` parameter.
-   :type filename: str | None, optional
-   :param filetype: The filetype for saving identification results, defaults to "csv". Valid options
-                    are:
-                    - "csv": save results in .csv-format
-                    - "mat": save results in MATLAB .mat-format
-   :type filetype: Literal["csv", "mat"], optional
    :param use_window: Whether to use window function for calculating DFT, defaults to True.
    :type use_window: bool, optional
-   :param variable_amplitude: Whether to increase the excitation signal amplitude with the frequency, defaults
-                              to True.
-   :type variable_amplitude: bool, optional
-   :param amplitude_multiplier: Gain value to set how much the excitation signal amplitude is increased at the
-                                highest frequency compared to the lowest if `variable_amplitude` is set to True.
-                                Defaults to 5.0.
-   :type amplitude_multiplier: float, optional
 
 
 
@@ -258,7 +232,8 @@ Package Contents
    Contains fields for excitation signal frequency `f_e`, elements of the output
    admittance matrix `[Y_dd, Y_qd; Y_dq, Y_qq]`, and the following operating-point
    vectors (in synchronous coordinates aligned with the PCC voltage): grid current
-   `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`.
+   `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`. The
+   results can be saved, e.g., by ``scipy.io.savemat(path, dataclasses.asdict(res))``.
 
 
 
@@ -558,16 +533,29 @@ Package Contents
    
    Run the identification.
 
-   :param cfg: Dataclass object containing the identification configuration.
+   The system is first simulated to the operating point. Then, the output admittance
+   of the converter is identified at the PCC: the PCC voltage is imposed by a stiff
+   voltage source, whose magnitude and frequency equal those of the operating point,
+   and small-signal voltage excitations are injected in the d- and q-axes. The grid
+   impedance of `mdl` as well as any time variation and negative-sequence component of
+   its source only affect the operating point.
+
+   :param cfg: Identification configuration.
    :type cfg: IdentificationCfg
-   :param mdl: Continuous-time system model object.
+   :param mdl: Continuous-time system model.
    :type mdl: GridConverterSystem
-   :param ctrl: Discrete-time control system object.
+   :param ctrl: Discrete-time control system.
    :type ctrl: GridConverterControlSystem
 
-   :returns: **res** -- Dataclass object containing the results from the identification, along with
-             information about the operating point.
+   :returns: Admittance matrix elements and the operating point.
    :rtype: IdentificationResults
+
+   .. rubric:: Notes
+
+   With carrier-comparison PWM, background switching harmonics can bias the identified
+   admittance at the excitation frequency. Results near switching harmonics and their
+   sidebands may depend strongly on the excitation amplitude and its phase relative to
+   the carrier, even when the numerical solution has converged.
 
 
 

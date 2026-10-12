@@ -561,10 +561,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.create_time_series"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.generate_space_vector"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.generate_space_vector()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.rhs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.set_outputs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.set_outputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">
@@ -619,7 +616,7 @@
 <td><p>Three-phase source model.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection" title="motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a></p></td>
-<td><p>Three-phase source model with additional signal injection in dq-coordinates.</p></td>
+<td><p>Three-phase source model with signal injection in synchronous coordinates.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.VoltageSourceConverter" title="motulator.grid.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
 <td><p>Lossless three-phase voltage-source converter with constant DC-bus voltage.</p></td>
@@ -715,7 +712,7 @@ defaults to <cite>np.sign</cite>.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.grid.model.VoltageSourceConverter" title="motulator.grid.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a><em> | </em><a class="reference internal" href="#motulator.grid.model.CapacitiveDCBusConverter" title="motulator.grid.model.CapacitiveDCBusConverter"><em>CapacitiveDCBusConverter</em></a>) – Converter model.</p></li>
 <li><p><strong>ac_filter</strong> (<a class="reference internal" href="#motulator.grid.model.LFilter" title="motulator.grid.model.LFilter"><em>LFilter</em></a><em> | </em><a class="reference internal" href="#motulator.grid.model.LCLFilter" title="motulator.grid.model.LCLFilter"><em>LCLFilter</em></a>) – AC filter model.</p></li>
-<li><p><strong>ac_source</strong> (<a class="reference internal" href="#motulator.grid.model.ThreePhaseSource" title="motulator.grid.model.ThreePhaseSource"><em>ThreePhaseSource</em></a><em> | </em><a class="reference internal" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection" title="motulator.grid.model.ThreePhaseSourceWithSignalInjection"><em>ThreePhaseSourceWithSignalInjection</em></a>) – Three-phase voltage source.</p></li>
+<li><p><strong>ac_source</strong> (<a class="reference internal" href="#motulator.grid.model.ThreePhaseSource" title="motulator.grid.model.ThreePhaseSource"><em>ThreePhaseSource</em></a>) – Three-phase voltage source.</p></li>
 <li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable PWM model, defaults to False.</p></li>
 <li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay (samples), defaults to 1.</p></li>
 </ul>
@@ -1105,78 +1102,36 @@ to represent, e.g., a current source as well.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.ThreePhaseSourceWithSignalInjection">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">ThreePhaseSourceWithSignalInjection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">sqrt(2</span> <span class="pre">/</span> <span class="pre">3)</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_eq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_e</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
-<p>Three-phase source model with additional signal injection in dq-coordinates.</p>
-<p>This class implements a three-phase voltage source model with signal injection
-capabilities, intended for use in converter output admittance identification. The
-excitation signal is added to the output voltage of the source. The zero-sequence
-component is not included in this model.</p>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">ThreePhaseSourceWithSignalInjection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">sqrt(2</span> <span class="pre">/</span> <span class="pre">3)</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_e</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_e</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#motulator.grid.model.ThreePhaseSource" title="motulator.grid.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p>
+<p>Three-phase source model with signal injection in synchronous coordinates.</p>
+<p>The excitation <code class="docutils literal notranslate"><span class="pre">u_e*cos(2*pi*f_e*t)</span></code> is added to the positive-sequence component
+in the synchronous coordinates of the source. This model is intended for converter
+output admittance identification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>w_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Angular frequency (rad/s), defaults to 2*pi*50.</p></li>
-<li><p><strong>e_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.</p></li>
-<li><p><strong>phi</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Phase shift (rad) of positive-sequence component, defaults to 0.</p></li>
-<li><p><strong>u_ed</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Magnitude of d-axis excitation signal (V), defaults to 0.</p></li>
-<li><p><strong>u_eq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Magnitude of q-axis excitation signal (V), defaults to 0.</p></li>
-<li><p><strong>f_e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Frequency of excitation signal (Hz), defaults to 0.</p></li>
+<li><p><strong>w_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Angular frequency (rad/s), defaults to 2*pi*50.</p></li>
+<li><p><strong>e_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.</p></li>
+<li><p><strong>phi</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Phase shift (rad) of positive-sequence component, defaults to 0.</p></li>
+<li><p><strong>u_e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>, </em><em>optional</em>) – Excitation (V) in synchronous coordinates, defaults to 0.</p></li>
+<li><p><strong>f_e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Excitation frequency (Hz), defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>This model is typically used to represent a voltage source, but it can be configured
-to represent, e.g., a current source as well.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.model.ThreePhaseSourceWithSignalInjection.create_time_series">
-<span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.create_time_series" title="Link to this definition">#</a></dt>
-<dd><p>Create time series from state list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, SignalInjectionTimeSeries]</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.ThreePhaseSourceWithSignalInjection.generate_space_vector">
-<span class="sig-name descname"><span class="pre">generate_space_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection.generate_space_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.generate_space_vector" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">generate_space_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection.generate_space_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.generate_space_vector" title="Link to this definition">#</a></dt>
 <dd><p>Generate the space vector in stationary coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t</strong> (<em>Any</em>)</p></li>
 <li><p><strong>exp_j_theta_g</strong> (<em>Any</em>)</p></li>
-<li><p><strong>exp_j_theta_e</strong> (<em>Any</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.model.ThreePhaseSourceWithSignalInjection.rhs">
-<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.rhs" title="Link to this definition">#</a></dt>
-<dd><p>Compute the state derivative.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.model.ThreePhaseSourceWithSignalInjection.set_outputs">
-<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_ac_source.html#ThreePhaseSourceWithSignalInjection.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.set_outputs" title="Link to this definition">#</a></dt>
-<dd><p>Set output variables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1397,10 +1352,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.create_time_series"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.generate_space_vector"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.generate_space_vector()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.rhs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.rhs()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection.set_outputs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection.set_outputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">

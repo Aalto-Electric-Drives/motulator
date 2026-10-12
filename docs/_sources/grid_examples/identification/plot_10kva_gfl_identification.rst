@@ -25,9 +25,11 @@ This example demonstrates converter output admittance identification using a 10-
 grid-following (GFL) converter. The converter and grid models are the same as in
 :doc:`/grid_examples/grid_following/plot_10kva_gfl`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-14
+.. GENERATED FROM PYTHON SOURCE LINES 12-16
 
 .. code-block:: Python
+
+    import numpy as np
 
     from motulator.grid import control, model, utils
 
@@ -38,11 +40,11 @@ grid-following (GFL) converter. The converter and grid models are the same as in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-16
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-20
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
@@ -57,23 +59,17 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Configure the identification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-33
+.. GENERATED FROM PYTHON SOURCE LINES 24-29
 
 .. code-block:: Python
 
 
     identification_cfg = utils.IdentificationCfg(
-        abs_u_e=0.01 * base.u,
-        f_start=1,
-        f_stop=10e3,
-        n_freqs=100,
-        # Uncomment the row below to save the results in ./data of the working directory
-        # filename="gfl_admittance",
-        filetype="csv",
+        abs_u_e=0.01 * base.u, freqs=np.geomspace(1, 10e3, 100)
     )
 
 
@@ -83,11 +79,11 @@ Configure the identification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-41
+.. GENERATED FROM PYTHON SOURCE LINES 31-37
 
 .. code-block:: Python
 
@@ -104,11 +100,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-43
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-54
+.. GENERATED FROM PYTHON SOURCE LINES 39-50
 
 .. code-block:: Python
 
@@ -130,17 +126,21 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Run the identification and plot results.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-61
+.. GENERATED FROM PYTHON SOURCE LINES 52-61
 
 .. code-block:: Python
 
 
     if __name__ == "__main__":
         res = utils.run_identification(identification_cfg, mdl, ctrl)
+        # To save the results, e.g., in MATLAB format:
+        # from dataclasses import asdict
+        # from scipy.io import savemat
+        # savemat("gfl_admittance.mat", asdict(res))
         utils.plot_identification(res, plot_style="re_im")
         utils.plot_vector_identification(res, base)
 
@@ -177,7 +177,7 @@ Run the identification and plot results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (5 minutes 36.261 seconds)
+   **Total running time of the script:** (5 minutes 15.832 seconds)
 
 
 .. _sphx_glr_download_grid_examples_identification_plot_10kva_gfl_identification.py:

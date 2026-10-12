@@ -192,7 +192,7 @@ Package Contents
    :param ac_filter: AC filter model.
    :type ac_filter: LFilter | LCLFilter
    :param ac_source: Three-phase voltage source.
-   :type ac_source: ThreePhaseSource | ThreePhaseSourceWithSignalInjection
+   :type ac_source: ThreePhaseSource
    :param pwm: Enable PWM model, defaults to False.
    :type pwm: bool, optional
    :param delay: Computational delay (samples), defaults to 1.
@@ -897,36 +897,28 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ThreePhaseSourceWithSignalInjection(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, u_ed = 0.0, u_eq = 0.0, f_e = 0.0)
+.. py:class:: ThreePhaseSourceWithSignalInjection(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, u_e = 0j, f_e = 0.0)
 
-   Bases: :py:obj:`motulator.common.model.Subsystem`
+   Bases: :py:obj:`ThreePhaseSource`
 
 
    
-   Three-phase source model with additional signal injection in dq-coordinates.
+   Three-phase source model with signal injection in synchronous coordinates.
 
-   This class implements a three-phase voltage source model with signal injection
-   capabilities, intended for use in converter output admittance identification. The
-   excitation signal is added to the output voltage of the source. The zero-sequence
-   component is not included in this model.
+   The excitation ``u_e*cos(2*pi*f_e*t)`` is added to the positive-sequence component
+   in the synchronous coordinates of the source. This model is intended for converter
+   output admittance identification.
 
    :param w_g: Angular frequency (rad/s), defaults to 2*pi*50.
-   :type w_g: float, optional
+   :type w_g: float | Callable[[float], float], optional
    :param e_g: Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.
-   :type e_g: float, optional
+   :type e_g: float | Callable[[float], float], optional
    :param phi: Phase shift (rad) of positive-sequence component, defaults to 0.
-   :type phi: float, optional
-   :param u_ed: Magnitude of d-axis excitation signal (V), defaults to 0.
-   :type u_ed: float, optional
-   :param u_eq: Magnitude of q-axis excitation signal (V), defaults to 0.
-   :type u_eq: float, optional
-   :param f_e: Frequency of excitation signal (Hz), defaults to 0.
+   :type phi: float | Callable[[float], float], optional
+   :param u_e: Excitation (V) in synchronous coordinates, defaults to 0.
+   :type u_e: complex, optional
+   :param f_e: Excitation frequency (Hz), defaults to 0.
    :type f_e: float, optional
-
-   .. rubric:: Notes
-
-   This model is typically used to represent a voltage source, but it can be configured
-   to represent, e.g., a current source as well.
 
 
 
@@ -945,82 +937,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: create_time_series(t)
-
-      
-      Create time series from state list.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: generate_space_vector(t, exp_j_theta_g, exp_j_theta_e)
+   .. py:method:: generate_space_vector(t, exp_j_theta_g)
 
       
       Generate the space vector in stationary coordinates.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs(t)
-
-      
-      Compute the state derivative.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(t)
-
-      
-      Set output variables.
 
 
 

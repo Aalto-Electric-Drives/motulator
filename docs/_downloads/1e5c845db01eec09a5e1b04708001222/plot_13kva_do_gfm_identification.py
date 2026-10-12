@@ -9,6 +9,8 @@ models are the same as in :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`.
 """
 
 # %%
+import numpy as np
+
 from motulator.grid import control, model, utils
 
 # %%
@@ -21,13 +23,7 @@ base = utils.BaseValues.from_nominal(nom)
 # Configure the identification.
 
 identification_cfg = utils.IdentificationCfg(
-    abs_u_e=0.01 * base.u,
-    f_start=1,
-    f_stop=10e3,
-    n_freqs=100,
-    # Uncomment the row below to save the results in ./data of the working directory
-    # filename="do-gfm_admittance",
-    filetype="csv",
+    abs_u_e=0.01 * base.u, freqs=np.geomspace(1, 10e3, 100)
 )
 
 # %%
@@ -61,5 +57,9 @@ ctrl.set_ac_voltage_ref(base.u)
 
 if __name__ == "__main__":
     res = utils.run_identification(identification_cfg, mdl, ctrl)
+    # To save the results, e.g., in MATLAB format:
+    # from dataclasses import asdict
+    # from scipy.io import savemat
+    # savemat("do-gfm_admittance.mat", asdict(res))
     utils.plot_identification(res, plot_style="re_im")
     utils.plot_vector_identification(res, base)
