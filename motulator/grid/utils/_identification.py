@@ -16,7 +16,7 @@ from scipy.integrate import trapezoid
 from scipy.io import savemat
 
 from motulator.common.model._pwm import CarrierComparison
-from motulator.common.utils._plotting import set_latex_style, set_screen_style
+from motulator.common.utils._plotting import set_style
 from motulator.common.utils._utils import empty_array, get_value
 from motulator.grid import control, model, utils
 
@@ -474,10 +474,7 @@ def plot_identification(
 
     """
     # ruff: noqa: PLR0915
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+    set_style(latex)
 
     # First figure: elements of output admittance matrix
     if plot_style == "polar":
@@ -606,10 +603,7 @@ def plot_vector_identification(
         Use latex for plots, defaults to False.
 
     """
-    if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+    set_style(latex)
 
     _, ax = plt.subplots()
     ax.grid(True, zorder=0)

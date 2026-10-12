@@ -77,7 +77,6 @@ class VoltageSourceConverter(Subsystem):
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=u_dc)
         self.state = None
-        self._history = None
 
     def set_external_dc_current(self, i_dc: Callable[[float], float]) -> None:
         """Set external DC current (A)."""
@@ -145,13 +144,6 @@ class CapacitiveDCBusConverterStates:
     u_dc: float
 
 
-@dataclass
-class CapacitiveDCBusConverterStateHistory:
-    """State history."""
-
-    u_dc: list[complex] = field(default_factory=list)
-
-
 class CapacitiveDCBusConverter(VoltageSourceConverter):
     """
     Lossless voltage-source converter with capacitive DC-bus dynamics.
@@ -184,9 +176,6 @@ class CapacitiveDCBusConverter(VoltageSourceConverter):
         self.C_dc = C_dc
         self.state: CapacitiveDCBusConverterStates = CapacitiveDCBusConverterStates(
             self.u_dc
-        )
-        self._history: CapacitiveDCBusConverterStateHistory = (
-            CapacitiveDCBusConverterStateHistory()
         )
 
     def set_external_dc_current(self, i_dc: Callable[[float], float]) -> None:
@@ -226,7 +215,7 @@ class CapacitiveDCBusConverterTimeSeries(
     subsystem: InitVar[CapacitiveDCBusConverter]
 
     def __post_init__(self, t: np.ndarray, subsystem: CapacitiveDCBusConverter) -> None:
-        self.u_dc = np.array(subsystem._history.u_dc)
+        self.u_dc = np.array(subsystem._history["u_dc"])
 
 
 # %%
@@ -239,15 +228,6 @@ class FrequencyConverterStates:
     u_dc: complex  # Imaginary part is always zero
     i_L: complex = 0j  # Imaginary part is always zero
     exp_j_theta_g: complex = complex(1)
-
-
-@dataclass
-class FrequencyConverterStateHistory:
-    """State history."""
-
-    u_dc: list[complex] = field(default_factory=list)
-    i_L: list[complex] = field(default_factory=list)
-    exp_j_theta_g: list[complex] = field(default_factory=list)
 
 
 class FrequencyConverter(VoltageSourceConverter):
@@ -294,7 +274,6 @@ class FrequencyConverter(VoltageSourceConverter):
         self.w_g = 2 * np.pi * f_g
         self.u_g = sqrt(2 / 3) * U_g
         self.state: FrequencyConverterStates = FrequencyConverterStates(u_dc)
-        self._history: FrequencyConverterStateHistory = FrequencyConverterStateHistory()
 
     def compute_voltages(self, state: Any) -> tuple[Any, Any]:
         """Compute grid and rectified voltages."""
@@ -350,9 +329,9 @@ class FrequencyConverterTimeSeries(
     i_g_ab: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: FrequencyConverter) -> None:
-        self.u_dc = np.real(np.array(subsystem._history.u_dc))
-        self.i_L = np.real(np.array(subsystem._history.i_L))
-        self.exp_j_theta_g = np.array(subsystem._history.exp_j_theta_g)
+        self.u_dc = np.real(np.array(subsystem._history["u_dc"]))
+        self.i_L = np.real(np.array(subsystem._history["i_L"]))
+        self.exp_j_theta_g = np.array(subsystem._history["exp_j_theta_g"])
         self.u_g_ab, self.u_di = subsystem.compute_voltages(self)
         self.u_g_abc = complex2abc(self.u_g_ab)
         # Diode bridge switching states (-1, 0, 1)

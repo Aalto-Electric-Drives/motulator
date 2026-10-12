@@ -17,7 +17,7 @@ import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.utils import dead_time_error
 from motulator.drive import model
-from motulator.drive.control import _im_flux_vector, _im_observers, _sm_flux_vector
+from motulator.drive.control import _im_flux_vector, _sm_flux_vector
 from motulator.drive.utils import ControlLoci, MagneticModel
 
 T_STOP = 0.6
@@ -177,16 +177,18 @@ def test_speed_control(case: str) -> None:
 
 
 @pytest.mark.filterwarnings("ignore::RuntimeWarning")
-def test_numerical_failure_is_flagged() -> None:
+@pytest.mark.parametrize("t_fail", [0.0, 0.02])
+def test_numerical_failure_is_flagged(t_fail: float) -> None:
     """A numerical failure stops the simulation and is flagged in the results."""
     mdl = ipmsm_drive(pwm=False)
     ctrl = ipmsm_fvc(sensorless=False)
     ctrl.set_speed_ref(lambda t: 0.0)
-    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.02) * 1e300)
+    mdl.mechanics.set_external_load_torque(lambda t: (t >= t_fail) * 1e300)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.05)
 
     assert not res.success
-    assert 0.01 < res.mdl.t[-1] < 0.03
+    assert np.all(res.mdl.t < t_fail + 0.01)  # Also no samples if failing at once
+    assert t_fail == 0 or res.mdl.t[-1] > t_fail - 0.01
 
 
 def test_observer_based_vhz() -> None:
@@ -627,7 +629,7 @@ def test_flux_torque_controller_without_torque_control() -> None:
         n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=np.inf
     )
     ctrl = _im_flux_vector.FluxTorqueController(par, alpha_psi=100.0, alpha_tau=10.0)
-    fbk = _im_observers.ObserverOutputs(psi_s=1.0 + 0j, w_s=300.0)
+    fbk = im_control.ObserverOutputs(psi_s=1.0 + 0j, w_s=300.0)
     u_s = [ctrl.compute_output(0.8, tau_M_ref, fbk) for tau_M_ref in (0.0, 10.0)]
     assert u_s == pytest.approx([1j * 300 + 100 * (0.8 - 1)] * 2)
 

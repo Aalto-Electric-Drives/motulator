@@ -48,14 +48,6 @@ class InductionMachineStates:
     psi_r_ab: complex = 0j
 
 
-@dataclass
-class InductionMachineStateHistory:
-    """State history."""
-
-    psi_s_ab: list[complex] = field(default_factory=list)
-    psi_r_ab: list[complex] = field(default_factory=list)
-
-
 class InductionMachine(Subsystem):
     """
     Γ-equivalent model of an induction machine.
@@ -110,7 +102,6 @@ class InductionMachine(Subsystem):
         self.out: InductionMachineOutputs = InductionMachineOutputs(
             i_s_ab=i_s_ab, i_r_ab=i_r_ab, tau_M=tau_M
         )
-        self._history: InductionMachineStateHistory = InductionMachineStateHistory()
 
     def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
@@ -170,8 +161,8 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: InductionMachine) -> None:
         """Compute output time series from the states."""
-        self.psi_s_ab = np.array(subsystem._history.psi_s_ab)
-        self.psi_r_ab = np.array(subsystem._history.psi_r_ab)
+        self.psi_s_ab = np.array(subsystem._history["psi_s_ab"])
+        self.psi_r_ab = np.array(subsystem._history["psi_r_ab"])
         # Provisional stator current, since u_s_ab needed for the core-loss current is
         # not yet available; corrected in compute_input_derived_signals
         self.i_s_ab, self.i_r_ab, self.tau_M = subsystem.compute_outputs(
@@ -225,14 +216,6 @@ class SynchronousMachineStates:
         self.psi_s_dq = complex(par.psi_f)
 
 
-@dataclass
-class SynchronousMachineStateHistory:
-    """State history."""
-
-    psi_s_dq: list[complex] = field(default_factory=list)
-    exp_j_theta_m: list[complex] = field(default_factory=list)
-
-
 class SynchronousMachine(Subsystem):
     """
     Synchronous machine model.
@@ -278,7 +261,6 @@ class SynchronousMachine(Subsystem):
         self.out: SynchronousMachineOutputs = SynchronousMachineOutputs(
             i_s_ab=i_s_ab, i_s_dq=i_s_dq, tau_M=tau_M
         )
-        self._history: SynchronousMachineStateHistory = SynchronousMachineStateHistory()
 
     def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
@@ -343,8 +325,8 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: SynchronousMachine) -> None:
         """Compute time series from states."""
-        self.psi_s_dq = np.array(subsystem._history.psi_s_dq)
-        self.exp_j_theta_m = np.array(subsystem._history.exp_j_theta_m)
+        self.psi_s_dq = np.array(subsystem._history["psi_s_dq"])
+        self.exp_j_theta_m = np.array(subsystem._history["exp_j_theta_m"])
         self.theta_m = np.angle(self.exp_j_theta_m)
         self.psi_s_ab = self.exp_j_theta_m * self.psi_s_dq
         # Provisional stator current, since u_s_ab needed for the core-loss current is

@@ -36,14 +36,6 @@ class States:
     w_M: complex = 0j
 
 
-@dataclass
-class StateHistory:
-    """State history."""
-
-    exp_j_theta_M: list[complex] = field(default_factory=list)
-    w_M: list[complex] = field(default_factory=list)
-
-
 class MechanicalSystem(Subsystem):
     """
     Stiff mechanical system.
@@ -66,7 +58,6 @@ class MechanicalSystem(Subsystem):
         self.out: Outputs = Outputs(
             exp_j_theta_M=self.state.exp_j_theta_M, w_M=self.state.w_M.real
         )
-        self._history: StateHistory = StateHistory()
         self.J = J
         self.B_L = B_L
 
@@ -125,8 +116,8 @@ class MechanicalSystemTimeSeries(SubsystemTimeSeries):
     theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: MechanicalSystem) -> None:
-        self.w_M = np.real(np.array(subsystem._history.w_M))
-        self.exp_j_theta_M = np.array(subsystem._history.exp_j_theta_M)
+        self.w_M = np.real(np.array(subsystem._history["w_M"]))
+        self.exp_j_theta_M = np.array(subsystem._history["exp_j_theta_M"])
         self.tau_L_tot = np.array(
             [
                 subsystem.compute_total_load_torque(t_k, w_M_k)
@@ -145,16 +136,6 @@ class TwoMassMechanicalSystemStates:
     w_M: complex = 0j
     w_L: complex = 0j  # Imaginary part always zero
     theta_ML: complex = 0j  # Imaginary part always zero
-
-
-@dataclass
-class TwoMassMechanicalSystemStateHistory:
-    """Temporary storage for system states."""
-
-    exp_j_theta_M: list[complex] = field(default_factory=list)
-    w_M: list[complex] = field(default_factory=list)
-    w_L: list[complex] = field(default_factory=list)
-    theta_ML: list[complex] = field(default_factory=list)
 
 
 class TwoMassMechanicalSystem(Subsystem):
@@ -196,9 +177,6 @@ class TwoMassMechanicalSystem(Subsystem):
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(
             exp_j_theta_M=self.state.exp_j_theta_M, w_M=self.state.w_M.real
-        )
-        self._history: TwoMassMechanicalSystemStateHistory = (
-            TwoMassMechanicalSystemStateHistory()
         )
 
     def set_external_load_torque(self, tau_L: Callable[[float], float]) -> None:
@@ -275,10 +253,10 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
     theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: TwoMassMechanicalSystem) -> None:
-        self.w_M = np.real(np.array(subsystem._history.w_M))
-        self.exp_j_theta_M = np.array(subsystem._history.exp_j_theta_M)
-        self.w_L = np.real(np.array(subsystem._history.w_L))
-        self.theta_ML = np.real(np.array(subsystem._history.theta_ML))
+        self.w_M = np.real(np.array(subsystem._history["w_M"]))
+        self.exp_j_theta_M = np.array(subsystem._history["exp_j_theta_M"])
+        self.w_L = np.real(np.array(subsystem._history["w_L"]))
+        self.theta_ML = np.real(np.array(subsystem._history["theta_ML"]))
         self.tau_S = subsystem.compute_shaft_torque(self.theta_ML, self.w_M, self.w_L)
         self.tau_L_tot = np.array(
             [
@@ -297,13 +275,6 @@ class ExternalRotorSpeedStates:
     exp_j_theta_M: complex = complex(1)
 
 
-@dataclass
-class ExternalRotorSpeedStateHistory:
-    """State history."""
-
-    exp_j_theta_M: list[complex] = field(default_factory=list)
-
-
 class ExternalRotorSpeed(Subsystem):
     """
     Integrate rotor angle from externally given rotor speed.
@@ -317,7 +288,6 @@ class ExternalRotorSpeed(Subsystem):
         self.inp: Inputs = Inputs()
         self.state: ExternalRotorSpeedStates = ExternalRotorSpeedStates()
         self.out: Outputs = Outputs(exp_j_theta_M=self.state.exp_j_theta_M, w_M=0.0)
-        self._history: ExternalRotorSpeedStateHistory = ExternalRotorSpeedStateHistory()
         self.w_M = lambda t: 0.0  # External input
 
     def set_external_rotor_speed(self, w_M: Callable[[float], float]) -> None:
@@ -369,5 +339,5 @@ class ExternalRotorSpeedTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: ExternalRotorSpeed) -> None:
         self.w_M = np.array([subsystem.w_M(t) for t in t])
-        self.exp_j_theta_M = np.array(subsystem._history.exp_j_theta_M)
+        self.exp_j_theta_M = np.array(subsystem._history["exp_j_theta_M"])
         self.theta_M = np.angle(self.exp_j_theta_M)

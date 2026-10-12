@@ -2,6 +2,8 @@
 
 from motulator.common.utils._dead_time import dead_time_error
 from motulator.common.utils._utils import (
+    BaseValues,
+    NominalValues,
     SequenceGenerator,
     Step,
     abc2complex,
@@ -11,6 +13,8 @@ from motulator.common.utils._utils import (
 )
 
 __all__ = [
+    "BaseValues",
+    "NominalValues",
     "SequenceGenerator",
     "Step",
     "abc2complex",

@@ -34,14 +34,6 @@ class States:
     u_f_ab: complex = 0j
 
 
-@dataclass
-class StateHistory:
-    """State history."""
-
-    i_c_ab: list[complex] = field(default_factory=list)
-    u_f_ab: list[complex] = field(default_factory=list)
-
-
 class LCFilter(Subsystem):
     """
     LC-filter model.
@@ -69,7 +61,6 @@ class LCFilter(Subsystem):
         self.state: States = States()
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(self.state.i_c_ab, self.state.u_f_ab)
-        self._history: StateHistory = StateHistory()
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -111,5 +102,5 @@ class LCFilterTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: LCFilter) -> None:
         """Compute output time series from the states."""
-        self.i_c_ab = np.array(subsystem._history.i_c_ab)
-        self.u_f_ab = np.array(subsystem._history.u_f_ab)
+        self.i_c_ab = np.array(subsystem._history["i_c_ab"])
+        self.u_f_ab = np.array(subsystem._history["u_f_ab"])

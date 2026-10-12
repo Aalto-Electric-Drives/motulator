@@ -8,6 +8,7 @@ from motulator.common.utils._utils import (
 )
 from motulator.grid.utils._identification import (
     IdentificationCfg,
+    IdentificationResults,
     plot_identification,
     plot_vector_identification,
     run_identification,
@@ -21,6 +22,7 @@ from motulator.grid.utils._plots import (
 __all__ = [
     "BaseValues",
     "IdentificationCfg",
+    "IdentificationResults",
     "NominalValues",
     "plot_control_signals",
     "plot_grid_waveforms",
