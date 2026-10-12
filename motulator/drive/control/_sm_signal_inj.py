@@ -154,6 +154,15 @@ class SignalInjectionObserver:
         self.theta_m: float = 0.0  # State
         self.par = par
 
+    @property
+    def w_M(self) -> float:
+        """Mechanical angular rotor speed estimate (rad/s), also an initial value."""
+        return self.speed_observer.w_M
+
+    @w_M.setter
+    def w_M(self, value: float) -> None:
+        self.speed_observer.w_M = value
+
     def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
         """Compute output."""
         # Unpack and initialize the output signals

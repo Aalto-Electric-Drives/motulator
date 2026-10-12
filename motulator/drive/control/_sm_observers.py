@@ -11,6 +11,7 @@ from motulator.drive.control._common import SpeedObserver, hold_equivalent, matc
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
+    aux_flux,
 )
 
 
@@ -119,14 +120,6 @@ class FluxObserver:
         self.theta_m: float = 0.0
         self.psi_s: complex = complex(par.psi_f)
 
-    def _aux_flux(self, i_s: complex, psi_s: complex) -> complex:
-        """Auxiliary flux linkage vector."""
-        L_s = self.par.incr_ind_mat(i_s)
-        L_dd, L_dq, L_qq = L_s[0, 0], L_s[0, 1], L_s[1, 1]
-        return (
-            psi_s - L_qq * i_s.real - 1j * L_dd * i_s.imag + 1j * L_dq * i_s.conjugate()
-        )
-
     def compute_output(
         self,
         u_s_ab: complex,
@@ -179,7 +172,7 @@ class FluxObserver:
         out.e_o = psi_s_dq - out.psi_s
 
         # Auxiliary flux
-        out.psi_a = self._aux_flux(out.i_s, psi_s_dq)
+        out.psi_a = aux_flux(out.i_s, psi_s_dq, par.incr_ind_mat(out.i_s))
 
         # Error signals for the rotor angle and PM-flux estimation. The model-based part
         # is faded out as the external error signal takes over.
@@ -272,6 +265,15 @@ class SpeedFluxObserver:
         # Create component observers
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_theta, k_o, k_f)
+
+    @property
+    def w_M(self) -> float:
+        """Mechanical angular rotor speed estimate (rad/s), also an initial value."""
+        return self.speed_observer.w_M
+
+    @w_M.setter
+    def w_M(self, value: float) -> None:
+        self.speed_observer.w_M = value
 
     @property
     def theta_m(self) -> float:

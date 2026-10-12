@@ -89,7 +89,7 @@ def simulate(discrete: bool):
         discrete=discrete,
     )
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
-    vector_ctrl.observer.speed_observer.w_M = 1.5 * base.w_M  # Initial speed estimate
+    vector_ctrl.observer.w_M = 1.5 * base.w_M  # Initial speed estimate
     ctrl = control.VectorControlSystem(vector_ctrl)
     ctrl.set_torque_ref(
         lambda t: (

@@ -10,6 +10,8 @@ from scipy.optimize import root_scalar
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
+    aux_current,
+    aux_flux,
 )
 
 NUM = 16
@@ -94,41 +96,14 @@ class ControlLoci:
     ) -> None:
         self.par = par
 
-    def _aux_flux(
-        self, i_s_dq: complex | np.ndarray, psi_s_dq: complex | np.ndarray
-    ) -> complex:
-        """Auxiliary flux linkage vector."""
-        L_s = self.par.incr_ind_mat(i_s_dq)
-        return complex(
-            psi_s_dq
-            - L_s[1, 1] * np.real(i_s_dq)
-            - 1j * L_s[0, 0] * np.imag(i_s_dq)
-            + 1j * L_s[0, 1] * np.conj(i_s_dq)
-        )
-
-    def _aux_current(
-        self, psi_s_dq: complex | np.ndarray, i_s_dq: complex | np.ndarray
-    ) -> complex:
-        """Auxiliary current vector."""
-        L_s = self.par.incr_ind_mat(i_s_dq)
-        det_L = L_s[0, 0] * L_s[1, 1] - L_s[0, 1] ** 2
-        return complex(
-            (
-                L_s[0, 0] * np.real(psi_s_dq)
-                + 1j * L_s[1, 1] * np.imag(psi_s_dq)
-                + 1j * L_s[0, 1] * np.conj(psi_s_dq)
-            )
-            / det_L
-            - i_s_dq
-        )
-
     def compute_mtpa_current_angle(self, i_s_abs: float) -> float:
         """MTPA current angle (rad) at given current magnitude (A)."""
 
         def mtpa_cond(gamma: float) -> float:
             i_s_dq = i_s_abs * np.exp(1j * gamma)
             psi_s_dq = self.par.psi_s_dq(i_s_dq)
-            psi_a_dq = self._aux_flux(i_s_dq, psi_s_dq)
+            L_s = self.par.incr_ind_mat(i_s_dq)
+            psi_a_dq = aux_flux(complex(i_s_dq), complex(psi_s_dq), L_s)
             return np.real(psi_a_dq * np.conj(i_s_dq))
 
         if self.par.psi_f == 0:
@@ -187,7 +162,8 @@ class ControlLoci:
             nonlocal i_s_dq
             psi_s_dq = psi_s_abs * np.exp(1j * delta)
             i_s_dq = self.par.iterate_i_s_dq(psi_s_dq)
-            i_a_dq = self._aux_current(psi_s_dq, i_s_dq)
+            L_s = self.par.incr_ind_mat(i_s_dq)
+            i_a_dq = aux_current(complex(psi_s_dq), complex(i_s_dq), L_s)
             return np.real(i_a_dq * np.conj(psi_s_dq))
 
         if self.par.psi_f == 0:
@@ -299,7 +275,8 @@ class ControlLoci:
         def mtpv_cond(gamma: float) -> float:
             i_s_dq = i_s_abs * np.exp(1j * gamma)
             psi_s_dq = self.par.psi_s_dq(i_s_dq)
-            i_a_dq = self._aux_current(psi_s_dq, i_s_dq)
+            L_s = self.par.incr_ind_mat(i_s_dq)
+            i_a_dq = aux_current(complex(psi_s_dq), complex(i_s_dq), L_s)
             return float(np.real(i_a_dq * np.conj(psi_s_dq)))
 
         if self.par.psi_f == 0:

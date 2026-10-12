@@ -408,7 +408,7 @@ def test_discrete_current_control_angle_estimate() -> None:
     )
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, discrete=True)
     vector_ctrl = sm_control.CurrentVectorController(par, cfg)
-    vector_ctrl.observer.speed_observer.w_M = w_M
+    vector_ctrl.observer.w_M = w_M
     ctrl = sm_control.VectorControlSystem(vector_ctrl)
     assert ctrl.pwm.k_comp == 0  # The default PWM of the discrete-time design
     ctrl.set_torque_ref(7.0)
@@ -438,7 +438,7 @@ def test_discrete_current_control_dead_time() -> None:
         psi_s_nom=1.04, i_s_max=10.6, T_s=T_s, discrete=True
     )
     vector_ctrl = im_control.CurrentVectorController(im_par(), cfg)
-    vector_ctrl.observer.speed_observer.w_M = w_M
+    vector_ctrl.observer.w_M = w_M
     pwm = im_control.PWM(k_comp=0, d_err=lambda i, d: dead_time_error(i, d, t_d, T_s))
     ctrl = im_control.VectorControlSystem(vector_ctrl, pwm=pwm)
     ctrl.set_torque_ref(0.0)  # Constant magnetizing current
@@ -534,7 +534,7 @@ def test_im_flux_observer_at_low_sampling_rate() -> None:
     mdl.mechanics.set_external_rotor_speed(lambda t: w_M)
     cfg = im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6, T_s=1e-3)
     vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
-    vector_ctrl.observer.speed_observer.w_M = w_M
+    vector_ctrl.observer.w_M = w_M
     ctrl = im_control.VectorControlSystem(vector_ctrl)
     ctrl.set_torque_ref(lambda t: 7.0)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.5)

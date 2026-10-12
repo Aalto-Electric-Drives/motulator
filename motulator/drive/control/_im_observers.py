@@ -189,7 +189,7 @@ class FluxObserver:
         # so it is faded out together with the model-based error signal.
         k_o1 = self.k_o(out.w_m)
         proj = out.psi_R / out.psi_R.conjugate() if abs(out.psi_R) > 0.0 else 0.0
-        k_o2 = (1 - out.h) * self.k_o(out.w_m) * proj
+        k_o2 = (1 - out.h) * k_o1 * proj
 
         # Correct the flux estimate at the sampling instant. The estimation error has
         # accumulated over the previous sampling period, whose length scales it.
@@ -260,8 +260,12 @@ class SpeedFluxObserver:
 
     @property
     def w_M(self) -> float:
-        """Mechanical angular rotor speed estimate (rad/s)."""
+        """Mechanical angular rotor speed estimate (rad/s), also an initial value."""
         return self.speed_observer.w_M
+
+    @w_M.setter
+    def w_M(self, value: float) -> None:
+        self.speed_observer.w_M = value
 
     def compute_output(
         self, u_s_ab: complex, i_s_ab: complex, eps_ext: float = 0.0, h: float = 0.0
