@@ -471,7 +471,7 @@
 <span></span><span class="sd">"""Common control functions and classes for machine drives."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">expm1</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -621,6 +621,31 @@
     <span class="n">x</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">w_c</span> <span class="o">*</span> <span class="n">T_s</span>
     <span class="n">exp_jx</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">exp_jx</span> <span class="o">*</span> <span class="n">exp_jx</span><span class="p">,</span> <span class="n">T_s</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sinc</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">pi</span><span class="p">))</span> <span class="o">*</span> <span class="n">exp_jx</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">matched_pole</span><span class="p">(</span><span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Pole for the gain formulas of estimators updated by the forward Euler method.</span>
+
+<span class="sd">    The forward Euler method maps the continuous-time pole `s` to the discrete-time</span>
+<span class="sd">    pole ``1 + s*T_s``. Using the returned value instead of `alpha` in the gain</span>
+<span class="sd">    formulas of a design with the poles at ``s = -alpha`` places the discrete-time</span>
+<span class="sd">    poles at ``exp(-alpha*T_s)``. This holds for the constant sampling period `T_s`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    alpha : float</span>
+<span class="sd">        Continuous-time pole (rad/s).</span>
+<span class="sd">    T_s : float</span>
+<span class="sd">        Sampling period (s).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Matched pole (rad/s), ``(1 - exp(-alpha*T_s))/T_s``.</span>
+
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">expm1</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">T_s</span>
 </pre></div>
 
                 </article>

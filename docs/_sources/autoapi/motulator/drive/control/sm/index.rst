@@ -255,7 +255,7 @@ Module Contents
    :type alpha_i: float, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
-                   keeps the speed estimation gain the same.
+                   keeps the speed estimation gain approximately the same.
    :type alpha_o: float, optional
    :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_ref: float, optional
@@ -646,7 +646,7 @@ Module Contents
    :type alpha_i: float | None, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
-                   keeps the speed estimation gain the same.
+                   keeps the speed estimation gain approximately the same.
    :type alpha_o: float | None, optional
    :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_ref: float, optional
@@ -1875,7 +1875,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, k_f, J = None)
+.. py:class:: SpeedFluxObserver(par, alpha_o, T_s, k_o, k_f, J = None)
 
    
    Flux observer with speed estimation.
@@ -1891,6 +1891,9 @@ Module Contents
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param alpha_o: Speed-estimation pole (rad/s).
    :type alpha_o: float
+   :param T_s: Sampling period (s). The poles of the ideal sensored estimation-error dynamics
+               are placed at ``exp(-alpha_o*T_s)``.
+   :type T_s: float
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], float]
    :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.

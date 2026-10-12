@@ -622,7 +622,7 @@
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,</span>
 <span class="sd">        otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which</span>
-<span class="sd">        keeps the speed estimation gain the same.</span>
+<span class="sd">        keeps the speed estimation gain approximately the same.</span>
 <span class="sd">    alpha_ref : float, optional</span>
 <span class="sd">        Reference generation bandwidth (rad/s), defaults to 2*pi*100.</span>
 <span class="sd">    k_o : Callable[[float], float], optional</span>
@@ -675,7 +675,7 @@
 <span class="w">        </span><span class="sd">"""Set alpha_o default based on J value and operation mode."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">400</span>
-            <span class="c1"># With J, the triple pole at alpha/sqrt(3) keeps the speed gain k_w the same</span>
+            <span class="c1"># With J, the triple pole at alpha/sqrt(3) keeps the gain k_w about the same</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">=</span> <span class="n">alpha</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">alpha</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 
 
@@ -719,7 +719,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span> <span class="o">=</span> <span class="n">CurrentController</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_i</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">create_speed_flux_observer</span><span class="p">(</span>
-            <span class="n">par</span><span class="p">,</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">),</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_f</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">J</span>
+            <span class="n">par</span><span class="p">,</span>
+            <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">),</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">k_o</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">k_f</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span><span class="p">,</span>
+            <span class="n">cfg</span><span class="o">.</span><span class="n">J</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>

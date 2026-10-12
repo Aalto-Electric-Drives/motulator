@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:01.090** total execution time for 6 files **from drive_examples/vhz**:
+**00:37.708** total execution time for 6 files **from drive_examples/vhz**:
 
 .. container::
 
@@ -33,20 +33,20 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py` (``plot_7kw_syrm_sat_ovhz.py``)
-     - 00:18.122
+     - 00:11.148
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_ovhz.py` (``plot_2kw_ipmsm_ovhz.py``)
-     - 00:16.844
+     - 00:10.392
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_diode_vhz.py` (``plot_2kw_im_diode_vhz.py``)
-     - 00:12.594
+     - 00:07.700
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_lc_vhz.py` (``plot_2kw_im_lc_vhz.py``)
-     - 00:06.910
+     - 00:04.280
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py` (``plot_2kw_ipmsm_2mass_ovhz.py``)
-     - 00:03.398
+     - 00:02.169
      - 0.0
    * - :ref:`sphx_glr_drive_examples_vhz_plot_2kw_im_ovhz.py` (``plot_2kw_im_ovhz.py``)
-     - 00:03.222
+     - 00:02.019
      - 0.0

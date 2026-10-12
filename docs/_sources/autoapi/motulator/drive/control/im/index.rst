@@ -334,7 +334,7 @@ Module Contents
    :type alpha_i: float, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
-                   speed estimation gain the same.
+                   speed estimation gain approximately the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
@@ -715,7 +715,7 @@ Module Contents
    :type alpha_i: float, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
-                   speed estimation gain the same.
+                   speed estimation gain approximately the same.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the rotor angular speed.
    :type k_o: Callable[[float], complex], optional
@@ -1546,7 +1546,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SpeedFluxObserver(par, alpha_o, k_o, J = None)
+.. py:class:: SpeedFluxObserver(par, alpha_o, T_s, k_o, J = None)
 
    
    Flux observer with speed estimation.
@@ -1560,6 +1560,9 @@ Module Contents
    :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param alpha_o: Speed estimation pole (rad/s).
    :type alpha_o: float
+   :param T_s: Sampling period (s). The poles of the ideal sensored estimation-error dynamics
+               are placed at ``exp(-alpha_o*T_s)``.
+   :type T_s: float
    :param k_o: Observer gain as a function of the electrical angular speed of the rotor.
    :type k_o: Callable[[float], complex]
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the

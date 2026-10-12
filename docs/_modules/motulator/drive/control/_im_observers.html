@@ -476,7 +476,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedObserver</span><span class="p">,</span> <span class="n">hold_equivalent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedObserver</span><span class="p">,</span> <span class="n">hold_equivalent</span><span class="p">,</span> <span class="n">matched_pole</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
     <span class="n">InductionMachinePars</span><span class="p">,</span>
@@ -705,6 +705,9 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float</span>
 <span class="sd">        Speed estimation pole (rad/s).</span>
+<span class="sd">    T_s : float</span>
+<span class="sd">        Sampling period (s). The poles of the ideal sensored estimation-error dynamics</span>
+<span class="sd">        are placed at ``exp(-alpha_o*T_s)``.</span>
 <span class="sd">    k_o : Callable[[float], complex]</span>
 <span class="sd">        Observer gain as a function of the electrical angular speed of the rotor.</span>
 <span class="sd">    J : float, optional</span>
@@ -717,10 +720,12 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
         <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">],</span>
         <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Configure observer gains for critically damped dynamics</span>
+        <span class="n">alpha_o</span> <span class="o">=</span> <span class="n">matched_pole</span><span class="p">(</span><span class="n">alpha_o</span><span class="p">,</span> <span class="n">T_s</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">J</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">k_w</span> <span class="o">=</span> <span class="n">alpha_o</span>
             <span class="n">k_tau</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -786,6 +791,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">create_speed_flux_observer</span><span class="p">(</span>
     <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
     <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">complex</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">J</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -804,6 +810,8 @@
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float</span>
 <span class="sd">        Speed estimation pole (rad/s).</span>
+<span class="sd">    T_s : float</span>
+<span class="sd">        Sampling period (s), see {class}`SpeedFluxObserver`.</span>
 <span class="sd">    k_o : Callable[[float], complex], optional</span>
 <span class="sd">        Observer gain as a function of the electrical angular rotor speed. If `None`, it</span>
 <span class="sd">        defaults to ``lambda w_m: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``</span>
@@ -828,7 +836,7 @@
     <span class="k">if</span> <span class="n">k_o</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">k_o</span> <span class="o">=</span> <span class="n">default_sensorless_k_o</span><span class="p">(</span><span class="n">par</span><span class="p">)</span> <span class="k">if</span> <span class="n">sensorless</span> <span class="k">else</span> <span class="n">default_k_o_sensored</span>
 
-    <span class="k">return</span> <span class="n">SpeedFluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">k_o</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SpeedFluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">alpha_o</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">k_o</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_vhz_observer</span><span class="p">(</span>

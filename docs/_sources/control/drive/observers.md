@@ -31,6 +31,8 @@ which corresponds to a first-order low-pass filter of the true speed. The full-o
 
 The observer structure {eq}`speed_obs` was originally proposed for sensored servo drives {cite}`Lor1991` and for signal-injection methods {cite}`Kim2003`. We use it also in model-based sensorless control, where the error signal comes from the flux observer instead of a measured speed or position.
 
+The speed observer is updated using the forward Euler method. To place the poles of the ideal sensored estimation-error dynamics at $z = \e^{-\alphao\Ts}$, the pole $\alphao$ is replaced with $(1 - \e^{-\alphao\Ts})/\Ts$ in the gain formulas below.
+
 ## For Induction Machines
 
 In induction machine drives, the flux linkages and torque are estimated. In sensorless drives, the rotor speed is also estimated. Sensored and sensorless reduced-order observer designs {cite}`Ver1988,Har2001,Hin2010` are available in the {class}`motulator.drive.control.im.FluxObserver` and {class}`motulator.drive.control.im.SpeedFluxObserver` classes.
