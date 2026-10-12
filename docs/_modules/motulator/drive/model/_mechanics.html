@@ -506,14 +506,6 @@
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">StateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""State history."""</span>
-
-    <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">w_M</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="MechanicalSystem">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MechanicalSystem</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
@@ -538,7 +530,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span>
             <span class="n">exp_j_theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="n">StateHistory</span> <span class="o">=</span> <span class="n">StateHistory</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">B_L</span> <span class="o">=</span> <span class="n">B_L</span>
 
@@ -622,8 +613,8 @@
     <span class="n">theta_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">MechanicalSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">w_M</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"w_M"</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"exp_j_theta_M"</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="n">subsystem</span><span class="o">.</span><span class="n">compute_total_load_torque</span><span class="p">(</span><span class="n">t_k</span><span class="p">,</span> <span class="n">w_M_k</span><span class="p">)</span>
@@ -642,16 +633,6 @@
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">w_L</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Imaginary part always zero</span>
     <span class="n">theta_ML</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Imaginary part always zero</span>
-
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TwoMassMechanicalSystemStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Temporary storage for system states."""</span>
-
-    <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">w_M</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">w_L</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">theta_ML</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="TwoMassMechanicalSystem">
@@ -695,9 +676,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span>
             <span class="n">exp_j_theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="n">TwoMassMechanicalSystemStateHistory</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">TwoMassMechanicalSystemStateHistory</span><span class="p">()</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="TwoMassMechanicalSystem.set_external_load_torque">
@@ -808,10 +786,10 @@
     <span class="n">theta_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">TwoMassMechanicalSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">w_M</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">w_L</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">theta_ML</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"w_M"</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"exp_j_theta_M"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"w_L"</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"theta_ML"</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_S</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">compute_shaft_torque</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_ML</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_L</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
             <span class="p">[</span>
@@ -830,13 +808,6 @@
     <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ExternalRotorSpeedStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""State history."""</span>
-
-    <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="ExternalRotorSpeed">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExternalRotorSpeed</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
@@ -852,7 +823,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">ExternalRotorSpeedStates</span> <span class="o">=</span> <span class="n">ExternalRotorSpeedStates</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">exp_j_theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="n">ExternalRotorSpeedStateHistory</span> <span class="o">=</span> <span class="n">ExternalRotorSpeedStateHistory</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mf">0.0</span>  <span class="c1"># External input</span>
 
 <div class="viewcode-block" id="ExternalRotorSpeed.set_external_rotor_speed">
@@ -926,7 +896,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">ExternalRotorSpeed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">subsystem</span><span class="o">.</span><span class="n">w_M</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"exp_j_theta_M"</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
 </pre></div>
 

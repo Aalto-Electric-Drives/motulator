@@ -528,7 +528,9 @@ Package Contents
    be used with different input, output, state, and history types. The class provides
    methods for setting states, outputs, and computing state derivatives. It also
    provides methods for extending the state history and creating time-series
-   representations of the subsystem.
+   representations of the subsystem. The state history is a dict of lists, keyed by
+   the names of the state fields. The model initializes it by `init_state_history`
+   and extends it by `extend_state_history`.
 
 
 
@@ -575,6 +577,30 @@ Package Contents
 
       
       Extend the state history with values from solver output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: init_state_history()
+
+      
+      Initialize the state history with an empty list for each state field.
 
 
 

@@ -549,7 +549,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="VoltageSourceConverter.set_external_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.set_external_dc_current">[docs]</a>
@@ -639,13 +638,6 @@
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CapacitiveDCBusConverterStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""State history."""</span>
-
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="CapacitiveDCBusConverter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CapacitiveDCBusConverter</span><span class="p">(</span><span class="n">VoltageSourceConverter</span><span class="p">):</span>
@@ -680,9 +672,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span> <span class="o">=</span> <span class="n">C_dc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">CapacitiveDCBusConverterStates</span> <span class="o">=</span> <span class="n">CapacitiveDCBusConverterStates</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="n">CapacitiveDCBusConverterStateHistory</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">CapacitiveDCBusConverterStateHistory</span><span class="p">()</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="CapacitiveDCBusConverter.set_external_dc_current">
@@ -735,7 +724,7 @@
     <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">CapacitiveDCBusConverter</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">CapacitiveDCBusConverter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_dc"</span><span class="p">])</span>
 
 
 <span class="c1"># %%</span>
@@ -748,15 +737,6 @@
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Imaginary part is always zero</span>
     <span class="n">i_L</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Imaginary part is always zero</span>
     <span class="n">exp_j_theta_g</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">FrequencyConverterStateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""State history."""</span>
-
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">i_L</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">exp_j_theta_g</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="FrequencyConverter">
@@ -805,7 +785,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f_g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">U_g</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">FrequencyConverterStates</span> <span class="o">=</span> <span class="n">FrequencyConverterStates</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="n">FrequencyConverterStateHistory</span> <span class="o">=</span> <span class="n">FrequencyConverterStateHistory</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FrequencyConverter.compute_voltages">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.compute_voltages">[docs]</a>
@@ -874,9 +853,9 @@
     <span class="n">i_g_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">FrequencyConverter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">u_dc</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">i_L</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">exp_j_theta_g</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_dc"</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"i_L"</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"exp_j_theta_g"</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_di</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">compute_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_g_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">)</span>
         <span class="c1"># Diode bridge switching states (-1, 0, 1)</span>

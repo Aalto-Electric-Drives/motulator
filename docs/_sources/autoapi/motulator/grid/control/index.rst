@@ -40,6 +40,7 @@ Classes
    motulator.grid.control.GridConverterControlSystem
    motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.ObserverBasedGridFormingControllerCfg
+   motulator.grid.control.ObserverOutputs
    motulator.grid.control.PLL
    motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
@@ -784,6 +785,29 @@ Package Contents
    :type i_d_max: float, optional
    :param alpha_l: Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_l: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: ObserverOutputs
+
+   
+   Feedback signals for the control system.
+
 
 
 

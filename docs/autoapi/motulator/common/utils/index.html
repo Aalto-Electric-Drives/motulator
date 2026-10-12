@@ -521,6 +521,12 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.BaseValues"><code class="docutils literal notranslate"><span class="pre">BaseValues</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.BaseValues.from_nominal"><code class="docutils literal notranslate"><span class="pre">BaseValues.from_nominal()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.BaseValues.unity"><code class="docutils literal notranslate"><span class="pre">BaseValues.unity()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>
@@ -548,6 +554,12 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseValues</span></code></a></p></td>
+<td><p>Base values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.NominalValues" title="motulator.common.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
+<td><p>Nominal values.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.SequenceGenerator" title="motulator.common.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
@@ -583,6 +595,91 @@
 </section>
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.utils.BaseValues">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">BaseValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.BaseValues" title="Link to this definition">#</a></dt>
+<dd><p>Base values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Voltage (V, peak, line-neutral).</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Current (A, peak).</p></li>
+<li><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular frequency (rad/s).</p></li>
+<li><p><strong>psi</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Flux linkage (Vs).</p></li>
+<li><p><strong>p</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Power (W).</p></li>
+<li><p><strong>Z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Impedance (Ω).</p></li>
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Inductance (H).</p></li>
+<li><p><strong>C</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Capacitance (F).</p></li>
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Torque (Nm), defaults to 0.</p></li>
+<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of pole pairs, defaults to 0.</p></li>
+<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Mechanical angular frequency (rad/s), defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.utils.BaseValues.from_nominal">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_nominal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues.from_nominal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.BaseValues.from_nominal" title="Link to this definition">#</a></dt>
+<dd><p>Compute base values from nominal values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nom</strong> (<a class="reference internal" href="#motulator.common.utils.NominalValues" title="motulator.common.utils.NominalValues"><em>NominalValues</em></a>) – <dl class="simple">
+<dt>Nominal values containing the following fields:</dt><dd><dl class="simple">
+<dt>U<span class="classifier">float</span></dt><dd><p>Voltage (V, rms, line-line).</p>
+</dd>
+<dt>I<span class="classifier">float</span></dt><dd><p>Current (A, rms).</p>
+</dd>
+<dt>f<span class="classifier">float</span></dt><dd><p>Frequency (Hz).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Number of pole pairs, defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Base values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues">BaseValues</a></p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Notice that the nominal torque is larger than the base torque due to the power
+factor and efficiency being less than unity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.utils.BaseValues.unity">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">unity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#BaseValues.unity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.BaseValues.unity" title="Link to this definition">#</a></dt>
+<dd><p>Create base values with all values set to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues">BaseValues</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.utils.NominalValues">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">NominalValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#NominalValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.NominalValues" title="Link to this definition">#</a></dt>
+<dd><p>Nominal values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>U</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Voltage (V, rms, line-line).</p></li>
+<li><p><strong>I</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Current (A, rms).</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Frequency (Hz).</p></li>
+<li><p><strong>P</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Power (W).</p></li>
+<li><p><strong>tau</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Torque (Nm), defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.utils.SequenceGenerator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">SequenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">times</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#SequenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.SequenceGenerator" title="Link to this definition">#</a></dt>
@@ -795,6 +892,12 @@ period. It does not include transients due to changes in the switching commands.
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.BaseValues"><code class="docutils literal notranslate"><span class="pre">BaseValues</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.BaseValues.from_nominal"><code class="docutils literal notranslate"><span class="pre">BaseValues.from_nominal()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.BaseValues.unity"><code class="docutils literal notranslate"><span class="pre">BaseValues.unity()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.abc2complex"><code class="docutils literal notranslate"><span class="pre">abc2complex()</span></code></a></li>

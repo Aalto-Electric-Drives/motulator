@@ -25,8 +25,10 @@ Classes
    motulator.drive.control.im.FluxVectorController
    motulator.drive.control.im.FluxVectorControllerCfg
    motulator.drive.control.im.InductionMachineInvGammaPars
+   motulator.drive.control.im.InductionMachinePars
    motulator.drive.control.im.ObserverBasedVHzController
    motulator.drive.control.im.ObserverBasedVHzControllerCfg
+   motulator.drive.control.im.ObserverOutputs
    motulator.drive.control.im.PIController
    motulator.drive.control.im.PWM
    motulator.drive.control.im.ReferenceGenerator
@@ -922,6 +924,152 @@ Module Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: InductionMachinePars
+
+   
+   Γ-model parameters of an induction machine.
+
+   This contains Γ-model parameters of an induction machine. The main-flux saturation
+   can also be modeled by providing a callable `L_s` parameter. For convenience, the
+   class also provides the corresponding inverse-Γ model parameters, which can be used
+   in control systems. If the saturation is modeled, these inverse-Γ parameters depend
+   on the stator flux linkage magnitude `psi_s` that should be updated by calling the
+   `update_psi_s` method.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param R_r: Rotor resistance (Ω).
+   :type R_r: float
+   :param L_ell: Leakage inductance (H).
+   :type L_ell: float
+   :param L_s: Stator inductance (H). If callable, it should be a function of the stator flux
+               linkage magnitude (Vs).
+   :type L_s: float | Callable[[float], float]
+   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
+               defaults to 0 (no core losses).
+   :type G_c: float, optional
+   :param psi_s: Stator flux linkage magnitude (Vs), at which the callable `L_s` is evaluated,
+                 defaults to 0. It can be updated by calling the `update_psi_s` method.
+   :type psi_s: float, optional
+
+   .. attribute:: gamma
+
+      Magnetic coupling factor.
+
+      :type: float
+
+   .. attribute:: L_M
+
+      Inverse-Γ magnetizing inductance (H).
+
+      :type: float
+
+   .. attribute:: L_sgm
+
+      Inverse-Γ leakage inductance (H).
+
+      :type: float
+
+   .. attribute:: R_R
+
+      Inverse-Γ rotor resistance (Ω).
+
+      :type: float
+
+   .. attribute:: R_sgm
+
+      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
+
+      :type: float
+
+   .. attribute:: alpha
+
+      Inverse rotor time constant (rad/s).
+
+      :type: float
+
+   .. attribute:: w_rb
+
+      Breakdown slip angular frequency (rad/s).
+
+      :type: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: from_inv_gamma_pars(par)
+      :classmethod:
+
+
+      
+      Compute Γ-model parameters from inverse-Γ model parameters.
+
+      This transformation assumes that the parameters are constant.
+
+      :param par: Inverse-Γ model parameters.
+      :type par: InductionMachineInvGammaPars
+
+      :returns: Γ model parameters.
+      :rtype: InductionMachinePars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update_psi_s(psi_s)
+
+      
+      Update the stator flux linkage magnitude state.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: ObserverBasedVHzController(par, cfg)
 
    
@@ -1097,6 +1245,29 @@ Module Contents
    :type k_b: float, optional
    :param T_s: Sampling period (s), defaults to 250e-6.
    :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: ObserverOutputs
+
+   
+   Feedback signals for the control system.
+
 
 
 

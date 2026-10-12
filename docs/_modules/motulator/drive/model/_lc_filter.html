@@ -504,14 +504,6 @@
     <span class="n">u_f_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
 
 
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">StateHistory</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""State history."""</span>
-
-    <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">u_f_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="LCFilter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LCFilter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
@@ -541,7 +533,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">States</span> <span class="o">=</span> <span class="n">States</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">:</span> <span class="n">StateHistory</span> <span class="o">=</span> <span class="n">StateHistory</span><span class="p">()</span>
 
 <div class="viewcode-block" id="LCFilter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.set_outputs">[docs]</a>
@@ -599,8 +590,8 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LCFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute output time series from the states."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_f_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"i_c_ab"</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_f_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_f_ab"</span><span class="p">])</span>
 </pre></div>
 
                 </article>

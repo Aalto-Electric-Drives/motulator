@@ -554,6 +554,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverOutputs"><code class="docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL"><code class="docutils literal notranslate"><span class="pre">PLL</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.compute_output"><code class="docutils literal notranslate"><span class="pre">PLL.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
@@ -620,16 +621,19 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControllerCfg" title="motulator.grid.control.ObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControllerCfg</span></code></a></p></td>
 <td><p>Disturbance-observer-based grid-forming controller configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
+<td><p>Feedback signals for the control system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
 <td><p>Phase-locked loop including the voltage-magnitude filtering.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationController" title="motulator.grid.control.PowerSynchronizationController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationController" title="motulator.grid.control.PowerSynchronizationController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationController</span></code></a></p></td>
 <td><p>Reference-feedforward power-synchronization controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
 <td><p>Configuration for the reference-feedforward power-synchronization controller.</p></td>
 </tr>
 </tbody>
@@ -1009,7 +1013,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<a class="reference internal" href="../../drive/control/sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1030,7 +1034,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="../../drive/control/sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs">ObserverOutputs</a></p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs">ObserverOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1057,7 +1061,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref</strong> (<em>References</em>)</p></li>
-<li><p><strong>fbk</strong> (<a class="reference internal" href="../../drive/control/sm/index.html#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1093,6 +1097,12 @@ somewhat below <cite>i_max</cite> is recommended, e.g., <cite>i_d_max = 0.85*i_m
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.ObserverOutputs">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverOutputs</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverOutputs" title="Link to this definition">#</a></dt>
+<dd><p>Feedback signals for the control system.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1572,6 +1582,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverOutputs"><code class="docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL"><code class="docutils literal notranslate"><span class="pre">PLL</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.compute_output"><code class="docutils literal notranslate"><span class="pre">PLL.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>

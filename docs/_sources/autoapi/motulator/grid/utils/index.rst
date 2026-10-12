@@ -34,6 +34,7 @@ Classes
 
    motulator.grid.utils.BaseValues
    motulator.grid.utils.IdentificationCfg
+   motulator.grid.utils.IdentificationResults
    motulator.grid.utils.NominalValues
    motulator.grid.utils.SequenceGenerator
    motulator.grid.utils.Step
@@ -231,6 +232,33 @@ Package Contents
                                 highest frequency compared to the lowest if `variable_amplitude` is set to True.
                                 Defaults to 5.0.
    :type amplitude_multiplier: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: IdentificationResults
+
+   
+   Container for identification results.
+
+   Contains fields for excitation signal frequency `f_e`, elements of the output
+   admittance matrix `[Y_dd, Y_qd; Y_dq, Y_qq]`, and the following operating-point
+   vectors (in synchronous coordinates aligned with the PCC voltage): grid current
+   `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`.
 
 
 

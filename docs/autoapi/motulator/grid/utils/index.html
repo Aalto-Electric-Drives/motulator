@@ -527,6 +527,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.IdentificationCfg"><code class="docutils literal notranslate"><span class="pre">IdentificationCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.IdentificationResults"><code class="docutils literal notranslate"><span class="pre">IdentificationResults</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>
@@ -562,13 +563,16 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.IdentificationCfg" title="motulator.grid.utils.IdentificationCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IdentificationCfg</span></code></a></p></td>
 <td><p>Configuration parameters for converter output admittance identification.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.NominalValues" title="motulator.grid.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.IdentificationResults" title="motulator.grid.utils.IdentificationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IdentificationResults</span></code></a></p></td>
+<td><p>Container for identification results.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.NominalValues" title="motulator.grid.utils.NominalValues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NominalValues</span></code></a></p></td>
 <td><p>Nominal values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.SequenceGenerator" title="motulator.grid.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.SequenceGenerator" title="motulator.grid.utils.SequenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></p></td>
 <td><p>Sequence generator.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.utils.Step" title="motulator.grid.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.utils.Step" title="motulator.grid.utils.Step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Step</span></code></a></p></td>
 <td><p>Step function.</p></td>
 </tr>
 </tbody>
@@ -722,6 +726,16 @@ Defaults to 5.0.</p></li>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.utils.IdentificationResults">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">IdentificationResults</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/utils/_identification.html#IdentificationResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.IdentificationResults" title="Link to this definition">#</a></dt>
+<dd><p>Container for identification results.</p>
+<p>Contains fields for excitation signal frequency <cite>f_e</cite>, elements of the output
+admittance matrix <cite>[Y_dd, Y_qd; Y_dq, Y_qq]</cite>, and the following operating-point
+vectors (in synchronous coordinates aligned with the PCC voltage): grid current
+<cite>i_g0</cite>, grid voltage <cite>e_g0</cite>, PCC voltage <cite>u_g0</cite> and converter voltage <cite>u_c0</cite>.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.utils.NominalValues">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.utils.</span></span><span class="sig-name descname"><span class="pre">NominalValues</span></span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_utils.html#NominalValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.utils.NominalValues" title="Link to this definition">#</a></dt>
 <dd><p>Nominal values.</p>
@@ -831,7 +845,7 @@ Otherwise, plot the grid voltage waveforms, defaults to True.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>res</strong> (<em>IdentificationResults</em>) – Should contain the results from the identification.</p></li>
+<li><p><strong>res</strong> (<a class="reference internal" href="#motulator.grid.utils.IdentificationResults" title="motulator.grid.utils.IdentificationResults"><em>IdentificationResults</em></a>) – Should contain the results from the identification.</p></li>
 <li><p><strong>plot_style</strong> (<em>Literal</em><em>[</em><em>&quot;polar&quot;</em><em>, </em><em>&quot;re_im&quot;</em><em>]</em><em>, </em><em>optional</em>) – Style for plotting of identification results, defaults to “re_im”. Options are:
 - “polar”: plot magnitude and phase
 - “re_im”: plot real and imaginary parts</p></li>
@@ -854,7 +868,7 @@ the operating point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>res</strong> (<em>IdentificationResults</em>) – Should contain the results from the identification.</p></li>
+<li><p><strong>res</strong> (<a class="reference internal" href="#motulator.grid.utils.IdentificationResults" title="motulator.grid.utils.IdentificationResults"><em>IdentificationResults</em></a>) – Should contain the results from the identification.</p></li>
 <li><p><strong>base</strong> (<a class="reference internal" href="#motulator.grid.utils.BaseValues" title="motulator.grid.utils.BaseValues"><em>BaseValues</em></a>) – Base values for per-unit conversion.</p></li>
 <li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Use latex for plots, defaults to False.</p></li>
 </ul>
@@ -902,7 +916,7 @@ in SI units.</p></li>
 information about the operating point.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>IdentificationResults</p>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.grid.utils.IdentificationResults" title="motulator.grid.utils.IdentificationResults">IdentificationResults</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -966,6 +980,7 @@ information about the operating point.</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.IdentificationCfg"><code class="docutils literal notranslate"><span class="pre">IdentificationCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.IdentificationResults"><code class="docutils literal notranslate"><span class="pre">IdentificationResults</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.NominalValues"><code class="docutils literal notranslate"><span class="pre">NominalValues</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.SequenceGenerator"><code class="docutils literal notranslate"><span class="pre">SequenceGenerator</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.utils.Step"><code class="docutils literal notranslate"><span class="pre">Step</span></code></a></li>

@@ -486,7 +486,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">savemat</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">CarrierComparison</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_latex_style</span><span class="p">,</span> <span class="n">set_screen_style</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_style</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">control</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span>
 
@@ -596,6 +596,8 @@
 
 
 
+<div class="viewcode-block" id="IdentificationResults">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.IdentificationResults">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">IdentificationResults</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
@@ -616,7 +618,8 @@
     <span class="n">i_g0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">e_g0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">u_g0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-    <span class="n">u_c0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">u_c0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span></div>
+
 
 
 <span class="c1"># %%</span>
@@ -952,10 +955,7 @@
 
 <span class="sd">    """</span>
     <span class="c1"># ruff: noqa: PLR0915</span>
-    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span>
+    <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
 
     <span class="c1"># First figure: elements of output admittance matrix</span>
     <span class="k">if</span> <span class="n">plot_style</span> <span class="o">==</span> <span class="s2">"polar"</span><span class="p">:</span>
@@ -1087,10 +1087,7 @@
 <span class="sd">        Use latex for plots, defaults to False.</span>
 
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span>
+    <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
 
     <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

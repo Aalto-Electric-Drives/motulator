@@ -548,6 +548,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem"><code class="docutils literal notranslate"><span class="pre">Subsystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">Subsystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.extend_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.extend_state_history()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.init_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.rhs"><code class="docutils literal notranslate"><span class="pre">Subsystem.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">Subsystem.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.set_states"><code class="docutils literal notranslate"><span class="pre">Subsystem.set_states()</span></code></a></li>
@@ -918,7 +919,9 @@ failure, in which case the results cover the time until the failure.</p>
 be used with different input, output, state, and history types. The class provides
 methods for setting states, outputs, and computing state derivatives. It also
 provides methods for extending the state history and creating time-series
-representations of the subsystem.</p>
+representations of the subsystem. The state history is a dict of lists, keyed by
+the names of the state fields. The model initializes it by <cite>init_state_history</cite>
+and extends it by <cite>extend_state_history</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Subsystem.create_time_series">
 <span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.create_time_series" title="Link to this definition">#</a></dt>
@@ -946,6 +949,17 @@ representations of the subsystem.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Subsystem.init_state_history">
+<span class="sig-name descname"><span class="pre">init_state_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.init_state_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.init_state_history" title="Link to this definition">#</a></dt>
+<dd><p>Initialize the state history with an empty list for each state field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1118,6 +1132,7 @@ representations of the subsystem.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem"><code class="docutils literal notranslate"><span class="pre">Subsystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">Subsystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.extend_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.extend_state_history()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.init_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.rhs"><code class="docutils literal notranslate"><span class="pre">Subsystem.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">Subsystem.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.set_states"><code class="docutils literal notranslate"><span class="pre">Subsystem.set_states()</span></code></a></li>
