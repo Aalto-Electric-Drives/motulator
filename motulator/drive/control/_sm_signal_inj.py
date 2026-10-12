@@ -6,7 +6,7 @@ from typing import cast
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver
+from motulator.drive.control._common import SpeedObserver, matched_pole
 from motulator.drive.control._sm_current_vector import (
     CurrentVectorController,
     CurrentVectorControllerCfg,
@@ -139,7 +139,9 @@ class SignalInjectionObserver:
         J: float | None = None,
         N_inj: int = 1,
     ) -> None:
-        # Configure observer gains for critically damped dynamics
+        # Configure observer gains for critically damped dynamics, with the poles
+        # matched to the sampling period
+        alpha_o = matched_pole(alpha_o, T_s)
         if J is None:
             self.k_theta = 2 * par.n_p * alpha_o
             k_w = alpha_o**2

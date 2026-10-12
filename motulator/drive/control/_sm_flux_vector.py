@@ -6,6 +6,7 @@ from math import inf, pi, sqrt
 from typing import Literal, cast
 
 from motulator.common.control._base import TimeSeries
+from motulator.drive.control._common import matched_pole
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
     create_speed_flux_observer,
@@ -161,7 +162,7 @@ class FluxVectorControllerCfg:
     alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
-        keeps the speed estimation gain the same.
+        keeps the speed estimation gain approximately the same.
     alpha_ref : float, optional
         Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float] | None, optional
@@ -210,7 +211,7 @@ class FluxVectorControllerCfg:
         """Set alpha_o default based on J value and operation mode."""
         if self.alpha_o is None:
             alpha = 2 * pi * 50 if self.sensorless else 2 * pi * 400
-            # With J, the triple pole at alpha/sqrt(3) keeps the speed gain k_w the same
+            # With J, the triple pole at alpha/sqrt(3) keeps the gain k_w about the same
             self.alpha_o = alpha if self.J is None else alpha / sqrt(3)
 
 
@@ -272,7 +273,13 @@ class FluxVectorController:
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
         self.observer = create_speed_flux_observer(
-            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
+            par,
+            cast(float, cfg.alpha_o),
+            cfg.T_s,
+            cfg.k_o,
+            cfg.k_f,
+            cfg.sensorless,
+            cfg.J,
         )  # alpha_o is resolved in the configuration's __post_init__
         self.cfg = cfg
         self.par = par
@@ -388,7 +395,8 @@ class ObserverBasedVHzController:
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv, 0.0
         )  # The current reference is not used, so its tracking bandwidth is zero
         self.flux_torque_ctrl = FluxTorqueController(par, cfg.alpha_psi, cfg.alpha_tau)
-        self.observer = create_vhz_observer(par, cfg.alpha_o, cfg.k_o)
+        k_theta = matched_pole(cfg.alpha_o, cfg.T_s)  # First-order angle estimation
+        self.observer = create_vhz_observer(par, k_theta, cfg.k_o)
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.T_s = cfg.T_s

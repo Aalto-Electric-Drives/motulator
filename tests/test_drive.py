@@ -210,7 +210,13 @@ def test_observer_based_vhz() -> None:
 
 
 def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
-    """Speed-estimation gain k_w of the observer created by the configuration."""
+    """
+    Speed-estimation gain k_w of the observer created by the configuration.
+
+    The sampling period is short, so the gains equal those of the continuous-time
+    design (the poles are matched to the sampling period).
+    """
+    kwargs["T_s"] = 1e-7
     if machine == "sm":
         par = sm_control.SynchronousMachinePars(
             n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
@@ -241,13 +247,15 @@ def test_default_speed_observer_gain(machine: str, sensorless: bool) -> None:
         for ctrl in ("fvc", "cvc")
         for J in (None, 0.015)
     ]
-    assert k_w == pytest.approx([k_w[0]] * len(k_w))
+    assert k_w == pytest.approx([k_w[0]] * len(k_w), rel=1e-3)
     # An explicitly given alpha_o is used as such
     alpha_o = 2 * pi * 20
     k_w_explicit = speed_observer_gain(
         machine, "cvc", sensorless=sensorless, alpha_o=alpha_o
     )
-    assert k_w_explicit == pytest.approx(alpha_o**2 if machine == "sm" else alpha_o)
+    assert k_w_explicit == pytest.approx(
+        alpha_o**2 if machine == "sm" else alpha_o, rel=1e-3
+    )
 
 
 def test_pm_flux_adaptation_keeps_parameters() -> None:
@@ -545,3 +553,64 @@ def test_im_flux_observer_current_model() -> None:
     for k in range(2, len(T_s) - 1):
         cm = psi_R[k] + T_s[k - 1] * (par.R_R * i_s - par.alpha * psi_R[k])
         assert psi_R[k + 1] == pytest.approx(cm)
+
+
+@pytest.mark.parametrize("J", [None, 0.015])
+@pytest.mark.parametrize("machine", ["sm", "im"])
+def test_speed_observer_poles(machine: str, J: float | None) -> None:
+    """The poles of the sensored estimation-error dynamics are at exp(-alpha_o*T_s)."""
+    T_s, alpha_o = 1e-3, 2 * pi * 400
+    if machine == "im":
+        observer = im_control.SpeedFluxObserver(
+            im_par(), alpha_o, T_s, lambda w_m: 1, J
+        )
+        k_w, k_tau = observer.speed_observer.k_w, observer.speed_observer.k_tau
+        # States: speed and load-torque estimation errors
+        A = np.array([[-k_w, -1 / (J or 1)], [k_tau, 0]])
+    else:
+        par = sm_control.SynchronousMachinePars(
+            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+        )
+        observer = sm_control.SpeedFluxObserver(
+            par, alpha_o, T_s, lambda w_m: 0, lambda w_m: 0, J
+        )
+        k_theta = observer.flux_observer.k_theta
+        k_w, k_tau = observer.speed_observer.k_w, observer.speed_observer.k_tau
+        # States: angle, speed, and load-torque estimation errors
+        A = np.array([[-k_theta, 1, 0], [-k_w, 0, -1 / (J or 1)], [k_tau, 0, 0]])
+    if J is None:  # No load-torque estimation
+        A = A[:-1, :-1]
+    # The states are updated using the forward Euler method
+    z = np.linalg.eigvals(np.eye(len(A)) + T_s * A)
+    assert z == pytest.approx(np.full(len(A), np.exp(-alpha_o * T_s)), abs=1e-4)
+
+
+@pytest.mark.parametrize("machine", ["sm", "im"])
+def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
+    """The default sensored speed estimation is stable at T_s = 1 ms."""
+    if machine == "im":
+        cfg = im_control.FluxVectorControllerCfg(
+            psi_s_nom=1.04, i_s_max=10.6, sensorless=False, T_s=1e-3
+        )
+        vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
+        mdl = im_drive()
+    else:
+        par = sm_control.SynchronousMachinePars(
+            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+        )
+        cfg = sm_control.FluxVectorControllerCfg(
+            i_s_max=6.5, sensorless=False, T_s=1e-3
+        )
+        vector_ctrl = sm_control.FluxVectorController(par, cfg)
+        mdl = ipmsm_drive(False)
+    ctrl = im_control.VectorControlSystem(
+        vector_ctrl, im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
+    )
+    ctrl.set_speed_ref(lambda t: 50.0 * (t > 0.05))
+    mdl.mechanics.set_external_load_torque(lambda t: 7.0 * (t > 0.3))
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.6)
+
+    end = res.ctrl.t > 0.55
+    w_M = np.interp(res.ctrl.t, res.mdl.t, res.mdl.machine.w_M)
+    assert np.mean(w_M[end]) == pytest.approx(50.0, abs=0.5)
+    assert res.ctrl.fbk.w_M[end] == pytest.approx(w_M[end], abs=0.5)

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from math import pi
 
 from motulator.common.utils._utils import wrap
-from motulator.drive.control._common import SpeedObserver, hold_equivalent
+from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -236,6 +236,9 @@ class SpeedFluxObserver:
         Machine model parameters.
     alpha_o : float
         Speed-estimation pole (rad/s).
+    T_s : float
+        Sampling period (s). The poles of the ideal sensored estimation-error dynamics
+        are placed at ``exp(-alpha_o*T_s)``.
     k_o : Callable[[float], float]
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float]
@@ -250,11 +253,13 @@ class SpeedFluxObserver:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         alpha_o: float,
+        T_s: float,
         k_o: Callable[[float], float],
         k_f: Callable[[float], float],
         J: float | None = None,
     ) -> None:
         # Configure observer gains for critically damped dynamics
+        alpha_o = matched_pole(alpha_o, T_s)
         if J is None:
             k_theta = 2 * alpha_o
             k_w = alpha_o**2
@@ -322,6 +327,7 @@ def default_sensorless_k_o(
 def create_speed_flux_observer(
     par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
     alpha_o: float,
+    T_s: float,
     k_o: Callable[[float], float] | None = None,
     k_f: Callable[[float], float] | None = None,
     sensorless: bool = True,
@@ -339,6 +345,8 @@ def create_speed_flux_observer(
         Machine model parameters.
     alpha_o : float
         Speed estimation pole (rad/s).
+    T_s : float
+        Sampling period (s), see {class}`SpeedFluxObserver`.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor speed, defaults to ``lambda w_m:
         0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if `sensorless` else ``lambda w_m:
@@ -364,7 +372,7 @@ def create_speed_flux_observer(
         k_o = default_sensorless_k_o(par) if sensorless else (lambda w_m: 2 * pi * 15)
     k_f = (lambda w_m: 0) if k_f is None else k_f
 
-    return SpeedFluxObserver(par, alpha_o, k_o, k_f, J)
+    return SpeedFluxObserver(par, alpha_o, T_s, k_o, k_f, J)
 
 
 def create_vhz_observer(

@@ -1,7 +1,7 @@
 """Common control functions and classes for machine drives."""
 
 from cmath import exp
-from math import inf, pi
+from math import expm1, inf, pi
 
 import numpy as np
 
@@ -139,3 +139,28 @@ def hold_equivalent(T_s: float, w_c: float) -> tuple[complex, complex]:
     x = 0.5 * w_c * T_s
     exp_jx = exp(-1j * x)
     return exp_jx * exp_jx, T_s * float(np.sinc(x / pi)) * exp_jx
+
+
+def matched_pole(alpha: float, T_s: float) -> float:
+    """
+    Pole for the gain formulas of estimators updated by the forward Euler method.
+
+    The forward Euler method maps the continuous-time pole `s` to the discrete-time
+    pole ``1 + s*T_s``. Using the returned value instead of `alpha` in the gain
+    formulas of a design with the poles at ``s = -alpha`` places the discrete-time
+    poles at ``exp(-alpha*T_s)``. This holds for the constant sampling period `T_s`.
+
+    Parameters
+    ----------
+    alpha : float
+        Continuous-time pole (rad/s).
+    T_s : float
+        Sampling period (s).
+
+    Returns
+    -------
+    float
+        Matched pole (rad/s), ``(1 - exp(-alpha*T_s))/T_s``.
+
+    """
+    return -expm1(-alpha * T_s) / T_s
