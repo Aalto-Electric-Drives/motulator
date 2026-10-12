@@ -87,132 +87,6 @@ class VectorController[Ref, Fbk](Protocol):
         ...
 
 
-class VectorControlSystem(ControlSystem):
-    """
-    Vector control system.
-
-    This class defines the interface for drive control systems. It is a generic class
-    that can be used with different inner controllers (such as current-vector control
-    and flux-vector control).
-
-    Parameters
-    ----------
-    vector_ctrl : VectorController
-        Vector controller whose input is the torque reference.
-    speed_ctrl : SpeedController | PIController | None, optional
-        Speed controller. If None (default), torque-control mode is used.
-    pwm : PWM, optional
-        Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.
-
-    """
-
-    def __init__(
-        self,
-        vector_ctrl: VectorController,
-        speed_ctrl: SpeedController | PIController | None = None,
-        pwm: PWM | None = None,
-    ) -> None:
-        super().__init__()
-        self.pwm = pwm if pwm is not None else vector_ctrl.default_pwm()
-        self.vector_ctrl = vector_ctrl
-        self.speed_ctrl = speed_ctrl
-        self.ext_ref = ExternalReferences()
-
-    def set_torque_ref(self, ref_fcn: Callable[[float], float]) -> None:
-        """
-        Set the external torque reference for torque-control mode.
-
-        Parameters
-        ----------
-        ref_fcn : Callable[[float], float]
-            Torque reference (Nm) as a function of time.
-
-        """
-        self.ext_ref.tau_M = ref_fcn
-
-    def set_speed_ref(self, ref_fcn: Callable[[float], float]) -> None:
-        """
-        Set the external speed reference for speed-control mode.
-
-        Parameters
-        ----------
-        ref_fcn : Callable[[float], float]
-            Speed reference (mechanical rad/s) as a function of time.
-
-        """
-        self.ext_ref.w_M = ref_fcn
-
-    def get_measurement(self, mdl: Drive) -> Measurements:
-        """Get measurements from sensors."""
-        u_dc = mdl.converter.meas_dc_voltage()
-        if mdl.lc_filter is not None:
-            i_c_ab = abc2complex(mdl.lc_filter.meas_currents())
-        else:
-            i_c_ab = abc2complex(mdl.machine.meas_currents())
-
-        if self.vector_ctrl.sensorless:
-            w_M = None
-            theta_M = None
-        else:
-            w_M = mdl.mechanics.meas_speed()
-            theta_M = wrap(mdl.mechanics.meas_position())
-        return Measurements(i_c_ab, u_dc, w_M, theta_M)
-
-    def get_feedback(self, meas: Measurements) -> Feedbacks:
-        """Get feedback signals."""
-        # The observers use the voltage of the ongoing sampling period, while the
-        # control laws use the voltage averaged over the previous and ongoing periods
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc, average=False)
-        fbk = self.vector_ctrl.get_feedback(u_c_ab, meas.i_c_ab, meas.w_M, meas.theta_M)
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
-        fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
-        fbk.u_dc = meas.u_dc
-        return fbk
-
-    def compute_output(self, fbk: Feedbacks) -> References:
-        """Compute controller output based on feedback."""
-        # Speed-control mode
-        if self.speed_ctrl and self.ext_ref.w_M is not None:
-            w_M_ref = self.ext_ref.w_M(self.t)
-            tau_M_ref = self.speed_ctrl.compute_output(w_M_ref, fbk.w_M)
-        # Torque-control mode
-        elif self.ext_ref.tau_M is not None:
-            w_M_ref = None
-            tau_M_ref = self.ext_ref.tau_M(self.t)
-        else:
-            raise ValueError("Either speed or torque reference must be set")
-        ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
-        ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
-        ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
-        ref.w_M = w_M_ref  # Store the speed reference for later use
-        return ref
-
-    def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
-        """
-        Compute the duty ratios from the stator voltage reference.
-
-        The reference is in the controller coordinates. Subclasses can override this
-        method, e.g., to control an output filter between the converter and the machine.
-
-        """
-        u_s_ab_ref = exp(1j * fbk.theta_c) * u_s_ref
-        return self.pwm(T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
-
-    def update(self, ref: References, fbk: Feedbacks) -> None:
-        """Update controller states."""
-        super().update(ref, fbk)
-        self.vector_ctrl.update(ref, fbk)
-        if self.speed_ctrl and ref.tau_M is not None:
-            self.speed_ctrl.update(ref.T_s, ref.tau_M)
-
-    def post_process(self) -> TimeSeries:
-        """Extend the post-process method."""
-        ts = super().post_process()
-        self.vector_ctrl.post_process(ts)
-        return ts
-
-
-# %%
 class VHzController[Ref, Fbk](Protocol):
     """Protocol defining the interface for V/Hz controllers."""
 
@@ -239,7 +113,175 @@ class VHzController[Ref, Fbk](Protocol):
         ...
 
 
-class VHzControlSystem(ControlSystem):
+# %%
+class DriveControlSystem(ControlSystem):
+    """
+    Base class for drive control systems.
+
+    This class implements the parts common to the drive control systems: the feedback
+    voltages, the modulation, and the speed reference. Subclasses implement
+    `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`
+    and `_compute_inner_output`.
+
+    Parameters
+    ----------
+    pwm : PWM
+        Pulse-width modulator.
+
+    """
+
+    def __init__(self, pwm: PWM) -> None:
+        super().__init__()
+        self.pwm = pwm
+        self.ext_ref = ExternalReferences()
+
+    def set_speed_ref(self, ref_fcn: Callable[[float], float]) -> None:
+        """
+        Set the external speed reference.
+
+        In vector control, the speed reference is used in speed-control mode, i.e., if
+        the speed controller is given.
+
+        Parameters
+        ----------
+        ref_fcn : Callable[[float], float]
+            Speed reference (mechanical rad/s) as a function of time.
+
+        """
+        self.ext_ref.w_M = ref_fcn
+
+    def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
+        """Get the feedback signals from the inner controller."""
+        raise NotImplementedError
+
+    def _compute_inner_output(self, fbk: Feedbacks) -> References:
+        """Compute the references, including the speed reference `w_M`."""
+        raise NotImplementedError
+
+    def get_feedback(self, meas: Measurements) -> Feedbacks:
+        """Get feedback signals."""
+        # The observers use the voltage of the ongoing sampling period, while the
+        # control laws use the voltage averaged over the previous and ongoing periods
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc, average=False)
+        fbk = self._get_inner_feedback(u_c_ab, meas)
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
+        fbk.u_dc = meas.u_dc
+        return fbk
+
+    def compute_output(self, fbk: Feedbacks) -> References:
+        """Compute controller output based on feedback."""
+        ref = self._compute_inner_output(fbk)
+        ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
+        ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
+        return ref
+
+    def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
+        """
+        Compute the duty ratios from the stator voltage reference.
+
+        The reference is in the controller coordinates. Subclasses can override this
+        method, e.g., to control an output filter between the converter and the machine.
+
+        """
+        u_s_ab_ref = exp(1j * fbk.theta_c) * u_s_ref
+        return self.pwm(T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
+
+
+# %%
+class VectorControlSystem(DriveControlSystem):
+    """
+    Vector control system.
+
+    This class defines the interface for drive control systems. It is a generic class
+    that can be used with different inner controllers (such as current-vector control
+    and flux-vector control).
+
+    Parameters
+    ----------
+    vector_ctrl : VectorController
+        Vector controller whose input is the torque reference.
+    speed_ctrl : SpeedController | PIController | None, optional
+        Speed controller. If None (default), torque-control mode is used.
+    pwm : PWM, optional
+        Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.
+
+    """
+
+    def __init__(
+        self,
+        vector_ctrl: VectorController,
+        speed_ctrl: SpeedController | PIController | None = None,
+        pwm: PWM | None = None,
+    ) -> None:
+        super().__init__(pwm if pwm is not None else vector_ctrl.default_pwm())
+        self.vector_ctrl = vector_ctrl
+        self.speed_ctrl = speed_ctrl
+
+    def set_torque_ref(self, ref_fcn: Callable[[float], float]) -> None:
+        """
+        Set the external torque reference for torque-control mode.
+
+        Parameters
+        ----------
+        ref_fcn : Callable[[float], float]
+            Torque reference (Nm) as a function of time.
+
+        """
+        self.ext_ref.tau_M = ref_fcn
+
+    def get_measurement(self, mdl: Drive) -> Measurements:
+        """Get measurements from sensors."""
+        u_dc = mdl.converter.meas_dc_voltage()
+        if mdl.lc_filter is not None:
+            i_c_ab = abc2complex(mdl.lc_filter.meas_currents())
+        else:
+            i_c_ab = abc2complex(mdl.machine.meas_currents())
+
+        if self.vector_ctrl.sensorless:
+            w_M = None
+            theta_M = None
+        else:
+            w_M = mdl.mechanics.meas_speed()
+            theta_M = wrap(mdl.mechanics.meas_position())
+        return Measurements(i_c_ab, u_dc, w_M, theta_M)
+
+    def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
+        return self.vector_ctrl.get_feedback(
+            u_s_ab, meas.i_c_ab, meas.w_M, meas.theta_M
+        )
+
+    def _compute_inner_output(self, fbk: Feedbacks) -> References:
+        # Speed-control mode
+        if self.speed_ctrl and self.ext_ref.w_M is not None:
+            w_M_ref = self.ext_ref.w_M(self.t)
+            tau_M_ref = self.speed_ctrl.compute_output(w_M_ref, fbk.w_M)
+        # Torque-control mode
+        elif self.ext_ref.tau_M is not None:
+            w_M_ref = None
+            tau_M_ref = self.ext_ref.tau_M(self.t)
+        else:
+            raise ValueError("Either speed or torque reference must be set")
+        ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
+        ref.w_M = w_M_ref
+        return ref
+
+    def update(self, ref: References, fbk: Feedbacks) -> None:
+        """Update controller states."""
+        super().update(ref, fbk)
+        self.vector_ctrl.update(ref, fbk)
+        if self.speed_ctrl and ref.tau_M is not None:
+            self.speed_ctrl.update(ref.T_s, ref.tau_M)
+
+    def post_process(self) -> TimeSeries:
+        """Extend the post-process method."""
+        ts = super().post_process()
+        self.vector_ctrl.post_process(ts)
+        return ts
+
+
+# %%
+class VHzControlSystem(DriveControlSystem):
     """
     V/Hz control system.
 
@@ -257,24 +299,10 @@ class VHzControlSystem(ControlSystem):
     def __init__(
         self, vhz_ctrl: VHzController, slew_rate: float = inf, pwm: PWM | None = None
     ) -> None:
-        super().__init__()
+        super().__init__(pwm if pwm is not None else vhz_ctrl.default_pwm())
         self.vhz_ctrl = vhz_ctrl
-        self.pwm = pwm if pwm is not None else vhz_ctrl.default_pwm()
         self.rate_limiter = RateLimiter(slew_rate)
-        self.ext_ref = ExternalReferences()
         self._w_M_ref: float = 0  # For storing ramp-limited speed reference
-
-    def set_speed_ref(self, ref_fcn: Callable[[float], float]) -> None:
-        """
-        Set the external speed reference.
-
-        Parameters
-        ----------
-        ref_fcn : Callable[[float], float]
-            Speed reference (mechanical rad/s) as a function of time.
-
-        """
-        self.ext_ref.w_M = ref_fcn
 
     def get_measurement(self, mdl: Drive) -> Measurements:
         """Get measurements."""
@@ -282,40 +310,17 @@ class VHzControlSystem(ControlSystem):
         i_s_ab = abc2complex(mdl.machine.meas_currents())
         return Measurements(i_s_ab, u_dc)
 
-    def get_feedback(self, meas: Measurements) -> Feedbacks:
-        """Get feedback signals."""
-        if self.ext_ref.w_M is not None:
-            w_M_ref = self.ext_ref.w_M(self.t)
-            self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
-            # Voltages as in VectorControlSystem.get_feedback
-            u_c_ab = self.pwm.get_realized_voltage(
-                meas.i_c_ab, meas.u_dc, average=False
-            )
-            fbk = self.vhz_ctrl.get_feedback(u_c_ab, meas.i_c_ab, self._w_M_ref)
-            u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
-            fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
-            fbk.u_dc = meas.u_dc
-            return fbk
-        raise ValueError("Speed reference must be set")
+    def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
+        if self.ext_ref.w_M is None:
+            raise ValueError("Speed reference must be set")
+        w_M_ref = self.ext_ref.w_M(self.t)
+        self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
+        return self.vhz_ctrl.get_feedback(u_s_ab, meas.i_c_ab, self._w_M_ref)
 
-    def compute_output(self, fbk: Feedbacks) -> References:
-        """Compute controller output based on feedback."""
+    def _compute_inner_output(self, fbk: Feedbacks) -> References:
         ref = self.vhz_ctrl.compute_output(fbk)
-        ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
-        ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
-        ref.w_M = self._w_M_ref  # Store the speed reference for later use
+        ref.w_M = self._w_M_ref
         return ref
-
-    def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
-        """
-        Compute the duty ratios from the stator voltage reference.
-
-        The reference is in the controller coordinates. Subclasses can override this
-        method, e.g., to control an output filter between the converter and the machine.
-
-        """
-        u_s_ab_ref = exp(1j * fbk.theta_c) * u_s_ref
-        return self.pwm(T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""

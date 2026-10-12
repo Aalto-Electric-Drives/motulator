@@ -17,6 +17,7 @@ import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.utils import dead_time_error
 from motulator.drive import model
+from motulator.drive.control import _im_flux_vector, _im_observers, _sm_flux_vector
 from motulator.drive.utils import ControlLoci, MagneticModel
 
 T_STOP = 0.6
@@ -617,3 +618,29 @@ def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
     w_M = np.interp(res.ctrl.t, res.mdl.t, res.mdl.machine.w_M)
     assert np.mean(w_M[end]) == pytest.approx(50.0, abs=0.5)
     assert res.ctrl.fbk.w_M[end] == pytest.approx(w_M[end], abs=0.5)
+
+
+def test_flux_torque_controller_without_torque_control() -> None:
+    """Without torque controllability, the torque reference is ignored."""
+    # IM with L_sgm = 0 (open-loop V/Hz control): only the flux is controlled
+    par = im_control.InductionMachineInvGammaPars(
+        n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=np.inf
+    )
+    ctrl = _im_flux_vector.FluxTorqueController(par, alpha_psi=100.0, alpha_tau=10.0)
+    fbk = _im_observers.ObserverOutputs(psi_s=1.0 + 0j, w_s=300.0)
+    u_s = [ctrl.compute_output(0.8, tau_M_ref, fbk) for tau_M_ref in (0.0, 10.0)]
+    assert u_s == pytest.approx([1j * 300 + 100 * (0.8 - 1)] * 2)
+
+    # PM machine at a high flux and a small load angle (c_tau < 0): the flux is reduced
+    par = sm_control.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    ctrl = _sm_flux_vector.FluxTorqueController(par, alpha_psi=100.0, alpha_tau=10.0)
+    psi_s = 2.5 + 0j
+    fbk = sm_control.ObserverOutputs(psi_s=psi_s, i_s=(psi_s - par.psi_f) / par.L_d)
+    u_s = [
+        ctrl.compute_output(psi_s_ref, tau_M_ref, fbk)
+        for psi_s_ref in (1.0, 3.0)
+        for tau_M_ref in (0.0, 10.0)
+    ]
+    assert u_s == pytest.approx([par.R_s * fbk.i_s - 100 * abs(psi_s)] * 4)
