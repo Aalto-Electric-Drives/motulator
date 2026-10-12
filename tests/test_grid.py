@@ -6,6 +6,8 @@ state, with loose tolerances.
 
 """
 
+from dataclasses import replace
+
 import numpy as np
 import pytest
 
@@ -84,3 +86,15 @@ def test_dft_of_unevenly_sampled_signal() -> None:
     u = 2.0 * np.cos(2 * np.pi * 50 * t + 0.3)
     y = dft(cfg, t, u, 50.0, initial_simulation=True)
     assert y == pytest.approx(2.0 * np.exp(0.3j), rel=1e-3)
+
+
+@pytest.mark.parametrize("ctrl", ["psc", "observer"])
+def test_default_active_resistance(ctrl: str) -> None:
+    """The default active resistance follows a configuration changed by replace()."""
+    if ctrl == "psc":
+        cfg = control.PowerSynchronizationControllerCfg(i_max=30)
+        inner_ctrl = control.PowerSynchronizationController(replace(cfg, i_max=60))
+    else:
+        cfg = control.ObserverBasedGridFormingControllerCfg(i_max=30, L=L_BASE)
+        inner_ctrl = control.ObserverBasedGridFormingController(replace(cfg, i_max=60))
+    assert inner_ctrl.R_a == pytest.approx(0.25 * cfg.u_nom / 60)

@@ -173,10 +173,6 @@ class CurrentVectorControllerCfg:
     alpha_pll: float = 2 * pi * 20
     T_s: float = 125e-6
 
-    def __post_init__(self) -> None:
-        if self.alpha_i is None:
-            self.alpha_i = self.alpha_c
-
 
 class CurrentVectorController:
     """

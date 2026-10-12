@@ -182,7 +182,7 @@ def test_numerical_failure_is_flagged(t_fail: float) -> None:
     """A numerical failure stops the simulation and is flagged in the results."""
     mdl = ipmsm_drive(pwm=False)
     ctrl = ipmsm_fvc(sensorless=False)
-    ctrl.set_speed_ref(lambda t: 0.0)
+    ctrl.set_speed_ref(0.0)
     mdl.mechanics.set_external_load_torque(lambda t: (t >= t_fail) * 1e300)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.05)
 
@@ -400,7 +400,7 @@ def test_discrete_current_control_angle_estimate() -> None:
         model.VoltageSourceConverter(u_dc=540),
     )
     w_M = 300.0
-    mdl.mechanics.set_external_rotor_speed(lambda t: w_M)
+    mdl.mechanics.set_external_rotor_speed(w_M)
     par = sm_control.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
     )
@@ -409,7 +409,7 @@ def test_discrete_current_control_angle_estimate() -> None:
     vector_ctrl.observer.speed_observer.w_M = w_M
     ctrl = sm_control.VectorControlSystem(vector_ctrl)
     assert ctrl.pwm.k_comp == 0  # The default PWM of the discrete-time design
-    ctrl.set_torque_ref(lambda t: 7.0)
+    ctrl.set_torque_ref(7.0)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
 
     end = res.ctrl.t > 0.15
@@ -431,7 +431,7 @@ def test_discrete_current_control_dead_time() -> None:
         model.VoltageSourceConverter(u_dc=540, t_d=t_d),
         pwm=True,
     )
-    mdl.mechanics.set_external_rotor_speed(lambda t: w_M)
+    mdl.mechanics.set_external_rotor_speed(w_M)
     cfg = im_control.CurrentVectorControllerCfg(
         psi_s_nom=1.04, i_s_max=10.6, T_s=T_s, discrete=True
     )
@@ -439,7 +439,7 @@ def test_discrete_current_control_dead_time() -> None:
     vector_ctrl.observer.speed_observer.w_M = w_M
     pwm = im_control.PWM(k_comp=0, d_err=lambda i, d: dead_time_error(i, d, t_d, T_s))
     ctrl = im_control.VectorControlSystem(vector_ctrl, pwm=pwm)
-    ctrl.set_torque_ref(lambda t: 0.0)  # Constant magnetizing current
+    ctrl.set_torque_ref(0.0)  # Constant magnetizing current
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
 
     end = res.ctrl.t > 0.15

@@ -9,7 +9,7 @@ from typing import Protocol
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter
 from motulator.common.control._pwm import PWM
-from motulator.common.utils._utils import abc2complex, wrap
+from motulator.common.utils._utils import abc2complex, get_value, wrap
 from motulator.drive.control._common import SpeedController
 from motulator.drive.model._drive import Drive
 
@@ -40,8 +40,8 @@ class References(Protocol):
 class ExternalReferences:
     """External reference signals."""
 
-    w_M: Callable[[float], float] | None = None
-    tau_M: Callable[[float], float] | None = None
+    w_M: float | Callable[[float], float] | None = None
+    tau_M: float | Callable[[float], float] | None = None
 
 
 @dataclass
@@ -135,7 +135,7 @@ class DriveControlSystem(ControlSystem):
         self.pwm = pwm
         self.ext_ref = ExternalReferences()
 
-    def set_speed_ref(self, ref_fcn: Callable[[float], float]) -> None:
+    def set_speed_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
         """
         Set the external speed reference.
 
@@ -144,8 +144,8 @@ class DriveControlSystem(ControlSystem):
 
         Parameters
         ----------
-        ref_fcn : Callable[[float], float]
-            Speed reference (mechanical rad/s) as a function of time.
+        ref_fcn : float | Callable[[float], float]
+            Speed reference (mechanical rad/s), constant or a function of time.
 
         """
         self.ext_ref.w_M = ref_fcn
@@ -218,14 +218,14 @@ class VectorControlSystem(DriveControlSystem):
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
 
-    def set_torque_ref(self, ref_fcn: Callable[[float], float]) -> None:
+    def set_torque_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
         """
         Set the external torque reference for torque-control mode.
 
         Parameters
         ----------
-        ref_fcn : Callable[[float], float]
-            Torque reference (Nm) as a function of time.
+        ref_fcn : float | Callable[[float], float]
+            Torque reference (Nm), constant or a function of time.
 
         """
         self.ext_ref.tau_M = ref_fcn
@@ -254,12 +254,12 @@ class VectorControlSystem(DriveControlSystem):
     def _compute_inner_output(self, fbk: Feedbacks) -> References:
         # Speed-control mode
         if self.speed_ctrl and self.ext_ref.w_M is not None:
-            w_M_ref = self.ext_ref.w_M(self.t)
+            w_M_ref = get_value(self.ext_ref.w_M, self.t)
             tau_M_ref = self.speed_ctrl.compute_output(w_M_ref, fbk.w_M)
         # Torque-control mode
         elif self.ext_ref.tau_M is not None:
             w_M_ref = None
-            tau_M_ref = self.ext_ref.tau_M(self.t)
+            tau_M_ref = get_value(self.ext_ref.tau_M, self.t)
         else:
             raise ValueError("Either speed or torque reference must be set")
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
@@ -313,7 +313,7 @@ class VHzControlSystem(DriveControlSystem):
     def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
         if self.ext_ref.w_M is None:
             raise ValueError("Speed reference must be set")
-        w_M_ref = self.ext_ref.w_M(self.t)
+        w_M_ref = get_value(self.ext_ref.w_M, self.t)
         self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
         return self.vhz_ctrl.get_feedback(u_s_ab, meas.i_c_ab, self._w_M_ref)
 

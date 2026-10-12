@@ -4,7 +4,6 @@ from cmath import exp, phase
 from collections.abc import Sequence
 from dataclasses import dataclass
 from math import copysign, inf, pi, sqrt
-from typing import cast
 
 import numpy as np
 
@@ -123,9 +122,9 @@ class ObserverBasedGridFormingControllerCfg:
         Total inductance estimate (H).
     R : float, optional
         Total series resistance estimate (Ω), defaults to 0.
-    R_a : float, optional
+    R_a : float | None, optional
         Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
-    k_v : float, optional
+    k_v : float | None, optional
         Voltage control gain, defaults to `alpha_o/w_nom`.
     alpha_o : float, optional
         Observer gain (rad/s), defaults to 2*pi*50.
@@ -159,12 +158,6 @@ class ObserverBasedGridFormingControllerCfg:
     T_s: float = 125e-6
     i_d_max: float | None = None
     alpha_l: float = 2 * pi * 50
-
-    def __post_init__(self) -> None:
-        if self.R_a is None:
-            self.R_a = 0.25 * self.u_nom / self.i_max
-        if self.k_v is None:
-            self.k_v = self.alpha_o / self.w_nom
 
 
 class ObserverBasedGridFormingController:
@@ -207,8 +200,8 @@ class ObserverBasedGridFormingController:
             u_nom=cfg.u_nom, w_nom=cfg.w_nom, L=cfg.L, R=cfg.R, alpha_o=cfg.alpha_o
         )
         self.current_limiter = CurrentLimiter(cfg.i_max)
-        self.R_a = cast(float, cfg.R_a)  # Resolved in the configuration's __post_init__
-        self.k_v = cast(float, cfg.k_v)
+        self.R_a = 0.25 * cfg.u_nom / cfg.i_max if cfg.R_a is None else cfg.R_a
+        self.k_v = cfg.alpha_o / cfg.w_nom if cfg.k_v is None else cfg.k_v
         self.k_c = cfg.alpha_c * cfg.L  # Current control gain
         self.T_s: float = cfg.T_s
         # Active-power reference limitation
