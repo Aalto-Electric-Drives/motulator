@@ -562,7 +562,7 @@ def test_speed_observer_poles(machine: str, J: float | None) -> None:
     T_s, alpha_o = 1e-3, 2 * pi * 400
     if machine == "im":
         observer = im_control.SpeedFluxObserver(
-            im_par(), alpha_o, lambda w_m: 1, J, T_s=T_s
+            im_par(), alpha_o, T_s, lambda w_m: 1, J
         )
         k_w, k_tau = observer.speed_observer.k_w, observer.speed_observer.k_tau
         # States: speed and load-torque estimation errors
@@ -572,7 +572,7 @@ def test_speed_observer_poles(machine: str, J: float | None) -> None:
             n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
         )
         observer = sm_control.SpeedFluxObserver(
-            par, alpha_o, lambda w_m: 0, lambda w_m: 0, J, T_s=T_s
+            par, alpha_o, T_s, lambda w_m: 0, lambda w_m: 0, J
         )
         k_theta = observer.flux_observer.k_theta
         k_w, k_tau = observer.speed_observer.k_w, observer.speed_observer.k_tau

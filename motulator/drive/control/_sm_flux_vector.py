@@ -275,11 +275,11 @@ class FluxVectorController:
         self.observer = create_speed_flux_observer(
             par,
             cast(float, cfg.alpha_o),
+            cfg.T_s,
             cfg.k_o,
             cfg.k_f,
             cfg.sensorless,
             cfg.J,
-            T_s=cfg.T_s,
         )  # alpha_o is resolved in the configuration's __post_init__
         self.cfg = cfg
         self.par = par

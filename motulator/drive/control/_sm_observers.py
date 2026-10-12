@@ -236,6 +236,9 @@ class SpeedFluxObserver:
         Machine model parameters.
     alpha_o : float
         Speed-estimation pole (rad/s).
+    T_s : float
+        Sampling period (s). The poles of the ideal sensored estimation-error dynamics
+        are placed at ``exp(-alpha_o*T_s)``.
     k_o : Callable[[float], float]
         Observer gain as a function of the rotor angular speed.
     k_f : Callable[[float], float]
@@ -243,9 +246,6 @@ class SpeedFluxObserver:
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
-    T_s : float
-        Sampling period (s). The poles of the ideal sensored estimation-error dynamics
-        are placed at ``exp(-alpha_o*T_s)``.
 
     """
 
@@ -253,11 +253,10 @@ class SpeedFluxObserver:
         self,
         par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
         alpha_o: float,
+        T_s: float,
         k_o: Callable[[float], float],
         k_f: Callable[[float], float],
         J: float | None = None,
-        *,
-        T_s: float,
     ) -> None:
         # Configure observer gains for critically damped dynamics
         alpha_o = matched_pole(alpha_o, T_s)
@@ -328,12 +327,11 @@ def default_sensorless_k_o(
 def create_speed_flux_observer(
     par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
     alpha_o: float,
+    T_s: float,
     k_o: Callable[[float], float] | None = None,
     k_f: Callable[[float], float] | None = None,
     sensorless: bool = True,
     J: float | None = None,
-    *,
-    T_s: float,
 ) -> SpeedFluxObserver:
     """
     Create a flux observer with speed estimation.
@@ -347,6 +345,8 @@ def create_speed_flux_observer(
         Machine model parameters.
     alpha_o : float
         Speed estimation pole (rad/s).
+    T_s : float
+        Sampling period (s), see {class}`SpeedFluxObserver`.
     k_o : Callable[[float], float], optional
         Observer gain as a function of the rotor speed, defaults to ``lambda w_m:
         0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if `sensorless` else ``lambda w_m:
@@ -361,8 +361,6 @@ def create_speed_flux_observer(
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
-    T_s : float
-        Sampling period (s), see {class}`SpeedFluxObserver`.
 
     Returns
     -------
@@ -374,7 +372,7 @@ def create_speed_flux_observer(
         k_o = default_sensorless_k_o(par) if sensorless else (lambda w_m: 2 * pi * 15)
     k_f = (lambda w_m: 0) if k_f is None else k_f
 
-    return SpeedFluxObserver(par, alpha_o, k_o, k_f, J, T_s=T_s)
+    return SpeedFluxObserver(par, alpha_o, T_s, k_o, k_f, J)
 
 
 def create_vhz_observer(

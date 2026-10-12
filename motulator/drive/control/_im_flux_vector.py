@@ -314,7 +314,7 @@ class FluxVectorController:
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
         self.observer = create_speed_flux_observer(
-            par, cast(float, cfg.alpha_o), cfg.k_o, cfg.sensorless, cfg.J, T_s=cfg.T_s
+            par, cast(float, cfg.alpha_o), cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
         )
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s
