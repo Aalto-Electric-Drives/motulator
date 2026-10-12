@@ -252,8 +252,11 @@ class ObserverBasedGridFormingController:
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
-        # Convert quantities to converter-output-voltage coordinates
+        # Transform the complex signals to the coordinates aligned with v_c
         T = np.exp(-1j * np.angle(ts.fbk.v_c))
         ts.ref.u_c = T * ts.ref.u_c
-        ts.fbk.i_c = T * ts.fbk.i_c
         ts.ref.i_c = T * ts.ref.i_c
+        ts.fbk.u_c = T * ts.fbk.u_c
+        ts.fbk.i_c = T * ts.fbk.i_c
+        ts.fbk.u_g = T * ts.fbk.u_g
+        ts.fbk.v_c = T * ts.fbk.v_c

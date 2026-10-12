@@ -1,6 +1,7 @@
 """Simulation environment."""
 
 import os
+import warnings
 from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
@@ -145,7 +146,8 @@ class Simulation:
             if progress_bar is not None:
                 progress_bar.close()
         if error is not None:
-            print(f"Simulation stopped at {self.mdl.t0:.2f} s: {error}")
+            msg = f"Simulation stopped at {self.mdl.t0:.2f} s: {error}"
+            warnings.warn(msg, RuntimeWarning, stacklevel=2)
 
         # Post-process the solution data
         mdl_ts = ModelTimeSeries(self.mdl)

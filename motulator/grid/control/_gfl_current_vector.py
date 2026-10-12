@@ -207,6 +207,10 @@ class CurrentVectorController:
         # Compute the reference current
         ref.i_c = (ref.p_g - 1j * ref.q_g) / (1.5 * fbk.u_g)
         ref.i_c = self.current_limiter(ref.i_c)
+        # Power references corresponding to the limited current, which are also used
+        # for the anti-windup of the DC-bus voltage controller
+        s_g_ref = 1.5 * fbk.u_g * ref.i_c.conjugate()
+        ref.p_g, ref.q_g = s_g_ref.real, s_g_ref.imag
 
         # Compute the reference voltage
         ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)

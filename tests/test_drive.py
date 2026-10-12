@@ -176,7 +176,7 @@ def test_speed_control(case: str) -> None:
     assert tau_M_ref == pytest.approx(tau_M, abs=0.05 * 14)
 
 
-@pytest.mark.filterwarnings("ignore::RuntimeWarning")
+@pytest.mark.filterwarnings("ignore:overflow:RuntimeWarning")
 @pytest.mark.parametrize("t_fail", [0.0, 0.02])
 def test_numerical_failure_is_flagged(t_fail: float) -> None:
     """A numerical failure stops the simulation and is flagged in the results."""
@@ -184,7 +184,9 @@ def test_numerical_failure_is_flagged(t_fail: float) -> None:
     ctrl = ipmsm_fvc(sensorless=False)
     ctrl.set_speed_ref(0.0)
     mdl.mechanics.set_external_load_torque(lambda t: (t >= t_fail) * 1e300)
-    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.05)
+    sim = model.Simulation(mdl, ctrl, show_progress=False)
+    with pytest.warns(RuntimeWarning, match="Simulation stopped"):
+        res = sim.simulate(t_stop=0.05)
 
     assert not res.success
     assert np.all(res.mdl.t < t_fail + 0.01)  # Also no samples if failing at once
@@ -646,3 +648,27 @@ def test_flux_torque_controller_without_torque_control() -> None:
         for tau_M_ref in (0.0, 10.0)
     ]
     assert u_s == pytest.approx([par.R_s * fbk.i_s - 100 * abs(psi_s)] * 4)
+
+
+def test_reference_of_other_mode_is_rejected() -> None:
+    """The control mode is given by the speed controller, not by the references."""
+    with pytest.raises(ValueError):  # The speed controller gives the torque reference
+        ipmsm_fvc(sensorless=True).set_torque_ref(1.0)
+    par = sm_control.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    cfg = sm_control.FluxVectorControllerCfg(i_s_max=6.5)
+    ctrl = sm_control.VectorControlSystem(sm_control.FluxVectorController(par, cfg))
+    with pytest.raises(ValueError):  # Speed control requires the speed controller
+        ctrl.set_speed_ref(1.0)
+    # Missing references are reported in both modes
+    for system in (ctrl, ipmsm_fvc(sensorless=True)):
+        sim = model.Simulation(ipmsm_drive(pwm=False), system, show_progress=False)
+        with pytest.raises(ValueError, match="reference must be set"):
+            sim.simulate(t_stop=0.001)
+
+
+def test_zero_field_weakening_gain() -> None:
+    """The field-weakening gain zero is used as such."""
+    ref_gen = im_control.CurrentReferenceGenerator(im_par(), 1.04, 10.6, 314, 0.95, 0)
+    assert ref_gen.k_fw == 0

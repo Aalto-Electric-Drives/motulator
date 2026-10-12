@@ -30,7 +30,7 @@ class References(Protocol):
 
     T_s: float  # Sampling period (s) for the next control step
     d_abc: Sequence[float]  # Duty ratios for three-phase PWM
-    tau_M: float | None  # Torque reference
+    tau_M: float  # Torque reference
     u_s: complex  # Stator voltage reference (controller coordinates)
     u_s_lim: complex  # Limited stator voltage reference (controller coordinates)
     w_M: float | None  # Mechanical speed
@@ -139,9 +139,6 @@ class DriveControlSystem(ControlSystem):
         """
         Set the external speed reference.
 
-        In vector control, the speed reference is used in speed-control mode, i.e., if
-        the speed controller is given.
-
         Parameters
         ----------
         ref_fcn : float | Callable[[float], float]
@@ -218,6 +215,20 @@ class VectorControlSystem(DriveControlSystem):
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
 
+    def set_speed_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
+        """
+        Set the external speed reference for speed-control mode.
+
+        Parameters
+        ----------
+        ref_fcn : float | Callable[[float], float]
+            Speed reference (mechanical rad/s), constant or a function of time.
+
+        """
+        if self.speed_ctrl is None:
+            raise ValueError("Speed-control mode requires speed_ctrl")
+        super().set_speed_ref(ref_fcn)
+
     def set_torque_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
         """
         Set the external torque reference for torque-control mode.
@@ -228,6 +239,8 @@ class VectorControlSystem(DriveControlSystem):
             Torque reference (Nm), constant or a function of time.
 
         """
+        if self.speed_ctrl is not None:
+            raise ValueError("The speed controller gives the torque reference")
         self.ext_ref.tau_M = ref_fcn
 
     def get_measurement(self, mdl: Drive) -> Measurements:
@@ -252,16 +265,16 @@ class VectorControlSystem(DriveControlSystem):
         )
 
     def _compute_inner_output(self, fbk: Feedbacks) -> References:
-        # Speed-control mode
-        if self.speed_ctrl and self.ext_ref.w_M is not None:
+        if self.speed_ctrl is not None:  # Speed-control mode
+            if self.ext_ref.w_M is None:
+                raise ValueError("Speed reference must be set")
             w_M_ref = get_value(self.ext_ref.w_M, self.t)
             tau_M_ref = self.speed_ctrl.compute_output(w_M_ref, fbk.w_M)
-        # Torque-control mode
-        elif self.ext_ref.tau_M is not None:
+        else:  # Torque-control mode
+            if self.ext_ref.tau_M is None:
+                raise ValueError("Torque reference must be set")
             w_M_ref = None
             tau_M_ref = get_value(self.ext_ref.tau_M, self.t)
-        else:
-            raise ValueError("Either speed or torque reference must be set")
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
         ref.w_M = w_M_ref
         return ref
@@ -270,7 +283,7 @@ class VectorControlSystem(DriveControlSystem):
         """Update controller states."""
         super().update(ref, fbk)
         self.vector_ctrl.update(ref, fbk)
-        if self.speed_ctrl and ref.tau_M is not None:
+        if self.speed_ctrl is not None:
             self.speed_ctrl.update(ref.T_s, ref.tau_M)
 
     def post_process(self) -> TimeSeries:

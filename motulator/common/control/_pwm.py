@@ -104,6 +104,8 @@ class PWM:
     ) -> None:
         if not 0 <= d_min < 0.5:
             raise ValueError("d_min must be in the range [0, 0.5)")
+        if overmodulation not in ("MPE", "MME", "six_step"):
+            raise ValueError(f"Invalid overmodulation method: {overmodulation}")
         self.k_comp = k_comp
         self.k_pred = k_pred
         self.overmodulation = overmodulation

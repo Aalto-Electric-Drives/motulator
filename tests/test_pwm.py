@@ -200,7 +200,9 @@ def test_min_pulse_dead_time() -> None:
                     assert abs(realized[k] - d_ref[k]) <= abs(r - d_ref[k]) + 1e-12
 
 
-def test_min_pulse_range() -> None:
-    """The minimum duty ratio must be in [0, 0.5)."""
+def test_invalid_configuration() -> None:
+    """The minimum duty ratio must be in [0, 0.5), and the overmodulation valid."""
     with pytest.raises(ValueError, match="d_min"):
         PWM(d_min=0.5)
+    with pytest.raises(ValueError, match="overmodulation"):
+        PWM(overmodulation="mpe")  # type: ignore[arg-type]

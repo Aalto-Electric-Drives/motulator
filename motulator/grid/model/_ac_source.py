@@ -108,6 +108,9 @@ class ThreePhaseSourceTimeSeries(SubsystemTimeSeries):
     t: InitVar[np.ndarray]
     subsystem: InitVar[ThreePhaseSource]
     exp_j_theta_g: np.ndarray = field(default_factory=empty_array)
+    w_g: np.ndarray = field(default_factory=empty_array)
+    theta_g: np.ndarray = field(default_factory=empty_array)
+    e_g_ab: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: ThreePhaseSource) -> None:
         """Compute output time series from the states."""
@@ -217,6 +220,10 @@ class SignalInjectionTimeSeries(SubsystemTimeSeries):
     t: InitVar[np.ndarray]
     subsystem: InitVar[ThreePhaseSourceWithSignalInjection]
     exp_j_theta_g: np.ndarray = field(default_factory=empty_array)
+    exp_j_theta_e: np.ndarray = field(default_factory=empty_array)
+    w_g: np.ndarray = field(default_factory=empty_array)
+    theta_g: np.ndarray = field(default_factory=empty_array)
+    e_g_ab: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(
         self, t: np.ndarray, subsystem: ThreePhaseSourceWithSignalInjection
