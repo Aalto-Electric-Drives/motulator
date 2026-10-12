@@ -474,7 +474,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">copysign</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -598,9 +597,9 @@
 <span class="sd">        Total inductance estimate (H).</span>
 <span class="sd">    R : float, optional</span>
 <span class="sd">        Total series resistance estimate (Ω), defaults to 0.</span>
-<span class="sd">    R_a : float, optional</span>
+<span class="sd">    R_a : float | None, optional</span>
 <span class="sd">        Active resistance (Ω), defaults to `0.25*u_nom/i_max`.</span>
-<span class="sd">    k_v : float, optional</span>
+<span class="sd">    k_v : float | None, optional</span>
 <span class="sd">        Voltage control gain, defaults to `alpha_o/w_nom`.</span>
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer gain (rad/s), defaults to 2*pi*50.</span>
@@ -633,13 +632,7 @@
     <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span>
     <span class="n">i_d_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">alpha_l</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_nom</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_nom</span></div>
+    <span class="n">alpha_l</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span></div>
 
 
 
@@ -685,8 +678,8 @@
             <span class="n">u_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">,</span> <span class="n">w_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span><span class="p">)</span>  <span class="c1"># Resolved in the configuration's __post_init__</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
         <span class="c1"># Active-power reference limitation</span>

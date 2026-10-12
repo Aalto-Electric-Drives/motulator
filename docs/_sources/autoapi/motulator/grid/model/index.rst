@@ -134,7 +134,7 @@ Package Contents
    .. py:method:: set_external_dc_current(i_dc)
 
       
-      Set external DC current (A).
+      Set external DC current (A), constant or a function of time.
 
 
 
@@ -1183,7 +1183,7 @@ Package Contents
 
 
       
-      Set external DC current (A).
+      Set external DC current (A), constant or a function of time.
 
 
 

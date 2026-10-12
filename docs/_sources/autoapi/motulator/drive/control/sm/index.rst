@@ -2513,8 +2513,8 @@ Module Contents
       
       Set the external torque reference for torque-control mode.
 
-      :param ref_fcn: Torque reference (Nm) as a function of time.
-      :type ref_fcn: Callable[[float], float]
+      :param ref_fcn: Torque reference (Nm), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
 
 
 

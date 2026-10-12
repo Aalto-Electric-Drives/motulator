@@ -678,10 +678,10 @@ defaults to <cite>np.sign</cite>.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.CapacitiveDCBusConverter.set_external_dc_current">
 <span class="sig-name descname"><span class="pre">set_external_dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#CapacitiveDCBusConverter.set_external_dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.CapacitiveDCBusConverter.set_external_dc_current" title="Link to this definition">#</a></dt>
-<dd><p>Set external DC current (A).</p>
+<dd><p>Set external DC current (A), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>i_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1260,10 +1260,10 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter.set_external_dc_current">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_external_dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_external_dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.set_external_dc_current" title="Link to this definition">#</a></dt>
-<dd><p>Set external DC current (A).</p>
+<dd><p>Set external DC current (A), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>i_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

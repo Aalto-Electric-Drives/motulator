@@ -486,7 +486,12 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">empty_array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">abc2complex</span><span class="p">,</span>
+    <span class="n">complex2abc</span><span class="p">,</span>
+    <span class="n">empty_array</span><span class="p">,</span>
+    <span class="n">get_value</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <span class="c1"># %%</span>
@@ -552,8 +557,8 @@
 
 <div class="viewcode-block" id="VoltageSourceConverter.set_external_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.VoltageSourceConverter.set_external_dc_current">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set external DC current (A)."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set external DC current (A), constant or a function of time."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -676,8 +681,8 @@
 
 <div class="viewcode-block" id="CapacitiveDCBusConverter.set_external_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter.set_external_dc_current">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set external DC current (A)."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set external DC current (A), constant or a function of time."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="n">i_dc</span></div>
 
 
@@ -693,12 +698,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.drive.model.CapacitiveDCBusConverter.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Compute state derivatives for DC-bus voltage."""</span>
-        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">):</span>
-            <span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
-            <span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="n">i_dc_int</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
         <span class="n">d_u_dc</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_dc</span> <span class="o">-</span> <span class="n">i_dc_int</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">d_u_dc</span><span class="p">]</span></div>

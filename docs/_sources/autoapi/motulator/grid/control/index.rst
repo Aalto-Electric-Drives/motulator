@@ -765,9 +765,9 @@ Package Contents
    :param R: Total series resistance estimate (Ω), defaults to 0.
    :type R: float, optional
    :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
-   :type R_a: float, optional
+   :type R_a: float | None, optional
    :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
-   :type k_v: float, optional
+   :type k_v: float | None, optional
    :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
    :type alpha_o: float, optional
    :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
@@ -1349,12 +1349,12 @@ Package Contents
    
    Configuration for the reference-feedforward power-synchronization controller.
 
-   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value.
-   :type u_nom: float
-   :param w_nom: Nominal grid angular frequency (rad/s).
-   :type w_nom: float
    :param i_max: Maximum current (A), peak value.
    :type i_max: float
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to sqrt(2/3)*400.
+   :type u_nom: float, optional
+   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_nom: float, optional
    :param R: Total series resistance (Ω), defaults to 0.
    :type R: float, optional
    :param R_a: Active resistance (Ω), defaults to ``0.25*u_nom/i_max``.

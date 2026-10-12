@@ -798,10 +798,10 @@ determined by an external function rather than by torque dynamics.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.set_external_load_torque">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_external_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.set_external_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.set_external_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Set external load torque (Nm).</p>
+<dd><p>Set external load torque (Nm), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tau_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>tau_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -812,10 +812,10 @@ determined by an external function rather than by torque dynamics.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.set_external_rotor_speed">
 <span class="sig-name descname"><span class="pre">set_external_rotor_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.set_external_rotor_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.set_external_rotor_speed" title="Link to this definition">#</a></dt>
-<dd><p>Set external rotor speed (rad/s).</p>
+<dd><p>Set external rotor speed (rad/s), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1451,10 +1451,10 @@ Defaults to 0.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.set_external_load_torque">
 <span class="sig-name descname"><span class="pre">set_external_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.set_external_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.set_external_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Set external load torque (Nm).</p>
+<dd><p>Set external load torque (Nm), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tau_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>tau_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1465,7 +1465,7 @@ Defaults to 0.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.set_external_rotor_speed">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_external_rotor_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.set_external_rotor_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.set_external_rotor_speed" title="Link to this definition">#</a></dt>
-<dd><p>Set external rotor speed (rad/s).</p>
+<dd><p>Set external rotor speed (rad/s), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -2060,10 +2060,10 @@ Defaults to 0.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.set_external_load_torque">
 <span class="sig-name descname"><span class="pre">set_external_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.set_external_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.set_external_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Set external load torque (Nm).</p>
+<dd><p>Set external load torque (Nm), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tau_L</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>tau_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -2074,7 +2074,7 @@ Defaults to 0.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.set_external_rotor_speed">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_external_rotor_speed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.set_external_rotor_speed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.set_external_rotor_speed" title="Link to this definition">#</a></dt>
-<dd><p>Set external rotor speed (rad/s).</p>
+<dd><p>Set external rotor speed (rad/s), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -2175,10 +2175,10 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.set_external_dc_current">
 <span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_external_dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_external_dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.set_external_dc_current" title="Link to this definition">#</a></dt>
-<dd><p>Set external DC current (A).</p>
+<dd><p>Set external DC current (A), constant or a function of time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_dc</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><p><strong>i_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.15)"><em>collections.abc.Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

@@ -221,7 +221,7 @@ Package Contents
 
 
       
-      Set external load torque (Nm).
+      Set external load torque (Nm), constant or a function of time.
 
 
 
@@ -245,7 +245,7 @@ Package Contents
    .. py:method:: set_external_rotor_speed(w_M)
 
       
-      Set external rotor speed (rad/s).
+      Set external rotor speed (rad/s), constant or a function of time.
 
 
 
@@ -1178,7 +1178,7 @@ Package Contents
    .. py:method:: set_external_load_torque(tau_L)
 
       
-      Set external load torque (Nm).
+      Set external load torque (Nm), constant or a function of time.
 
 
 
@@ -1204,7 +1204,7 @@ Package Contents
 
 
       
-      Set external rotor speed (rad/s).
+      Set external rotor speed (rad/s), constant or a function of time.
 
 
 
@@ -2227,7 +2227,7 @@ Package Contents
    .. py:method:: set_external_load_torque(tau_L)
 
       
-      Set external load torque (Nm).
+      Set external load torque (Nm), constant or a function of time.
 
 
 
@@ -2253,7 +2253,7 @@ Package Contents
 
 
       
-      Set external rotor speed (rad/s).
+      Set external rotor speed (rad/s), constant or a function of time.
 
 
 
@@ -2440,7 +2440,7 @@ Package Contents
 
 
       
-      Set external DC current (A).
+      Set external DC current (A), constant or a function of time.
 
 
 
