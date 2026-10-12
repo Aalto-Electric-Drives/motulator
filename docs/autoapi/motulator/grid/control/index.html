@@ -830,8 +830,10 @@ signals, and reference signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inner_ctrl</strong> (<em>GridFormingController</em><em> | </em><em>GridFollowingController</em>) – Inner controller.</p></li>
-<li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller. If not given, power-control mode is used.</p></li>
+<li><p><strong>inner_ctrl</strong> (<em>GridFormingController</em><em> | </em><em>GridFollowingController</em>) – Inner controller. A grid-forming controller takes the AC voltage reference
+and a grid-following controller the reactive power reference.</p></li>
+<li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller, which gives the active power reference. If not
+given, the active power reference is set externally.</p></li>
 <li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>PWM()</cite>.</p></li>
 </ul>
 </dd>
@@ -937,7 +939,7 @@ signals, and reference signals.</p>
 <dd><p>Set the external reactive power reference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ref_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Power reference (VAr), constant or a function of time.</p>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Reactive power reference (VAr), constant or a function of time.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

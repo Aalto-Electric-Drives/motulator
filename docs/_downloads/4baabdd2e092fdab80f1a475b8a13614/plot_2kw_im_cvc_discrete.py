@@ -33,8 +33,8 @@ est_par = par  # Assume accurate model parameter estimates
 
 # %%
 # Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
-# discrete-time design compensates for the delays itself, which is taken into account
-# in the PWM configuration.
+# discrete-time design compensates for the delays itself, so its default PWM does
+# not (`k_comp=0`).
 
 
 def simulate(discrete: bool):
@@ -52,10 +52,9 @@ def simulate(discrete: bool):
         T_s=200e-6,
         discrete=discrete,
     )
-    pwm = control.PWM(k_comp=0) if discrete else None
     vector_ctrl = control.CurrentVectorController(est_par, cfg)
     vector_ctrl.observer.speed_observer.w_M = 0.5 * base.w_M  # Initial speed estimate
-    ctrl = control.VectorControlSystem(vector_ctrl, pwm=pwm)
+    ctrl = control.VectorControlSystem(vector_ctrl)
     ctrl.set_torque_ref(
         lambda t: nom.tau * (0.3 * (t > 0.3) + 0.2 * (t > 0.32) - 0.8 * (t > 0.34))
     )

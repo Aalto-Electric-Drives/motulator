@@ -88,10 +88,10 @@ Configure the machine parameters.
 .. GENERATED FROM PYTHON SOURCE LINES 35-38
 
 Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
-discrete-time design compensates for the delays itself, which is taken into account
-in the PWM configuration.
+discrete-time design compensates for the delays itself, so its default PWM does
+not (`k_comp=0`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-67
+.. GENERATED FROM PYTHON SOURCE LINES 38-66
 
 .. code-block:: Python
 
@@ -112,10 +112,9 @@ in the PWM configuration.
             T_s=200e-6,
             discrete=discrete,
         )
-        pwm = control.PWM(k_comp=0) if discrete else None
         vector_ctrl = control.CurrentVectorController(est_par, cfg)
         vector_ctrl.observer.speed_observer.w_M = 0.5 * base.w_M  # Initial speed estimate
-        ctrl = control.VectorControlSystem(vector_ctrl, pwm=pwm)
+        ctrl = control.VectorControlSystem(vector_ctrl)
         ctrl.set_torque_ref(
             lambda t: nom.tau * (0.3 * (t > 0.3) + 0.2 * (t > 0.32) - 0.8 * (t > 0.34))
         )
@@ -131,11 +130,11 @@ in the PWM configuration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Plot the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-88
+.. GENERATED FROM PYTHON SOURCE LINES 68-87
 
 .. code-block:: Python
 
@@ -170,7 +169,7 @@ Plot the current responses in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-91
+.. GENERATED FROM PYTHON SOURCE LINES 88-90
 
 At this bandwidth, the continuous-time design results in poorly damped oscillations,
 while the discrete-time design is well damped.
@@ -178,7 +177,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.793 seconds)
+   **Total running time of the script:** (0 minutes 1.850 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:

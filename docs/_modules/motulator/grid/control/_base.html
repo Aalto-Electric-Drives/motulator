@@ -524,6 +524,8 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">GridFormingController</span><span class="p">[</span><span class="n">Ref</span><span class="p">,</span> <span class="n">Fbk</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol defining the interface for grid-forming controllers."""</span>
 
+    <span class="n">grid_forming</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># True: the controller takes the AC voltage reference</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals from measurements."""</span>
         <span class="o">...</span>
@@ -543,6 +545,8 @@
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GridFollowingController</span><span class="p">[</span><span class="n">Ref</span><span class="p">,</span> <span class="n">Fbk</span><span class="p">](</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol defining the interface for grid-following controllers."""</span>
+
+    <span class="n">grid_forming</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># False: the controller takes the reactive power reference</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals from measurements."""</span>
@@ -574,9 +578,11 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    inner_ctrl : GridFormingController | GridFollowingController</span>
-<span class="sd">        Inner controller.</span>
+<span class="sd">        Inner controller. A grid-forming controller takes the AC voltage reference</span>
+<span class="sd">        and a grid-following controller the reactive power reference.</span>
 <span class="sd">    dc_bus_voltage_ctrl : DCBusVoltageController, optional</span>
-<span class="sd">        DC-bus voltage controller. If not given, power-control mode is used.</span>
+<span class="sd">        DC-bus voltage controller, which gives the active power reference. If not</span>
+<span class="sd">        given, the active power reference is set externally.</span>
 <span class="sd">    pwm : PWM, optional</span>
 <span class="sd">        Pulse-width modulator, defaults to `PWM()`.</span>
 
@@ -606,6 +612,8 @@
 <span class="sd">            Active power reference (W), constant or a function of time.</span>
 
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The DC-bus voltage controller gives the power reference"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
 
 
@@ -617,10 +625,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        ref_fcn : Callable[[float], float] | float</span>
-<span class="sd">            Power reference (VAr), constant or a function of time.</span>
+<span class="sd">        ref_fcn : float | Callable[[float], float]</span>
+<span class="sd">            Reactive power reference (VAr), constant or a function of time.</span>
 
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">grid_forming</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Grid-forming control takes the AC voltage reference"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
 
 
@@ -636,6 +646,10 @@
 <span class="sd">            AC-side converter voltage reference (V), constant or a function of time.</span>
 
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">grid_forming</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"Grid-following control takes the reactive power reference"</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
 
 
@@ -651,6 +665,8 @@
 <span class="sd">            DC-bus voltage reference (V), constant or a function of time.</span>
 
 <span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"DC-bus voltage control requires dc_bus_voltage_ctrl"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
 
 
@@ -680,25 +696,29 @@
 <span class="w">        </span><span class="sd">"""Compute controller outputs based on feedback."""</span>
         <span class="n">ext_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span>
 
-        <span class="c1"># Second reference: AC voltage (grid forming) or reactive power (grid following)</span>
-        <span class="k">if</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">v_c_or_q_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">v_c_or_q_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No valid control mode configuration detected"</span><span class="p">)</span>
+        <span class="c1"># AC voltage (grid forming) or reactive power (grid following) reference</span>
+        <span class="n">v_c_or_q_g_ref</span> <span class="o">=</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">v_c</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">grid_forming</span> <span class="k">else</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">q_g</span>
+        <span class="k">if</span> <span class="n">v_c_or_q_g_ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">"AC voltage"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">grid_forming</span> <span class="k">else</span> <span class="s2">"Reactive power"</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">quantity</span><span class="si">}</span><span class="s2"> reference must be set"</span><span class="p">)</span>
 
-        <span class="c1"># Active power reference: external or from the DC-bus voltage controller</span>
+        <span class="c1"># Active power reference: from the DC-bus voltage controller or external</span>
         <span class="n">u_dc_ref</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">p_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"DC-bus voltage reference must be set"</span><span class="p">)</span>
             <span class="n">u_dc_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
             <span class="n">p_g_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus_voltage_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_dc_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p_g_ref</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">p_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No valid control mode configuration detected"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Active power reference must be set"</span><span class="p">)</span>
 
-        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">v_c_or_q_g_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span>
+            <span class="n">p_g_ref</span><span class="p">,</span> <span class="n">get_value</span><span class="p">(</span><span class="n">v_c_or_q_g_ref</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="n">fbk</span>
+        <span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc_ref</span>
         <span class="n">u_c_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_c_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>

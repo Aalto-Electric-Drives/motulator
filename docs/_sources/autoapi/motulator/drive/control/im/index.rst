@@ -246,6 +246,30 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: default_pwm()
+
+      
+      Get the default pulse-width modulator.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
@@ -355,8 +379,9 @@ Module Contents
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
    :param discrete: If True, the direct discrete-time current controller is used instead of the
-                    continuous-time design, defaults to False. The PWM must then be configured
-                    with `k_comp=0`.
+                    continuous-time design, defaults to False. The default PWM of the controller
+                    then has `k_comp=0`, and a PWM given to the control system must be configured
+                    likewise.
    :type discrete: bool, optional
 
 
@@ -386,7 +411,8 @@ Module Contents
 
    The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
    resistive voltage drop and the back-emf are disturbances, which the integral action
-   compensates for. The PWM must be configured with `k_comp=0`.
+   compensates for. The PWM must be configured with `k_comp=0`, which is the default
+   when the controller is selected by `discrete=True`.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
@@ -609,6 +635,30 @@ Module Contents
 
       
       Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: default_pwm()
+
+      
+      Get the default pulse-width modulator.
 
 
 
@@ -906,6 +956,30 @@ Module Contents
 
       
       Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: default_pwm()
+
+      
+      Get the default pulse-width modulator.
 
 
 
@@ -1764,7 +1838,7 @@ Module Contents
    :type vhz_ctrl: VHzController
    :param slew_rate: Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.
    :type slew_rate: float, optional
-   :param pwm: Pulse-width modulator, defaults to `PWM(overmodulation=vhz_ctrl.pwm_mode)`.
+   :param pwm: Pulse-width modulator, defaults to `vhz_ctrl.default_pwm()`.
    :type pwm: PWM, optional
 
 
@@ -1972,7 +2046,7 @@ Module Contents
    :type vector_ctrl: VectorController
    :param speed_ctrl: Speed controller. If None (default), torque-control mode is used.
    :type speed_ctrl: SpeedController | PIController | None, optional
-   :param pwm: Pulse-width modulator, defaults to `PWM()`.
+   :param pwm: Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.
    :type pwm: PWM, optional
 
 

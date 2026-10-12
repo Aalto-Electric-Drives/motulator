@@ -528,6 +528,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.default_pwm"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.default_pwm()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
@@ -545,6 +546,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.default_pwm"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.default_pwm()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
@@ -561,6 +563,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.default_pwm"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.default_pwm()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.get_feedback"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.post_process"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.update()</span></code></a></li>
@@ -831,6 +834,17 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController.default_pwm">
+<span class="sig-name descname"><span class="pre">default_pwm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.default_pwm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.default_pwm" title="Link to this definition">#</a></dt>
+<dd><p>Get the default pulse-width modulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../../common/control/index.html#motulator.common.control.PWM" title="motulator.common.control.PWM">motulator.common.control.PWM</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController.get_feedback">
 <span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
@@ -909,8 +923,9 @@ used in speed estimation.</p></li>
 <li><p><strong>sensorless</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, sensorless control is used, defaults to True.</p></li>
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
 <li><p><strong>discrete</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the direct discrete-time current controller is used instead of the
-continuous-time design, defaults to False. The PWM must then be configured
-with <cite>k_comp=0</cite>.</p></li>
+continuous-time design, defaults to False. The default PWM of the controller
+then has <cite>k_comp=0</cite>, and a PWM given to the control system must be configured
+likewise.</p></li>
 </ul>
 </dd>
 </dl>
@@ -923,7 +938,8 @@ with <cite>k_comp=0</cite>.</p></li>
 <p>Direct discrete-time current controller for induction machines.</p>
 <p>The currents are mapped to the leakage flux linkages, <code class="docutils literal notranslate"><span class="pre">psi</span> <span class="pre">=</span> <span class="pre">L_sgm*i</span></code>. The
 resistive voltage drop and the back-emf are disturbances, which the integral action
-compensates for. The PWM must be configured with <cite>k_comp=0</cite>.</p>
+compensates for. The PWM must be configured with <cite>k_comp=0</cite>, which is the default
+when the controller is selected by <cite>discrete=True</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1087,6 +1103,17 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.FluxVectorController.default_pwm">
+<span class="sig-name descname"><span class="pre">default_pwm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController.default_pwm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController.default_pwm" title="Link to this definition">#</a></dt>
+<dd><p>Get the default pulse-width modulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>motulator.common.control._pwm.PWM</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1295,6 +1322,17 @@ the stator flux and torque channels is used <a class="footnote-reference bracket
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.ObserverBasedVHzController.default_pwm">
+<span class="sig-name descname"><span class="pre">default_pwm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ObserverBasedVHzController.default_pwm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ObserverBasedVHzController.default_pwm" title="Link to this definition">#</a></dt>
+<dd><p>Get the default pulse-width modulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>motulator.common.control._pwm.PWM</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1863,7 +1901,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vhz_ctrl</strong> (<em>VHzController</em>) – V/Hz controller to be used in the drive control system.</p></li>
 <li><p><strong>slew_rate</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Slew rate (mechanical rad/s**2) for the speed reference, defaults to <cite>inf</cite>.</p></li>
-<li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.drive.control.im.PWM" title="motulator.drive.control.im.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>PWM(overmodulation=vhz_ctrl.pwm_mode)</cite>.</p></li>
+<li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.drive.control.im.PWM" title="motulator.drive.control.im.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>vhz_ctrl.default_pwm()</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1986,7 +2024,7 @@ and flux-vector control).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>vector_ctrl</strong> (<em>VectorController</em>) – Vector controller whose input is the torque reference.</p></li>
 <li><p><strong>speed_ctrl</strong> (<a class="reference internal" href="#motulator.drive.control.im.SpeedController" title="motulator.drive.control.im.SpeedController"><em>SpeedController</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.PIController" title="motulator.drive.control.im.PIController"><em>PIController</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Speed controller. If None (default), torque-control mode is used.</p></li>
-<li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.drive.control.im.PWM" title="motulator.drive.control.im.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>PWM()</cite>.</p></li>
+<li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.drive.control.im.PWM" title="motulator.drive.control.im.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>vector_ctrl.default_pwm()</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2170,6 +2208,7 @@ method, e.g., to control an output filter between the converter and the machine.
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.default_pwm"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.default_pwm()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
@@ -2187,6 +2226,7 @@ method, e.g., to control an output filter between the converter and the machine.
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.default_pwm"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.default_pwm()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
@@ -2203,6 +2243,7 @@ method, e.g., to control an output filter between the converter and the machine.
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.default_pwm"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.default_pwm()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.get_feedback"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.post_process"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ObserverBasedVHzController.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.update()</span></code></a></li>

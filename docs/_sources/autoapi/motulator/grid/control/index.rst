@@ -359,9 +359,11 @@ Package Contents
    generic class that can be used with different models, measurements, feedback
    signals, and reference signals.
 
-   :param inner_ctrl: Inner controller.
+   :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference
+                      and a grid-following controller the reactive power reference.
    :type inner_ctrl: GridFormingController | GridFollowingController
-   :param dc_bus_voltage_ctrl: DC-bus voltage controller. If not given, power-control mode is used.
+   :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active power reference. If not
+                               given, the active power reference is set externally.
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
@@ -562,8 +564,8 @@ Package Contents
       
       Set the external reactive power reference.
 
-      :param ref_fcn: Power reference (VAr), constant or a function of time.
-      :type ref_fcn: Callable[[float], float] | float
+      :param ref_fcn: Reactive power reference (VAr), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
 
 
 

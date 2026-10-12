@@ -675,6 +675,8 @@
 
 <span class="sd">    """</span>
 
+    <span class="n">grid_forming</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">ObserverBasedGridFormingControllerCfg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span>
             <span class="n">u_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">,</span> <span class="n">w_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span><span class="p">,</span> <span class="n">L</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">alpha_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span>

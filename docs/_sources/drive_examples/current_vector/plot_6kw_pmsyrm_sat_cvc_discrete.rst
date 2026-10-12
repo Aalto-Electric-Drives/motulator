@@ -136,10 +136,10 @@ so the model has small errors.
 .. GENERATED FROM PYTHON SOURCE LINES 70-73
 
 Simulate the drive in torque-control mode at the constant speed of 1.5 p.u. The
-discrete-time design compensates for the delays itself, which is taken into account
-in the PWM configuration.
+discrete-time design compensates for the delays itself, so its default PWM does
+not (`k_comp=0`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-111
+.. GENERATED FROM PYTHON SOURCE LINES 73-110
 
 .. code-block:: Python
 
@@ -161,10 +161,9 @@ in the PWM configuration.
             T_s=200e-6,
             discrete=discrete,
         )
-        pwm = control.PWM(k_comp=0) if discrete else None
         vector_ctrl = control.CurrentVectorController(est_par, cfg)
         vector_ctrl.observer.speed_observer.w_M = 1.5 * base.w_M  # Initial speed estimate
-        ctrl = control.VectorControlSystem(vector_ctrl, pwm=pwm)
+        ctrl = control.VectorControlSystem(vector_ctrl)
         ctrl.set_torque_ref(
             lambda t: (
                 nom.tau
@@ -188,11 +187,11 @@ in the PWM configuration.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-113
+.. GENERATED FROM PYTHON SOURCE LINES 111-112
 
 Plot the speed estimates and the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-138
+.. GENERATED FROM PYTHON SOURCE LINES 112-137
 
 .. code-block:: Python
 
@@ -233,7 +232,7 @@ Plot the speed estimates and the current responses in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-148
+.. GENERATED FROM PYTHON SOURCE LINES 138-147
 
 At this bandwidth, the continuous-time design is sensitive to the errors in the flux
 linkage map, resulting in poorly damped oscillations, while the discrete-time design
@@ -248,7 +247,7 @@ remains well damped. In the largest steps, the voltage is limited.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.963 seconds)
+   **Total running time of the script:** (0 minutes 1.243 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py:
