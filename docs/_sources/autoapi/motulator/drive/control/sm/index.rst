@@ -2508,6 +2508,32 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_speed_ref(ref_fcn)
+
+      
+      Set the external speed reference for speed-control mode.
+
+      :param ref_fcn: Speed reference (mechanical rad/s), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: set_torque_ref(ref_fcn)
 
       

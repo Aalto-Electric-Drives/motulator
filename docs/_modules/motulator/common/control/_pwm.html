@@ -576,6 +576,8 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">d_min</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"d_min must be in the range [0, 0.5)"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">overmodulation</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"MPE"</span><span class="p">,</span> <span class="s2">"MME"</span><span class="p">,</span> <span class="s2">"six_step"</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid overmodulation method: </span><span class="si">{</span><span class="n">overmodulation</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">=</span> <span class="n">k_comp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_pred</span> <span class="o">=</span> <span class="n">k_pred</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">overmodulation</span> <span class="o">=</span> <span class="n">overmodulation</span>

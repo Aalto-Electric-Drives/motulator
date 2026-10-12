@@ -110,8 +110,8 @@ Module Contents
    :type w_s_nom: float
    :param k_u: Voltage utilization factor.
    :type k_u: float
-   :param k_fw: Field-weakening gain (1/H). If zero, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
-   :type k_fw: float
+   :param k_fw: Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
+   :type k_fw: float | None
 
    .. rubric:: References
 
@@ -372,7 +372,7 @@ Module Contents
    :param k_u: Voltage utilization factor, defaults to 0.95.
    :type k_u: float, optional
    :param k_fw: Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
-   :type k_fw: float, optional
+   :type k_fw: float | None, optional
    :param J: Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
              used in speed estimation.
    :type J: float | None, optional
@@ -2191,6 +2191,32 @@ Module Contents
       
       Extend the post-process method.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_speed_ref(ref_fcn)
+
+      
+      Set the external speed reference for speed-control mode.
+
+      :param ref_fcn: Speed reference (mechanical rad/s), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
 
 
 
