@@ -139,7 +139,7 @@ label: k1_sensored
     \kob = 0
 ```
 
-where $g$ is a unitless positive design parameter. The corresponding pole is located at $s = -\alpha - g |\omegamo| - \jj\omegaro$, where $\omegaro = \omegaso - \omegamo$ is the slip angular frequency.
+where $g$ is a unitless positive design parameter, $g = 0.2$ by default. The corresponding pole is located at $s = -\alpha - g |\omegamo| - \jj\omegaro$, where $\omegaro = \omegaso - \omegamo$ is the slip angular frequency.
 
 ```{note}
 As a special case, $\koa = 0$ yields the voltage model. As another special case, the current model is obtained choosing $\koa = 1$.
@@ -178,7 +178,7 @@ label: k1_sensorless
     \koa = \frac{\sigma}{\hat \alpha - \jj\hatomegam}
 ```
 
-which results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -\alpha$, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
+which results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds, $\zeta_\infty = 0.2$ by default. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -\alpha$, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
 
 ```{figure} ../figs/poles.svg
 ---
@@ -287,7 +287,7 @@ The control system operates in estimated rotor coordinates, $\thetac = \hattheta
 label: is_prime
 ---
     \is' = \iss \e^{-\jj\hatthetam} \qquad
-    \us' = \us \e^{-\jj\hatthetam}
+    \us' = \uss \e^{-\jj\hatthetam}
 ```
 
 Due to the estimation error $\tildethetam = \thetam - \hatthetam$, the current $\is'$ generally differs from the current $\is$ (and similarly for the voltage).

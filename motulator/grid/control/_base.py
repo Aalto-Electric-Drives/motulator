@@ -103,7 +103,7 @@ class GridConverterControlSystem(ControlSystem):
     ----------
     inner_ctrl : GridFormingController | GridFollowingController
         Inner controller.
-    dc_bus_voltage_ctrl: DCBusVoltageController, optional
+    dc_bus_voltage_ctrl : DCBusVoltageController, optional
         DC-bus voltage controller. If not given, power-control mode is used.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.

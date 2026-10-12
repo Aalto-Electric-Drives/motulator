@@ -95,8 +95,8 @@ class VectorControlSystem(ControlSystem):
     ----------
     vector_ctrl : VectorController
         Vector controller whose input is the torque reference.
-    speed_ctrl : SpeedController | PIController | None
-        Speed controller. If not given or None, torque-control mode is used.
+    speed_ctrl : SpeedController | PIController | None, optional
+        Speed controller. If None (default), torque-control mode is used.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
 

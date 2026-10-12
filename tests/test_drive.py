@@ -214,7 +214,8 @@ def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
     Speed-estimation gain k_w of the observer created by the configuration.
 
     The sampling period is short, so the gains equal those of the continuous-time
-    design (the poles are matched to the sampling period).
+    design (the poles are matched to the sampling period). The configuration is
+    modified by `replace()`, so the defaults must not be resolved at its creation.
     """
     kwargs["T_s"] = 1e-7
     if machine == "sm":
@@ -222,18 +223,18 @@ def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
             n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
         )
         if ctrl == "fvc":
-            cfg = sm_control.FluxVectorControllerCfg(i_s_max=6.5, **kwargs)
+            cfg = replace(sm_control.FluxVectorControllerCfg(i_s_max=6.5), **kwargs)
             observer = sm_control.FluxVectorController(par, cfg).observer
         else:
-            cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, **kwargs)
+            cfg = replace(sm_control.CurrentVectorControllerCfg(i_s_max=6.5), **kwargs)
             observer = sm_control.CurrentVectorController(par, cfg).observer
     elif ctrl == "fvc":
-        cfg = im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6, **kwargs)
+        cfg = im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6)
+        cfg = replace(cfg, **kwargs)
         observer = im_control.FluxVectorController(im_par(), cfg).observer
     else:
-        cfg = im_control.CurrentVectorControllerCfg(
-            psi_s_nom=1.04, i_s_max=10.6, **kwargs
-        )
+        cfg = im_control.CurrentVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6)
+        cfg = replace(cfg, **kwargs)
         observer = im_control.CurrentVectorController(im_par(), cfg).observer
     return observer.speed_observer.k_w
 
@@ -248,6 +249,9 @@ def test_default_speed_observer_gain(machine: str, sensorless: bool) -> None:
         for J in (None, 0.015)
     ]
     assert k_w == pytest.approx([k_w[0]] * len(k_w), rel=1e-3)
+    # The documented defaults
+    alpha_o = 2 * pi * (400 if not sensorless else 50 if machine == "sm" else 60)
+    assert k_w[0] == pytest.approx(alpha_o**2 if machine == "sm" else alpha_o, rel=1e-3)
     # An explicitly given alpha_o is used as such
     alpha_o = 2 * pi * 20
     k_w_explicit = speed_observer_gain(

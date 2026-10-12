@@ -2,7 +2,6 @@
 
 from cmath import exp
 from collections import deque
-from typing import cast
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
@@ -12,7 +11,7 @@ from motulator.drive.control._sm_current_vector import (
     CurrentVectorControllerCfg,
     References,
 )
-from motulator.drive.control._sm_observers import ObserverOutputs
+from motulator.drive.control._sm_observers import ObserverOutputs, default_alpha_o
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
@@ -206,8 +205,7 @@ class SignalInjectionController(CurrentVectorController):
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector control configuration. The drive is always sensorless, and the
-        fields `sensorless`, `k_o`, and `k_f` are not used. Since the default of
-        `alpha_o` depends on `sensorless`, keep `sensorless=True` or give `alpha_o`.
+        fields `sensorless`, `k_o`, and `k_f` are not used.
     U_inj : float, optional
         Injected voltage amplitude (V), defaults to 250.
     N_inj : int, optional
@@ -247,8 +245,9 @@ class SignalInjectionController(CurrentVectorController):
             raise ValueError("Signal injection requires the continuous-time design")
         super().__init__(par, cfg)
         self.sensorless = True
+        alpha_o = default_alpha_o(True, cfg.J) if cfg.alpha_o is None else cfg.alpha_o
         self.observer = SignalInjectionObserver(
-            par, cast(float, cfg.alpha_o), U_inj, cfg.T_s, cfg.J, N_inj
+            par, alpha_o, U_inj, cfg.T_s, cfg.J, N_inj
         )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:

@@ -103,7 +103,7 @@ where the gains $R_\mathrm{a} = 0.25u_\mathrm{nom}/i_\mathrm{max}$ and $k_\mathr
 
 ### Implementation Aspects
 
-To avoid the derivate on the right-hand side of {eq}`disturbance_observer_gfm`, a new state variable $\hatug' = \hatug + \alphao \hat L \ic$ can be introduced {cite}`Fra1997`. Furthermore, the coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, $\omegac = \hatomegag$. Using these design choices, the whole control system consisting of the disturbance observer {eq}`disturbance_observer_gfm` and the control law {eq}`control_law_gfm` in the state-space form reduces to {cite}`Nur2024`
+To avoid the derivative on the right-hand side of {eq}`disturbance_observer_gfm`, a new state variable $\hatug' = \hatug + \alphao \hat L \ic$ can be introduced {cite}`Fra1997`. Furthermore, the coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, $\omegac = \hatomegag$. Using these design choices, the whole control system consisting of the disturbance observer {eq}`disturbance_observer_gfm` and the control law {eq}`control_law_gfm` in the state-space form reduces to {cite}`Nur2024`
 
 ```{math}
 ---
