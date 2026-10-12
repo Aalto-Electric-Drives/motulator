@@ -62,7 +62,8 @@ class ControlLoci:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : ~motulator.drive.model.SynchronousMachinePars \
+        | ~motulator.drive.model.SaturatedSynchronousMachinePars
         Machine model parameters.
 
     Notes

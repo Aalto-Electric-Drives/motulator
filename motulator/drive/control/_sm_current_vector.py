@@ -2,8 +2,7 @@
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from math import inf, pi, sqrt
-from typing import cast
+from math import inf, pi
 
 from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
@@ -135,16 +134,20 @@ class CurrentVectorControllerCfg:
     alpha_i : float, optional
         Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
         used if `discrete` is True.
-    alpha_o : float, optional
+    alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
         keeps the speed estimation gain approximately the same.
     alpha_ref : float, optional
         Reference generation bandwidth (rad/s), defaults to 2*pi*100.
-    k_o : Callable[[float], float], optional
-        Observer gain as a function of the rotor angular speed.
-    k_f : Callable[[float], float], optional
-        PM-flux estimation gain as a function of the rotor angular speed.
+    k_o : Callable[[float], float] | None, optional
+        Observer gain as a function of the electrical rotor angular speed. If None,
+        defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if
+        `sensorless` is True (incremental inductances at zero current), otherwise
+        ``lambda w_m: 2*pi*15``.
+    k_f : Callable[[float], float] | None, optional
+        PM-flux estimation gain as a function of the electrical rotor angular speed. If
+        None, the gain is zero, i.e., the PM-flux linkage is not estimated.
     psi_s_min : float, optional
         Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
         positive for machines without PMs.
@@ -187,13 +190,6 @@ class CurrentVectorControllerCfg:
     T_s: float = 125e-6
     discrete: bool = False
 
-    def __post_init__(self) -> None:
-        """Set alpha_o default based on J value and operation mode."""
-        if self.alpha_o is None:
-            alpha = 2 * pi * 50 if self.sensorless else 2 * pi * 400
-            # With J, the triple pole at alpha/sqrt(3) keeps the gain k_w about the same
-            self.alpha_o = alpha if self.J is None else alpha / sqrt(3)
-
 
 # %%
 class CurrentVectorController:
@@ -232,13 +228,7 @@ class CurrentVectorController:
         else:
             self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
-            par,
-            cast(float, cfg.alpha_o),
-            cfg.T_s,
-            cfg.k_o,
-            cfg.k_f,
-            cfg.sensorless,
-            cfg.J,
+            par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
         )
         self.par = par
         self.cfg = cfg

@@ -4,7 +4,7 @@ from collections.abc import Callable, Sequence
 from copy import copy
 from dataclasses import dataclass
 from math import inf, pi, sqrt
-from typing import Literal, cast
+from typing import Literal
 
 import numpy as np
 
@@ -232,12 +232,15 @@ class FluxVectorControllerCfg:
         Flux-control bandwidth (rad/s), defaults to `alpha_tau`.
     alpha_i : float, optional
         Integral action bandwidth (rad/s), defaults to `alpha_tau`.
-    alpha_o : float, optional
+    alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
         speed estimation gain approximately the same.
-    k_o : Callable[[float], complex], optional
-        Observer gain as a function of the rotor angular speed.
+    k_o : Callable[[float], complex] | None, optional
+        Observer gain as a function of the electrical rotor angular speed. If None,
+        defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)`` if
+        `sensorless` is True, otherwise ``lambda w_m: 1 + 0.2*abs(w_m)/(alpha -
+        1j*w_m)``, where ``alpha = R_R/L_M``.
     tau_M_max : float, optional
         Maximum torque reference (Nm), defaults to `inf`.
     k_u : float, optional
@@ -267,13 +270,6 @@ class FluxVectorControllerCfg:
     J: float | None = None
     sensorless: bool = True
     T_s: float = 125e-6
-
-    def __post_init__(self) -> None:
-        """Set alpha_o default based on J value and operation mode."""
-        if self.alpha_o is None:
-            alpha = 2 * pi * 60 if self.sensorless else 2 * pi * 400
-            # With J, the double pole at alpha/2 keeps the speed gain k_w about the same
-            self.alpha_o = alpha if self.J is None else 0.5 * alpha
 
 
 # %%
@@ -314,7 +310,7 @@ class FluxVectorController:
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
         self.observer = create_speed_flux_observer(
-            par, cast(float, cfg.alpha_o), cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
+            par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
         )
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s
@@ -378,8 +374,10 @@ class ObserverBasedVHzControllerCfg:
         Torque-control bandwidth (rad/s), defaults to 2*pi*20.
     alpha_f : float, optional
         Low-pass-filter bandwidth (rad/s), defaults to 2*pi*1.
-    k_o : Callable[[float], complex], optional
-        Observer gain as a function of the rotor angular speed.
+    k_o : Callable[[float], complex] | None, optional
+        Observer gain as a function of the electrical rotor angular speed. If None,
+        defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)``, where
+        ``alpha = R_R/L_M``.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_b : float, optional

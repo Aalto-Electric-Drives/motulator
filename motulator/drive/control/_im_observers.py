@@ -3,7 +3,7 @@
 from cmath import exp
 from collections.abc import Callable
 from dataclasses import dataclass
-from math import inf
+from math import inf, pi
 
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
@@ -216,7 +216,7 @@ class SpeedFluxObserver:
     This class implements a reduced-order flux observer for induction machines with
     speed estimation. If the inertia of the mechanical system is provided, the observer
     also estimates the load torque, to avoid the lag in the speed estimate. The rotor
-    speed error signal is defined in {class}`FluxObserver`.
+    speed error signal is defined in :class:`FluxObserver`.
 
     Parameters
     ----------
@@ -302,7 +302,7 @@ def default_sensorless_k_o(
 
 def create_speed_flux_observer(
     par: InductionMachineInvGammaPars | InductionMachinePars,
-    alpha_o: float,
+    alpha_o: float | None,
     T_s: float,
     k_o: Callable[[float], complex] | None = None,
     sensorless: bool = True,
@@ -314,16 +314,18 @@ def create_speed_flux_observer(
     In sensored mode, the measured rotor speed is filtered. In sensorless mode, the
     rotor speed is estimated based on the stator voltage and current. The sensored mode
     corresponds to the weight `h = 1` and the sensorless mode to `h = 0`, see
-    {class}`FluxObserver`.
+    :class:`FluxObserver`.
 
     Parameters
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
-    alpha_o : float
-        Speed estimation pole (rad/s).
+    alpha_o : float | None
+        Speed estimation poles (rad/s). If None, defaults to 2*pi*60 if `sensorless`
+        is True, otherwise 2*pi*400. If `J` is given, the default is halved, which
+        keeps the speed estimation gain approximately the same.
     T_s : float
-        Sampling period (s), see {class}`SpeedFluxObserver`.
+        Sampling period (s), see :class:`SpeedFluxObserver`.
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the electrical angular rotor speed. If `None`, it
         defaults to ``lambda w_m: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``
@@ -345,6 +347,10 @@ def create_speed_flux_observer(
     def default_k_o_sensored(w_m: float) -> complex:
         return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
 
+    if alpha_o is None:
+        alpha_o = 2 * pi * 60 if sensorless else 2 * pi * 400
+        # With J, the double pole at alpha_o/2 keeps the speed gain about the same
+        alpha_o = alpha_o if J is None else 0.5 * alpha_o
     if k_o is None:
         k_o = default_sensorless_k_o(par) if sensorless else default_k_o_sensored
 

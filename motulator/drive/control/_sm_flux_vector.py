@@ -2,8 +2,8 @@
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from math import inf, pi, sqrt
-from typing import Literal, cast
+from math import inf, pi
+from typing import Literal
 
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._common import matched_pole
@@ -166,9 +166,13 @@ class FluxVectorControllerCfg:
     alpha_ref : float, optional
         Reference generation bandwidth (rad/s), defaults to 2*pi*100.
     k_o : Callable[[float], float] | None, optional
-        Observer gain as a function of the rotor angular speed.
+        Observer gain as a function of the electrical rotor angular speed. If None,
+        defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if
+        `sensorless` is True (incremental inductances at zero current), otherwise
+        ``lambda w_m: 2*pi*15``.
     k_f : Callable[[float], float] | None, optional
-        PM-flux estimation gain as a function of the rotor angular speed.
+        PM-flux estimation gain as a function of the electrical rotor angular speed. If
+        None, the gain is zero, i.e., the PM-flux linkage is not estimated.
     psi_s_min : float | None, optional
         Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere. It must be
         positive for machines without PMs.
@@ -206,13 +210,6 @@ class FluxVectorControllerCfg:
     sensorless: bool = True
     online_ref: bool = False
     T_s: float = 125e-6
-
-    def __post_init__(self) -> None:
-        """Set alpha_o default based on J value and operation mode."""
-        if self.alpha_o is None:
-            alpha = 2 * pi * 50 if self.sensorless else 2 * pi * 400
-            # With J, the triple pole at alpha/sqrt(3) keeps the gain k_w about the same
-            self.alpha_o = alpha if self.J is None else alpha / sqrt(3)
 
 
 # %%
@@ -273,14 +270,8 @@ class FluxVectorController:
             par, alpha_psi, cfg.alpha_tau, alpha_i
         )
         self.observer = create_speed_flux_observer(
-            par,
-            cast(float, cfg.alpha_o),
-            cfg.T_s,
-            cfg.k_o,
-            cfg.k_f,
-            cfg.sensorless,
-            cfg.J,
-        )  # alpha_o is resolved in the configuration's __post_init__
+            par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
+        )
         self.cfg = cfg
         self.par = par
         self.sensorless = cfg.sensorless
@@ -340,7 +331,9 @@ class ObserverBasedVHzControllerCfg:
     alpha_o : float, optional
         Angle estimation pole (rad/s), defaults to 2*pi*200.
     k_o : Callable[[float], float] | None, optional
-        Observer gain as a function of the rotor angular speed.
+        Observer gain as a function of the electrical rotor angular speed. If None,
+        defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)``
+        (incremental inductances at zero current).
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional

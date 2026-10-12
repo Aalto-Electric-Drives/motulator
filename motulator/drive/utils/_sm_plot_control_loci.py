@@ -48,7 +48,8 @@ class MachineCharacteristics:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : ~motulator.drive.model.SynchronousMachinePars \
+        | ~motulator.drive.model.SaturatedSynchronousMachinePars
         Machine parameters.
 
     """
