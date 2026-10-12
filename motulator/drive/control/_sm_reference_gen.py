@@ -3,13 +3,15 @@
 from cmath import exp, phase
 from math import inf, pi, sqrt
 
-import numpy as np
 from scipy.optimize import root_scalar
 
 from motulator.common.utils._utils import clip, sign
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
+    aux_current,
+    aux_flux,
+    mat_vec,
 )
 from motulator.drive.utils._sm_control_loci import ControlLoci
 
@@ -17,29 +19,63 @@ EPS = 1e-4
 
 
 # %%
-def _mat_vec(L_s: np.ndarray, x: complex) -> complex:
-    """Matrix-vector product L_s @ x for symmetric 2x2 matrix."""
-    return L_s[0, 0] * x.real + 1j * L_s[1, 1] * x.imag + 1j * L_s[0, 1] * x.conjugate()
+class _ReferenceGeneratorBase:
+    """Flux limits and current-reference tracking of the reference generators."""
 
+    def __init__(
+        self,
+        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        psi_s_min: float | None,
+        psi_s_max: float,
+        k_u: float,
+        k_mtpv: float,
+        alpha_ref: float,
+    ) -> None:
+        self.par = par
+        self.k_u = k_u
+        self.k_mtpv = k_mtpv
+        self.alpha = alpha_ref
 
-def _aux_flux(i_s: complex, psi_s: complex, L_s: np.ndarray) -> complex:
-    """Auxiliary flux linkage vector."""
-    return (
-        psi_s
-        - L_s[1, 1] * i_s.real
-        - 1j * L_s[0, 0] * i_s.imag
-        + 1j * L_s[0, 1] * i_s.conjugate()
-    )
+        psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
+        if par.psi_f == 0 and psi_s_min <= 0:
+            raise ValueError("psi_s_min must be positive for machines without PMs.")
+        self.psi_s_limits = (psi_s_min, psi_s_max)
 
+        self.i_s_ref = 0j  # Current-reference state, initialized by the subclasses
+        self.tau_M_ref = 0.0
+        self.psi_s_ref = psi_s_min
 
-def _aux_current(psi_s: complex, i_s: complex, L_s: np.ndarray) -> complex:
-    """Auxiliary current vector."""
-    det_L = L_s[0, 0] * L_s[1, 1] - L_s[0, 1] ** 2
-    return _mat_vec(L_s, psi_s) / det_L - i_s
+    def _evaluate(self, i_s: complex) -> tuple[complex, float]:
+        """Flux linkage and torque produced by the given current."""
+        psi_s = complex(self.par.psi_s_dq(i_s))
+        tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
+        return psi_s, tau_M
+
+    def _get_max_flux(self, w_m: float, u_dc: float) -> float:
+        """Get the maximum available flux linkage."""
+        u_s_max = self.k_u * u_dc / sqrt(3)
+        return u_s_max / abs(w_m) if w_m != 0 else inf
+
+    def _update_current_tracking(self, T_s: float) -> None:
+        """Update the current-reference state."""
+        # The current reference is a state, driven toward the stored flux and torque
+        # references by the tracking law [#Sar2026]_.
+        psi_s, tau_M = self._evaluate(self.i_s_ref)
+        psi_s_abs = abs(psi_s)
+        if psi_s_abs > 0:
+            L_s = self.par.incr_ind_mat(self.i_s_ref)
+            psi_a = aux_flux(self.i_s_ref, psi_s, L_s)
+            ell = mat_vec(L_s, psi_s) / psi_s_abs
+            den = (psi_a * ell.conjugate()).real
+            if den != 0:
+                err_tau = (abs(self.tau_M_ref) - tau_M) / (1.5 * self.par.n_p)
+                err_psi = self.psi_s_ref - psi_s_abs
+                err = (1j * ell * err_tau + psi_a * err_psi) / den
+                self.i_s_ref += T_s * self.alpha * err
 
 
 # %%
-class ReferenceGenerator:
+class ReferenceGenerator(_ReferenceGeneratorBase):
     """
     Optimal feedforward reference generator for synchronous machines.
 
@@ -96,15 +132,8 @@ class ReferenceGenerator:
         k_mtpv: float,
         alpha_ref: float,
     ) -> None:
-        self.par = par
-        self.k_u = k_u
-        self.k_mtpv = k_mtpv
-        self.alpha = alpha_ref
-
-        psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
-        if par.psi_f == 0 and psi_s_min <= 0:
-            raise ValueError("psi_s_min must be positive for machines without PMs.")
-        self.psi_s_limits = (psi_s_min, psi_s_max)
+        super().__init__(par, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
+        psi_s_min = self.psi_s_limits[0]
 
         # Generate LUTs
         loci = ControlLoci(par)
@@ -132,20 +161,6 @@ class ReferenceGenerator:
             self.i_s_ref = complex(psi_s_min / par.incr_ind_mat(0j)[0, 0])
         else:
             self.i_s_ref = complex(self.i_s_mtpa(0.0))
-
-        self.tau_M_ref = 0.0
-        self.psi_s_ref = self.psi_s_limits[0]
-
-    def _evaluate(self, i_s: complex) -> tuple[complex, float]:
-        """Flux linkage and torque produced by the given current."""
-        psi_s = complex(self.par.psi_s_dq(i_s))
-        tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
-        return psi_s, tau_M
-
-    def _get_max_flux(self, w_m: float, u_dc: float) -> float:
-        """Get the maximum available flux linkage."""
-        u_s_max = self.k_u * u_dc / sqrt(3)
-        return u_s_max / abs(w_m) if w_m != 0 else inf
 
     def compute_flux_and_torque_refs(
         self, tau_M_ref: float, w_m: float, u_dc: float
@@ -217,25 +232,11 @@ class ReferenceGenerator:
             Sampling period (s).
 
         """
-        # The current reference is a state, driven toward the stored flux and torque
-        # references by the tracking law [#Sar2026]_.
-        psi_s, tau_M = self._evaluate(self.i_s_ref)
-        psi_s_abs = abs(psi_s)
-
-        if psi_s_abs > 0:
-            L_s = self.par.incr_ind_mat(self.i_s_ref)
-            psi_a = _aux_flux(self.i_s_ref, psi_s, L_s)
-            ell = _mat_vec(L_s, psi_s) / psi_s_abs
-            den = (psi_a * ell.conjugate()).real
-            if den != 0:
-                err_tau = (abs(self.tau_M_ref) - tau_M) / (1.5 * self.par.n_p)
-                err_psi = self.psi_s_ref - psi_s_abs
-                err = (1j * ell * err_tau + psi_a * err_psi) / den
-                self.i_s_ref += T_s * self.alpha * err
+        self._update_current_tracking(T_s)
 
 
 # %%
-class ReferenceGeneratorOnline:
+class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
     """
     Optimal feedforward online reference generator for synchronous machines.
 
@@ -275,15 +276,8 @@ class ReferenceGeneratorOnline:
         k_mtpv: float,
         alpha_ref: float,
     ) -> None:
-        self.par = par
-        self.k_u = k_u
-        self.k_mtpv = k_mtpv
-        self.alpha = alpha_ref
-
-        psi_s_min = par.psi_f if psi_s_min is None else psi_s_min
-        if par.psi_f == 0 and psi_s_min <= 0:
-            raise ValueError("psi_s_min must be positive for machines without PMs.")
-        self.psi_s_limits = (psi_s_min, psi_s_max)
+        super().__init__(par, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
+        psi_s_min = self.psi_s_limits[0]
 
         # Dynamic tracking states
         if self.par.psi_f == 0:  # SyRM
@@ -299,7 +293,7 @@ class ReferenceGeneratorOnline:
             i_s = i_s_max * exp(1j * gamma)
             psi_s, _ = self._evaluate(i_s)
             L_s = self.par.incr_ind_mat(i_s)
-            i_a = _aux_current(psi_s, i_s, L_s)
+            i_a = aux_current(psi_s, i_s, L_s)
             return (i_a * psi_s.conjugate()).real
 
         f0, f1 = mtpv_cond(self.gamma_limits[0]), mtpv_cond(self.gamma_limits[1])
@@ -322,23 +316,9 @@ class ReferenceGeneratorOnline:
         # Zero torque at the minimum flux corresponds to pure d-axis current
         self.i_s_ref = complex(self.i_s_limits[0])
 
-        self.tau_M_ref = 0.0
-        self.psi_s_ref = self.psi_s_limits[0]
-
         # Cached from compute_flux_and_torque_refs, reused by the tracker updates
         self._mtpa_state = self._evaluate(self.i_s_mtpa)
         self._mtpv_state = self._evaluate(self.i_s_mtpv)
-
-    def _evaluate(self, i_s: complex) -> tuple[complex, float]:
-        """Flux linkage and torque produced by the given current."""
-        psi_s = complex(self.par.psi_s_dq(i_s))
-        tau_M = 1.5 * self.par.n_p * (i_s * psi_s.conjugate()).imag
-        return psi_s, tau_M
-
-    def _get_max_flux(self, w_m: float, u_dc: float) -> float:
-        """Get the maximum available flux linkage."""
-        u_s_max = self.k_u * u_dc / sqrt(3)
-        return u_s_max / abs(w_m) if w_m != 0 else inf
 
     def _clip_state(self, i_s: complex, max_angle: float | None = None) -> complex:
         """Constrain current magnitude and angle to allowable limits."""
@@ -402,7 +382,7 @@ class ReferenceGeneratorOnline:
         if abs(psi_s) > 0:
             L_s = self.par.incr_ind_mat(self.i_s_mtpa)
             L_delta = 0.5 * ((L_s[0, 0] - L_s[1, 1]) + 1j * (L_s[1, 0] + L_s[0, 1]))
-            psi_a = _aux_flux(self.i_s_mtpa, psi_s, L_s)
+            psi_a = aux_flux(self.i_s_mtpa, psi_s, L_s)
             phi_a = psi_a + 2 * L_delta * self.i_s_mtpa.conjugate()
 
             den = (psi_a * phi_a.conjugate()).real
@@ -421,11 +401,11 @@ class ReferenceGeneratorOnline:
             L_s = self.par.incr_ind_mat(self.i_s_mtpv)
             det_L = L_s[0, 0] * L_s[1, 1] - L_s[0, 1] ** 2
             L_delta = 0.5 * ((L_s[0, 0] - L_s[1, 1]) + 1j * (L_s[1, 0] + L_s[0, 1]))
-            L_psi = _mat_vec(L_s, psi_s)
+            L_psi = mat_vec(L_s, psi_s)
             ell = L_psi / psi_s_abs
             i_a = L_psi / det_L - self.i_s_mtpv
             j_a = i_a + 2 * (L_delta / det_L) * psi_s.conjugate()
-            phi_e = _mat_vec(L_s, j_a)
+            phi_e = mat_vec(L_s, j_a)
 
             den = (ell * phi_e.conjugate()).imag
             if den != 0:
@@ -444,27 +424,11 @@ class ReferenceGeneratorOnline:
         psi_s_abs = abs(psi_s)
         if psi_s_abs > 0:
             L_s = self.par.incr_ind_mat(self.i_s_cl)
-            ell = _mat_vec(L_s, psi_s) / psi_s_abs
+            ell = mat_vec(L_s, psi_s) / psi_s_abs
             den = (ell * self.i_s_cl.conjugate()).imag
             if den != 0:
                 err = 1j * self.i_s_cl * (self.psi_s_ref - psi_s_abs) / den
                 self.i_s_cl += T_s * self.alpha * err
-
-    def _update_current_tracking(self, T_s: float) -> None:
-        """Update the current reference tracker state."""
-        # Tracks the current vector that produces the requested torque and flux
-        psi_s, tau_M = self._evaluate(self.i_s_ref)
-        psi_s_abs = abs(psi_s)
-        if psi_s_abs > 0:
-            L_s = self.par.incr_ind_mat(self.i_s_ref)
-            ell = _mat_vec(L_s, psi_s) / psi_s_abs
-            psi_a = _aux_flux(self.i_s_ref, psi_s, L_s)
-            den = (psi_a * ell.conjugate()).real
-            if den != 0:
-                err_tau = (abs(self.tau_M_ref) - tau_M) / (1.5 * self.par.n_p)
-                err_psi = self.psi_s_ref - psi_s_abs
-                err = (1j * ell * err_tau + psi_a * err_psi) / den
-                self.i_s_ref += T_s * self.alpha * err
 
     def update(self, T_s: float) -> None:
         """

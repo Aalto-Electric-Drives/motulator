@@ -24,6 +24,7 @@ from motulator.drive.control._sm_reference_gen import (
 from motulator.drive.utils._parameters import (
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
+    aux_current,
 )
 
 
@@ -56,20 +57,11 @@ class FluxTorqueController(FluxTorqueControllerBase):
         self.par = par
         self.x_psi = alpha_i * par.psi_f
 
-    def _aux_current(self, psi_s: complex, i_s: complex) -> complex:
-        """Auxiliary current vector."""
-        L_s = self.par.incr_ind_mat(i_s)
-        L_dd, L_dq, L_qq = L_s[0, 0], L_s[0, 1], L_s[1, 1]
-        det_L = L_dd * L_qq - L_dq**2
-        return (
-            L_dd * psi_s.real + 1j * L_qq * psi_s.imag + 1j * L_dq * psi_s.conjugate()
-        ) / det_L - i_s
-
     def compute_output(
         self, psi_s_ref: float, tau_M_ref: float, fbk: ObserverOutputs
     ) -> complex:
         """Calculate the voltage reference."""
-        i_a = self._aux_current(fbk.psi_s, fbk.i_s)
+        i_a = aux_current(fbk.psi_s, fbk.i_s, self.par.incr_ind_mat(fbk.i_s))
         # If the torque-production factor is negative, the torque cannot be controlled.
         # In a PM machine with weak PMs, this occurs at a high flux and a small load
         # angle (psi_s.real > 0), where the flux is reduced until the torque becomes

@@ -10,7 +10,7 @@ from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, get_value, wrap
-from motulator.drive.control._common import SpeedController
+from motulator.drive.control._common import References, SpeedController
 from motulator.drive.model._drive import Drive
 
 
@@ -23,17 +23,6 @@ class Feedbacks(Protocol):
     theta_c: float  # Angular position of the coordinate system
     u_s: complex  # Stator voltage (controller coordinates) for the control laws
     u_dc: float  # DC-bus voltage
-
-
-class References(Protocol):
-    """Protocol defining the required fields for reference signals."""
-
-    T_s: float  # Sampling period (s) for the next control step
-    d_abc: Sequence[float]  # Duty ratios for three-phase PWM
-    tau_M: float  # Torque reference
-    u_s: complex  # Stator voltage reference (controller coordinates)
-    u_s_lim: complex  # Limited stator voltage reference (controller coordinates)
-    w_M: float | None  # Mechanical speed
 
 
 @dataclass

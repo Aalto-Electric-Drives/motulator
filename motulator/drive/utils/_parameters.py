@@ -37,6 +37,28 @@ def _solve_pm_flux(i_d: Callable[[float], float]) -> float:
 
 
 # %%
+def mat_vec(L_s: np.ndarray, x: complex) -> complex:
+    """Matrix-vector product ``L_s @ x`` for a symmetric 2x2 matrix."""
+    return L_s[0, 0] * x.real + 1j * L_s[1, 1] * x.imag + 1j * L_s[0, 1] * x.conjugate()
+
+
+def aux_flux(i_s: complex, psi_s: complex, L_s: np.ndarray) -> complex:
+    """Auxiliary flux linkage of a synchronous machine in rotor coordinates."""
+    return (
+        psi_s
+        - L_s[1, 1] * i_s.real
+        - 1j * L_s[0, 0] * i_s.imag
+        + 1j * L_s[0, 1] * i_s.conjugate()
+    )
+
+
+def aux_current(psi_s: complex, i_s: complex, L_s: np.ndarray) -> complex:
+    """Auxiliary current of a synchronous machine in rotor coordinates."""
+    det_L = L_s[0, 0] * L_s[1, 1] - L_s[0, 1] ** 2
+    return mat_vec(L_s, psi_s) / det_L - i_s
+
+
+# %%
 class BaseSynchronousMachinePars(Protocol):
     """Base class for synchronous machine parameters."""
 
