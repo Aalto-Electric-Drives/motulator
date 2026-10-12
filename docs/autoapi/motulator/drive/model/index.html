@@ -1374,10 +1374,10 @@ defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Total moment of inertia (kgm²).</p></li>
-<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
+<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
 friction, or an arbitrary function of the rotor speed. For example, choosing
 <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_M:</span> <span class="pre">k*abs(w_M)</span></code> gives the quadratic load torque <code class="docutils literal notranslate"><span class="pre">k*w_M**2</span></code>.
-The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+Defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1943,10 +1943,10 @@ defaults to 0 (no core losses).</p></li>
 <li><p><strong>J_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Load moment of inertia (kgm²).</p></li>
 <li><p><strong>K_S</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Shaft torsional stiffness (Nm/rad).</p></li>
 <li><p><strong>C_S</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Shaft torsional damping (Nm/(rad/s)).</p></li>
-<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
+<li><p><strong>B_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
 friction, or an arbitrary function of the load speed. For example, choosing
 <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_L:</span> <span class="pre">k*abs(w_L)</span></code> leads to quadratic load torque <code class="docutils literal notranslate"><span class="pre">k*w_L**2</span></code>.
-The default is <code class="docutils literal notranslate"><span class="pre">B_L</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p></li>
+Defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>

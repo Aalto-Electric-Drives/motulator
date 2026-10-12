@@ -256,13 +256,17 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
                    keeps the speed estimation gain approximately the same.
-   :type alpha_o: float, optional
+   :type alpha_o: float | None, optional
    :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_ref: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], float], optional
-   :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
-   :type k_f: Callable[[float], float], optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
+               defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if
+               `sensorless` is True (incremental inductances at zero current), otherwise
+               ``lambda w_m: 2*pi*15``.
+   :type k_o: Callable[[float], float] | None, optional
+   :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
+               None, the gain is zero, i.e., the PM-flux linkage is not estimated.
+   :type k_f: Callable[[float], float] | None, optional
    :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
                      positive for machines without PMs.
    :type psi_s_min: float, optional
@@ -650,9 +654,13 @@ Module Contents
    :type alpha_o: float | None, optional
    :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
    :type alpha_ref: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed.
+   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
+               defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if
+               `sensorless` is True (incremental inductances at zero current), otherwise
+               ``lambda w_m: 2*pi*15``.
    :type k_o: Callable[[float], float] | None, optional
-   :param k_f: PM-flux estimation gain as a function of the rotor angular speed.
+   :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
+               None, the gain is zero, i.e., the PM-flux linkage is not estimated.
    :type k_f: Callable[[float], float] | None, optional
    :param psi_s_min: Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere. It must be
                      positive for machines without PMs.
@@ -831,7 +839,9 @@ Module Contents
    :type alpha_f: float, optional
    :param alpha_o: Angle estimation pole (rad/s), defaults to 2*pi*200.
    :type alpha_o: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed.
+   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
+               defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)``
+               (incremental inductances at zero current).
    :type k_o: Callable[[float], float] | None, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
@@ -1744,8 +1754,7 @@ Module Contents
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
    :param cfg: Current-vector control configuration. The drive is always sensorless, and the
-               fields `sensorless`, `k_o`, and `k_f` are not used. Since the default of
-               `alpha_o` depends on `sensorless`, keep `sensorless=True` or give `alpha_o`.
+               fields `sensorless`, `k_o`, and `k_f` are not used.
    :type cfg: CurrentVectorControllerCfg
    :param U_inj: Injected voltage amplitude (V), defaults to 250.
    :type U_inj: float, optional
@@ -1885,7 +1894,7 @@ Module Contents
    the poles of the corresponding linearized estimation error dynamics. If the inertia
    of the mechanical system is provided, the observer also estimates the load torque,
    to avoid the lag in the speed estimate. The rotor angle is tracked using a position
-   error signal, see {class}`FluxObserver`.
+   error signal, see :class:`FluxObserver`.
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -2455,8 +2464,8 @@ Module Contents
 
    :param vector_ctrl: Vector controller whose input is the torque reference.
    :type vector_ctrl: VectorController
-   :param speed_ctrl: Speed controller. If not given or None, torque-control mode is used.
-   :type speed_ctrl: SpeedController | PIController | None
+   :param speed_ctrl: Speed controller. If None (default), torque-control mode is used.
+   :type speed_ctrl: SpeedController | PIController | None, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
 

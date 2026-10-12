@@ -188,7 +188,7 @@ Package Contents
    characteristics.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: ~motulator.drive.model.SynchronousMachinePars         | ~motulator.drive.model.SaturatedSynchronousMachinePars
 
    .. rubric:: Notes
 
@@ -411,7 +411,7 @@ Package Contents
    synchronous machines directly from machine parameters.
 
    :param par: Machine parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: ~motulator.drive.model.SynchronousMachinePars         | ~motulator.drive.model.SaturatedSynchronousMachinePars
 
 
 

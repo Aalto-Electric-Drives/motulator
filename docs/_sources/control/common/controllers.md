@@ -16,7 +16,7 @@ label: 2dof_pi
     u &= \kt r - \kp y + \ui + \uff
 ```
 
-where $r$ is the reference signal, $y$ is the measured (or estimated) feedback signal, $\ui$ is the the integral state, and $\uff$ is the optional feedforward signal. Furthermore, $\kt$ is the reference-feedforward gain, $\kp$ is the proportional gain, and $\ki$ is the integral gain. Setting $\kt = \kp$ and $\uff = 0$ results in the standard PI controller. This 2DOF PI controller can also be understood as a state-feedback controller with integral action and reference feedforward {cite}`Fra1997`.
+where $r$ is the reference signal, $y$ is the measured (or estimated) feedback signal, $\ui$ is the integral state, and $\uff$ is the optional feedforward signal. Furthermore, $\kt$ is the reference-feedforward gain, $\kp$ is the proportional gain, and $\ki$ is the integral gain. Setting $\kt = \kp$ and $\uff = 0$ results in the standard PI controller. This 2DOF PI controller can also be understood as a state-feedback controller with integral action and reference feedforward {cite}`Fra1997`.
 
 ```{figure} ../figs/2dof_pi.svg
 ---
@@ -101,7 +101,7 @@ label: complex_vector_2dof_pi
     \mathbf{u} &= \kT\mathbf{r} - \kP\mathbf{y} + \uI + \uFF
 ```
 
-where $\mathbf{u}$ is the output of the controller, $\mathbf{r}$ is the reference signal, $\uI$ is the the integral state, and $\uFF$ is the optional feedforward signal. Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
+where $\mathbf{u}$ is the output of the controller, $\mathbf{r}$ is the reference signal, $\uI$ is the integral state, and $\uFF$ is the optional feedforward signal. Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
 
 ```{figure} ../figs/complex_vector_2dof_pi.svg
 ---
@@ -126,6 +126,6 @@ alt: 2DOF complex-vector PI controller with feedforward
 
 The discrete-time implementation of {eq}`complex_vector_2dof_pi` with the anti-windup is given in the {class}`motulator.common.control.ComplexPIController` class, which is the base class for {class}`motulator.drive.control.sm.CurrentController`, {class}`motulator.drive.control.im.CurrentController`, and {class}`motulator.grid.control.CurrentController` classes. The algorithm is similar to the real-valued case given in {eq}`discrete_2dof_pi`.
 
-The converter output voltage is limited due to the limited DC-bus voltage. The realized switching-cycle averaged voltage is obtained from the pulse-width modulation (PWM) algorithm. The {class}`motulator.common.control.PWM` class implements the space-vector modulation {cite}`Hav1999` with different overmodulation strategies (minimum phase error, minimum magnitude error, six-step {cite}`Bol1997`). Before the duty ratios are computed, the angle of the voltage reference is advanced to compensate for the computational and PWM delays {cite}`Bae2003`. The realized voltage is computed as the average of the voltages corresponding to the duty ratios of the previous and ongoing sampling periods.
+The converter output voltage is limited due to the limited DC-bus voltage. The realized switching-cycle averaged voltage is obtained from the pulse-width modulation (PWM) algorithm. The {class}`motulator.common.control.PWM` class implements the space-vector modulation {cite}`Hav1999` with different overmodulation strategies (minimum phase error, minimum magnitude error, six-step {cite}`Bol1997`). Before the duty ratios are computed, the angle of the voltage reference is advanced to compensate for the computational and PWM delays {cite}`Bae2003`. The realized voltage is computed as the average of the voltages corresponding to the duty ratios of the previous and ongoing sampling periods. The discrete-time observers of machine drives use the voltage of the ongoing sampling period instead, which is obtained by {meth}`motulator.common.control.PWM.get_realized_voltage` with `average=False`.
 
 Optionally, the duty-ratio error caused by the inverter nonlinearities can be given as a function `d_err(i_abc, d_abc)` of the phase currents and duty ratios. The realized voltage is then corrected for this error, using the measured currents and the duty ratios of the corresponding sampling periods. The {func}`motulator.common.utils.dead_time_error` function implements the dead-time error, consistent with the system model. Furthermore, the error is compensated for by feedforward, using the currents predicted to the middle of the next sampling period. This can be disabled by `feedforward=False`, retaining the correction of the realized voltage.

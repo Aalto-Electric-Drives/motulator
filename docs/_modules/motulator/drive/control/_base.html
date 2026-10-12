@@ -567,8 +567,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    vector_ctrl : VectorController</span>
 <span class="sd">        Vector controller whose input is the torque reference.</span>
-<span class="sd">    speed_ctrl : SpeedController | PIController | None</span>
-<span class="sd">        Speed controller. If not given or None, torque-control mode is used.</span>
+<span class="sd">    speed_ctrl : SpeedController | PIController | None, optional</span>
+<span class="sd">        Speed controller. If None (default), torque-control mode is used.</span>
 <span class="sd">    pwm : PWM, optional</span>
 <span class="sd">        Pulse-width modulator, defaults to `PWM()`.</span>
 

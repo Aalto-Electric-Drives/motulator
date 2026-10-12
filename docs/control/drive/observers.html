@@ -637,7 +637,7 @@
 <div class="math notranslate nohighlight" id="equation-k1-sensored">
 <span class="eqno">(10)<a class="headerlink" href="#equation-k1-sensored" title="Link to this equation">#</a></span>\[    \koa = 1 + \frac{g |\omegam|}{\hatalpha - \jj\omegam} \qquad
     \kob = 0\]</div>
-<p>where <span class="math notranslate nohighlight">\(g\)</span> is a unitless positive design parameter. The corresponding pole is located at <span class="math notranslate nohighlight">\(s = -\alpha - g |\omegamo| - \jj\omegaro\)</span>, where <span class="math notranslate nohighlight">\(\omegaro = \omegaso - \omegamo\)</span> is the slip angular frequency.</p>
+<p>where <span class="math notranslate nohighlight">\(g\)</span> is a unitless positive design parameter, <span class="math notranslate nohighlight">\(g = 0.2\)</span> by default. The corresponding pole is located at <span class="math notranslate nohighlight">\(s = -\alpha - g |\omegamo| - \jj\omegaro\)</span>, where <span class="math notranslate nohighlight">\(\omegaro = \omegaso - \omegamo\)</span> is the slip angular frequency.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>As a special case, <span class="math notranslate nohighlight">\(\koa = 0\)</span> yields the voltage model. As another special case, the current model is obtained choosing <span class="math notranslate nohighlight">\(\koa = 1\)</span>.</p>
@@ -656,7 +656,7 @@
 <p>where the gain components correspond to <span class="math notranslate nohighlight">\(\koa = \kd + \jj \kq\)</span>. The attenuation <span class="math notranslate nohighlight">\(\sigma\)</span> can be assigned by choosing</p>
 <div class="math notranslate nohighlight" id="equation-k1-sensorless">
 <span class="eqno">(13)<a class="headerlink" href="#equation-k1-sensorless" title="Link to this equation">#</a></span>\[    \koa = \frac{\sigma}{\hat \alpha - \jj\hatomegam}\]</div>
-<p>which results in the characteristic polynomial <span class="math notranslate nohighlight">\(D(s) = s^2 + 2\sigma s + \omegaso^2\)</span>. In the default tuning, the attenuation is scheduled as <span class="math notranslate nohighlight">\(\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|\)</span>, where <span class="math notranslate nohighlight">\(\zeta_\infty\)</span> is the desired damping ratio at high speeds. At zero stator frequency <span class="math notranslate nohighlight">\(\omegaso = 0\)</span>, the poles are located at <span class="math notranslate nohighlight">\(s = 0\)</span> and <span class="math notranslate nohighlight">\(s = -\alpha\)</span>, which allows stable magnetizing and starting the machine. <a class="reference internal" href="#fig-poles"><span class="std std-ref">Figure 1</span></a> shows the corresponding pole placement example.</p>
+<p>which results in the characteristic polynomial <span class="math notranslate nohighlight">\(D(s) = s^2 + 2\sigma s + \omegaso^2\)</span>. In the default tuning, the attenuation is scheduled as <span class="math notranslate nohighlight">\(\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|\)</span>, where <span class="math notranslate nohighlight">\(\zeta_\infty\)</span> is the desired damping ratio at high speeds, <span class="math notranslate nohighlight">\(\zeta_\infty = 0.2\)</span> by default. At zero stator frequency <span class="math notranslate nohighlight">\(\omegaso = 0\)</span>, the poles are located at <span class="math notranslate nohighlight">\(s = 0\)</span> and <span class="math notranslate nohighlight">\(s = -\alpha\)</span>, which allows stable magnetizing and starting the machine. <a class="reference internal" href="#fig-poles"><span class="std std-ref">Figure 1</span></a> shows the corresponding pole placement example.</p>
 <figure class="align-center" id="fig-poles">
 <a class="only-light reference internal image-reference" href="../../_images/poles.svg"><img alt="Pole placement example in sensorless drives" class="only-light" src="../../_images/poles.svg" style="width: 100%;" />
 </a>
@@ -718,7 +718,7 @@
 <p>The control system operates in estimated rotor coordinates, <span class="math notranslate nohighlight">\(\thetac = \hatthetam\)</span>, aligned at the rotor angle estimate. In these coordinates, the measured current and the realized voltage (obtained from the PWM algorithm), respectively, are</p>
 <div class="math notranslate nohighlight" id="equation-is-prime">
 <span class="eqno">(20)<a class="headerlink" href="#equation-is-prime" title="Link to this equation">#</a></span>\[    \is' = \iss \e^{-\jj\hatthetam} \qquad
-    \us' = \us \e^{-\jj\hatthetam}\]</div>
+    \us' = \uss \e^{-\jj\hatthetam}\]</div>
 <p>Due to the estimation error <span class="math notranslate nohighlight">\(\tildethetam = \thetam - \hatthetam\)</span>, the current <span class="math notranslate nohighlight">\(\is'\)</span> generally differs from the current <span class="math notranslate nohighlight">\(\is\)</span> (and similarly for the voltage).</p>
 </section>
 <section id="flux-and-position-observer">

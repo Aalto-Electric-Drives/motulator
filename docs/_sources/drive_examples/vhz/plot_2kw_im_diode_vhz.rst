@@ -22,7 +22,7 @@
 =====================================
 
 This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM)
-drive. A diode bridge, stiff three-phase grid, and a DC link is modeled.
+drive. A diode bridge, stiff three-phase grid, and a DC link are modeled.
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-16
 
@@ -192,7 +192,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.700 seconds)
+   **Total running time of the script:** (0 minutes 7.814 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_diode_vhz.py:

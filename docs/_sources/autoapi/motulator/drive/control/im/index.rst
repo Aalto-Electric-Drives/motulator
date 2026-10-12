@@ -335,9 +335,12 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
                    speed estimation gain approximately the same.
-   :type alpha_o: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], complex], optional
+   :type alpha_o: float | None, optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
+               defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)`` if
+               `sensorless` is True, otherwise ``lambda w_m: 1 + 0.2*abs(w_m)/(alpha -
+               1j*w_m)``, where ``alpha = R_R/L_M``.
+   :type k_o: Callable[[float], complex] | None, optional
    :param w_s_nom: Nominal stator angular frequency (rad/s), defaults to 2*pi*50.
    :type w_s_nom: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.95.
@@ -716,9 +719,12 @@ Module Contents
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
                    speed estimation gain approximately the same.
-   :type alpha_o: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], complex], optional
+   :type alpha_o: float | None, optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
+               defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)`` if
+               `sensorless` is True, otherwise ``lambda w_m: 1 + 0.2*abs(w_m)/(alpha -
+               1j*w_m)``, where ``alpha = R_R/L_M``.
+   :type k_o: Callable[[float], complex] | None, optional
    :param tau_M_max: Maximum torque reference (Nm), defaults to `inf`.
    :type tau_M_max: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
@@ -1007,8 +1013,10 @@ Module Contents
    :type alpha_tau: float, optional
    :param alpha_f: Low-pass-filter bandwidth (rad/s), defaults to 2*pi*1.
    :type alpha_f: float, optional
-   :param k_o: Observer gain as a function of the rotor angular speed.
-   :type k_o: Callable[[float], complex], optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
+               defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)``, where
+               ``alpha = R_R/L_M``.
+   :type k_o: Callable[[float], complex] | None, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
    :param k_b: Breakdown torque margin, defaults to 0.9.
@@ -1554,7 +1562,7 @@ Module Contents
    This class implements a reduced-order flux observer for induction machines with
    speed estimation. If the inertia of the mechanical system is provided, the observer
    also estimates the load torque, to avoid the lag in the speed estimate. The rotor
-   speed error signal is defined in {class}`FluxObserver`.
+   speed error signal is defined in :class:`FluxObserver`.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
@@ -1962,8 +1970,8 @@ Module Contents
 
    :param vector_ctrl: Vector controller whose input is the torque reference.
    :type vector_ctrl: VectorController
-   :param speed_ctrl: Speed controller. If not given or None, torque-control mode is used.
-   :type speed_ctrl: SpeedController | PIController | None
+   :param speed_ctrl: Speed controller. If None (default), torque-control mode is used.
+   :type speed_ctrl: SpeedController | PIController | None, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
 

@@ -1035,8 +1035,8 @@ Package Contents
    :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
                friction, or an arbitrary function of the rotor speed. For example, choosing
                ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.
-               The default is ``B_L = 0``.
-   :type B_L: float | Callable[[float], float]
+               Defaults to 0.
+   :type B_L: float | Callable[[float], float], optional
 
 
 
@@ -2012,8 +2012,8 @@ Package Contents
    :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
                friction, or an arbitrary function of the load speed. For example, choosing
                ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.
-               The default is ``B_L = 0``.
-   :type B_L: float | Callable[[float], float]
+               Defaults to 0.
+   :type B_L: float | Callable[[float], float], optional
 
 
 
