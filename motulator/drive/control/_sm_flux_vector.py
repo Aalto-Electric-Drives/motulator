@@ -3,9 +3,9 @@
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from math import inf, pi
-from typing import Literal
 
 from motulator.common.control._base import TimeSeries
+from motulator.common.control._pwm import PWM
 from motulator.drive.control._common import matched_pole
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
@@ -277,6 +277,10 @@ class FluxVectorController:
         self.sensorless = cfg.sensorless
         self.online_ref = cfg.online_ref
 
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        return PWM()
+
     def get_feedback(
         self,
         u_s_ab: complex,
@@ -383,7 +387,6 @@ class ObserverBasedVHzController:
         cfg: ObserverBasedVHzControllerCfg,
     ) -> None:
         self.cfg = cfg
-        self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv, 0.0
         )  # The current reference is not used, so its tracking bandwidth is zero
@@ -393,6 +396,10 @@ class ObserverBasedVHzController:
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.T_s = cfg.T_s
+
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        return PWM(overmodulation="MME")
 
     def get_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float

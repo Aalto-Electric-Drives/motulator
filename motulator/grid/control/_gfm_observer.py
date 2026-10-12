@@ -200,6 +200,8 @@ class ObserverBasedGridFormingController:
 
     """
 
+    grid_forming = True
+
     def __init__(self, cfg: ObserverBasedGridFormingControllerCfg) -> None:
         self.observer = Observer(
             u_nom=cfg.u_nom, w_nom=cfg.w_nom, L=cfg.L, R=cfg.R, alpha_o=cfg.alpha_o

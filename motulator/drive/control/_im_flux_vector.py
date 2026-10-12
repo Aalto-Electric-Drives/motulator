@@ -4,11 +4,11 @@ from collections.abc import Callable, Sequence
 from copy import copy
 from dataclasses import dataclass
 from math import inf, pi, sqrt
-from typing import Literal
 
 import numpy as np
 
 from motulator.common.control._base import TimeSeries
+from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import sign
 from motulator.drive.control._im_observers import (
     ObserverOutputs,
@@ -315,6 +315,10 @@ class FluxVectorController:
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s
 
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        return PWM()
+
     def get_feedback(
         self,
         u_s_ab: complex,
@@ -421,7 +425,6 @@ class ObserverBasedVHzController:
     ) -> None:
         par = copy(par)  # The observer updates the saturation state of this copy
         self.cfg = cfg
-        self.pwm_mode: Literal["MPE", "MME", "six_step"] = "MME"
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, inf, cfg.k_u, cfg.k_b
         )
@@ -436,6 +439,10 @@ class ObserverBasedVHzController:
             self.observer.psi_s = cfg.psi_s_nom
             self.reference_gen.k_u = inf
             self.h = 1.0  # Disables the model-based correction
+
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        return PWM(overmodulation="MME")
 
     def get_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float

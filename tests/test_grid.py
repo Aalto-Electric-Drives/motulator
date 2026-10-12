@@ -41,6 +41,13 @@ def test_grid_following() -> None:
     p_g_ref, q_g_ref = 5e3, 4e3
     ctrl.set_power_ref(lambda t: (t > 0.02) * p_g_ref)
     ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * q_g_ref)
+    with pytest.raises(ValueError):  # References of other modes are rejected
+        ctrl.set_ac_voltage_ref(U_NOM)
+    with pytest.raises(ValueError):
+        ctrl.set_dc_bus_voltage_ref(650)
+    dc_ctrl = control.DCBusVoltageController(C_dc=1e-3, alpha_dc=2 * np.pi * 30)
+    with pytest.raises(ValueError):  # The DC-bus voltage controller gives p_g_ref
+        control.GridConverterControlSystem(ctrl.inner_ctrl, dc_ctrl).set_power_ref(0)
 
     res = model.Simulation(system(), ctrl, show_progress=False).simulate(t_stop=0.1)
 
@@ -60,6 +67,8 @@ def test_grid_forming() -> None:
     p_g_ref = 5e3
     ctrl.set_ac_voltage_ref(U_NOM)
     ctrl.set_power_ref(lambda t: (t > 0.05) * p_g_ref)
+    with pytest.raises(ValueError):  # References of other modes are rejected
+        ctrl.set_reactive_power_ref(0)
 
     mdl = system(L_g=0.74 * L_BASE)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.4)

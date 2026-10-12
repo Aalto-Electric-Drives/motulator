@@ -189,6 +189,8 @@ class CurrentVectorController:
 
     """
 
+    grid_forming = False
+
     def __init__(self, cfg: CurrentVectorControllerCfg) -> None:
         self.cfg = cfg
         self.current_ctrl = CurrentController(cfg.L, cfg.alpha_c, cfg.alpha_i)
