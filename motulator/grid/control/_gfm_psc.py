@@ -1,31 +1,16 @@
 """Power-synchronization control for grid converters."""
 
 from cmath import exp
-from collections.abc import Sequence
 from dataclasses import dataclass
 from math import pi, sqrt
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
-from motulator.grid.control._common import CurrentLimiter
+from motulator.grid.control._common import CurrentLimiter, References
 
 
 # %%
-@dataclass
-class References:
-    """Reference signals for power-synchronization control."""
-
-    T_s: float = 0.0
-    u_c: complex = 0j
-    i_c: complex = 0j
-    v_c: float = 0.0
-    p_g: float = 0.0
-    w_c: float = 0.0
-    u_dc: float | None = None
-    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
-
-
 @dataclass
 class Feedbacks:
     """Feedback signals for the control system."""
@@ -120,7 +105,7 @@ class PowerSynchronizationController:
         ref = References(T_s=self.cfg.T_s, v_c=v_c_ref, p_g=p_g_ref)
 
         # Power droop
-        fbk.w_c = ref.w_c = self.cfg.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
+        fbk.w_c = self.cfg.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)
 
         # Current reference: feedforward from the power reference in the d-axis and
         # the low-pass-filtered current in the q-axis
@@ -135,7 +120,7 @@ class PowerSynchronizationController:
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update states."""
         self.i_c_flt += ref.T_s * self.cfg.w_b * (fbk.i_c - self.i_c_flt)
-        self.theta_c += ref.T_s * ref.w_c
+        self.theta_c += ref.T_s * fbk.w_c
         self.theta_c = wrap(self.theta_c)
 
     def post_process(self, ts: TimeSeries) -> None:

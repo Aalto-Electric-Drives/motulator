@@ -83,7 +83,7 @@ def _plot_voltages(ax, ctrl, mdl, base: BaseValues) -> None:
         ds="steps-post",
     )
 
-    if hasattr(ctrl.ref, "v_c"):
+    if hasattr(ctrl.ref, "v_c") and np.any(ctrl.ref.v_c):
         ax.plot(
             ctrl.t,
             np.abs(ctrl.ref.v_c / base.u),

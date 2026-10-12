@@ -1,8 +1,25 @@
 """Common control functions and classes."""
 
+from collections.abc import Sequence
+from dataclasses import dataclass
 from math import inf
 
 from motulator.common.control._controllers import PIController
+
+
+# %%
+@dataclass
+class References:
+    """Reference signals of the grid converter controllers."""
+
+    T_s: float = 0.0  # Sampling period for the next control step
+    p_g: float = 0.0  # Active power reference
+    q_g: float = 0.0  # Reactive power reference (not used in grid-forming control)
+    v_c: float = 0.0  # Converter voltage magnitude reference (grid-forming control)
+    u_c: complex = 0j  # Converter voltage reference
+    i_c: complex = 0j  # Converter current reference
+    u_dc: float | None = None  # DC-bus voltage reference (set by the control system)
+    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
 
 # %%

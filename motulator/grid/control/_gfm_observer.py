@@ -1,7 +1,6 @@
 """Disturbance-observer-based grid-forming control."""
 
 from cmath import exp, phase
-from collections.abc import Sequence
 from dataclasses import dataclass
 from math import copysign, inf, pi, sqrt
 
@@ -10,7 +9,7 @@ import numpy as np
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
-from motulator.grid.control._common import CurrentLimiter
+from motulator.grid.control._common import CurrentLimiter, References
 
 
 # %%
@@ -96,19 +95,6 @@ class Observer:
 
 
 # %%
-@dataclass
-class References:
-    """Reference signals for observer-based grid-forming control."""
-
-    T_s: float = 0.0
-    p_g: float = 0.0
-    u_c: complex = 0j
-    i_c: complex = 0j
-    v_c: float = 0.0
-    u_dc: float | None = None
-    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
-
-
 @dataclass
 class ObserverBasedGridFormingControllerCfg:
     """

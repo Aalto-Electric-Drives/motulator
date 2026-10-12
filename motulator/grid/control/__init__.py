@@ -8,6 +8,7 @@ from motulator.grid.control._gfl_current_vector import (
     CurrentController,
     CurrentVectorController,
     CurrentVectorControllerCfg,
+    PLLOutputs,
 )
 from motulator.grid.control._gfm_observer import (
     ObserverBasedGridFormingController,
@@ -31,6 +32,7 @@ __all__ = [
     "ObserverBasedGridFormingControllerCfg",
     "ObserverOutputs",
     "PLL",
+    "PLLOutputs",
     "PowerSynchronizationController",
     "PowerSynchronizationControllerCfg",
 ]

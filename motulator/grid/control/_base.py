@@ -1,14 +1,14 @@
 """Base control system for grid converters."""
 
 from cmath import exp
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Protocol
 
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, get_value, line2complex
-from motulator.grid.control._common import DCBusVoltageController
+from motulator.grid.control._common import DCBusVoltageController, References
 from motulator.grid.model import GridConverterSystem
 
 
@@ -19,16 +19,6 @@ class Feedbacks(Protocol):
     w_c: float  # Angular speed of the coordinate system (rad/s)
     theta_c: float  # Angular position of the coordinate system (rad)
     u_dc: float  # DC-bus voltage (V)
-
-
-class References(Protocol):
-    """Protocol defining the required fields for reference signals."""
-
-    T_s: float
-    d_abc: Sequence[float]
-    p_g: float
-    u_c: complex  # Converter voltage reference (controller coordinates)
-    u_dc: float | None
 
 
 @dataclass
@@ -51,42 +41,22 @@ class Measurements:
 
 
 # %%
-class GridFormingController[Ref, Fbk](Protocol):
-    """Protocol defining the interface for grid-forming controllers."""
+class InnerController[Fbk](Protocol):
+    """Protocol defining the interface for the inner controllers."""
 
-    grid_forming: bool  # True: the controller takes the AC voltage reference
-
-    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
-        """Get feedback signals from measurements."""
-        ...
-
-    def compute_output(self, p_g_ref: float, v_c_ref: float, fbk: Fbk) -> Ref:
-        """Compute control output from feedback signals."""
-        ...
-
-    def update(self, ref: Ref, fbk: Fbk) -> None:
-        """Update controller states."""
-        ...
-
-    def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller outputs."""
-        ...
-
-
-class GridFollowingController[Ref, Fbk](Protocol):
-    """Protocol defining the interface for grid-following controllers."""
-
-    grid_forming: bool  # False: the controller takes the reactive power reference
+    # True: the controller takes the AC voltage reference (grid forming). False: it
+    # takes the reactive power reference (grid following).
+    grid_forming: bool
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals from measurements."""
         ...
 
-    def compute_output(self, p_g_ref: float, q_g_ref: float, fbk: Fbk) -> Ref:
-        """Compute control output from feedback signals."""
+    def compute_output(self, p_g_ref: float, ac_ref: float, fbk: Fbk, /) -> References:
+        """Compute control output, `ac_ref` being the AC voltage or reactive power."""
         ...
 
-    def update(self, ref: Ref, fbk: Fbk) -> None:
+    def update(self, ref: References, fbk: Fbk) -> None:
         """Update controller states."""
         ...
 
@@ -105,7 +75,7 @@ class GridConverterControlSystem(ControlSystem):
 
     Parameters
     ----------
-    inner_ctrl : GridFormingController | GridFollowingController
+    inner_ctrl : InnerController
         Inner controller. A grid-forming controller takes the AC voltage reference
         and a grid-following controller the reactive power reference.
     dc_bus_voltage_ctrl : DCBusVoltageController, optional
@@ -118,7 +88,7 @@ class GridConverterControlSystem(ControlSystem):
 
     def __init__(
         self,
-        inner_ctrl: GridFormingController | GridFollowingController,
+        inner_ctrl: InnerController,
         dc_bus_voltage_ctrl: DCBusVoltageController | None = None,
         pwm: PWM | None = None,
     ) -> None:
