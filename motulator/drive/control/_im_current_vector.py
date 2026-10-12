@@ -125,8 +125,8 @@ class CurrentReferenceGenerator:
         Nominal stator angular frequency (rad/s).
     k_u : float
         Voltage utilization factor.
-    k_fw : float
-        Field-weakening gain (1/H). If zero, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
+    k_fw : float | None
+        Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
 
     References
     ----------
@@ -143,7 +143,7 @@ class CurrentReferenceGenerator:
         i_s_max: float,
         w_s_nom: float,
         k_u: float,
-        k_fw: float,
+        k_fw: float | None,
     ) -> None:
         self.par = par
         self.i_s_max = i_s_max
@@ -152,7 +152,7 @@ class CurrentReferenceGenerator:
         par_nom = copy(par)
         par_nom.update_psi_s(psi_s_nom)
         self.i_sd_nom = psi_s_nom / (par_nom.L_M + par_nom.L_sgm)
-        self.k_fw = k_fw or 2 * par.R_R / (w_s_nom * par.L_sgm**2)
+        self.k_fw = 2 * par.R_R / (w_s_nom * par.L_sgm**2) if k_fw is None else k_fw
         self.i_sd_ref = self.i_sd_nom  # Integral state
 
     def compute_output(self, tau_M_ref: float, psi_R: float) -> tuple[complex, float]:
@@ -248,7 +248,7 @@ class CurrentVectorControllerCfg:
         Nominal stator angular frequency (rad/s), defaults to 2*pi*50.
     k_u : float, optional
         Voltage utilization factor, defaults to 0.95.
-    k_fw : float, optional
+    k_fw : float | None, optional
         Field-weakening gain (1/H), defaults to `2*R_R/(w_s_nom*L_sgm**2)`.
     J : float | None, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
@@ -273,7 +273,7 @@ class CurrentVectorControllerCfg:
     k_o: Callable[[float], complex] | None = None
     w_s_nom: float = 2 * pi * 50
     k_u: float = 0.95
-    k_fw: float = 0.0
+    k_fw: float | None = None
     J: float | None = None
     sensorless: bool = True
     T_s: float = 125e-6

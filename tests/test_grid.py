@@ -13,6 +13,7 @@ import pytest
 
 from motulator.common.model import SimulationResults
 from motulator.grid import control, model, utils
+from motulator.grid.control._gfl_current_vector import PLLOutputSignals
 from motulator.grid.utils._identification import dft
 
 U_NOM = np.sqrt(2 / 3) * 400  # Peak phase voltage
@@ -77,6 +78,11 @@ def test_grid_forming() -> None:
 
     p_g, _ = grid_powers(res, 0.35)
     assert p_g == pytest.approx(p_g_ref, abs=0.02 * 10e3)
+    # The post-processed signals are in the same coordinates, aligned with v_c
+    end = res.ctrl.t > 0.35
+    assert np.abs(res.ctrl.fbk.v_c.imag).max() < 1e-9 * U_NOM
+    u_c_err = np.mean(res.ctrl.fbk.u_c[end] - res.ctrl.ref.u_c[end])
+    assert abs(u_c_err) < 0.02 * U_NOM
 
 
 def test_dft_of_unevenly_sampled_signal() -> None:
@@ -98,3 +104,15 @@ def test_default_active_resistance(ctrl: str) -> None:
         cfg = control.ObserverBasedGridFormingControllerCfg(i_max=30, L=L_BASE)
         inner_ctrl = control.ObserverBasedGridFormingController(replace(cfg, i_max=60))
     assert inner_ctrl.R_a == pytest.approx(0.25 * cfg.u_nom / 60)
+
+
+def test_power_references_follow_current_limit() -> None:
+    """The power references correspond to the limited current reference."""
+    cfg = control.CurrentVectorControllerCfg(i_max=10, L=L_BASE)
+    inner_ctrl = control.CurrentVectorController(cfg)
+    fbk = PLLOutputSignals(u_g=300.0)
+    ref = inner_ctrl.compute_output(9e3, 3e3, fbk)
+    assert abs(ref.i_c) == pytest.approx(10)
+    s_g = 1.5 * fbk.u_g * ref.i_c.conjugate()
+    assert (ref.p_g, ref.q_g) == pytest.approx((s_g.real, s_g.imag))
+    assert abs(ref.p_g + 1j * ref.q_g) == pytest.approx(1.5 * 300 * 10)

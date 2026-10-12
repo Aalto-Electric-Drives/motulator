@@ -149,66 +149,58 @@ class IdentificationResults:
 # %%
 def save_csv(data: IdentificationResults, filename: str) -> None:
     """Save the identification results in a .csv-file."""
-    try:
-        # Create the data directory if it doesn't exist
-        makedirs("data", exist_ok=True)
+    # Create the data directory if it doesn't exist
+    makedirs("data", exist_ok=True)
 
-        # Create the file path
-        timestamp = datetime.now().strftime("%Y%m%d_%H.%M_")
-        filepath = join("data", timestamp + filename + ".csv")
+    # Create the file path
+    timestamp = datetime.now().strftime("%Y%m%d_%H.%M_")
+    filepath = join("data", timestamp + filename + ".csv")
 
-        # Check if file already exists
-        if exists(filepath):
-            print("Warning: Overwriting already existing file")
+    # Check if file already exists
+    if exists(filepath):
+        print("Warning: Overwriting already existing file")
 
-        # Get field names from the IdentificationResults dataclass
-        field_names = list(data.__dataclass_fields__.keys())
+    # Get field names from the IdentificationResults dataclass
+    field_names = list(data.__dataclass_fields__.keys())
 
-        # Save data to CSV file
-        with open(filepath, "w", encoding="utf-8") as f:
-            f.write(",".join(field_names) + "\n")
-            n_rows = len(data.f_e)
+    # Save data to CSV file
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(",".join(field_names) + "\n")
+        n_rows = len(data.f_e)
 
-            for i in range(n_rows):
-                row = []
-                for field_name in field_names:
-                    value = getattr(data, field_name)
+        for i in range(n_rows):
+            row = []
+            for field_name in field_names:
+                value = getattr(data, field_name)
 
-                    # Only write scalar values once in the first row
-                    if isinstance(value, np.ndarray):
-                        row.append(str(value[i]))
-                    else:
-                        row.append(str(value) if i == 0 else "")
+                # Only write scalar values once in the first row
+                if isinstance(value, np.ndarray):
+                    row.append(str(value[i]))
+                else:
+                    row.append(str(value) if i == 0 else "")
 
-                f.write(",".join(row) + "\n")
+            f.write(",".join(row) + "\n")
 
-        print(f"Data successfully exported to {timestamp + filename}")
-
-    except Exception as error:
-        print(f"Error saving data: {str(error)}")
+    print(f"Data successfully exported to {timestamp + filename}")
 
 
 def save_mat(data: IdentificationResults, filename: str) -> None:
     """Save the identification results in a .mat-file."""
-    try:
-        # Create the data directory if it doesn't exist
-        makedirs("data", exist_ok=True)
+    # Create the data directory if it doesn't exist
+    makedirs("data", exist_ok=True)
 
-        # Convert the data class to dict
-        data_dict = dict(data.__dict__.items())
-        # Create the file path
-        timestamp = datetime.now().strftime("%Y%m%d_%H.%M_")
-        filepath = join("data", timestamp + filename + ".mat")
+    # Convert the data class to dict
+    data_dict = dict(data.__dict__.items())
+    # Create the file path
+    timestamp = datetime.now().strftime("%Y%m%d_%H.%M_")
+    filepath = join("data", timestamp + filename + ".mat")
 
-        # Check if file already exists
-        if exists(filepath):
-            print("Warning: Overwriting already existing file")
+    # Check if file already exists
+    if exists(filepath):
+        print("Warning: Overwriting already existing file")
 
-        savemat(filepath, data_dict)
-        print(f"Data successfully exported to {timestamp + filename}")
-
-    except Exception as error:
-        print(f"Error saving data: {str(error)}")
+    savemat(filepath, data_dict)
+    print(f"Data successfully exported to {timestamp + filename}")
 
 
 def dft(
