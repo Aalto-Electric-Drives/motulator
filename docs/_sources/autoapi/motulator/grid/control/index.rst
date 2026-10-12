@@ -42,6 +42,7 @@ Classes
    motulator.grid.control.ObserverBasedGridFormingControllerCfg
    motulator.grid.control.ObserverOutputs
    motulator.grid.control.PLL
+   motulator.grid.control.PLLOutputs
    motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
    motulator.grid.control.PowerSynchronizationControllerCfg
@@ -362,7 +363,7 @@ Package Contents
 
    :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference
                       and a grid-following controller the reactive power reference.
-   :type inner_ctrl: GridFormingController | GridFollowingController
+   :type inner_ctrl: InnerController
    :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active power reference. If not
                                given, the active power reference is set externally.
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
@@ -905,6 +906,29 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: PLLOutputs
+
+   
+   Feedback signals for the control system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
 

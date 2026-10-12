@@ -560,6 +560,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLLOutputs"><code class="docutils literal notranslate"><span class="pre">PLLOutputs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PWM"><code class="docutils literal notranslate"><span class="pre">PWM</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PWM.compute_output"><code class="docutils literal notranslate"><span class="pre">PWM.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PWM.duty_ratios"><code class="docutils literal notranslate"><span class="pre">PWM.duty_ratios()</span></code></a></li>
@@ -627,13 +628,16 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
 <td><p>Phase-locked loop including the voltage-magnitude filtering.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLLOutputs</span></code></a></p></td>
+<td><p>Feedback signals for the control system.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationController" title="motulator.grid.control.PowerSynchronizationController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationController" title="motulator.grid.control.PowerSynchronizationController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationController</span></code></a></p></td>
 <td><p>Reference-feedforward power-synchronization controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
 <td><p>Configuration for the reference-feedforward power-synchronization controller.</p></td>
 </tr>
 </tbody>
@@ -696,11 +700,11 @@ inductance.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>q_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<em>PLLOutputSignals</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><em>PLLOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>References</p>
+<dd class="field-even"><p>motulator.grid.control._common.References</p>
 </dd>
 </dl>
 </dd></dl>
@@ -717,7 +721,7 @@ inductance.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>PLLOutputSignals</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs">PLLOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -743,8 +747,8 @@ inductance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>References</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>PLLOutputSignals</em>)</p></li>
+<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><em>PLLOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -834,7 +838,7 @@ signals, and reference signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inner_ctrl</strong> (<em>GridFormingController</em><em> | </em><em>GridFollowingController</em>) – Inner controller. A grid-forming controller takes the AC voltage reference
+<li><p><strong>inner_ctrl</strong> (<em>InnerController</em>) – Inner controller. A grid-forming controller takes the AC voltage reference
 and a grid-following controller the reactive power reference.</p></li>
 <li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller, which gives the active power reference. If not
 given, the active power reference is set externally.</p></li>
@@ -851,7 +855,7 @@ given, the active power reference is set externally.</p></li>
 <dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>References</p>
+<dd class="field-even"><p>motulator.grid.control._common.References</p>
 </dd>
 </dl>
 </dd></dl>
@@ -958,7 +962,7 @@ given, the active power reference is set externally.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
 <li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
 </ul>
 </dd>
@@ -1017,7 +1021,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>References</p>
+<dd class="field-even"><p>motulator.grid.control._common.References</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1060,7 +1064,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
@@ -1133,7 +1137,7 @@ the measured PCC voltage is also filtered.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>PLLOutputSignals</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs">PLLOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1146,7 +1150,7 @@ the measured PCC voltage is also filtered.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>out</strong> (<em>PLLOutputSignals</em>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><em>PLLOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1155,6 +1159,12 @@ the measured PCC voltage is also filtered.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.PLLOutputs">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PLLOutputs</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#PLLOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PLLOutputs" title="Link to this definition">#</a></dt>
+<dd><p>Feedback signals for the control system.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1422,7 +1432,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>References</p>
+<dd class="field-even"><p>motulator.grid.control._common.References</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1465,7 +1475,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
 <li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
 </ul>
 </dd>
@@ -1588,6 +1598,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLL.update"><code class="docutils literal notranslate"><span class="pre">PLL.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PLLOutputs"><code class="docutils literal notranslate"><span class="pre">PLLOutputs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PWM"><code class="docutils literal notranslate"><span class="pre">PWM</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PWM.compute_output"><code class="docutils literal notranslate"><span class="pre">PWM.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PWM.duty_ratios"><code class="docutils literal notranslate"><span class="pre">PWM.duty_ratios()</span></code></a></li>
