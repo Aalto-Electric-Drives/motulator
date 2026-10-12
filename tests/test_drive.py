@@ -78,7 +78,6 @@ def ipmsm_cvc_discrete() -> sm_control.VectorControlSystem:
     return sm_control.VectorControlSystem(
         sm_control.CurrentVectorController(par, cfg),
         sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
-        sm_control.PWM(k_comp=0),
     )
 
 
@@ -120,7 +119,6 @@ def im_cvc_discrete() -> im_control.VectorControlSystem:
     return im_control.VectorControlSystem(
         im_control.CurrentVectorController(im_par(), cfg),
         im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
-        im_control.PWM(k_comp=0),
     )
 
 
@@ -406,7 +404,8 @@ def test_discrete_current_control_angle_estimate() -> None:
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, discrete=True)
     vector_ctrl = sm_control.CurrentVectorController(par, cfg)
     vector_ctrl.observer.speed_observer.w_M = w_M
-    ctrl = sm_control.VectorControlSystem(vector_ctrl, pwm=sm_control.PWM(k_comp=0))
+    ctrl = sm_control.VectorControlSystem(vector_ctrl)
+    assert ctrl.pwm.k_comp == 0  # The default PWM of the discrete-time design
     ctrl.set_torque_ref(lambda t: 7.0)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
 

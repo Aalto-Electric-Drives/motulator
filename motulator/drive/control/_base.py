@@ -4,7 +4,7 @@ from cmath import exp
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from math import inf
-from typing import Literal, Protocol
+from typing import Protocol
 
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter
@@ -60,6 +60,10 @@ class VectorController[Ref, Fbk](Protocol):
 
     sensorless: bool
 
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        ...
+
     def get_feedback(
         self,
         u_s_ab: complex,
@@ -98,7 +102,7 @@ class VectorControlSystem(ControlSystem):
     speed_ctrl : SpeedController | PIController | None, optional
         Speed controller. If None (default), torque-control mode is used.
     pwm : PWM, optional
-        Pulse-width modulator, defaults to `PWM()`.
+        Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.
 
     """
 
@@ -109,7 +113,7 @@ class VectorControlSystem(ControlSystem):
         pwm: PWM | None = None,
     ) -> None:
         super().__init__()
-        self.pwm = pwm if pwm is not None else PWM()
+        self.pwm = pwm if pwm is not None else vector_ctrl.default_pwm()
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
         self.ext_ref = ExternalReferences()
@@ -213,7 +217,10 @@ class VHzController[Ref, Fbk](Protocol):
     """Protocol defining the interface for V/Hz controllers."""
 
     T_s: float
-    pwm_mode: Literal["MPE", "MME", "six_step"]
+
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        ...
 
     def get_feedback(self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float) -> Fbk:
         """Get feedback signals from measurements."""
@@ -243,7 +250,7 @@ class VHzControlSystem(ControlSystem):
     slew_rate : float, optional
         Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.
     pwm : PWM, optional
-        Pulse-width modulator, defaults to `PWM(overmodulation=vhz_ctrl.pwm_mode)`.
+        Pulse-width modulator, defaults to `vhz_ctrl.default_pwm()`.
 
     """
 
@@ -252,7 +259,7 @@ class VHzControlSystem(ControlSystem):
     ) -> None:
         super().__init__()
         self.vhz_ctrl = vhz_ctrl
-        self.pwm = pwm if pwm is not None else PWM(overmodulation=vhz_ctrl.pwm_mode)
+        self.pwm = pwm if pwm is not None else vhz_ctrl.default_pwm()
         self.rate_limiter = RateLimiter(slew_rate)
         self.ext_ref = ExternalReferences()
         self._w_M_ref: float = 0  # For storing ramp-limited speed reference

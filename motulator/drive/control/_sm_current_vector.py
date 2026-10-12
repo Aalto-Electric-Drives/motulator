@@ -4,7 +4,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from math import inf, pi
 
-from motulator.common.control import ComplexPIController, DiscreteComplexController
+from motulator.common.control import PWM, ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._sm_observers import (
     ObserverOutputs,
@@ -90,7 +90,8 @@ class DiscreteCurrentController(DiscreteComplexController):
 
     This implements the flux-linkage-based current controller designed directly in
     discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
-    the flux linkages. The PWM must be configured with `k_comp=0`.
+    the flux linkages. The PWM must be configured with `k_comp=0`, which is the
+    default when the controller is selected by `discrete=True`.
 
     Parameters
     ----------
@@ -168,8 +169,9 @@ class CurrentVectorControllerCfg:
         Sampling period (s), defaults to 125e-6.
     discrete : bool, optional
         If True, the direct discrete-time current controller is used instead of the
-        continuous-time design, defaults to False. The PWM must then be configured
-        with `k_comp=0`.
+        continuous-time design, defaults to False. The default PWM of the controller
+        then has `k_comp=0`, and a PWM given to the control system must be configured
+        likewise.
 
     """
 
@@ -234,6 +236,11 @@ class CurrentVectorController:
         self.cfg = cfg
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s
+
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        # The discrete-time current controller compensates for the delays itself
+        return PWM(k_comp=0) if self.cfg.discrete else PWM()
 
     def get_feedback(
         self,

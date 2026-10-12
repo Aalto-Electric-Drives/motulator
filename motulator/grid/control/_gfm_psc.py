@@ -95,6 +95,8 @@ class PowerSynchronizationController:
 
     """
 
+    grid_forming = True
+
     def __init__(self, cfg: PowerSynchronizationControllerCfg) -> None:
         self.cfg = cfg
         self.theta_c: float = 0.0

@@ -8,7 +8,7 @@ from math import pi, sqrt
 
 import numpy as np
 
-from motulator.common.control import ComplexPIController, DiscreteComplexController
+from motulator.common.control import PWM, ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import clip
 from motulator.drive.control._im_observers import (
@@ -71,7 +71,8 @@ class DiscreteCurrentController(DiscreteComplexController):
 
     The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
     resistive voltage drop and the back-emf are disturbances, which the integral action
-    compensates for. The PWM must be configured with `k_comp=0`.
+    compensates for. The PWM must be configured with `k_comp=0`, which is the default
+    when the controller is selected by `discrete=True`.
 
     Parameters
     ----------
@@ -271,8 +272,9 @@ class CurrentVectorControllerCfg:
         Sampling period (s), defaults to 125e-6.
     discrete : bool, optional
         If True, the direct discrete-time current controller is used instead of the
-        continuous-time design, defaults to False. The PWM must then be configured
-        with `k_comp=0`.
+        continuous-time design, defaults to False. The default PWM of the controller
+        then has `k_comp=0`, and a PWM given to the control system must be configured
+        likewise.
 
     """
 
@@ -324,6 +326,11 @@ class CurrentVectorController:
             par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
         )
         self.T_s = cfg.T_s
+
+    def default_pwm(self) -> PWM:
+        """Get the default pulse-width modulator."""
+        # The discrete-time current controller compensates for the delays itself
+        return PWM(k_comp=0) if self.cfg.discrete else PWM()
 
     def get_feedback(
         self,

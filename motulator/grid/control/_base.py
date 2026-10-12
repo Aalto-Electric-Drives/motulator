@@ -54,6 +54,8 @@ class Measurements:
 class GridFormingController[Ref, Fbk](Protocol):
     """Protocol defining the interface for grid-forming controllers."""
 
+    grid_forming: bool  # True: the controller takes the AC voltage reference
+
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals from measurements."""
         ...
@@ -73,6 +75,8 @@ class GridFormingController[Ref, Fbk](Protocol):
 
 class GridFollowingController[Ref, Fbk](Protocol):
     """Protocol defining the interface for grid-following controllers."""
+
+    grid_forming: bool  # False: the controller takes the reactive power reference
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals from measurements."""
@@ -102,9 +106,11 @@ class GridConverterControlSystem(ControlSystem):
     Parameters
     ----------
     inner_ctrl : GridFormingController | GridFollowingController
-        Inner controller.
+        Inner controller. A grid-forming controller takes the AC voltage reference
+        and a grid-following controller the reactive power reference.
     dc_bus_voltage_ctrl : DCBusVoltageController, optional
-        DC-bus voltage controller. If not given, power-control mode is used.
+        DC-bus voltage controller, which gives the active power reference. If not
+        given, the active power reference is set externally.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
 
@@ -132,6 +138,8 @@ class GridConverterControlSystem(ControlSystem):
             Active power reference (W), constant or a function of time.
 
         """
+        if self.dc_bus_voltage_ctrl is not None:
+            raise ValueError("The DC-bus voltage controller gives the power reference")
         self.ext_ref.p_g = ref_fcn
 
     def set_reactive_power_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
@@ -140,10 +148,12 @@ class GridConverterControlSystem(ControlSystem):
 
         Parameters
         ----------
-        ref_fcn : Callable[[float], float] | float
-            Power reference (VAr), constant or a function of time.
+        ref_fcn : float | Callable[[float], float]
+            Reactive power reference (VAr), constant or a function of time.
 
         """
+        if self.inner_ctrl.grid_forming:
+            raise ValueError("Grid-forming control takes the AC voltage reference")
         self.ext_ref.q_g = ref_fcn
 
     def set_ac_voltage_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
@@ -156,6 +166,10 @@ class GridConverterControlSystem(ControlSystem):
             AC-side converter voltage reference (V), constant or a function of time.
 
         """
+        if not self.inner_ctrl.grid_forming:
+            raise ValueError(
+                "Grid-following control takes the reactive power reference"
+            )
         self.ext_ref.v_c = ref_fcn
 
     def set_dc_bus_voltage_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
@@ -168,6 +182,8 @@ class GridConverterControlSystem(ControlSystem):
             DC-bus voltage reference (V), constant or a function of time.
 
         """
+        if self.dc_bus_voltage_ctrl is None:
+            raise ValueError("DC-bus voltage control requires dc_bus_voltage_ctrl")
         self.ext_ref.u_dc = ref_fcn
 
     def get_measurement(self, mdl: GridConverterSystem) -> Measurements:
@@ -188,25 +204,29 @@ class GridConverterControlSystem(ControlSystem):
         """Compute controller outputs based on feedback."""
         ext_ref = self.ext_ref
 
-        # Second reference: AC voltage (grid forming) or reactive power (grid following)
-        if ext_ref.v_c is not None:
-            v_c_or_q_g_ref = get_value(ext_ref.v_c, self.t)
-        elif ext_ref.q_g is not None:
-            v_c_or_q_g_ref = get_value(ext_ref.q_g, self.t)
-        else:
-            raise ValueError("No valid control mode configuration detected")
+        # AC voltage (grid forming) or reactive power (grid following) reference
+        v_c_or_q_g_ref = ext_ref.v_c if self.inner_ctrl.grid_forming else ext_ref.q_g
+        if v_c_or_q_g_ref is None:
+            quantity = (
+                "AC voltage" if self.inner_ctrl.grid_forming else "Reactive power"
+            )
+            raise ValueError(f"{quantity} reference must be set")
 
-        # Active power reference: external or from the DC-bus voltage controller
+        # Active power reference: from the DC-bus voltage controller or external
         u_dc_ref = None
-        if ext_ref.p_g is not None:
-            p_g_ref = get_value(ext_ref.p_g, self.t)
-        elif ext_ref.u_dc is not None and self.dc_bus_voltage_ctrl:
+        if self.dc_bus_voltage_ctrl is not None:
+            if ext_ref.u_dc is None:
+                raise ValueError("DC-bus voltage reference must be set")
             u_dc_ref = get_value(ext_ref.u_dc, self.t)
             p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
+        elif ext_ref.p_g is not None:
+            p_g_ref = get_value(ext_ref.p_g, self.t)
         else:
-            raise ValueError("No valid control mode configuration detected")
+            raise ValueError("Active power reference must be set")
 
-        ref = self.inner_ctrl.compute_output(p_g_ref, v_c_or_q_g_ref, fbk)
+        ref = self.inner_ctrl.compute_output(
+            p_g_ref, get_value(v_c_or_q_g_ref, self.t), fbk
+        )
         ref.u_dc = u_dc_ref
         u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
         ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
