@@ -480,7 +480,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PWM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">wrap</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedController</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">References</span><span class="p">,</span> <span class="n">SpeedController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span>
 
 
@@ -493,17 +493,6 @@
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular position of the coordinate system</span>
     <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator voltage (controller coordinates) for the control laws</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">References</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol defining the required fields for reference signals."""</span>
-
-    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Sampling period (s) for the next control step</span>
-    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Duty ratios for three-phase PWM</span>
-    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Torque reference</span>
-    <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator voltage reference (controller coordinates)</span>
-    <span class="n">u_s_lim</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Limited stator voltage reference (controller coordinates)</span>
-    <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># Mechanical speed</span>
 
 
 <span class="nd">@dataclass</span>
@@ -584,6 +573,8 @@
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="DriveControlSystem">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DriveControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for drive control systems.</span>
@@ -605,6 +596,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
 
+<div class="viewcode-block" id="DriveControlSystem.set_speed_ref">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.set_speed_ref">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_speed_ref</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_fcn</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set the external speed reference.</span>
@@ -615,7 +608,8 @@
 <span class="sd">            Speed reference (mechanical rad/s), constant or a function of time.</span>
 
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">ref_fcn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
+
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get the feedback signals from the inner controller."""</span>
@@ -625,6 +619,8 @@
 <span class="w">        </span><span class="sd">"""Compute the references, including the speed reference `w_M`."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
+<div class="viewcode-block" id="DriveControlSystem.get_feedback">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
@@ -634,15 +630,21 @@
         <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
-        <span class="k">return</span> <span class="n">fbk</span>
+        <span class="k">return</span> <span class="n">fbk</span></div>
 
+
+<div class="viewcode-block" id="DriveControlSystem.compute_output">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute controller output based on feedback."""</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_inner_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">limited_voltage</span>
-        <span class="k">return</span> <span class="n">ref</span>
+        <span class="k">return</span> <span class="n">ref</span></div>
 
+
+<div class="viewcode-block" id="DriveControlSystem.modulate">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.modulate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the duty ratios from the stator voltage reference.</span>
@@ -652,7 +654,9 @@
 
 <span class="sd">        """</span>
         <span class="n">u_s_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ref</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span></div>
+</div>
+
 
 
 <span class="c1"># %%</span>

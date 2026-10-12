@@ -669,7 +669,7 @@
         <span class="c1"># so it is faded out together with the model-based error signal.</span>
         <span class="n">k_o1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span>
         <span class="n">proj</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">/</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="k">else</span> <span class="mf">0.0</span>
-        <span class="n">k_o2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_o</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">proj</span>
+        <span class="n">k_o2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">h</span><span class="p">)</span> <span class="o">*</span> <span class="n">k_o1</span> <span class="o">*</span> <span class="n">proj</span>
 
         <span class="c1"># Correct the flux estimate at the sampling instant. The estimation error has</span>
         <span class="c1"># accumulated over the previous sampling period, whose length scales it.</span>
@@ -744,8 +744,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">w_M</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Mechanical angular rotor speed estimate (rad/s)."""</span>
+<span class="w">        </span><span class="sd">"""Mechanical angular rotor speed estimate (rad/s), also an initial value."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">w_M</span>
+
+    <span class="nd">@w_M</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">w_M</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">value</span>
 
 <div class="viewcode-block" id="SpeedFluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver.compute_output">[docs]</a>

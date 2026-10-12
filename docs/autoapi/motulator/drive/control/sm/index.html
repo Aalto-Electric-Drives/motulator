@@ -537,6 +537,13 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DiscreteCurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController.compute_output()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.modulate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.set_speed_ref()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
@@ -604,6 +611,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.theta_m"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.theta_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.w_M"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.w_M</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedObserver"><code class="docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a><ul class="nav section-nav flex-column">
@@ -664,58 +672,61 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.DiscreteCurrentController" title="motulator.drive.control.sm.DiscreteCurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a></p></td>
 <td><p>Direct discrete-time current controller for synchronous machines.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.DriveControlSystem" title="motulator.drive.control.sm.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p></td>
+<td><p>Base class for drive control systems.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
 <td><p>Observer for synchronous machines in estimated rotor coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorController" title="motulator.drive.control.sm.FluxVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorController" title="motulator.drive.control.sm.FluxVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a></p></td>
 <td><p>Flux-vector controller of synchronous machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorControllerCfg" title="motulator.drive.control.sm.FluxVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorControllerCfg" title="motulator.drive.control.sm.FluxVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></p></td>
 <td><p>Flux-vector controller configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="motulator.drive.control.sm.ObserverBasedVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="motulator.drive.control.sm.ObserverBasedVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a></p></td>
 <td><p>Observer-based V/Hz controller for synchronous machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzControllerCfg" title="motulator.drive.control.sm.ObserverBasedVHzControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzControllerCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzControllerCfg" title="motulator.drive.control.sm.ObserverBasedVHzControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzControllerCfg</span></code></a></p></td>
 <td><p>Observer-based V/Hz controller configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
 <td><p>Feedback signals for the control system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PIController" title="motulator.drive.control.sm.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PIController" title="motulator.drive.control.sm.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PWM" title="motulator.drive.control.sm.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PWM" title="motulator.drive.control.sm.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGenerator" title="motulator.drive.control.sm.ReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGenerator" title="motulator.drive.control.sm.ReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a></p></td>
 <td><p>Optimal feedforward reference generator for synchronous machines.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGeneratorOnline" title="motulator.drive.control.sm.ReferenceGeneratorOnline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGeneratorOnline</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGeneratorOnline" title="motulator.drive.control.sm.ReferenceGeneratorOnline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGeneratorOnline</span></code></a></p></td>
 <td><p>Optimal feedforward online reference generator for synchronous machines.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a></p></td>
 <td><p>Parameters of a saturated synchronous machine.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SignalInjectionController" title="motulator.drive.control.sm.SignalInjectionController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SignalInjectionController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SignalInjectionController" title="motulator.drive.control.sm.SignalInjectionController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SignalInjectionController</span></code></a></p></td>
 <td><p>Sensorless controller with signal injection for synchronous machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedController" title="motulator.drive.control.sm.SpeedController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedController" title="motulator.drive.control.sm.SpeedController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedController</span></code></a></p></td>
 <td><p>2DOF PI speed controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a></p></td>
 <td><p>Flux observer with speed estimation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedObserver" title="motulator.drive.control.sm.SpeedObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedObserver" title="motulator.drive.control.sm.SpeedObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a></p></td>
 <td><p>Speed observer.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
 <td><p>Synchronous machine parameters, without saturation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VHzControlSystem" title="motulator.drive.control.sm.VHzControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VHzControlSystem" title="motulator.drive.control.sm.VHzControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a></p></td>
 <td><p>V/Hz control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VectorControlSystem" title="motulator.drive.control.sm.VectorControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VectorControlSystem" title="motulator.drive.control.sm.VectorControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a></p></td>
 <td><p>Vector control system.</p></td>
 </tr>
 </tbody>
@@ -940,6 +951,84 @@ default when the controller is selected by <cite>discrete=True</cite>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">DriveControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._base.ControlSystem</span></code></p>
+<p>Base class for drive control systems.</p>
+<p>This class implements the parts common to the drive control systems: the feedback
+voltages, the modulation, and the speed reference. Subclasses implement
+<cite>get_measurement</cite>, <cite>update</cite>, <cite>post_process</cite>, and the hooks <cite>_get_inner_feedback</cite>
+and <cite>_compute_inner_output</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.drive.control.sm.PWM" title="motulator.drive.control.sm.PWM"><em>PWM</em></a>) – Pulse-width modulator.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute controller output based on feedback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.drive.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get feedback signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>meas</strong> (<em>Measurements</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Feedbacks</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem.modulate">
+<span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem.modulate" title="Link to this definition">#</a></dt>
+<dd><p>Compute the duty ratios from the stator voltage reference.</p>
+<p>The reference is in the controller coordinates. Subclasses can override this
+method, e.g., to control an output filter between the converter and the machine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>u_s_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)">collections.abc.Sequence</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem.set_speed_ref">
+<span class="sig-name descname"><span class="pre">set_speed_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_fcn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem.set_speed_ref"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem.set_speed_ref" title="Link to this definition">#</a></dt>
+<dd><p>Set the external speed reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ref_fcn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Speed reference (mechanical rad/s), constant or a function of time.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1613,7 +1702,8 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.ReferenceGenerator">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_mtpv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGenerator" title="Link to this definition">#</a></dt>
-<dd><p>Optimal feedforward reference generator for synchronous machines.</p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">_ReferenceGeneratorBase</span></code></p>
+<p>Optimal feedforward reference generator for synchronous machines.</p>
 <p>This class computes the optimal flux, limited torque, and current references from a
 given torque reference. The MTPA locus as well as the current, voltage and MTPV
 limits are taken into account. This class can be used also for a saturated machine
@@ -1717,7 +1807,8 @@ reference state. The state is updated in the <cite>update</cite> method.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.ReferenceGeneratorOnline">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ReferenceGeneratorOnline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_mtpv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_reference_gen.html#ReferenceGeneratorOnline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ReferenceGeneratorOnline" title="Link to this definition">#</a></dt>
-<dd><p>Optimal feedforward online reference generator for synchronous machines.</p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">_ReferenceGeneratorBase</span></code></p>
+<p>Optimal feedforward online reference generator for synchronous machines.</p>
 <p>This class tracks online in a feedforward manner the optimal flux, limited torque,
 and current references from a given torque reference <a class="footnote-reference brackets" href="#sar2026" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>. The MTPA locus as
 well as the current, voltage, and MTPV limits are taken into account. This class can
@@ -2054,6 +2145,17 @@ based error signal is used exclusively.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.SpeedFluxObserver.w_M">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">w_M</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><span class="pre">float</span></a></span><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.w_M" title="Link to this definition">#</a></dt>
+<dd><p>Mechanical angular rotor speed estimate (rad/s), also an initial value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2195,7 +2297,7 @@ defaults to 0 (no core losses).</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.VHzControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">VHzControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vhz_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slew_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VHzControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VHzControlSystem" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.control.sm.DriveControlSystem" title="motulator.drive.control.sm.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p>
 <p>V/Hz control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2238,7 +2340,7 @@ defaults to 0 (no core losses).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
 <li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
 </ul>
 </dd>
@@ -2253,7 +2355,7 @@ defaults to 0 (no core losses).</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.VectorControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">VectorControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">speed_ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VectorControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VectorControlSystem" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.control.sm.DriveControlSystem" title="motulator.drive.control.sm.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p>
 <p>Vector control system.</p>
 <p>This class defines the interface for drive control systems. It is a generic class
 that can be used with different inner controllers (such as current-vector control
@@ -2327,7 +2429,7 @@ and flux-vector control).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>References</em>)</p></li>
+<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
 <li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
 </ul>
 </dd>
@@ -2408,6 +2510,13 @@ and flux-vector control).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DiscreteCurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController.compute_output()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.modulate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.set_speed_ref()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
@@ -2475,6 +2584,7 @@ and flux-vector control).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.theta_m"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.theta_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.w_M"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.w_M</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedObserver"><code class="docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a><ul class="nav section-nav flex-column">

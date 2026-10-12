@@ -507,6 +507,28 @@
 
 
 <span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mat_vec</span><span class="p">(</span><span class="n">L_s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Matrix-vector product ``L_s @ x`` for a symmetric 2x2 matrix."""</span>
+    <span class="k">return</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">real</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">imag</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">aux_flux</span><span class="p">(</span><span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">L_s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Auxiliary flux linkage of a synchronous machine in rotor coordinates."""</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">psi_s</span>
+        <span class="o">-</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_s</span><span class="o">.</span><span class="n">real</span>
+        <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_s</span><span class="o">.</span><span class="n">imag</span>
+        <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">i_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">aux_current</span><span class="p">(</span><span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">L_s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Auxiliary current of a synchronous machine in rotor coordinates."""</span>
+    <span class="n">det_L</span> <span class="o">=</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">L_s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">mat_vec</span><span class="p">(</span><span class="n">L_s</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">det_L</span> <span class="o">-</span> <span class="n">i_s</span>
+
+
+<span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseSynchronousMachinePars</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Base class for synchronous machine parameters."""</span>
 

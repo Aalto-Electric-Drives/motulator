@@ -21,6 +21,7 @@ Classes
    motulator.drive.control.im.CurrentVectorController
    motulator.drive.control.im.CurrentVectorControllerCfg
    motulator.drive.control.im.DiscreteCurrentController
+   motulator.drive.control.im.DriveControlSystem
    motulator.drive.control.im.FluxObserver
    motulator.drive.control.im.FluxVectorController
    motulator.drive.control.im.FluxVectorControllerCfg
@@ -452,6 +453,139 @@ Module Contents
 
       :returns: **u** -- Controller output.
       :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DriveControlSystem(pwm)
+
+   Bases: :py:obj:`motulator.common.control._base.ControlSystem`
+
+
+   
+   Base class for drive control systems.
+
+   This class implements the parts common to the drive control systems: the feedback
+   voltages, the modulation, and the speed reference. Subclasses implement
+   `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`
+   and `_compute_inner_output`.
+
+   :param pwm: Pulse-width modulator.
+   :type pwm: PWM
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(fbk)
+
+      
+      Compute controller output based on feedback.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(meas)
+
+      
+      Get feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: modulate(T_s, u_s_ref, fbk)
+
+      
+      Compute the duty ratios from the stator voltage reference.
+
+      The reference is in the controller coordinates. Subclasses can override this
+      method, e.g., to control an output filter between the converter and the machine.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_speed_ref(ref_fcn)
+
+      
+      Set the external speed reference.
+
+      :param ref_fcn: Speed reference (mechanical rad/s), constant or a function of time.
+      :type ref_fcn: float | Callable[[float], float]
 
 
 
@@ -1904,7 +2038,7 @@ Module Contents
       :type: float
 
       
-      Mechanical angular rotor speed estimate (rad/s).
+      Mechanical angular rotor speed estimate (rad/s), also an initial value.
 
 
 

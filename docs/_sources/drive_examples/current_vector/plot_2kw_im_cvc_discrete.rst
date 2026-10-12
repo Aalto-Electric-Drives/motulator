@@ -113,7 +113,7 @@ not (`k_comp=0`).
             discrete=discrete,
         )
         vector_ctrl = control.CurrentVectorController(est_par, cfg)
-        vector_ctrl.observer.speed_observer.w_M = 0.5 * base.w_M  # Initial speed estimate
+        vector_ctrl.observer.w_M = 0.5 * base.w_M  # Initial speed estimate
         ctrl = control.VectorControlSystem(vector_ctrl)
         ctrl.set_torque_ref(
             lambda t: nom.tau * (0.3 * (t > 0.3) + 0.2 * (t > 0.32) - 0.8 * (t > 0.34))
@@ -177,7 +177,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.171 seconds)
+   **Total running time of the script:** (0 minutes 1.908 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:
