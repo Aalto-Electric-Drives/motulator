@@ -1,7 +1,6 @@
 """Grid-following control methods."""
 
 from cmath import exp
-from collections.abc import Sequence
 from dataclasses import dataclass
 from math import pi, sqrt
 
@@ -9,7 +8,7 @@ from motulator.common.control._base import TimeSeries
 from motulator.common.control._controllers import ComplexPIController
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
-from motulator.grid.control._common import CurrentLimiter
+from motulator.grid.control._common import CurrentLimiter, References
 
 
 # %%
@@ -23,7 +22,7 @@ class PLLStates:
 
 
 @dataclass
-class PLLOutputSignals:
+class PLLOutputs:
     """Feedback signals for the control system."""
 
     i_c: complex = 0j
@@ -64,9 +63,9 @@ class PLL:
 
     def compute_output(
         self, u_c_ab: complex, i_c_ab: complex, u_g_meas_ab: complex
-    ) -> PLLOutputSignals:
+    ) -> PLLOutputs:
         """Output estimates and coordinate transformed quantities."""
-        out = PLLOutputSignals(theta_c=self.state.theta_c, w_g=self.state.w_g)
+        out = PLLOutputs(theta_c=self.state.theta_c, w_g=self.state.w_g)
 
         # Coordinate transformations
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
@@ -88,7 +87,7 @@ class PLL:
 
         return out
 
-    def update(self, T_s: float, out: PLLOutputSignals) -> None:
+    def update(self, T_s: float, out: PLLOutputs) -> None:
         """Update integral states."""
         self.state.theta_c += T_s * out.w_c
         self.state.theta_c = wrap(self.state.theta_c)
@@ -125,19 +124,6 @@ class CurrentController(ComplexPIController):
 
 
 # %%
-@dataclass
-class References:
-    """Reference signals for grid-following control."""
-
-    T_s: float = 0.0
-    u_c: complex = 0j
-    i_c: complex = 0j
-    p_g: float = 0.0
-    q_g: float = 0.0
-    u_dc: float | None = None
-    d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
-
-
 @dataclass
 class CurrentVectorControllerCfg:
     """
@@ -193,13 +179,13 @@ class CurrentVectorController:
         self.pll = PLL(cfg.u_nom, cfg.w_nom, cfg.alpha_pll)
         self.current_limiter = CurrentLimiter(cfg.i_max)
 
-    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> PLLOutputSignals:
+    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> PLLOutputs:
         """Get feedback signals."""
         fbk = self.pll.compute_output(u_c_ab, meas.i_c_ab, meas.u_g_ab)
         return fbk
 
     def compute_output(
-        self, p_g_ref: float, q_g_ref: float, fbk: PLLOutputSignals
+        self, p_g_ref: float, q_g_ref: float, fbk: PLLOutputs
     ) -> References:
         """Compute references."""
         ref = References(T_s=self.cfg.T_s, p_g=p_g_ref, q_g=q_g_ref)
@@ -216,7 +202,7 @@ class CurrentVectorController:
         ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
         return ref
 
-    def update(self, ref: References, fbk: PLLOutputSignals) -> None:
+    def update(self, ref: References, fbk: PLLOutputs) -> None:
         """Update states."""
         self.current_ctrl.update(ref.T_s, fbk.u_c, fbk.w_c)
         self.pll.update(ref.T_s, fbk)

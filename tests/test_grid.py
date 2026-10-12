@@ -13,7 +13,6 @@ import pytest
 
 from motulator.common.model import SimulationResults
 from motulator.grid import control, model, utils
-from motulator.grid.control._gfl_current_vector import PLLOutputSignals
 from motulator.grid.utils._identification import dft
 
 U_NOM = np.sqrt(2 / 3) * 400  # Peak phase voltage
@@ -59,14 +58,20 @@ def test_grid_following() -> None:
     assert q_g == pytest.approx(q_g_ref, abs=0.02 * 10e3)
 
 
-def test_grid_forming() -> None:
-    """Observer-based grid-forming control tracks the active power reference."""
-    cfg = control.ObserverBasedGridFormingControllerCfg(
-        i_max=30, L=0.35 * L_BASE, R_a=0.2 * Z_BASE, u_nom=U_NOM, w_nom=W_NOM
-    )
-    ctrl = control.GridConverterControlSystem(
-        control.ObserverBasedGridFormingController(cfg)
-    )
+@pytest.mark.parametrize("method", ["observer", "psc"])
+def test_grid_forming(method: str) -> None:
+    """Grid-forming control tracks the active power reference."""
+    if method == "observer":
+        cfg = control.ObserverBasedGridFormingControllerCfg(
+            i_max=30, L=0.35 * L_BASE, R_a=0.2 * Z_BASE, u_nom=U_NOM, w_nom=W_NOM
+        )
+        inner_ctrl = control.ObserverBasedGridFormingController(cfg)
+    else:
+        cfg = control.PowerSynchronizationControllerCfg(
+            i_max=30, u_nom=U_NOM, w_nom=W_NOM, R_a=0.2 * Z_BASE
+        )
+        inner_ctrl = control.PowerSynchronizationController(cfg)
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
     p_g_ref = 5e3
     ctrl.set_ac_voltage_ref(U_NOM)
     ctrl.set_power_ref(lambda t: (t > 0.05) * p_g_ref)
@@ -78,6 +83,8 @@ def test_grid_forming() -> None:
 
     p_g, _ = grid_powers(res, 0.35)
     assert p_g == pytest.approx(p_g_ref, abs=0.02 * 10e3)
+    if method == "psc":
+        return
     # The post-processed signals are in the same coordinates, aligned with v_c
     end = res.ctrl.t > 0.35
     assert np.abs(res.ctrl.fbk.v_c.imag).max() < 1e-9 * U_NOM
@@ -110,7 +117,7 @@ def test_power_references_follow_current_limit() -> None:
     """The power references correspond to the limited current reference."""
     cfg = control.CurrentVectorControllerCfg(i_max=10, L=L_BASE)
     inner_ctrl = control.CurrentVectorController(cfg)
-    fbk = PLLOutputSignals(u_g=300.0)
+    fbk = control.PLLOutputs(u_g=300.0)
     ref = inner_ctrl.compute_output(9e3, 3e3, fbk)
     assert abs(ref.i_c) == pytest.approx(10)
     s_g = 1.5 * fbk.u_g * ref.i_c.conjugate()
