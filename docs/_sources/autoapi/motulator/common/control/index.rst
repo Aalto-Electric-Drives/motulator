@@ -418,9 +418,9 @@ Package Contents
    where `i` is the feedback signal, `u` is the realized output, `u_lim` is the limited
    controller output, and ``Phi = exp(-1j*w_c*T_s)``. The design gives the
    reference-tracking dynamics ``i(k) = (1 - beta)/(z*(z - beta))*i_ref(k)``, where
-   ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances. The
-   controller compensates for the delays itself, so the PWM must be configured with
-   `k_comp=0`.
+   ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances.
+   Since the design includes the delays, the angle of the output must not be advanced
+   (`k_comp = 0` in the control system).
 
    :param alpha_c: Reference-tracking bandwidth (rad/s).
    :type alpha_c: float
@@ -619,15 +619,16 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
+.. py:class:: PWM(overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
 
    This computes the duty ratios corresponding to standard space-vector PWM and
-   overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios
-   and the measured DC-bus voltage. The digital delay effects are taken into account
-   in the realized voltage [#Bae2003]_.
+   overmodulation [#Hav1999]_. The realized voltage is reconstructed from the duty
+   ratios and the measured DC-bus voltage, taking into account the computational delay
+   of one sampling period. The angle of the voltage reference is not advanced here:
+   the control systems compensate for the delays, if needed by the controller.
 
    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
    dead time and the voltage drops of the power devices) is modeled as a function of
@@ -651,10 +652,6 @@ Package Contents
    pulses. The limited voltage reference and the realized voltage are computed from
    the limited duty ratios.
 
-   :param k_comp: Compensation factor for the angular delay effect on the voltage reference,
-                  defaults to 1.5. Use 0 if the controller compensates for the delays itself,
-                  e.g., in direct discrete-time designs.
-   :type k_comp: float, optional
    :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
                           - "MPE": minimum phase error
                           - "MME": minimum magnitude error
@@ -683,10 +680,6 @@ Package Contents
    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
       triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
       https://doi.org/10.1109/28.777199
-
-   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-      2003, https://doi.org/10.1109/TIA.2003.810660
 
    .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
       minimum pulse-width limitations in two-level PWM voltage source inverters,"
@@ -720,13 +713,14 @@ Package Contents
       :type u_c_ref_ab: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
-      :param w: Angular speed of synchronous coordinates (rad/s).
+      :param w: Angular speed of the synchronous coordinates (rad/s), used for predicting
+                the currents in the feedforward compensation of `d_err`.
       :type w: float
 
       :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
                 * **u_c_ab** (*complex*) -- Voltage (V) in stationary coordinates corresponding to the duty ratios
-                  `d_abc`, i.e., the limited voltage reference with the delay-compensating
-                  angle advance and the duty-ratio error compensation (if used) included.
+                  `d_abc`, i.e., the limited voltage reference with the duty-ratio error
+                  compensation (if used) included.
 
 
 
@@ -784,9 +778,11 @@ Package Contents
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      voltage is computed from the duty ratios of the previous and the ongoing
-      sampling periods and the measured DC-bus voltage. The measured currents are also
-      stored for the feedforward compensation of the next duty ratios.
+      voltage is reconstructed from the duty ratios of the previous and the ongoing
+      sampling periods and the measured DC-bus voltage, i.e., the variations of the
+      DC-bus voltage and of the currents within the periods are not known. The
+      measured currents are also stored for the feedforward compensation of the next
+      duty ratios.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex

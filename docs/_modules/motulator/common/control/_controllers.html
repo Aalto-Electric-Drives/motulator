@@ -261,6 +261,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 </ul>
 </details></li>
@@ -681,9 +682,9 @@
 <span class="sd">    where `i` is the feedback signal, `u` is the realized output, `u_lim` is the limited</span>
 <span class="sd">    controller output, and ``Phi = exp(-1j*w_c*T_s)``. The design gives the</span>
 <span class="sd">    reference-tracking dynamics ``i(k) = (1 - beta)/(z*(z - beta))*i_ref(k)``, where</span>
-<span class="sd">    ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances. The</span>
-<span class="sd">    controller compensates for the delays itself, so the PWM must be configured with</span>
-<span class="sd">    `k_comp=0`.</span>
+<span class="sd">    ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances.</span>
+<span class="sd">    Since the design includes the delays, the angle of the output must not be advanced</span>
+<span class="sd">    (`k_comp = 0` in the control system).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

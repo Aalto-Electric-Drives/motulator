@@ -170,30 +170,6 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: default_pwm()
-
-      
-      Get the default pulse-width modulator.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
@@ -311,9 +287,7 @@ Module Contents
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
    :param discrete: If True, the direct discrete-time current controller is used instead of the
-                    continuous-time design, defaults to False. The default PWM of the controller
-                    then has `k_comp=0`, and a PWM given to the control system must be configured
-                    likewise.
+                    continuous-time design, defaults to False.
    :type discrete: bool, optional
 
 
@@ -343,8 +317,8 @@ Module Contents
 
    This implements the flux-linkage-based current controller designed directly in
    discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
-   the flux linkages. The PWM must be configured with `k_comp=0`, which is the
-   default when the controller is selected by `discrete=True`.
+   the flux linkages. Since the design includes the delays, the angle of the voltage
+   reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
 
    :param par: Machine model parameters.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
@@ -401,7 +375,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: DriveControlSystem(pwm)
+.. py:class:: DriveControlSystem(pwm, k_comp)
 
    Bases: :py:obj:`motulator.common.control._base.ControlSystem`
 
@@ -414,8 +388,26 @@ Module Contents
    `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`
    and `_compute_inner_output`.
 
+   The inner controller gets the realized voltage of the ongoing sampling period for
+   its observer, while the feedback voltage `u_s` for the control laws is the realized
+   voltage averaged over the previous and the ongoing sampling periods. Before the
+   modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
+   where `k_comp` is given by the inner controller. The value 1.5 compensates for the
+   computational delay of one sampling period and the delay of half a sampling period
+   caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
+   angle is not advanced, which is used if the controller takes the delays into
+   account itself, e.g., in a direct discrete-time design.
+
    :param pwm: Pulse-width modulator.
    :type pwm: PWM
+   :param k_comp: Angle-advance factor of the voltage reference.
+   :type k_comp: float
+
+   .. rubric:: References
+
+   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+      2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 
@@ -487,8 +479,9 @@ Module Contents
       
       Compute the duty ratios from the stator voltage reference.
 
-      The reference is in the controller coordinates. Subclasses can override this
-      method, e.g., to control an output filter between the converter and the machine.
+      The reference is in the controller coordinates. Its angle is advanced by
+      `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an
+      output filter between the converter and the machine.
 
 
 
@@ -723,30 +716,6 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: default_pwm()
-
-      
-      Get the default pulse-width modulator.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
@@ -916,30 +885,6 @@ Module Contents
 
       
       Calculate references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: default_pwm()
-
-      
-      Get the default pulse-width modulator.
 
 
 
@@ -1211,15 +1156,16 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
+.. py:class:: PWM(overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
 
    This computes the duty ratios corresponding to standard space-vector PWM and
-   overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios
-   and the measured DC-bus voltage. The digital delay effects are taken into account
-   in the realized voltage [#Bae2003]_.
+   overmodulation [#Hav1999]_. The realized voltage is reconstructed from the duty
+   ratios and the measured DC-bus voltage, taking into account the computational delay
+   of one sampling period. The angle of the voltage reference is not advanced here:
+   the control systems compensate for the delays, if needed by the controller.
 
    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
    dead time and the voltage drops of the power devices) is modeled as a function of
@@ -1243,10 +1189,6 @@ Module Contents
    pulses. The limited voltage reference and the realized voltage are computed from
    the limited duty ratios.
 
-   :param k_comp: Compensation factor for the angular delay effect on the voltage reference,
-                  defaults to 1.5. Use 0 if the controller compensates for the delays itself,
-                  e.g., in direct discrete-time designs.
-   :type k_comp: float, optional
    :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
                           - "MPE": minimum phase error
                           - "MME": minimum magnitude error
@@ -1275,10 +1217,6 @@ Module Contents
    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
       triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
       https://doi.org/10.1109/28.777199
-
-   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-      2003, https://doi.org/10.1109/TIA.2003.810660
 
    .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
       minimum pulse-width limitations in two-level PWM voltage source inverters,"
@@ -1312,13 +1250,14 @@ Module Contents
       :type u_c_ref_ab: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
-      :param w: Angular speed of synchronous coordinates (rad/s).
+      :param w: Angular speed of the synchronous coordinates (rad/s), used for predicting
+                the currents in the feedforward compensation of `d_err`.
       :type w: float
 
       :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
                 * **u_c_ab** (*complex*) -- Voltage (V) in stationary coordinates corresponding to the duty ratios
-                  `d_abc`, i.e., the limited voltage reference with the delay-compensating
-                  angle advance and the duty-ratio error compensation (if used) included.
+                  `d_abc`, i.e., the limited voltage reference with the duty-ratio error
+                  compensation (if used) included.
 
 
 
@@ -1376,9 +1315,11 @@ Module Contents
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      voltage is computed from the duty ratios of the previous and the ongoing
-      sampling periods and the measured DC-bus voltage. The measured currents are also
-      stored for the feedforward compensation of the next duty ratios.
+      voltage is reconstructed from the duty ratios of the previous and the ongoing
+      sampling periods and the measured DC-bus voltage, i.e., the variations of the
+      DC-bus voltage and of the currents within the periods are not known. The
+      measured currents are also stored for the feedforward compensation of the next
+      duty ratios.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
@@ -2497,7 +2438,7 @@ Module Contents
    :type vhz_ctrl: VHzController
    :param slew_rate: Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.
    :type slew_rate: float, optional
-   :param pwm: Pulse-width modulator, defaults to `vhz_ctrl.default_pwm()`.
+   :param pwm: Pulse-width modulator, defaults to `PWM(overmodulation="MME")`.
    :type pwm: PWM, optional
 
 
@@ -2605,7 +2546,7 @@ Module Contents
    :type vector_ctrl: VectorController
    :param speed_ctrl: Speed controller. If None (default), torque-control mode is used.
    :type speed_ctrl: SpeedController | PIController | None, optional
-   :param pwm: Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.
+   :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
 
 

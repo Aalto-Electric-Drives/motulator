@@ -266,6 +266,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 </ul>
 </details></li>
@@ -831,9 +832,9 @@ one sampling period, is:</p>
 <p>where <cite>i</cite> is the feedback signal, <cite>u</cite> is the realized output, <cite>u_lim</cite> is the limited
 controller output, and <code class="docutils literal notranslate"><span class="pre">Phi</span> <span class="pre">=</span> <span class="pre">exp(-1j*w_c*T_s)</span></code>. The design gives the
 reference-tracking dynamics <code class="docutils literal notranslate"><span class="pre">i(k)</span> <span class="pre">=</span> <span class="pre">(1</span> <span class="pre">-</span> <span class="pre">beta)/(z*(z</span> <span class="pre">-</span> <span class="pre">beta))*i_ref(k)</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">beta</span> <span class="pre">=</span> <span class="pre">exp(-alpha_c*T_s)</span></code>. The integral action compensates for disturbances. The
-controller compensates for the delays itself, so the PWM must be configured with
-<cite>k_comp=0</cite>.</p>
+<code class="docutils literal notranslate"><span class="pre">beta</span> <span class="pre">=</span> <span class="pre">exp(-alpha_c*T_s)</span></code>. The integral action compensates for disturbances.
+Since the design includes the delays, the angle of the output must not be advanced
+(<cite>k_comp = 0</cite> in the control system).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -960,12 +961,13 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.PWM">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
-overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The realized voltage is computed from the duty ratios
-and the measured DC-bus voltage. The digital delay effects are taken into account
-in the realized voltage <a class="footnote-reference brackets" href="#bae2003" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The realized voltage is reconstructed from the duty
+ratios and the measured DC-bus voltage, taking into account the computational delay
+of one sampling period. The angle of the voltage reference is not advanced here:
+the control systems compensate for the delays, if needed by the controller.</p>
 <p>Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
 dead time and the voltage drops of the power devices) is modeled as a function of
 the phase currents and duty ratios. The realized voltage is corrected for this
@@ -977,7 +979,7 @@ are applied, assuming that they rotate at the angular speed of the synchronous
 coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
 duty-dependent error.</p>
 <p>Optionally, the pulses are limited to a minimum width, e.g., due to the gate
-drivers <a class="footnote-reference brackets" href="#wel2006" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
+drivers <a class="footnote-reference brackets" href="#wel2006" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
 <cite>[d_min, 1 - d_min]</cite>, while the duty ratios 0 and 1 (a leg not switching) are not
 limited. A duty ratio in the range <cite>(0, d_min)</cite> is rounded to 0 (the pulse is
 dropped) or to <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to <cite>1 - d_min</cite> or 1,
@@ -989,9 +991,6 @@ the limited duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k_comp</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Compensation factor for the angular delay effect on the voltage reference,
-defaults to 1.5. Use 0 if the controller compensates for the delays itself,
-e.g., in direct discrete-time designs.</p></li>
 <li><p><strong>overmodulation</strong> (<em>Literal</em><em>[</em><em>&quot;MPE&quot;</em><em>, </em><em>&quot;MME&quot;</em><em>, </em><em>&quot;six_step&quot;</em><em>]</em><em>, </em><em>optional</em>) – Overmodulation method, defaults to “MPE”. Valid options are:
 - “MPE”: minimum phase error
 - “MME”: minimum magnitude error
@@ -1020,14 +1019,8 @@ switching and about <cite>2*d_min*T_s</cite> otherwise.</p></li>
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
-<aside class="footnote brackets" id="bae2003" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
-<p>Bae, Sul, “A compensation method for time delay of full-digital
-synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
-2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.810660">https://doi.org/10.1109/TIA.2003.810660</a></p>
-</aside>
 <aside class="footnote brackets" id="wel2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
 minimum pulse-width limitations in two-level PWM voltage source inverters,”
 Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
@@ -1043,15 +1036,16 @@ Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s).</p></li>
 <li><p><strong>u_c_ref_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Converter voltage reference (V) in stationary coordinates.</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – DC-bus voltage (V).</p></li>
-<li><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed of synchronous coordinates (rad/s).</p></li>
+<li><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed of the synchronous coordinates (rad/s), used for predicting
+the currents in the feedforward compensation of <cite>d_err</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>d_abc</strong> (<em>list[float]</em>) – Duty ratios for the next sampling period.</p></li>
 <li><p><strong>u_c_ab</strong> (<em>complex</em>) – Voltage (V) in stationary coordinates corresponding to the duty ratios
-<cite>d_abc</cite>, i.e., the limited voltage reference with the delay-compensating
-angle advance and the duty-ratio error compensation (if used) included.</p></li>
+<cite>d_abc</cite>, i.e., the limited voltage reference with the duty-ratio error
+compensation (if used) included.</p></li>
 </ul>
 </p>
 </dd>
@@ -1087,9 +1081,11 @@ angle advance and the duty-ratio error compensation (if used) included.</p></li>
 <dd><p>Get the realized voltage.</p>
 <p>This method is to be called at the sampling instant before the next duty ratios
 are computed, and a computational delay of one sampling period is assumed. The
-voltage is computed from the duty ratios of the previous and the ongoing
-sampling periods and the measured DC-bus voltage. The measured currents are also
-stored for the feedforward compensation of the next duty ratios.</p>
+voltage is reconstructed from the duty ratios of the previous and the ongoing
+sampling periods and the measured DC-bus voltage, i.e., the variations of the
+DC-bus voltage and of the currents within the periods are not known. The
+measured currents are also stored for the feedforward compensation of the next
+duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1149,7 +1145,7 @@ changed and the realized duty ratios of the limited legs.</p></li>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1167,7 +1163,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>

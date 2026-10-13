@@ -1,0 +1,934 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>motulator.grid.control._gfm_observer_negseq &#8212; motulator 0.10.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery.css?v=c83e6b79" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=ebd526be" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../../../_static/documentation_options.js?v=cb265169"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/motulator/grid/control/_gfm_observer_negseq';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">motulator 0.10.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/gradnet/index.html">GradNet Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.html">5.6-kW PM-SyRM, train flux map, FEM data, no spatial harmonics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem.html">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_28kw_pmsyrm_flux_map_meas.html">28-kW PM-SyRM, train flux map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas.html">5.6-kW PM-SyRM, train flux map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas.html">5.6-kW PM-SyRM, train current map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_28kw_pmsyrm_curr_map_meas.html">28-kW PM-SyRM, train current map, measured data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_following/index.html">Grid-Following Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/identification/index.html">Output Admittance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/identification/plot_10kva_gfl_identification.html">10-kVA, GFL, converter output admittance identification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/identification/plot_13kva_do_gfm_identification.html">12.5-kVA, DO-GFM, converter output admittance identification</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">System Models</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/sampled_data.html">Sampled-Data Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/space_vectors.html">Space Vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/common/converters.html">Voltage-Source Converter</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/induction_machine.html">Induction Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/synchronous_machine.html">Synchronous Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/mechanics.html">Mechanics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/ac_filter.html">Output LC Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/drive/diode_bridge.html">Six-Pulse Diode Bridge</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../model/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/filter_and_grid.html">AC Filter and Grid Impedance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../model/grid/grid_volt_source.html">Three-Phase Source</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Control Methods</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/common/index.html">Common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/control_system.html">Control System Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/common/controllers.html">Controllers</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/drive/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/reference_gen.html">Reference Generation</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../control/grid/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/dc_voltage_ctrl.html">DC-Bus Voltage Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/current_ctrl.html">Current Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/pll.html">Phase-Locked Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/grid/grid-forming.html">Grid-Forming Control</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../autoapi/motulator/index.html">API</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/common/index.html">motulator.common</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/common/control/index.html">motulator.common.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/common/model/index.html">motulator.common.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/common/utils/index.html">motulator.common.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/drive/index.html">motulator.drive</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/index.html">motulator.drive.control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/im/index.html">motulator.drive.control.im</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../autoapi/motulator/grid/index.html">motulator.grid</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/grid/control/index.html">motulator.grid.control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/grid/model/index.html">motulator.grid.model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/grid/utils/index.html">motulator.grid.utils</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/Aalto-Electric-Drives/motulator" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for motulator.grid.control._gfm_observer_negseq</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Sequence-separated disturbance-observer-based grid-forming control."""</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Measurements</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">PowerReferenceLimiter</span><span class="p">,</span> <span class="n">References</span>
+
+
+<span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SequenceReferences</span><span class="p">(</span><span class="n">References</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Reference signals, including the sequence components."""</span>
+
+    <span class="n">u_cp</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Positive-sequence converter-voltage reference</span>
+    <span class="n">u_cn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Negative-sequence converter-voltage reference</span>
+    <span class="n">i_cp</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Positive-sequence converter-current reference</span>
+    <span class="n">i_cn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Negative-sequence converter-current reference</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CurrentReferenceLimiter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Limit the peak phase current of the sequence current references.</span>
+
+<span class="sd">    Both sequence components are scaled by the same factor, which preserves the</span>
+<span class="sd">    elliptical trajectory of the current vector.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i_max : float</span>
+<span class="sd">        Maximum current (A), peak value.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span> <span class="o">=</span> <span class="n">i_max</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_cp</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_cn</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]:</span>
+        <span class="c1"># Peak phase current, using the angles in stationary coordinates</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">phase</span><span class="p">(</span><span class="n">i_cp</span><span class="p">)</span> <span class="o">+</span> <span class="n">phase</span><span class="p">(</span><span class="n">i_cn</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">theta_c</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="n">n</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">abs_i_cp</span><span class="p">,</span> <span class="n">abs_i_cn</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i_cp</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i_cn</span><span class="p">)</span>
+        <span class="n">i_ph_max</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">abs_i_cp</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">abs_i_cn</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">abs_i_cp</span> <span class="o">*</span> <span class="n">abs_i_cn</span><span class="p">)</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_max</span><span class="p">,</span> <span class="n">i_ph_max</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">i_cp</span><span class="p">,</span> <span class="n">gamma</span> <span class="o">*</span> <span class="n">i_cn</span>
+
+
+<span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObserverOutputs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Feedback signals for the control system."""</span>
+
+    <span class="n">i_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">i_cp</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">i_cn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">i_f</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Filtered current for the sequence separation</span>
+    <span class="n">u_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Converter voltage (set by the control system)</span>
+    <span class="n">u_c_zoh</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Converter voltage of the ongoing sampling period</span>
+    <span class="n">v_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">v_cp</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">v_cn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">u_gp</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">u_gn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">p_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">p_gp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">p_gn</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">q_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angle of the coordinate system (rad)</span>
+    <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angular speed of the coordinate system (rad/s)</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC-bus voltage (set by the control system)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ObserverStates</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""States of the observer."""</span>
+
+    <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">u_gp</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Predicted positive-sequence grid voltage</span>
+    <span class="n">u_gn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Predicted negative-sequence grid voltage</span>
+    <span class="n">i_c</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Predicted converter current</span>
+    <span class="n">i_f</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Filtered current</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Observer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Disturbance observer for the grid-voltage sequence components.</span>
+
+<span class="sd">    This observer estimates the positive- and negative-sequence grid voltages. It is</span>
+<span class="sd">    designed directly in discrete time, using the hold-equivalent model in coordinates</span>
+<span class="sd">    rotating at the nominal grid angular frequency. At each sampling instant, the</span>
+<span class="sd">    estimates are corrected using the prediction error of the measured current, after</span>
+<span class="sd">    which the current and the estimates are predicted for the next sampling instant,</span>
+<span class="sd">    using the realized converter voltage of the ongoing sampling period.</span>
+<span class="sd">    The observer gains place the poles of the estimation-error dynamics at</span>
+<span class="sd">    `exp(p*alpha_o*T_s)`.</span>
+
+<span class="sd">    The converter current is separated into its quasi-static sequence components using</span>
+<span class="sd">    a complex first-order filter. Its discrete-time coefficients are selected such</span>
+<span class="sd">    that the separation is exact for both sequences in the periodic steady state.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    u_nom : float</span>
+<span class="sd">        Nominal grid voltage (V), line-to-neutral peak value.</span>
+<span class="sd">    w_nom : float</span>
+<span class="sd">        Nominal grid angular frequency (rad/s).</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Total inductance (H).</span>
+<span class="sd">    alpha_o : float</span>
+<span class="sd">        Observer gain (rad/s).</span>
+<span class="sd">    p : tuple[complex, complex]</span>
+<span class="sd">        Continuous-time observer poles, normalized by `alpha_o`.</span>
+<span class="sd">    T_s : float</span>
+<span class="sd">        Sampling period (s).</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">L</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">p</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">],</span>
+        <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">w_nom</span>
+        <span class="c1"># Coefficients of the hold-equivalent model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_nom</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># State transition of the negative sequence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma_c</span> <span class="o">=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">/</span> <span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_nom</span> <span class="o">*</span> <span class="n">L</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span>
+        <span class="c1"># Observer gains</span>
+        <span class="n">z_1</span><span class="p">,</span> <span class="n">z_2</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">alpha_o</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">),</span> <span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">alpha_o</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z_1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z_2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_n</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">-</span> <span class="n">z_1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">-</span> <span class="n">z_2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_n</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># Coefficients of the sequence-separation filter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_f</span> <span class="o">=</span> <span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_f</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_f</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">ObserverStates</span><span class="p">(</span><span class="n">u_gp</span><span class="o">=</span><span class="n">u_nom</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the estimates."""</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span><span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span><span class="p">,</span> <span class="n">w_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="p">)</span>
+
+        <span class="c1"># Transform the measured values into synchronous coordinates</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_c_ab</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">u_c_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
+
+        <span class="c1"># Correct the predicted grid-voltage estimates</span>
+        <span class="n">e_o</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">i_c</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">*</span> <span class="n">e_o</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">u_gn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_gn</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_n</span> <span class="o">*</span> <span class="n">e_o</span>
+
+        <span class="c1"># Quasi-static sequence components of the current and the converter voltage</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">i_f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_f</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_f</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">i_cp</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">i_c</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_f</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">i_cn</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">i_c</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_f</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_cp</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">v_cn</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gn</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_cn</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">v_cn</span>
+
+        <span class="c1"># Instantaneous powers and the active powers of the sequences</span>
+        <span class="n">s_g</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gn</span><span class="p">)</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">p_g</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">q_g</span> <span class="o">=</span> <span class="n">s_g</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">s_g</span><span class="o">.</span><span class="n">imag</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">p_gp</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_cp</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">p_gn</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">u_gn</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_cn</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
+
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update the states."""</span>
+        <span class="c1"># Predict the current and the grid-voltage sequences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_c</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_c</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">u_c_zoh</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gp</span>
+            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_n</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gn</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_gn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">u_gn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_f</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">i_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="p">)</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="SequenceSeparatedObserverBasedGridFormingControllerCfg">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SequenceSeparatedObserverBasedGridFormingControllerCfg</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Sequence-separated disturbance-observer-based grid-forming controller configuration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i_max : float</span>
+<span class="sd">        Maximum current (A), peak value.</span>
+<span class="sd">    i_d_max : float</span>
+<span class="sd">        Maximum active current (A), peak value.</span>
+<span class="sd">    L : float</span>
+<span class="sd">        Total inductance estimate (H).</span>
+<span class="sd">    R : float, optional</span>
+<span class="sd">        Total series resistance estimate (Ω), defaults to 0.</span>
+<span class="sd">    R_a : float | None, optional</span>
+<span class="sd">        Active resistance (Ω), defaults to `0.2*u_nom/i_max`.</span>
+<span class="sd">    k_v : float | None, optional</span>
+<span class="sd">        Voltage control gain, defaults to `alpha_o/w_nom`.</span>
+<span class="sd">    k_n : float, optional</span>
+<span class="sd">        Negative-sequence voltage gain, defaults to 2.</span>
+<span class="sd">    alpha_c : float, optional</span>
+<span class="sd">        Current control bandwidth (rad/s), defaults to 2*pi*300.</span>
+<span class="sd">    alpha_l : float, optional</span>
+<span class="sd">        Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.</span>
+<span class="sd">    alpha_o : float, optional</span>
+<span class="sd">        Observer gain (rad/s), defaults to 2*pi*50.</span>
+<span class="sd">    u_nom : float, optional</span>
+<span class="sd">        Nominal grid voltage (V), line-to-neutral peak value, defaults to</span>
+<span class="sd">        `sqrt(2/3)*400`.</span>
+<span class="sd">    w_nom : float, optional</span>
+<span class="sd">        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</span>
+<span class="sd">    p : tuple[complex, complex], optional</span>
+<span class="sd">        Continuous-time observer poles, normalized by `alpha_o`, defaults to</span>
+<span class="sd">        (-1 - 1j, -0.58 - 1j). The poles of the discrete-time observer are</span>
+<span class="sd">        `exp(p*alpha_o*T_s)`.</span>
+<span class="sd">    T_s : float, optional</span>
+<span class="sd">        Sampling period (s), defaults to 125e-6.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">i_max</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">i_d_max</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">k_n</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">300</span>
+    <span class="n">alpha_l</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
+    <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
+    <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">400</span>
+    <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
+    <span class="n">p</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.58</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+    <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span></div>
+
+
+
+<div class="viewcode-block" id="SequenceSeparatedObserverBasedGridFormingController">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SequenceSeparatedObserverBasedGridFormingController</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Sequence-separated disturbance-observer-based grid-forming controller.</span>
+
+<span class="sd">    This implements the grid-forming mode of the control method described in</span>
+<span class="sd">    [#Maa2026b]_, with transparent current control. The positive-sequence active power</span>
+<span class="sd">    and converter-voltage magnitude are controlled, while the negative-sequence</span>
+<span class="sd">    converter voltage is suppressed. The disturbance observer estimates the positive-</span>
+<span class="sd">    and negative-sequence grid voltages. The active-power reference is limited to a</span>
+<span class="sd">    realizable level, prioritizing the reactive and negative-sequence currents, and</span>
+<span class="sd">    the sequence current references are limited such that the peak phase current does</span>
+<span class="sd">    not exceed `i_max`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : SequenceSeparatedObserverBasedGridFormingControllerCfg</span>
+<span class="sd">        Grid-forming control configuration.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The control system operates in synchronous coordinates rotating at the nominal grid</span>
+<span class="sd">    angular frequency. The controller compensates for the computational delay of one</span>
+<span class="sd">    sampling period and the zero-order-hold delay of half a sampling period itself:</span>
+<span class="sd">    the angle of the positive-sequence voltage reference is advanced by</span>
+<span class="sd">    `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite</span>
+<span class="sd">    direction, is retarded by the same angle. Therefore, the control system does not</span>
+<span class="sd">    advance the angle of the voltage reference (`k_comp = 0`).</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,</span>
+<span class="sd">       "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,</span>
+<span class="sd">       https://arxiv.org/abs/2608.11857</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">grid_forming</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">k_comp</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">SequenceSeparatedObserverBasedGridFormingControllerCfg</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">Observer</span><span class="p">(</span>
+            <span class="n">u_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">,</span>
+            <span class="n">w_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span><span class="p">,</span>
+            <span class="n">L</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span>
+            <span class="n">alpha_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span>
+            <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+            <span class="n">T_s</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_limiter</span> <span class="o">=</span> <span class="n">PowerReferenceLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_d_max</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_l</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">CurrentReferenceLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_n</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_n</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
+        <span class="c1"># Angle advance of the positive sequence for the delay compensation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_delay</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mf">1.5</span><span class="n">j</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SequenceSeparatedObserverBasedGridFormingController.get_feedback">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.get_feedback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get the feedback signals."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SequenceSeparatedObserverBasedGridFormingController.compute_output">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.compute_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">p_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v_c_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceReferences</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute references."""</span>
+        <span class="c1"># Limit the active-power reference</span>
+        <span class="n">p_g_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_limiter</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">)</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="n">SequenceReferences</span><span class="p">(</span><span class="n">T_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">p_g</span><span class="o">=</span><span class="n">p_g_ref</span><span class="p">,</span> <span class="n">v_c</span><span class="o">=</span><span class="n">v_c_ref</span><span class="p">)</span>
+
+        <span class="c1"># Complex gains for grid-forming mode</span>
+        <span class="n">exp_j_theta</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cp</span><span class="p">))</span>
+        <span class="n">k_p</span> <span class="o">=</span> <span class="n">exp_j_theta</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">ref</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span>
+        <span class="n">k_v</span> <span class="o">=</span> <span class="n">exp_j_theta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span>
+
+        <span class="c1"># Feedback correction for grid-forming mode</span>
+        <span class="n">p_loss</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_cp</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">e_cp</span> <span class="o">=</span> <span class="n">k_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">p_g</span> <span class="o">+</span> <span class="n">p_loss</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">p_gp</span><span class="p">)</span> <span class="o">+</span> <span class="n">k_v</span> <span class="o">*</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">v_c</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cp</span><span class="p">))</span>
+        <span class="n">e_cn</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_n</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">v_cn</span>
+
+        <span class="c1"># Transparent current limitation</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">i_cp</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">i_cn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span><span class="p">(</span>
+            <span class="n">fbk</span><span class="o">.</span><span class="n">i_cp</span> <span class="o">+</span> <span class="n">e_cp</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_cn</span> <span class="o">+</span> <span class="n">e_cn</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span>
+        <span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">i_cp</span> <span class="o">+</span> <span class="n">ref</span><span class="o">.</span><span class="n">i_cn</span>
+
+        <span class="c1"># Voltage references, compensating for the delays of both sequences</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">u_cp</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">*</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_cp</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_cp</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">u_cn</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">v_cn</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">*</span> <span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">i_cn</span> <span class="o">-</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_cn</span><span class="p">)</span>
+        <span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_delay</span> <span class="o">*</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_cp</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_delay</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span> <span class="o">*</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_cn</span>
+
+        <span class="k">return</span> <span class="n">ref</span></div>
+
+
+<div class="viewcode-block" id="SequenceSeparatedObserverBasedGridFormingController.update">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.update">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">SequenceReferences</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update states."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power_limiter</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_cp</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_cp</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">i_cn</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SequenceSeparatedObserverBasedGridFormingController.post_process">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.post_process">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Post-process controller time series."""</span>
+        <span class="c1"># Transform the complex signals to the coordinates aligned with v_cp</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cp</span><span class="p">))</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_cp</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_cp</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_cn</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_cn</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_cp</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_cp</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_cn</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_cn</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_cp</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_cp</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_cn</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_cn</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_f</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_f</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cp</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cp</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cn</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_cn</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_gp</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_gp</span>
+        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_gn</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_gn</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Aalto Electric Drives
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Aalto Electric Drives.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

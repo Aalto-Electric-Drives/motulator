@@ -68,8 +68,8 @@ est_par = control.SaturatedSynchronousMachinePars(
 
 # %%
 # Simulate the drive in torque-control mode at the constant speed of 1.5 p.u. The
-# discrete-time design compensates for the delays itself, so its default PWM does
-# not (`k_comp=0`).
+# discrete-time design includes the delays, so the control system does not advance
+# the angle of its voltage reference (`k_comp = 0`).
 
 
 def simulate(discrete: bool):

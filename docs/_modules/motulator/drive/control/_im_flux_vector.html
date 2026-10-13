@@ -261,6 +261,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 </ul>
 </details></li>
@@ -476,7 +477,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PWM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">sign</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">FluxTorqueControllerBase</span><span class="p">,</span> <span class="n">References</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._im_observers</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -708,6 +708,8 @@
 
 <span class="sd">    """</span>
 
+    <span class="n">k_comp</span> <span class="o">=</span> <span class="mf">1.5</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
@@ -727,13 +729,6 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sensorless</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>
-
-<div class="viewcode-block" id="FluxVectorController.default_pwm">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController.default_pwm">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">default_pwm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PWM</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get the default pulse-width modulator."""</span>
-        <span class="k">return</span> <span class="n">PWM</span><span class="p">()</span></div>
-
 
 <div class="viewcode-block" id="FluxVectorController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController.get_feedback">[docs]</a>
@@ -842,6 +837,8 @@
 
 <span class="sd">    """</span>
 
+    <span class="n">k_comp</span> <span class="o">=</span> <span class="mf">1.5</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachineInvGammaPars</span> <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
@@ -863,13 +860,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">psi_s_nom</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span><span class="o">.</span><span class="n">k_u</span> <span class="o">=</span> <span class="n">inf</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">h</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Disables the model-based correction</span>
-
-<div class="viewcode-block" id="ObserverBasedVHzController.default_pwm">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ObserverBasedVHzController.default_pwm">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">default_pwm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PWM</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get the default pulse-width modulator."""</span>
-        <span class="k">return</span> <span class="n">PWM</span><span class="p">(</span><span class="n">overmodulation</span><span class="o">=</span><span class="s2">"MME"</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="ObserverBasedVHzController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ObserverBasedVHzController.get_feedback">[docs]</a>

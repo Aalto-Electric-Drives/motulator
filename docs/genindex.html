@@ -261,6 +261,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 </ul>
 </details></li>
@@ -666,6 +667,8 @@
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.compute_output">(motulator.grid.control.PWM method)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.compute_output">(motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -767,24 +770,8 @@
 </li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.dead_time_error">dead_time_error() (in module motulator.common.utils)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentVectorController.default_pwm">default_pwm() (motulator.drive.control.im.CurrentVectorController method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController.default_pwm">(motulator.drive.control.im.FluxVectorController method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ObserverBasedVHzController.default_pwm">(motulator.drive.control.im.ObserverBasedVHzController method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorController.default_pwm">(motulator.drive.control.sm.CurrentVectorController method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController.default_pwm">(motulator.drive.control.sm.FluxVectorController method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ObserverBasedVHzController.default_pwm">(motulator.drive.control.sm.ObserverBasedVHzController method)</a>
-</li>
-      </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController">DiscreteComplexController (class in motulator.common.control)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DiscreteCurrentController">DiscreteCurrentController (class in motulator.drive.control.im)</a>
 
       <ul>
@@ -793,6 +780,8 @@
       </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Drive">Drive (class in motulator.drive.model)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem">DriveControlSystem (class in motulator.drive.control.im)</a>
 
       <ul>
@@ -919,6 +908,8 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.get_feedback">(motulator.grid.control.ObserverBasedGridFormingController method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationController.get_feedback">(motulator.grid.control.PowerSynchronizationController method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.get_feedback">(motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1469,6 +1460,8 @@
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationController.post_process">(motulator.grid.control.PowerSynchronizationController method)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.post_process">(motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController method)</a>
+</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -1620,6 +1613,10 @@
         <li><a href="autoapi/motulator/grid/utils/index.html#motulator.grid.utils.SequenceGenerator">(class in motulator.grid.utils)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController">SequenceSeparatedObserverBasedGridFormingController (class in motulator.grid.control)</a>
+</li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg">SequenceSeparatedObserverBasedGridFormingControllerCfg (class in motulator.grid.control)</a>
+</li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_ac_voltage_ref">set_ac_voltage_ref() (motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref">set_dc_bus_voltage_ref() (motulator.grid.control.GridConverterControlSystem method)</a>
@@ -1904,6 +1901,8 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationController.update">(motulator.grid.control.PowerSynchronizationController method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.update">(motulator.grid.control.PWM method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.update">(motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController method)</a>
 </li>
       </ul></li>
   </ul></td>

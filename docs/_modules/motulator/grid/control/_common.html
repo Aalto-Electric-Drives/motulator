@@ -261,6 +261,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 </ul>
 </details></li>
@@ -472,7 +473,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">copysign</span><span class="p">,</span> <span class="n">inf</span><span class="p">,</span> <span class="n">sqrt</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span>
 
@@ -563,6 +564,62 @@
             <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_max</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">i</span></div>
 
+
+
+<span class="c1"># %%</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PowerReferenceLimiter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Limit the active-power reference to a realizable level.</span>
+
+<span class="sd">    The maximum active power is computed from the voltage reference and the currents,</span>
+<span class="sd">    prioritizing the reactive current and the negative-sequence current, and it is</span>
+<span class="sd">    low-pass filtered.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i_d_max : float</span>
+<span class="sd">        Maximum active current (A), peak value.</span>
+<span class="sd">    alpha_l : float</span>
+<span class="sd">        Bandwidth of the low-pass filter (rad/s).</span>
+<span class="sd">    u_nom : float</span>
+<span class="sd">        Nominal grid voltage (V), line-to-neutral peak value, which gives the initial</span>
+<span class="sd">        maximum active power.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_d_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha_l</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_d_max</span> <span class="o">=</span> <span class="n">i_d_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_l</span> <span class="o">=</span> <span class="n">alpha_l</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">u_nom</span> <span class="o">*</span> <span class="n">i_d_max</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_g_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">copysign</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">p_g_ref</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span><span class="p">),</span> <span class="n">p_g_ref</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_c</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_c</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_cn</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Update the maximum active power.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period (s).</span>
+<span class="sd">        u_c : complex</span>
+<span class="sd">            Converter voltage reference (V), its positive-sequence component in</span>
+<span class="sd">            unbalanced conditions.</span>
+<span class="sd">        i_c : complex</span>
+<span class="sd">            Converter current (A), its positive-sequence component in unbalanced</span>
+<span class="sd">            conditions.</span>
+<span class="sd">        i_cn : complex, optional</span>
+<span class="sd">            Negative-sequence converter current (A), defaults to 0.</span>
+
+<span class="sd">        """</span>
+        <span class="n">abs_u_c</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">u_c</span><span class="p">),</span> <span class="mf">1e-6</span><span class="p">)</span>
+        <span class="n">i_q</span> <span class="o">=</span> <span class="p">(</span><span class="n">u_c</span> <span class="o">*</span> <span class="n">i_c</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">abs_u_c</span>
+        <span class="n">i_d_lim_sqr</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_d_max</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i_cn</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">i_q</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">p_max</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">abs_u_c</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">i_d_lim_sqr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha_l</span> <span class="o">*</span> <span class="p">(</span><span class="n">p_max</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_max</span><span class="p">)</span>
 </pre></div>
 
                 </article>

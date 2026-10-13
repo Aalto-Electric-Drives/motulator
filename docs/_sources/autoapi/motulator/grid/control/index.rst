@@ -46,6 +46,8 @@ Classes
    motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
    motulator.grid.control.PowerSynchronizationControllerCfg
+   motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController
+   motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg
 
 
 Package Contents
@@ -361,6 +363,16 @@ Package Contents
    generic class that can be used with different models, measurements, feedback
    signals, and reference signals.
 
+   The inner controller gets the realized voltage of the ongoing sampling period for
+   discrete-time observers, while the feedback voltage `u_c` is the realized voltage
+   averaged over the previous and the ongoing sampling periods, which is used by the
+   control laws and the continuous-time observers. Before the modulation, the angle
+   of the voltage reference is advanced by `k_comp*T_s*w_c`, where `k_comp` is given
+   by the inner controller. The value 1.5 compensates for the computational delay of
+   one sampling period and the delay of half a sampling period caused by the
+   zero-order hold of the PWM [#Bae2003]_. The value 0 means that the angle is not
+   advanced, which is used if the controller takes the delays into account itself.
+
    :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference
                       and a grid-following controller the reactive power reference.
    :type inner_ctrl: InnerController
@@ -369,6 +381,12 @@ Package Contents
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
+
+   .. rubric:: References
+
+   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+      2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 
@@ -859,7 +877,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(u_c_ab, i_c_ab, u_g_meas_ab)
+   .. py:method:: compute_output(i_c_ab, u_g_meas_ab)
 
       
       Output estimates and coordinate transformed quantities.
@@ -930,15 +948,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: PWM(k_comp = 1.5, overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
+.. py:class:: PWM(overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
 
    This computes the duty ratios corresponding to standard space-vector PWM and
-   overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios
-   and the measured DC-bus voltage. The digital delay effects are taken into account
-   in the realized voltage [#Bae2003]_.
+   overmodulation [#Hav1999]_. The realized voltage is reconstructed from the duty
+   ratios and the measured DC-bus voltage, taking into account the computational delay
+   of one sampling period. The angle of the voltage reference is not advanced here:
+   the control systems compensate for the delays, if needed by the controller.
 
    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
    dead time and the voltage drops of the power devices) is modeled as a function of
@@ -962,10 +981,6 @@ Package Contents
    pulses. The limited voltage reference and the realized voltage are computed from
    the limited duty ratios.
 
-   :param k_comp: Compensation factor for the angular delay effect on the voltage reference,
-                  defaults to 1.5. Use 0 if the controller compensates for the delays itself,
-                  e.g., in direct discrete-time designs.
-   :type k_comp: float, optional
    :param overmodulation: Overmodulation method, defaults to "MPE". Valid options are:
                           - "MPE": minimum phase error
                           - "MME": minimum magnitude error
@@ -994,10 +1009,6 @@ Package Contents
    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
       triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
       https://doi.org/10.1109/28.777199
-
-   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-      2003, https://doi.org/10.1109/TIA.2003.810660
 
    .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
       minimum pulse-width limitations in two-level PWM voltage source inverters,"
@@ -1031,13 +1042,14 @@ Package Contents
       :type u_c_ref_ab: complex
       :param u_dc: DC-bus voltage (V).
       :type u_dc: float
-      :param w: Angular speed of synchronous coordinates (rad/s).
+      :param w: Angular speed of the synchronous coordinates (rad/s), used for predicting
+                the currents in the feedforward compensation of `d_err`.
       :type w: float
 
       :returns: * **d_abc** (*list[float]*) -- Duty ratios for the next sampling period.
                 * **u_c_ab** (*complex*) -- Voltage (V) in stationary coordinates corresponding to the duty ratios
-                  `d_abc`, i.e., the limited voltage reference with the delay-compensating
-                  angle advance and the duty-ratio error compensation (if used) included.
+                  `d_abc`, i.e., the limited voltage reference with the duty-ratio error
+                  compensation (if used) included.
 
 
 
@@ -1095,9 +1107,11 @@ Package Contents
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      voltage is computed from the duty ratios of the previous and the ongoing
-      sampling periods and the measured DC-bus voltage. The measured currents are also
-      stored for the feedforward compensation of the next duty ratios.
+      voltage is reconstructed from the duty ratios of the previous and the ongoing
+      sampling periods and the measured DC-bus voltage, i.e., the variations of the
+      DC-bus voltage and of the currents within the periods are not known. The
+      measured currents are also stored for the feedforward compensation of the next
+      duty ratios.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
@@ -1385,6 +1399,206 @@ Package Contents
    :type R_a: float | None, optional
    :param w_b: Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
    :type w_b: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: SequenceSeparatedObserverBasedGridFormingController(cfg)
+
+   
+   Sequence-separated disturbance-observer-based grid-forming controller.
+
+   This implements the grid-forming mode of the control method described in
+   [#Maa2026b]_, with transparent current control. The positive-sequence active power
+   and converter-voltage magnitude are controlled, while the negative-sequence
+   converter voltage is suppressed. The disturbance observer estimates the positive-
+   and negative-sequence grid voltages. The active-power reference is limited to a
+   realizable level, prioritizing the reactive and negative-sequence currents, and
+   the sequence current references are limited such that the peak phase current does
+   not exceed `i_max`.
+
+   :param cfg: Grid-forming control configuration.
+   :type cfg: SequenceSeparatedObserverBasedGridFormingControllerCfg
+
+   .. rubric:: Notes
+
+   The control system operates in synchronous coordinates rotating at the nominal grid
+   angular frequency. The controller compensates for the computational delay of one
+   sampling period and the zero-order-hold delay of half a sampling period itself:
+   the angle of the positive-sequence voltage reference is advanced by
+   `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite
+   direction, is retarded by the same angle. Therefore, the control system does not
+   advance the angle of the voltage reference (`k_comp = 0`).
+
+   .. rubric:: References
+
+   .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
+      "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
+      https://arxiv.org/abs/2608.11857
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(p_g_ref, v_c_ref, fbk)
+
+      
+      Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(u_c_ab, meas)
+
+      
+      Get the feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SequenceSeparatedObserverBasedGridFormingControllerCfg
+
+   
+   Sequence-separated disturbance-observer-based grid-forming controller configuration.
+
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param i_d_max: Maximum active current (A), peak value.
+   :type i_d_max: float
+   :param L: Total inductance estimate (H).
+   :type L: float
+   :param R: Total series resistance estimate (Ω), defaults to 0.
+   :type R: float, optional
+   :param R_a: Active resistance (Ω), defaults to `0.2*u_nom/i_max`.
+   :type R_a: float | None, optional
+   :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
+   :type k_v: float | None, optional
+   :param k_n: Negative-sequence voltage gain, defaults to 2.
+   :type k_n: float, optional
+   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*300.
+   :type alpha_c: float, optional
+   :param alpha_l: Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
+   :type alpha_l: float, optional
+   :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
+   :type alpha_o: float, optional
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
+                 `sqrt(2/3)*400`.
+   :type u_nom: float, optional
+   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_nom: float, optional
+   :param p: Continuous-time observer poles, normalized by `alpha_o`, defaults to
+             (-1 - 1j, -0.58 - 1j). The poles of the discrete-time observer are
+             `exp(p*alpha_o*T_s)`.
+   :type p: tuple[complex, complex], optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 

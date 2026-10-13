@@ -266,6 +266,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_rfpsc_gfm.html">12.5-kVA, RFPSC-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
 </ul>
 </details></li>
@@ -550,7 +551,7 @@
 </div></div></section>
 <section id="grid-forming-control">
 <h2>Grid-Forming Control<a class="headerlink" href="#grid-forming-control" title="Link to this heading">#</a></h2>
-<p>These examples demonstrate grid-forming control. The example <a class="reference internal" href="grid_forming/plot_13kva_rfpsc_gfm.html"><span class="doc">12.5-kVA, RFPSC-GFM</span></a> uses a power-synchronization loop for synchronizing with the grid <a class="footnote-reference brackets" href="#har2020" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In <a class="reference internal" href="grid_forming/plot_13kva_do_gfm.html"><span class="doc">12.5-kVA, DO-GFM</span></a>, disturbance-observer-based control is used <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>These examples demonstrate grid-forming control. The example <a class="reference internal" href="grid_forming/plot_13kva_rfpsc_gfm.html"><span class="doc">12.5-kVA, RFPSC-GFM</span></a> uses a power-synchronization loop for synchronizing with the grid <a class="footnote-reference brackets" href="#har2020" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In <a class="reference internal" href="grid_forming/plot_13kva_do_gfm.html"><span class="doc">12.5-kVA, DO-GFM</span></a>, disturbance-observer-based control is used <a class="footnote-reference brackets" href="#nur2024" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The example <a class="reference internal" href="grid_forming/plot_13kva_do_gfm_negseq.html"><span class="doc">12.5-kVA, DO-GFM with sequence separation</span></a> extends the disturbance-observer-based control method with the addition of negative sequence <a class="footnote-reference brackets" href="#maa2026b" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har2020" role="doc-footnote">
@@ -561,6 +562,10 @@
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming converter control based on a disturbance observer, “IEEE Trans. Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
+<aside class="footnote brackets" id="maa2026b" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors, “Disturbance-observer-based grid-forming control for unbalanced grids,” 2026, <a class="reference external" href="https://arxiv.org/abs/2608.11857">https://arxiv.org/abs/2608.11857</a></p>
+</aside>
 </aside>
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA grid-forming (GFM) converter using reference-feedforward power-synchronization control (RFPSC). The converter is connected to a weak grid. The converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm."><img alt="" src="../_images/sphx_glr_plot_13kva_rfpsc_gfm_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_rfpsc_gfm.html"><span class="doc">12.5-kVA, RFPSC-GFM</span></a></p>
@@ -568,17 +573,20 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter, connected to a weak grid. The converter output voltage and the active power are directly controlled. Grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation. A grid-voltage sag in this weak grid is simulated in /grid_examples/grid_forming/plot_13kva_do_gfm_sag."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_do_gfm.html"><span class="doc">12.5-kVA, DO-GFM</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter, connected to a weak grid. The control method is designed to take into account negative sequence grid voltage. The positive-sequence converter output voltage and the positive-sequence active power are directly controlled. Grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_negseq_thumb.png" />
+<p><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_negseq.html"><span class="doc">12.5-kVA, DO-GFM with sequence separation</span></a></p>
+  <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM with sequence separation</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter during a grid-voltage sag in a weak grid. Apart from the sag, the converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm. The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u. The active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_sag_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_sag.html"><span class="doc">12.5-kVA, DO-GFM, grid-voltage sag</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM, grid-voltage sag</div>
 </div></div></section>
 <section id="output-admittance-identification">
 <h2>Output Admittance Identification<a class="headerlink" href="#output-admittance-identification" title="Link to this heading">#</a></h2>
-<p>These examples demonstrate numerical identification of grid converter output admittance <a class="footnote-reference brackets" href="#maa2026" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<p>These examples demonstrate numerical identification of grid converter output admittance <a class="footnote-reference brackets" href="#maa2026a" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="maa2026" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<aside class="footnote brackets" id="maa2026a" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Määttä, Kukkola, Seppänen, Hinkkanen, “Open-source Python tool for grid converter output admittance identification,” 2026, <a class="reference external" href="https://arxiv.org/abs/2607.10653">https://arxiv.org/abs/2607.10653</a></p>
 </aside>
 </aside>

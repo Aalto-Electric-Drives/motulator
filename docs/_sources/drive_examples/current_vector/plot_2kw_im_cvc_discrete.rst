@@ -88,8 +88,8 @@ Configure the machine parameters.
 .. GENERATED FROM PYTHON SOURCE LINES 35-38
 
 Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
-discrete-time design compensates for the delays itself, so its default PWM does
-not (`k_comp=0`).
+discrete-time design includes the delays, so the control system does not advance
+the angle of its voltage reference (`k_comp = 0`).
 
 .. GENERATED FROM PYTHON SOURCE LINES 38-66
 
@@ -177,7 +177,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.901 seconds)
+   **Total running time of the script:** (0 minutes 4.496 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:
