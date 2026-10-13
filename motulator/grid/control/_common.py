@@ -18,6 +18,10 @@ class References:
     v_c: float = 0.0  # Converter voltage magnitude reference (grid-forming control)
     u_c: complex = 0j  # Converter voltage reference
     i_c: complex = 0j  # Converter current reference
+    u_cp: complex = 0j  # Positive-sequence converter-voltage reference
+    u_cn: complex = 0j  # Negative-sequence converter-voltage reference
+    i_cp: complex = 0j  # Positive-sequence converter-current reference
+    i_cn: complex = 0j  # Negative-sequence converter-current reference
     u_dc: float | None = None  # DC-bus voltage reference (set by the control system)
     d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
 
