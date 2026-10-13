@@ -4,7 +4,7 @@
 
 This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM)
 converter, connected to a weak grid. The control method is designed to take into account
-negative sequence grid voltage. The positive-sequence converter output voltage and the
+negative-sequence grid voltage. The positive-sequence converter output voltage and the
 positive-sequence active power are directly controlled. Grid synchronization is provided
 by the disturbance observer. A transparent current controller is included for current
 limitation.
@@ -45,6 +45,7 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # %%
 # Configure the control system.
+
 cfg = control.SequenceObserverBasedGridFormingControllerCfg(
     i_max=1.3 * base.i, i_d_max=1.1 * base.i, L=0.2 * base.L, T_s=1 / 16e3
 )
@@ -53,14 +54,15 @@ ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 # %%
 # Set the references for converter output voltage magnitude and active power.
+
 ctrl.set_ac_voltage_ref(base.u)
 ctrl.set_power_ref(lambda t: (t > 0.1) * nom.P)
 
-# Uncomment the lines below to simulate a three-phase grid voltage sag to 0.5 p.u.
+# Uncomment lines below to simulate a three-phase grid-voltage sag to 0.5 p.u.
 # mdl.ac_source.e_g = lambda t: (1 - (t > 0.4) * 0.5 + (t > 0.6) * 0.5) * base.u
 # mdl.ac_source.e_g_neg = 0
 
-# Uncomment the lines below to simulate active-power reference tracking
+# Uncomment lines below to simulate active-power reference tracking
 # mdl.ac_source.e_g = base.u
 # mdl.ac_source.e_g_neg = 0
 # ctrl.set_power_ref(

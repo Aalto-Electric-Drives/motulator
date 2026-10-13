@@ -7,6 +7,6 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward power-synchronization control," IEEE Trans. Power Electron., 2020, https://doi.org/10.1109/TPEL.2020.2970991
 
-.. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
+.. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer," IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors, "Disturbance-observer-based grid-forming control for unbalanced grids," 2026, https://arxiv.org/abs/2608.11857
