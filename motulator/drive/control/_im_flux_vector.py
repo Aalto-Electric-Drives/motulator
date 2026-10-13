@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from math import inf, pi, sqrt
 
 from motulator.common.control._base import TimeSeries
-from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import sign
 from motulator.drive.control._common import FluxTorqueControllerBase, References
 from motulator.drive.control._im_observers import (
@@ -227,6 +226,8 @@ class FluxVectorController:
 
     """
 
+    k_comp = 1.5
+
     def __init__(
         self,
         par: InductionMachineInvGammaPars | InductionMachinePars,
@@ -246,10 +247,6 @@ class FluxVectorController:
         )
         self.sensorless = cfg.sensorless
         self.T_s = cfg.T_s
-
-    def default_pwm(self) -> PWM:
-        """Get the default pulse-width modulator."""
-        return PWM()
 
     def get_feedback(
         self,
@@ -340,6 +337,8 @@ class ObserverBasedVHzController:
 
     """
 
+    k_comp = 1.5
+
     def __init__(
         self,
         par: InductionMachineInvGammaPars | InductionMachinePars,
@@ -361,10 +360,6 @@ class ObserverBasedVHzController:
             self.observer.psi_s = cfg.psi_s_nom
             self.reference_gen.k_u = inf
             self.h = 1.0  # Disables the model-based correction
-
-    def default_pwm(self) -> PWM:
-        """Get the default pulse-width modulator."""
-        return PWM(overmodulation="MME")
 
     def get_feedback(
         self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float

@@ -4,7 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from math import inf, pi
 
-from motulator.common.control import PWM, ComplexPIController, DiscreteComplexController
+from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.drive.control._common import References
 from motulator.drive.control._sm_observers import (
@@ -76,8 +76,8 @@ class DiscreteCurrentController(DiscreteComplexController):
 
     This implements the flux-linkage-based current controller designed directly in
     discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
-    the flux linkages. The PWM must be configured with `k_comp=0`, which is the
-    default when the controller is selected by `discrete=True`.
+    the flux linkages. Since the design includes the delays, the angle of the voltage
+    reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
 
     Parameters
     ----------
@@ -155,9 +155,7 @@ class CurrentVectorControllerCfg:
         Sampling period (s), defaults to 125e-6.
     discrete : bool, optional
         If True, the direct discrete-time current controller is used instead of the
-        continuous-time design, defaults to False. The default PWM of the controller
-        then has `k_comp=0`, and a PWM given to the control system must be configured
-        likewise.
+        continuous-time design, defaults to False.
 
     """
 
@@ -221,12 +219,9 @@ class CurrentVectorController:
         self.par = par
         self.cfg = cfg
         self.sensorless = cfg.sensorless
-        self.T_s = cfg.T_s
-
-    def default_pwm(self) -> PWM:
-        """Get the default pulse-width modulator."""
         # The discrete-time current controller compensates for the delays itself
-        return PWM(k_comp=0) if self.cfg.discrete else PWM()
+        self.k_comp = 0.0 if cfg.discrete else 1.5
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self,
