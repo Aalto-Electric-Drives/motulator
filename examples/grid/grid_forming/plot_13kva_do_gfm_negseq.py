@@ -32,10 +32,12 @@ base = utils.BaseValues.from_nominal(nom)
 ac_filter = model.LFilter(L_f=0.15 * base.L, L_g=0.62 * base.L)
 ac_source = model.ThreePhaseSource(
     w_g=base.w,
-    e_g=lambda t: (1 - (t > 0.4) * 1 / 6 + (t > 0.5) * 1 / 12 + (t > 0.6) * 1 / 12)
-    * base.u,
-    e_g_neg=lambda t: ((t > 0.4) * 1 / 6 - (t > 0.5) * 1 / 12 - (t > 0.6) * 1 / 12)
-    * base.u,
+    e_g=lambda t: (
+        (1 - (t > 0.4) * 1 / 6 + (t > 0.5) * 1 / 12 + (t > 0.6) * 1 / 12) * base.u
+    ),
+    e_g_neg=lambda t: (
+        ((t > 0.4) * 1 / 6 - (t > 0.5) * 1 / 12 - (t > 0.6) * 1 / 12) * base.u
+    ),
     phi_neg=pi,
 )
 converter = model.VoltageSourceConverter(u_dc=660)
@@ -62,7 +64,9 @@ ctrl.set_power_ref(lambda t: (t > 0.1) * nom.P)
 # Uncomment the lines below to simulate active-power reference tracking
 # mdl.ac_source.e_g = base.u
 # mdl.ac_source.e_g_neg = 0
-# ctrl.set_power_ref(lambda t: ((t > 0.1) - (t > 0.25) - (t > 0.4) + (t > 0.55)) * nom.P)
+# ctrl.set_power_ref(
+#     lambda t: ((t > 0.1) - (t > 0.25) - (t > 0.4) + (t > 0.55)) * nom.P
+# )
 
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.
