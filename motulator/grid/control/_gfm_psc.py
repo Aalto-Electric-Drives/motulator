@@ -16,7 +16,7 @@ class Feedbacks:
     """Feedback signals for the control system."""
 
     i_c: complex = 0j
-    u_c: complex = 0j
+    u_c: complex = 0j  # Converter voltage (set by the control system)
     p_g: float = 0.0
     theta_c: float = 0.0  # Angle of the coordinate system (rad)
     w_c: float = 0.0  # Angular speed of the coordinate system (rad/s)
@@ -76,6 +76,7 @@ class PowerSynchronizationController:
     """
 
     grid_forming = True
+    k_comp = 1.5
 
     def __init__(self, cfg: PowerSynchronizationControllerCfg) -> None:
         self.cfg = cfg
@@ -89,13 +90,8 @@ class PowerSynchronizationController:
         """Get the feedback signals."""
         out = Feedbacks(theta_c=self.theta_c)
 
-        # Transform the measured values into synchronous coordinates
+        # Transform the measured current into synchronous coordinates
         out.i_c = exp(-1j * out.theta_c) * meas.i_c_ab
-        out.u_c = exp(-1j * out.theta_c) * u_c_ab
-
-        # Other feedback signals
-        p_loss = 1.5 * self.cfg.R * abs(out.i_c) ** 2
-        out.p_g = 1.5 * (out.u_c * out.i_c.conjugate()).real - p_loss
         return out
 
     def compute_output(
@@ -103,6 +99,10 @@ class PowerSynchronizationController:
     ) -> References:
         """Compute references."""
         ref = References(T_s=self.cfg.T_s, v_c=v_c_ref, p_g=p_g_ref)
+
+        # Active power, using the realized converter voltage
+        p_loss = 1.5 * self.cfg.R * abs(fbk.i_c) ** 2
+        fbk.p_g = 1.5 * (fbk.u_c * fbk.i_c.conjugate()).real - p_loss
 
         # Power droop
         fbk.w_c = self.cfg.w_nom + self.k_p_psc * (ref.p_g - fbk.p_g)

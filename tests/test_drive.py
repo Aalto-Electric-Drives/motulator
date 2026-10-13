@@ -362,7 +362,7 @@ def test_discrete_current_control(w: float) -> None:
     par = sm_control.SynchronousMachinePars(n_p=1, R_s=0, L_d=L, L_q=L, psi_f=0)
     ctrl = sm_control.DiscreteCurrentController(par, alpha_c, T_s)
     ctrl.w_c = w  # Initial angular speed of the coordinates
-    pwm = sm_control.PWM(k_comp=0)
+    pwm = sm_control.PWM()
     psi_ab, u_ab, theta = 0j, 0j, 0.0
 
     def run(i_ref: float, n: int, u_dc: float) -> np.ndarray:
@@ -410,7 +410,6 @@ def test_discrete_current_control_angle_estimate() -> None:
     vector_ctrl = sm_control.CurrentVectorController(par, cfg)
     vector_ctrl.observer.w_M = w_M
     ctrl = sm_control.VectorControlSystem(vector_ctrl)
-    assert ctrl.pwm.k_comp == 0  # The default PWM of the discrete-time design
     ctrl.set_torque_ref(7.0)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
 
@@ -439,7 +438,7 @@ def test_discrete_current_control_dead_time() -> None:
     )
     vector_ctrl = im_control.CurrentVectorController(im_par(), cfg)
     vector_ctrl.observer.w_M = w_M
-    pwm = im_control.PWM(k_comp=0, d_err=lambda i, d: dead_time_error(i, d, t_d, T_s))
+    pwm = im_control.PWM(d_err=lambda i, d: dead_time_error(i, d, t_d, T_s))
     ctrl = im_control.VectorControlSystem(vector_ctrl, pwm=pwm)
     ctrl.set_torque_ref(0.0)  # Constant magnetizing current
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
@@ -447,6 +446,9 @@ def test_discrete_current_control_dead_time() -> None:
     end = res.ctrl.t > 0.15
     err = np.mean(res.ctrl.fbk.i_s[end] - res.ctrl.ref.i_s[end])
     assert abs(err) == pytest.approx(0, abs=0.05)  # Below 1 % of the nominal current
+    # The angle of the voltage reference of the discrete-time design is not advanced,
+    # also with a PWM given by the user
+    assert res.ctrl.ref.u_s_lim[end] == pytest.approx(res.ctrl.ref.u_s[end])
 
 
 @pytest.mark.parametrize("psi_f", [0.0, 0.05, 0.5])

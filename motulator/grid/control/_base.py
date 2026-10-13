@@ -18,6 +18,7 @@ class Feedbacks(Protocol):
 
     w_c: float  # Angular speed of the coordinate system (rad/s)
     theta_c: float  # Angular position of the coordinate system (rad)
+    u_c: complex  # Converter voltage (controller coordinates) for the control laws
     u_dc: float  # DC-bus voltage (V)
 
 
@@ -41,22 +42,23 @@ class Measurements:
 
 
 # %%
-class InnerController[Fbk](Protocol):
+class InnerController[Ref: References, Fbk](Protocol):
     """Protocol defining the interface for the inner controllers."""
 
     # True: the controller takes the AC voltage reference (grid forming). False: it
     # takes the reactive power reference (grid following).
     grid_forming: bool
+    k_comp: float  # Angle-advance factor, see GridConverterControlSystem
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
-        """Get feedback signals from measurements."""
+        """Get feedback signals, `u_c_ab` being the voltage of the ongoing period."""
         ...
 
-    def compute_output(self, p_g_ref: float, ac_ref: float, fbk: Fbk, /) -> References:
+    def compute_output(self, p_g_ref: float, ac_ref: float, fbk: Fbk, /) -> Ref:
         """Compute control output, `ac_ref` being the AC voltage or reactive power."""
         ...
 
-    def update(self, ref: References, fbk: Fbk) -> None:
+    def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller states."""
         ...
 
@@ -73,6 +75,16 @@ class GridConverterControlSystem(ControlSystem):
     generic class that can be used with different models, measurements, feedback
     signals, and reference signals.
 
+    The inner controller gets the realized voltage of the ongoing sampling period for
+    discrete-time observers, while the feedback voltage `u_c` is the realized voltage
+    averaged over the previous and the ongoing sampling periods, which is used by the
+    control laws and the continuous-time observers. Before the modulation, the angle
+    of the voltage reference is advanced by `k_comp*T_s*w_c`, where `k_comp` is given
+    by the inner controller. The value 1.5 compensates for the computational delay of
+    one sampling period and the delay of half a sampling period caused by the
+    zero-order hold of the PWM [#Bae2003]_. The value 0 means that the angle is not
+    advanced, which is used if the controller takes the delays into account itself.
+
     Parameters
     ----------
     inner_ctrl : InnerController
@@ -83,6 +95,12 @@ class GridConverterControlSystem(ControlSystem):
         given, the active power reference is set externally.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
+
+    References
+    ----------
+    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+       2003, https://doi.org/10.1109/TIA.2003.810660
 
     """
 
@@ -95,6 +113,7 @@ class GridConverterControlSystem(ControlSystem):
         super().__init__()
         self.pwm = pwm if pwm is not None else PWM()
         self.inner_ctrl = inner_ctrl
+        self.k_comp = inner_ctrl.k_comp
         self.dc_bus_voltage_ctrl = dc_bus_voltage_ctrl
         self.ext_ref: ExternalReferences = ExternalReferences()
 
@@ -165,8 +184,12 @@ class GridConverterControlSystem(ControlSystem):
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        # The observers use the voltage of the ongoing sampling period, while the
+        # control laws use the voltage averaged over the previous and ongoing periods
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc, average=False)
         fbk = self.inner_ctrl.get_feedback(u_c_ab, meas)
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        fbk.u_c = exp(-1j * fbk.theta_c) * u_c_ab
         fbk.u_dc = meas.u_dc
         return fbk
 
@@ -199,6 +222,7 @@ class GridConverterControlSystem(ControlSystem):
         )
         ref.u_dc = u_dc_ref
         u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
+        u_c_ab_ref *= exp(1j * self.k_comp * ref.T_s * fbk.w_c)
         ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
         return ref
 

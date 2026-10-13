@@ -26,7 +26,7 @@ class ObserverOutputs:
     """Feedback signals for the control system."""
 
     i_c: complex = 0j
-    u_c: complex = 0j
+    u_c: complex = 0j  # Converter voltage (set by the control system)
     v_c: complex = 0j
     u_g: complex = 0j
     p_g: float = 0.0
@@ -67,13 +67,12 @@ class Observer:
         self.w_g: float = w_nom
         self.state = ObserverStates(theta_c=0, u_gp=u_nom)
 
-    def compute_output(self, u_c_ab: complex, i_c_ab: complex) -> ObserverOutputs:
+    def compute_output(self, i_c_ab: complex) -> ObserverOutputs:
         """Compute the estimates."""
         out = ObserverOutputs(theta_c=self.state.theta_c)
 
-        # Transform the measured values into synchronous coordinates
+        # Transform the measured current into synchronous coordinates
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
-        out.u_c = exp(-1j * out.theta_c) * u_c_ab
 
         # Estimates for the quasi-static converter voltage and the grid voltage
         u_gp = self.state.u_gp
@@ -180,6 +179,7 @@ class ObserverBasedGridFormingController:
     """
 
     grid_forming = True
+    k_comp = 1.5
 
     def __init__(self, cfg: ObserverBasedGridFormingControllerCfg) -> None:
         self.observer = Observer(
@@ -197,8 +197,7 @@ class ObserverBasedGridFormingController:
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
-        fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab)
-        return fbk
+        return self.observer.compute_output(meas.i_c_ab)
 
     def compute_output(
         self, p_g_ref: float, v_c_ref: float, fbk: ObserverOutputs

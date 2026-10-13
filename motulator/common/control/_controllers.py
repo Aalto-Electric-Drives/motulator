@@ -191,9 +191,9 @@ class DiscreteComplexController:
     where `i` is the feedback signal, `u` is the realized output, `u_lim` is the limited
     controller output, and ``Phi = exp(-1j*w_c*T_s)``. The design gives the
     reference-tracking dynamics ``i(k) = (1 - beta)/(z*(z - beta))*i_ref(k)``, where
-    ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances. The
-    controller compensates for the delays itself, so the PWM must be configured with
-    `k_comp=0`.
+    ``beta = exp(-alpha_c*T_s)``. The integral action compensates for disturbances.
+    Since the design includes the delays, the angle of the output must not be advanced
+    (`k_comp = 0` in the control system).
 
     Parameters
     ----------

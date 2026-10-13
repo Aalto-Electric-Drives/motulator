@@ -48,10 +48,7 @@ class VectorController[Ref, Fbk](Protocol):
     """Protocol defining the interface for vector controllers."""
 
     sensorless: bool
-
-    def default_pwm(self) -> PWM:
-        """Get the default pulse-width modulator."""
-        ...
+    k_comp: float  # Angle-advance factor, see DriveControlSystem
 
     def get_feedback(
         self,
@@ -80,10 +77,7 @@ class VHzController[Ref, Fbk](Protocol):
     """Protocol defining the interface for V/Hz controllers."""
 
     T_s: float
-
-    def default_pwm(self) -> PWM:
-        """Get the default pulse-width modulator."""
-        ...
+    k_comp: float  # Angle-advance factor, see DriveControlSystem
 
     def get_feedback(self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float) -> Fbk:
         """Get feedback signals from measurements."""
@@ -112,16 +106,35 @@ class DriveControlSystem(ControlSystem):
     `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`
     and `_compute_inner_output`.
 
+    The inner controller gets the realized voltage of the ongoing sampling period for
+    its observer, while the feedback voltage `u_s` for the control laws is the realized
+    voltage averaged over the previous and the ongoing sampling periods. Before the
+    modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
+    where `k_comp` is given by the inner controller. The value 1.5 compensates for the
+    computational delay of one sampling period and the delay of half a sampling period
+    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
+    angle is not advanced, which is used if the controller takes the delays into
+    account itself, e.g., in a direct discrete-time design.
+
     Parameters
     ----------
     pwm : PWM
         Pulse-width modulator.
+    k_comp : float
+        Angle-advance factor of the voltage reference.
+
+    References
+    ----------
+    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+       2003, https://doi.org/10.1109/TIA.2003.810660
 
     """
 
-    def __init__(self, pwm: PWM) -> None:
+    def __init__(self, pwm: PWM, k_comp: float) -> None:
         super().__init__()
         self.pwm = pwm
+        self.k_comp = k_comp
         self.ext_ref = ExternalReferences()
 
     def set_speed_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
@@ -166,11 +179,13 @@ class DriveControlSystem(ControlSystem):
         """
         Compute the duty ratios from the stator voltage reference.
 
-        The reference is in the controller coordinates. Subclasses can override this
-        method, e.g., to control an output filter between the converter and the machine.
+        The reference is in the controller coordinates. Its angle is advanced by
+        `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an
+        output filter between the converter and the machine.
 
         """
         u_s_ab_ref = exp(1j * fbk.theta_c) * u_s_ref
+        u_s_ab_ref *= exp(1j * self.k_comp * T_s * fbk.w_c)
         return self.pwm(T_s, u_s_ab_ref, fbk.u_dc, fbk.w_c)
 
 
@@ -190,7 +205,7 @@ class VectorControlSystem(DriveControlSystem):
     speed_ctrl : SpeedController | PIController | None, optional
         Speed controller. If None (default), torque-control mode is used.
     pwm : PWM, optional
-        Pulse-width modulator, defaults to `vector_ctrl.default_pwm()`.
+        Pulse-width modulator, defaults to `PWM()`.
 
     """
 
@@ -200,7 +215,7 @@ class VectorControlSystem(DriveControlSystem):
         speed_ctrl: SpeedController | PIController | None = None,
         pwm: PWM | None = None,
     ) -> None:
-        super().__init__(pwm if pwm is not None else vector_ctrl.default_pwm())
+        super().__init__(pwm if pwm is not None else PWM(), vector_ctrl.k_comp)
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
 
@@ -294,14 +309,15 @@ class VHzControlSystem(DriveControlSystem):
     slew_rate : float, optional
         Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.
     pwm : PWM, optional
-        Pulse-width modulator, defaults to `vhz_ctrl.default_pwm()`.
+        Pulse-width modulator, defaults to `PWM(overmodulation="MME")`.
 
     """
 
     def __init__(
         self, vhz_ctrl: VHzController, slew_rate: float = inf, pwm: PWM | None = None
     ) -> None:
-        super().__init__(pwm if pwm is not None else vhz_ctrl.default_pwm())
+        pwm = pwm if pwm is not None else PWM(overmodulation="MME")
+        super().__init__(pwm, vhz_ctrl.k_comp)
         self.vhz_ctrl = vhz_ctrl
         self.rate_limiter = RateLimiter(slew_rate)
         self._w_M_ref: float = 0  # For storing ramp-limited speed reference
