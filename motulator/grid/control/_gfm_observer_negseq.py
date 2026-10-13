@@ -301,19 +301,13 @@ class SequenceSeparatedObserverBasedGridFormingController:
     Sequence-separated disturbance-observer-based grid-forming controller.
 
     This implements the disturbance-observer-based control method described in
-    [#Maa2026b]_. The control method is designed to take into account negative sequence
+    [#Maa2026]_. The control method is designed to take into account negative sequence
     grid voltage.
 
     Parameters
     ----------
     cfg : ObserverBasedGridFormingControllerWithNegativeSequenceCfg
         Grid-forming control configuration.
-
-    References
-    ----------
-    .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
-        "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
-        https://arxiv.org/abs/2608.11857
 
     """
 
