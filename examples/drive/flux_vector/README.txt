@@ -5,7 +5,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. rubric:: References
 
-.. [#Pel2009] Pellegrino, Armando, Guglielmi, “Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region,” IEEE Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167
+.. [#Pel2009] Pellegrino, Armando, Guglielmi, "Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region," IEEE Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167
 
 .. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
