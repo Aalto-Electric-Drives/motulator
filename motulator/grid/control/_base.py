@@ -76,14 +76,14 @@ class GridConverterControlSystem(ControlSystem):
     signals, and reference signals.
 
     The inner controller gets the realized voltage of the ongoing sampling period for
-    discrete-time observers, while the feedback voltage `u_c` is the realized voltage
-    averaged over the previous and the ongoing sampling periods, which is used by the
-    control laws and the continuous-time observers. Before the modulation, the angle
-    of the voltage reference is advanced by `k_comp*T_s*w_c`, where `k_comp` is given
-    by the inner controller. The value 1.5 compensates for the computational delay of
-    one sampling period and the delay of half a sampling period caused by the
-    zero-order hold of the PWM [#Bae2003]_. The value 0 means that the angle is not
-    advanced, which is used if the controller takes the delays into account itself.
+    its observer, while the feedback voltage `u_c` for the control laws is the realized
+    voltage averaged over the previous and the ongoing sampling periods. Before the
+    modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
+    where `k_comp` is given by the inner controller. The value 1.5 compensates for the
+    computational delay of one sampling period and the delay of half a sampling period
+    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
+    angle is not advanced, which is used if the controller takes the delays into account
+    itself.
 
     Parameters
     ----------

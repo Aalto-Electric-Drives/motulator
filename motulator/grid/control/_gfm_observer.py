@@ -19,10 +19,11 @@ from motulator.grid.control._common import (
 # %%
 @dataclass
 class ObserverStates:
-    """State estimates."""
+    """States of the observer."""
 
     theta_c: float = 0.0
-    u_gp: complex = 0j
+    u_g: complex = 0j  # Predicted grid voltage
+    i_c: complex = 0j  # Predicted converter current
 
 
 @dataclass
@@ -31,6 +32,7 @@ class ObserverOutputs:
 
     i_c: complex = 0j
     u_c: complex = 0j  # Converter voltage (set by the control system)
+    u_c_zoh: complex = 0j  # Converter voltage of the ongoing sampling period
     v_c: complex = 0j
     u_g: complex = 0j
     p_g: float = 0.0
@@ -44,8 +46,16 @@ class Observer:
     """
     Disturbance observer.
 
-    This implements a disturbance observer, which estimates the quasi-static converter
-    output voltage. Coordinates rotating at the nominal grid angular frequency are used.
+    This observer estimates the grid voltage and the quasi-static converter voltage. It
+    is designed directly in discrete time, using the hold-equivalent model in
+    coordinates rotating at the nominal grid angular frequency. Over the sampling
+    period, the converter voltage is constant in stationary coordinates, while the grid
+    voltage and the resistive voltage drop are constant in the observer coordinates. At
+    each sampling instant, the grid-voltage estimate is corrected using the prediction
+    error of the measured current, after which the current is predicted for the next
+    sampling instant, using the realized converter voltage of the ongoing sampling
+    period. The observer gain places the pole of the estimation-error dynamics at
+    `exp(-alpha_o*T_s)`.
 
     Parameters
     ----------
@@ -53,36 +63,47 @@ class Observer:
         Nominal grid voltage (V), line-to-neutral peak value.
     w_nom : float
         Nominal grid angular frequency (rad/s).
-    alpha_o : float
-        Observer gain (rad/s).
     L : float
         Total inductance (H).
+    alpha_o : float
+        Observer bandwidth (rad/s).
+    T_s : float
+        Sampling period (s).
     R : float, optional
         Total series resistance (Ω), defaults to 0.
 
     """
 
     def __init__(
-        self, u_nom: float, w_nom: float, alpha_o: float, L: float, R: float = 0
+        self,
+        u_nom: float,
+        w_nom: float,
+        L: float,
+        alpha_o: float,
+        T_s: float,
+        R: float = 0.0,
     ) -> None:
-        self.alpha_o: float = alpha_o
         self.L: float = L
         self.R: float = R
         self.w_g: float = w_nom
-        self.state = ObserverStates(theta_c=0, u_gp=u_nom)
+        # Coefficients of the hold-equivalent model
+        self.phi = exp(-1j * w_nom * T_s)
+        self.gamma_c = T_s * self.phi / L
+        self.gamma_g = (self.phi - 1) / (1j * w_nom * L)
+        self.k_o = (1 - exp(-alpha_o * T_s)) / self.gamma_g  # Observer gain
+        self.state = ObserverStates(u_g=u_nom)
 
-    def compute_output(self, i_c_ab: complex) -> ObserverOutputs:
+    def compute_output(self, u_c_ab: complex, i_c_ab: complex) -> ObserverOutputs:
         """Compute the estimates."""
-        out = ObserverOutputs(theta_c=self.state.theta_c)
+        out = ObserverOutputs(theta_c=self.state.theta_c, w_c=self.w_g)
 
-        # Transform the measured current into synchronous coordinates
+        # Transform the measured values into synchronous coordinates
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
+        out.u_c_zoh = exp(-1j * out.theta_c) * u_c_ab
 
-        # Estimates for the quasi-static converter voltage and the grid voltage
-        u_gp = self.state.u_gp
-        out.v_c = u_gp - (self.alpha_o - 1j * self.w_g) * self.L * out.i_c
-        out.u_g = u_gp - self.alpha_o * self.L * out.i_c
-        out.w_c = self.w_g
+        # Correct the predicted grid-voltage estimate
+        out.u_g = self.state.u_g + self.k_o * (out.i_c - self.state.i_c)
+        out.v_c = out.u_g + 1j * self.w_g * self.L * out.i_c
 
         # Active and reactive powers
         s_g = 1.5 * out.u_g * out.i_c.conjugate()
@@ -92,9 +113,14 @@ class Observer:
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Update the states."""
-        self.state.u_gp += T_s * self.alpha_o * (out.u_c - out.v_c - self.R * out.i_c)
-        self.state.theta_c += T_s * self.w_g
-        self.state.theta_c = wrap(self.state.theta_c)
+        # Predict the current, the grid voltage being constant in these coordinates
+        self.state.i_c = (
+            self.phi * out.i_c
+            + self.gamma_c * out.u_c_zoh
+            + self.gamma_g * (out.u_g + self.R * out.i_c)
+        )
+        self.state.u_g = out.u_g
+        self.state.theta_c = wrap(self.state.theta_c + T_s * self.w_g)
 
 
 # %%
@@ -116,7 +142,7 @@ class ObserverBasedGridFormingControllerCfg:
     k_v : float | None, optional
         Voltage control gain, defaults to `alpha_o/w_nom`.
     alpha_o : float, optional
-        Observer gain (rad/s), defaults to 2*pi*50.
+        Observer bandwidth (rad/s), defaults to 2*pi*50.
     alpha_c : float, optional
         Current control bandwidth (rad/s), defaults to 2*pi*400.
     u_nom : float, optional
@@ -167,8 +193,9 @@ class ObserverBasedGridFormingController:
     Notes
     -----
     In this implementation, the control system operates in synchronous coordinates
-    rotating at the nominal grid angular frequency. For other implementation options,
-    see [#Nur2024]_.
+    rotating at the nominal grid angular frequency, and the disturbance observer is
+    designed directly in discrete time. For other implementation options, see
+    [#Nur2024]_.
 
     References
     ----------
@@ -187,7 +214,12 @@ class ObserverBasedGridFormingController:
 
     def __init__(self, cfg: ObserverBasedGridFormingControllerCfg) -> None:
         self.observer = Observer(
-            u_nom=cfg.u_nom, w_nom=cfg.w_nom, L=cfg.L, R=cfg.R, alpha_o=cfg.alpha_o
+            u_nom=cfg.u_nom,
+            w_nom=cfg.w_nom,
+            L=cfg.L,
+            alpha_o=cfg.alpha_o,
+            T_s=cfg.T_s,
+            R=cfg.R,
         )
         self.current_limiter = CurrentLimiter(cfg.i_max)
         self.R_a = 0.25 * cfg.u_nom / cfg.i_max if cfg.R_a is None else cfg.R_a
@@ -202,7 +234,7 @@ class ObserverBasedGridFormingController:
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
-        return self.observer.compute_output(meas.i_c_ab)
+        return self.observer.compute_output(u_c_ab, meas.i_c_ab)
 
     def compute_output(
         self, p_g_ref: float, v_c_ref: float, fbk: ObserverOutputs
@@ -243,6 +275,7 @@ class ObserverBasedGridFormingController:
         ts.ref.u_c = T * ts.ref.u_c
         ts.ref.i_c = T * ts.ref.i_c
         ts.fbk.u_c = T * ts.fbk.u_c
+        ts.fbk.u_c_zoh = T * ts.fbk.u_c_zoh
         ts.fbk.i_c = T * ts.fbk.i_c
         ts.fbk.u_g = T * ts.fbk.u_g
         ts.fbk.v_c = T * ts.fbk.v_c

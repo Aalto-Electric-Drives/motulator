@@ -15,13 +15,13 @@ from motulator.grid.control._gfm_observer import (
     ObserverBasedGridFormingControllerCfg,
     ObserverOutputs,
 )
-from motulator.grid.control._gfm_observer_negseq import (
-    SequenceSeparatedObserverBasedGridFormingController,
-    SequenceSeparatedObserverBasedGridFormingControllerCfg,
-)
 from motulator.grid.control._gfm_psc import (
     PowerSynchronizationController,
     PowerSynchronizationControllerCfg,
+)
+from motulator.grid.control._gfm_sequence_observer import (
+    SequenceObserverBasedGridFormingController,
+    SequenceObserverBasedGridFormingControllerCfg,
 )
 
 __all__ = [
@@ -39,6 +39,6 @@ __all__ = [
     "PLLOutputs",
     "PowerSynchronizationController",
     "PowerSynchronizationControllerCfg",
-    "SequenceSeparatedObserverBasedGridFormingController",
-    "SequenceSeparatedObserverBasedGridFormingControllerCfg",
+    "SequenceObserverBasedGridFormingController",
+    "SequenceObserverBasedGridFormingControllerCfg",
 ]
