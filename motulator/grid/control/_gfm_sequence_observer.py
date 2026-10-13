@@ -1,4 +1,4 @@
-"""Sequence-separated disturbance-observer-based grid-forming control."""
+"""Disturbance-observer-based grid-forming control with sequence separation."""
 
 from cmath import exp, phase
 from dataclasses import dataclass
@@ -23,7 +23,7 @@ class SequenceReferences(References):
     i_cn: complex = 0j  # Negative-sequence converter-current reference
 
 
-class CurrentReferenceLimiter:
+class SequenceCurrentLimiter:
     """
     Limit the peak phase current of the sequence current references.
 
@@ -54,7 +54,7 @@ class CurrentReferenceLimiter:
 
 # %%
 @dataclass
-class ObserverOutputs:
+class SequenceObserverOutputs:
     """Feedback signals for the control system."""
 
     i_c: complex = 0j
@@ -78,7 +78,7 @@ class ObserverOutputs:
 
 
 @dataclass
-class ObserverStates:
+class SequenceObserverStates:
     """States of the observer."""
 
     theta_c: float = 0.0
@@ -88,7 +88,7 @@ class ObserverStates:
     i_f: complex = 0j  # Filtered current
 
 
-class Observer:
+class SequenceObserver:
     """
     Disturbance observer for the grid-voltage sequence components.
 
@@ -114,7 +114,7 @@ class Observer:
     L : float
         Total inductance (H).
     alpha_o : float
-        Observer gain (rad/s).
+        Observer bandwidth (rad/s).
     p : tuple[complex, complex]
         Continuous-time observer poles, normalized by `alpha_o`.
     T_s : float
@@ -148,11 +148,13 @@ class Observer:
         # Coefficients of the sequence-separation filter
         self.a_f = 2j * self.phi_n / (1 + 1j - (1 - 1j) * self.phi_n)
         self.b_f = (1 - self.a_f) / (1 + 1j)
-        self.state = ObserverStates(u_gp=u_nom)
+        self.state = SequenceObserverStates(u_gp=u_nom)
 
-    def compute_output(self, u_c_ab: complex, i_c_ab: complex) -> ObserverOutputs:
+    def compute_output(
+        self, u_c_ab: complex, i_c_ab: complex
+    ) -> SequenceObserverOutputs:
         """Compute the estimates."""
-        out = ObserverOutputs(theta_c=self.state.theta_c, w_c=self.w_g)
+        out = SequenceObserverOutputs(theta_c=self.state.theta_c, w_c=self.w_g)
 
         # Transform the measured values into synchronous coordinates
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
@@ -179,7 +181,7 @@ class Observer:
 
         return out
 
-    def update(self, T_s: float, out: ObserverOutputs) -> None:
+    def update(self, T_s: float, out: SequenceObserverOutputs) -> None:
         """Update the states."""
         # Predict the current and the grid-voltage sequences
         self.state.i_c = (
@@ -196,7 +198,7 @@ class Observer:
 
 # %%
 @dataclass
-class SequenceSeparatedObserverBasedGridFormingControllerCfg:
+class SequenceObserverBasedGridFormingControllerCfg:
     """
     Sequence-separated disturbance-observer-based grid-forming controller configuration.
 
@@ -221,7 +223,7 @@ class SequenceSeparatedObserverBasedGridFormingControllerCfg:
     alpha_l : float, optional
         Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
     alpha_o : float, optional
-        Observer gain (rad/s), defaults to 2*pi*50.
+        Observer bandwidth (rad/s), defaults to 2*pi*50.
     u_nom : float, optional
         Nominal grid voltage (V), line-to-neutral peak value, defaults to
         `sqrt(2/3)*400`.
@@ -252,7 +254,7 @@ class SequenceSeparatedObserverBasedGridFormingControllerCfg:
     T_s: float = 125e-6
 
 
-class SequenceSeparatedObserverBasedGridFormingController:
+class SequenceObserverBasedGridFormingController:
     """
     Sequence-separated disturbance-observer-based grid-forming controller.
 
@@ -267,7 +269,7 @@ class SequenceSeparatedObserverBasedGridFormingController:
 
     Parameters
     ----------
-    cfg : SequenceSeparatedObserverBasedGridFormingControllerCfg
+    cfg : SequenceObserverBasedGridFormingControllerCfg
         Grid-forming control configuration.
 
     Notes
@@ -291,10 +293,8 @@ class SequenceSeparatedObserverBasedGridFormingController:
     grid_forming = True
     k_comp = 0.0
 
-    def __init__(
-        self, cfg: SequenceSeparatedObserverBasedGridFormingControllerCfg
-    ) -> None:
-        self.observer = Observer(
+    def __init__(self, cfg: SequenceObserverBasedGridFormingControllerCfg) -> None:
+        self.observer = SequenceObserver(
             u_nom=cfg.u_nom,
             w_nom=cfg.w_nom,
             L=cfg.L,
@@ -303,7 +303,7 @@ class SequenceSeparatedObserverBasedGridFormingController:
             T_s=cfg.T_s,
         )
         self.power_limiter = PowerReferenceLimiter(cfg.i_d_max, cfg.alpha_l, cfg.u_nom)
-        self.current_limiter = CurrentReferenceLimiter(cfg.i_max)
+        self.current_limiter = SequenceCurrentLimiter(cfg.i_max)
         self.R = cfg.R
         self.R_a = 0.2 * cfg.u_nom / cfg.i_max if cfg.R_a is None else cfg.R_a
         self.k_v = cfg.alpha_o / cfg.w_nom if cfg.k_v is None else cfg.k_v
@@ -313,12 +313,14 @@ class SequenceSeparatedObserverBasedGridFormingController:
         # Angle advance of the positive sequence for the delay compensation
         self.exp_j_delay = exp(1.5j * cfg.w_nom * cfg.T_s)
 
-    def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
+    def get_feedback(
+        self, u_c_ab: complex, meas: Measurements
+    ) -> SequenceObserverOutputs:
         """Get the feedback signals."""
         return self.observer.compute_output(u_c_ab, meas.i_c_ab)
 
     def compute_output(
-        self, p_g_ref: float, v_c_ref: float, fbk: ObserverOutputs
+        self, p_g_ref: float, v_c_ref: float, fbk: SequenceObserverOutputs
     ) -> SequenceReferences:
         """Compute references."""
         # Limit the active-power reference
@@ -348,7 +350,7 @@ class SequenceSeparatedObserverBasedGridFormingController:
 
         return ref
 
-    def update(self, ref: SequenceReferences, fbk: ObserverOutputs) -> None:
+    def update(self, ref: SequenceReferences, fbk: SequenceObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.power_limiter.update(ref.T_s, ref.u_cp, fbk.i_cp, fbk.i_cn)

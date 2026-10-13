@@ -245,6 +245,7 @@ mathjax3_config = {
             "absug": "u_\\mathrm{g}",
             "hatabsug": "\\hat{u}_\\mathrm{g}",
             "hatug": "\\hat{\\mathbf{u}}_\\mathrm{g}",
+            "hatic": "\\hat{\\mathbf{i}}_\\mathrm{c}",
             "ugs": "\\mathbf{u}_\\mathrm{g}^\\mathrm{s}",
             "ugmeas": "\\mathbf{u}_\\mathrm{g}^\\mathrm{meas}",
             "ig": "\\mathbf{i}_\\mathrm{g}",

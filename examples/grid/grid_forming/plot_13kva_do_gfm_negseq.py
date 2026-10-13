@@ -45,10 +45,10 @@ mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
 
 # %%
 # Configure the control system.
-cfg = control.SequenceSeparatedObserverBasedGridFormingControllerCfg(
+cfg = control.SequenceObserverBasedGridFormingControllerCfg(
     i_max=1.3 * base.i, i_d_max=1.1 * base.i, L=0.2 * base.L, T_s=1 / 16e3
 )
-inner_ctrl = control.SequenceSeparatedObserverBasedGridFormingController(cfg)
+inner_ctrl = control.SequenceObserverBasedGridFormingController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 # %%

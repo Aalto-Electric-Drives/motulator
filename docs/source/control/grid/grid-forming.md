@@ -103,21 +103,39 @@ where the gains $R_\mathrm{a} = 0.25u_\mathrm{nom}/i_\mathrm{max}$ and $k_\mathr
 
 ### Implementation Aspects
 
-To avoid the derivative on the right-hand side of {eq}`disturbance_observer_gfm`, a new state variable $\hatug' = \hatug + \alphao \hat L \ic$ can be introduced {cite}`Fra1997`. Furthermore, the coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, $\omegac = \hatomegag$. Using these design choices, the whole control system consisting of the disturbance observer {eq}`disturbance_observer_gfm` and the control law {eq}`control_law_gfm` in the state-space form reduces to {cite}`Nur2024`
+The coordinate system for the implementation can be chosen freely. The simplest choice is to use the nominal grid frequency as the coordinate system frequency, $\omegac = \hatomegag$. The disturbance observer is implemented in discrete time, using the hold-equivalent model of {eq}`system_model1` in these coordinates. Over the sampling period, the coordinates rotate at the constant angular speed $\hatomegag$, the realized converter voltage is constant in stationary coordinates, and the grid voltage is constant in the observer coordinates, which gives
 
 ```{math}
 ---
-label: control_system_gfm
+label: hold_equivalent_gfm
 ---
-\frac{\D \hatug'}{\D t} &= \alphao (\uc - \hatvc) \\
-\hatvc &= \hatug' - (\alphao - \jj\hatomegag) \hat L \ic \\
-\hatpg &= \frac{3}{2}\RE\{\hatvc\ic^*\} \\
-\ucref &= \hatvc + \kP (\pgref - \hatpg) + \kV (\vcref - \hatabsvc)
+\ic(k+1) = \Phi\ic(k) + \gamma_\mathrm{c}\uc(k) + \gamma_\mathrm{g}\ug(k)
 ```
 
-where the gains can be selected according to {eq}`gain_selection_gfm` and $\uc$ is the realized converter voltage obtained from the PWM, taking into account the voltage limitation and the computational delay. Various control modes could be easily incorporated into the control system {eq}`control_system_gfm`, simply by changing the feedback correction terms of the control law {cite}`Nur2024`. The switching between the modes is seamless since the control law does not have memory, but the integral action is provided by the disturbance observer (in addition to synchronization).
+where $\uc(k)$ is the realized voltage averaged over the sampling period from $k$ to $k + 1$ and
 
-The control system implemented in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class corresponds to {eq}`control_system_gfm`. In the example implementation, a transparent current-control mode is implemented. The implementation also includes an optional series-resistance estimate $\hat R$ (zero by default), which adds the term $-\hat R\ic$ to the observer and the term $\hat R\ic$ to the control law. In the grid-forming mode, the observer bandwidth $\alphao = 1$ p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., $\hat L = 0.15$ p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.
+```{math}
+---
+label: hold_equivalent_coeff_gfm
+---
+\Phi = \e^{-\jj\hatomegag\Ts} \qquad
+\gamma_\mathrm{c} = \frac{\Ts\Phi}{\hat L} \qquad
+\gamma_\mathrm{g} = \frac{\Phi - 1}{\jj\hatomegag\hat L}
+```
+
+All vectors are in the observer coordinates at the instant $k$. At each sampling instant, the grid-voltage estimate is corrected using the prediction error of the current, after which the current is predicted for the next sampling instant,
+
+```{math}
+---
+label: disturbance_observer_discrete_gfm
+---
+\hatug(k) &= \hatug(k-1) + k_\mathrm{o}\left[\ic(k) - \hatic(k)\right] \\
+\hatic(k+1) &= \Phi\ic(k) + \gamma_\mathrm{c}\uc(k) + \gamma_\mathrm{g}\hatug(k)
+```
+
+where the gain $k_\mathrm{o} = (1 - \e^{-\alphao\Ts})/\gamma_\mathrm{g}$ places the pole of the estimation-error dynamics at $\e^{-\alphao\Ts}$, corresponding to the pole $-\alphao$ of {eq}`disturbance_observer_gfm`. The estimates $\hatvc$ and $\hatpg$ are obtained from {eq}`disturbance_observer_gfm`, and the control law {eq}`control_law_gfm` is used as such. Various control modes could be easily incorporated into the control system, simply by changing the feedback correction terms of the control law {cite}`Nur2024`. The switching between the modes is seamless since the control law does not have memory, but the integral action is provided by the disturbance observer (in addition to synchronization).
+
+The control system implemented in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class consists of the disturbance observer {eq}`disturbance_observer_discrete_gfm` and the control law {eq}`control_law_gfm`. In the example implementation, a transparent current-control mode is implemented. The implementation also includes an optional series-resistance estimate $\hat R$ (zero by default), which adds the voltage drop $\hat R\ic(k)$ to the grid-voltage estimate in the current prediction and the term $\hat R\ic$ to the control law. In the grid-forming mode, the observer bandwidth $\alphao = 1$ p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., $\hat L = 0.15$ p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.
 
 ## Active-Power Reference Limitation
 

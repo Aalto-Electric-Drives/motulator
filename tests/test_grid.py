@@ -13,7 +13,8 @@ import pytest
 
 from motulator.common.model import SimulationResults
 from motulator.grid import control, model, utils
-from motulator.grid.control._gfm_observer_negseq import Observer
+from motulator.grid.control._gfm_observer import Observer
+from motulator.grid.control._gfm_sequence_observer import SequenceObserver
 from motulator.grid.utils._identification import dft
 
 U_NOM = np.sqrt(2 / 3) * 400  # Peak phase voltage
@@ -97,10 +98,10 @@ def test_grid_forming(method: str) -> None:
 def test_grid_forming_unbalanced(u_dc: float) -> None:
     """Sequence-separated grid-forming control suppresses the negative sequence and
     tracks the power reference, also when the PWM saturates."""
-    cfg = control.SequenceSeparatedObserverBasedGridFormingControllerCfg(
+    cfg = control.SequenceObserverBasedGridFormingControllerCfg(
         i_max=30, i_d_max=25, L=0.35 * L_BASE, u_nom=U_NOM, w_nom=W_NOM, T_s=250e-6
     )
-    inner_ctrl = control.SequenceSeparatedObserverBasedGridFormingController(cfg)
+    inner_ctrl = control.SequenceObserverBasedGridFormingController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
     p_g_ref = 5e3
     ctrl.set_ac_voltage_ref(U_NOM)
@@ -122,36 +123,58 @@ def test_grid_forming_unbalanced(u_dc: float) -> None:
     assert i_n == pytest.approx(-1j * e_g_neg / (W_NOM * 0.94 * L_BASE), rel=0.02)
 
 
-def test_sequence_observer() -> None:
-    """The sequence observer has the designed estimation-error dynamics, and the
+def exact_model(
+    u_gp: complex, u_gn: complex, L: float, t: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """Converter voltages held over the sampling periods and the currents of the exact
+    hold-equivalent model, with the grid-voltage sequences `u_gp` and `u_gn`."""
+    T_s = t[1] - t[0]
+    u_c_ab = 0.9 * U_NOM * np.exp(1j * (W_NOM * t + 0.3))
+    exp_p = np.exp(1j * W_NOM * t)
+    exp_t = np.exp(1j * W_NOM * T_s)
+    e_g_int = u_gp * exp_p * (exp_t - 1) - u_gn / exp_p * (1 / exp_t - 1)
+    di_c_ab = (T_s * u_c_ab - e_g_int / (1j * W_NOM)) / L
+    return u_c_ab, np.concatenate(([0j], np.cumsum(di_c_ab)[:-1]))
+
+
+def test_observers() -> None:
+    """The disturbance observers have the designed estimation-error dynamics, and the
     sequence separation is exact in the periodic steady state."""
-    T_s, L, alpha_o, p = 125e-6, 0.2 * L_BASE, W_NOM, (-1 - 1j, -0.58 - 1j)
-    observer = Observer(U_NOM, W_NOM, L, alpha_o, p, T_s)
-    u_gp, u_gn = 0.8 * U_NOM, 0.2j * U_NOM  # Grid-voltage sequences at t = 0
-    i_c_ab, err = 0j, []
-    for k in range(10):
-        t = k * T_s
-        u_c_ab = 0.9 * U_NOM * np.exp(1j * (W_NOM * t + 0.3))  # Held over the period
+    T_s, L, alpha_o = 125e-6, 0.2 * L_BASE, W_NOM
+    t = T_s * np.arange(10)
+
+    # The error of the balanced observer decays at the pole exp(-alpha_o*T_s)
+    u_g, err = 0.8 * U_NOM, []
+    observer = Observer(U_NOM, W_NOM, L, alpha_o, T_s)
+    for u_c_ab, i_c_ab in zip(*exact_model(u_g, 0, L, t), strict=True):
         out = observer.compute_output(u_c_ab, i_c_ab)
-        err.append([u_gp - out.u_gp, u_gn * np.exp(-2j * W_NOM * t) - out.u_gn])
         observer.update(T_s, out)
-        # Exact hold-equivalent model in stationary coordinates
-        exp_p = np.exp(1j * W_NOM * np.array([t + T_s, t]))
-        e_g_int = u_gp * (exp_p[0] - exp_p[1]) - u_gn * (1 / exp_p[0] - 1 / exp_p[1])
-        i_c_ab += (T_s * u_c_ab - e_g_int / (1j * W_NOM)) / L
-    # The error satisfies the characteristic equation of the designed poles
-    z_1, z_2 = np.exp(np.array(p) * alpha_o * T_s)
+        err.append(u_g - out.u_g)
     e = np.array(err)
+    assert e[1:] == pytest.approx(np.exp(-alpha_o * T_s) * e[:-1], abs=1e-9 * U_NOM)
+
+    # The error of the sequence observer satisfies the characteristic equation of the
+    # poles exp(p*alpha_o*T_s)
+    p, u_gp, u_gn, err = (-1 - 1j, -0.58 - 1j), 0.8 * U_NOM, 0.2j * U_NOM, []
+    observer = SequenceObserver(U_NOM, W_NOM, L, alpha_o, p, T_s)
+    u_c, i_c = exact_model(u_gp, u_gn, L, t)
+    for u_c_ab, i_c_ab, t_k in zip(u_c, i_c, t, strict=True):
+        out = observer.compute_output(u_c_ab, i_c_ab)
+        observer.update(T_s, out)
+        err.append([u_gp - out.u_gp, u_gn * np.exp(-2j * W_NOM * t_k) - out.u_gn])
+    e = np.array(err)
+    z_1, z_2 = np.exp(np.array(p) * alpha_o * T_s)
     e_pred = (z_1 + z_2) * e[1:-1] - z_1 * z_2 * e[:-2]
     assert e[2:] == pytest.approx(e_pred, abs=1e-9 * U_NOM)
 
-    observer = Observer(U_NOM, W_NOM, L, alpha_o, p, T_s)
+    # Exact sequence separation
+    observer = SequenceObserver(U_NOM, W_NOM, L, alpha_o, p, T_s)
     i_cp, i_cn, seq = 10.0, 4j, []
-    for t in T_s * np.arange(1000):
-        i_c_ab = i_cp * np.exp(1j * W_NOM * t) + i_cn * np.exp(-1j * W_NOM * t)
+    for t_k in T_s * np.arange(1000):
+        i_c_ab = i_cp * np.exp(1j * W_NOM * t_k) + i_cn * np.exp(-1j * W_NOM * t_k)
         out = observer.compute_output(0j, i_c_ab)
         observer.update(T_s, out)
-        seq.append((out.i_cp, out.i_cn * np.exp(2j * W_NOM * t)))
+        seq.append((out.i_cp, out.i_cn * np.exp(2j * W_NOM * t_k)))
     assert seq[-1] == pytest.approx((i_cp, i_cn))
 
 
