@@ -13,6 +13,7 @@ import pytest
 
 from motulator.common.model import SimulationResults
 from motulator.grid import control, model, utils
+from motulator.grid.control._gfm_observer_negseq import Observer
 from motulator.grid.utils._identification import dft
 
 U_NOM = np.sqrt(2 / 3) * 400  # Peak phase voltage
@@ -28,9 +29,9 @@ def grid_powers(res: SimulationResults, t_start: float) -> tuple[float, float]:
     return float(np.mean(s_g.real)), float(np.mean(s_g.imag))
 
 
-def system(L_g: float = 0.0) -> model.GridConverterSystem:
+def system(L_g: float = 0.0, u_dc: float = 650) -> model.GridConverterSystem:
     return model.GridConverterSystem(
-        model.VoltageSourceConverter(u_dc=650),
+        model.VoltageSourceConverter(u_dc=u_dc),
         model.LFilter(L_f=0.2 * L_BASE, L_g=L_g),
         model.ThreePhaseSource(w_g=W_NOM, e_g=U_NOM),
     )
@@ -90,6 +91,68 @@ def test_grid_forming(method: str) -> None:
     assert np.abs(res.ctrl.fbk.v_c.imag).max() < 1e-9 * U_NOM
     u_c_err = np.mean(res.ctrl.fbk.u_c[end] - res.ctrl.ref.u_c[end])
     assert abs(u_c_err) < 0.02 * U_NOM
+
+
+@pytest.mark.parametrize("u_dc", [650, 520], ids=["linear", "overmodulation"])
+def test_grid_forming_unbalanced(u_dc: float) -> None:
+    """Sequence-separated grid-forming control suppresses the negative sequence and
+    tracks the power reference, also when the PWM saturates."""
+    cfg = control.SequenceSeparatedObserverBasedGridFormingControllerCfg(
+        i_max=30, i_d_max=25, L=0.35 * L_BASE, u_nom=U_NOM, w_nom=W_NOM, T_s=250e-6
+    )
+    inner_ctrl = control.SequenceSeparatedObserverBasedGridFormingController(cfg)
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
+    p_g_ref = 5e3
+    ctrl.set_ac_voltage_ref(U_NOM)
+    ctrl.set_power_ref(lambda t: (t > 0.05) * p_g_ref)
+
+    e_g_neg = 0.1 * U_NOM
+    mdl = system(L_g=0.74 * L_BASE, u_dc=u_dc)
+    mdl.ac_source.e_g_neg = e_g_neg
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.4)
+
+    # The observer uses the realized voltage, which avoids a power error in saturation
+    p_g, _ = grid_powers(res, 0.36)
+    assert p_g == pytest.approx(p_g_ref, abs=0.01 * 10e3)
+    # Without the negative-sequence converter voltage, the negative-sequence grid
+    # voltage drives the negative-sequence current through the total inductance
+    t = 0.36 + 1e-4 * np.arange(400)  # Two fundamental periods, evenly sampled
+    i_c_ab = np.interp(t, res.mdl.t, res.mdl.ac_filter.i_c_ab)
+    i_n = np.mean(i_c_ab * np.exp(1j * W_NOM * t))
+    assert i_n == pytest.approx(-1j * e_g_neg / (W_NOM * 0.94 * L_BASE), rel=0.02)
+
+
+def test_sequence_observer() -> None:
+    """The sequence observer has the designed estimation-error dynamics, and the
+    sequence separation is exact in the periodic steady state."""
+    T_s, L, alpha_o, p = 125e-6, 0.2 * L_BASE, W_NOM, (-1 - 1j, -0.58 - 1j)
+    observer = Observer(U_NOM, W_NOM, L, alpha_o, p, T_s)
+    u_gp, u_gn = 0.8 * U_NOM, 0.2j * U_NOM  # Grid-voltage sequences at t = 0
+    i_c_ab, err = 0j, []
+    for k in range(10):
+        t = k * T_s
+        u_c_ab = 0.9 * U_NOM * np.exp(1j * (W_NOM * t + 0.3))  # Held over the period
+        out = observer.compute_output(u_c_ab, i_c_ab)
+        err.append([u_gp - out.u_gp, u_gn * np.exp(-2j * W_NOM * t) - out.u_gn])
+        observer.update(T_s, out)
+        # Exact hold-equivalent model in stationary coordinates
+        exp_p = np.exp(1j * W_NOM * np.array([t + T_s, t]))
+        e_g_int = u_gp * (exp_p[0] - exp_p[1]) - u_gn * (1 / exp_p[0] - 1 / exp_p[1])
+        i_c_ab += (T_s * u_c_ab - e_g_int / (1j * W_NOM)) / L
+    # The error satisfies the characteristic equation of the designed poles
+    z_1, z_2 = np.exp(np.array(p) * alpha_o * T_s)
+    e = np.array(err)
+    e_pred = (z_1 + z_2) * e[1:-1] - z_1 * z_2 * e[:-2]
+    assert e[2:] == pytest.approx(e_pred, abs=1e-9 * U_NOM)
+
+    observer = Observer(U_NOM, W_NOM, L, alpha_o, p, T_s)
+    i_cp, i_cn, seq = 10.0, 4j, []
+    for t in T_s * np.arange(1000):
+        i_c_ab = i_cp * np.exp(1j * W_NOM * t) + i_cn * np.exp(-1j * W_NOM * t)
+        out = observer.compute_output(0j, i_c_ab)
+        observer.update(T_s, out)
+        seq.append((out.i_cp, out.i_cn * np.exp(2j * W_NOM * t)))
+    assert seq[-1] == pytest.approx((i_cp, i_cn))
 
 
 def test_dft_of_unevenly_sampled_signal() -> None:

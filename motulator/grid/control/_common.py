@@ -2,7 +2,7 @@
 
 from collections.abc import Sequence
 from dataclasses import dataclass
-from math import inf
+from math import copysign, inf, sqrt
 
 from motulator.common.control._controllers import PIController
 
@@ -84,3 +84,59 @@ class CurrentLimiter:
         if abs(i) > self.i_max:
             i = self.i_max * i / abs(i)
         return i
+
+
+# %%
+class PowerReferenceLimiter:
+    """
+    Limit the active-power reference to a realizable level.
+
+    The maximum active power is computed from the voltage reference and the currents,
+    prioritizing the reactive current and the negative-sequence current, and it is
+    low-pass filtered.
+
+    Parameters
+    ----------
+    i_d_max : float
+        Maximum active current (A), peak value.
+    alpha_l : float
+        Bandwidth of the low-pass filter (rad/s).
+    u_nom : float
+        Nominal grid voltage (V), line-to-neutral peak value, which gives the initial
+        maximum active power.
+
+    """
+
+    def __init__(self, i_d_max: float, alpha_l: float, u_nom: float) -> None:
+        self.i_d_max = i_d_max
+        self.alpha_l = alpha_l
+        self.p_max = 1.5 * u_nom * i_d_max
+
+    def __call__(self, p_g_ref: float) -> float:
+        return copysign(min(abs(p_g_ref), self.p_max), p_g_ref)
+
+    def update(
+        self, T_s: float, u_c: complex, i_c: complex, i_cn: complex = 0j
+    ) -> None:
+        """
+        Update the maximum active power.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+        u_c : complex
+            Converter voltage reference (V), its positive-sequence component in
+            unbalanced conditions.
+        i_c : complex
+            Converter current (A), its positive-sequence component in unbalanced
+            conditions.
+        i_cn : complex, optional
+            Negative-sequence converter current (A), defaults to 0.
+
+        """
+        abs_u_c = max(abs(u_c), 1e-6)
+        i_q = (u_c * i_c.conjugate()).imag / abs_u_c
+        i_d_lim_sqr = max(max(self.i_d_max - abs(i_cn), 0.0) ** 2 - i_q**2, 0.0)
+        p_max = 1.5 * abs_u_c * sqrt(i_d_lim_sqr)
+        self.p_max += T_s * self.alpha_l * (p_max - self.p_max)
