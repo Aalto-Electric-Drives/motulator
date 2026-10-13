@@ -23,7 +23,7 @@
 
 This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM)
 converter, connected to a weak grid. The control method is designed to take into account
-negative sequence grid voltage. The positive-sequence converter output voltage and the
+negative-sequence grid voltage. The positive-sequence converter output voltage and the
 positive-sequence active power are directly controlled. Grid synchronization is provided
 by the disturbance observer. A transparent current controller is included for current
 limitation.
@@ -100,14 +100,15 @@ to 2/3 p.u. and then rises to 5/6 p.u.
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-54
+.. GENERATED FROM PYTHON SOURCE LINES 48-55
 
 .. code-block:: Python
 
-    cfg = control.SequenceSeparatedObserverBasedGridFormingControllerCfg(
+
+    cfg = control.SequenceObserverBasedGridFormingControllerCfg(
         i_max=1.3 * base.i, i_d_max=1.1 * base.i, L=0.2 * base.L, T_s=1 / 16e3
     )
-    inner_ctrl = control.SequenceSeparatedObserverBasedGridFormingController(cfg)
+    inner_ctrl = control.SequenceObserverBasedGridFormingController(cfg)
     ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
@@ -117,22 +118,23 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-70
+.. GENERATED FROM PYTHON SOURCE LINES 57-72
 
 .. code-block:: Python
+
 
     ctrl.set_ac_voltage_ref(base.u)
     ctrl.set_power_ref(lambda t: (t > 0.1) * nom.P)
 
-    # Uncomment the lines below to simulate a three-phase grid voltage sag to 0.5 p.u.
+    # Uncomment lines below to simulate a three-phase grid-voltage sag to 0.5 p.u.
     # mdl.ac_source.e_g = lambda t: (1 - (t > 0.4) * 0.5 + (t > 0.6) * 0.5) * base.u
     # mdl.ac_source.e_g_neg = 0
 
-    # Uncomment the lines below to simulate active-power reference tracking
+    # Uncomment lines below to simulate active-power reference tracking
     # mdl.ac_source.e_g = base.u
     # mdl.ac_source.e_g_neg = 0
     # ctrl.set_power_ref(
@@ -146,11 +148,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-77
+.. GENERATED FROM PYTHON SOURCE LINES 74-79
 
 .. code-block:: Python
 
@@ -186,7 +188,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.457 seconds)
+   **Total running time of the script:** (0 minutes 4.958 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm_negseq.py:

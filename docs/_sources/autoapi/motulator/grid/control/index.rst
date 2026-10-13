@@ -46,8 +46,8 @@ Classes
    motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
    motulator.grid.control.PowerSynchronizationControllerCfg
-   motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController
-   motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg
+   motulator.grid.control.SequenceObserverBasedGridFormingController
+   motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg
 
 
 Package Contents
@@ -364,14 +364,14 @@ Package Contents
    signals, and reference signals.
 
    The inner controller gets the realized voltage of the ongoing sampling period for
-   discrete-time observers, while the feedback voltage `u_c` is the realized voltage
-   averaged over the previous and the ongoing sampling periods, which is used by the
-   control laws and the continuous-time observers. Before the modulation, the angle
-   of the voltage reference is advanced by `k_comp*T_s*w_c`, where `k_comp` is given
-   by the inner controller. The value 1.5 compensates for the computational delay of
-   one sampling period and the delay of half a sampling period caused by the
-   zero-order hold of the PWM [#Bae2003]_. The value 0 means that the angle is not
-   advanced, which is used if the controller takes the delays into account itself.
+   its observer, while the feedback voltage `u_c` for the control laws is the realized
+   voltage averaged over the previous and the ongoing sampling periods. Before the
+   modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
+   where `k_comp` is given by the inner controller. The value 1.5 compensates for the
+   computational delay of one sampling period and the delay of half a sampling period
+   caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
+   angle is not advanced, which is used if the controller takes the delays into account
+   itself.
 
    :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference
                       and a grid-following controller the reactive power reference.
@@ -646,8 +646,9 @@ Package Contents
    .. rubric:: Notes
 
    In this implementation, the control system operates in synchronous coordinates
-   rotating at the nominal grid angular frequency. For other implementation options,
-   see [#Nur2024]_.
+   rotating at the nominal grid angular frequency, and the disturbance observer is
+   designed directly in discrete time. For other implementation options, see
+   [#Nur2024]_.
 
    .. rubric:: References
 
@@ -787,7 +788,7 @@ Package Contents
    :type R_a: float | None, optional
    :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
    :type k_v: float | None, optional
-   :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
+   :param alpha_o: Observer bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_o: float, optional
    :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
    :type alpha_c: float, optional
@@ -1419,7 +1420,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: SequenceSeparatedObserverBasedGridFormingController(cfg)
+.. py:class:: SequenceObserverBasedGridFormingController(cfg)
 
    
    Sequence-separated disturbance-observer-based grid-forming controller.
@@ -1434,7 +1435,7 @@ Package Contents
    not exceed `i_max`.
 
    :param cfg: Grid-forming control configuration.
-   :type cfg: SequenceSeparatedObserverBasedGridFormingControllerCfg
+   :type cfg: SequenceObserverBasedGridFormingControllerCfg
 
    .. rubric:: Notes
 
@@ -1565,7 +1566,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SequenceSeparatedObserverBasedGridFormingControllerCfg
+.. py:class:: SequenceObserverBasedGridFormingControllerCfg
 
    
    Sequence-separated disturbance-observer-based grid-forming controller configuration.
@@ -1588,7 +1589,7 @@ Package Contents
    :type alpha_c: float, optional
    :param alpha_l: Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_l: float, optional
-   :param alpha_o: Observer gain (rad/s), defaults to 2*pi*50.
+   :param alpha_o: Observer bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_o: float, optional
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
                  `sqrt(2/3)*400`.

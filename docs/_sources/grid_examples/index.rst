@@ -106,7 +106,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. [#Har2020] Harnefors, Rahman, Hinkkanen, Routimo, "Reference-feedforward power-synchronization control," IEEE Trans. Power Electron., 2020, https://doi.org/10.1109/TPEL.2020.2970991
 
-.. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer, "IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
+.. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming converter control based on a disturbance observer," IEEE Trans. Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors, "Disturbance-observer-based grid-forming control for unbalanced grids," 2026, https://arxiv.org/abs/2608.11857
 
@@ -158,7 +158,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter, connected to a weak grid. The control method is designed to take into account negative sequence grid voltage. The positive-sequence converter output voltage and the positive-sequence active power are directly controlled. Grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter, connected to a weak grid. The control method is designed to take into account negative-sequence grid voltage. The positive-sequence converter output voltage and the positive-sequence active power are directly controlled. Grid synchronization is provided by the disturbance observer. A transparent current controller is included for current limitation.">
 
 .. only:: html
 

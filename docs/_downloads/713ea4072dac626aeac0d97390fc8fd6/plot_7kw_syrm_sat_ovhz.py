@@ -66,6 +66,6 @@ utils.plot(res, base)
 # %%
 # .. rubric:: References
 #
-# .. [#Hin2017] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi, “Sensorless
+# .. [#Hin2017] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi, "Sensorless
 #    self-commissioning of synchronous reluctance motors at standstill without rotor
-#    locking, ”IEEE Trans. Ind. Appl., 2017, https://doi.org/10.1109/TIA.2016.2644624
+#    locking," IEEE Trans. Ind. Appl., 2017, https://doi.org/10.1109/TIA.2016.2644624

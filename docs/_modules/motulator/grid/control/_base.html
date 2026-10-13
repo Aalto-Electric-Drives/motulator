@@ -549,14 +549,14 @@
 <span class="sd">    signals, and reference signals.</span>
 
 <span class="sd">    The inner controller gets the realized voltage of the ongoing sampling period for</span>
-<span class="sd">    discrete-time observers, while the feedback voltage `u_c` is the realized voltage</span>
-<span class="sd">    averaged over the previous and the ongoing sampling periods, which is used by the</span>
-<span class="sd">    control laws and the continuous-time observers. Before the modulation, the angle</span>
-<span class="sd">    of the voltage reference is advanced by `k_comp*T_s*w_c`, where `k_comp` is given</span>
-<span class="sd">    by the inner controller. The value 1.5 compensates for the computational delay of</span>
-<span class="sd">    one sampling period and the delay of half a sampling period caused by the</span>
-<span class="sd">    zero-order hold of the PWM [#Bae2003]_. The value 0 means that the angle is not</span>
-<span class="sd">    advanced, which is used if the controller takes the delays into account itself.</span>
+<span class="sd">    its observer, while the feedback voltage `u_c` for the control laws is the realized</span>
+<span class="sd">    voltage averaged over the previous and the ongoing sampling periods. Before the</span>
+<span class="sd">    modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,</span>
+<span class="sd">    where `k_comp` is given by the inner controller. The value 1.5 compensates for the</span>
+<span class="sd">    computational delay of one sampling period and the delay of half a sampling period</span>
+<span class="sd">    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the</span>
+<span class="sd">    angle is not advanced, which is used if the controller takes the delays into account</span>
+<span class="sd">    itself.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

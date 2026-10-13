@@ -579,14 +579,14 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControllerCfg"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.get_feedback()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.post_process()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.update"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.update"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -649,10 +649,10 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
 <td><p>Configuration for the reference-feedforward power-synchronization controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController" title="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingControllerCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller configuration.</p></td>
 </tr>
 </tbody>
@@ -851,14 +851,14 @@ PWM converter-inverter system,” IEEE Trans. Ind. Electron., 2001,
 generic class that can be used with different models, measurements, feedback
 signals, and reference signals.</p>
 <p>The inner controller gets the realized voltage of the ongoing sampling period for
-discrete-time observers, while the feedback voltage <cite>u_c</cite> is the realized voltage
-averaged over the previous and the ongoing sampling periods, which is used by the
-control laws and the continuous-time observers. Before the modulation, the angle
-of the voltage reference is advanced by <cite>k_comp*T_s*w_c</cite>, where <cite>k_comp</cite> is given
-by the inner controller. The value 1.5 compensates for the computational delay of
-one sampling period and the delay of half a sampling period caused by the
-zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the angle is not
-advanced, which is used if the controller takes the delays into account itself.</p>
+its observer, while the feedback voltage <cite>u_c</cite> for the control laws is the realized
+voltage averaged over the previous and the ongoing sampling periods. Before the
+modulation, the angle of the voltage reference is advanced by <cite>k_comp*T_s*w_c</cite>,
+where <cite>k_comp</cite> is given by the inner controller. The value 1.5 compensates for the
+computational delay of one sampling period and the delay of half a sampling period
+caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the
+angle is not advanced, which is used if the controller takes the delays into account
+itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1023,8 +1023,9 @@ limitation helps to maintain synchronism during grid-voltage sags in weak grids.
 </dl>
 <p class="rubric">Notes</p>
 <p>In this implementation, the control system operates in synchronous coordinates
-rotating at the nominal grid angular frequency. For other implementation options,
-see <a class="footnote-reference brackets" href="#nur2024" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+rotating at the nominal grid angular frequency, and the disturbance observer is
+designed directly in discrete time. For other implementation options, see
+<a class="footnote-reference brackets" href="#nur2024" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="nur2024" role="doc-footnote">
@@ -1121,7 +1122,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance estimate (Ω), defaults to 0.</p></li>
 <li><p><strong>R_a</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Active resistance (Ω), defaults to <cite>0.25*u_nom/i_max</cite>.</p></li>
 <li><p><strong>k_v</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Voltage control gain, defaults to <cite>alpha_o/w_nom</cite>.</p></li>
-<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer gain (rad/s), defaults to 2*pi*50.</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth (rad/s), defaults to 2*pi*50.</p></li>
 <li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Current control bandwidth (rad/s), defaults to 2*pi*400.</p></li>
 <li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid voltage (V), line-to-neutral peak value, defaults to
 <cite>sqrt(2/3)*400</cite>.</p></li>
@@ -1534,8 +1535,8 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceSeparatedObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer_negseq.html#SequenceSeparatedObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverBasedGridFormingController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
 <dd><p>Sequence-separated disturbance-observer-based grid-forming controller.</p>
 <p>This implements the grid-forming mode of the control method described in
 <a class="footnote-reference brackets" href="#maa2026b" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>, with transparent current control. The positive-sequence active power
@@ -1547,7 +1548,7 @@ the sequence current references are limited such that the peak phase current doe
 not exceed <cite>i_max</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg"><em>SequenceSeparatedObserverBasedGridFormingControllerCfg</em></a>) – Grid-forming control configuration.</p>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><em>SequenceObserverBasedGridFormingControllerCfg</em></a>) – Grid-forming control configuration.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -1568,15 +1569,15 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </aside>
 </aside>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_g_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_c_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer_negseq.html#SequenceSeparatedObserverBasedGridFormingController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.compute_output" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverBasedGridFormingController.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_g_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_c_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute references.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>SequenceObserverOutputs</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1586,8 +1587,8 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer_negseq.html#SequenceSeparatedObserverBasedGridFormingController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.get_feedback" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverBasedGridFormingController.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1597,14 +1598,14 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs">ObserverOutputs</a></p>
+<dd class="field-even"><p>SequenceObserverOutputs</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.post_process">
-<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer_negseq.html#SequenceSeparatedObserverBasedGridFormingController.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.post_process" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverBasedGridFormingController.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.post_process" title="Link to this definition">#</a></dt>
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1617,14 +1618,14 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer_negseq.html#SequenceSeparatedObserverBasedGridFormingController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.update" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverBasedGridFormingController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.update" title="Link to this definition">#</a></dt>
 <dd><p>Update states.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref</strong> (<em>SequenceReferences</em>)</p></li>
-<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>SequenceObserverOutputs</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1636,8 +1637,8 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceSeparatedObserverBasedGridFormingControllerCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer_negseq.html#SequenceSeparatedObserverBasedGridFormingControllerCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingControllerCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="Link to this definition">#</a></dt>
 <dd><p>Sequence-separated disturbance-observer-based grid-forming controller configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1651,7 +1652,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <li><p><strong>k_n</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Negative-sequence voltage gain, defaults to 2.</p></li>
 <li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Current control bandwidth (rad/s), defaults to 2*pi*300.</p></li>
 <li><p><strong>alpha_l</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.</p></li>
-<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer gain (rad/s), defaults to 2*pi*50.</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth (rad/s), defaults to 2*pi*50.</p></li>
 <li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid voltage (V), line-to-neutral peak value, defaults to
 <cite>sqrt(2/3)*400</cite>.</p></li>
 <li><p><strong>w_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</p></li>
@@ -1774,14 +1775,14 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControllerCfg"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.get_feedback()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.post_process()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingController.update"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingController.update()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.update"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.update()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceSeparatedObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">SequenceSeparatedObserverBasedGridFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></li>
 </ul>
 </li>
 </ul>

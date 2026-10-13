@@ -164,14 +164,14 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rubric:: References
 
-.. [#Hin2017] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi, “Sensorless
+.. [#Hin2017] Hinkkanen, Pescetto, Mölsä, Saarakkala, Pellegrino, Bojoi, "Sensorless
    self-commissioning of synchronous reluctance motors at standstill without rotor
-   locking, ”IEEE Trans. Ind. Appl., 2017, https://doi.org/10.1109/TIA.2016.2644624
+   locking," IEEE Trans. Ind. Appl., 2017, https://doi.org/10.1109/TIA.2016.2644624
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.025 seconds)
+   **Total running time of the script:** (0 minutes 11.453 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_7kw_syrm_sat_ovhz.py:
