@@ -1,4 +1,4 @@
-"""Disturbance-observer-based grid-forming control, with negative sequence."""
+"""Sequence-separated disturbance-observer-based grid-forming control."""
 
 from cmath import exp, phase
 from dataclasses import dataclass
@@ -9,60 +9,47 @@ import numpy as np
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
-from motulator.grid.control._common import References
+from motulator.grid.control._common import PowerReferenceLimiter, References
 
 
 # %%
+@dataclass
+class SequenceReferences(References):
+    """Reference signals, including the sequence components."""
+
+    u_cp: complex = 0j  # Positive-sequence converter-voltage reference
+    u_cn: complex = 0j  # Negative-sequence converter-voltage reference
+    i_cp: complex = 0j  # Positive-sequence converter-current reference
+    i_cn: complex = 0j  # Negative-sequence converter-current reference
+
+
 class CurrentReferenceLimiter:
-    """Current reference limiter."""
+    """
+    Limit the peak phase current of the sequence current references.
+
+    Both sequence components are scaled by the same factor, which preserves the
+    elliptical trajectory of the current vector.
+
+    Parameters
+    ----------
+    i_max : float
+        Maximum current (A), peak value.
+
+    """
 
     def __init__(self, i_max: float) -> None:
         self.i_max = i_max
 
     def __call__(
-        self, ref: "References", i_ref_p: complex, i_ref_n: complex
-    ) -> "References":
-        phi = phase(i_ref_p) + phase(i_ref_n)
-        x = max(cos(phi), cos(2 * pi / 3 + phi), cos(-2 * pi / 3 + phi))
-        i_x = sqrt(
-            (abs(i_ref_p)) ** 2
-            + (abs(i_ref_n)) ** 2
-            + 2 * x * abs(i_ref_p) * abs(i_ref_n)
-        )
-        gamma = self.i_max / max(self.i_max, i_x)
-        ref.i_cp = gamma * ref.i_cp
-        ref.i_cn = gamma * ref.i_cn
-
-        return ref
-
-
-class PowerReferenceLimiter:
-    """Power reference limiter."""
-
-    def __init__(self, alpha_l: float, i_d_max: float) -> None:
-        self.alpha_l = alpha_l
-        self.i_d_max = i_d_max
-        self.p_flt: float = 0.0
-
-    def __call__(self, p_g_ref: float) -> float:
-        p_max = np.sign(p_g_ref) * min(abs(p_g_ref), self.p_flt)
-        return p_max
-
-    def update(self, ref: "References", fbk: "ObserverOutputs") -> None:
-        # Transform to converter-output-voltage coordinates
-        T = np.exp(-1j * np.angle(fbk.v_c))
-        u_cp = T * ref.u_cp
-        i_cp = T * fbk.i_cp
-        i_cn = T * fbk.i_cn
-
-        if abs(ref.u_cp) > 0:
-            i_q = (u_cp * i_cp.conjugate()).imag / abs(u_cp)
-        else:
-            i_q = 0
-        i_ref = (self.i_d_max - abs(i_cn)) ** 2 - i_q**2
-        i_sat = min(max(i_ref, 0), self.i_d_max**2)
-        p_lim = 1.5 * sqrt(i_sat) * abs(u_cp)
-        self.p_flt += ref.T_s * self.alpha_l * (p_lim - self.p_flt)
+        self, i_cp: complex, i_cn: complex, theta_c: float
+    ) -> tuple[complex, complex]:
+        # Peak phase current, using the angles in stationary coordinates
+        phi = phase(i_cp) + phase(i_cn) + 2 * theta_c
+        x = max(cos(phi + 2 * pi * n / 3) for n in (-1, 0, 1))
+        abs_i_cp, abs_i_cn = abs(i_cp), abs(i_cn)
+        i_ph_max = sqrt(abs_i_cp**2 + abs_i_cn**2 + 2 * x * abs_i_cp * abs_i_cn)
+        gamma = self.i_max / max(self.i_max, i_ph_max)
+        return gamma * i_cp, gamma * i_cn
 
 
 # %%
@@ -73,17 +60,15 @@ class ObserverOutputs:
     i_c: complex = 0j
     i_cp: complex = 0j
     i_cn: complex = 0j
-    i_f: complex = 0j
-    u_c: complex = 0j
-    u_cp: complex = 0j
-    u_cn: complex = 0j
+    i_f: complex = 0j  # Filtered current for the sequence separation
+    u_c: complex = 0j  # Converter voltage (set by the control system)
+    u_c_zoh: complex = 0j  # Converter voltage of the ongoing sampling period
     v_c: complex = 0j
     v_cp: complex = 0j
     v_cn: complex = 0j
     u_gp: complex = 0j
     u_gn: complex = 0j
     p_g: float = 0.0
-    p_g_av: float = 0.0
     p_gp: float = 0.0
     p_gn: float = 0.0
     q_g: float = 0.0
@@ -92,53 +77,33 @@ class ObserverOutputs:
     u_dc: float = 0.0  # DC-bus voltage (set by the control system)
 
 
-def calculate_observer_gains(
-    alpha_o: float, p: tuple[complex, complex], T_s: float, w_g: float, L: float
-) -> tuple[complex, complex]:
-    """Calculate observer gains based on given continuous-time pole locations."""
-
-    # Calculate discrete-time poles from specified continuous-time ones
-    p_z1 = exp(p[0] * alpha_o * T_s)
-    p_z2 = exp(p[1] * alpha_o * T_s)
-    # Calculate observer gains using pole locations
-    k_o1 = -(L * w_g * exp(T_s * w_g * 3j) * (p_z1 - 1) * (p_z2 - 1) * 1j) / (
-        (exp(T_s * w_g * 1j) - 1) ** 2 * (exp(T_s * w_g * 1j) + 1)
-    )
-    k_o2 = (
-        L
-        * w_g
-        * (p_z1 * exp(T_s * w_g * 2j) - 1)
-        * (p_z2 * exp(T_s * w_g * 2j) - 1)
-        * 1j
-    ) / ((exp(T_s * w_g * 1j) - 1) ** 2 * (exp(T_s * w_g * 1j) + 1))
-
-    return (k_o1, k_o2)
-
-
 @dataclass
 class ObserverStates:
-    """State estimates."""
+    """States of the observer."""
 
     theta_c: float = 0.0
-    u_gp: complex = 0j
-    u_gn: complex = 0j
-    i_f: complex = 0j
-    # Current and voltages from the previous time step, required only for the
-    # discrete-time observer implementation
-    i_c_old: complex = 0j
-    u_gp_old: complex = 0j
-    u_gn_old: complex = 0j
-    u_c: complex = 0j
-    u_c_old: complex = 0j
+    u_gp: complex = 0j  # Predicted positive-sequence grid voltage
+    u_gn: complex = 0j  # Predicted negative-sequence grid voltage
+    i_c: complex = 0j  # Predicted converter current
+    i_f: complex = 0j  # Filtered current
 
 
 class Observer:
     """
-    Disturbance observer.
+    Disturbance observer for the grid-voltage sequence components.
 
-    This implements a disturbance observer, which estimates the positive- and negative-
-    sequence grid voltages. Direct discrete-time design is employed, based on the
-    zero-order-hold-equivalent system model.
+    This observer estimates the positive- and negative-sequence grid voltages. It is
+    designed directly in discrete time, using the hold-equivalent model in coordinates
+    rotating at the nominal grid angular frequency. At each sampling instant, the
+    estimates are corrected using the prediction error of the measured current, after
+    which the current and the estimates are predicted for the next sampling instant,
+    using the realized converter voltage of the ongoing sampling period.
+    The observer gains place the poles of the estimation-error dynamics at
+    `exp(p*alpha_o*T_s)`.
+
+    The converter current is separated into its quasi-static sequence components using
+    a complex first-order filter. Its discrete-time coefficients are selected such
+    that the separation is exact for both sequences in the periodic steady state.
 
     Parameters
     ----------
@@ -148,10 +113,10 @@ class Observer:
         Nominal grid angular frequency (rad/s).
     L : float
         Total inductance (H).
-    alpha_o : float, optional
-        Observer gain (rad/s), defaults to 2*pi*50.
+    alpha_o : float
+        Observer gain (rad/s).
     p : tuple[complex, complex]
-        Continuous-time observer poles (p.u.).
+        Continuous-time observer poles, normalized by `alpha_o`.
     T_s : float
         Sampling period (s).
 
@@ -168,74 +133,65 @@ class Observer:
     ) -> None:
         self.L: float = L
         self.w_g: float = w_nom
-        self.u_cp: complex = 0j
-        self.u_cn: complex = 0j
-        self.gamma_c = T_s * exp(-1j * w_nom * T_s) / L
-        self.gamma_gp = (exp(-1j * w_nom * T_s) - 1) / (1j * w_nom * L)
-        self.gamma_gn = (exp(-2j * w_nom * T_s) - exp(-1j * w_nom * T_s)) / (
-            1j * w_nom * L
+        # Coefficients of the hold-equivalent model
+        self.phi = exp(-1j * w_nom * T_s)
+        self.phi_n = self.phi**2  # State transition of the negative sequence
+        self.gamma_c = T_s * self.phi / L
+        self.gamma_p = (self.phi - 1) / (1j * w_nom * L)
+        self.gamma_n = self.phi * self.gamma_p
+        # Observer gains
+        z_1, z_2 = exp(p[0] * alpha_o * T_s), exp(p[1] * alpha_o * T_s)
+        self.k_p = (1 - z_1) * (1 - z_2) / ((1 - self.phi_n) * self.gamma_p)
+        self.k_n = (
+            (self.phi_n - z_1) * (self.phi_n - z_2) / ((self.phi_n - 1) * self.gamma_n)
         )
-        self.k_op, self.k_on = calculate_observer_gains(alpha_o, p, T_s, w_nom, L)
-        self.state = ObserverStates(u_gp=u_nom, u_gp_old=u_nom)
+        # Coefficients of the sequence-separation filter
+        self.a_f = 2j * self.phi_n / (1 + 1j - (1 - 1j) * self.phi_n)
+        self.b_f = (1 - self.a_f) / (1 + 1j)
+        self.state = ObserverStates(u_gp=u_nom)
 
-    def compute_output(
-        self, u_c_ab: complex, i_c_ab: complex, u_g_ab: complex
-    ) -> ObserverOutputs:
+    def compute_output(self, u_c_ab: complex, i_c_ab: complex) -> ObserverOutputs:
         """Compute the estimates."""
-        out = ObserverOutputs(theta_c=self.state.theta_c, i_f=self.state.i_f)
+        out = ObserverOutputs(theta_c=self.state.theta_c, w_c=self.w_g)
 
         # Transform the measured values into synchronous coordinates
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
-        out.u_c = exp(-1j * out.theta_c) * u_c_ab
+        out.u_c_zoh = exp(-1j * out.theta_c) * u_c_ab
 
-        # Extract the current and voltage sequence components
+        # Correct the predicted grid-voltage estimates
+        e_o = out.i_c - self.state.i_c
+        out.u_gp = self.state.u_gp + self.k_p * e_o
+        out.u_gn = self.state.u_gn + self.k_n * e_o
+
+        # Quasi-static sequence components of the current and the converter voltage
+        out.i_f = self.a_f * self.state.i_f + self.b_f * out.i_c
         out.i_cp = out.i_c / (1 + 1j) + 1j * out.i_f
         out.i_cn = out.i_c / (1 - 1j) - 1j * out.i_f
-        out.u_cp = self.u_cp
-        out.u_cn = self.u_cn
-
-        # Estimates for the quasi-static converter voltage and the grid voltage
-        out.u_gp = self.state.u_gp
-        out.u_gn = self.state.u_gn
         out.v_cp = out.u_gp + 1j * self.w_g * self.L * out.i_cp
         out.v_cn = out.u_gn - 1j * self.w_g * self.L * out.i_cn
         out.v_c = out.v_cp + out.v_cn
-        out.w_c = self.w_g
 
-        # Instantaneous active and reactive powers
+        # Instantaneous powers and the active powers of the sequences
         s_g = 1.5 * (out.u_gp + out.u_gn) * out.i_c.conjugate()
         out.p_g, out.q_g = s_g.real, s_g.imag
-
-        out.p_g_av = (
-            1.5
-            * (out.v_cp * out.i_cp.conjugate() + out.v_cn * out.i_cn.conjugate()).real
-        )
-        out.p_gp = 1.5 * (out.v_cp * out.i_cp.conjugate()).real
-        out.p_gn = 1.5 * (out.v_cn * out.i_cn.conjugate()).real
+        out.p_gp = 1.5 * (out.u_gp * out.i_cp.conjugate()).real
+        out.p_gn = 1.5 * (out.u_gn * out.i_cn.conjugate()).real
 
         return out
 
-    def update(self, ref: "References", out: ObserverOutputs) -> None:
+    def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Update the states."""
-        e_o = (
-            out.i_c
-            - exp(-1j * self.w_g * ref.T_s) * self.state.i_c_old
-            - self.gamma_c * self.state.u_c_old
-            - self.gamma_gp * self.state.u_gp_old
-            - self.gamma_gn * self.state.u_gn_old
+        # Predict the current and the grid-voltage sequences
+        self.state.i_c = (
+            self.phi * out.i_c
+            + self.gamma_c * out.u_c_zoh
+            + self.gamma_p * out.u_gp
+            + self.gamma_n * out.u_gn
         )
-        self.state.u_gp = out.u_gp + self.k_op * e_o
-        self.state.u_gn = exp(-2j * self.w_g * ref.T_s) * out.u_gn + self.k_on * e_o
-        self.state.i_f += ref.T_s * self.w_g * (out.i_c - out.i_f - 1j * out.i_f)
-        self.state.theta_c += ref.T_s * self.w_g
-        self.state.theta_c = wrap(self.state.theta_c)
-
-        # Save feedbacks for next time step
-        self.state.i_c_old = out.i_c
-        self.state.u_c_old = self.state.u_c
-        self.state.u_c = exp(-1j * self.w_g * ref.T_s) * ref.u_c
-        self.state.u_gp_old = out.u_gp
-        self.state.u_gn_old = out.u_gn
+        self.state.u_gp = out.u_gp
+        self.state.u_gn = self.phi_n * out.u_gn
+        self.state.i_f = out.i_f
+        self.state.theta_c = wrap(self.state.theta_c + T_s * self.w_g)
 
 
 # %%
@@ -272,9 +228,9 @@ class SequenceSeparatedObserverBasedGridFormingControllerCfg:
     w_nom : float, optional
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     p : tuple[complex, complex], optional
-        Continuous-time observer poles (p.u.). The continuous-time poles are mapped to
-        discrete-time and are used for calculating the observer gains. Defaults to
-        (-1 - 1j, -0.58 - 1j).
+        Continuous-time observer poles, normalized by `alpha_o`, defaults to
+        (-1 - 1j, -0.58 - 1j). The poles of the discrete-time observer are
+        `exp(p*alpha_o*T_s)`.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 
@@ -300,18 +256,40 @@ class SequenceSeparatedObserverBasedGridFormingController:
     """
     Sequence-separated disturbance-observer-based grid-forming controller.
 
-    This implements the disturbance-observer-based control method described in
-    [#Maa2026]_. The control method is designed to take into account negative sequence
-    grid voltage.
+    This implements the grid-forming mode of the control method described in
+    [#Maa2026b]_, with transparent current control. The positive-sequence active power
+    and converter-voltage magnitude are controlled, while the negative-sequence
+    converter voltage is suppressed. The disturbance observer estimates the positive-
+    and negative-sequence grid voltages. The active-power reference is limited to a
+    realizable level, prioritizing the reactive and negative-sequence currents, and
+    the sequence current references are limited such that the peak phase current does
+    not exceed `i_max`.
 
     Parameters
     ----------
-    cfg : ObserverBasedGridFormingControllerWithNegativeSequenceCfg
+    cfg : SequenceSeparatedObserverBasedGridFormingControllerCfg
         Grid-forming control configuration.
+
+    Notes
+    -----
+    The control system operates in synchronous coordinates rotating at the nominal grid
+    angular frequency. The controller compensates for the computational delay of one
+    sampling period and the zero-order-hold delay of half a sampling period itself:
+    the angle of the positive-sequence voltage reference is advanced by
+    `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite
+    direction, is retarded by the same angle. Therefore, the control system does not
+    advance the angle of the voltage reference (`k_comp = 0`).
+
+    References
+    ----------
+    .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
+       "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
+       https://arxiv.org/abs/2608.11857
 
     """
 
     grid_forming = True
+    k_comp = 0.0
 
     def __init__(
         self, cfg: SequenceSeparatedObserverBasedGridFormingControllerCfg
@@ -324,7 +302,7 @@ class SequenceSeparatedObserverBasedGridFormingController:
             p=cfg.p,
             T_s=cfg.T_s,
         )
-        self.power_limiter = PowerReferenceLimiter(cfg.alpha_l, cfg.i_d_max)
+        self.power_limiter = PowerReferenceLimiter(cfg.i_d_max, cfg.alpha_l, cfg.u_nom)
         self.current_limiter = CurrentReferenceLimiter(cfg.i_max)
         self.R = cfg.R
         self.R_a = 0.2 * cfg.u_nom / cfg.i_max if cfg.R_a is None else cfg.R_a
@@ -332,75 +310,67 @@ class SequenceSeparatedObserverBasedGridFormingController:
         self.k_n = cfg.k_n
         self.k_c = cfg.alpha_c * cfg.L  # Current control gain
         self.T_s = cfg.T_s
+        # Angle advance of the positive sequence for the delay compensation
+        self.exp_j_delay = exp(1.5j * cfg.w_nom * cfg.T_s)
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
-        fbk = self.observer.compute_output(u_c_ab, meas.i_c_ab, meas.u_g_ab)
-        return fbk
+        return self.observer.compute_output(u_c_ab, meas.i_c_ab)
 
     def compute_output(
         self, p_g_ref: float, v_c_ref: float, fbk: ObserverOutputs
-    ) -> References:
+    ) -> SequenceReferences:
         """Compute references."""
         # Limit the active-power reference
         p_g_ref = self.power_limiter(p_g_ref)
-        ref = References(T_s=self.T_s, p_g=p_g_ref, v_c=v_c_ref)
+        ref = SequenceReferences(T_s=self.T_s, p_g=p_g_ref, v_c=v_c_ref)
 
         # Complex gains for grid-forming mode
-        exp_j_theta = fbk.v_cp / abs(fbk.v_cp)
+        exp_j_theta = exp(1j * phase(fbk.v_cp))
         k_p = exp_j_theta * (1 + 1j) * self.R_a / (1.5 * ref.v_c)
         k_v = exp_j_theta * self.k_v
-        k_n = 1j * self.k_n
 
         # Feedback correction for grid-forming mode
         p_loss = 1.5 * self.R * abs(fbk.i_cp) ** 2
         e_cp = k_p * (ref.p_g + p_loss - fbk.p_gp) + k_v * (ref.v_c - abs(fbk.v_cp))
-        e_cn = -k_n * fbk.v_cn
+        e_cn = -1j * self.k_n * fbk.v_cn
 
         # Transparent current limitation
-        ref.i_cp = fbk.i_cp + e_cp / self.k_c
-        ref.i_cn = fbk.i_cn + e_cn / self.k_c
-        i_cp_ab_ref = exp(1j * fbk.theta_c) * ref.i_cp
-        i_cn_ab_ref = exp(1j * fbk.theta_c) * ref.i_cn
-        ref = self.current_limiter(ref, i_cp_ab_ref, i_cn_ab_ref)
+        ref.i_cp, ref.i_cn = self.current_limiter(
+            fbk.i_cp + e_cp / self.k_c, fbk.i_cn + e_cn / self.k_c, fbk.theta_c
+        )
         ref.i_c = ref.i_cp + ref.i_cn
 
-        # Voltage reference
+        # Voltage references, compensating for the delays of both sequences
         ref.u_cp = fbk.v_cp + self.k_c * (ref.i_cp - fbk.i_cp)
         ref.u_cn = fbk.v_cn + self.k_c * (ref.i_cn - fbk.i_cn)
-        self.observer.u_cp = ref.u_cp
-        self.observer.u_cn = ref.u_cn
-
-        # Discrete-time delay compensation
-        ref.u_c = (
-            exp(1.5j * self.observer.w_g * ref.T_s) * ref.u_cp
-            + exp(-1.5j * self.observer.w_g * ref.T_s) * ref.u_cn
-        )
+        ref.u_c = self.exp_j_delay * ref.u_cp + self.exp_j_delay.conjugate() * ref.u_cn
 
         return ref
 
-    def update(self, ref: References, fbk: ObserverOutputs) -> None:
+    def update(self, ref: SequenceReferences, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.observer.update(ref, fbk)
-        self.power_limiter.update(ref, fbk)
+        self.observer.update(ref.T_s, fbk)
+        self.power_limiter.update(ref.T_s, ref.u_cp, fbk.i_cp, fbk.i_cn)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
-        # Transform the complex signals to the coordinates aligned with v_c
-        T = np.exp(-1j * np.angle(ts.fbk.v_c))
-        ts.fbk.u_c = T * ts.fbk.u_c
+        # Transform the complex signals to the coordinates aligned with v_cp
+        T = np.exp(-1j * np.angle(ts.fbk.v_cp))
         ts.ref.u_c = T * ts.ref.u_c
         ts.ref.u_cp = T * ts.ref.u_cp
         ts.ref.u_cn = T * ts.ref.u_cn
-        ts.fbk.v_c = T * ts.fbk.v_c
-        ts.fbk.v_cp = T * ts.fbk.v_cp
-        ts.fbk.v_cn = T * ts.fbk.v_cn
+        ts.ref.i_c = T * ts.ref.i_c
+        ts.ref.i_cp = T * ts.ref.i_cp
+        ts.ref.i_cn = T * ts.ref.i_cn
+        ts.fbk.u_c = T * ts.fbk.u_c
+        ts.fbk.u_c_zoh = T * ts.fbk.u_c_zoh
         ts.fbk.i_c = T * ts.fbk.i_c
         ts.fbk.i_cp = T * ts.fbk.i_cp
         ts.fbk.i_cn = T * ts.fbk.i_cn
         ts.fbk.i_f = T * ts.fbk.i_f
-        ts.ref.i_c = T * ts.ref.i_c
-        ts.ref.i_cp = T * ts.ref.i_cp
-        ts.ref.i_cn = T * ts.ref.i_cn
+        ts.fbk.v_c = T * ts.fbk.v_c
+        ts.fbk.v_cp = T * ts.fbk.v_cp
+        ts.fbk.v_cn = T * ts.fbk.v_cn
         ts.fbk.u_gp = T * ts.fbk.u_gp
         ts.fbk.u_gn = T * ts.fbk.u_gn

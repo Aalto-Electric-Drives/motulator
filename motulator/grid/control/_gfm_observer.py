@@ -2,14 +2,18 @@
 
 from cmath import exp, phase
 from dataclasses import dataclass
-from math import copysign, inf, pi, sqrt
+from math import pi, sqrt
 
 import numpy as np
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
-from motulator.grid.control._common import CurrentLimiter, References
+from motulator.grid.control._common import (
+    CurrentLimiter,
+    PowerReferenceLimiter,
+    References,
+)
 
 
 # %%
@@ -190,10 +194,11 @@ class ObserverBasedGridFormingController:
         self.k_v = cfg.alpha_o / cfg.w_nom if cfg.k_v is None else cfg.k_v
         self.k_c = cfg.alpha_c * cfg.L  # Current control gain
         self.T_s: float = cfg.T_s
-        # Active-power reference limitation
-        self.i_d_max = cfg.i_d_max
-        self.alpha_l = cfg.alpha_l
-        self.p_max = inf if cfg.i_d_max is None else 1.5 * cfg.u_nom * cfg.i_d_max
+        self.power_limiter = (
+            None
+            if cfg.i_d_max is None
+            else PowerReferenceLimiter(cfg.i_d_max, cfg.alpha_l, cfg.u_nom)
+        )
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> ObserverOutputs:
         """Get the feedback signals."""
@@ -204,7 +209,8 @@ class ObserverBasedGridFormingController:
     ) -> References:
         """Compute references."""
         # Limit the active-power reference
-        p_g_ref = copysign(min(abs(p_g_ref), self.p_max), p_g_ref)
+        if self.power_limiter is not None:
+            p_g_ref = self.power_limiter(p_g_ref)
         ref = References(T_s=self.T_s, p_g=p_g_ref, v_c=v_c_ref)
 
         # Complex gains for grid-forming mode
@@ -227,13 +233,8 @@ class ObserverBasedGridFormingController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        if self.i_d_max is not None:
-            # Maximum active power, prioritizing the reactive current
-            abs_u_c = max(abs(ref.u_c), 1e-6)
-            i_q = (ref.u_c * fbk.i_c.conjugate()).imag / abs_u_c
-            i_d_lim_sqr = min(max(self.i_d_max**2 - i_q**2, 0.0), self.i_d_max**2)
-            p_max = 1.5 * abs_u_c * sqrt(i_d_lim_sqr)
-            self.p_max += ref.T_s * self.alpha_l * (p_max - self.p_max)
+        if self.power_limiter is not None:
+            self.power_limiter.update(ref.T_s, ref.u_c, fbk.i_c)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

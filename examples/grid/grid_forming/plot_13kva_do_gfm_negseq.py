@@ -14,7 +14,6 @@ limitation.
 # %%
 from math import pi
 
-from motulator.common.control._pwm import PWM
 from motulator.grid import control, model, utils
 
 # %%
@@ -24,10 +23,11 @@ nom = utils.NominalValues(U=400, I=18, f=50, P=12.5e3)
 base = utils.BaseValues.from_nominal(nom)
 
 # %%
-# %%
-# Configure the system model. An unbalanced fault is simulated, where the phase-a
+# Configure the system model. An unbalanced fault is simulated, where the phase-a grid
 # voltage drops to 0.5 p.u. at 0.4 s, rises to 0.75 p.u. at 0.5 s, and finally rises to
-# 1 p.u. at 0.6 s.
+# 1 p.u. at 0.6 s. The zero-sequence component of the fault is omitted, since it does
+# not affect the three-wire system. Therefore, the phase-a voltage of the model drops
+# to 2/3 p.u. and then rises to 5/6 p.u.
 
 ac_filter = model.LFilter(L_f=0.15 * base.L, L_g=0.62 * base.L)
 ac_source = model.ThreePhaseSource(
@@ -50,7 +50,6 @@ cfg = control.SequenceSeparatedObserverBasedGridFormingControllerCfg(
 )
 inner_ctrl = control.SequenceSeparatedObserverBasedGridFormingController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)
-ctrl.pwm = PWM(k_comp=0)
 
 # %%
 # Set the references for converter output voltage magnitude and active power.
