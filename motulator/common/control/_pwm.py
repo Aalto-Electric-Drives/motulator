@@ -22,9 +22,10 @@ class PWM:
     Duty ratios and realized voltage for three-phase space-vector PWM.
 
     This computes the duty ratios corresponding to standard space-vector PWM and
-    overmodulation [#Hav1999]_. The realized voltage is computed from the duty ratios
-    and the measured DC-bus voltage. The digital delay effects are taken into account
-    in the realized voltage [#Bae2003]_.
+    overmodulation [#Hav1999]_. The realized voltage is reconstructed from the duty
+    ratios and the measured DC-bus voltage, taking into account the computational delay
+    of one sampling period. The angle of the voltage reference is not advanced here:
+    the control systems compensate for the delays, if needed by the controller.
 
     Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
     dead time and the voltage drops of the power devices) is modeled as a function of
@@ -50,10 +51,6 @@ class PWM:
 
     Parameters
     ----------
-    k_comp : float, optional
-        Compensation factor for the angular delay effect on the voltage reference,
-        defaults to 1.5. Use 0 if the controller compensates for the delays itself,
-        e.g., in direct discrete-time designs.
     overmodulation : Literal["MPE", "MME", "six_step"], optional
         Overmodulation method, defaults to "MPE". Valid options are:
         - "MPE": minimum phase error
@@ -83,10 +80,6 @@ class PWM:
        triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
        https://doi.org/10.1109/28.777199
 
-    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-       2003, https://doi.org/10.1109/TIA.2003.810660
-
     .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
        minimum pulse-width limitations in two-level PWM voltage source inverters,"
        Proc. IEEE IAS Annu. Meeting, 2006, https://doi.org/10.1109/IAS.2006.256630
@@ -95,7 +88,6 @@ class PWM:
 
     def __init__(
         self,
-        k_comp: float = 1.5,
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
         d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
         feedforward: bool = True,
@@ -106,7 +98,6 @@ class PWM:
             raise ValueError("d_min must be in the range [0, 0.5)")
         if overmodulation not in ("MPE", "MME", "six_step"):
             raise ValueError(f"Invalid overmodulation method: {overmodulation}")
-        self.k_comp = k_comp
         self.k_pred = k_pred
         self.overmodulation = overmodulation
         self.d_err = d_err
@@ -222,7 +213,8 @@ class PWM:
         u_dc : float
             DC-bus voltage (V).
         w : float
-            Angular speed of synchronous coordinates (rad/s).
+            Angular speed of the synchronous coordinates (rad/s), used for predicting
+            the currents in the feedforward compensation of `d_err`.
 
         Returns
         -------
@@ -230,15 +222,10 @@ class PWM:
             Duty ratios for the next sampling period.
         u_c_ab : complex
             Voltage (V) in stationary coordinates corresponding to the duty ratios
-            `d_abc`, i.e., the limited voltage reference with the delay-compensating
-            angle advance and the duty-ratio error compensation (if used) included.
+            `d_abc`, i.e., the limited voltage reference with the duty-ratio error
+            compensation (if used) included.
 
         """
-        # Advance the angle due to the computational delay (N*T_s) and the ZOH (PWM)
-        # delay (0.5*T_s), typically 1.5*T_s*w
-        theta_comp = self.k_comp * T_s * w
-        u_c_ref_ab = exp(1j * theta_comp) * u_c_ref_ab
-
         # Modify angle in the overmodulation region
         if self.overmodulation == "six_step":
             u_c_ref_ab = self.six_step_overmodulation(u_c_ref_ab, u_dc)
@@ -326,9 +313,11 @@ class PWM:
 
         This method is to be called at the sampling instant before the next duty ratios
         are computed, and a computational delay of one sampling period is assumed. The
-        voltage is computed from the duty ratios of the previous and the ongoing
-        sampling periods and the measured DC-bus voltage. The measured currents are also
-        stored for the feedforward compensation of the next duty ratios.
+        voltage is reconstructed from the duty ratios of the previous and the ongoing
+        sampling periods and the measured DC-bus voltage, i.e., the variations of the
+        DC-bus voltage and of the currents within the periods are not known. The
+        measured currents are also stored for the feedforward compensation of the next
+        duty ratios.
 
         Parameters
         ----------

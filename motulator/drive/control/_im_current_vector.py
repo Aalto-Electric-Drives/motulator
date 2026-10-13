@@ -6,7 +6,7 @@ from copy import copy
 from dataclasses import dataclass
 from math import pi, sqrt
 
-from motulator.common.control import PWM, ComplexPIController, DiscreteComplexController
+from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import clip
 from motulator.drive.control._common import References
@@ -58,8 +58,8 @@ class DiscreteCurrentController(DiscreteComplexController):
 
     The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
     resistive voltage drop and the back-emf are disturbances, which the integral action
-    compensates for. The PWM must be configured with `k_comp=0`, which is the default
-    when the controller is selected by `discrete=True`.
+    compensates for. Since the design includes the delays, the angle of the voltage
+    reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
 
     Parameters
     ----------
@@ -259,9 +259,7 @@ class CurrentVectorControllerCfg:
         Sampling period (s), defaults to 125e-6.
     discrete : bool, optional
         If True, the direct discrete-time current controller is used instead of the
-        continuous-time design, defaults to False. The default PWM of the controller
-        then has `k_comp=0`, and a PWM given to the control system must be configured
-        likewise.
+        continuous-time design, defaults to False.
 
     """
 
@@ -312,12 +310,9 @@ class CurrentVectorController:
         self.observer = create_speed_flux_observer(
             par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
         )
-        self.T_s = cfg.T_s
-
-    def default_pwm(self) -> PWM:
-        """Get the default pulse-width modulator."""
         # The discrete-time current controller compensates for the delays itself
-        return PWM(k_comp=0) if self.cfg.discrete else PWM()
+        self.k_comp = 0.0 if cfg.discrete else 1.5
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self,

@@ -26,7 +26,7 @@ class PLLOutputs:
     """Feedback signals for the control system."""
 
     i_c: complex = 0j
-    u_c: complex = 0j
+    u_c: complex = 0j  # Converter voltage (set by the control system)
     u_g: float = 0.0  # Filtered
     u_g_meas: complex = 0j  # Measured
     theta_c: float = 0.0
@@ -61,15 +61,12 @@ class PLL:
         self.k_i = alpha_pll**2
         self.state = PLLStates(w_g=w_nom, u_g=u_nom)
 
-    def compute_output(
-        self, u_c_ab: complex, i_c_ab: complex, u_g_meas_ab: complex
-    ) -> PLLOutputs:
+    def compute_output(self, i_c_ab: complex, u_g_meas_ab: complex) -> PLLOutputs:
         """Output estimates and coordinate transformed quantities."""
         out = PLLOutputs(theta_c=self.state.theta_c, w_g=self.state.w_g)
 
         # Coordinate transformations
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
-        out.u_c = exp(-1j * out.theta_c) * u_c_ab
         out.u_g_meas = exp(-1j * out.theta_c) * u_g_meas_ab
         # Filtered voltage magnitude
         out.u_g = self.state.u_g
@@ -172,6 +169,7 @@ class CurrentVectorController:
     """
 
     grid_forming = False
+    k_comp = 1.5
 
     def __init__(self, cfg: CurrentVectorControllerCfg) -> None:
         self.cfg = cfg
@@ -181,8 +179,7 @@ class CurrentVectorController:
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> PLLOutputs:
         """Get feedback signals."""
-        fbk = self.pll.compute_output(u_c_ab, meas.i_c_ab, meas.u_g_ab)
-        return fbk
+        return self.pll.compute_output(meas.i_c_ab, meas.u_g_ab)
 
     def compute_output(
         self, p_g_ref: float, q_g_ref: float, fbk: PLLOutputs

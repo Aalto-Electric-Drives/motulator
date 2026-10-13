@@ -112,9 +112,8 @@ def test_realized_voltage_follows_dc_bus(average: bool) -> None:
     assert realized[-1] == pytest.approx(2 * (50 + 80j))
 
 
-@pytest.mark.parametrize("k_comp", [0, 1.5])
-def test_feedforward_current_prediction(k_comp: float) -> None:
-    """The currents of the feedforward are predicted independently of k_comp."""
+def test_feedforward_current_prediction() -> None:
+    """The currents of the feedforward are predicted to the middle of the period."""
     T_s, w, i_c_ab = 1e-4, 2 * np.pi * 50, 4 + 1j
     currents = []
 
@@ -122,7 +121,7 @@ def test_feedforward_current_prediction(k_comp: float) -> None:
         currents.append(i_abc)
         return np.zeros(3)
 
-    pwm = PWM(k_comp=k_comp, d_err=d_err)
+    pwm = PWM(d_err=d_err)
     pwm.get_realized_voltage(i_c_ab, 540)
     pwm(T_s, 100, 540, w)
     expected = complex2abc(np.exp(1.5j * w * T_s) * i_c_ab)
