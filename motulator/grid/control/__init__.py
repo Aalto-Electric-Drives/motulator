@@ -10,6 +10,11 @@ from motulator.grid.control._gfl_current_vector import (
     CurrentVectorControllerCfg,
     PLLOutputs,
 )
+from motulator.grid.control._gfm_dual_voltage import (
+    DualVoltageFormingController,
+    DualVoltageFormingControllerCfg,
+    DualVoltageFormingOutputs,
+)
 from motulator.grid.control._gfm_observer import (
     ObserverBasedGridFormingController,
     ObserverBasedGridFormingControllerCfg,
@@ -31,6 +36,9 @@ __all__ = [
     "CurrentVectorController",
     "CurrentVectorControllerCfg",
     "DCBusVoltageController",
+    "DualVoltageFormingController",
+    "DualVoltageFormingControllerCfg",
+    "DualVoltageFormingOutputs",
     "GridConverterControlSystem",
     "ObserverBasedGridFormingController",
     "ObserverBasedGridFormingControllerCfg",

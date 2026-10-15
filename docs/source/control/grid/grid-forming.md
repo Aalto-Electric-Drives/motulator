@@ -151,3 +151,26 @@ p_\mathrm{max} &= \frac{\alpha_\mathrm{l}}{s + \alpha_\mathrm{l}} \frac{3}{2} |\
 ```
 
 where $i_\mathrm{d,max}$ is the maximum active current and $\alpha_\mathrm{l}$ is the power-limitation bandwidth. The limited active-power reference is $\bar p_\mathrm{g}^\mathrm{ref} = \mathrm{sign}(\pgref) \min(|\pgref|, p_\mathrm{max})$. The maximum active current should be chosen somewhat below the current limit $i_\mathrm{max}$, e.g., $i_\mathrm{d,max} = 1.1$ p.u. when $i_\mathrm{max} = 1.3$ p.u. {cite}`Maa2026`. This limitation is enabled in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class by setting the parameter `i_d_max`. Its effect is demonstrated in the example {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
+
+## Dual-Voltage-Forming Control
+
+The disturbance-observer-based control can be extended to regulate the DC-bus voltage directly, without a cascaded DC-bus voltage controller {cite}`Mou2025`. In addition to the quasi-static converter voltage $\hatvc$, the disturbance power $p_\mathrm{dis} = p_\mathrm{ext} - \pg - (3/2)R|\ic|^2$ is estimated, where $p_\mathrm{ext}$ is the external power fed to the DC bus and the last term is the resistive losses (omitted in {cite}`Mou2025`). The estimate is obtained from the energy balance of the DC-bus capacitor and the inductor,
+
+```{math}
+---
+label: disturbance_power_observer
+---
+\hat p_\mathrm{dis} = x + \alpha_\mathrm{o,dc}\left(\hatWdc + \frac{3}{4}\hat L |\ic|^2\right) \qquad
+\frac{\D x}{\D t} = -\frac{3}{2\hat L}\RE\{\hatug \boldsymbol{e}_\mathrm{c}^*\} - \alpha_\mathrm{o,dc}\hat p_\mathrm{dis}
+```
+
+where $x$ is an auxiliary state, $\alpha_\mathrm{o,dc}$ is the observer bandwidth, $\hatWdc = \hatCdc\udc^2/2$ is the DC-bus energy, and $\boldsymbol{e}_\mathrm{c} = \uc - \hatvc$ is the realized feedback correction, computed from the realized converter voltage $\uc$ of the ongoing sampling period (averaged over the period in the observer coordinates). The feedback correction in the dual-voltage-forming mode is
+
+```{math}
+---
+label: control_law_dvf
+---
+\boldsymbol{e}_\mathrm{c} = \boldsymbol{k}_\mathrm{d}\hat p_\mathrm{dis} - \boldsymbol{k}_\mathrm{w}\left(\Wdcref - \hatWdc\right) + \boldsymbol{k}_\mathrm{v}\left(v_\mathrm{c}^\mathrm{ref} - \hat v_\mathrm{c}\right)
+```
+
+where the complex gains $\boldsymbol{k}_\mathrm{d} = k_\mathrm{d}\hatvc/\hat v_\mathrm{c}$, $\boldsymbol{k}_\mathrm{w} = k_\mathrm{w}\hatvc/\hat v_\mathrm{c}$, and $\boldsymbol{k}_\mathrm{v} = (1 - \mathrm{j}k_\mathrm{v})\hatvc/\hat v_\mathrm{c}$ are aligned with the quasi-static converter voltage. The approximate closed-loop bandwidth of the DC-bus energy is $\alpha_\mathrm{dc} = k_\mathrm{w}/k_\mathrm{d}$, and the DC-bus power gain $k_\mathrm{d} = 1$ p.u. can be used. The control law {eq}`control_law_dvf` equals the grid-forming mode with the power control gain $R_\mathrm{a}/(3 v_\mathrm{c}^\mathrm{ref}/2) = k_\mathrm{d}$ and the active-power reference $\pgref = \hat p_\mathrm{dis} + \hatpg - \alpha_\mathrm{dc}(\Wdcref - \hatWdc)$, where $\hat p_\mathrm{dis} + \hatpg$ is the estimated external power excluding the resistive losses: the disturbance observer provides the feedforward of the external power and the integral action. Since the active power is not controlled in a cascade, the DC-bus voltage control does not depend on the power-control dynamics, which vary with the grid strength. This method is implemented in the {class}`motulator.grid.control.DualVoltageFormingController` class and demonstrated in {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc`, where the external power is fed by a motor drive.

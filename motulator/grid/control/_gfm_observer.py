@@ -210,6 +210,7 @@ class ObserverBasedGridFormingController:
     """
 
     grid_forming = True
+    dc_bus_forming = False
     k_comp = 1.5
 
     def __init__(self, cfg: ObserverBasedGridFormingControllerCfg) -> None:
@@ -270,12 +271,16 @@ class ObserverBasedGridFormingController:
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
-        # Transform the complex signals to the coordinates aligned with v_c
-        T = np.exp(-1j * np.angle(ts.fbk.v_c))
-        ts.ref.u_c = T * ts.ref.u_c
-        ts.ref.i_c = T * ts.ref.i_c
-        ts.fbk.u_c = T * ts.fbk.u_c
-        ts.fbk.u_c_zoh = T * ts.fbk.u_c_zoh
-        ts.fbk.i_c = T * ts.fbk.i_c
-        ts.fbk.u_g = T * ts.fbk.u_g
-        ts.fbk.v_c = T * ts.fbk.v_c
+        transform_to_v_c_coordinates(ts)
+
+
+def transform_to_v_c_coordinates(ts: TimeSeries) -> None:
+    """Transform the complex signals to the coordinates aligned with `v_c`."""
+    T = np.exp(-1j * np.angle(ts.fbk.v_c))
+    ts.ref.u_c = T * ts.ref.u_c
+    ts.ref.i_c = T * ts.ref.i_c
+    ts.fbk.u_c = T * ts.fbk.u_c
+    ts.fbk.u_c_zoh = T * ts.fbk.u_c_zoh
+    ts.fbk.i_c = T * ts.fbk.i_c
+    ts.fbk.u_g = T * ts.fbk.u_g
+    ts.fbk.v_c = T * ts.fbk.v_c

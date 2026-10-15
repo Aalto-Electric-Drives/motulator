@@ -76,6 +76,7 @@ class PowerSynchronizationController:
     """
 
     grid_forming = True
+    dc_bus_forming = False
     k_comp = 1.5
 
     def __init__(self, cfg: PowerSynchronizationControllerCfg) -> None:

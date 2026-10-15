@@ -48,14 +48,23 @@ class InnerController[Ref: References, Fbk](Protocol):
     # True: the controller takes the AC voltage reference (grid forming). False: it
     # takes the reactive power reference (grid following).
     grid_forming: bool
+    # True: the controller takes the DC-bus voltage reference. False: it takes the
+    # active power reference.
+    dc_bus_forming: bool
     k_comp: float  # Angle-advance factor, see GridConverterControlSystem
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals, `u_c_ab` being the voltage of the ongoing period."""
         ...
 
-    def compute_output(self, p_g_ref: float, ac_ref: float, fbk: Fbk, /) -> Ref:
-        """Compute control output, `ac_ref` being the AC voltage or reactive power."""
+    def compute_output(self, dc_ref: float, ac_ref: float, fbk: Fbk, /) -> Ref:
+        """
+        Compute control output.
+
+        The reference `dc_ref` is the active power or the DC-bus voltage, and `ac_ref`
+        is the AC voltage or the reactive power, depending on the controller.
+
+        """
         ...
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
@@ -89,10 +98,13 @@ class GridConverterControlSystem(ControlSystem):
     ----------
     inner_ctrl : InnerController
         Inner controller. A grid-forming controller takes the AC voltage reference
-        and a grid-following controller the reactive power reference.
+        and a grid-following controller the reactive power reference. A
+        DC-bus-forming controller takes the DC-bus voltage reference instead of the
+        active power reference.
     dc_bus_voltage_ctrl : DCBusVoltageController, optional
         DC-bus voltage controller, which gives the active power reference. If not
-        given, the active power reference is set externally.
+        given, the active power reference is set externally, unless the inner
+        controller is DC-bus forming.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
 
@@ -111,6 +123,8 @@ class GridConverterControlSystem(ControlSystem):
         pwm: PWM | None = None,
     ) -> None:
         super().__init__()
+        if inner_ctrl.dc_bus_forming and dc_bus_voltage_ctrl is not None:
+            raise ValueError("The inner controller controls the DC-bus voltage")
         self.pwm = pwm if pwm is not None else PWM()
         self.inner_ctrl = inner_ctrl
         self.k_comp = inner_ctrl.k_comp
@@ -129,6 +143,8 @@ class GridConverterControlSystem(ControlSystem):
         """
         if self.dc_bus_voltage_ctrl is not None:
             raise ValueError("The DC-bus voltage controller gives the power reference")
+        if self.inner_ctrl.dc_bus_forming:
+            raise ValueError("DC-bus-forming control takes the DC-bus voltage ref")
         self.ext_ref.p_g = ref_fcn
 
     def set_reactive_power_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
@@ -171,7 +187,7 @@ class GridConverterControlSystem(ControlSystem):
             DC-bus voltage reference (V), constant or a function of time.
 
         """
-        if self.dc_bus_voltage_ctrl is None:
+        if self.dc_bus_voltage_ctrl is None and not self.inner_ctrl.dc_bus_forming:
             raise ValueError("DC-bus voltage control requires dc_bus_voltage_ctrl")
         self.ext_ref.u_dc = ref_fcn
 
@@ -205,20 +221,24 @@ class GridConverterControlSystem(ControlSystem):
             )
             raise ValueError(f"{quantity} reference must be set")
 
-        # Active power reference: from the DC-bus voltage controller or external
+        # DC-bus voltage reference (DC-bus forming) or active power reference (from
+        # the DC-bus voltage controller or external)
         u_dc_ref = None
-        if self.dc_bus_voltage_ctrl is not None:
+        if self.inner_ctrl.dc_bus_forming or self.dc_bus_voltage_ctrl is not None:
             if ext_ref.u_dc is None:
                 raise ValueError("DC-bus voltage reference must be set")
             u_dc_ref = get_value(ext_ref.u_dc, self.t)
-            p_g_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
+        if self.inner_ctrl.dc_bus_forming and u_dc_ref is not None:
+            dc_ref = u_dc_ref
+        elif self.dc_bus_voltage_ctrl is not None and u_dc_ref is not None:
+            dc_ref = self.dc_bus_voltage_ctrl.compute_output(u_dc_ref, fbk.u_dc)
         elif ext_ref.p_g is not None:
-            p_g_ref = get_value(ext_ref.p_g, self.t)
+            dc_ref = get_value(ext_ref.p_g, self.t)
         else:
             raise ValueError("Active power reference must be set")
 
         ref = self.inner_ctrl.compute_output(
-            p_g_ref, get_value(v_c_or_q_g_ref, self.t), fbk
+            dc_ref, get_value(v_c_or_q_g_ref, self.t), fbk
         )
         ref.u_dc = u_dc_ref
         u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
