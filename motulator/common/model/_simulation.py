@@ -2,8 +2,9 @@
 
 import os
 import warnings
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
+from types import SimpleNamespace
 from typing import Any
 
 import numpy as np
@@ -12,6 +13,11 @@ from tqdm import tqdm
 
 from motulator.common.control._base import ControlSystem
 from motulator.common.model._base import Model, ModelTimeSeries
+from motulator.common.model._composite import CompositeModel, CompositeModelTimeSeries
+
+# Tolerance (s) for treating the sampling and switching instants of different
+# converters as simultaneous
+_T_TOL = 1e-12
 
 
 # %%
@@ -57,17 +63,19 @@ class SimulationResults:
 
     Attributes
     ----------
-    mdl : ModelTimeSeries
-        Results from the continuous-time model.
+    mdl : ModelTimeSeries | CompositeModelTimeSeries
+        Results from the continuous-time model. For a composite model, the time series
+        of each model is an attribute by the model name.
     ctrl : Any
-        Results from the digital control system.
+        Results from the digital control system. For a composite model, the results of
+        each control system is an attribute by the model name.
     success : bool
         False if the simulation stopped before the stop time due to a numerical
         failure, in which case the results cover the time until the failure.
 
     """
 
-    mdl: ModelTimeSeries
+    mdl: ModelTimeSeries | CompositeModelTimeSeries
     ctrl: Any
     success: bool = True
 
@@ -76,25 +84,39 @@ class Simulation:
     """
     Simulation environment.
 
+    Each control system is called at its own sampling instants, which gives the
+    sampling period of its next control cycle. The control systems of a composite
+    model can have different sampling periods, and their sampling instants need not
+    coincide. The switching states of the converters are held constant between the
+    sampling and switching instants of all the converters.
+
     Parameters
     ----------
-    mdl : Model
+    mdl : Model | CompositeModel
         Continuous-time system model.
-    ctrl : ControlSystem
-        Discrete-time control system.
+    ctrl : ControlSystem | Mapping[str, ControlSystem]
+        Discrete-time control system. For a composite model, the control systems of
+        the models by the model names.
     show_progress : bool, optional
         Show progress during simulation, defaults to True.
     cfg : SolverCfg, optional
         Solver configuration parameters.
+    t_start : float | Mapping[str, float], optional
+        First sampling instant (s) of the control system or, for a composite model,
+        of the control systems by the model names. The time `ctrl.t` of the control
+        system is set to this value. Defaults to the initial time of the model, as do
+        the control systems not included in the mapping, in which case `ctrl.t` is
+        not changed.
 
     """
 
     def __init__(
         self,
-        mdl: Model,
-        ctrl: ControlSystem,
+        mdl: Model | CompositeModel,
+        ctrl: ControlSystem | Mapping[str, ControlSystem],
         show_progress: bool = True,
         cfg: SolverCfg | None = None,
+        t_start: float | Mapping[str, float] | None = None,
     ) -> None:
         if os.environ.get("BUILDING_DOCS") == "1":
             show_progress = False
@@ -102,10 +124,41 @@ class Simulation:
         self.cfg = cfg if cfg is not None else SolverCfg()
         self.mdl = mdl
         self.ctrl = ctrl
+        # Pairs of the models and their control systems, and the first sampling
+        # instants given for the control systems
+        if isinstance(mdl, CompositeModel):
+            if not isinstance(ctrl, Mapping) or ctrl.keys() != mdl.models.keys():
+                raise ValueError("A control system must be given for each model")
+            if t_start is not None and (
+                not isinstance(t_start, Mapping) or t_start.keys() - ctrl.keys()
+            ):
+                raise ValueError("t_start must be a mapping by the model names")
+            self._pairs = [(mdl.models[name], ctrl[name]) for name in mdl.models]
+            t_start = {} if t_start is None else t_start
+            self._t_sample = [t_start.get(name, mdl.t0) for name in mdl.models]
+            given = [(ctrl[name], t) for name, t in t_start.items()]
+        else:
+            if isinstance(ctrl, Mapping) or isinstance(t_start, Mapping):
+                raise ValueError("A single model takes a single control system")
+            self._pairs = [(mdl, ctrl)]
+            self._t_sample = [mdl.t0 if t_start is None else t_start]
+            given = [] if t_start is None else [(ctrl, t_start)]
+        if not all(mdl.t0 <= t < np.inf for t in self._t_sample):
+            raise ValueError("t_start must not be earlier than the model time")
+        for ctrl_k, t in given:
+            ctrl_k.t = t
+        # Pending switching events (instant, gate signals, blanking signals) of each
+        # converter
+        self._events: list[list[tuple[float, np.ndarray, np.ndarray]]] = [
+            [] for _ in self._pairs
+        ]
 
     def simulate(self, t_stop: float = 1.0, N_eval: int = 0) -> SimulationResults:
         """
         Solve continuous-time system model and call control system.
+
+        The simulation runs until the first sampling instant after `t_stop`. A
+        subsequent call continues the simulation.
 
         Parameters
         ----------
@@ -113,9 +166,9 @@ class Simulation:
             Simulation stop time, defaults to 1.
         N_eval : int, optional
             Number of evenly spaced data points to be returned by the solver for each
-            integration interval, i.e., for each sampling period or, if carrier
-            comparison is used, for each switching interval. Defaults to 0, in which
-            case the number and spacing of points is selected by the solver.
+            integration interval, i.e., for each interval between the sampling and
+            switching instants. Defaults to 0, in which case the number and spacing of
+            points is selected by the solver.
 
         """
         progress_bar = None
@@ -150,8 +203,14 @@ class Simulation:
             warnings.warn(msg, RuntimeWarning, stacklevel=2)
 
         # Post-process the solution data
-        mdl_ts = ModelTimeSeries(self.mdl)
-        ctrl_ts = self.ctrl.post_process()
+        if isinstance(self.mdl, CompositeModel) and isinstance(self.ctrl, Mapping):
+            mdl_ts = CompositeModelTimeSeries(self.mdl)
+            ctrl_ts = SimpleNamespace(
+                **{name: ctrl.post_process() for name, ctrl in self.ctrl.items()}
+            )
+        else:
+            mdl_ts = ModelTimeSeries(self._pairs[0][0])
+            ctrl_ts = self._pairs[0][1].post_process()
         return SimulationResults(mdl_ts, ctrl_ts, success=error is None)
 
     @np.errstate(invalid="raise")
@@ -159,56 +218,76 @@ class Simulation:
         self, t_stop: float, update_progress: Callable[[], None], N_eval: int
     ) -> None:
         """Run the main simulation loop."""
-        while self.mdl.t0 <= t_stop:
-            # Control, computational delay, and carrier comparison
-            T_s, ref_duty_ratio = self.ctrl(self.mdl)
-            duty_ratio = self.mdl.delay(ref_duty_ratio)
-            t_steps, q_abc, b_abc = self.mdl.pwm(T_s, duty_ratio)
+        t_sample, events = self._t_sample, self._events
+        while True:
+            t0 = self.mdl.t0
+            due = [k for k, t in enumerate(t_sample) if t <= t0 + _T_TOL]
+            if due and t0 > t_stop:
+                break
+            for k, (mdl, ctrl) in enumerate(self._pairs):
+                # Control, computational delay, and carrier comparison
+                if k in due:
+                    T_s, ref_duty_ratio = ctrl(mdl)
+                    if T_s <= _T_TOL:
+                        raise ValueError("The sampling period must be positive")
+                    duty_ratio = mdl.delay(ref_duty_ratio)
+                    t_steps, q_abc, b_abc = mdl.pwm(T_s, duty_ratio)
+                    # Switching instants, accumulated from the interval durations
+                    t_sw = [t0]
+                    for t_step in t_steps[:-1]:
+                        t_sw.append(t_sw[-1] + t_step)
+                    events[k] = list(zip(t_sw, q_abc, b_abc, strict=True))
+                    # The next sampling instant is based on the current instant, so a
+                    # sampling instant merged with an instant of another converter
+                    # within the tolerance shifts the subsequent instants accordingly
+                    t_sample[k] = t_sw[-1] + t_steps[-1]
+                    update_progress()
+                # Set the switching state due at this instant
+                while events[k] and events[k][0][0] <= t0 + _T_TOL:
+                    _, q_abc, b_abc = events[k].pop(0)
+                    mdl.converter.set_gate_signals(q_abc, b_abc)
+            # Integrate until the next sampling or switching instant
+            t1 = min(t_sample + [ev[0][0] for ev in events if ev])
+            self._integrate((t0, t1), N_eval)
 
-            # Loop over the sampling period T_s
-            for i, t_step in enumerate(t_steps):
-                # Integration time span, skipped if empty
-                t_span = (self.mdl.t0, self.mdl.t0 + t_step)
-                if t_span[1] > t_span[0]:
-                    # Set the switching state and get initial values
-                    self.mdl.converter.set_gate_signals(q_abc[i], b_abc[i])
-                    state0 = self.mdl.get_initial_values()
+    def _integrate(self, t_span: tuple[float, float], N_eval: int) -> None:
+        """Integrate over the time span and save the solution."""
+        if t_span[1] <= t_span[0]:
+            return
+        state0 = self.mdl.get_initial_values()
 
-                    # Explicit Runge-Kutta methods try the whole interval as the first
-                    # step, which skips the estimation of the initial step size
-                    first_step = None
-                    if self.cfg.method in ("RK23", "RK45", "DOP853"):
-                        first_step = min(t_span[1] - t_span[0], self.cfg.max_step)
+        # Explicit Runge-Kutta methods try the whole interval as the first step, which
+        # skips the estimation of the initial step size
+        first_step = None
+        if self.cfg.method in ("RK23", "RK45", "DOP853"):
+            first_step = min(t_span[1] - t_span[0], self.cfg.max_step)
 
-                    # Create array of evaluation times if N_eval is given, including
-                    # the end point for the final state
-                    if N_eval != 0:
-                        t_eval = np.linspace(t_span[0], t_span[1], N_eval + 1)
-                    else:
-                        t_eval = None
+        # Create array of evaluation times if N_eval is given, including the end point
+        # for the final state
+        if N_eval != 0:
+            t_eval = np.linspace(t_span[0], t_span[1], N_eval + 1)
+        else:
+            t_eval = None
 
-                    # Integrate over t_span
-                    sol = solve_ivp(
-                        self.mdl.rhs,
-                        t_span,
-                        state0,
-                        t_eval=t_eval,
-                        first_step=first_step,
-                        **self.cfg.solver,
-                    )
-                    if not sol.success:
-                        raise FloatingPointError(sol.message)
+        # Integrate over t_span
+        sol = solve_ivp(
+            self.mdl.rhs,
+            t_span,
+            state0,
+            t_eval=t_eval,
+            first_step=first_step,
+            **self.cfg.solver,
+        )
+        if not sol.success:
+            raise FloatingPointError(sol.message)
 
-                    # Set the final state, since the last call to rhs may be at an
-                    # earlier instant (e.g., DOP853 with t_eval)
-                    self.mdl.t0 = t_span[-1]
-                    self.mdl.set_states(sol.y[:, -1])
-                    self.mdl.set_outputs(self.mdl.t0)
+        # Set the final state, since the last call to rhs may be at an earlier instant
+        # (e.g., DOP853 with t_eval)
+        self.mdl.t0 = t_span[1]
+        self.mdl.set_states(sol.y[:, -1])
+        self.mdl.set_outputs(self.mdl.t0)
 
-                    # Save the solution (excluding the end point if N_eval is given)
-                    if N_eval != 0:
-                        sol.t, sol.y = sol.t[:-1], sol.y[:, :-1]
-                    self.mdl.save(sol)
-
-            # Update progress after each control step
-            update_progress()
+        # Save the solution (excluding the end point if N_eval is given)
+        if N_eval != 0:
+            sol.t, sol.y = sol.t[:-1], sol.y[:, :-1]
+        self.mdl.save(sol)

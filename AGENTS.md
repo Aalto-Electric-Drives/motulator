@@ -20,15 +20,17 @@ The package is split into `common` (shared base classes), `drive` (machine drive
 
 ### Simulation loop (`common/model/_simulation.py`)
 
-`Simulation.simulate()` alternates between the control system and the ODE solver:
+`Simulation.simulate()` alternates between the control systems and the ODE solver:
 
-1. The control system is called once per sampling period: `ctrl(mdl)` returns `(T_s, d_abc)`. The controller can change `T_s` at every step.
+1. Each control system is called at its own sampling instants (the first one at `mdl.t0`, or at `t_start` given to `Simulation`): `ctrl(mdl)` returns `(T_s, d_abc)`. The controller can change `T_s` at every step.
 1. `mdl.delay` applies the computational delay, and `mdl.pwm` converts the duty ratios into switching intervals: `ZOH` (averaged, default) or `CarrierComparison` (`pwm=True` in the model constructor).
-1. `solve_ivp` integrates `mdl.rhs` over each switching interval, with the switching state `mdl.converter.inp.q_c_ab` held constant.
+1. `solve_ivp` integrates `mdl.rhs` between the sampling and switching instants of all the converters, with the switching states `converter.inp.q_c_ab` held constant.
+
+A single `Model` has one converter and one control system. A `CompositeModel` combines several models (e.g., a `GridConverterSystem` and a `Drive` sharing a `DCBus`), each with its own converter, PWM, and delay; `Simulation` then takes a dict of control systems keyed by the model names, and the results are grouped by the same names (`res.mdl.drive`, `res.ctrl.drive`). The `DCBus` computes the DC currents of its converters from their inputs in `rhs()` instead of through the connections, since a converter output computed in `set_outputs()` would be one evaluation stale.
 
 ### System models (`common/model/_base.py`)
 
-A `Model` (e.g., `drive.model.Drive`, `grid.model.GridConverterSystem`) is a list of subsystems plus a wiring table. Each subsystem has `inp`, `out`, and `state` dataclasses and implements `set_outputs(t)` and `rhs(t)`. The subsystems, the converter, and the `connections` dict, which maps `(target, input_attr)` to `(source, output_attr)`, are passed to `Model.__init__`. The outputs are computed in the order of the `subsystems` list and passed to the connected inputs immediately, so a subsystem whose outputs depend directly on its inputs (e.g., a machine with core losses) must come after its input sources. States are gathered from the `state` dataclass fields in declaration order, so the field order defines the solver's state vector.
+A `System` is a list of subsystems plus a wiring table, and a `Model` (e.g., `drive.model.Drive`, `grid.model.GridConverterSystem`) adds the converter driven by the control system. Each subsystem has `inp`, `out`, and `state` dataclasses and implements `set_outputs(t)` and `rhs(t)`. The subsystems, the converter, and the `connections` dict, which maps `(target, input_attr)` to `(source, output_attr)`, are passed to `Model.__init__`, optionally with a `DCBus` whose voltage is connected to the converter. The outputs are computed in the order of the `subsystems` list and passed to the connected inputs immediately, so a subsystem whose outputs depend directly on its inputs (e.g., a machine with core losses) must come after its input sources. States are gathered from the `state` dataclass fields in declaration order, so the field order defines the solver's state vector.
 
 ### Control systems (`common/control/_base.py`)
 
