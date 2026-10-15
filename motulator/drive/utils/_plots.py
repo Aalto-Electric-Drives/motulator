@@ -347,17 +347,17 @@ def plot_stator_waveforms(
 # %%
 def _plot_dc_bus_voltages(ax, mdl, base: BaseValues) -> None:
     """Plot DC bus and grid voltages."""
-    ax.plot(mdl.t, mdl.converter.u_di / base.u, label=r"$u_\mathrm{di}$")
-    ax.plot(mdl.t, mdl.converter.u_dc / base.u, label=r"$u_\mathrm{dc}$")
-    ax.plot(mdl.t, mdl.converter.u_g_abc.T[:, 0] / base.u, label=r"$u_\mathrm{ga}$")
+    ax.plot(mdl.t, mdl.dc_bus.u_di / base.u, label=r"$u_\mathrm{di}$")
+    ax.plot(mdl.t, mdl.dc_bus.u_dc / base.u, label=r"$u_\mathrm{dc}$")
+    ax.plot(mdl.t, mdl.dc_bus.u_g_abc.T[:, 0] / base.u, label=r"$u_\mathrm{ga}$")
     ax.legend()
 
 
 def _plot_dc_bus_currents(ax, mdl, base: BaseValues) -> None:
     """Plot DC bus and grid currents."""
-    ax.plot(mdl.t, mdl.converter.i_L / base.i, label=r"$i_\mathrm{L}$")
+    ax.plot(mdl.t, mdl.dc_bus.i_L / base.i, label=r"$i_\mathrm{L}$")
     ax.plot(mdl.t, mdl.converter.i_dc_int / base.i, label=r"$i_\mathrm{dc}$")
-    ax.plot(mdl.t, mdl.converter.i_g_ab.real / base.i, label=r"$i_\mathrm{ga}$")
+    ax.plot(mdl.t, mdl.dc_bus.i_g_ab.real / base.i, label=r"$i_\mathrm{ga}$")
     ax.legend()
 
 
@@ -397,8 +397,8 @@ def plot_dc_bus_waveforms(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Check if DC bus data exists
-    if not hasattr(res.mdl.converter, "i_L"):
+    # Check if diode bridge data exists
+    if not (hasattr(res.mdl, "dc_bus") and hasattr(res.mdl.dc_bus, "i_L")):
         print("DC bus data not available in simulation results.")
         return
 

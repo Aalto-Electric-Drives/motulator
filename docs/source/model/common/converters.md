@@ -48,7 +48,7 @@ alt: Voltage-source converter and carrier comparison
 *Figure 2:* Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states $\qA = 1$, $\qB = 0$, and $\qC = 0$.
 ```
 
-By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, if the DC bus is fed from an external current source $\idc$, the DC-bus dynamics are modeled in the {class}`motulator.grid.model.CapacitiveDCBusConverter` class as
+By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, the converter can be fed from the DC-bus model in the {class}`motulator.common.model.DCBus` class. If the DC bus is fed from an external current source $\idc$, the DC-bus dynamics are
 
 ```{math}
 ---
@@ -66,7 +66,7 @@ label: DC_current
     \idc' = \qA \iA + \qB \iB + \qC \iC
 ```
 
-The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. The {class}`motulator.common.model.DCBus` class models the DC-bus capacitor fed by the given converters, whose DC currents $\idc'$ are computed from their switching states and phase currents, and by the external current $\idc$. The models of the converter systems sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc`.
+The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models of the converter systems sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge rectifier, see {doc}`/model/drive/diode_bridge`.
 
 ## Carrier Comparison
 

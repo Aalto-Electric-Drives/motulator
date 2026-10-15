@@ -3,7 +3,7 @@
 from motulator.common.model._composite import CompositeModel
 from motulator.common.model._converter import (
     DCBus,
-    FrequencyConverter,
+    DiodeBridgeDCBus,
     VoltageSourceConverter,
 )
 from motulator.common.model._sensor import Sensor
@@ -27,9 +27,9 @@ from motulator.drive.utils._parameters import (
 __all__ = [
     "CompositeModel",
     "DCBus",
+    "DiodeBridgeDCBus",
     "Drive",
     "ExternalRotorSpeed",
-    "FrequencyConverter",
     "InductionMachine",
     "InductionMachinePars",
     "InductionMachineInvGammaPars",

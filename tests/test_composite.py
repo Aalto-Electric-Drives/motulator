@@ -109,35 +109,56 @@ def ipmsm_cvc(
 
 
 @pytest.mark.parametrize("pwm", [False, True])
-def test_dc_bus_equals_capacitive_dc_bus_converter(pwm: bool) -> None:
-    """A converter fed from a DC bus matches the capacitive DC-bus converter model."""
-    conv = drive_model.VoltageSourceConverter(u_dc=U_DC)
-    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv])
-    dc_bus.set_external_dc_current(lambda t: (t > 0.05) * 5)
-    conv_ref = grid_model.CapacitiveDCBusConverter(u_dc=U_DC, C_dc=C_DC)
-    conv_ref.set_external_dc_current(lambda t: (t > 0.05) * 5)
-    res = []
-    for mdl in (ipmsm_drive(conv_ref, None, pwm), ipmsm_drive(conv, dc_bus, pwm)):
+def test_composite_of_one_model_equals_model(pwm: bool) -> None:
+    """A composite of a single model gives the same results as the model alone."""
+
+    def simulate(composite: bool) -> drive_model.SimulationResults:
+        conv = drive_model.VoltageSourceConverter()
+        dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv])
+        dc_bus.set_external_dc_current(lambda t: (t > 0.05) * 5)
+        mdl = ipmsm_drive(conv, dc_bus, pwm)
         ctrl = ipmsm_cvc(T_S_DRIVE)
         ctrl.set_speed_ref(lambda t: (t > 0.02) * 50.0)
-        res.append(Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.1))
-    # Also a composite of a single model is identical
-    conv = drive_model.VoltageSourceConverter(u_dc=U_DC)
-    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv])
-    dc_bus.set_external_dc_current(lambda t: (t > 0.05) * 5)
-    mdl = CompositeModel({"drive": ipmsm_drive(conv, dc_bus, pwm)})
-    ctrl = ipmsm_cvc(T_S_DRIVE)
-    ctrl.set_speed_ref(lambda t: (t > 0.02) * 50.0)
-    sim = Simulation(mdl, {"drive": ctrl}, show_progress=False)
-    res_composite = sim.simulate(t_stop=0.1)
-    assert res_composite.ctrl.drive.t.shape == res[0].ctrl.t.shape
+        if not composite:
+            return Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.1)
+        sim = Simulation(CompositeModel({"drive": mdl}), {"drive": ctrl})
+        res = sim.simulate(t_stop=0.1)
+        return drive_model.SimulationResults(res.mdl.drive, res.ctrl.drive)
 
-    for ts in (res[1].mdl, res_composite.mdl.drive):
-        np.testing.assert_array_equal(ts.t, res[0].mdl.t)
-        np.testing.assert_array_equal(ts.dc_bus.u_dc, res[0].mdl.converter.u_dc)
-        np.testing.assert_array_equal(ts.converter.u_dc, res[0].mdl.converter.u_dc)
-        np.testing.assert_array_equal(ts.converter.u_c_ab, res[0].mdl.converter.u_c_ab)
-        np.testing.assert_array_equal(ts.machine.w_M, res[0].mdl.machine.w_M)
+    ref, res = simulate(False), simulate(True)
+    assert res.ctrl.t.shape == ref.ctrl.t.shape
+    np.testing.assert_array_equal(res.mdl.t, ref.mdl.t)
+    np.testing.assert_array_equal(res.mdl.dc_bus.u_dc, ref.mdl.dc_bus.u_dc)
+    np.testing.assert_array_equal(res.mdl.converter.u_dc, ref.mdl.dc_bus.u_dc)
+    np.testing.assert_array_equal(res.mdl.converter.u_c_ab, ref.mdl.converter.u_c_ab)
+    np.testing.assert_array_equal(res.mdl.machine.w_M, ref.mdl.machine.w_M)
+
+
+def test_diode_bridge_dc_bus() -> None:
+    """The diode bridge charges the DC bus, and its current does not reverse."""
+    conv = drive_model.VoltageSourceConverter()
+    dc_bus = drive_model.DiodeBridgeDCBus(
+        C_dc=235e-6, L_dc=1e-3, U_g=400, f_g=50, converters=[conv]
+    )
+    mdl = ipmsm_drive(conv, dc_bus, pwm=True)
+    ctrl = ipmsm_cvc(T_S_DRIVE)
+    ctrl.set_speed_ref(lambda t: (t > 0.02) * 100.0)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.1) * 7.0)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.3)
+    assert res.success
+
+    # Averages over the last 100 ms
+    t, dc_bus_ts = res.mdl.t, res.mdl.dc_bus
+    u_dc = time_average(dc_bus_ts.u_dc, t, 0.2)
+    p_dc = time_average(dc_bus_ts.u_di * dc_bus_ts.i_L, t, 0.2)
+    p_M = time_average(res.mdl.machine.tau_M * res.mdl.machine.w_M, t, 0.2)
+    w_M = time_average(res.mdl.machine.w_M, t, 0.2)
+
+    assert 1.35 * 400 * 0.95 < u_dc < np.sqrt(2) * 400  # Between the mean and peak
+    assert np.min(dc_bus_ts.i_L) > -0.01  # Only numerical undershoot
+    assert w_M == pytest.approx(100.0, rel=0.05)  # Still recovering from the load step
+    # The rectified power covers the mechanical power and the losses
+    assert p_dc == pytest.approx(p_M, rel=0.15) and p_dc > p_M > 0.9 * 7.0 * 100.0
 
 
 def test_active_front_end_drive() -> None:
@@ -244,9 +265,9 @@ def test_dc_bus_misuse_is_rejected() -> None:
     conv = drive_model.VoltageSourceConverter(u_dc=U_DC)
     with pytest.raises(ValueError):  # The converter is not fed from the DC bus
         ipmsm_drive(conv, DCBus(C_dc=C_DC, u_dc=U_DC, converters=[]))
-    with pytest.raises(ValueError):  # The converter has its own DC-bus model
-        conv_ref = grid_model.CapacitiveDCBusConverter(u_dc=U_DC, C_dc=C_DC)
-        DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv_ref])
+    with pytest.raises(ValueError):  # Neither a DC-bus voltage nor a DC bus
+        mdl = ipmsm_drive(drive_model.VoltageSourceConverter(), None)
+        Simulation(mdl, ipmsm_cvc(T_S_DRIVE), show_progress=False).simulate(1e-3)
     with pytest.raises(ValueError):  # The converters must be distinct
         DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv, conv])
     afe = grid_model.VoltageSourceConverter(u_dc=U_DC)
