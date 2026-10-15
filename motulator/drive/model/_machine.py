@@ -12,7 +12,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import complex2abc, empty_array, get_value
+from motulator.common.utils._utils import complex2abc, empty_array, get_value, wrap
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
@@ -274,6 +274,14 @@ class SynchronousMachine(Subsystem):
         i_s_ab = i_s_dq * exp_j_theta_m
         tau_M = par.n_p * tau_m
         return i_s_dq, i_s_ab, tau_M
+
+    def set_states(self, state_list: list[complex], index: int) -> int:
+        """Set states, keeping the rotor angle within [-pi, pi)."""
+        # The angle is wrapped only in the state of the model, which the next
+        # integration interval starts from, so the solver sees no discontinuity
+        index = super().set_states(state_list, index)
+        self.state.theta_m = wrap(self.state.theta_m.real)
+        return index
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""

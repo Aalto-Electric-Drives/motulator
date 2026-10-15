@@ -72,6 +72,12 @@ class MechanicalSystem(Subsystem):
         """Total load torque (Nm)."""
         return get_value(self.B_L, w_M) * w_M + get_value(self.inp.tau_L, t)
 
+    def set_states(self, state_list: list[complex], index: int) -> int:
+        """Set states, keeping the rotor angle within [-pi, pi)."""
+        index = super().set_states(state_list, index)
+        self.state.theta_M = wrap(self.state.theta_M.real)
+        return index
+
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         self.out.theta_M = self.state.theta_M.real
@@ -195,6 +201,12 @@ class TwoMassMechanicalSystem(Subsystem):
         """Total load torque (Nm)."""
         return get_value(self.B_L, w_L) * w_L + get_value(self.inp.tau_L, t)
 
+    def set_states(self, state_list: list[complex], index: int) -> int:
+        """Set states, keeping the rotor angle within [-pi, pi)."""
+        index = super().set_states(state_list, index)
+        self.state.theta_M = wrap(self.state.theta_M.real)
+        return index
+
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         self.out.theta_M = self.state.theta_M.real
@@ -297,6 +309,12 @@ class ExternalRotorSpeed(Subsystem):
     def set_external_load_torque(self, tau_L: float | Callable[[float], float]) -> None:
         """Set external load torque (Nm), constant or a function of time."""
         raise NotImplementedError
+
+    def set_states(self, state_list: list[complex], index: int) -> int:
+        """Set states, keeping the rotor angle within [-pi, pi)."""
+        index = super().set_states(state_list, index)
+        self.state.theta_M = wrap(self.state.theta_M.real)
+        return index
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""

@@ -365,6 +365,9 @@ def test_rotor_angle_with_long_solver_steps() -> None:
     assert theta_M == pytest.approx(w_M * res.mdl.t, abs=1e-9)
     err = np.angle(np.exp(1j * (res.mdl.machine.theta_m - par.n_p * theta_M)))
     assert err == pytest.approx(0, abs=1e-9)
+    # The angle states are kept within [-pi, pi) between the integration intervals
+    assert abs(mdl.mechanics.state.theta_M) <= pi
+    assert abs(mdl.machine.state.theta_m) <= pi
 
 
 def test_im_parameter_conversion_round_trip() -> None:
