@@ -45,6 +45,10 @@ def smooth_sign(i):
 # Configure the system model. The Γ-equivalent machine model with main-flux saturation
 # is used. The parameters are based on the measured data of a 2.2-kW machine
 # [#Qu2012]_. The dead time and the threshold voltage are parameters of the converter.
+# The duty ratios are updated once per carrier period (single update), which is
+# common in practice. The sampling period then equals the carrier period, i.e., the
+# switching frequency is 8 kHz, and the computational delay of one sampling period
+# is two half carrier periods.
 
 par = model.InductionMachinePars(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=lambda psi: 0.34 / (1 + (0.84 * psi) ** 7)
@@ -57,7 +61,7 @@ def create_model():
     converter = model.VoltageSourceConverter(
         u_dc=540, t_d=t_d, u_th=u_th, sign=smooth_sign
     )
-    mdl = model.Drive(machine, mechanics, converter)
+    mdl = model.Drive(machine, mechanics, converter, delay=2, single_update=True)
     mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
     return mdl
 
@@ -91,9 +95,11 @@ utils.plot(res, base)
 
 # %%
 # Simulate with the compensation, using the same duty-ratio error model as in the
-# system model.
+# system model. The PWM of the control system is also configured for single update,
+# so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
-pwm = control.PWM(d_err=control.InverterNonlinearity(t_d, u_th, sign=smooth_sign))
+d_err = control.InverterNonlinearity(t_d, u_th, sign=smooth_sign)
+pwm = control.PWM(d_err=d_err, single_update=True)
 sim = model.Simulation(create_model(), create_control_system(pwm))
 res = sim.simulate(t_stop=2.4)
 utils.plot(res, base)
