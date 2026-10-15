@@ -22,12 +22,13 @@
 =========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive at low speeds. The dead time of the converter is modeled, and its
-effect is compensated for in the control system. The magnetic saturation is included
-in the machine model and taken into account in the control system. The sensorless
-observer and the compensation method are similar to [#Hin2010]_.
+motor (IM) drive at low speeds. The dead time and the threshold voltage of the
+converter are modeled, and their effects are compensated for in the control system.
+The magnetic saturation is included in the machine model and taken into account in
+the control system. The sensorless observer and the compensation method are similar
+to [#Hin2010]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-22
+.. GENERATED FROM PYTHON SOURCE LINES 15-22
 
 .. code-block:: Python
 
@@ -36,7 +37,6 @@ observer and the compensation method are similar to [#Hin2010]_.
     import numpy as np
 
     import motulator.drive.control.im as control
-    from motulator.common.utils import dead_time_error
     from motulator.drive import model, utils
 
 
@@ -65,18 +65,20 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-32
+.. GENERATED FROM PYTHON SOURCE LINES 29-33
 
-The dead time causes a duty-ratio error that depends on the sign of the phase current.
-As in [#Hin2010]_, the signum function is replaced with a smooth arctangent function,
-which approximates the effect of the parasitic capacitances at low currents.
+The dead time and the threshold voltage of the power devices cause a duty-ratio error
+that depends on the sign of the phase current. As in [#Hin2010]_, the signum function
+is replaced with a smooth arctangent function, which approximates the effect of the
+parasitic capacitances at low currents.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-42
+.. GENERATED FROM PYTHON SOURCE LINES 33-44
 
 .. code-block:: Python
 
 
     t_d = 2e-6  # Dead time (s)
+    u_th = 1.0  # Threshold voltage (V)
     T_s = 125e-6  # Sampling period (s)
 
 
@@ -92,13 +94,17 @@ which approximates the effect of the parasitic capacitances at low currents.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-46
+.. GENERATED FROM PYTHON SOURCE LINES 45-52
 
 Configure the system model. The Γ-equivalent machine model with main-flux saturation
 is used. The parameters are based on the measured data of a 2.2-kW machine
-[#Qu2012]_. The dead time is a parameter of the converter.
+[#Qu2012]_. The dead time and the threshold voltage are parameters of the converter.
+The duty ratios are updated once per carrier period (single update), which is
+common in practice. The sampling period then equals the carrier period, i.e., the
+switching frequency is 8 kHz, and the computational delay of one sampling period
+is two half carrier periods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-61
+.. GENERATED FROM PYTHON SOURCE LINES 52-69
 
 .. code-block:: Python
 
@@ -111,8 +117,10 @@ is used. The parameters are based on the measured data of a 2.2-kW machine
     def create_model():
         machine = model.InductionMachine(par)
         mechanics = model.MechanicalSystem(J=0.015)
-        converter = model.VoltageSourceConverter(u_dc=540, t_d=t_d, sign=smooth_sign)
-        mdl = model.Drive(machine, mechanics, converter)
+        converter = model.VoltageSourceConverter(
+            u_dc=540, t_d=t_d, u_th=u_th, sign=smooth_sign
+        )
+        mdl = model.Drive(machine, mechanics, converter, delay=2, single_update=True)
         mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
         return mdl
 
@@ -124,13 +132,13 @@ is used. The parameters are based on the measured data of a 2.2-kW machine
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-65
+.. GENERATED FROM PYTHON SOURCE LINES 70-73
 
 Configure the control system. If the duty-ratio error is given, the PWM compensates
 for it, and the realized voltage fed to the observer includes it. The speed
 reference is reversed under the load torque, leading to the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-79
+.. GENERATED FROM PYTHON SOURCE LINES 73-87
 
 .. code-block:: Python
 
@@ -155,13 +163,13 @@ reference is reversed under the load torque, leading to the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-83
+.. GENERATED FROM PYTHON SOURCE LINES 88-91
 
-Simulate without the compensation. The voltage error caused by the dead time
-corrupts the flux and speed estimates. After the speed reversal, the drive fails in
-the regenerating mode.
+Simulate without the compensation. The voltage error caused by the inverter
+nonlinearities corrupts the flux and speed estimates. After the speed reversal, the
+drive fails in the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-88
+.. GENERATED FROM PYTHON SOURCE LINES 91-96
 
 .. code-block:: Python
 
@@ -182,17 +190,19 @@ the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-91
+.. GENERATED FROM PYTHON SOURCE LINES 97-100
 
 Simulate with the compensation, using the same duty-ratio error model as in the
-system model.
+system model. The PWM of the control system is also configured for single update,
+so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-99
+.. GENERATED FROM PYTHON SOURCE LINES 100-109
 
 .. code-block:: Python
 
 
-    pwm = control.PWM(d_err=lambda i, d: dead_time_error(i, d, t_d, T_s, sign=smooth_sign))
+    d_err = control.InverterNonlinearity(t_d, u_th, sign=smooth_sign)
+    pwm = control.PWM(d_err=d_err, single_update=True)
     sim = model.Simulation(create_model(), create_control_system(pwm))
     res = sim.simulate(t_stop=2.4)
     utils.plot(res, base)
@@ -211,7 +221,7 @@ system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-109
+.. GENERATED FROM PYTHON SOURCE LINES 110-119
 
 .. rubric:: References
 
@@ -226,7 +236,7 @@ system model.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 14.488 seconds)
+   **Total running time of the script:** (0 minutes 37.216 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:

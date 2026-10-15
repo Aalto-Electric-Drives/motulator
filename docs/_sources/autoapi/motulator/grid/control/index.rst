@@ -41,6 +41,7 @@ Classes
    motulator.grid.control.DualVoltageFormingControllerCfg
    motulator.grid.control.DualVoltageFormingOutputs
    motulator.grid.control.GridConverterControlSystem
+   motulator.grid.control.InverterNonlinearity
    motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.ObserverBasedGridFormingControllerCfg
    motulator.grid.control.ObserverOutputs
@@ -864,6 +865,52 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: InverterNonlinearity(t_d = 0.0, u_th = 0.0, sign = np.sign)
+
+   
+   Duty-ratio error due to the dead time and the threshold voltages.
+
+   The dead time blanks a leg for `t_d` after each switching instant, and the current
+   direction determines the leg state during the blanking. Away from the duty-ratio
+   limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the
+   half carrier period. Pulses shorter than the dead time are suppressed, and clamped
+   legs have no dead-time error. The threshold voltage `u_th` of the power devices,
+   assumed equal for the switches and the diodes, causes the voltage drop
+   `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`,
+   also in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model
+   is consistent with `motulator.common.model.VoltageSourceConverter`.
+
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
+   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :type u_th: float, optional
+   :param sign: Current-direction function, defaults to `np.sign`. A smooth approximation may
+                be used, matching the converter model.
+   :type sign: Callable[[np.ndarray], np.ndarray], optional
+
+   .. rubric:: Notes
+
+   This switching-cycle averaged model assumes constant duty ratios and currents
+   over a carrier period. It does not include transients due to changes in the
+   switching commands.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: ObserverBasedGridFormingController(cfg)
 
    
@@ -1184,7 +1231,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: PWM(overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0)
+.. py:class:: PWM(overmodulation = 'MPE', d_err = None, feedforward = True, k_pred = 1.5, d_min = 0.0, single_update = False)
 
    
    Duty ratios and realized voltage for three-phase space-vector PWM.
@@ -1196,10 +1243,11 @@ Package Contents
    the control systems compensate for the delays, if needed by the controller.
 
    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
-   dead time and the voltage drops of the power devices) is modeled as a function of
-   the phase currents and duty ratios. The realized voltage is corrected for this
-   error using the measured currents, which correspond to the same instant as the
-   realized voltage, and the duty ratios of the corresponding sampling periods.
+   dead time and the threshold voltages of the power devices) is modeled as a function
+   of the phase currents, duty ratios, DC-bus voltage, and half carrier period. The
+   realized voltage is corrected for this error using the measured currents, which
+   correspond to the same instant as the realized voltage, and the duty ratios of the
+   corresponding sampling periods.
    Furthermore, the error can be compensated for by feedforward, in which case the
    currents are predicted to the middle of the sampling period in which the duty ratios
    are applied, assuming that they rotate at the angular speed of the synchronous
@@ -1222,12 +1270,11 @@ Package Contents
                           - "MME": minimum magnitude error
                           - "six_step": six-step operation
    :type overmodulation: Literal["MPE", "MME", "six_step"], optional
-   :param d_err: Duty-ratio error as a function of the phase currents (A) and duty ratios,
-                 i.e., the realized duty ratios are `d_abc - d_err(i_abc, d_abc)`, defaults
-                 to None (no error). For the dead time, use
-                 `motulator.common.utils.dead_time_error`, whose sampling period must equal
-                 that of the control system.
-   :type d_err: Callable[[np.ndarray, np.ndarray], np.ndarray], optional
+   :param d_err: Duty-ratio error as a function of the phase currents (A), duty ratios, DC-bus
+                 voltage (V), and half carrier period (s), i.e., the realized duty ratios are
+                 `d_abc - d_err(i_abc, d_abc, u_dc, T_half)`, defaults to None (no error). See
+                 `InverterNonlinearity` for the dead time and the threshold voltages.
+   :type d_err: Callable[[np.ndarray, np.ndarray, float, float], np.ndarray], optional
    :param feedforward: Compensate for `d_err` in the duty ratios, defaults to True.
    :type feedforward: bool, optional
    :param k_pred: Prediction factor of the currents for the feedforward compensation, defaults to
@@ -1235,10 +1282,14 @@ Package Contents
                   ratios are applied after the computational delay of one sampling period.
    :type k_pred: float, optional
    :param d_min: Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0
-                 (no limit). The duty ratio applies to a sampling period (a half of the carrier
-                 period), so the shortest pulse is `d_min*T_s` when a leg starts or stops
-                 switching and about `2*d_min*T_s` otherwise.
+                 (no limit). The duty ratio applies to a half carrier period, so the shortest
+                 pulse is `d_min` times the half carrier period when a leg starts or stops
+                 switching and about twice that otherwise.
    :type d_min: float, optional
+   :param single_update: Duty ratios are updated once per carrier period, i.e., the half carrier period
+                         is `T_s/2`, defaults to False (twice per carrier period, the half carrier
+                         period is `T_s`). Must match the system model.
+   :type single_update: bool, optional
 
    .. rubric:: References
 
@@ -1346,6 +1397,8 @@ Package Contents
       voltage is reconstructed from the duty ratios of the previous and the ongoing
       sampling periods and the measured DC-bus voltage, i.e., the variations of the
       DC-bus voltage and of the currents within the periods are not known. The
+      duty-ratio error is evaluated with the half carrier period of the previous
+      sampling period, which is assumed to equal that of the ongoing period. The
       measured currents are also stored for the feedforward compensation of the next
       duty ratios.
 
@@ -1380,7 +1433,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: limit_pulses(d_abc, d_ref, i_abc = None)
+   .. py:method:: limit_pulses(d_abc, d_ref, d_err = None)
 
       
       Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`.
@@ -1395,11 +1448,10 @@ Package Contents
       :param d_ref: Duty ratios of the voltage reference, i.e., the realized duty ratios aimed
                     at.
       :type d_ref: ndarray, shape (3,)
-      :param i_abc: Phase currents (A) for the duty-ratio error `d_err`, if it is compensated
-                    for, in which case the realized duty ratios are `d_abc - d_err(i_abc,
-                    d_abc)`. Defaults to None, in which case the realized duty ratios are
-                    `d_abc`.
-      :type i_abc: ndarray, shape (3,), optional
+      :param d_err: Duty-ratio error as a function of the duty ratios, if it is compensated
+                    for, in which case the realized duty ratios are `d_abc - d_err(d_abc)`.
+                    Defaults to None, in which case the realized duty ratios are `d_abc`.
+      :type d_err: Callable[[np.ndarray], np.ndarray], optional
 
       :returns: * **d_abc** (*list[float]*) -- Limited duty ratios.
                 * **d_realized** (*ndarray, shape (3,)*) -- Realized duty ratios: `d_ref` for the legs whose duty ratios were not
@@ -1465,10 +1517,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(d_abc)
+   .. py:method:: update(T_s, d_abc)
 
       
-      Store the duty ratios of the next sampling period.
+      Store the next duty ratios and the ongoing half carrier period.
 
 
 

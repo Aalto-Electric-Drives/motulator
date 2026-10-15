@@ -268,7 +268,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, pwm = False, delay = 1, dc_bus = None)
+.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, pwm = False, delay = 1, single_update = False)
 
    Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`motulator.common.model._converter.VoltageSourceConverter`\ ]
 
@@ -282,14 +282,19 @@ Package Contents
    :type ac_filter: LFilter | LCLFilter
    :param ac_source: Three-phase voltage source.
    :type ac_source: ThreePhaseSource
-   :param pwm: Enable PWM model, defaults to False.
-   :type pwm: bool, optional
-   :param delay: Computational delay (samples), defaults to 1.
-   :type delay: int, optional
    :param dc_bus: DC bus feeding the converter, which can be shared with other models (e.g., with
                   a drive), see `CompositeModel`. Defaults to None, in which case the converter
                   has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
+   :param pwm: Enable PWM model, defaults to False.
+   :type pwm: bool, optional
+   :param delay: Computational delay in half carrier periods (sampling periods with double
+                 update), defaults to 1. With single update, use 2 for a delay of one
+                 sampling period, see `Model`.
+   :type delay: int, optional
+   :param single_update: Sample and update the duty ratios once per carrier period instead of twice,
+                         defaults to False, see `Model`.
+   :type single_update: bool, optional
 
 
 
@@ -1113,25 +1118,31 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc = None, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
+.. py:class:: VoltageSourceConverter(u_dc = None, t_d = 0.0, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
 
    
-   Lossless three-phase voltage-source converter.
+   Three-phase voltage-source converter.
 
-   The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
-   neither of its switches conducts, the current direction determines which diode
-   conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
-   in the beginning of the blanking interval. The DC-bus voltage is either constant or
-   given by a DC-bus model connected to the input `u_dc` (see `DCBus` and `Model`).
+   The switches are ideal, except for the dead time and the threshold voltage. When a
+   leg is blanked, i.e., neither of its switches conducts, the current direction
+   determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where
+   `i` is the phase current in the beginning of the blanking interval. The threshold
+   voltage of the conducting device, assumed equal for the switches and the diodes,
+   reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
+   determined at the latest switching instant. The DC-bus voltage is either constant
+   or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
+   `Model`).
 
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
                 be fed from a DC-bus model.
    :type u_dc: float, optional
    :param t_d: Dead time (s), defaults to 0.
    :type t_d: float, optional
+   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :type u_th: float, optional
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
                 used to model the effect of parasitic capacitances, for example.

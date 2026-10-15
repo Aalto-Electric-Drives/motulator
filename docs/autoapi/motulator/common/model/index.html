@@ -220,9 +220,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -549,6 +549,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.modulate"><code class="docutils literal notranslate"><span class="pre">Model.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
 </ul>
 </li>
@@ -924,28 +925,66 @@ converters, see <cite>DCBus</cite>.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Model">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">System</span></code></p>
 <p>Base class for system models with a converter driven by a control system.</p>
-<p>The converter subsystem gets the switching state <cite>q_c_ab</cite>, which is held constant
-over each integration interval. The PWM model includes the dead time
-<cite>converter.t_d</cite>, and the computational delay is sized according to the number of
-legs <cite>converter.n_legs</cite>.</p>
+<p>The converter subsystem gets the switching state <cite>q_c_ab</cite> and the current-direction
+vector <cite>s_c_ab</cite>, which are held constant over each integration interval. The PWM
+model includes the dead time <cite>converter.t_d</cite>, and the computational delay is sized
+according to the number of legs <cite>converter.n_legs</cite>. The control systems of this
+package compensate for a computational delay of one sampling period, i.e.,
+<cite>delay=1</cite> with double update and <cite>delay=2</cite> with single update.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>converter</strong> (<em>Converter</em>) – Converter model.</p></li>
 <li><p><strong>subsystems</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>]</em>) – All subsystems, including the converter.</p></li>
 <li><p><strong>connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>]</em>) – Connections as <cite>{(target, input_name): (source, output_name)}</cite>.</p></li>
-<li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable PWM model, defaults to False.</p></li>
-<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay (samples), defaults to 0.</p></li>
 <li><p><strong>dc_bus</strong> (<a class="reference internal" href="#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><em>DCBus</em></a><em>, </em><em>optional</em>) – DC bus feeding the converter, whose input <cite>u_dc</cite> is connected to the DC-bus
 voltage. The DC bus is added to the subsystems, and it can be shared with other
 models, see <cite>CompositeModel</cite>. Defaults to None, in which case the converter has
 its own DC-bus model (or a constant DC-bus voltage).</p></li>
+<li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable PWM model, defaults to False.</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay in half carrier periods from the sampling instant to the
+loading of the duty ratios, defaults to 0. With double update, this equals
+the delay in sampling periods.</p></li>
+<li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the duty ratios once per carrier period, i.e., the sampling
+period of the control system equals the carrier period, defaults to False
+(double update, the sampling period is half the carrier period). With single
+update, <cite>delay=2</cite> loads the duty ratios at the next sampling instant and
+<cite>delay=1</cite> at the carrier extremum between the sampling instants.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Model.modulate">
+<span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.modulate" title="Link to this definition">#</a></dt>
+<dd><p>Delay the duty ratios and convert them to gate signals.</p>
+<p>The sampling period consists of one half carrier period with double update
+and of two with single update. The duty ratios pass through the
+computational delay once per half carrier period, and the PWM model is
+called for each half carrier period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>d_abc</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Duty ratios computed at this sampling instant.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_steps</strong> (<em>SwitchingTimes, shape (N,)</em>) – Durations of the intervals (s), summing to <cite>T_s</cite>.</p></li>
+<li><p><strong>q_abc</strong> (<em>GateSignals, shape (N, n_legs)</em>) – Gate signals of the upper switches in each interval.</p></li>
+<li><p><strong>b_abc</strong> (<em>BlankingSignals, shape (N, n_legs)</em>) – Blanking signals in each interval.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[motulator.common.model._pwm.SwitchingTimes, motulator.common.model._pwm.GateSignals, motulator.common.model._pwm.BlankingSignals]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Model.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.save" title="Link to this definition">#</a></dt>
@@ -1336,6 +1375,7 @@ and extends it by <cite>extend_state_history</cite>.</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.modulate"><code class="docutils literal notranslate"><span class="pre">Model.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
 </ul>
 </li>

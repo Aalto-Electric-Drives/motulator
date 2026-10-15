@@ -215,9 +215,9 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -822,8 +822,6 @@
       </ul></li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController">DCBusVoltageController (class in motulator.grid.control)</a>
 </li>
-      <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.dead_time_error">dead_time_error() (in module motulator.common.utils)</a>
-</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridgeDCBus">DiodeBridgeDCBus (class in motulator.common.model)</a>
 
       <ul>
@@ -1058,10 +1056,10 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachinePars.incr_ind_mat">(motulator.drive.model.SynchronousMachinePars method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine">InductionMachine (class in motulator.drive.model)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars">InductionMachineInvGammaPars (class in motulator.drive.control.im)</a>
 
       <ul>
@@ -1078,6 +1076,16 @@
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.invert">invert() (motulator.drive.utils.MagneticModel method)</a>
 </li>
+      <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.InverterNonlinearity">InverterNonlinearity (class in motulator.common.control)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InverterNonlinearity">(class in motulator.drive.control.im)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.InverterNonlinearity">(class in motulator.drive.control.sm)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.InverterNonlinearity">(class in motulator.grid.control)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.is_current_map">is_current_map() (motulator.drive.utils.MagneticModel method)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.is_flux_map">is_flux_map() (motulator.drive.utils.MagneticModel method)</a>
@@ -1240,9 +1248,11 @@
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ModelTimeSeries">ModelTimeSeries (class in motulator.common.model)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem.modulate">modulate() (motulator.drive.control.im.DriveControlSystem method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.modulate">modulate() (motulator.common.model.Model method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem.modulate">(motulator.drive.control.im.DriveControlSystem method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DriveControlSystem.modulate">(motulator.drive.control.sm.DriveControlSystem method)</a>
 </li>
       </ul></li>

@@ -228,23 +228,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive at low speeds. The dead time of the converter is modeled, and its effect is compensated for in the control system. The magnetic saturation is included in the machine model and taken into account in the control system. The sensorless observer and the compensation method are similar to [#Hin2010]_.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_dead_time_cvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_2kw_im_dead_time_cvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW IM, dead time, CVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
 
 .. only:: html
@@ -274,6 +257,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, CVC</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive at low speeds. The dead time and the threshold voltage of the converter are modeled, and their effects are compensated for in the control system. The magnetic saturation is included in the machine model and taken into account in the control system. The sensorless observer and the compensation method are similar to [#Hin2010]_.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_im_dead_time_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_im_dead_time_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IM, dead time, CVC</div>
     </div>
 
 

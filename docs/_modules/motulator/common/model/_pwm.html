@@ -215,9 +215,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -511,7 +511,7 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        T_s : float</span>
-<span class="sd">            Half carrier period (s), corresponds to sampling period.</span>
+<span class="sd">            Half carrier period (s).</span>
 <span class="sd">        d_abc : Sequence[float]</span>
 <span class="sd">            Duty ratios in range [0, 1].</span>
 
@@ -534,9 +534,10 @@
 <span class="sd">    Replace PWM with zero-order hold.</span>
 
 <span class="sd">    The dead time reduces the gate signal duty ratios of both switches of a leg by</span>
-<span class="sd">    `t_d/(2*T_s)`, leaving the leg blanked for the fraction `t_d/T_s` of the sampling</span>
-<span class="sd">    period, unless the leg does not switch. Short pulses are suppressed, and the</span>
-<span class="sd">    blanking fraction is computed from the remaining on-times of both switches.</span>
+<span class="sd">    `t_d/(2*T_s)`, leaving the leg blanked for the fraction `t_d/T_s` of the half</span>
+<span class="sd">    carrier period `T_s`, unless the leg does not switch. Short pulses are</span>
+<span class="sd">    suppressed, and the blanking fraction is computed from the remaining on-times of</span>
+<span class="sd">    both switches.</span>
 <span class="sd">    This is a switching-cycle averaged model, not a model of switching transients.</span>
 
 <span class="sd">    Parameters</span>

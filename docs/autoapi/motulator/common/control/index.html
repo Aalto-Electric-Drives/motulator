@@ -220,9 +220,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -549,6 +549,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.compute_output"><code class="docutils literal notranslate"><span class="pre">PIController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.update"><code class="docutils literal notranslate"><span class="pre">PIController.update()</span></code></a></li>
@@ -594,16 +595,19 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.DiscreteComplexController" title="motulator.common.control.DiscreteComplexController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a></p></td>
 <td><p>Direct discrete-time 2DOF complex-vector controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.InverterNonlinearity" title="motulator.common.control.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
+<td><p>Duty-ratio error due to the dead time and the threshold voltages.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.RateLimiter" title="motulator.common.control.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.RateLimiter" title="motulator.common.control.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
 <td><p>Rate limiter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></p></td>
 <td><p>Container for control system's discrete-time data.</p></td>
 </tr>
 </tbody>
@@ -899,6 +903,35 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.control.InverterNonlinearity">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">InverterNonlinearity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#InverterNonlinearity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.InverterNonlinearity" title="Link to this definition">#</a></dt>
+<dd><p>Duty-ratio error due to the dead time and the threshold voltages.</p>
+<p>The dead time blanks a leg for <cite>t_d</cite> after each switching instant, and the current
+direction determines the leg state during the blanking. Away from the duty-ratio
+limits, the resulting error is <cite>sign(i)*t_d/(2*T_half)</cite>, where <cite>T_half</cite> is the
+half carrier period. Pulses shorter than the dead time are suppressed, and clamped
+legs have no dead-time error. The threshold voltage <cite>u_th</cite> of the power devices,
+assumed equal for the switches and the diodes, causes the voltage drop
+<cite>sign(i)*u_th</cite> in each phase, i.e., the duty-ratio error <cite>sign(i)*u_th/u_dc</cite>,
+also in the clamped legs. The realized duty ratios are <cite>d_abc - d_err</cite>. This model
+is consistent with <cite>motulator.common.model.VoltageSourceConverter</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the power devices, defaults to 0.</p></li>
+<li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Current-direction function, defaults to <cite>np.sign</cite>. A smooth approximation may
+be used, matching the converter model.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This switching-cycle averaged model assumes constant duty ratios and currents
+over a carrier period. It does not include transients due to changes in the
+switching commands.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.PIController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PIController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#PIController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PIController" title="Link to this definition">#</a></dt>
 <dd><p>2DOF PI controller.</p>
@@ -967,7 +1000,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.PWM">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
 overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The realized voltage is reconstructed from the duty
@@ -975,10 +1008,11 @@ ratios and the measured DC-bus voltage, taking into account the computational de
 of one sampling period. The angle of the voltage reference is not advanced here:
 the control systems compensate for the delays, if needed by the controller.</p>
 <p>Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
-dead time and the voltage drops of the power devices) is modeled as a function of
-the phase currents and duty ratios. The realized voltage is corrected for this
-error using the measured currents, which correspond to the same instant as the
-realized voltage, and the duty ratios of the corresponding sampling periods.
+dead time and the threshold voltages of the power devices) is modeled as a function
+of the phase currents, duty ratios, DC-bus voltage, and half carrier period. The
+realized voltage is corrected for this error using the measured currents, which
+correspond to the same instant as the realized voltage, and the duty ratios of the
+corresponding sampling periods.
 Furthermore, the error can be compensated for by feedforward, in which case the
 currents are predicted to the middle of the sampling period in which the duty ratios
 are applied, assuming that they rotate at the angular speed of the synchronous
@@ -1001,19 +1035,21 @@ the limited duty ratios.</p>
 - “MPE”: minimum phase error
 - “MME”: minimum magnitude error
 - “six_step”: six-step operation</p></li>
-<li><p><strong>d_err</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Duty-ratio error as a function of the phase currents (A) and duty ratios,
-i.e., the realized duty ratios are <cite>d_abc - d_err(i_abc, d_abc)</cite>, defaults
-to None (no error). For the dead time, use
-<cite>motulator.common.utils.dead_time_error</cite>, whose sampling period must equal
-that of the control system.</p></li>
+<li><p><strong>d_err</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Duty-ratio error as a function of the phase currents (A), duty ratios, DC-bus
+voltage (V), and half carrier period (s), i.e., the realized duty ratios are
+<cite>d_abc - d_err(i_abc, d_abc, u_dc, T_half)</cite>, defaults to None (no error). See
+<cite>InverterNonlinearity</cite> for the dead time and the threshold voltages.</p></li>
 <li><p><strong>feedforward</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Compensate for <cite>d_err</cite> in the duty ratios, defaults to True.</p></li>
 <li><p><strong>k_pred</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Prediction factor of the currents for the feedforward compensation, defaults to
 1.5, which corresponds to the middle of the sampling period in which the duty
 ratios are applied after the computational delay of one sampling period.</p></li>
 <li><p><strong>d_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0
-(no limit). The duty ratio applies to a sampling period (a half of the carrier
-period), so the shortest pulse is <cite>d_min*T_s</cite> when a leg starts or stops
-switching and about <cite>2*d_min*T_s</cite> otherwise.</p></li>
+(no limit). The duty ratio applies to a half carrier period, so the shortest
+pulse is <cite>d_min</cite> times the half carrier period when a leg starts or stops
+switching and about twice that otherwise.</p></li>
+<li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Duty ratios are updated once per carrier period, i.e., the half carrier period
+is <cite>T_s/2</cite>, defaults to False (twice per carrier period, the half carrier
+period is <cite>T_s</cite>). Must match the system model.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1090,6 +1126,8 @@ are computed, and a computational delay of one sampling period is assumed. The
 voltage is reconstructed from the duty ratios of the previous and the ongoing
 sampling periods and the measured DC-bus voltage, i.e., the variations of the
 DC-bus voltage and of the currents within the periods are not known. The
+duty-ratio error is evaluated with the half carrier period of the previous
+sampling period, which is assumed to equal that of the ongoing period. The
 measured currents are also stored for the feedforward compensation of the next
 duty ratios.</p>
 <dl class="field-list simple">
@@ -1114,7 +1152,7 @@ given, the voltage is corrected for it using the measured currents.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.PWM.limit_pulses">
-<span class="sig-name descname"><span class="pre">limit_pulses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_abc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.limit_pulses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.limit_pulses" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">limit_pulses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.limit_pulses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.limit_pulses" title="Link to this definition">#</a></dt>
 <dd><p>Limit the duty ratios of the switching legs to <cite>[d_min, 1 - d_min]</cite>.</p>
 <p>A duty ratio in the range <cite>(0, d_min)</cite> is replaced by 0 or <cite>d_min</cite>, and in the
 range <cite>(1 - d_min, 1)</cite> by <cite>1 - d_min</cite> or 1, whichever gives the realized duty
@@ -1126,10 +1164,9 @@ ratios 0 and 1 are not changed.</p>
 <li><p><strong>d_abc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Duty ratios, including the compensation of the duty-ratio error.</p></li>
 <li><p><strong>d_ref</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Duty ratios of the voltage reference, i.e., the realized duty ratios aimed
 at.</p></li>
-<li><p><strong>i_abc</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Phase currents (A) for the duty-ratio error <cite>d_err</cite>, if it is compensated
-for, in which case the realized duty ratios are <cite>d_abc - d_err(i_abc,
-d_abc)</cite>. Defaults to None, in which case the realized duty ratios are
-<cite>d_abc</cite>.</p></li>
+<li><p><strong>d_err</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Duty-ratio error as a function of the duty ratios, if it is compensated
+for, in which case the realized duty ratios are <cite>d_abc - d_err(d_abc)</cite>.
+Defaults to None, in which case the realized duty ratios are <cite>d_abc</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1179,11 +1216,14 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.PWM.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.update" title="Link to this definition">#</a></dt>
-<dd><p>Store the duty ratios of the next sampling period.</p>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.update" title="Link to this definition">#</a></dt>
+<dd><p>Store the next duty ratios and the ongoing half carrier period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>d_abc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>d_abc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1284,6 +1324,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.compute_output"><code class="docutils literal notranslate"><span class="pre">PIController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.update"><code class="docutils literal notranslate"><span class="pre">PIController.update()</span></code></a></li>

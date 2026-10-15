@@ -508,7 +508,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: Model(converter, subsystems, connections, pwm = False, delay = 0, dc_bus = None)
+.. py:class:: Model(converter, subsystems, connections, dc_bus = None, pwm = False, delay = 0, single_update = False)
 
    Bases: :py:obj:`System`
 
@@ -516,10 +516,12 @@ Package Contents
    
    Base class for system models with a converter driven by a control system.
 
-   The converter subsystem gets the switching state `q_c_ab`, which is held constant
-   over each integration interval. The PWM model includes the dead time
-   `converter.t_d`, and the computational delay is sized according to the number of
-   legs `converter.n_legs`.
+   The converter subsystem gets the switching state `q_c_ab` and the current-direction
+   vector `s_c_ab`, which are held constant over each integration interval. The PWM
+   model includes the dead time `converter.t_d`, and the computational delay is sized
+   according to the number of legs `converter.n_legs`. The control systems of this
+   package compensate for a computational delay of one sampling period, i.e.,
+   `delay=1` with double update and `delay=2` with single update.
 
    :param converter: Converter model.
    :type converter: Converter
@@ -527,15 +529,23 @@ Package Contents
    :type subsystems: list[Subsystem]
    :param connections: Connections as `{(target, input_name): (source, output_name)}`.
    :type connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]]
-   :param pwm: Enable PWM model, defaults to False.
-   :type pwm: bool, optional
-   :param delay: Computational delay (samples), defaults to 0.
-   :type delay: int, optional
    :param dc_bus: DC bus feeding the converter, whose input `u_dc` is connected to the DC-bus
                   voltage. The DC bus is added to the subsystems, and it can be shared with other
                   models, see `CompositeModel`. Defaults to None, in which case the converter has
                   its own DC-bus model (or a constant DC-bus voltage).
    :type dc_bus: DCBus, optional
+   :param pwm: Enable PWM model, defaults to False.
+   :type pwm: bool, optional
+   :param delay: Computational delay in half carrier periods from the sampling instant to the
+                 loading of the duty ratios, defaults to 0. With double update, this equals
+                 the delay in sampling periods.
+   :type delay: int, optional
+   :param single_update: Sample and update the duty ratios once per carrier period, i.e., the sampling
+                         period of the control system equals the carrier period, defaults to False
+                         (double update, the sampling period is half the carrier period). With single
+                         update, `delay=2` loads the duty ratios at the next sampling instant and
+                         `delay=1` at the carrier extremum between the sampling instants.
+   :type single_update: bool, optional
 
 
 
@@ -553,6 +563,43 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: modulate(T_s, d_abc)
+
+      
+      Delay the duty ratios and convert them to gate signals.
+
+      The sampling period consists of one half carrier period with double update
+      and of two with single update. The duty ratios pass through the
+      computational delay once per half carrier period, and the PWM model is
+      called for each half carrier period.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param d_abc: Duty ratios computed at this sampling instant.
+      :type d_abc: Sequence[float]
+
+      :returns: * **t_steps** (*SwitchingTimes, shape (N,)*) -- Durations of the intervals (s), summing to `T_s`.
+                * **q_abc** (*GateSignals, shape (N, n_legs)*) -- Gate signals of the upper switches in each interval.
+                * **b_abc** (*BlankingSignals, shape (N, n_legs)*) -- Blanking signals in each interval.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: save(sol)
 

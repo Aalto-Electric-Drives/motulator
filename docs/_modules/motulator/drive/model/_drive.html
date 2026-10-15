@@ -215,9 +215,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -506,15 +506,20 @@
 <span class="sd">    lc_filter : LCFilter, optional</span>
 <span class="sd">        LC filter model. If not given, a direct connection between the converter and</span>
 <span class="sd">        machine is used.</span>
-<span class="sd">    pwm : bool, optional</span>
-<span class="sd">        Enable PWM model, defaults to False.</span>
-<span class="sd">    delay : int, optional</span>
-<span class="sd">        Computational delay (samples), defaults to 1.</span>
 <span class="sd">    dc_bus : DCBus, optional</span>
 <span class="sd">        DC bus feeding the converter, e.g., `DiodeBridgeDCBus` for a diode front end,</span>
 <span class="sd">        or a DC bus shared with other models (e.g., with a grid converter system), see</span>
 <span class="sd">        `CompositeModel`. Defaults to None, in which case the converter has a constant</span>
 <span class="sd">        DC-bus voltage.</span>
+<span class="sd">    pwm : bool, optional</span>
+<span class="sd">        Enable PWM model, defaults to False.</span>
+<span class="sd">    delay : int, optional</span>
+<span class="sd">        Computational delay in half carrier periods (sampling periods with double</span>
+<span class="sd">        update), defaults to 1. With single update, use 2 for a delay of one</span>
+<span class="sd">        sampling period, see `Model`.</span>
+<span class="sd">    single_update : bool, optional</span>
+<span class="sd">        Sample and update the duty ratios once per carrier period instead of twice,</span>
+<span class="sd">        defaults to False, see `Model`.</span>
 
 <span class="sd">    """</span>
 
@@ -524,9 +529,10 @@
         <span class="n">mechanics</span><span class="p">:</span> <span class="n">MechanicalSystem</span> <span class="o">|</span> <span class="n">TwoMassMechanicalSystem</span> <span class="o">|</span> <span class="n">ExternalRotorSpeed</span><span class="p">,</span>
         <span class="n">converter</span><span class="p">:</span> <span class="n">VoltageSourceConverter</span><span class="p">,</span>
         <span class="n">lc_filter</span><span class="p">:</span> <span class="n">LCFilter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dc_bus</span><span class="p">:</span> <span class="n">DCBus</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pwm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">dc_bus</span><span class="p">:</span> <span class="n">DCBus</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span> <span class="o">=</span> <span class="n">mechanics</span>
@@ -551,7 +557,15 @@
                 <span class="p">(</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
                 <span class="p">(</span><span class="n">machine</span><span class="p">,</span> <span class="s2">"u_s_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">lc_filter</span><span class="p">,</span> <span class="s2">"u_f_ab"</span><span class="p">),</span>
             <span class="p">}</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">pwm</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">dc_bus</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">converter</span><span class="p">,</span>
+            <span class="n">subsystems</span><span class="p">,</span>
+            <span class="n">connections</span><span class="p">,</span>
+            <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">,</span>
+            <span class="n">pwm</span><span class="o">=</span><span class="n">pwm</span><span class="p">,</span>
+            <span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="p">,</span>
+            <span class="n">single_update</span><span class="o">=</span><span class="n">single_update</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 
