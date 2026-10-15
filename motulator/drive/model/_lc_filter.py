@@ -5,7 +5,7 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
+from motulator.common.model import ACPort, Sensor, Subsystem, SubsystemTimeSeries
 from motulator.common.utils._utils import complex2abc, complex2line, empty_array
 
 
@@ -76,6 +76,14 @@ class LCFilter(Subsystem):
         d_u_f_ab = (state.i_c_ab - inp.i_f_ab) / self.C_f
 
         return [d_i_c_ab, d_u_f_ab]
+
+    def compute_ac_port(self) -> ACPort:
+        """Return the converter-side inductor current dynamics."""
+        return ACPort(
+            self.state.i_c_ab,
+            self.state.u_f_ab + self.R_f * self.state.i_c_ab,
+            np.eye(2) / self.L_f,
+        )
 
     def meas_currents(self) -> Any:
         """Measure the converter phase currents (A)."""

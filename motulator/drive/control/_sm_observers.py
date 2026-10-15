@@ -267,6 +267,15 @@ class SpeedFluxObserver:
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_theta, k_o, k_f)
 
+    def synchronize(self, i_s_ab: complex, w_M: float, theta_M: float) -> None:
+        """Synchronize speed, position, and flux using sensored operating data."""
+        par = self.flux_observer.par
+        theta_m = wrap(par.n_p * theta_M)
+        self.flux_observer.theta_m = theta_m
+        self.flux_observer.psi_s = complex(par.psi_s_dq(exp(-1j * theta_m) * i_s_ab))
+        self.speed_observer.w_M = w_M
+        self.speed_observer.tau_L = 0.0
+
     @property
     def w_M(self) -> float:
         """Mechanical angular rotor speed estimate (rad/s), also an initial value."""

@@ -207,6 +207,24 @@ class FluxVectorController:
         self.par = par
         self.sensorless = cfg.sensorless
         self.online_ref = cfg.online_ref
+        self.T_s = cfg.T_s
+
+    def synchronize(self, i_s_ab: complex, w_M: float, theta_M: float) -> None:
+        """Synchronize the observer using measured rotor speed and position."""
+        self.observer.synchronize(i_s_ab, w_M, theta_M)
+
+    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
+        """Prepare a voltage matching the spinning machine without torque control."""
+        return References(
+            T_s=self.T_s,
+            i_s=fbk.i_s,
+            psi_s=abs(fbk.psi_s),
+            u_s=self.par.R_s * fbk.i_s + 1j * fbk.w_m * fbk.psi_s,
+        )
+
+    def prepare_start(self, fbk: ObserverOutputs) -> None:
+        """Initialize flux and torque integrators at the measured state."""
+        self.flux_torque_ctrl.initialize(fbk)
 
     def get_feedback(
         self,
@@ -232,6 +250,8 @@ class FluxVectorController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
+        if not ref.enabled:
+            return
         self.flux_torque_ctrl.update(ref.T_s, fbk)
         if self.online_ref:
             self.reference_gen.update(ref.T_s)
@@ -340,8 +360,9 @@ class ObserverBasedVHzController:
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
         self.observer.update(ref.T_s, fbk)
+        if ref.enabled:
+            self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

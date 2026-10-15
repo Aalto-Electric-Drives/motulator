@@ -49,6 +49,11 @@ class PIController:
         self.alpha_i = k_i / self.k_t  # Inverse of the integration time T_i
         self.v, self.u_i = 0.0, 0.0
 
+    def initialize(self, y_ref: float, y: float, u: float = 0.0) -> None:
+        """Initialize the integral state for a bumpless output `u`."""
+        self.u_i = u - self.k_t * y_ref + self.k_p * y
+        self.v = u - self.k_t * (y_ref - y)
+
     def compute_output(self, y_ref: float, y: float, u_ff: float = 0.0) -> float:
         """
         Compute the controller output.
@@ -133,6 +138,11 @@ class ComplexPIController:
         self.alpha_i = k_i / self.k_t  # Inverse of the integration time T_i
         self.v: complex = 0j
         self.u_i: complex = 0j
+
+    def initialize(self, i: complex, u: complex, w_c: float = 0.0) -> None:
+        """Initialize at a matched current reference and voltage operating point."""
+        self.u_i = u + (self.k_p - self.k_t) * i
+        self.v = u
 
     def compute_output(self, i_ref: complex, i: complex, u_ff: complex = 0j) -> complex:
         """
@@ -220,6 +230,14 @@ class DiscreteComplexController:
         # Workspace variables
         self._e: complex = 0j
         self._u: complex = 0j
+
+    def initialize(self, i: complex, u: complex, w_c: float = 0.0) -> None:
+        """Initialize the delayed regulator for a matched operating point."""
+        self.w_c = w_c
+        self.u_lim = u
+        k_t, _, k_1, k_2 = self._gains(w_c)
+        self.u_i = u + (k_1 - k_t) * i + k_2 * u
+        self._e, self._u = 0j, u
 
     def _gains(self, w_c: float) -> tuple[complex, complex, complex, complex]:
         """Gains of the complex-vector design, see (20) and (22) in [#Awa2019]_."""

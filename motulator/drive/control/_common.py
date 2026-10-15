@@ -30,6 +30,8 @@ class References:
     u_s_lim: complex = 0j  # Limited voltage reference (set by the control system)
     w_M: float | None = None  # Speed reference (set by the control system)
     d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
+    enabled: bool = True  # Effective gate enable, including the model interlock
+    flying_start: bool = False  # PWM priming or torque takeover ramp is in progress
 
 
 # %%
@@ -91,6 +93,11 @@ class FluxTorqueControllerBase:
         # Workspace variables for the update method
         self._i_a: complex = 0j
         self._u_ff: complex = 0j
+
+    def initialize(self, fbk: FluxTorqueFeedbacks) -> None:
+        """Initialize integral action at the measured flux and torque."""
+        self.x_psi = self.gain.alpha_i * abs(fbk.psi_s)
+        self.x_tau = self.gain.alpha_i * fbk.tau_M
 
     def _compute_voltage_ref(
         self,

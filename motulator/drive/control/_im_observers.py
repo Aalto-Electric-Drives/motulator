@@ -259,6 +259,11 @@ class SpeedFluxObserver:
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_o)
 
+    def synchronize(self, w_M: float) -> None:
+        """Synchronize shaft speed, preserving the residual flux estimate."""
+        self.speed_observer.w_M = w_M
+        self.speed_observer.tau_L = 0.0
+
     @property
     def w_M(self) -> float:
         """Mechanical angular rotor speed estimate (rad/s), also an initial value."""

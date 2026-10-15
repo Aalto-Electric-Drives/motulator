@@ -11,7 +11,7 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
+from motulator.common.model import ACPort, Sensor, Subsystem, SubsystemTimeSeries
 from motulator.common.utils._utils import complex2abc, empty_array, get_value, wrap
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
@@ -119,6 +119,32 @@ class InductionMachine(Subsystem):
         self.out.i_s_ab, self.out.i_r_ab, self.out.tau_M = self.compute_outputs(
             self.state, self.inp
         )
+
+    def compute_ac_port(self) -> ACPort:
+        """Return the stationary-coordinate stator current dynamics."""
+        par, state = self.par, self.state
+        i_s, i_r, _ = self.compute_outputs(state, self.inp)
+        if par.G_c:
+            i_m = state.psi_s_ab / get_value(par.L_s, abs(state.psi_s_ab)) - i_r
+            g = par.G_c / (1 + par.G_c * par.R_s)
+            return ACPort(i_s, -i_m / par.G_c, g * np.eye(2), algebraic=True)
+        # Differentiate the flux-to-current map, including magnetic saturation.
+        h = 1e-5
+
+        def current(psi: complex) -> complex:
+            return (
+                psi / get_value(par.L_s, abs(psi)) + (psi - state.psi_r_ab) / par.L_ell
+            )
+
+        d_x = (current(state.psi_s_ab + h) - current(state.psi_s_ab - h)) / (2 * h)
+        d_y = (current(state.psi_s_ab + 1j * h) - current(state.psi_s_ab - 1j * h)) / (
+            2 * h
+        )
+        Y = np.array([[d_x.real, d_y.real], [d_x.imag, d_y.imag]])
+        d_psi_r = -par.R_r * i_r + 1j * par.n_p * self.inp.w_M * state.psi_r_ab
+        v = np.linalg.solve(Y, [d_psi_r.real, d_psi_r.imag]) / par.L_ell
+        e = par.R_s * i_s + complex(v[0], v[1])
+        return ACPort(i_s, e, Y)
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
@@ -288,6 +314,44 @@ class SynchronousMachine(Subsystem):
         self.out.i_s_dq, self.out.i_s_ab, self.out.tau_M = self.compute_outputs(
             self.state, self.inp
         )
+
+    def compute_ac_port(self) -> ACPort:
+        """Return the stator current relation for blocked converter gates."""
+        par, state = self.par, self.state
+        theta = state.theta_m.real
+        rot = np.exp(1j * theta)
+        i_dq, _ = par.magnetic_map(state.psi_s_dq, rot)
+        i = complex(i_dq) * rot
+        if par.G_c:
+            g = par.G_c / (1 + par.G_c * par.R_s)
+            _, i_s, _ = self.compute_outputs(state, self.inp)
+            return ACPort(i_s, -i / par.G_c, g * np.eye(2), algebraic=True)
+        if isinstance(par, SynchronousMachinePars):
+            J = np.diag([1 / par.L_d, 1 / par.L_q])
+            d_theta = 0j
+        else:
+            # Differentiate the current map directly; a flux map is optional in
+            # saturated machine models. Also include spatial harmonics.
+            h = 1e-5
+            psi = state.psi_s_dq
+            dx = (par.i_s_dq(psi + h, rot) - par.i_s_dq(psi - h, rot)) / (2 * h)
+            dy = (par.i_s_dq(psi + 1j * h, rot) - par.i_s_dq(psi - 1j * h, rot)) / (
+                2 * h
+            )
+            J = np.array([[np.real(dx), np.real(dy)], [np.imag(dx), np.imag(dy)]])
+            d_theta = complex(
+                (
+                    par.i_s_dq(psi, rot * np.exp(1j * h))
+                    - par.i_s_dq(psi, rot * np.exp(-1j * h))
+                )
+                / (2 * h)
+            )
+        w = par.n_p * self.inp.w_M
+        rotational_current = w * (d_theta + 1j * complex(i_dq))
+        v = np.linalg.solve(J, [rotational_current.real, rotational_current.imag])
+        e_dq = par.R_s * complex(i_dq) + 1j * w * state.psi_s_dq - complex(v[0], v[1])
+        R = np.array([[rot.real, -rot.imag], [rot.imag, rot.real]])
+        return ACPort(i, complex(e_dq * rot), R @ J @ R.T)
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""

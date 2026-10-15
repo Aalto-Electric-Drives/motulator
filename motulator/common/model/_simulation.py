@@ -152,6 +152,7 @@ class Simulation:
         self._events: list[list[tuple[float, np.ndarray, np.ndarray]]] = [
             [] for _ in self._pairs
         ]
+        self._enable_initialized = False
 
     def simulate(self, t_stop: float = 1.0, N_eval: int = 0) -> SimulationResults:
         """
@@ -188,6 +189,10 @@ class Simulation:
         error = None
         try:
             # Initialize outputs based on the current states
+            if not self._enable_initialized:
+                for mdl, _ in self._pairs:
+                    mdl.converter.update_enable(self.mdl.t0)
+                self._enable_initialized = True
             self.mdl.set_outputs(self.mdl.t0)
 
             # Main simulation loop
@@ -227,6 +232,7 @@ class Simulation:
             for k, (mdl, ctrl) in enumerate(self._pairs):
                 # Control, computational delay, and carrier comparison
                 if k in due:
+                    mdl.converter.update_enable(t0)
                     T_s, ref_duty_ratio = ctrl(mdl)
                     if T_s <= _T_TOL:
                         raise ValueError("The sampling period must be positive")

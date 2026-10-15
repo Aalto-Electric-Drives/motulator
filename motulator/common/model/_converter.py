@@ -15,6 +15,7 @@ from typing import Any
 
 import numpy as np
 
+from motulator.common.model._ac_port import blocked_voltage
 from motulator.common.model._base import Subsystem, SubsystemTimeSeries
 from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import (
@@ -33,6 +34,7 @@ class Inputs:
     q_c_ab: complex = 0j
     i_c_ab: complex = 0j
     u_dc: float | None = None  # DC-bus voltage (V) from a DC-bus model, if connected
+    enabled: bool = True
 
 
 @dataclass
@@ -41,6 +43,7 @@ class Outputs:
 
     u_c_ab: complex
     u_dc: float
+    enabled: bool = True
 
 
 class VoltageSourceConverter(Subsystem):
@@ -52,6 +55,10 @@ class VoltageSourceConverter(Subsystem):
     conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
     in the beginning of the blanking interval. The DC-bus voltage is either constant or
     given by a DC-bus model connected to the input `u_dc` (see `DCBus` and `Model`).
+
+    The gates can be blocked with `Model.set_enable`. During blocking, all controlled
+    switches are open and the connected load's AC-port relation determines the
+    terminal voltage and passive conduction through the antiparallel diodes.
 
     Parameters
     ----------
@@ -70,6 +77,7 @@ class VoltageSourceConverter(Subsystem):
     """
 
     n_legs: int = 3
+    output_names: tuple[str, ...] = ("u_c_ab", "enabled")
 
     def __init__(
         self,
@@ -85,6 +93,35 @@ class VoltageSourceConverter(Subsystem):
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc)
         self.state = None
+        self._enable: bool | Callable[[float], bool] = True
+        self._model_enabled = True
+        self._control_enabled = True
+        self.ac_load: Subsystem | None = None
+
+    def connect_ac_load(self, load: Subsystem) -> None:
+        """Connect the subsystem supplying the converter AC current."""
+        self.ac_load = load
+
+    def set_enable(self, enable: bool | Callable[[float], bool]) -> None:
+        """Set the gate-enable command, evaluated at control sampling instants."""
+        self._enable = enable
+        if not callable(enable):
+            self._model_enabled = bool(enable)
+            self.inp.enabled = self._model_enabled and self._control_enabled
+
+    def set_control_enable(self, enable: bool) -> None:
+        """Set control-side gate permission, interlocked with the model command."""
+        self._control_enabled = enable
+        self.inp.enabled = self._model_enabled and enable
+
+    def update_enable(self, t: float) -> None:
+        """Evaluate the gate-enable command."""
+        self._model_enabled = bool(get_value(self._enable, t))
+        self.inp.enabled = self._model_enabled and self._control_enabled
+
+    def needs_output_iteration(self) -> bool:
+        """Blocked terminal voltages depend on the load's AC-port relation."""
+        return not self.inp.enabled
 
     def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
         """Set the switching state based on the gate and blanking signals."""
@@ -93,7 +130,9 @@ class VoltageSourceConverter(Subsystem):
 
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A)."""
-        return 1.5 * np.real(inp.q_c_ab * np.conj(inp.i_c_ab))
+        pwm_current = 1.5 * np.real(inp.q_c_ab * np.conj(inp.i_c_ab))
+        diode_current = -0.5 * np.sum(np.abs(complex2abc(inp.i_c_ab)), axis=0)
+        return np.where(inp.enabled, pwm_current, diode_current)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -104,13 +143,26 @@ class VoltageSourceConverter(Subsystem):
                 "The DC-bus voltage must be given, unless the converter is fed from a "
                 "DC-bus model"
             )
-        self.out.u_c_ab = self.inp.q_c_ab * self.out.u_dc
+        self.out.enabled = self.inp.enabled
+        if self.inp.enabled:
+            self.out.u_c_ab = self.inp.q_c_ab * self.out.u_dc
+        else:
+            if self.ac_load is None:
+                raise ValueError("A disabled converter requires a connected AC load")
+            port = self.ac_load.compute_ac_port()
+            if port is None:
+                raise ValueError("The connected load must implement compute_ac_port")
+            self.out.u_c_ab = blocked_voltage(port, self.out.u_dc)
 
     def meas_dc_voltage(self) -> float:
         """Measure converter DC-bus voltage (V)."""
         if self.u_dc_sensor is None:
             return self.out.u_dc
         return float(self.u_dc_sensor(self.out.u_dc))
+
+    def meas_voltages(self) -> np.ndarray:
+        """Measure ideal converter AC phase voltages (V), excluding common mode."""
+        return complex2abc(self.out.u_c_ab)
 
     def rhs(self, t: float) -> list[complex]:
         """Default empty implementation."""
@@ -134,15 +186,21 @@ class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
     i_c_ab: np.ndarray = field(default_factory=empty_array)
     u_c_ab: np.ndarray = field(default_factory=empty_array)
     i_dc_int: np.ndarray = field(default_factory=empty_array)
+    enabled: np.ndarray = field(default_factory=empty_array)
+    _blocked_voltage: np.ndarray = field(default_factory=empty_array, repr=False)
 
     def __post_init__(self, t: np.ndarray, subsystem: T) -> None:
         # Constant DC-bus voltage, replaced by the DC-bus model time series if connected
         u_dc = np.nan if subsystem.u_dc is None else subsystem.u_dc
         self.u_dc = np.full(np.size(t), u_dc)
+        self.enabled = np.array(subsystem._output_history["enabled"], dtype=bool)
+        self._blocked_voltage = np.array(subsystem._output_history["u_c_ab"])
 
     def compute_zoh_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
         """Compute zero-order hold derived signals."""
-        self.u_c_ab = self.q_c_ab * self.u_dc
+        self.u_c_ab = np.where(
+            self.enabled, self.q_c_ab * self.u_dc, self._blocked_voltage
+        )
 
     def compute_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
         """Process input time series."""

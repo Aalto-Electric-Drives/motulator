@@ -3,6 +3,7 @@
 from motulator.common.control._pwm import PWM
 from motulator.drive.control._base import (
     DriveControlSystem,
+    FlyingStartCfg,
     VectorControlSystem,
     VHzControlSystem,
 )
@@ -35,6 +36,7 @@ from motulator.drive.utils._parameters import (
 )
 
 __all__ = [
+    "FlyingStartCfg",
     "DriveControlSystem",
     "PWM",
     "PIController",

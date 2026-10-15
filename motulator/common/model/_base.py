@@ -1,15 +1,17 @@
 """Base classes for models."""
 
+from collections.abc import Callable
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Protocol
 
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
+from motulator.common.model._ac_port import ACPort
 from motulator.common.model._pwm import ZOH, CarrierComparison
 
 if TYPE_CHECKING:
-    from motulator.common.model._converter import DCBus
+    from motulator.common.model._converter import DCBus, VoltageSourceConverter
 
 
 # %%
@@ -45,6 +47,16 @@ class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemSta
     out: Out
     state: State | None
     _history: dict[str, list[complex]]
+    _output_history: dict[str, list[Any]]
+    output_names: tuple[str, ...] = ()
+
+    def compute_ac_port(self) -> ACPort | None:
+        """Return the load's AC-port relation for passive diode conduction."""
+        return None
+
+    def needs_output_iteration(self) -> bool:
+        """Whether outputs depend on inputs supplied later in the wiring order."""
+        return False
 
     def set_states(self, state_list: list[complex], index: int) -> int:
         """Set states from the state list."""
@@ -66,6 +78,7 @@ class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemSta
         """Initialize the state history with an empty list for each state field."""
         states = vars(self.state) if self.state is not None else {}
         self._history = {name: [] for name in states}
+        self._output_history = {name: [] for name in self.output_names}
 
     def extend_state_history(self, sol_y: list[list[float]], index: int) -> int:
         """Extend the state history with values from solver output."""
@@ -98,6 +111,14 @@ class Converter(Subsystem, Protocol):
 
     n_legs: int  # Number of legs
     t_d: float  # Dead time (s)
+
+    def connect_ac_load(self, load: Subsystem) -> None:
+        """Connect a load providing an AC-port relation."""
+        ...
+
+    def update_enable(self, t: float) -> None:
+        """Evaluate the enable schedule at a sampling instant."""
+        ...
 
     @property
     def inp(self) -> ConverterInputs:
@@ -175,10 +196,12 @@ class System:
 
     def set_outputs(self, t: float) -> None:
         """Compute the outputs and pass them to the connected inputs."""
-        for subsystem in self.subsystems:
-            subsystem.set_outputs(t)
-            for target, inp, out in self._outgoing[subsystem]:
-                setattr(target.inp, inp, getattr(subsystem.out, out))
+        passes = 2 if any(s.needs_output_iteration() for s in self.subsystems) else 1
+        for _ in range(passes):
+            for subsystem in self.subsystems:
+                subsystem.set_outputs(t)
+                for target, inp, out in self._outgoing[subsystem]:
+                    setattr(target.inp, inp, getattr(subsystem.out, out))
 
     def rhs(self, t: float, state_list: list[complex]) -> list[complex]:
         """Compute complete state derivative list for the solver."""
@@ -196,6 +219,20 @@ class System:
         index = 0
         for subsystem in self.subsystems:
             index = subsystem.extend_state_history(sol.y, index)
+        # Gate-blocked outputs vary within a PWM interval. Evaluate the accepted
+        # solution points, preserving the final state even when t_eval omits it.
+        replay = any(s.needs_output_iteration() for s in self.subsystems)
+        state = self.get_initial_values() if replay else []
+        for k, t in enumerate(sol.t):
+            if replay:
+                self.set_states(sol.y[:, k])
+                self.set_outputs(t)
+            for subsystem in self.subsystems:
+                for name, history in subsystem._output_history.items():
+                    history.append(getattr(subsystem.out, name))
+        if replay:
+            self.set_states(state)
+            self.set_outputs(self.t0)
 
 
 class Model[C: Converter](System):
@@ -249,10 +286,29 @@ class Model[C: Converter](System):
             connections = {**connections, (converter, "u_dc"): (dc_bus, "u_dc")}
         super().__init__(subsystems, connections)
         self.converter: C = converter
+        if (source := connections.get((converter, "i_c_ab"))) is not None:
+            converter.connect_ac_load(source[0])
         self.dc_bus = dc_bus
         self.delay = Delay(delay, converter.n_legs)
         t_d = converter.t_d
         self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
+
+    def set_enable(
+        self: "Model[VoltageSourceConverter]", enable: bool | Callable[[float], bool]
+    ) -> None:
+        """
+        Set the converter gate-enable command, constant or a function of time.
+
+        Parameters
+        ----------
+        enable : bool | Callable[[float], bool]
+            True enables PWM, False opens all controlled switches. The antiparallel
+            diodes remain connected. Functions are evaluated at control sampling
+            instants, independently of the PWM computational delay. Defaults to True.
+            The control system continues running while the gates are blocked.
+
+        """
+        self.converter.set_enable(enable)
 
     def save(self, sol: OdeResult) -> None:
         """Save the solution and the switching state."""

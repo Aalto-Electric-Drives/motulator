@@ -81,6 +81,10 @@ class DiscreteCurrentController(DiscreteComplexController):
         self.par = par
         super().__init__(alpha_c, T_s)
 
+    def initialize(self, i: complex, u: complex, w_c: float = 0.0) -> None:
+        """Initialize the discrete regulator in leakage-flux coordinates."""
+        super().initialize(self.par.L_sgm * i, u, w_c)
+
     def compute_output(self, i_ref: complex, i: complex) -> complex:
         # Extends the base class method by mapping the currents to the flux linkages
         L_sgm = self.par.L_sgm
@@ -314,6 +318,28 @@ class CurrentVectorController:
         self.k_comp = 0.0 if cfg.discrete else 1.5
         self.T_s = cfg.T_s
 
+    def synchronize(self, i_s_ab: complex, w_M: float, theta_M: float) -> None:
+        """Synchronize the measured shaft speed, preserving residual flux."""
+        self.observer.synchronize(w_M)
+
+    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
+        """Prepare a voltage matching the estimated stator flux motion."""
+        return References(
+            T_s=self.T_s,
+            i_s=fbk.i_s,
+            psi_s=abs(fbk.psi_s),
+            u_s=self.reference_gen.par.R_s * fbk.i_s + 1j * fbk.w_s * fbk.psi_s,
+        )
+
+    def prepare_start(self, fbk: ObserverOutputs) -> None:
+        """Initialize magnetizing current and regulator without winding up."""
+        i_d = (exp(-1j * phase(fbk.psi_R)) * fbk.i_s).real
+        self.reference_gen.i_sd_ref = clip(
+            i_d, -self.reference_gen.i_s_max, self.reference_gen.i_sd_nom
+        )
+        ref = self.compute_standby_output(fbk)
+        self.current_ctrl.initialize(fbk.i_s, ref.u_s, fbk.w_c)
+
     def get_feedback(
         self,
         u_s_ab: complex,
@@ -340,6 +366,8 @@ class CurrentVectorController:
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
+        if not ref.enabled:
+            return
         self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc)
         u_s = ref.u_s_lim if self.cfg.discrete else fbk.u_s
         self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)

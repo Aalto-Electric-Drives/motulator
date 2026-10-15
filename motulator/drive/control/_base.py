@@ -31,6 +31,7 @@ class ExternalReferences:
 
     w_M: float | Callable[[float], float] | None = None
     tau_M: float | Callable[[float], float] | None = None
+    enable: bool | Callable[[float], bool] = True
 
 
 @dataclass
@@ -41,6 +42,28 @@ class Measurements:
     u_dc: float
     w_M: float | None = None
     theta_M: float | None = None  # Mechanical angular position
+    u_c_ab: complex | None = None  # Measured voltage while gates are blocked
+
+
+@dataclass
+class FlyingStartCfg:
+    """
+    Sensored flying-start configuration for vector control.
+
+    Parameters
+    ----------
+    T_ramp : float, optional
+        Torque takeover ramp duration (s), defaults to 0.05. Must be positive and
+        finite. Before enabling the gates, synchronized voltage commands are held
+        for the model's computational delay plus one sampling period.
+
+    """
+
+    T_ramp: float = 0.05
+
+    def __post_init__(self) -> None:
+        if self.T_ramp <= 0:
+            raise ValueError("T_ramp must be positive")
 
 
 # %%
@@ -49,6 +72,18 @@ class VectorController[Ref, Fbk](Protocol):
 
     sensorless: bool
     k_comp: float  # Angle-advance factor, see DriveControlSystem
+
+    def synchronize(self, i_s_ab: complex, w_M: float, theta_M: float) -> None:
+        """Synchronize using measured current, shaft speed, and shaft position."""
+        ...
+
+    def compute_standby_output(self, fbk: Fbk) -> Ref:
+        """Compute synchronized voltage references without power control."""
+        ...
+
+    def prepare_start(self, fbk: Fbk) -> None:
+        """Initialize power-controller states for torque takeover."""
+        ...
 
     def get_feedback(
         self,
@@ -136,6 +171,31 @@ class DriveControlSystem(ControlSystem):
         self.pwm = pwm
         self.k_comp = k_comp
         self.ext_ref = ExternalReferences()
+        self.enabled = True
+
+    def set_enable(self, enable: bool | Callable[[float], bool]) -> None:
+        """
+        Set the control-side gate-enable command.
+
+        Parameters
+        ----------
+        enable : bool | Callable[[float], bool]
+            Constant command or a function of controller time (s), evaluated at
+            sampling instants. Defaults to True. Both the model and control
+            commands must permit operation. While blocked, power regulators stop
+            integrating and observers use measured converter terminal voltages.
+
+        """
+        self.ext_ref.enable = enable
+
+    def _update_enable(self, mdl: Drive) -> None:
+        mdl.converter.set_control_enable(bool(get_value(self.ext_ref.enable, self.t)))
+        self.enabled = mdl.converter.inp.enabled
+
+    def run_control_loop(self, mdl: Drive) -> tuple[float, Sequence[float]]:
+        """Apply the gate interlock before running the sampled control loop."""
+        self._update_enable(mdl)
+        return super().run_control_loop(mdl)
 
     def set_speed_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
         """
@@ -157,20 +217,33 @@ class DriveControlSystem(ControlSystem):
         """Compute the references, including the speed reference `w_M`."""
         raise NotImplementedError
 
+    def _compute_standby_output(self, fbk: Feedbacks) -> References:
+        """Compute references without running power regulators."""
+        raise NotImplementedError
+
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         # The observers use the voltage of the ongoing sampling period, while the
         # control laws use the voltage averaged over the previous and ongoing periods
         u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc, average=False)
+        if meas.u_c_ab is not None:
+            u_c_ab = meas.u_c_ab
         fbk = self._get_inner_feedback(u_c_ab, meas)
         u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        if meas.u_c_ab is not None:
+            u_c_ab = meas.u_c_ab
         fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
         fbk.u_dc = meas.u_dc
         return fbk
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""
-        ref = self._compute_inner_output(fbk)
+        ref = (
+            self._compute_inner_output(fbk)
+            if self.enabled
+            else self._compute_standby_output(fbk)
+        )
+        ref.enabled = self.enabled
         ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
         ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
         return ref
@@ -206,6 +279,11 @@ class VectorControlSystem(DriveControlSystem):
         Speed controller. If None (default), torque-control mode is used.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
+    flying_start : FlyingStartCfg, optional
+        Enable sensored flying-start, defaults to None (disabled). Requires speed
+        and position measurements and a direct machine connection. Sensorless
+        controllers are rejected. At every takeover, the observer and regulators
+        are synchronized, delayed PWM is primed, and torque is ramped in.
 
     """
 
@@ -214,10 +292,45 @@ class VectorControlSystem(DriveControlSystem):
         vector_ctrl: VectorController,
         speed_ctrl: SpeedController | PIController | None = None,
         pwm: PWM | None = None,
+        flying_start: FlyingStartCfg | None = None,
     ) -> None:
+        if flying_start is not None and vector_ctrl.sensorless:
+            raise ValueError("Flying-start requires a sensored vector controller")
         super().__init__(pwm if pwm is not None else PWM(), vector_ctrl.k_comp)
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
+        self.flying_start_cfg = flying_start
+        self._restart_pending = True
+        self._priming_remaining = 0
+        self._prepare_start = False
+        self._takeover_time = 0.0
+        self._flying_start = False
+
+    def _update_enable(self, mdl: Drive) -> None:
+        was_enabled = self.enabled
+        super()._update_enable(mdl)
+        if self.flying_start_cfg is None:
+            return
+        if mdl.lc_filter is not None:
+            raise ValueError(
+                "Sensored flying-start requires a direct machine connection"
+            )
+        if not self.enabled:
+            self._restart_pending = True
+            self._priming_remaining = 0
+            self._takeover_time = 0.0
+            self._prepare_start = False
+            self._flying_start = False
+            return
+        if self._restart_pending:
+            self._priming_remaining = len(mdl.delay.data) + 1
+            self._restart_pending = False
+        self._prepare_start = self._priming_remaining > 0 or not was_enabled
+        self._flying_start = self._takeover_time < self.flying_start_cfg.T_ramp
+        if self._priming_remaining > 0:
+            self._priming_remaining -= 1
+            mdl.converter.set_control_enable(False)
+            self.enabled = False
 
     def set_speed_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
         """
@@ -261,12 +374,44 @@ class VectorControlSystem(DriveControlSystem):
         else:
             w_M = mdl.mechanics.meas_speed()
             theta_M = wrap(mdl.mechanics.meas_position())
-        return Measurements(i_c_ab, u_dc, w_M, theta_M)
+        u_c_ab = (
+            abc2complex(mdl.converter.meas_voltages()) if not self.enabled else None
+        )
+        return Measurements(i_c_ab, u_dc, w_M, theta_M, u_c_ab)
 
     def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
+        if self.flying_start_cfg is not None and (
+            not self.enabled or self._prepare_start
+        ):
+            if meas.w_M is None or meas.theta_M is None:
+                raise ValueError(
+                    "Flying-start requires measured shaft speed and position"
+                )
+            self.vector_ctrl.synchronize(meas.i_c_ab, meas.w_M, meas.theta_M)
         return self.vector_ctrl.get_feedback(
             u_s_ab, meas.i_c_ab, meas.w_M, meas.theta_M
         )
+
+    def get_feedback(self, meas: Measurements) -> Feedbacks:
+        """Synchronize the observer and initialize regulators at torque takeover."""
+        fbk = super().get_feedback(meas)
+        if self._prepare_start:
+            self.vector_ctrl.prepare_start(fbk)
+            if self.speed_ctrl is not None:
+                w_ref = (
+                    fbk.w_M
+                    if self.ext_ref.w_M is None
+                    else get_value(self.ext_ref.w_M, self.t)
+                )
+                self.speed_ctrl.initialize(w_ref, fbk.w_M)
+        return fbk
+
+    def _compute_standby_output(self, fbk: Feedbacks) -> References:
+        ref = self.vector_ctrl.compute_standby_output(fbk)
+        ref.flying_start = self._flying_start
+        if self.speed_ctrl is not None and self.ext_ref.w_M is not None:
+            ref.w_M = get_value(self.ext_ref.w_M, self.t)
+        return ref
 
     def _compute_inner_output(self, fbk: Feedbacks) -> References:
         if self.speed_ctrl is not None:  # Speed-control mode
@@ -279,16 +424,21 @@ class VectorControlSystem(DriveControlSystem):
                 raise ValueError("Torque reference must be set")
             w_M_ref = None
             tau_M_ref = get_value(self.ext_ref.tau_M, self.t)
+        if self.flying_start_cfg is not None:
+            tau_M_ref *= min(self._takeover_time / self.flying_start_cfg.T_ramp, 1.0)
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
         ref.w_M = w_M_ref
+        ref.flying_start = self._flying_start
         return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
         super().update(ref, fbk)
         self.vector_ctrl.update(ref, fbk)
-        if self.speed_ctrl is not None:
+        if self.speed_ctrl is not None and ref.enabled:
             self.speed_ctrl.update(ref.T_s, ref.tau_M)
+        if ref.enabled:
+            self._takeover_time += ref.T_s
 
     def post_process(self) -> TimeSeries:
         """Extend the post-process method."""
@@ -326,12 +476,18 @@ class VHzControlSystem(DriveControlSystem):
         """Get measurements."""
         u_dc = mdl.converter.meas_dc_voltage()
         i_s_ab = abc2complex(mdl.machine.meas_currents())
-        return Measurements(i_s_ab, u_dc)
+        u_c_ab = (
+            abc2complex(mdl.converter.meas_voltages()) if not self.enabled else None
+        )
+        return Measurements(i_s_ab, u_dc, u_c_ab=u_c_ab)
 
     def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
         if self.ext_ref.w_M is None:
-            raise ValueError("Speed reference must be set")
-        w_M_ref = get_value(self.ext_ref.w_M, self.t)
+            if self.enabled:
+                raise ValueError("Speed reference must be set")
+            w_M_ref = 0.0
+        else:
+            w_M_ref = get_value(self.ext_ref.w_M, self.t)
         self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
         return self.vhz_ctrl.get_feedback(u_s_ab, meas.i_c_ab, self._w_M_ref)
 
@@ -339,6 +495,9 @@ class VHzControlSystem(DriveControlSystem):
         ref = self.vhz_ctrl.compute_output(fbk)
         ref.w_M = self._w_M_ref
         return ref
+
+    def _compute_standby_output(self, fbk: Feedbacks) -> References:
+        return References(T_s=self.vhz_ctrl.T_s, u_s=fbk.u_s, w_M=self._w_M_ref)
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""

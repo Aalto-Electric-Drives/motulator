@@ -68,6 +68,48 @@ label: DC_current
 
 The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models of the converter systems sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge rectifier, see {doc}`/model/drive/diode_bridge`.
 
+## Gate Enable
+
+The converter gates are enabled by default. A model with a voltage-source converter,
+including a variable typed as `Model[VoltageSourceConverter]`, accepts a constant
+enable command or a function of simulation time:
+
+```python
+mdl.set_enable(False)  # All controlled switches open
+mdl.set_enable(lambda t: t < 0.2 or t >= 0.5)
+```
+
+The function is evaluated at the model's control sampling instants. Gate blocking
+bypasses the PWM computational delay and works with both averaged and switching
+models. Drive controllers also provide `ctrl.set_enable(...)`; both commands must
+permit operation. While blocked, drive observers keep running but power regulators
+stop integrating. Without flying-start, the ongoing delayed PWM command takes
+effect on re-enabling. Opt-in sensored flying-start synchronizes the observer and
+regulators, primes the PWM delay, and ramps torque at takeover, see
+{doc}`/control/drive/enable_flying_start`.
+
+While disabled, the antiparallel diodes remain connected. Below their conduction
+threshold, the machine terminal voltage follows the open-circuit EMF and the stator
+current is zero. Existing winding currents freewheel through the diodes after gate
+blocking. If the generated line-to-line voltage exceeds the DC-bus voltage, passive
+rectification can feed the DC bus. A constant DC source absorbs this energy, while a
+capacitive `DCBus` can charge. A floating phase remains unconstrained until one of its
+diodes is forward biased; the phase currents and the connected load's differential
+AC-port relation determine these terminal voltages.
+
+The ideal-diode solution treats phase currents within 10 microamperes of zero as
+zero and stabilizes this residual with a 100-microsecond time constant. Solver
+tolerances should resolve this current boundary layer; reducing `SolverCfg.rtol`
+and `SolverCfg.atol` avoids spurious commutations near zero current. The example
+uses `SolverCfg(rtol=1e-8, atol=1e-10)`. Machine saturation and core-loss branches,
+output filters, and shared DC buses are supported. Custom AC loads must implement
+`Subsystem.compute_ac_port()` to provide an `ACPort` current relation.
+
+The realized gate-enable state is available as `res.mdl.converter.enabled` and the
+terminal voltage as `res.mdl.converter.u_c_ab`. The switching command `q_c_ab`
+continues to represent the PWM command, even while the gates are blocked. See
+{doc}`/drive_examples/current_vector/plot_ipmsm_drive_enable` for an example.
+
 ## Carrier Comparison
 
 In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals $\qA$, $\qB$, and $\qC$ from duty ratios $\dA$, $\dB$, and $\dC$. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.
