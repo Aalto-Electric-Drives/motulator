@@ -226,6 +226,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
@@ -536,6 +537,15 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.compute_output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.compute_output()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.update"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingOutputs"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingOutputs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback()</span></code></a></li>
@@ -623,37 +633,46 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBusVoltageController</span></code></a></p></td>
 <td><p>DC-bus voltage PI controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.DualVoltageFormingController" title="motulator.grid.control.DualVoltageFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DualVoltageFormingController</span></code></a></p></td>
+<td><p>Dual-voltage-forming controller.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.DualVoltageFormingControllerCfg" title="motulator.grid.control.DualVoltageFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DualVoltageFormingControllerCfg</span></code></a></p></td>
+<td><p>Dual-voltage-forming controller configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DualVoltageFormingOutputs</span></code></a></p></td>
+<td><p>Feedback signals for the control system.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p></td>
 <td><p>Grid converter control system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a></p></td>
 <td><p>Disturbance-observer-based grid-forming controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControllerCfg" title="motulator.grid.control.ObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingControllerCfg" title="motulator.grid.control.ObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingControllerCfg</span></code></a></p></td>
 <td><p>Disturbance-observer-based grid-forming controller configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
 <td><p>Feedback signals for the control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PLL" title="motulator.grid.control.PLL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLL</span></code></a></p></td>
 <td><p>Phase-locked loop including the voltage-magnitude filtering.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLLOutputs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PLLOutputs</span></code></a></p></td>
 <td><p>Feedback signals for the control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationController" title="motulator.grid.control.PowerSynchronizationController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationController" title="motulator.grid.control.PowerSynchronizationController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationController</span></code></a></p></td>
 <td><p>Reference-feedforward power-synchronization controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
 <td><p>Configuration for the reference-feedforward power-synchronization controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller configuration.</p></td>
 </tr>
 </tbody>
@@ -844,6 +863,150 @@ PWM converter-inverter system,” IEEE Trans. Ind. Electron., 2001,
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DualVoltageFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingController" title="Link to this definition">#</a></dt>
+<dd><p>Dual-voltage-forming controller.</p>
+<p>This controller regulates both the DC-bus voltage and the converter output voltage
+magnitude <a class="footnote-reference brackets" href="#mou2025" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, extending the disturbance-observer-based grid-forming control
+<a href="#id15"><span class="problematic" id="id3">[#Nur2024]_</span></a>. The disturbance observer estimates the quasi-static converter voltage
+as in <cite>ObserverBasedGridFormingController</cite>, and a second observer estimates the
+disturbance power, i.e., the external power fed to the DC bus minus the grid
+power and the resistive losses, from the energy balance of the DC-bus capacitor
+and the inductor. The control law feeds the estimated disturbance power forward and
+corrects the DC-bus energy error, which controls the active power without a
+cascaded DC-bus voltage controller. The disturbance observers provide the integral
+action and the synchronization. Transparent current control is also implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.DualVoltageFormingControllerCfg" title="motulator.grid.control.DualVoltageFormingControllerCfg"><em>DualVoltageFormingControllerCfg</em></a>) – Dual-voltage-forming control configuration.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The control law equals the grid-forming mode of <cite>ObserverBasedGridFormingController</cite>
+with the power control gain <cite>R_a/(1.5*v_c_ref) = k_d</cite> and the active-power
+reference <cite>p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)</cite>, where <cite>p_dis + p_g</cite>
+is the estimated external power fed to the DC bus, excluding the resistive losses
+<cite>1.5*R*|i_c|**2</cite>. This equivalent reference is logged in <cite>ref.p_g</cite>.</p>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="mou2025" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Mourouvin, Nurminen, Hinkkanen, Routimo, “Direct DC-bus control for
+grid-forming converters: Toward the concept of dual-voltage-forming converters,”
+IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://doi.org/10.1109/TPEL.2025.3537332">https://doi.org/10.1109/TPEL.2025.3537332</a></p>
+</aside>
+<aside class="footnote brackets" id="nur2024" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming
+converter control based on a disturbance observer,” IEEE Trans. Power Electron.,
+2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
+</aside>
+</aside>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingController.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_c_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingController.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_dc_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs"><em>DualVoltageFormingOutputs</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.grid.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingController.get_feedback">
+<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingController.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get the feedback signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
+<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs">DualVoltageFormingOutputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingController.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingController.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingController.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Post-process controller time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingController.update" title="Link to this definition">#</a></dt>
+<dd><p>Update states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs"><em>DualVoltageFormingOutputs</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingControllerCfg">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DualVoltageFormingControllerCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingControllerCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingControllerCfg" title="Link to this definition">#</a></dt>
+<dd><p>Dual-voltage-forming controller configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Maximum current (A), peak value.</p></li>
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Total inductance estimate (H).</p></li>
+<li><p><strong>C_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – DC-bus capacitance estimate (F).</p></li>
+<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance estimate (Ω), defaults to 0.</p></li>
+<li><p><strong>k_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – DC-bus power gain (V/W), defaults to <cite>1/(1.5*i_max)</cite>, i.e., 1 p.u. with the
+base power <cite>1.5*u_nom*i_max</cite>.</p></li>
+<li><p><strong>alpha_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Approximate closed-loop bandwidth of the DC-bus energy control (rad/s),
+defaults to 2*pi*7.5.</p></li>
+<li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth of the quasi-static converter voltage (rad/s), defaults to
+2*pi*100.</p></li>
+<li><p><strong>alpha_o_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth of the disturbance power (rad/s), defaults to 2*pi*60.</p></li>
+<li><p><strong>k_v</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Voltage control gain, defaults to <cite>alpha_o/w_nom</cite>.</p></li>
+<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Current control bandwidth (rad/s), defaults to 2*pi*400.</p></li>
+<li><p><strong>u_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid voltage (V), line-to-neutral peak value, defaults to
+<cite>sqrt(2/3)*400</cite>.</p></li>
+<li><p><strong>w_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 125e-6.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingOutputs">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DualVoltageFormingOutputs</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingOutputs" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._gfm_observer.ObserverOutputs</span></code></p>
+<p>Feedback signals for the control system.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus_voltage_ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._base.ControlSystem</span></code></p>
@@ -857,16 +1020,19 @@ voltage averaged over the previous and the ongoing sampling periods. Before the
 modulation, the angle of the voltage reference is advanced by <cite>k_comp*T_s*w_c</cite>,
 where <cite>k_comp</cite> is given by the inner controller. The value 1.5 compensates for the
 computational delay of one sampling period and the delay of half a sampling period
-caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the
+caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. The value 0 means that the
 angle is not advanced, which is used if the controller takes the delays into account
 itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>inner_ctrl</strong> (<em>InnerController</em>) – Inner controller. A grid-forming controller takes the AC voltage reference
-and a grid-following controller the reactive power reference.</p></li>
+and a grid-following controller the reactive power reference. A
+DC-bus-forming controller takes the DC-bus voltage reference instead of the
+active power reference.</p></li>
 <li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller, which gives the active power reference. If not
-given, the active power reference is set externally.</p></li>
+given, the active power reference is set externally, unless the inner
+controller is DC-bus forming.</p></li>
 <li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>PWM()</cite>.</p></li>
 </ul>
 </dd>
@@ -874,7 +1040,7 @@ given, the active power reference is set externally.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bae2003" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Bae, Sul, “A compensation method for time delay of full-digital
 synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.810660">https://doi.org/10.1109/TIA.2003.810660</a></p>
@@ -1013,9 +1179,9 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
 <dd><p>Disturbance-observer-based grid-forming controller.</p>
 <p>This implements the RFPSC-type grid-forming mode of the control method described in
-<a class="footnote-reference brackets" href="#nur2024" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. Transparent current control is also implemented. Optionally, the
+<a href="#id16"><span class="problematic" id="id5">[#Nur2024]_</span></a>. Transparent current control is also implemented. Optionally, the
 active-power reference is limited to a realizable level, prioritizing the reactive
-current, as described in <a class="footnote-reference brackets" href="#maa2026" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> (here reduced to balanced conditions). This
+current, as described in <a class="footnote-reference brackets" href="#maa2026" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> (here reduced to balanced conditions). This
 limitation helps to maintain synchronism during grid-voltage sags in weak grids.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1026,18 +1192,17 @@ limitation helps to maintain synchronism during grid-voltage sags in weak grids.
 <p>In this implementation, the control system operates in synchronous coordinates
 rotating at the nominal grid angular frequency, and the disturbance observer is
 designed directly in discrete time. For other implementation options, see
-<a class="footnote-reference brackets" href="#nur2024" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<a href="#id17"><span class="problematic" id="id7">[#Nur2024]_</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="nur2024" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<aside class="footnote brackets" id="id8" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
 <p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming
 converter control based on a disturbance observer,” IEEE Trans. Power Electron.,
 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
 <aside class="footnote brackets" id="maa2026" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
 <p>Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
 “Disturbance-observer-based grid-forming control for unbalanced grids,” 2026,
 <a class="reference external" href="https://arxiv.org/abs/2608.11857">https://arxiv.org/abs/2608.11857</a></p>
@@ -1206,7 +1371,7 @@ the measured PCC voltage is also filtered.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
-overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. The realized voltage is reconstructed from the duty
+overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. The realized voltage is reconstructed from the duty
 ratios and the measured DC-bus voltage, taking into account the computational delay
 of one sampling period. The angle of the voltage reference is not advanced here:
 the control systems compensate for the delays, if needed by the controller.</p>
@@ -1221,7 +1386,7 @@ are applied, assuming that they rotate at the angular speed of the synchronous
 coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
 duty-dependent error.</p>
 <p>Optionally, the pulses are limited to a minimum width, e.g., due to the gate
-drivers <a class="footnote-reference brackets" href="#wel2006" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
+drivers <a class="footnote-reference brackets" href="#wel2006" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
 <cite>[d_min, 1 - d_min]</cite>, while the duty ratios 0 and 1 (a leg not switching) are not
 limited. A duty ratio in the range <cite>(0, d_min)</cite> is rounded to 0 (the pulse is
 dropped) or to <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to <cite>1 - d_min</cite> or 1,
@@ -1256,13 +1421,13 @@ switching and about <cite>2*d_min*T_s</cite> otherwise.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">5</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">7</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation characteristics of
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="wel2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">6</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">8</a><span class="fn-bracket">]</span></span>
 <p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
 minimum pulse-width limitations in two-level PWM voltage source inverters,”
 Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
@@ -1387,7 +1552,7 @@ changed and the realized duty ratios of the limited legs.</p></li>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1405,7 +1570,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">9</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -1433,7 +1598,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PowerSynchronizationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationController" title="Link to this definition">#</a></dt>
 <dd><p>Reference-feedforward power-synchronization controller.</p>
-<p>This implements the reference-feedforward power-synchronization control <a class="footnote-reference brackets" href="#har2020" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>.</p>
+<p>This implements the reference-feedforward power-synchronization control <a class="footnote-reference brackets" href="#har2020" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><em>PowerSynchronizationControllerCfg</em></a>) – Configuration object.</p>
@@ -1442,7 +1607,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har2020" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">10</a><span class="fn-bracket">]</span></span>
 <p>Harnefors, Rahman, Hinkkanen, Routimo, “Reference-feedforward
 power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <a class="reference external" href="https://doi.org/10.1109/TPEL.2020.2970991">https://doi.org/10.1109/TPEL.2020.2970991</a></p>
@@ -1540,7 +1705,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
 <dd><p>Sequence-separated disturbance-observer-based grid-forming controller.</p>
 <p>This implements the grid-forming mode of the control method described in
-<a class="footnote-reference brackets" href="#maa2026b" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>, with transparent current control. The positive-sequence active power
+<a class="footnote-reference brackets" href="#maa2026b" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>, with transparent current control. The positive-sequence active power
 and converter-voltage magnitude are controlled, while the negative-sequence
 converter voltage is suppressed. The disturbance observer estimates the positive-
 and negative-sequence grid voltages. The active-power reference is limited to a
@@ -1563,7 +1728,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="maa2026b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">11</a><span class="fn-bracket">]</span></span>
 <p>Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
 “Disturbance-observer-based grid-forming control for unbalanced grids,” 2026,
 <a class="reference external" href="https://arxiv.org/abs/2608.11857">https://arxiv.org/abs/2608.11857</a></p>
@@ -1732,6 +1897,15 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DCBusVoltageController.compute_output"><code class="docutils literal notranslate"><span class="pre">DCBusVoltageController.compute_output()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.get_feedback"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.get_feedback()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.post_process"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingController.update"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingController.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingOutputs"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingOutputs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.get_feedback()</span></code></a></li>

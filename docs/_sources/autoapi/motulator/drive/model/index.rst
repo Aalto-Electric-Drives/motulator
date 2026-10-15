@@ -654,6 +654,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_states(state_list, index)
+
+      
+      Set states, keeping the rotor angle within [-pi, pi).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: InductionMachine(par, i_s_sensor = None)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
@@ -1473,6 +1497,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_states(state_list, index)
+
+      
+      Set states, keeping the rotor angle within [-pi, pi).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: SaturatedSynchronousMachinePars
 
    Bases: :py:obj:`BaseSynchronousMachinePars`
@@ -2141,6 +2189,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_states(state_list, index)
+
+      
+      Set states, keeping the rotor angle within [-pi, pi).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: SynchronousMachinePars
 
    Bases: :py:obj:`BaseSynchronousMachinePars`
@@ -2561,6 +2633,30 @@ Package Contents
 
       
       Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_states(state_list, index)
+
+      
+      Set states, keeping the rotor angle within [-pi, pi).
 
 
 

@@ -228,6 +228,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
@@ -539,7 +540,7 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="phase-locked-loop">
 <h1>Phase-Locked Loop<a class="headerlink" href="#phase-locked-loop" title="Link to this heading">#</a></h1>
-<p>A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id28" title="Kaura and Blasko. Operation of a phase locked loop system under distorted utility conditions. IEEE Trans. Ind. Appl., 1997. doi:10.1109/28.567077.">Kaura and Blasko, 1997</a>]</span>. Here, we represent the PLL using the disturbance observer structure <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id12" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>]</span>, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id37" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>.</p>
+<p>A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id28" title="Kaura and Blasko. Operation of a phase locked loop system under distorted utility conditions. IEEE Trans. Ind. Appl., 1997. doi:10.1109/28.567077.">Kaura and Blasko, 1997</a>]</span>. Here, we represent the PLL using the disturbance observer structure <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id12" title="Franklin, Powell, and Workman. Digital Control of Dynamic Systems. Addison-Wesley, Menlo Park, CA, USA, 1997.">Franklin <em>et al.</em>, 1997</a>]</span>, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id38" title="Nurminen, Mourouvin, Hinkkanen, and Kukkola. Multifunctional grid-forming converter control based on a disturbance observer. IEEE Trans. Power Electron., 2024. doi:10.1109/TPEL.2024.3433503.">Nurminen <em>et al.</em>, 2024</a>]</span>.</p>
 <section id="disturbance-model">
 <h2>Disturbance Model<a class="headerlink" href="#disturbance-model" title="Link to this heading">#</a></h2>
 <p>Consider the positive-sequence voltage at the point of common coupling (PCC) in general coordinates, rotating at the angular speed <span class="math notranslate nohighlight">\(\omegac\)</span>. The dynamics of the PCC voltage <span class="math notranslate nohighlight">\(\ug\)</span> can be modeled using a disturbance model as</p>
@@ -549,8 +550,8 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The disturbance model in <a class="reference internal" href="#equation-disturbance">(1)</a> can be equivalently expressed in polar form as</p>
-<div class="amsmath math notranslate nohighlight" id="equation-7f19f4cb-e259-490c-9241-f0126d7becfe">
-<span class="eqno">(2)<a class="headerlink" href="#equation-7f19f4cb-e259-490c-9241-f0126d7becfe" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-b0308027-1fa8-4689-abc5-5d33865b1d17">
+<span class="eqno">(2)<a class="headerlink" href="#equation-b0308027-1fa8-4689-abc5-5d33865b1d17" title="Permalink to this equation">#</a></span>\[\begin{align}
     \frac{\D \absug}{\D t} &amp;= 0 \\
     \frac{\D \delta_\mathrm{g}}{\D t} &amp;= \omegag - \omegac \\
     \ug &amp;= \absug \e^{\jj\delta_\mathrm{g}}

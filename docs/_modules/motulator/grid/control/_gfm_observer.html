@@ -221,6 +221,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
@@ -690,6 +691,7 @@
 <span class="sd">    """</span>
 
     <span class="n">grid_forming</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">dc_bus_forming</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">k_comp</span> <span class="o">=</span> <span class="mf">1.5</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="n">ObserverBasedGridFormingControllerCfg</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -761,17 +763,21 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.post_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Post-process controller time series."""</span>
-        <span class="c1"># Transform the complex signals to the coordinates aligned with v_c</span>
-        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">))</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span>
-        <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span></div>
+        <span class="n">transform_to_v_c_coordinates</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span></div>
 </div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">transform_to_v_c_coordinates</span><span class="p">(</span><span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Transform the complex signals to the coordinates aligned with `v_c`."""</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">))</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span>
 </pre></div>
 
                 </article>

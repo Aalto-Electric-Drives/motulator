@@ -226,6 +226,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
@@ -550,6 +551,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_external_load_torque"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_external_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_external_rotor_speed"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_external_rotor_speed()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_outputs"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_states"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine"><code class="docutils literal notranslate"><span class="pre">InductionMachine</span></code></a><ul class="nav section-nav flex-column">
@@ -597,6 +599,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_external_load_torque"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_external_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_external_rotor_speed"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_external_rotor_speed()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_states"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
@@ -631,6 +634,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.meas_currents()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.rhs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.set_outputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.set_states"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
@@ -652,6 +656,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_external_load_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_external_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_external_rotor_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_external_rotor_speed()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">
@@ -1071,6 +1076,23 @@ determined by an external function rather than by torque dynamics.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.ExternalRotorSpeed.set_states">
+<span class="sig-name descname"><span class="pre">set_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#ExternalRotorSpeed.set_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.ExternalRotorSpeed.set_states" title="Link to this definition">#</a></dt>
+<dd><p>Set states, keeping the rotor angle within [-pi, pi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_list</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>)</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1646,6 +1668,23 @@ Defaults to 0.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.set_states">
+<span class="sig-name descname"><span class="pre">set_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.set_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.set_states" title="Link to this definition">#</a></dt>
+<dd><p>Set states, keeping the rotor angle within [-pi, pi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_list</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>)</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2067,6 +2106,23 @@ magnetic circuit, i.e., the core-loss current is excluded from the torque.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachine.set_states">
+<span class="sig-name descname"><span class="pre">set_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#SynchronousMachine.set_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachine.set_states" title="Link to this definition">#</a></dt>
+<dd><p>Set states, keeping the rotor angle within [-pi, pi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_list</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>)</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2310,6 +2366,23 @@ Defaults to 0.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.set_states">
+<span class="sig-name descname"><span class="pre">set_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.set_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.set_states" title="Link to this definition">#</a></dt>
+<dd><p>Set states, keeping the rotor angle within [-pi, pi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_list</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>)</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -2501,6 +2574,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_external_load_torque"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_external_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_external_rotor_speed"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_external_rotor_speed()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_outputs"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.ExternalRotorSpeed.set_states"><code class="docutils literal notranslate"><span class="pre">ExternalRotorSpeed.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine"><code class="docutils literal notranslate"><span class="pre">InductionMachine</span></code></a><ul class="nav section-nav flex-column">
@@ -2548,6 +2622,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_external_load_torque"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_external_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_external_rotor_speed"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_external_rotor_speed()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.set_states"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
@@ -2582,6 +2657,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.meas_currents()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.rhs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.set_outputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.set_states"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
@@ -2603,6 +2679,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_external_load_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_external_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_external_rotor_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_external_rotor_speed()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_outputs"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.set_states"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">

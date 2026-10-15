@@ -221,6 +221,7 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
@@ -680,6 +681,8 @@
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController.compute_output">(motulator.grid.control.DCBusVoltageController method)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingController.compute_output">(motulator.grid.control.DualVoltageFormingController method)</a>
+</li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.compute_output">(motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.compute_output">(motulator.grid.control.ObserverBasedGridFormingController method)</a>
@@ -825,14 +828,14 @@
       </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController">DiscreteComplexController (class in motulator.common.control)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DiscreteCurrentController">DiscreteCurrentController (class in motulator.drive.control.im)</a>
 
       <ul>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DiscreteCurrentController">(class in motulator.drive.control.sm)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Drive">Drive (class in motulator.drive.model)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem">DriveControlSystem (class in motulator.drive.control.im)</a>
@@ -841,6 +844,12 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DriveControlSystem">(class in motulator.drive.control.sm)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingController">DualVoltageFormingController (class in motulator.grid.control)</a>
+</li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingControllerCfg">DualVoltageFormingControllerCfg (class in motulator.grid.control)</a>
+</li>
+      <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingOutputs">DualVoltageFormingOutputs (class in motulator.grid.control)</a>
+</li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.PWM.duty_ratios">duty_ratios() (motulator.common.control.PWM method)</a>
 
       <ul>
@@ -953,6 +962,8 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ObserverBasedVHzController.get_feedback">(motulator.drive.control.sm.ObserverBasedVHzController method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.get_feedback">(motulator.grid.control.CurrentVectorController method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingController.get_feedback">(motulator.grid.control.DualVoltageFormingController method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.get_feedback">(motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
@@ -1509,6 +1520,8 @@
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.post_process">(motulator.grid.control.CurrentVectorController method)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingController.post_process">(motulator.grid.control.DualVoltageFormingController method)</a>
+</li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.post_process">(motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.ObserverBasedGridFormingController.post_process">(motulator.grid.control.ObserverBasedGridFormingController method)</a>
@@ -1765,7 +1778,17 @@
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.set_states">set_states() (motulator.common.model.Subsystem method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_states">(motulator.drive.model.ExternalRotorSpeed method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_states">(motulator.drive.model.MechanicalSystem method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.set_states">(motulator.drive.model.SynchronousMachine method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.set_states">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VectorControlSystem.set_torque_ref">set_torque_ref() (motulator.drive.control.im.VectorControlSystem method)</a>
 
       <ul>
@@ -1964,6 +1987,8 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.VHzControlSystem.update">(motulator.drive.control.sm.VHzControlSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.update">(motulator.grid.control.CurrentVectorController method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingController.update">(motulator.grid.control.DualVoltageFormingController method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.update">(motulator.grid.control.GridConverterControlSystem method)</a>
 </li>

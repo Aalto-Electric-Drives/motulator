@@ -37,6 +37,9 @@ Classes
    motulator.grid.control.CurrentVectorController
    motulator.grid.control.CurrentVectorControllerCfg
    motulator.grid.control.DCBusVoltageController
+   motulator.grid.control.DualVoltageFormingController
+   motulator.grid.control.DualVoltageFormingControllerCfg
+   motulator.grid.control.DualVoltageFormingOutputs
    motulator.grid.control.GridConverterControlSystem
    motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.ObserverBasedGridFormingControllerCfg
@@ -351,6 +354,235 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: DualVoltageFormingController(cfg)
+
+   
+   Dual-voltage-forming controller.
+
+   This controller regulates both the DC-bus voltage and the converter output voltage
+   magnitude [#Mou2025]_, extending the disturbance-observer-based grid-forming control
+   [#Nur2024]_. The disturbance observer estimates the quasi-static converter voltage
+   as in `ObserverBasedGridFormingController`, and a second observer estimates the
+   disturbance power, i.e., the external power fed to the DC bus minus the grid
+   power and the resistive losses, from the energy balance of the DC-bus capacitor
+   and the inductor. The control law feeds the estimated disturbance power forward and
+   corrects the DC-bus energy error, which controls the active power without a
+   cascaded DC-bus voltage controller. The disturbance observers provide the integral
+   action and the synchronization. Transparent current control is also implemented.
+
+   :param cfg: Dual-voltage-forming control configuration.
+   :type cfg: DualVoltageFormingControllerCfg
+
+   .. rubric:: Notes
+
+   The control law equals the grid-forming mode of `ObserverBasedGridFormingController`
+   with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power
+   reference `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g`
+   is the estimated external power fed to the DC bus, excluding the resistive losses
+   `1.5*R*|i_c|**2`. This equivalent reference is logged in `ref.p_g`.
+
+   .. rubric:: References
+
+   .. [#Mou2025] Mourouvin, Nurminen, Hinkkanen, Routimo, "Direct DC-bus control for
+      grid-forming converters: Toward the concept of dual-voltage-forming converters,"
+      IEEE Trans. Power Electron., 2025, https://doi.org/10.1109/TPEL.2025.3537332
+
+   .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming
+      converter control based on a disturbance observer," IEEE Trans. Power Electron.,
+      2024, https://doi.org/10.1109/TPEL.2024.3433503
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(u_dc_ref, v_c_ref, fbk)
+
+      
+      Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(u_c_ab, meas)
+
+      
+      Get the feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DualVoltageFormingControllerCfg
+
+   
+   Dual-voltage-forming controller configuration.
+
+   :param i_max: Maximum current (A), peak value.
+   :type i_max: float
+   :param L: Total inductance estimate (H).
+   :type L: float
+   :param C_dc: DC-bus capacitance estimate (F).
+   :type C_dc: float
+   :param R: Total series resistance estimate (Ω), defaults to 0.
+   :type R: float, optional
+   :param k_d: DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the
+               base power `1.5*u_nom*i_max`.
+   :type k_d: float | None, optional
+   :param alpha_dc: Approximate closed-loop bandwidth of the DC-bus energy control (rad/s),
+                    defaults to 2*pi*7.5.
+   :type alpha_dc: float, optional
+   :param alpha_o: Observer bandwidth of the quasi-static converter voltage (rad/s), defaults to
+                   2*pi*100.
+   :type alpha_o: float, optional
+   :param alpha_o_dc: Observer bandwidth of the disturbance power (rad/s), defaults to 2*pi*60.
+   :type alpha_o_dc: float, optional
+   :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
+   :type k_v: float | None, optional
+   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
+   :type alpha_c: float, optional
+   :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
+                 `sqrt(2/3)*400`.
+   :type u_nom: float, optional
+   :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
+   :type w_nom: float, optional
+   :param T_s: Sampling period (s), defaults to 125e-6.
+   :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: DualVoltageFormingOutputs
+
+   Bases: :py:obj:`motulator.grid.control._gfm_observer.ObserverOutputs`
+
+
+   
+   Feedback signals for the control system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None, pwm = None)
 
    Bases: :py:obj:`motulator.common.control._base.ControlSystem`
@@ -374,10 +606,13 @@ Package Contents
    itself.
 
    :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference
-                      and a grid-following controller the reactive power reference.
+                      and a grid-following controller the reactive power reference. A
+                      DC-bus-forming controller takes the DC-bus voltage reference instead of the
+                      active power reference.
    :type inner_ctrl: InnerController
    :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active power reference. If not
-                               given, the active power reference is set externally.
+                               given, the active power reference is set externally, unless the inner
+                               controller is DC-bus forming.
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional

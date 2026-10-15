@@ -5,7 +5,7 @@
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`). The examples :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc` and :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc` include a diode bridge rectifier and an active front end, respectively, the latter with two independent control systems.
+These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`). The example :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc` includes a diode bridge rectifier, while :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc` and :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc` include an active front end with grid-following and dual-voltage-forming control, respectively, each with two independent control systems.
 
 
 .. raw:: html
@@ -191,6 +191,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive whose active front end (AFE) uses dual-voltage-forming control [#Mou2025]_ and is connected to a weak grid. The grid-side converter regulates both the DC-bus voltage and its output voltage magnitude without a cascaded DC-bus voltage controller: the external power fed to the DC bus by the drive is estimated by a disturbance observer and fed forward. The machine-side converter uses sensorless current-vector control (CVC). The two control systems are independent: they have different sampling periods, and their carriers are not synchronized. The system model is otherwise the same as in /drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc, except for the weak grid.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_afe_dvf_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive equipped with an active front end (AFE), i.e., a grid-connected converter that controls the DC-bus voltage. The machine-side converter uses sensorless current-vector control (CVC), and the grid-side converter uses grid-following current-vector control with a DC-bus voltage controller. The two control systems are independent: they have different sampling periods, and their carriers are not synchronized.">
 
 .. only:: html
@@ -226,5 +243,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
    /drive_examples/current_vector/plot_2kw_im_cvc_discrete
    /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc
    /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete
+   /drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc
    /drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc
 
