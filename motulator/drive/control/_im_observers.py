@@ -3,6 +3,7 @@
 from cmath import exp
 from collections.abc import Callable
 from dataclasses import dataclass
+from functools import partial
 from math import inf, pi
 
 import numpy as np
@@ -336,12 +337,30 @@ def to_rotor_flux_coordinates(ts: TimeSeries) -> None:
 
 
 # %%
+# The default gains are module-level functions, possibly with bound arguments, so that
+# the observers can be pickled (e.g., for parallel simulations)
+def _sensorless_k_o(
+    par: InductionMachineInvGammaPars | InductionMachinePars, w_m: float
+) -> complex:
+    return (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
+
+
+def _sensored_k_o(
+    par: InductionMachineInvGammaPars | InductionMachinePars, w_m: float
+) -> complex:
+    return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
+
+
+def _unity_k_o(w_m: float) -> complex:
+    return 1.0
+
+
 def default_sensorless_k_o(
     par: InductionMachineInvGammaPars | InductionMachinePars,
 ) -> Callable[[float], complex]:
     """Default observer gain for sensorless drives."""
     # The machine parameters are read at each call, since saturation changes them
-    return lambda w_m: (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
+    return partial(_sensorless_k_o, par)
 
 
 def create_speed_flux_observer(
@@ -387,16 +406,12 @@ def create_speed_flux_observer(
         Flux observer with speed estimation.
 
     """
-
-    def default_k_o_sensored(w_m: float) -> complex:
-        return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
-
     if alpha_o is None:
         alpha_o = 2 * pi * 60 if sensorless else 2 * pi * 400
         # With J, the double pole at alpha_o/2 keeps the speed gain about the same
         alpha_o = alpha_o if J is None else 0.5 * alpha_o
     if k_o is None:
-        k_o = default_sensorless_k_o(par) if sensorless else default_k_o_sensored
+        k_o = default_sensorless_k_o(par) if sensorless else partial(_sensored_k_o, par)
 
     return SpeedFluxObserver(par, alpha_o, T_s, k_o, J)
 
@@ -428,7 +443,7 @@ def create_vhz_observer(
 
     """
     if par.L_M == inf:  # Pure open-loop V/Hz control, used with h = 1
-        return FluxObserver(par, lambda w_m: 1)
+        return FluxObserver(par, _unity_k_o)
 
     k_o = default_sensorless_k_o(par) if k_o is None else k_o
 

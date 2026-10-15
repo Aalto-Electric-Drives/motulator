@@ -12,10 +12,10 @@ import numpy as np
 import pytest
 
 from motulator.common.model import SimulationResults
+from motulator.common.utils._identification import dft
 from motulator.grid import control, model, utils
 from motulator.grid.control._gfm_observer import Observer
 from motulator.grid.control._gfm_sequence_observer import SequenceObserver
-from motulator.grid.utils._identification import dft
 
 U_NOM = np.sqrt(2 / 3) * 400  # Peak phase voltage
 W_NOM = 2 * np.pi * 50
@@ -30,11 +30,15 @@ def grid_powers(res: SimulationResults, t_start: float) -> tuple[float, float]:
     return float(np.mean(s_g.real)), float(np.mean(s_g.imag))
 
 
-def system(L_g: float = 0.0, u_dc: float = 650) -> model.GridConverterSystem:
+def system(L_g: float = 0.0, u_dc: float | None = 650) -> model.GridConverterSystem:
+    """Grid converter system, fed by a DC bus if `u_dc` is None."""
+    converter = model.VoltageSourceConverter(u_dc=u_dc)
+    dc_bus = None if u_dc else model.DCBus(C_dc=1e-3, u_dc=650, converters=[converter])
     return model.GridConverterSystem(
-        model.VoltageSourceConverter(u_dc=u_dc),
+        converter,
         model.LFilter(L_f=0.2 * L_BASE, L_g=L_g),
         model.ThreePhaseSource(w_g=W_NOM, e_g=U_NOM),
+        dc_bus=dc_bus,
     )
 
 
@@ -226,11 +230,13 @@ def test_observers() -> None:
 
 def test_dft_of_unevenly_sampled_signal() -> None:
     """The DFT of the identification finds a sinusoid sampled at uneven instants."""
-    cfg = utils.IdentificationCfg(abs_u_e=1.0)
     t = np.sort(np.random.default_rng(0).uniform(0, 0.1, 4000))
     u = 2.0 * np.cos(2 * np.pi * 50 * t + 0.3)
-    y = dft(cfg, t, u, 50.0, initial_simulation=True)
-    assert y == pytest.approx(2.0 * np.exp(0.3j), rel=1e-3)
+    for window in (False, True):
+        y = dft(t, u, 50.0, 0.06, window)
+        assert y == pytest.approx(2.0 * np.exp(0.3j), rel=1e-3)
+    with pytest.raises(ValueError, match="three periods"):
+        dft(t, u, 50.0, 0.04, window=True)  # Two periods: the DC would leak
 
 
 @pytest.mark.parametrize("ctrl", ["psc", "observer"])
@@ -257,20 +263,34 @@ def test_power_references_follow_current_limit() -> None:
     assert abs(ref.p_g + 1j * ref.q_g) == pytest.approx(1.5 * 300 * 10)
 
 
-def test_identification_at_sampling_frequency() -> None:
+@pytest.mark.parametrize("dc_bus", [False, True])
+def test_identification_at_sampling_frequency(dc_bus: bool) -> None:
     """The identified GFL admittance at the sampling frequency is that of the filter."""
     # At the sampling frequency, the excitation aliases to zero frequency in the
     # sampled control system, so the converter voltage does not respond to it
     T_s, L_f = 1e-4, 0.2 * L_BASE
     cfg = control.CurrentVectorControllerCfg(i_max=30, L=L_f, T_s=T_s)
-    ctrl = control.GridConverterControlSystem(control.CurrentVectorController(cfg))
-    ctrl.set_power_ref(5e3)
+    if dc_bus:
+        mdl = system(u_dc=None)
+        assert mdl.dc_bus is not None
+        mdl.dc_bus.set_external_dc_current(10.0)
+        dc_bus_ctrl = control.DCBusVoltageController(
+            C_dc=1e-3, alpha_dc=2 * np.pi * 30, p_max=10e3
+        )
+        ctrl = control.GridConverterControlSystem(
+            control.CurrentVectorController(cfg), dc_bus_ctrl
+        )
+        ctrl.set_dc_bus_voltage_ref(650.0)
+    else:
+        mdl = system()
+        ctrl = control.GridConverterControlSystem(control.CurrentVectorController(cfg))
+        ctrl.set_power_ref(5e3)
     ctrl.set_reactive_power_ref(0.0)
     freqs = np.array([1 / T_s])
     id_cfg = utils.IdentificationCfg(
         abs_u_e=0.05 * U_NOM, freqs=freqs, t0=0.1, multiprocess=False
     )
-    res = utils.run_identification(id_cfg, system(), ctrl)
+    res = utils.run_identification(id_cfg, mdl, ctrl)
 
     Y_L = 1 / (2j * np.pi * freqs[0] * L_f)
     assert res.Y_dd[0] == pytest.approx(Y_L, rel=0.05)

@@ -1,21 +1,16 @@
 """Functions and classes for converter output admittance identification."""
 
-import multiprocessing as mp
-from collections.abc import Iterable
-from contextlib import nullcontext
 from copy import deepcopy
 from dataclasses import dataclass, field
 from functools import partial
-from os import environ
-from time import time
 from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Circle
-from scipy.integrate import trapezoid
 
 from motulator.common.model import SolverCfg
+from motulator.common.utils._identification import dft, run_frequency_sweep
 from motulator.common.utils._plotting import set_style
 from motulator.common.utils._utils import empty_array, get_value
 from motulator.grid import control, model, utils
@@ -52,12 +47,16 @@ class IdentificationCfg:
         is used, for each switching interval, defaults to 10.
     n_periods_excitation : int, optional
         Number of excitation signal periods used in calculating the DFT, defaults to 4.
+        At least 3 are needed if `use_window` is True.
     n_periods_init : int, optional
         Number of fundamental periods to include for calculating operating-point
         vectors, defaults to 1.
     multiprocess : bool, optional
         If True, the frequencies are simulated in parallel using all available CPU
-        cores, defaults to True.
+        cores, defaults to True. The model and the control system are copied to the
+        worker processes, which can require pickling them. Lambda functions and nested
+        functions (e.g., as references) cannot be pickled, but module-level functions
+        can.
     use_window : bool, optional
         Whether to use window function for calculating DFT, defaults to True.
 
@@ -100,38 +99,6 @@ class IdentificationResults:
 
 
 # %%
-def dft(
-    cfg: IdentificationCfg,
-    t: np.ndarray,
-    u: np.ndarray,
-    f: float,
-    initial_simulation: bool = False,
-) -> complex:
-    """
-    Single-frequency Fourier transform.
-
-    Calculates the complex amplitude of the frequency component f of the signal u over
-    the last periods of the signal. The transform is computed with the trapezoidal rule
-    from the time instants t, which need not be evenly spaced.
-
-    """
-    n_periods = cfg.n_periods_init if initial_simulation else cfg.n_periods_excitation
-    T = n_periods / f
-    t_start = t[-1] - T
-
-    # Window of the last n_periods, starting from the value interpolated at t_start
-    k = np.searchsorted(t, t_start, side="right")
-    u_start = np.interp(t_start, t, np.real(u)) + 1j * np.interp(t_start, t, np.imag(u))
-    t = np.concatenate(([t_start], t[k:]))
-    u = np.concatenate(([u_start], u[k:]))
-
-    if cfg.use_window and not initial_simulation:
-        x = 2 * np.pi * (t - t_start) / T
-        u = u * (0.42 - 0.5 * np.cos(x) + 0.08 * np.cos(2 * x))  # Blackman window
-
-    return 2 / T * trapezoid(u * np.exp(-2j * np.pi * f * t), t)
-
-
 def pre_process(
     cfg: IdentificationCfg,
     mdl: model.GridConverterSystem,
@@ -150,8 +117,9 @@ def pre_process(
     # Fundamental-frequency vectors in coordinates aligned with the PCC voltage
     f_nom = w_g * 0.5 / np.pi
     t, filt = res.mdl.t, res.mdl.ac_filter
+    T = cfg.n_periods_init / f_nom
     vectors = [
-        0.5 * dft(cfg, t, x, f_nom, initial_simulation=True)
+        0.5 * dft(t, x, f_nom, T)
         for x in (filt.i_g_ab, filt.e_g_ab, filt.u_g_ab, filt.u_c_ab)
     ]
     i_g0, e_g0, u_g0, u_c0 = np.exp(-1j * np.angle(vectors[2])) * np.array(vectors)
@@ -159,11 +127,13 @@ def pre_process(
 
     # The PCC voltage is imposed by a stiff source with signal injection at the
     # operating point: the grid impedance is removed, and the source has the PCC
-    # voltage magnitude and the initial frequency of the original source
+    # voltage magnitude and the initial frequency of the original source. The DC bus
+    # is copied together with the converter, since it refers to the converter.
     ac_filter = deepcopy(mdl.ac_filter)
     ac_filter.L_g, ac_filter.R_g = 0.0, 0.0
     ac_source = model.ThreePhaseSourceWithSignalInjection(w_g=w_g, e_g=np.abs(u_g0))
-    mdl_inj = model.GridConverterSystem(deepcopy(mdl.converter), ac_filter, ac_source)
+    converter, dc_bus = deepcopy((mdl.converter, mdl.dc_bus))
+    mdl_inj = model.GridConverterSystem(converter, ac_filter, ac_source, dc_bus=dc_bus)
     mdl_inj.pwm, mdl_inj.delay = deepcopy(mdl.pwm), deepcopy(mdl.delay)
     ctrl_inj = deepcopy(ctrl)
     sim = model.Simulation(mdl_inj, ctrl_inj, show_progress=False)
@@ -197,9 +167,9 @@ def identify(
         exp_j_theta_g = res.mdl.ac_source.exp_j_theta_g
         u_g = np.conj(exp_j_theta_g) * res.mdl.ac_filter.u_g_ab
         i_g = np.conj(exp_j_theta_g) * res.mdl.ac_filter.i_g_ab
-        t = res.mdl.t
-        U[:, k] = dft(cfg, t, u_g.real, f_e), dft(cfg, t, u_g.imag, f_e)
-        I[:, k] = dft(cfg, t, i_g.real, f_e), dft(cfg, t, i_g.imag, f_e)
+        t, T, w = res.mdl.t, cfg.n_periods_excitation / f_e, cfg.use_window
+        U[:, k] = dft(t, u_g.real, f_e, T, w), dft(t, u_g.imag, f_e, T, w)
+        I[:, k] = dft(t, i_g.real, f_e, T, w), dft(t, i_g.imag, f_e, T, w)
     return -I @ np.linalg.inv(U)
 
 
@@ -217,7 +187,8 @@ def run_identification(
     voltage source, whose magnitude and frequency equal those of the operating point,
     and small-signal voltage excitations are injected in the d- and q-axes. The grid
     impedance of `mdl` as well as any time variation and negative-sequence component of
-    its source only affect the operating point.
+    its source only affect the operating point. A DC bus of `mdl` is included in the
+    identification.
 
     Parameters
     ----------
@@ -242,29 +213,11 @@ def run_identification(
 
     """
     mdl_inj, ctrl_inj, res = pre_process(cfg, mdl, ctrl)
-    show_progress = environ.get("BUILDING_DOCS") != "1"
-    if show_progress:
-        print("Start identification...")
-    t_start = time()
-
     n_freqs = np.size(cfg.freqs)
     amplitudes = cfg.abs_u_e * np.linspace(1.0, cfg.amplitude_multiplier, n_freqs)
-    excitations = zip(cfg.freqs, amplitudes, strict=True)
+    excitations = list(zip(cfg.freqs, amplitudes, strict=True))
     task = partial(identify, cfg, mdl_inj, ctrl_inj)
-    Y = []
-    with mp.Pool() if cfg.multiprocess else nullcontext() as pool:
-        # Results in the order of the frequencies
-        results: Iterable[np.ndarray] = (
-            pool.imap(task, excitations) if pool else map(task, excitations)
-        )
-        for k, Y_k in enumerate(results, start=1):
-            Y.append(Y_k)
-            if show_progress:
-                print(f"\rFrequencies simulated: {k}/{n_freqs}", end="")
-    if show_progress:
-        print(f"\nExecution time: {(time() - t_start):.2f} s")
-
-    Y_c = np.array(Y)
+    Y_c = np.array(run_frequency_sweep(task, excitations, cfg.multiprocess))
     res.f_e = np.array(cfg.freqs, dtype=float)  # A copy, independent of cfg
     res.Y_dd, res.Y_qd = Y_c[:, 0, 0], Y_c[:, 0, 1]
     res.Y_dq, res.Y_qq = Y_c[:, 1, 0], Y_c[:, 1, 1]

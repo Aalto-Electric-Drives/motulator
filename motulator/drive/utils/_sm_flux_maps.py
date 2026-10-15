@@ -33,6 +33,59 @@ def _interp_bilinear(
     return complex(v0 + t_d * (v1 - v0))
 
 
+class _GridInterpolator:
+    """
+    Linear interpolator of a map on a regular grid, accepting complex input (d + j*q).
+
+    The interpolator extrapolates linearly outside the grid. It is a class instead of a
+    closure, so that the models and controllers using the map can be pickled.
+
+    """
+
+    def __init__(
+        self, d_range: np.ndarray, q_range: np.ndarray, values: np.ndarray
+    ) -> None:
+        self.interpolator = RegularGridInterpolator(
+            (d_range, q_range),
+            values,
+            method="linear",
+            bounds_error=False,
+            fill_value=None,  # type: ignore
+        )
+        self.values = values
+        # Faster interpolation of single points on a strictly ascending grid
+        self.d_grid = np.asarray(d_range).tolist()
+        self.q_grid = np.asarray(q_range).tolist()
+        self.fast = all(
+            len(g) > 1 and np.all(np.diff(g) > 0) for g in (self.d_grid, self.q_grid)
+        )
+
+    def __call__(self, dq_input: complex | np.ndarray) -> complex | np.ndarray:
+        """
+        Interpolate at the input point(s).
+
+        Parameters
+        ----------
+        dq_input : complex | np.ndarray
+            Input values in complex form (d + j*q).
+
+        Returns
+        -------
+        complex | np.ndarray
+            Output value(s) corresponding to the input(s).
+
+        """
+        if np.isscalar(dq_input) or isinstance(dq_input, complex):
+            # Handle scalar complex input
+            x, y = dq_input.real, dq_input.imag  # type: ignore
+            if self.fast:
+                return _interp_bilinear(self.d_grid, self.q_grid, self.values, x, y)
+            return complex(self.interpolator(np.array([[x, y]]))[0])
+        # Handle array of complex inputs
+        points = np.column_stack((np.real(dq_input), np.imag(dq_input)))
+        return np.array(self.interpolator(points))
+
+
 # %%
 @dataclass
 class MagneticModel:
@@ -180,57 +233,7 @@ class MagneticModel:
                 points, self.tau_M.ravel(), (np.real(new_inp), np.imag(new_inp))
             )
 
-        # Create interpolator
-        interpolator = RegularGridInterpolator(
-            (d_range, q_range),
-            new_out,
-            method="linear",
-            bounds_error=False,
-            fill_value=None,  # type: ignore
-        )
-
-        # Faster interpolation of single points on a strictly ascending grid
-        d_grid, q_grid = np.asarray(d_range).tolist(), np.asarray(q_range).tolist()
-        fast = all(len(g) > 1 and np.all(np.diff(g) > 0) for g in (d_grid, q_grid))
-
-        # Create a wrapper function that accepts complex inputs
-        def lookup_fcn(dq_input: complex | np.ndarray) -> complex | np.ndarray:
-            """
-            Interpolator that accepts complex input directly.
-
-            Parameters
-            ----------
-            dq_input : complex | np.ndarray
-                Input values in complex form (d + j*q).
-
-            Returns
-            -------
-            np.ndarray
-                Output value(s) corresponding to the input(s).
-
-            """
-            if np.isscalar(dq_input) or isinstance(dq_input, complex):
-                # Handle scalar complex input
-                if fast:
-                    return _interp_bilinear(
-                        d_grid,
-                        q_grid,
-                        new_out,
-                        dq_input.real,  # type: ignore
-                        dq_input.imag,  # type: ignore
-                    )
-                points = np.array(
-                    [
-                        [
-                            dq_input.real,  # type: ignore
-                            dq_input.imag,  # type: ignore
-                        ]
-                    ]
-                )
-                return complex(interpolator(points)[0])
-            # Handle array of complex inputs
-            points = np.column_stack((np.real(dq_input), np.imag(dq_input)))
-            return np.array(interpolator(points))
+        lookup_fcn = _GridInterpolator(d_range, q_range, new_out)  # type: ignore
 
         # Arrange data based on map type
         if new_type == "flux_map":
