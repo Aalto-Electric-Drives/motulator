@@ -24,8 +24,9 @@ base = utils.BaseValues.from_nominal(nom)
 
 ac_filter = model.LFilter(L_f=0.2 * base.L)
 ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
-converter = model.CapacitiveDCBusConverter(u_dc=600, C_dc=1e-3)
-mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
+converter = model.VoltageSourceConverter()
+dc_bus = model.DCBus(C_dc=1e-3, u_dc=600, converters=[converter])
+mdl = model.GridConverterSystem(converter, ac_filter, ac_source, dc_bus=dc_bus)
 
 # %%
 # Configure the control system.
@@ -45,7 +46,7 @@ ctrl.set_dc_bus_voltage_ref(lambda t: 600 + (t > 0.02) * 50)
 ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
 # Set the external current fed to the DC bus
-mdl.converter.set_external_dc_current(lambda t: (t > 0.06) * 10)
+dc_bus.set_external_dc_current(lambda t: (t > 0.06) * 10)
 
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.

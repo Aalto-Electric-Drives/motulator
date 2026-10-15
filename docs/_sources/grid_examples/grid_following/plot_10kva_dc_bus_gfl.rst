@@ -63,15 +63,16 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-30
+.. GENERATED FROM PYTHON SOURCE LINES 24-31
 
 .. code-block:: Python
 
 
     ac_filter = model.LFilter(L_f=0.2 * base.L)
     ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
-    converter = model.CapacitiveDCBusConverter(u_dc=600, C_dc=1e-3)
-    mdl = model.GridConverterSystem(converter, ac_filter, ac_source)
+    converter = model.VoltageSourceConverter()
+    dc_bus = model.DCBus(C_dc=1e-3, u_dc=600, converters=[converter])
+    mdl = model.GridConverterSystem(converter, ac_filter, ac_source, dc_bus=dc_bus)
 
 
 
@@ -80,11 +81,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-40
+.. GENERATED FROM PYTHON SOURCE LINES 33-41
 
 .. code-block:: Python
 
@@ -103,11 +104,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-42
+.. GENERATED FROM PYTHON SOURCE LINES 42-43
 
 Set the time-dependent reference and disturbance signals.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-50
+.. GENERATED FROM PYTHON SOURCE LINES 43-51
 
 .. code-block:: Python
 
@@ -117,7 +118,7 @@ Set the time-dependent reference and disturbance signals.
     ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
     # Set the external current fed to the DC bus
-    mdl.converter.set_external_dc_current(lambda t: (t > 0.06) * 10)
+    dc_bus.set_external_dc_current(lambda t: (t > 0.06) * 10)
 
 
 
@@ -126,11 +127,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-57
+.. GENERATED FROM PYTHON SOURCE LINES 53-58
 
 .. code-block:: Python
 
@@ -166,7 +167,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.744 seconds)
+   **Total running time of the script:** (0 minutes 1.093 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py:

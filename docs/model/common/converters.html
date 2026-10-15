@@ -228,13 +228,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
 </ul>
@@ -569,12 +570,13 @@
 <p><span class="caption-text"><em>Figure 2:</em> Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states <span class="math notranslate nohighlight">\(\qA = 1\)</span>, <span class="math notranslate nohighlight">\(\qB = 0\)</span>, and <span class="math notranslate nohighlight">\(\qC = 0\)</span>.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, if the DC bus is fed from an external current source <span class="math notranslate nohighlight">\(\idc\)</span>, the DC-bus dynamics are modeled in the <a class="reference internal" href="../../autoapi/motulator/grid/model/index.html#motulator.grid.model.CapacitiveDCBusConverter" title="motulator.grid.model.CapacitiveDCBusConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.model.CapacitiveDCBusConverter</span></code></a> class as</p>
+<p>By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, the converter can be fed from the DC-bus model in the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.DCBus</span></code></a> class. If the DC bus is fed from an external current source <span class="math notranslate nohighlight">\(\idc\)</span>, the DC-bus dynamics are</p>
 <div class="math notranslate nohighlight" id="equation-dc-bus-model">
 <span class="eqno">(1)<a class="headerlink" href="#equation-dc-bus-model" title="Link to this equation">#</a></span>\[    \Cdc \frac{\D \udc}{\D t} = \idc - \idc'\]</div>
 <p>where the converter-side DC current depends on the phase currents <span class="math notranslate nohighlight">\(\iA\)</span>, <span class="math notranslate nohighlight">\(\iB\)</span>, and <span class="math notranslate nohighlight">\(\iC\)</span> as</p>
 <div class="math notranslate nohighlight" id="equation-dc-current">
 <span class="eqno">(2)<a class="headerlink" href="#equation-dc-current" title="Link to this equation">#</a></span>\[    \idc' = \qA \iA + \qB \iB + \qC \iC\]</div>
+<p>The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC currents <span class="math notranslate nohighlight">\(\idc'\)</span> of all the converters are subtracted from the external current <span class="math notranslate nohighlight">\(\idc\)</span>. The models of the converter systems sharing the DC bus are combined using the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.CompositeModel</span></code></a> class, see <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html"><span class="doc">2.2-kW IPMSM, active front end, CVC</span></a>. The DC bus can also be fed from a diode bridge rectifier, see <a class="reference internal" href="../drive/diode_bridge.html"><span class="doc">Six-Pulse Diode Bridge</span></a>.</p>
 </section>
 <section id="carrier-comparison">
 <h2>Carrier Comparison<a class="headerlink" href="#carrier-comparison" title="Link to this heading">#</a></h2>

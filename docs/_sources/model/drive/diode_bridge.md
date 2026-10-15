@@ -32,4 +32,4 @@ alt: Six-pulse diode bridge rectifier an three-phase supply voltage
 *Figure 1:* Six-pulse diode bridge rectifier.
 ```
 
-The voltage-source converter described in the {doc}`/model/common/converters` document is extended with this diode bridge model in the {class}`motulator.drive.model.FrequencyConverter` class. Examples using the six-pulse diode bridge can be found in {doc}`/drive_examples/vhz/plot_2kw_im_diode_vhz` and {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc`.
+The DC bus fed from this diode bridge model is implemented in the {class}`motulator.drive.model.DiodeBridgeDCBus` class, which feeds the voltage-source converter described in the {doc}`/model/common/converters` document. Examples using the six-pulse diode bridge can be found in {doc}`/drive_examples/vhz/plot_2kw_im_diode_vhz` and {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_diode_cvc`.

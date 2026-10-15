@@ -63,7 +63,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-34
+.. GENERATED FROM PYTHON SOURCE LINES 24-37
 
 .. code-block:: Python
 
@@ -74,8 +74,11 @@ Configure the system model.
     machine = model.InductionMachine(par)
     k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
     mechanics = model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
-    converter = model.FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
-    mdl = model.Drive(machine, mechanics, converter, pwm=True)
+    converter = model.VoltageSourceConverter()
+    dc_bus = model.DiodeBridgeDCBus(
+        C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f, converters=[converter]
+    )
+    mdl = model.Drive(machine, mechanics, converter, pwm=True, dc_bus=dc_bus)
 
 
 
@@ -84,11 +87,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Configure the control system as open-loop V/Hz control.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-44
+.. GENERATED FROM PYTHON SOURCE LINES 39-47
 
 .. code-block:: Python
 
@@ -107,11 +110,11 @@ Configure the control system as open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-51
+.. GENERATED FROM PYTHON SOURCE LINES 49-54
 
 .. code-block:: Python
 
@@ -127,11 +130,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-62
+.. GENERATED FROM PYTHON SOURCE LINES 56-65
 
 .. code-block:: Python
 
@@ -175,7 +178,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-74
+.. GENERATED FROM PYTHON SOURCE LINES 66-77
 
 .. note::
    The DC link of this particular example is actually unstable at 1-p.u. speed at the
@@ -192,7 +195,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.868 seconds)
+   **Total running time of the script:** (0 minutes 13.280 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_diode_vhz.py:

@@ -32,9 +32,11 @@ Classes
 
 .. autoapisummary::
 
+   motulator.drive.model.CompositeModel
+   motulator.drive.model.DCBus
+   motulator.drive.model.DiodeBridgeDCBus
    motulator.drive.model.Drive
    motulator.drive.model.ExternalRotorSpeed
-   motulator.drive.model.FrequencyConverter
    motulator.drive.model.InductionMachine
    motulator.drive.model.InductionMachineInvGammaPars
    motulator.drive.model.InductionMachinePars
@@ -43,6 +45,7 @@ Classes
    motulator.drive.model.SaturatedSynchronousMachinePars
    motulator.drive.model.Sensor
    motulator.drive.model.Simulation
+   motulator.drive.model.SimulationResults
    motulator.drive.model.SpatialSaturatedSynchronousMachinePars
    motulator.drive.model.SynchronousMachine
    motulator.drive.model.SynchronousMachinePars
@@ -53,9 +56,365 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: Drive(machine, mechanics, converter, lc_filter = None, pwm = False, delay = 1)
+.. py:class:: CompositeModel(models)
 
-   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`motulator.common.model._converter.VoltageSourceConverter | motulator.common.model._converter.FrequencyConverter`\ ]
+   Bases: :py:obj:`motulator.common.model._base.System`
+
+
+   
+   Composite of models sharing subsystems.
+
+   The models are coupled through shared subsystem objects, e.g., a DC bus given to
+   the models of a grid converter and a drive. Each model keeps its converter, PWM
+   model, and computational delay, and it is driven by its own control system in the
+   simulation, see `Simulation`. The subsystems are evaluated in the order of the
+   models, a shared subsystem at its first occurrence. The order is not resolved
+   automatically: a shared subsystem whose outputs other subsystems depend on
+   directly must come first in each model, as `Model` places the DC bus.
+
+   :param models: Models by name, each with its own converter. The names are used for the
+                  control systems and the results, so they must be valid attribute names (not
+                  starting with an underscore, and not `t`).
+   :type models: dict[str, Model]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: save(sol)
+
+      
+      Save the solution and the switching states of the models.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DCBus(C_dc, u_dc, converters)
+
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+
+
+   
+   Capacitive DC bus feeding converters.
+
+   The DC bus feeds the given converters, whose DC currents are computed from their
+   switching states and AC currents. The DC-bus voltage is connected to the input
+   `u_dc` of each converter by the model (see `Model`). The DC bus can be shared by
+   the converters of several models (see `CompositeModel`). An external current,
+   e.g., from a battery or a braking chopper, can also be fed to the DC bus.
+
+   :param C_dc: DC-bus capacitance (F).
+   :type C_dc: float
+   :param u_dc: Initial DC-bus voltage (V).
+   :type u_dc: float
+   :param converters: Converters fed from the DC bus.
+   :type converters: Sequence[VoltageSourceConverter]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_dc_current(t)
+
+      
+      Compute the net current (A) fed to the DC-bus capacitor.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_external_dc_current(i_dc)
+
+      
+      Set external DC current (A), constant or a function of time.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables for interconnection.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: DiodeBridgeDCBus(C_dc, L_dc, U_g, f_g, converters)
+
+   Bases: :py:obj:`DCBus`
+
+
+   
+   DC bus fed from a six-pulse diode bridge.
+
+   A three-phase diode bridge rectifier with a DC-bus inductor is modeled, supplied
+   from a stiff grid, i.e., the grid inductance is zero. The DC bus feeds the given
+   converters, see `DCBus`.
+
+   :param C_dc: DC-bus capacitance (F).
+   :type C_dc: float
+   :param L_dc: DC-bus inductance (H).
+   :type L_dc: float
+   :param U_g: Grid voltage (V, line-line, rms).
+   :type U_g: float
+   :param f_g: Grid frequency (Hz).
+   :type f_g: float
+   :param converters: Converters fed from the DC bus.
+   :type converters: Sequence[VoltageSourceConverter]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_derivatives(t, state)
+
+      
+      Compute the state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_voltages(state)
+
+      
+      Compute grid and rectified voltages.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: Drive(machine, mechanics, converter, lc_filter = None, pwm = False, delay = 1, dc_bus = None)
+
+   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`motulator.common.model._converter.VoltageSourceConverter`\ ]
 
 
    
@@ -66,7 +425,7 @@ Package Contents
    :param mechanics: Mechanical system model.
    :type mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
    :param converter: Converter model.
-   :type converter: VoltageSourceConverter | FrequencyConverter
+   :type converter: VoltageSourceConverter
    :param lc_filter: LC filter model. If not given, a direct connection between the converter and
                      machine is used.
    :type lc_filter: LCFilter, optional
@@ -74,6 +433,11 @@ Package Contents
    :type pwm: bool, optional
    :param delay: Computational delay (samples), defaults to 1.
    :type delay: int, optional
+   :param dc_bus: DC bus feeding the converter, e.g., `DiodeBridgeDCBus` for a diode front end,
+                  or a DC bus shared with other models (e.g., with a grid converter system), see
+                  `CompositeModel`. Defaults to None, in which case the converter has a constant
+                  DC-bus voltage.
+   :type dc_bus: DCBus, optional
 
 
 
@@ -270,146 +634,6 @@ Package Contents
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: FrequencyConverter(C_dc, L_dc, U_g, f_g, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
-
-   Bases: :py:obj:`VoltageSourceConverter`
-
-
-   
-   Frequency converter with a six-pulse diode bridge.
-
-   A three-phase diode bridge rectifier with a DC-bus inductor is modeled. The diode
-   bridge is connected to the voltage-source inverter. The grid inductance is zero.
-
-   :param C_dc: DC-bus capacitance (F).
-   :type C_dc: float
-   :param L_dc: DC-bus inductance (H).
-   :type L_dc: float
-   :param U_g: Grid voltage (V, line-line, rms).
-   :type U_g: float
-   :param f_g: Grid frequency (Hz).
-   :type f_g: float
-   :param t_d: Dead time (s), defaults to 0.
-   :type t_d: float, optional
-   :param sign: Function of the phase currents (A) determining the leg states during blanking,
-                defaults to `np.sign`.
-   :type sign: Callable[[np.ndarray], np.ndarray], optional
-   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
-   :type u_dc_sensor: Sensor, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: compute_voltages(state)
-
-      
-      Compute grid and rectified voltages.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: create_time_series(t)
-
-      
-      Time series.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs(t)
-
-      
-      Compute state derivatives.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_outputs(t)
-
-      
-      Set output variables for interconnection.
 
 
 
@@ -1441,19 +1665,32 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None)
+.. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None, t_start = None)
 
    
    Simulation environment.
 
+   Each control system is called at its own sampling instants, which gives the
+   sampling period of its next control cycle. The control systems of a composite
+   model can have different sampling periods, and their sampling instants need not
+   coincide. The switching states of the converters are held constant between the
+   sampling and switching instants of all the converters.
+
    :param mdl: Continuous-time system model.
-   :type mdl: Model
-   :param ctrl: Discrete-time control system.
-   :type ctrl: ControlSystem
+   :type mdl: Model | CompositeModel
+   :param ctrl: Discrete-time control system. For a composite model, the control systems of
+                the models by the model names.
+   :type ctrl: ControlSystem | Mapping[str, ControlSystem]
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
    :param cfg: Solver configuration parameters.
    :type cfg: SolverCfg, optional
+   :param t_start: First sampling instant (s) of the control system or, for a composite model,
+                   of the control systems by the model names. The time `ctrl.t` of the control
+                   system is set to this value. Defaults to the initial time of the model, as do
+                   the control systems not included in the mapping, in which case `ctrl.t` is
+                   not changed.
+   :type t_start: float | Mapping[str, float], optional
 
 
 
@@ -1477,12 +1714,15 @@ Package Contents
       
       Solve continuous-time system model and call control system.
 
+      The simulation runs until the first sampling instant after `t_stop`. A
+      subsequent call continues the simulation.
+
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
-                     integration interval, i.e., for each sampling period or, if carrier
-                     comparison is used, for each switching interval. Defaults to 0, in which
-                     case the number and spacing of points is selected by the solver.
+                     integration interval, i.e., for each interval between the sampling and
+                     switching instants. Defaults to 0, in which case the number and spacing of
+                     points is selected by the solver.
       :type N_eval: int, optional
 
 
@@ -1502,6 +1742,49 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: SimulationResults
+
+   
+   Container for simulation results.
+
+   .. attribute:: mdl
+
+      Results from the continuous-time model. For a composite model, the time series
+      of each model is an attribute by the model name.
+
+      :type: ModelTimeSeries | CompositeModelTimeSeries
+
+   .. attribute:: ctrl
+
+      Results from the digital control system. For a composite model, the results of
+      each control system is an attribute by the model name.
+
+      :type: Any
+
+   .. attribute:: success
+
+      False if the simulation stopped before the stop time due to a numerical
+      failure, in which case the results cover the time until the failure.
+
+      :type: bool
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: SpatialSaturatedSynchronousMachinePars
 
@@ -2298,21 +2581,23 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
+.. py:class:: VoltageSourceConverter(u_dc = None, t_d = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
 
    
-   Lossless three-phase voltage-source converter with constant DC-bus voltage.
+   Lossless three-phase voltage-source converter.
 
    The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
    neither of its switches conducts, the current direction determines which diode
    conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
-   in the beginning of the blanking interval.
+   in the beginning of the blanking interval. The DC-bus voltage is either constant or
+   given by a DC-bus model connected to the input `u_dc` (see `DCBus` and `Model`).
 
-   :param u_dc: DC-bus voltage (V).
-   :type u_dc: float
+   :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
+                be fed from a DC-bus model.
+   :type u_dc: float, optional
    :param t_d: Dead time (s), defaults to 0.
    :type t_d: float, optional
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
@@ -2415,32 +2700,6 @@ Package Contents
 
       
       Default empty implementation.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_external_dc_current(i_dc)
-      :abstractmethod:
-
-
-      
-      Set external DC current (A), constant or a function of time.
 
 
 

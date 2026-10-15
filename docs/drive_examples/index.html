@@ -226,13 +226,14 @@
 <li class="toctree-l3"><a class="reference internal" href="current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
 </ul>
@@ -578,7 +579,7 @@
 </div></div></section>
 <section id="current-vector-control">
 <h2>Current-Vector Control<a class="headerlink" href="#current-vector-control" title="Link to this heading">#</a></h2>
-<p>These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (<a class="reference internal" href="current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a>) as well as computation of control lookup tables for synchronous machines (<a class="reference internal" href="current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html"><span class="doc">5.1-kW saturated PM-SyRM, CVC</span></a>).</p>
+<p>These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (<a class="reference internal" href="current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a>) as well as computation of control lookup tables for synchronous machines (<a class="reference internal" href="current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html"><span class="doc">5.1-kW saturated PM-SyRM, CVC</span></a>). The examples <a class="reference internal" href="current_vector/plot_2kw_ipmsm_diode_cvc.html"><span class="doc">2.2-kW IPMSM, diode bridge, CVC</span></a> and <a class="reference internal" href="current_vector/plot_2kw_ipmsm_afe_cvc.html"><span class="doc">2.2-kW IPMSM, active front end, CVC</span></a> include a diode bridge rectifier and an active front end, respectively, the latter with two independent control systems.</p>
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 6.7-kW synchronous reluctance machine (SyRM) drive."><img alt="" src="../_images/sphx_glr_plot_7kw_syrm_cvc_thumb.png" />
 <p><a class="reference internal" href="current_vector/plot_7kw_syrm_cvc.html"><span class="doc">6.7-kW SyRM, CVC</span></a></p>
   <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, CVC</div>
@@ -609,6 +610,9 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example compares the continuous-time and direct discrete-time designs of the current controller [#Awa2019]_ in sensorless current-vector control of a saturated 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·500 rad/s, which is high compared with the sampling frequency."><img alt="" src="../_images/sphx_glr_plot_6kw_pmsyrm_sat_cvc_discrete_thumb.png" />
 <p><a class="reference internal" href="current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html"><span class="doc">5.6-kW saturated PM-SyRM, discrete-time current control</span></a></p>
   <div class="sphx-glr-thumbnail-title">5.6-kW saturated PM-SyRM, discrete-time current control</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive equipped with an active front end (AFE), i.e., a grid-connected converter that controls the DC-bus voltage. The machine-side converter uses sensorless current-vector control (CVC), and the grid-side converter uses grid-following current-vector control with a DC-bus voltage controller. The two control systems are independent: they have different sampling periods, and their carriers are not synchronized."><img alt="" src="../_images/sphx_glr_plot_2kw_ipmsm_afe_cvc_thumb.png" />
+<p><a class="reference internal" href="current_vector/plot_2kw_ipmsm_afe_cvc.html"><span class="doc">2.2-kW IPMSM, active front end, CVC</span></a></p>
+  <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, active front end, CVC</div>
 </div></div></section>
 <section id="v-hz-control">
 <h2>V/Hz Control<a class="headerlink" href="#v-hz-control" title="Link to this heading">#</a></h2>
@@ -630,12 +634,12 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive."><img alt="" src="../_images/sphx_glr_plot_2kw_ipmsm_ovhz_thumb.png" />
 <p><a class="reference internal" href="vhz/plot_2kw_ipmsm_ovhz.html"><span class="doc">2.2-kW IPMSM, O-V/Hz control</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, O-V/Hz control</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM) drive. A diode bridge, stiff three-phase grid, and a DC link are modeled."><img alt="" src="../_images/sphx_glr_plot_2kw_im_diode_vhz_thumb.png" />
-<p><a class="reference internal" href="vhz/plot_2kw_im_diode_vhz.html"><span class="doc">2.2-kW IM, diode bridge, V/Hz control</span></a></p>
-  <div class="sphx-glr-thumbnail-title">2.2-kW IM, diode bridge, V/Hz control</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates observer-based V/Hz (O-V/Hz) control of a 6.7-kW synchronous reluctance machine (SyRM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters."><img alt="" src="../_images/sphx_glr_plot_7kw_syrm_sat_ovhz_thumb.png" />
 <p><a class="reference internal" href="vhz/plot_7kw_syrm_sat_ovhz.html"><span class="doc">6.7-kW saturated SyRM, O-V/Hz control</span></a></p>
   <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, O-V/Hz control</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM) drive. A diode bridge, stiff three-phase grid, and a DC link are modeled."><img alt="" src="../_images/sphx_glr_plot_2kw_im_diode_vhz_thumb.png" />
+<p><a class="reference internal" href="vhz/plot_2kw_im_diode_vhz.html"><span class="doc">2.2-kW IM, diode bridge, V/Hz control</span></a></p>
+  <div class="sphx-glr-thumbnail-title">2.2-kW IM, diode bridge, V/Hz control</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive equipped with an output LC filter."><img alt="" src="../_images/sphx_glr_plot_2kw_im_lc_vhz_thumb.png" />
 <p><a class="reference internal" href="vhz/plot_2kw_im_lc_vhz.html"><span class="doc">2.2-kW IM, LC filter, V/Hz control</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW IM, LC filter, V/Hz control</div>

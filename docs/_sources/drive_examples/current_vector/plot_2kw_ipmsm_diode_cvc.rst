@@ -64,7 +64,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-32
+.. GENERATED FROM PYTHON SOURCE LINES 25-35
 
 .. code-block:: Python
 
@@ -72,8 +72,11 @@ Configure the system model.
     par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
-    converter = model.FrequencyConverter(C_dc=235e-6, L_dc=1e-3, U_g=400, f_g=50)
-    mdl = model.Drive(machine, mechanics, converter, pwm=True)
+    converter = model.VoltageSourceConverter()
+    dc_bus = model.DiodeBridgeDCBus(
+        C_dc=235e-6, L_dc=1e-3, U_g=400, f_g=50, converters=[converter]
+    )
+    mdl = model.Drive(machine, mechanics, converter, pwm=True, dc_bus=dc_bus)
 
 
 
@@ -82,11 +85,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-43
+.. GENERATED FROM PYTHON SOURCE LINES 37-46
 
 .. code-block:: Python
 
@@ -106,11 +109,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-49
+.. GENERATED FROM PYTHON SOURCE LINES 48-52
 
 .. code-block:: Python
 
@@ -125,11 +128,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-57
+.. GENERATED FROM PYTHON SOURCE LINES 54-60
 
 .. code-block:: Python
 
@@ -151,12 +154,12 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-60
+.. GENERATED FROM PYTHON SOURCE LINES 61-63
 
 Plot also the stator voltage and currents as well as the DC-bus and grid-side
 quantities.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-63
+.. GENERATED FROM PYTHON SOURCE LINES 63-66
 
 .. code-block:: Python
 
@@ -190,7 +193,7 @@ quantities.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.873 seconds)
+   **Total running time of the script:** (0 minutes 11.510 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py:

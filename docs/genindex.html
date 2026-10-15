@@ -221,13 +221,14 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="drive_examples/vhz/index.html">V/Hz Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_2kw_im_ovhz.html">2.2-kW IM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
 </ul>
@@ -550,8 +551,6 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CapacitiveDCBusConverter">CapacitiveDCBusConverter (class in motulator.grid.model)</a>
-</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison">CarrierComparison (class in motulator.common.model)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.clear_data">clear_data() (motulator.common.control.ControlSystem method)</a>
@@ -562,12 +561,36 @@
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController">ComplexPIController (class in motulator.common.control)</a>
 </li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel">CompositeModel (class in motulator.common.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CompositeModel">(class in motulator.drive.model)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CompositeModel">(class in motulator.grid.model)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModelTimeSeries">CompositeModelTimeSeries (class in motulator.common.model)</a>
+</li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci.compute_const_current_locus">compute_const_current_locus() (motulator.drive.utils.ControlLoci method)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGenerator.compute_current_ref">compute_current_ref() (motulator.drive.control.sm.ReferenceGenerator method)</a>
 
       <ul>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGeneratorOnline.compute_current_ref">(motulator.drive.control.sm.ReferenceGeneratorOnline method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus.compute_dc_current">compute_dc_current() (motulator.common.model.DCBus method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus.compute_dc_current">(motulator.drive.model.DCBus method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DCBus.compute_dc_current">(motulator.grid.model.DCBus method)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridgeDCBus.compute_derivatives">compute_derivatives() (motulator.common.model.DiodeBridgeDCBus method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DiodeBridgeDCBus.compute_derivatives">(motulator.drive.model.DiodeBridgeDCBus method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGenerator.compute_flux_and_torque_refs">compute_flux_and_torque_refs() (motulator.drive.control.sm.ReferenceGenerator method)</a>
@@ -686,8 +709,12 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.compute_voltages">compute_voltages() (motulator.drive.model.FrequencyConverter method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridgeDCBus.compute_voltages">compute_voltages() (motulator.common.model.DiodeBridgeDCBus method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DiodeBridgeDCBus.compute_voltages">(motulator.drive.model.DiodeBridgeDCBus method)</a>
 </li>
+      </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals">compute_zoh_input_derived_signals() (motulator.common.model.SubsystemTimeSeries method)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.ControlLoci">ControlLoci (class in motulator.drive.utils)</a>
@@ -696,12 +723,18 @@
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.create_interpolated_model">create_interpolated_model() (motulator.drive.utils.MagneticModel method)</a>
 </li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.create_time_series">create_time_series() (motulator.common.model.Subsystem method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus.create_time_series">create_time_series() (motulator.common.model.DCBus method)</a>
 
       <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.create_time_series">(motulator.drive.model.ExternalRotorSpeed method)</a>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridgeDCBus.create_time_series">(motulator.common.model.DiodeBridgeDCBus method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.create_time_series">(motulator.drive.model.FrequencyConverter method)</a>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.create_time_series">(motulator.common.model.Subsystem method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus.create_time_series">(motulator.drive.model.DCBus method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DiodeBridgeDCBus.create_time_series">(motulator.drive.model.DiodeBridgeDCBus method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.create_time_series">(motulator.drive.model.ExternalRotorSpeed method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.create_time_series">(motulator.drive.model.InductionMachine method)</a>
 </li>
@@ -715,7 +748,7 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.create_time_series">(motulator.drive.model.VoltageSourceConverter method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CapacitiveDCBusConverter.create_time_series">(motulator.grid.model.CapacitiveDCBusConverter method)</a>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DCBus.create_time_series">(motulator.grid.model.DCBus method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.create_time_series">(motulator.grid.model.LCLFilter method)</a>
 </li>
@@ -727,7 +760,13 @@
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults.ctrl">ctrl (motulator.common.model.SimulationResults attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SimulationResults.ctrl">(motulator.drive.model.SimulationResults attribute)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.SimulationResults.ctrl">(motulator.grid.model.SimulationResults attribute)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentController">CurrentController (class in motulator.drive.control.im)</a>
 
       <ul>
@@ -766,12 +805,28 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus">DCBus (class in motulator.common.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus">(class in motulator.drive.model)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DCBus">(class in motulator.grid.model)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DCBusVoltageController">DCBusVoltageController (class in motulator.grid.control)</a>
 </li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.dead_time_error">dead_time_error() (in module motulator.common.utils)</a>
 </li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridgeDCBus">DiodeBridgeDCBus (class in motulator.common.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DiodeBridgeDCBus">(class in motulator.drive.model)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController">DiscreteComplexController (class in motulator.common.control)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DiscreteCurrentController">DiscreteCurrentController (class in motulator.drive.control.im)</a>
 
       <ul>
@@ -780,8 +835,6 @@
       </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Drive">Drive (class in motulator.drive.model)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem">DriveControlSystem (class in motulator.drive.control.im)</a>
 
       <ul>
@@ -840,8 +893,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter">FrequencyConverter (class in motulator.drive.model)</a>
-</li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars">from_gamma_pars() (motulator.drive.control.im.InductionMachineInvGammaPars class method)</a>
 
       <ul>
@@ -914,8 +965,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.get_initial_values">get_initial_values() (motulator.common.model.Model method)</a>
-</li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.get_input_output">get_input_output() (motulator.drive.utils.MagneticModel method)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_measurement">get_measurement() (motulator.common.control.ControlSystem method)</a>
@@ -1103,7 +1152,13 @@
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel">MagneticModel (class in motulator.drive.utils)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults.mdl">mdl (motulator.common.model.SimulationResults attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SimulationResults.mdl">(motulator.drive.model.SimulationResults attribute)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.SimulationResults.mdl">(motulator.grid.model.SimulationResults attribute)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.meas_capacitor_voltages">meas_capacitor_voltages() (motulator.drive.model.LCFilter method)</a>
 
       <ul>
@@ -1531,14 +1586,18 @@
       </ul></li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ReferenceGeneratorOnline">ReferenceGeneratorOnline (class in motulator.drive.control.sm)</a>
 </li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.rhs">rhs() (motulator.common.model.Model method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus.rhs">rhs() (motulator.common.model.DCBus method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridgeDCBus.rhs">(motulator.common.model.DiodeBridgeDCBus method)</a>
+</li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.rhs">(motulator.common.model.Subsystem method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.rhs">(motulator.drive.model.ExternalRotorSpeed method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus.rhs">(motulator.drive.model.DCBus method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.rhs">(motulator.drive.model.FrequencyConverter method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DiodeBridgeDCBus.rhs">(motulator.drive.model.DiodeBridgeDCBus method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.rhs">(motulator.drive.model.ExternalRotorSpeed method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.rhs">(motulator.drive.model.InductionMachine method)</a>
 </li>
@@ -1552,7 +1611,7 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.rhs">(motulator.drive.model.VoltageSourceConverter method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CapacitiveDCBusConverter.rhs">(motulator.grid.model.CapacitiveDCBusConverter method)</a>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DCBus.rhs">(motulator.grid.model.DCBus method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.rhs">(motulator.grid.model.LCLFilter method)</a>
 </li>
@@ -1594,7 +1653,13 @@
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.save">save() (motulator.common.control.ControlSystem method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel.save">(motulator.common.model.CompositeModel method)</a>
+</li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.save">(motulator.common.model.Model method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CompositeModel.save">(motulator.drive.model.CompositeModel method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CompositeModel.save">(motulator.grid.model.CompositeModel method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Sensor">Sensor (class in motulator.common.model)</a>
@@ -1621,12 +1686,12 @@
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.set_dc_bus_voltage_ref">set_dc_bus_voltage_ref() (motulator.grid.control.GridConverterControlSystem method)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.set_external_dc_current">set_external_dc_current() (motulator.drive.model.VoltageSourceConverter method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus.set_external_dc_current">set_external_dc_current() (motulator.common.model.DCBus method)</a>
 
       <ul>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CapacitiveDCBusConverter.set_external_dc_current">(motulator.grid.model.CapacitiveDCBusConverter method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus.set_external_dc_current">(motulator.drive.model.DCBus method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.set_external_dc_current">(motulator.grid.model.VoltageSourceConverter method)</a>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DCBus.set_external_dc_current">(motulator.grid.model.DCBus method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_external_load_torque">set_external_load_torque() (motulator.drive.model.ExternalRotorSpeed method)</a>
@@ -1651,14 +1716,14 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.set_gate_signals">(motulator.grid.model.VoltageSourceConverter method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_outputs">set_outputs() (motulator.common.model.Model method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus.set_outputs">set_outputs() (motulator.common.model.DCBus method)</a>
 
       <ul>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.set_outputs">(motulator.common.model.Subsystem method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_outputs">(motulator.drive.model.ExternalRotorSpeed method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus.set_outputs">(motulator.drive.model.DCBus method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.FrequencyConverter.set_outputs">(motulator.drive.model.FrequencyConverter method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_outputs">(motulator.drive.model.ExternalRotorSpeed method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.set_outputs">(motulator.drive.model.InductionMachine method)</a>
 </li>
@@ -1672,7 +1737,7 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.set_outputs">(motulator.drive.model.VoltageSourceConverter method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CapacitiveDCBusConverter.set_outputs">(motulator.grid.model.CapacitiveDCBusConverter method)</a>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DCBus.set_outputs">(motulator.grid.model.DCBus method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.set_outputs">(motulator.grid.model.LCLFilter method)</a>
 </li>
@@ -1699,12 +1764,8 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.VectorControlSystem.set_speed_ref">(motulator.drive.control.sm.VectorControlSystem method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_states">set_states() (motulator.common.model.Model method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.set_states">(motulator.common.model.Subsystem method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.set_states">set_states() (motulator.common.model.Subsystem method)</a>
 </li>
-      </ul></li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VectorControlSystem.set_torque_ref">set_torque_ref() (motulator.drive.control.im.VectorControlSystem method)</a>
 
       <ul>
@@ -1730,7 +1791,13 @@
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults">SimulationResults (class in motulator.common.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SimulationResults">(class in motulator.drive.model)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.SimulationResults">(class in motulator.grid.model)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.PWM.six_step_overmodulation">six_step_overmodulation() (motulator.common.control.PWM static method)</a>
 
       <ul>
@@ -1782,7 +1849,13 @@
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SubsystemTimeSeries">SubsystemTimeSeries (class in motulator.common.model)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults.success">success (motulator.common.model.SimulationResults attribute)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SimulationResults.success">(motulator.drive.model.SimulationResults attribute)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.SimulationResults.success">(motulator.grid.model.SimulationResults attribute)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine">SynchronousMachine (class in motulator.drive.model)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars">SynchronousMachinePars (class in motulator.drive.control.sm)</a>
