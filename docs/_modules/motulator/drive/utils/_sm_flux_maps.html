@@ -251,6 +251,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/identification/index.html">Mechanical Impedance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/identification/plot_45kw_im_vhz_identification.html">45-kW IM, V/Hz control, mechanical impedance identification</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -506,6 +510,59 @@
     <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">v0</span> <span class="o">+</span> <span class="n">t_d</span> <span class="o">*</span> <span class="p">(</span><span class="n">v1</span> <span class="o">-</span> <span class="n">v0</span><span class="p">))</span>
 
 
+<span class="k">class</span><span class="w"> </span><span class="nc">_GridInterpolator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Linear interpolator of a map on a regular grid, accepting complex input (d + j*q).</span>
+
+<span class="sd">    The interpolator extrapolates linearly outside the grid. It is a class instead of a</span>
+<span class="sd">    closure, so that the models and controllers using the map can be pickled.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">d_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">),</span>
+            <span class="n">values</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span>
+            <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+        <span class="c1"># Faster interpolation of single points on a strictly ascending grid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fast</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_grid</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dq_input</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Interpolate at the input point(s).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dq_input : complex | np.ndarray</span>
+<span class="sd">            Input values in complex form (d + j*q).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        complex | np.ndarray</span>
+<span class="sd">            Output value(s) corresponding to the input(s).</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dq_input</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
+            <span class="c1"># Handle scalar complex input</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dq_input</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">dq_input</span><span class="o">.</span><span class="n">imag</span>  <span class="c1"># type: ignore</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fast</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">_interp_bilinear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]]))[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Handle array of complex inputs</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">dq_input</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interpolator</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
+
+
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="MagneticModel">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel">[docs]</a>
@@ -666,57 +723,7 @@
                 <span class="n">points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">new_inp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">new_inp</span><span class="p">))</span>
             <span class="p">)</span>
 
-        <span class="c1"># Create interpolator</span>
-        <span class="n">interpolator</span> <span class="o">=</span> <span class="n">RegularGridInterpolator</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">),</span>
-            <span class="n">new_out</span><span class="p">,</span>
-            <span class="n">method</span><span class="o">=</span><span class="s2">"linear"</span><span class="p">,</span>
-            <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Faster interpolation of single points on a strictly ascending grid</span>
-        <span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="n">fast</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="p">(</span><span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span><span class="p">))</span>
-
-        <span class="c1"># Create a wrapper function that accepts complex inputs</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">lookup_fcn</span><span class="p">(</span><span class="n">dq_input</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">            </span><span class="sd">"""</span>
-<span class="sd">            Interpolator that accepts complex input directly.</span>
-
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            dq_input : complex | np.ndarray</span>
-<span class="sd">                Input values in complex form (d + j*q).</span>
-
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            np.ndarray</span>
-<span class="sd">                Output value(s) corresponding to the input(s).</span>
-
-<span class="sd">            """</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dq_input</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
-                <span class="c1"># Handle scalar complex input</span>
-                <span class="k">if</span> <span class="n">fast</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">_interp_bilinear</span><span class="p">(</span>
-                        <span class="n">d_grid</span><span class="p">,</span>
-                        <span class="n">q_grid</span><span class="p">,</span>
-                        <span class="n">new_out</span><span class="p">,</span>
-                        <span class="n">dq_input</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                        <span class="n">dq_input</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                    <span class="p">)</span>
-                <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-                    <span class="p">[</span>
-                        <span class="p">[</span>
-                            <span class="n">dq_input</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                            <span class="n">dq_input</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                        <span class="p">]</span>
-                    <span class="p">]</span>
-                <span class="p">)</span>
-                <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">interpolator</span><span class="p">(</span><span class="n">points</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="c1"># Handle array of complex inputs</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">dq_input</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">interpolator</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
+        <span class="n">lookup_fcn</span> <span class="o">=</span> <span class="n">_GridInterpolator</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">new_out</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
         <span class="c1"># Arrange data based on map type</span>
         <span class="k">if</span> <span class="n">new_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>

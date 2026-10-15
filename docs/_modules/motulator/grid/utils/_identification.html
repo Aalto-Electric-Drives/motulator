@@ -251,6 +251,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/identification/index.html">Mechanical Impedance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/identification/plot_45kw_im_vhz_identification.html">45-kW IM, V/Hz control, mechanical impedance identification</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -473,22 +477,17 @@
   <h1>Source code for motulator.grid.utils._identification</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Functions and classes for converter output admittance identification."""</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">nullcontext</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">environ</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Circle</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">trapezoid</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">SolverCfg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._identification</span><span class="w"> </span><span class="kn">import</span> <span class="n">dft</span><span class="p">,</span> <span class="n">run_frequency_sweep</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_style</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">control</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span>
@@ -527,12 +526,16 @@
 <span class="sd">        is used, for each switching interval, defaults to 10.</span>
 <span class="sd">    n_periods_excitation : int, optional</span>
 <span class="sd">        Number of excitation signal periods used in calculating the DFT, defaults to 4.</span>
+<span class="sd">        At least 3 are needed if `use_window` is True.</span>
 <span class="sd">    n_periods_init : int, optional</span>
 <span class="sd">        Number of fundamental periods to include for calculating operating-point</span>
 <span class="sd">        vectors, defaults to 1.</span>
 <span class="sd">    multiprocess : bool, optional</span>
 <span class="sd">        If True, the frequencies are simulated in parallel using all available CPU</span>
-<span class="sd">        cores, defaults to True.</span>
+<span class="sd">        cores, defaults to True. The model and the control system are copied to the</span>
+<span class="sd">        worker processes, which can require pickling them. Lambda functions and nested</span>
+<span class="sd">        functions (e.g., as references) cannot be pickled, but module-level functions</span>
+<span class="sd">        can.</span>
 <span class="sd">    use_window : bool, optional</span>
 <span class="sd">        Whether to use window function for calculating DFT, defaults to True.</span>
 
@@ -579,38 +582,6 @@
 
 
 <span class="c1"># %%</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">dft</span><span class="p">(</span>
-    <span class="n">cfg</span><span class="p">:</span> <span class="n">IdentificationCfg</span><span class="p">,</span>
-    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">u</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">f</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">initial_simulation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Single-frequency Fourier transform.</span>
-
-<span class="sd">    Calculates the complex amplitude of the frequency component f of the signal u over</span>
-<span class="sd">    the last periods of the signal. The transform is computed with the trapezoidal rule</span>
-<span class="sd">    from the time instants t, which need not be evenly spaced.</span>
-
-<span class="sd">    """</span>
-    <span class="n">n_periods</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_periods_init</span> <span class="k">if</span> <span class="n">initial_simulation</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_periods_excitation</span>
-    <span class="n">T</span> <span class="o">=</span> <span class="n">n_periods</span> <span class="o">/</span> <span class="n">f</span>
-    <span class="n">t_start</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">T</span>
-
-    <span class="c1"># Window of the last n_periods, starting from the value interpolated at t_start</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">t_start</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">"right"</span><span class="p">)</span>
-    <span class="n">u_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">t_start</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">u</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">t_start</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">u</span><span class="p">))</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">t_start</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="n">k</span><span class="p">:]))</span>
-    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="n">u_start</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="n">k</span><span class="p">:]))</span>
-
-    <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">use_window</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">initial_simulation</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">t_start</span><span class="p">)</span> <span class="o">/</span> <span class="n">T</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">u</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.42</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.08</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">))</span>  <span class="c1"># Blackman window</span>
-
-    <span class="k">return</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">T</span> <span class="o">*</span> <span class="n">trapezoid</span><span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">f</span> <span class="o">*</span> <span class="n">t</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
-
-
 <span class="k">def</span><span class="w"> </span><span class="nf">pre_process</span><span class="p">(</span>
     <span class="n">cfg</span><span class="p">:</span> <span class="n">IdentificationCfg</span><span class="p">,</span>
     <span class="n">mdl</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">,</span>
@@ -629,8 +600,9 @@
     <span class="c1"># Fundamental-frequency vectors in coordinates aligned with the PCC voltage</span>
     <span class="n">f_nom</span> <span class="o">=</span> <span class="n">w_g</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
     <span class="n">t</span><span class="p">,</span> <span class="n">filt</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_periods_init</span> <span class="o">/</span> <span class="n">f_nom</span>
     <span class="n">vectors</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dft</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f_nom</span><span class="p">,</span> <span class="n">initial_simulation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dft</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">f_nom</span><span class="p">,</span> <span class="n">T</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">filt</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">e_g_ab</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">u_g_ab</span><span class="p">,</span> <span class="n">filt</span><span class="o">.</span><span class="n">u_c_ab</span><span class="p">)</span>
     <span class="p">]</span>
     <span class="n">i_g0</span><span class="p">,</span> <span class="n">e_g0</span><span class="p">,</span> <span class="n">u_g0</span><span class="p">,</span> <span class="n">u_c0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
@@ -638,11 +610,13 @@
 
     <span class="c1"># The PCC voltage is imposed by a stiff source with signal injection at the</span>
     <span class="c1"># operating point: the grid impedance is removed, and the source has the PCC</span>
-    <span class="c1"># voltage magnitude and the initial frequency of the original source</span>
+    <span class="c1"># voltage magnitude and the initial frequency of the original source. The DC bus</span>
+    <span class="c1"># is copied together with the converter, since it refers to the converter.</span>
     <span class="n">ac_filter</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="p">)</span>
     <span class="n">ac_filter</span><span class="o">.</span><span class="n">L_g</span><span class="p">,</span> <span class="n">ac_filter</span><span class="o">.</span><span class="n">R_g</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
     <span class="n">ac_source</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">ThreePhaseSourceWithSignalInjection</span><span class="p">(</span><span class="n">w_g</span><span class="o">=</span><span class="n">w_g</span><span class="p">,</span> <span class="n">e_g</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_g0</span><span class="p">))</span>
-    <span class="n">mdl_inj</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">),</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">)</span>
+    <span class="n">converter</span><span class="p">,</span> <span class="n">dc_bus</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">((</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">dc_bus</span><span class="p">))</span>
+    <span class="n">mdl_inj</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">GridConverterSystem</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">,</span> <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">)</span>
     <span class="n">mdl_inj</span><span class="o">.</span><span class="n">pwm</span><span class="p">,</span> <span class="n">mdl_inj</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">pwm</span><span class="p">),</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">delay</span><span class="p">)</span>
     <span class="n">ctrl_inj</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">ctrl</span><span class="p">)</span>
     <span class="n">sim</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl_inj</span><span class="p">,</span> <span class="n">ctrl_inj</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -676,9 +650,9 @@
         <span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_source</span><span class="o">.</span><span class="n">exp_j_theta_g</span>
         <span class="n">u_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">exp_j_theta_g</span><span class="p">)</span> <span class="o">*</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">u_g_ab</span>
         <span class="n">i_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">exp_j_theta_g</span><span class="p">)</span> <span class="o">*</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">i_g_ab</span>
-        <span class="n">t</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span>
-        <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dft</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_g</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">f_e</span><span class="p">),</span> <span class="n">dft</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">u_g</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">f_e</span><span class="p">)</span>
-        <span class="n">I</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dft</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_g</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">f_e</span><span class="p">),</span> <span class="n">dft</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">i_g</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">f_e</span><span class="p">)</span>
+        <span class="n">t</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">n_periods_excitation</span> <span class="o">/</span> <span class="n">f_e</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">use_window</span>
+        <span class="n">U</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dft</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">u_g</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">f_e</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">dft</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">u_g</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">f_e</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+        <span class="n">I</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">dft</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i_g</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">f_e</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="n">dft</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">i_g</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">f_e</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
     <span class="k">return</span> <span class="o">-</span><span class="n">I</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">U</span><span class="p">)</span>
 
 
@@ -698,7 +672,8 @@
 <span class="sd">    voltage source, whose magnitude and frequency equal those of the operating point,</span>
 <span class="sd">    and small-signal voltage excitations are injected in the d- and q-axes. The grid</span>
 <span class="sd">    impedance of `mdl` as well as any time variation and negative-sequence component of</span>
-<span class="sd">    its source only affect the operating point.</span>
+<span class="sd">    its source only affect the operating point. A DC bus of `mdl` is included in the</span>
+<span class="sd">    identification.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -723,29 +698,11 @@
 
 <span class="sd">    """</span>
     <span class="n">mdl_inj</span><span class="p">,</span> <span class="n">ctrl_inj</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="n">pre_process</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span>
-    <span class="n">show_progress</span> <span class="o">=</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"BUILDING_DOCS"</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">"1"</span>
-    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Start identification..."</span><span class="p">)</span>
-    <span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-
     <span class="n">n_freqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">freqs</span><span class="p">)</span>
     <span class="n">amplitudes</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">abs_u_e</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">amplitude_multiplier</span><span class="p">,</span> <span class="n">n_freqs</span><span class="p">)</span>
-    <span class="n">excitations</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">freqs</span><span class="p">,</span> <span class="n">amplitudes</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">excitations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">freqs</span><span class="p">,</span> <span class="n">amplitudes</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="n">task</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">identify</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">mdl_inj</span><span class="p">,</span> <span class="n">ctrl_inj</span><span class="p">)</span>
-    <span class="n">Y</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">()</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">multiprocess</span> <span class="k">else</span> <span class="n">nullcontext</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-        <span class="c1"># Results in the order of the frequencies</span>
-        <span class="n">results</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">pool</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">excitations</span><span class="p">)</span> <span class="k">if</span> <span class="n">pool</span> <span class="k">else</span> <span class="nb">map</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">excitations</span><span class="p">)</span>
-        <span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">Y_k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">Y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Y_k</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\r</span><span class="s2">Frequencies simulated: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n_freqs</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Execution time: </span><span class="si">{</span><span class="p">(</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t_start</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
-
-    <span class="n">Y_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+    <span class="n">Y_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">run_frequency_sweep</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">excitations</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">multiprocess</span><span class="p">))</span>
     <span class="n">res</span><span class="o">.</span><span class="n">f_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">freqs</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># A copy, independent of cfg</span>
     <span class="n">res</span><span class="o">.</span><span class="n">Y_dd</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">Y_qd</span> <span class="o">=</span> <span class="n">Y_c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Y_c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
     <span class="n">res</span><span class="o">.</span><span class="n">Y_dq</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">Y_qq</span> <span class="o">=</span> <span class="n">Y_c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">Y_c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>

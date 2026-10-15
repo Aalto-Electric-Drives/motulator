@@ -197,12 +197,16 @@ Package Contents
                   is used, for each switching interval, defaults to 10.
    :type N_eval: int, optional
    :param n_periods_excitation: Number of excitation signal periods used in calculating the DFT, defaults to 4.
+                                At least 3 are needed if `use_window` is True.
    :type n_periods_excitation: int, optional
    :param n_periods_init: Number of fundamental periods to include for calculating operating-point
                           vectors, defaults to 1.
    :type n_periods_init: int, optional
    :param multiprocess: If True, the frequencies are simulated in parallel using all available CPU
-                        cores, defaults to True.
+                        cores, defaults to True. The model and the control system are copied to the
+                        worker processes, which can require pickling them. Lambda functions and nested
+                        functions (e.g., as references) cannot be pickled, but module-level functions
+                        can.
    :type multiprocess: bool, optional
    :param use_window: Whether to use window function for calculating DFT, defaults to True.
    :type use_window: bool, optional
@@ -538,7 +542,8 @@ Package Contents
    voltage source, whose magnitude and frequency equal those of the operating point,
    and small-signal voltage excitations are injected in the d- and q-axes. The grid
    impedance of `mdl` as well as any time variation and negative-sequence component of
-   its source only affect the operating point.
+   its source only affect the operating point. A DC bus of `mdl` is included in the
+   identification.
 
    :param cfg: Identification configuration.
    :type cfg: IdentificationCfg

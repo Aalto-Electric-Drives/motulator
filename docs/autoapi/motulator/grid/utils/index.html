@@ -256,6 +256,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/identification/index.html">Mechanical Impedance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/identification/plot_45kw_im_vhz_identification.html">45-kW IM, V/Hz control, mechanical impedance identification</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -698,11 +702,15 @@ injection (s), defaults to 0.05.</p></li>
 <li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of evenly spaced data points the solver should return for each
 integration interval, i.e., for each sampling period or, if carrier comparison
 is used, for each switching interval, defaults to 10.</p></li>
-<li><p><strong>n_periods_excitation</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of excitation signal periods used in calculating the DFT, defaults to 4.</p></li>
+<li><p><strong>n_periods_excitation</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of excitation signal periods used in calculating the DFT, defaults to 4.
+At least 3 are needed if <cite>use_window</cite> is True.</p></li>
 <li><p><strong>n_periods_init</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of fundamental periods to include for calculating operating-point
 vectors, defaults to 1.</p></li>
 <li><p><strong>multiprocess</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the frequencies are simulated in parallel using all available CPU
-cores, defaults to True.</p></li>
+cores, defaults to True. The model and the control system are copied to the
+worker processes, which can require pickling them. Lambda functions and nested
+functions (e.g., as references) cannot be pickled, but module-level functions
+can.</p></li>
 <li><p><strong>use_window</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use window function for calculating DFT, defaults to True.</p></li>
 </ul>
 </dd>
@@ -893,7 +901,8 @@ of the converter is identified at the PCC: the PCC voltage is imposed by a stiff
 voltage source, whose magnitude and frequency equal those of the operating point,
 and small-signal voltage excitations are injected in the d- and q-axes. The grid
 impedance of <cite>mdl</cite> as well as any time variation and negative-sequence component of
-its source only affect the operating point.</p>
+its source only affect the operating point. A DC bus of <cite>mdl</cite> is included in the
+identification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
