@@ -14,6 +14,80 @@ from typing import Literal
 import numpy as np
 
 from motulator.common.utils import abc2complex, complex2abc
+from motulator.common.utils._dead_time import averaged_gate_signals
+
+# %%
+DutyRatioError = Callable[[np.ndarray, np.ndarray, float, float], np.ndarray]
+
+
+class InverterNonlinearity:
+    """
+    Duty-ratio error due to the dead time and the threshold voltages.
+
+    The dead time blanks a leg for `t_d` after each switching instant, and the current
+    direction determines the leg state during the blanking. Away from the duty-ratio
+    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the
+    half carrier period. Pulses shorter than the dead time are suppressed, and clamped
+    legs have no dead-time error. The threshold voltage `u_th` of the power devices,
+    assumed equal for the switches and the diodes, causes the voltage drop
+    `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`,
+    also in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model
+    is consistent with `motulator.common.model.VoltageSourceConverter`.
+
+    Parameters
+    ----------
+    t_d : float, optional
+        Dead time (s), defaults to 0.
+    u_th : float, optional
+        Threshold voltage (V) of the power devices, defaults to 0.
+    sign : Callable[[np.ndarray], np.ndarray], optional
+        Current-direction function, defaults to `np.sign`. A smooth approximation may
+        be used, matching the converter model.
+
+    Notes
+    -----
+    This switching-cycle averaged model assumes constant duty ratios and currents
+    over a carrier period. It does not include transients due to changes in the
+    switching commands.
+
+    """
+
+    def __init__(
+        self,
+        t_d: float = 0.0,
+        u_th: float = 0.0,
+        sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+    ) -> None:
+        self.t_d = t_d
+        self.u_th = u_th
+        self.sign = sign
+
+    def __call__(
+        self, i_abc: np.ndarray, d_abc: np.ndarray, u_dc: float, T_half: float
+    ) -> np.ndarray:
+        """
+        Compute the duty-ratio error.
+
+        Parameters
+        ----------
+        i_abc : ndarray, shape (3,)
+            Phase currents (A).
+        d_abc : ndarray, shape (3,)
+            Duty ratios in the range [0, 1].
+        u_dc : float
+            DC-bus voltage (V).
+        T_half : float
+            Half carrier period (s).
+
+        Returns
+        -------
+        ndarray, shape (3,)
+            Duty-ratio errors.
+
+        """
+        s = self.sign(i_abc)
+        q_abc, b_abc = averaged_gate_signals(d_abc, self.t_d, T_half)
+        return d_abc - q_abc - 0.5 * b_abc * (1 - s) + s * self.u_th / u_dc
 
 
 # %%
@@ -28,10 +102,11 @@ class PWM:
     the control systems compensate for the delays, if needed by the controller.
 
     Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
-    dead time and the voltage drops of the power devices) is modeled as a function of
-    the phase currents and duty ratios. The realized voltage is corrected for this
-    error using the measured currents, which correspond to the same instant as the
-    realized voltage, and the duty ratios of the corresponding sampling periods.
+    dead time and the threshold voltages of the power devices) is modeled as a function
+    of the phase currents, duty ratios, DC-bus voltage, and half carrier period. The
+    realized voltage is corrected for this error using the measured currents, which
+    correspond to the same instant as the realized voltage, and the duty ratios of the
+    corresponding sampling periods.
     Furthermore, the error can be compensated for by feedforward, in which case the
     currents are predicted to the middle of the sampling period in which the duty ratios
     are applied, assuming that they rotate at the angular speed of the synchronous
@@ -56,13 +131,11 @@ class PWM:
         - "MPE": minimum phase error
         - "MME": minimum magnitude error
         - "six_step": six-step operation
-    d_err : Callable[[np.ndarray, np.ndarray], np.ndarray], optional
-        Duty-ratio error as a function of the phase currents (A) and duty ratios,
-        i.e., the realized duty ratios are `d_abc - d_err(i_abc, d_abc)`, defaults
-        to None (no error). For the dead time, use
-        `motulator.common.utils.dead_time_error` with the half carrier period, i.e.,
-        the sampling period of the control system with double update or half of it
-        with single update.
+    d_err : Callable[[np.ndarray, np.ndarray, float, float], np.ndarray], optional
+        Duty-ratio error as a function of the phase currents (A), duty ratios, DC-bus
+        voltage (V), and half carrier period (s), i.e., the realized duty ratios are
+        `d_abc - d_err(i_abc, d_abc, u_dc, T_half)`, defaults to None (no error). See
+        `InverterNonlinearity` for the dead time and the threshold voltages.
     feedforward : bool, optional
         Compensate for `d_err` in the duty ratios, defaults to True.
     k_pred : float, optional
@@ -74,6 +147,10 @@ class PWM:
         (no limit). The duty ratio applies to a half carrier period, so the shortest
         pulse is `d_min` times the half carrier period when a leg starts or stops
         switching and about twice that otherwise.
+    single_update : bool, optional
+        Duty ratios are updated once per carrier period, i.e., the half carrier period
+        is `T_s/2`, defaults to False (twice per carrier period, the half carrier
+        period is `T_s`). Must match the system model.
 
     References
     ----------
@@ -90,10 +167,11 @@ class PWM:
     def __init__(
         self,
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
-        d_err: Callable[[np.ndarray, np.ndarray], np.ndarray] | None = None,
+        d_err: DutyRatioError | None = None,
         feedforward: bool = True,
         k_pred: float = 1.5,
         d_min: float = 0.0,
+        single_update: bool = False,
     ) -> None:
         if not 0 <= d_min < 0.5:
             raise ValueError("d_min must be in the range [0, 0.5)")
@@ -104,12 +182,15 @@ class PWM:
         self.d_err = d_err
         self.feedforward = feedforward
         self.d_min = d_min
+        self.single_update = single_update
         self.limited_voltage = 0j
         self._i_c_ab = 0j
-        # Duty ratios and voltages per DC-bus voltage of the previous and the ongoing
-        # sampling periods
+        # Duty ratios of the previous and the ongoing sampling periods and the half
+        # carrier period of the previous one, assumed to apply also to the ongoing one.
+        # Before the first duty ratios are computed, the legs do not switch, and the
+        # infinite period gives no dead-time error.
         self._d_abc = [np.zeros(3), np.zeros(3)]
-        self._q_ab = [0j, 0j]
+        self._T_half = np.inf
 
     @staticmethod
     def six_step_overmodulation(u_c_ref_ab: complex, u_dc: float) -> complex:
@@ -199,6 +280,17 @@ class PWM:
         d_abc = [max(min(d, 1.0), 0.0) for d in d_abc]
         return d_abc
 
+    def _half_period(self, T_s: float) -> float:
+        """Half carrier period (s) corresponding to the sampling period."""
+        return T_s / 2 if self.single_update else T_s
+
+    @staticmethod
+    def _bind(
+        d_err: DutyRatioError, i_abc: np.ndarray, u_dc: float, T_half: float
+    ) -> Callable[[np.ndarray], np.ndarray]:
+        """Bind the duty-ratio error to the currents, DC-bus voltage, and period."""
+        return lambda d_abc: d_err(i_abc, d_abc, u_dc, T_half)
+
     def compute_output(
         self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> tuple[list[float], complex]:
@@ -236,15 +328,16 @@ class PWM:
         d_ref = np.array(d_abc)
 
         # Compensate for the duty-ratio error using the predicted currents
-        i_c_abc = None
+        d_err = None
         if self.d_err is not None and self.feedforward:
             i_c_abc = complex2abc(exp(1j * self.k_pred * T_s * w) * self._i_c_ab)
-            d_abc = list(np.clip(d_ref + self.d_err(i_c_abc, d_ref), 0, 1))
+            d_err = self._bind(self.d_err, i_c_abc, u_dc, self._half_period(T_s))
+            d_abc = list(np.clip(d_ref + d_err(d_ref), 0, 1))
 
         # Minimum pulses and the duty ratios realized with them
         d_realized = d_ref
         if self.d_min > 0:
-            d_abc, d_realized = self.limit_pulses(d_abc, d_ref, i_c_abc)
+            d_abc, d_realized = self.limit_pulses(d_abc, d_ref, d_err)
 
         # Limited voltage reference, excluding and including the compensation
         self.limited_voltage = abc2complex(d_realized) * u_dc
@@ -253,7 +346,10 @@ class PWM:
         return d_abc, u_c_ab
 
     def limit_pulses(
-        self, d_abc: list[float], d_ref: np.ndarray, i_abc: np.ndarray | None = None
+        self,
+        d_abc: list[float],
+        d_ref: np.ndarray,
+        d_err: Callable[[np.ndarray], np.ndarray] | None = None,
     ) -> tuple[list[float], np.ndarray]:
         """
         Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`.
@@ -270,11 +366,10 @@ class PWM:
         d_ref : ndarray, shape (3,)
             Duty ratios of the voltage reference, i.e., the realized duty ratios aimed
             at.
-        i_abc : ndarray, shape (3,), optional
-            Phase currents (A) for the duty-ratio error `d_err`, if it is compensated
-            for, in which case the realized duty ratios are `d_abc - d_err(i_abc,
-            d_abc)`. Defaults to None, in which case the realized duty ratios are
-            `d_abc`.
+        d_err : Callable[[np.ndarray], np.ndarray], optional
+            Duty-ratio error as a function of the duty ratios, if it is compensated
+            for, in which case the realized duty ratios are `d_abc - d_err(d_abc)`.
+            Defaults to None, in which case the realized duty ratios are `d_abc`.
 
         Returns
         -------
@@ -298,8 +393,8 @@ class PWM:
             for d_k in candidates:
                 d[k] = d_k
                 r = d_k
-                if i_abc is not None and self.d_err is not None:
-                    r -= self.d_err(i_abc, d)[k]
+                if d_err is not None:
+                    r -= d_err(d)[k]
                 realized.append(r)
             errors = [abs(r - d_ref[k]) for r in realized]
             j = 1 if errors[1] < errors[0] else 0
@@ -317,6 +412,8 @@ class PWM:
         voltage is reconstructed from the duty ratios of the previous and the ongoing
         sampling periods and the measured DC-bus voltage, i.e., the variations of the
         DC-bus voltage and of the currents within the periods are not known. The
+        duty-ratio error is evaluated with the half carrier period of the previous
+        sampling period, which is assumed to equal that of the ongoing period. The
         measured currents are also stored for the feedforward compensation of the next
         duty ratios.
 
@@ -339,24 +436,20 @@ class PWM:
 
         """
         self._i_c_ab = i_c_ab
-        k = 0 if average else 1
-        q_ab = self._q_ab[k:]
+        d_abc = self._d_abc[0 if average else 1 :]
         if self.d_err is not None:
             i_abc = complex2abc(i_c_ab)
-            q_ab = [
-                q - abc2complex(self.d_err(i_abc, d))
-                for q, d in zip(q_ab, self._d_abc[k:], strict=True)
-            ]
-        return u_dc * sum(q_ab) / len(q_ab)
+            d_abc = [d - self.d_err(i_abc, d, u_dc, self._T_half) for d in d_abc]
+        return u_dc * sum(abc2complex(d) for d in d_abc) / len(d_abc)
 
-    def update(self, d_abc: list[float]) -> None:
-        """Store the duty ratios of the next sampling period."""
+    def update(self, T_s: float, d_abc: list[float]) -> None:
+        """Store the next duty ratios and the ongoing half carrier period."""
         self._d_abc = [self._d_abc[1], np.asarray(d_abc)]
-        self._q_ab = [self._q_ab[1], abc2complex(d_abc)]
+        self._T_half = self._half_period(T_s)
 
     def __call__(
         self, T_s: float, u_c_ref_ab: complex, u_dc: float, w: float
     ) -> list[float]:
         d_abc, _ = self.compute_output(T_s, u_c_ref_ab, u_dc, w)
-        self.update(d_abc)
+        self.update(T_s, d_abc)
         return d_abc

@@ -90,6 +90,7 @@ class ConverterInputs(Protocol):
     """Protocol for converter inputs."""
 
     q_c_ab: Any  # Switching state, held constant over each integration interval
+    s_c_ab: Any  # Current-direction vector at the latest switching instant
 
 
 class Converter(Subsystem, Protocol):
@@ -97,9 +98,10 @@ class Converter(Subsystem, Protocol):
     Protocol defining the interface for converters.
 
     In addition to the subsystem interface, a converter provides the number of legs,
-    the dead time, and a method for setting the switching state `inp.q_c_ab` based on
-    the gate and blanking signals from the PWM model. The format of the switching state
-    is up to the converter (e.g., a complex space vector in a three-phase converter).
+    the dead time, and a method for setting the switching state `inp.q_c_ab` and the
+    current-direction vector `inp.s_c_ab` based on the gate and blanking signals from
+    the PWM model and the phase currents. The format of these is up to the converter
+    (e.g., complex space vectors in a three-phase converter).
 
     """
 
@@ -123,6 +125,7 @@ class ModelStateHistory:
 
     t: list[float] = field(default_factory=list)
     q_c_ab: list[complex] = field(default_factory=list)
+    s_c_ab: list[complex] = field(default_factory=list)
 
 
 class System:
@@ -209,12 +212,12 @@ class Model[C: Converter](System):
     """
     Base class for system models with a converter driven by a control system.
 
-    The converter subsystem gets the switching state `q_c_ab`, which is held constant
-    over each integration interval. The PWM model includes the dead time
-    `converter.t_d`, and the computational delay is sized according to the number of
-    legs `converter.n_legs`. The control systems of this package compensate for a
-    computational delay of one sampling period, i.e., `delay=1` with double update
-    and `delay=2` with single update.
+    The converter subsystem gets the switching state `q_c_ab` and the current-direction
+    vector `s_c_ab`, which are held constant over each integration interval. The PWM
+    model includes the dead time `converter.t_d`, and the computational delay is sized
+    according to the number of legs `converter.n_legs`. The control systems of this
+    package compensate for a computational delay of one sampling period, i.e.,
+    `delay=1` with double update and `delay=2` with single update.
 
     Parameters
     ----------
@@ -312,6 +315,7 @@ class Model[C: Converter](System):
         """Save the solution and the switching state."""
         super().save(sol)
         self._history.q_c_ab.extend([self.converter.inp.q_c_ab] * len(sol.t))
+        self._history.s_c_ab.extend([self.converter.inp.s_c_ab] * len(sol.t))
 
 
 # %%
@@ -358,6 +362,7 @@ class ModelTimeSeries:
         # first, since the derived signals can depend on the inputs that are given by
         # the states (e.g., the converter voltage on the DC-bus voltage).
         ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
+        ts[mdl.converter].s_c_ab = np.array(mdl._history.s_c_ab)
         pass_inputs()
         for subsystem in mdl.subsystems:
             ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)

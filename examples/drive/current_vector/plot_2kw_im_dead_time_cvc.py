@@ -3,10 +3,11 @@
 =========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive at low speeds. The dead time of the converter is modeled, and its
-effect is compensated for in the control system. The magnetic saturation is included
-in the machine model and taken into account in the control system. The sensorless
-observer and the compensation method are similar to [#Hin2010]_.
+motor (IM) drive at low speeds. The dead time and the threshold voltage of the
+converter are modeled, and their effects are compensated for in the control system.
+The magnetic saturation is included in the machine model and taken into account in
+the control system. The sensorless observer and the compensation method are similar
+to [#Hin2010]_.
 
 """
 
@@ -16,7 +17,6 @@ from math import pi
 import numpy as np
 
 import motulator.drive.control.im as control
-from motulator.common.utils import dead_time_error
 from motulator.drive import model, utils
 
 # %%
@@ -26,11 +26,13 @@ nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
-# The dead time causes a duty-ratio error that depends on the sign of the phase current.
-# As in [#Hin2010]_, the signum function is replaced with a smooth arctangent function,
-# which approximates the effect of the parasitic capacitances at low currents.
+# The dead time and the threshold voltage of the power devices cause a duty-ratio error
+# that depends on the sign of the phase current. As in [#Hin2010]_, the signum function
+# is replaced with a smooth arctangent function, which approximates the effect of the
+# parasitic capacitances at low currents.
 
 t_d = 2e-6  # Dead time (s)
+u_th = 1.0  # Threshold voltage (V)
 T_s = 125e-6  # Sampling period (s)
 
 
@@ -42,7 +44,7 @@ def smooth_sign(i):
 # %%
 # Configure the system model. The Γ-equivalent machine model with main-flux saturation
 # is used. The parameters are based on the measured data of a 2.2-kW machine
-# [#Qu2012]_. The dead time is a parameter of the converter.
+# [#Qu2012]_. The dead time and the threshold voltage are parameters of the converter.
 
 par = model.InductionMachinePars(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=lambda psi: 0.34 / (1 + (0.84 * psi) ** 7)
@@ -52,7 +54,9 @@ par = model.InductionMachinePars(
 def create_model():
     machine = model.InductionMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
-    converter = model.VoltageSourceConverter(u_dc=540, t_d=t_d, sign=smooth_sign)
+    converter = model.VoltageSourceConverter(
+        u_dc=540, t_d=t_d, u_th=u_th, sign=smooth_sign
+    )
     mdl = model.Drive(machine, mechanics, converter)
     mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
     return mdl
@@ -77,9 +81,9 @@ def create_control_system(pwm=None):
 
 
 # %%
-# Simulate without the compensation. The voltage error caused by the dead time
-# corrupts the flux and speed estimates. After the speed reversal, the drive fails in
-# the regenerating mode.
+# Simulate without the compensation. The voltage error caused by the inverter
+# nonlinearities corrupts the flux and speed estimates. After the speed reversal, the
+# drive fails in the regenerating mode.
 
 sim = model.Simulation(create_model(), create_control_system())
 res = sim.simulate(t_stop=2.4)
@@ -89,7 +93,7 @@ utils.plot(res, base)
 # Simulate with the compensation, using the same duty-ratio error model as in the
 # system model.
 
-pwm = control.PWM(d_err=lambda i, d: dead_time_error(i, d, t_d, T_s, sign=smooth_sign))
+pwm = control.PWM(d_err=control.InverterNonlinearity(t_d, u_th, sign=smooth_sign))
 sim = model.Simulation(create_model(), create_control_system(pwm))
 res = sim.simulate(t_stop=2.4)
 utils.plot(res, base)

@@ -1,13 +1,15 @@
 """Tests for the converter models and the PWM of the control system."""
 
+from functools import partial
+
 import numpy as np
 import pytest
 
-from motulator.common.control import PWM
+from motulator.common.control import PWM, InverterNonlinearity
 from motulator.common.model import Model
 from motulator.common.model._converter import VoltageSourceConverter
 from motulator.common.model._pwm import ZOH, CarrierComparison
-from motulator.common.utils import abc2complex, complex2abc, dead_time_error
+from motulator.common.utils import abc2complex, complex2abc
 
 
 @pytest.mark.parametrize("pwm_cls", [ZOH, CarrierComparison], ids=["zoh", "carrier"])
@@ -49,7 +51,7 @@ def test_carrier_average_near_limits(d_abc: list[float]) -> None:
     assert q_avg == pytest.approx(q_zoh[0])
     assert b_avg == pytest.approx(b_zoh[0])
     d_real = q_avg + 0.5 * b_avg * (1 - np.sign(i_abc))
-    d_err = dead_time_error(i_abc, np.array(d_abc), t_d, T_s)
+    d_err = InverterNonlinearity(t_d)(i_abc, np.array(d_abc), 540, T_s)
     assert np.array(d_abc) - d_err == pytest.approx(d_real)
 
 
@@ -97,11 +99,9 @@ def test_realized_voltage(
 ) -> None:
     """The realized voltage of the control system equals that of the system model,
     also near the duty-ratio limits, where the error depends on the duty ratios."""
-    T_s, t_d, u_dc, i_c_ab = 1e-4, 2e-6, 540, 4 + 0j
-    pwm = PWM(
-        d_err=lambda i, d: dead_time_error(i, d, t_d, T_s), feedforward=feedforward
-    )
-    converter = VoltageSourceConverter(u_dc, t_d=t_d)
+    T_s, t_d, u_th, u_dc, i_c_ab = 1e-4, 2e-6, 1.5, 540, 4 + 0j
+    pwm = PWM(d_err=InverterNonlinearity(t_d, u_th), feedforward=feedforward)
+    converter = VoltageSourceConverter(u_dc, t_d=t_d, u_th=u_th)
     converter.inp.i_c_ab = i_c_ab
     realized = []
     for u_ref in u_refs:
@@ -109,7 +109,8 @@ def test_realized_voltage(
         d_abc = pwm(T_s, u_ref, u_dc, w=0)
         _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, d_abc)
         converter.set_gate_signals(q_abc[0], b_abc[0])
-        realized.append(u_dc * converter.inp.q_c_ab)
+        converter.set_outputs(0)
+        realized.append(converter.out.u_c_ab)
     expected = np.mean(realized) if average else realized[-1]
     u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=average)
     assert u_c_ab == pytest.approx(expected)
@@ -143,7 +144,9 @@ def test_feedforward_current_prediction() -> None:
     T_s, w, i_c_ab = 1e-4, 2 * np.pi * 50, 4 + 1j
     currents = []
 
-    def d_err(i_abc: np.ndarray, d_abc: np.ndarray) -> np.ndarray:
+    def d_err(
+        i_abc: np.ndarray, d_abc: np.ndarray, u_dc: float, T_half: float
+    ) -> np.ndarray:
         currents.append(i_abc)
         return np.zeros(3)
 
@@ -161,7 +164,7 @@ def test_min_pulse(t_d: float) -> None:
     pulses, and the realized voltage equals that of the system model, also in
     overmodulation."""
     T_s, u_dc, d_min = 1e-4, 540, 0.04
-    d_err = None if t_d == 0 else lambda i, d: dead_time_error(i, d, t_d, T_s)
+    d_err = None if t_d == 0 else InverterNonlinearity(t_d)
     pwm = PWM(d_err=d_err, d_min=d_min)
     converter = VoltageSourceConverter(u_dc, t_d=t_d)
     rng = np.random.default_rng(0)
@@ -191,18 +194,20 @@ def test_min_pulse(t_d: float) -> None:
 def test_min_pulse_dead_time() -> None:
     """With the compensation of the dead time, the duty ratio of the minimum pulse is
     selected by the realized duty ratio, not by the compensated duty ratio."""
-    T_s, t_d, d_min = 1e-4, 2e-6, 0.04  # Error of t_d/(2*T_s) = 0.01
+    T_s, t_d, u_dc, d_min = 1e-4, 2e-6, 540, 0.04  # Error of t_d/(2*T_s) = 0.01
+    nonlin = InverterNonlinearity(t_d)
 
     def d_err(i: np.ndarray, d: np.ndarray) -> np.ndarray:
-        return dead_time_error(i, d, t_d, T_s)
+        return nonlin(i, d, u_dc, T_s)
 
-    pwm = PWM(d_err=d_err, d_min=d_min)
+    pwm = PWM(d_err=nonlin, d_min=d_min)
     i_abc = np.array([4.0, -4.0, 4.0])
     d_ref = np.array([0.012, 0.012, 0.985])
     d_comp = np.clip(d_ref + d_err(i_abc, d_ref), 0, 1)  # [0.022, 0.002, 0.995]
     # Rounding the compensated duty ratio would give d_min = 0.04 in phase a, whose
     # realized duty ratio 0.03 is farther from the reference 0.012 than 0
-    assert pwm.limit_pulses(list(d_comp), d_ref, i_abc)[0] == [0, 0, 1]
+    d_lim, _ = pwm.limit_pulses(list(d_comp), d_ref, partial(d_err, i_abc))
+    assert d_lim == [0, 0, 1]
     # Without the compensation, the duty ratios are rounded to the nearest
     d = [0.022, 0.002, 0.995]
     assert pwm.limit_pulses(d, np.array(d))[0] == [d_min, 0, 1]
@@ -212,7 +217,7 @@ def test_min_pulse_dead_time() -> None:
         d_ref = rng.uniform(0, 1, 3) ** 4 * rng.choice([1, -1], 3) % 1
         i_abc = rng.uniform(-5, 5, 3)
         d_comp = np.clip(d_ref + d_err(i_abc, d_ref), 0, 1)
-        d_lim, d_realized = pwm.limit_pulses(list(d_comp), d_ref, i_abc)
+        d_lim, d_realized = pwm.limit_pulses(list(d_comp), d_ref, partial(d_err, i_abc))
         d = np.array(d_lim)
         realized = d - d_err(i_abc, d)
         assert d_realized == pytest.approx(np.where(d != d_comp, realized, d_ref))
