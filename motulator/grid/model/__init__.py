@@ -1,7 +1,9 @@
 """Continuous-time grid converter models."""
 
+from motulator.common.model._composite import CompositeModel
+from motulator.common.model._converter import DCBus
 from motulator.common.model._sensor import Sensor
-from motulator.common.model._simulation import Simulation
+from motulator.common.model._simulation import Simulation, SimulationResults
 from motulator.grid.model._ac_source import ThreePhaseSourceWithSignalInjection
 from motulator.grid.model._converter_system import (
     CapacitiveDCBusConverter,
@@ -14,6 +16,8 @@ from motulator.grid.model._converter_system import (
 
 __all__ = [
     "CapacitiveDCBusConverter",
+    "CompositeModel",
+    "DCBus",
     "GridConverterSystem",
     "LCLFilter",
     "LFilter",
@@ -21,5 +25,6 @@ __all__ = [
     "ThreePhaseSourceWithSignalInjection",
     "Sensor",
     "Simulation",
+    "SimulationResults",
     "VoltageSourceConverter",
 ]

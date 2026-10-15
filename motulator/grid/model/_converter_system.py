@@ -3,6 +3,7 @@
 from motulator.common.model._base import Model
 from motulator.common.model._converter import (
     CapacitiveDCBusConverter,
+    DCBus,
     VoltageSourceConverter,
 )
 from motulator.grid.model._ac_filter import LCLFilter, LFilter
@@ -26,6 +27,9 @@ class GridConverterSystem(Model[VoltageSourceConverter | CapacitiveDCBusConverte
         Enable PWM model, defaults to False.
     delay : int, optional
         Computational delay (samples), defaults to 1.
+    dc_bus : DCBus, optional
+        DC bus feeding the converter, which can be shared with other models (e.g., with
+        a drive), see `CompositeModel`. Defaults to None.
 
     """
 
@@ -36,6 +40,7 @@ class GridConverterSystem(Model[VoltageSourceConverter | CapacitiveDCBusConverte
         ac_source: ThreePhaseSource,
         pwm: bool = False,
         delay: int = 1,
+        dc_bus: DCBus | None = None,
     ) -> None:
         self.ac_filter = ac_filter
         self.ac_source = ac_source
@@ -45,4 +50,4 @@ class GridConverterSystem(Model[VoltageSourceConverter | CapacitiveDCBusConverte
             (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
         }
         subsystems = [converter, ac_filter, ac_source]
-        super().__init__(converter, subsystems, connections, pwm, delay)
+        super().__init__(converter, subsystems, connections, pwm, delay, dc_bus)

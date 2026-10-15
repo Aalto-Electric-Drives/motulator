@@ -1,7 +1,11 @@
 """Continuous-time model for electric machine drives."""
 
 from motulator.common.model._base import Model
-from motulator.common.model._converter import FrequencyConverter, VoltageSourceConverter
+from motulator.common.model._converter import (
+    DCBus,
+    FrequencyConverter,
+    VoltageSourceConverter,
+)
 from motulator.drive.model._lc_filter import LCFilter
 from motulator.drive.model._machine import InductionMachine, SynchronousMachine
 from motulator.drive.model._mechanics import (
@@ -31,6 +35,9 @@ class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
         Enable PWM model, defaults to False.
     delay : int, optional
         Computational delay (samples), defaults to 1.
+    dc_bus : DCBus, optional
+        DC bus feeding the converter, which can be shared with other models (e.g., with
+        a grid converter system), see `CompositeModel`. Defaults to None.
 
     """
 
@@ -42,6 +49,7 @@ class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
         lc_filter: LCFilter | None = None,
         pwm: bool = False,
         delay: int = 1,
+        dc_bus: DCBus | None = None,
     ) -> None:
         self.machine = machine
         self.mechanics = mechanics
@@ -66,4 +74,4 @@ class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
                 (lc_filter, "u_c_ab"): (converter, "u_c_ab"),
                 (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
             }
-        super().__init__(converter, subsystems, connections, pwm, delay)
+        super().__init__(converter, subsystems, connections, pwm, delay, dc_bus)

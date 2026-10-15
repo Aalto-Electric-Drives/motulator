@@ -1,12 +1,15 @@
 """Base classes for models."""
 
 from dataclasses import InitVar, dataclass, field
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
 from motulator.common.model._pwm import ZOH, CarrierComparison
+
+if TYPE_CHECKING:
+    from motulator.common.model._converter import DCBus
 
 
 # %%
@@ -115,43 +118,29 @@ class ModelStateHistory:
     q_c_ab: list[complex] = field(default_factory=list)
 
 
-class Model[C: Converter]:
+class System:
     """
     Base class for continuous-time system models.
 
-    A model consists of subsystems and connections between them. The converter
-    subsystem gets the switching state `q_c_ab`, which is held constant over each
-    integration interval. The PWM model includes the dead time `converter.t_d`, and the
-    computational delay is sized according to the number of legs `converter.n_legs`. The
-    outputs are computed in the order of the `subsystems` list and passed to the
-    connected inputs immediately. Hence, a subsystem whose outputs depend directly on
-    its inputs must come after the subsystems providing these inputs.
+    A system consists of subsystems and connections between them. The outputs are
+    computed in the order of the `subsystems` list and passed to the connected inputs
+    immediately. Hence, a subsystem whose outputs depend directly on its inputs must
+    come after the subsystems providing these inputs.
 
     Parameters
     ----------
-    converter : Converter
-        Converter model.
     subsystems : list[Subsystem]
-        All subsystems, including the converter.
+        All subsystems.
     connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]
         Connections as `{(target, input_name): (source, output_name)}`.
-    pwm : bool, optional
-        Enable PWM model, defaults to False.
-    delay : int, optional
-        Computational delay (samples), defaults to 0.
 
     """
 
     def __init__(
         self,
-        converter: C,
         subsystems: list[Subsystem],
         connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
-        pwm: bool = False,
-        delay: int = 0,
     ) -> None:
-        if converter not in subsystems:
-            raise ValueError("The converter must be included in the subsystems")
         # Group the connections by the source for passing the outputs to the inputs
         self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
             s: [] for s in subsystems
@@ -164,10 +153,6 @@ class Model[C: Converter]:
                 )
             self._outgoing[src].append((target, inp, out))
         self.t0: float = 0.0
-        self.delay = Delay(delay, converter.n_legs)
-        t_d = converter.t_d
-        self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
-        self.converter: C = converter
         self.subsystems = subsystems
         self.connections = connections
         self._history = ModelStateHistory()
@@ -206,13 +191,72 @@ class Model[C: Converter]:
         return rhs_list
 
     def save(self, sol: OdeResult) -> None:
-        """Save the solution and the switching state."""
+        """Save the solution."""
         self._history.t.extend(sol.t)
-        self._history.q_c_ab.extend([self.converter.inp.q_c_ab] * len(sol.t))
-        # Save states
         index = 0
         for subsystem in self.subsystems:
             index = subsystem.extend_state_history(sol.y, index)
+
+
+class Model[C: Converter](System):
+    """
+    Base class for system models with a converter driven by a control system.
+
+    The converter subsystem gets the switching state `q_c_ab`, which is held constant
+    over each integration interval. The PWM model includes the dead time
+    `converter.t_d`, and the computational delay is sized according to the number of
+    legs `converter.n_legs`.
+
+    Parameters
+    ----------
+    converter : Converter
+        Converter model.
+    subsystems : list[Subsystem]
+        All subsystems, including the converter.
+    connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+        Connections as `{(target, input_name): (source, output_name)}`.
+    pwm : bool, optional
+        Enable PWM model, defaults to False.
+    delay : int, optional
+        Computational delay (samples), defaults to 0.
+    dc_bus : DCBus, optional
+        DC bus feeding the converter, whose input `u_dc` is connected to the DC-bus
+        voltage. The DC bus is added to the subsystems, and it can be shared with other
+        models, see `CompositeModel`. Defaults to None, in which case the converter has
+        its own DC-bus model (or a constant DC-bus voltage).
+
+    """
+
+    def __init__(
+        self,
+        converter: C,
+        subsystems: list[Subsystem],
+        connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
+        pwm: bool = False,
+        delay: int = 0,
+        dc_bus: "DCBus | None" = None,
+    ) -> None:
+        if converter not in subsystems:
+            raise ValueError("The converter must be included in the subsystems")
+        if dc_bus is not None:
+            if converter not in dc_bus.converters:
+                raise ValueError("The converter must be given to the DC bus")
+            if dc_bus in subsystems:
+                raise ValueError("The DC bus must not be included in the subsystems")
+            # The DC bus comes first, since the converter voltage depends directly on
+            # the DC-bus voltage
+            subsystems = [dc_bus, *subsystems]
+            connections = {**connections, (converter, "u_dc"): (dc_bus, "u_dc")}
+        super().__init__(subsystems, connections)
+        self.converter: C = converter
+        self.delay = Delay(delay, converter.n_legs)
+        t_d = converter.t_d
+        self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
+
+    def save(self, sol: OdeResult) -> None:
+        """Save the solution and the switching state."""
+        super().save(sol)
+        self._history.q_c_ab.extend([self.converter.inp.q_c_ab] * len(sol.t))
 
 
 # %%
@@ -250,16 +294,23 @@ class ModelTimeSeries:
         for subsystem in mdl.subsystems:
             name, ts[subsystem] = subsystem.create_time_series(self.t)
             setattr(self, name, ts[subsystem])
-        # Switching states and the signals derived from them
+
+        def pass_inputs() -> None:
+            for (target, inp), (src, out) in mdl.connections.items():
+                setattr(ts[target], inp, np.array(getattr(ts[src], out)))
+
+        # Switching states and the signals derived from them. The inputs are passed
+        # first, since the derived signals can depend on the inputs that are given by
+        # the states (e.g., the converter voltage on the DC-bus voltage).
         ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
+        pass_inputs()
         for subsystem in mdl.subsystems:
             ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)
         # Inputs from the connections and the signals derived from them. The second
         # pass propagates the signals corrected in the first pass (e.g., the stator
         # current with core losses).
         for _ in range(2):
-            for (target, inp), (src, out) in mdl.connections.items():
-                setattr(ts[target], inp, np.array(getattr(ts[src], out)))
+            pass_inputs()
             for subsystem in mdl.subsystems:
                 ts[subsystem].compute_input_derived_signals(self.t, subsystem)
 

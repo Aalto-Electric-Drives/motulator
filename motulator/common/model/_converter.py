@@ -2,19 +2,20 @@
 Continuous-time models for converters.
 
 A three-phase voltage-source inverter with optional DC-bus dynamics is modeled, along
-with a six-pulse diode bridge rectifier supplied from a stiff grid. Complex space
-vectors are used also for duty ratios and switching states, wherever applicable.
+with a six-pulse diode bridge rectifier supplied from a stiff grid and a capacitive DC
+bus that can be shared by several converters. Complex space vectors are used also for
+duty ratios and switching states, wherever applicable.
 
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import InitVar, dataclass, field
 from math import sqrt
 from typing import Any
 
 import numpy as np
 
-from motulator.common.model._base import Subsystem
+from motulator.common.model._base import Subsystem, SubsystemTimeSeries
 from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import (
     abc2complex,
@@ -32,6 +33,7 @@ class Inputs:
     q_c_ab: complex = 0j
     i_c_ab: complex = 0j
     i_dc: float | Callable[[float], float] | None = None
+    u_dc: float | None = None  # DC-bus voltage (V) from a DC-bus model, if connected
 
 
 @dataclass
@@ -49,7 +51,8 @@ class VoltageSourceConverter(Subsystem):
     The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
     neither of its switches conducts, the current direction determines which diode
     conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
-    in the beginning of the blanking interval.
+    in the beginning of the blanking interval. The DC-bus voltage is constant, unless
+    the input `u_dc` is connected to a `DCBus` model (see `Model`).
 
     Parameters
     ----------
@@ -98,6 +101,8 @@ class VoltageSourceConverter(Subsystem):
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
+        if self.inp.u_dc is not None:
+            self.out.u_dc = self.inp.u_dc
         self.out.u_c_ab = self.inp.q_c_ab * self.out.u_dc
 
     def meas_dc_voltage(self) -> float:
@@ -219,8 +224,6 @@ class CapacitiveDCBusConverterTimeSeries(
 
 
 # %%
-
-
 @dataclass
 class FrequencyConverterStates:
     """State variables."""
@@ -340,3 +343,90 @@ class FrequencyConverterTimeSeries(
         ).astype(int)
         # Grid current space vector
         self.i_g_ab = abc2complex(self.q_g_abc) * self.i_L
+
+
+# %%
+@dataclass
+class DCBusInputs:
+    """Input variables."""
+
+    i_dc: float | Callable[[float], float] | None = None  # External current (A)
+
+
+@dataclass
+class DCBusOutputs:
+    """Output variables for interconnection."""
+
+    u_dc: float
+
+
+@dataclass
+class DCBusStates:
+    """State variables."""
+
+    u_dc: float
+
+
+class DCBus(Subsystem):
+    """
+    Capacitive DC bus shared by converters.
+
+    The DC bus feeds the given converters, whose DC currents are computed from their
+    switching states and AC currents. The DC-bus voltage is connected to the input
+    `u_dc` of each converter by the model (see `Model`). An external current, e.g.,
+    from a battery or a braking chopper, can also be fed to the DC bus.
+
+    Parameters
+    ----------
+    C_dc : float
+        DC-bus capacitance (F).
+    u_dc : float
+        Initial DC-bus voltage (V).
+    converters : Sequence[VoltageSourceConverter]
+        Converters fed from the DC bus.
+
+    """
+
+    def __init__(
+        self, C_dc: float, u_dc: float, converters: Sequence[VoltageSourceConverter]
+    ) -> None:
+        for converter in converters:
+            if isinstance(converter, CapacitiveDCBusConverter | FrequencyConverter):
+                raise ValueError("The converter has its own DC-bus model")
+        if len({id(c) for c in converters}) < len(converters):
+            raise ValueError("The converters must be distinct")
+        self.C_dc = C_dc
+        self.converters = list(converters)
+        self.inp: DCBusInputs = DCBusInputs()
+        self.out: DCBusOutputs = DCBusOutputs(u_dc)
+        self.state: DCBusStates = DCBusStates(u_dc)
+
+    def set_external_dc_current(self, i_dc: float | Callable[[float], float]) -> None:
+        """Set external DC current (A), constant or a function of time."""
+        self.inp.i_dc = i_dc
+
+    def set_outputs(self, t: float) -> None:
+        """Set output variables for interconnection."""
+        self.out.u_dc = self.state.u_dc.real
+
+    def rhs(self, t: float) -> list[complex]:
+        """Compute state derivatives."""
+        i_dc = 0.0 if self.inp.i_dc is None else get_value(self.inp.i_dc, t)
+        i_dc_int = sum(c.compute_internal_dc_current(c.inp) for c in self.converters)
+        return [(i_dc - i_dc_int) / self.C_dc]
+
+    def create_time_series(self, t: np.ndarray) -> tuple[str, "DCBusTimeSeries"]:
+        """Create time series from state list."""
+        return "dc_bus", DCBusTimeSeries(t, self)
+
+
+@dataclass
+class DCBusTimeSeries(SubsystemTimeSeries):
+    """Continuous time series."""
+
+    t: InitVar[np.ndarray]
+    subsystem: InitVar[DCBus]
+    u_dc: np.ndarray = field(default_factory=empty_array)
+
+    def __post_init__(self, t: np.ndarray, subsystem: DCBus) -> None:
+        self.u_dc = np.real(np.array(subsystem._history["u_dc"]))

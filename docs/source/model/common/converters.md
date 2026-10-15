@@ -66,6 +66,8 @@ label: DC_current
     \idc' = \qA \iA + \qB \iB + \qC \iC
 ```
 
+The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. The {class}`motulator.common.model.DCBus` class models the DC-bus capacitor fed by the given converters, whose DC currents $\idc'$ are computed from their switching states and phase currents, and by the external current $\idc$. The models of the converter systems sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc`.
+
 ## Carrier Comparison
 
 In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals $\qA$, $\qB$, and $\qC$ from duty ratios $\dA$, $\dB$, and $\dC$. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.
