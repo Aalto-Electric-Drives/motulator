@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from motulator.common.control import PWM
+from motulator.common.model import Model
 from motulator.common.model._converter import VoltageSourceConverter
 from motulator.common.model._pwm import ZOH, CarrierComparison
 from motulator.common.utils import abc2complex, complex2abc, dead_time_error
@@ -61,6 +62,31 @@ def test_blanking_across_samples() -> None:
     assert t_steps[0] == pytest.approx(1.5e-6)
     assert (q_abc[0, 0], b_abc[0, 0], b_abc[1, 0]) == (0, 1, 0)
     assert np.sum(t_steps) == pytest.approx(2e-5)
+
+
+@pytest.mark.parametrize("pwm", [False, True], ids=["zoh", "carrier"])
+@pytest.mark.parametrize("delay", [1, 2], ids=["half_period", "full_period"])
+def test_single_update(pwm: bool, delay: int) -> None:
+    """With single update, the sampling period consists of two half carrier periods,
+    whose duty ratios are delayed by the given number of half carrier periods, and
+    the mean gate signal equals the mean of their duty ratios."""
+    T_s, t_d = 2e-4, 2e-6
+    d_abc = [[0.25, 0.5, 0.75], [0.5, 0.25, 0.875]]
+    converter = VoltageSourceConverter(u_dc=540, t_d=t_d)
+    mdl = Model(converter, [converter], {}, pwm=pwm, delay=delay, single_update=True)
+    mdl.modulate(T_s, d_abc[0])
+    t_steps, q_abc, b_abc = mdl.modulate(T_s, d_abc[1])
+    # The same PWM model called with the half carrier period and the delayed duty
+    # ratios, which differ between the halves only with the delay of a half period
+    d_halves = [d_abc[0], d_abc[2 - delay]]
+    ref = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
+    expected = [ref(T_s / 2, d) for d in d_halves]
+    assert t_steps == pytest.approx(np.concatenate([e[0] for e in expected]))
+    assert np.array_equal(q_abc, np.vstack([e[1] for e in expected]))
+    assert np.array_equal(b_abc, np.vstack([e[2] for e in expected]))
+    # The blanking splits evenly between the switches of a leg
+    q_mean = t_steps @ (q_abc + b_abc / 2) / T_s
+    assert q_mean == pytest.approx(np.mean(d_halves, axis=0))
 
 
 @pytest.mark.parametrize("u_refs", [(100, 100), (100, 356.4)], ids=["linear", "limit"])

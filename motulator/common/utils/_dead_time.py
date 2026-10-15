@@ -39,8 +39,8 @@ def dead_time_error(
     t_d : float
         Dead time (s).
     T_s : float
-        Sampling period (s), equal to the half carrier period. In the control system,
-        this must equal the sampling period of the controller.
+        Half carrier period (s), i.e., the sampling period with double update or half
+        of it with single update.
     sign : Callable[[np.ndarray], np.ndarray], optional
         Current-direction function, defaults to `np.sign`. A smooth approximation
         may be used, matching the converter model.

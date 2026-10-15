@@ -19,14 +19,19 @@ class GridConverterSystem(Model[VoltageSourceConverter]):
         AC filter model.
     ac_source : ThreePhaseSource
         Three-phase voltage source.
-    pwm : bool, optional
-        Enable PWM model, defaults to False.
-    delay : int, optional
-        Computational delay (samples), defaults to 1.
     dc_bus : DCBus, optional
         DC bus feeding the converter, which can be shared with other models (e.g., with
         a drive), see `CompositeModel`. Defaults to None, in which case the converter
         has a constant DC-bus voltage.
+    pwm : bool, optional
+        Enable PWM model, defaults to False.
+    delay : int, optional
+        Computational delay in half carrier periods (sampling periods with double
+        update), defaults to 1. With single update, use 2 for a delay of one
+        sampling period, see `Model`.
+    single_update : bool, optional
+        Sample and update the duty ratios once per carrier period instead of twice,
+        defaults to False, see `Model`.
 
     """
 
@@ -35,9 +40,10 @@ class GridConverterSystem(Model[VoltageSourceConverter]):
         converter: VoltageSourceConverter,
         ac_filter: LFilter | LCLFilter,
         ac_source: ThreePhaseSource,
+        dc_bus: DCBus | None = None,
         pwm: bool = False,
         delay: int = 1,
-        dc_bus: DCBus | None = None,
+        single_update: bool = False,
     ) -> None:
         self.ac_filter = ac_filter
         self.ac_source = ac_source
@@ -47,4 +53,12 @@ class GridConverterSystem(Model[VoltageSourceConverter]):
             (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
         }
         subsystems = [converter, ac_filter, ac_source]
-        super().__init__(converter, subsystems, connections, pwm, delay, dc_bus)
+        super().__init__(
+            converter,
+            subsystems,
+            connections,
+            dc_bus=dc_bus,
+            pwm=pwm,
+            delay=delay,
+            single_update=single_update,
+        )

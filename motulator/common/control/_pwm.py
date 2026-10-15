@@ -60,8 +60,9 @@ class PWM:
         Duty-ratio error as a function of the phase currents (A) and duty ratios,
         i.e., the realized duty ratios are `d_abc - d_err(i_abc, d_abc)`, defaults
         to None (no error). For the dead time, use
-        `motulator.common.utils.dead_time_error`, whose sampling period must equal
-        that of the control system.
+        `motulator.common.utils.dead_time_error` with the half carrier period, i.e.,
+        the sampling period of the control system with double update or half of it
+        with single update.
     feedforward : bool, optional
         Compensate for `d_err` in the duty ratios, defaults to True.
     k_pred : float, optional
@@ -70,9 +71,9 @@ class PWM:
         ratios are applied after the computational delay of one sampling period.
     d_min : float, optional
         Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0
-        (no limit). The duty ratio applies to a sampling period (a half of the carrier
-        period), so the shortest pulse is `d_min*T_s` when a leg starts or stops
-        switching and about `2*d_min*T_s` otherwise.
+        (no limit). The duty ratio applies to a half carrier period, so the shortest
+        pulse is `d_min` times the half carrier period when a leg starts or stops
+        switching and about twice that otherwise.
 
     References
     ----------
