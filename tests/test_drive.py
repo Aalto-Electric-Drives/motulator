@@ -349,13 +349,10 @@ def test_rotor_angle_with_long_solver_steps() -> None:
     par = model.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
     )
-    mdl = model.Drive(
-        model.SynchronousMachine(par),
-        model.ExternalRotorSpeed(),
-        model.VoltageSourceConverter(u_dc=540),
-    )
+    machine, mechanics = model.SynchronousMachine(par), model.ExternalRotorSpeed()
+    mdl = model.Drive(machine, mechanics, model.VoltageSourceConverter(u_dc=540))
     w_M = 300.0  # Electrical angle of 0.9 rad per sampling period
-    mdl.mechanics.set_external_rotor_speed(w_M)
+    mechanics.set_external_rotor_speed(w_M)
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, T_s=1e-3, discrete=True)
     ctrl = sm_control.VectorControlSystem(sm_control.CurrentVectorController(par, cfg))
     ctrl.set_torque_ref(3.0)
@@ -366,8 +363,8 @@ def test_rotor_angle_with_long_solver_steps() -> None:
     err = np.angle(np.exp(1j * (res.mdl.machine.theta_m - par.n_p * theta_M)))
     assert err == pytest.approx(0, abs=1e-9)
     # The angle states are kept within [-pi, pi) between the integration intervals
-    assert abs(mdl.mechanics.state.theta_M) <= pi
-    assert abs(mdl.machine.state.theta_m) <= pi
+    assert abs(mechanics.state.theta_M) <= pi
+    assert abs(machine.state.theta_m) <= pi
 
 
 def test_im_parameter_conversion_round_trip() -> None:
