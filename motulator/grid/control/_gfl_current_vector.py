@@ -169,6 +169,7 @@ class CurrentVectorController:
     """
 
     grid_forming = False
+    dc_bus_forming = False
     k_comp = 1.5
 
     def __init__(self, cfg: CurrentVectorControllerCfg) -> None:

@@ -291,6 +291,7 @@ class SequenceObserverBasedGridFormingController:
     """
 
     grid_forming = True
+    dc_bus_forming = False
     k_comp = 0.0
 
     def __init__(self, cfg: SequenceObserverBasedGridFormingControllerCfg) -> None:

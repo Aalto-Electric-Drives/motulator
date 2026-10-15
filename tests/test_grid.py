@@ -60,6 +60,52 @@ def test_grid_following() -> None:
     assert q_g == pytest.approx(q_g_ref, abs=0.02 * 10e3)
 
 
+def test_dual_voltage_forming() -> None:
+    """Dual-voltage-forming control tracks the DC-bus voltage and feeds the power."""
+    u_dc_ref, p_ext = 650.0, -5e3
+    converter = model.VoltageSourceConverter()
+    dc_bus = model.DCBus(C_dc=1e-3, u_dc=u_dc_ref, converters=[converter])
+    dc_bus.set_external_dc_current(lambda t: (t > 0.05) * p_ext / u_dc_ref)
+    R_f = 0.05 * Z_BASE
+    mdl = model.GridConverterSystem(
+        converter,
+        model.LFilter(L_f=0.15 * L_BASE, R_f=R_f, L_g=0.6 * L_BASE),
+        model.ThreePhaseSource(w_g=W_NOM, e_g=U_NOM),
+        dc_bus=dc_bus,
+    )
+    cfg = control.DualVoltageFormingControllerCfg(
+        i_max=30, L=0.3 * L_BASE, C_dc=1e-3, R=R_f, u_nom=U_NOM, w_nom=W_NOM
+    )
+    inner_ctrl = control.DualVoltageFormingController(cfg)
+    with pytest.raises(ValueError):  # The inner controller controls the DC-bus voltage
+        dc_ctrl = control.DCBusVoltageController(C_dc=1e-3, alpha_dc=2 * np.pi * 30)
+        control.GridConverterControlSystem(inner_ctrl, dc_ctrl)
+    ctrl = control.GridConverterControlSystem(inner_ctrl)
+    with pytest.raises(ValueError):  # Takes the DC-bus voltage reference
+        ctrl.set_power_ref(0)
+    ctrl.set_ac_voltage_ref(U_NOM)
+    ctrl.set_dc_bus_voltage_ref(lambda t: u_dc_ref + (t > 0.3) * 50)
+
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.6)
+    assert res.success
+
+    t, u_dc = res.mdl.t, res.mdl.dc_bus.u_dc
+    mid, end = (t > 0.25) & (t < 0.3), t > 0.55
+    p_g, _ = grid_powers(res, 0.55)
+    # The external current is constant, so the external power scales with the voltage
+    p_ext_end = p_ext / u_dc_ref * np.mean(u_dc[end])
+    assert np.mean(u_dc[mid]) == pytest.approx(u_dc_ref, rel=0.01)
+    assert np.mean(u_dc[end]) == pytest.approx(u_dc_ref + 50, rel=0.01)
+    assert p_g + 1.5 * R_f * np.mean(np.abs(res.mdl.ac_filter.i_c_ab[end]) ** 2) == (
+        pytest.approx(p_ext_end, rel=0.03)
+    )
+    assert np.min(u_dc) > 0.85 * u_dc_ref  # Dip at the power step
+    # The estimated external power, excluding the losses, matches the actual one
+    fbk, ctrl_end = res.ctrl.fbk, res.ctrl.t > 0.55
+    p_ext_est = fbk.p_dis + fbk.p_g + 1.5 * R_f * np.abs(fbk.i_c) ** 2
+    assert np.mean(p_ext_est[ctrl_end]) == pytest.approx(p_ext_end, rel=0.03)
+
+
 @pytest.mark.parametrize("method", ["observer", "psc"])
 def test_grid_forming(method: str) -> None:
     """Grid-forming control tracks the active power reference."""
