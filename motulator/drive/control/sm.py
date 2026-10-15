@@ -1,6 +1,6 @@
 """Controls for synchronous machine drives."""
 
-from motulator.common.control._pwm import PWM
+from motulator.common.control._pwm import PWM, InverterNonlinearity
 from motulator.drive.control._base import (
     DriveControlSystem,
     FlyingStartCfg,
@@ -39,6 +39,7 @@ __all__ = [
     "FlyingStartCfg",
     "DriveControlSystem",
     "PWM",
+    "InverterNonlinearity",
     "PIController",
     "CurrentVectorControllerCfg",
     "VHzControlSystem",

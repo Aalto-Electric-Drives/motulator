@@ -37,10 +37,12 @@ class FixedPWM(ControlSystem):
         return FixedPWMReferences(self.T_s)
 
 
-def make_drive(w_M=100.0, u_dc=540.0, pwm=False, capacitor=False, core_losses=0.0):
+def make_drive(
+    w_M=100.0, u_dc=540.0, pwm=False, capacitor=False, core_losses=0.0, u_th=0.0
+):
     """A PM machine driven by an external shaft, with zero torque command."""
     par = model.SynchronousMachinePars(3, 3.6, 0.036, 0.051, 0.545, core_losses)
-    converter = model.VoltageSourceConverter(None if capacitor else u_dc)
+    converter = model.VoltageSourceConverter(None if capacitor else u_dc, u_th=u_th)
     dc_bus = model.DCBus(2e-3, u_dc, [converter]) if capacitor else None
     mechanics = model.ExternalRotorSpeed()
     mechanics.set_external_rotor_speed(w_M)
@@ -75,9 +77,10 @@ def test_disabled_open_circuit(pwm):
 
 
 @pytest.mark.parametrize("composite", [False, True])
-def test_disabled_charges_dc_bus(composite):
+@pytest.mark.parametrize("u_th", [0.0, 1.5])
+def test_disabled_charges_dc_bus(composite, u_th):
     """Above diode turn-on, shaft power charges the DC capacitor without PWM."""
-    drive, ctrl = make_drive(w_M=400, capacitor=True)
+    drive, ctrl = make_drive(w_M=400, capacitor=True, u_th=u_th)
     drive.set_enable(False)
     mdl = CompositeModel({"drive": drive}) if composite else drive
     controllers = {"drive": ctrl} if composite else ctrl
@@ -90,7 +93,7 @@ def test_disabled_charges_dc_bus(composite):
     assert np.all(ts.converter.i_dc_int < 1e-3)
     ac_power = 1.5 * np.real(ts.converter.u_c_ab * np.conj(ts.converter.i_c_ab))
     np.testing.assert_allclose(
-        ac_power, ts.converter.u_dc * ts.converter.i_dc_int, atol=0.05
+        ac_power, (ts.converter.u_dc + 2 * u_th) * ts.converter.i_dc_int, atol=0.05
     )
 
 

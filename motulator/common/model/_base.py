@@ -1,6 +1,6 @@
 """Base classes for models."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Protocol
 
@@ -8,7 +8,13 @@ import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
 from motulator.common.model._ac_port import ACPort
-from motulator.common.model._pwm import ZOH, CarrierComparison
+from motulator.common.model._pwm import (
+    ZOH,
+    BlankingSignals,
+    CarrierComparison,
+    GateSignals,
+    SwitchingTimes,
+)
 
 if TYPE_CHECKING:
     from motulator.common.model._converter import DCBus, VoltageSourceConverter
@@ -96,6 +102,7 @@ class ConverterInputs(Protocol):
     """Protocol for converter inputs."""
 
     q_c_ab: Any  # Switching state, held constant over each integration interval
+    s_c_ab: Any  # Current-direction vector at the latest switching instant
 
 
 class Converter(Subsystem, Protocol):
@@ -103,9 +110,10 @@ class Converter(Subsystem, Protocol):
     Protocol defining the interface for converters.
 
     In addition to the subsystem interface, a converter provides the number of legs,
-    the dead time, and a method for setting the switching state `inp.q_c_ab` based on
-    the gate and blanking signals from the PWM model. The format of the switching state
-    is up to the converter (e.g., a complex space vector in a three-phase converter).
+    the dead time, and a method for setting the switching state `inp.q_c_ab` and the
+    current-direction vector `inp.s_c_ab` based on the gate and blanking signals from
+    the PWM model and the phase currents. The format of these is up to the converter
+    (e.g., complex space vectors in a three-phase converter).
 
     """
 
@@ -137,6 +145,7 @@ class ModelStateHistory:
 
     t: list[float] = field(default_factory=list)
     q_c_ab: list[complex] = field(default_factory=list)
+    s_c_ab: list[complex] = field(default_factory=list)
 
 
 class System:
@@ -239,10 +248,12 @@ class Model[C: Converter](System):
     """
     Base class for system models with a converter driven by a control system.
 
-    The converter subsystem gets the switching state `q_c_ab`, which is held constant
-    over each integration interval. The PWM model includes the dead time
-    `converter.t_d`, and the computational delay is sized according to the number of
-    legs `converter.n_legs`.
+    The converter subsystem gets the switching state `q_c_ab` and the current-direction
+    vector `s_c_ab`, which are held constant over each integration interval. The PWM
+    model includes the dead time `converter.t_d`, and the computational delay is sized
+    according to the number of legs `converter.n_legs`. The control systems of this
+    package compensate for a computational delay of one sampling period, i.e.,
+    `delay=1` with double update and `delay=2` with single update.
 
     Parameters
     ----------
@@ -252,15 +263,23 @@ class Model[C: Converter](System):
         All subsystems, including the converter.
     connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]
         Connections as `{(target, input_name): (source, output_name)}`.
-    pwm : bool, optional
-        Enable PWM model, defaults to False.
-    delay : int, optional
-        Computational delay (samples), defaults to 0.
     dc_bus : DCBus, optional
         DC bus feeding the converter, whose input `u_dc` is connected to the DC-bus
         voltage. The DC bus is added to the subsystems, and it can be shared with other
         models, see `CompositeModel`. Defaults to None, in which case the converter has
         its own DC-bus model (or a constant DC-bus voltage).
+    pwm : bool, optional
+        Enable PWM model, defaults to False.
+    delay : int, optional
+        Computational delay in half carrier periods from the sampling instant to the
+        loading of the duty ratios, defaults to 0. With double update, this equals
+        the delay in sampling periods.
+    single_update : bool, optional
+        Sample and update the duty ratios once per carrier period, i.e., the sampling
+        period of the control system equals the carrier period, defaults to False
+        (double update, the sampling period is half the carrier period). With single
+        update, `delay=2` loads the duty ratios at the next sampling instant and
+        `delay=1` at the carrier extremum between the sampling instants.
 
     """
 
@@ -269,9 +288,10 @@ class Model[C: Converter](System):
         converter: C,
         subsystems: list[Subsystem],
         connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
+        dc_bus: "DCBus | None" = None,
         pwm: bool = False,
         delay: int = 0,
-        dc_bus: "DCBus | None" = None,
+        single_update: bool = False,
     ) -> None:
         if converter not in subsystems:
             raise ValueError("The converter must be included in the subsystems")
@@ -290,6 +310,7 @@ class Model[C: Converter](System):
             converter.connect_ac_load(source[0])
         self.dc_bus = dc_bus
         self.delay = Delay(delay, converter.n_legs)
+        self.single_update = single_update
         t_d = converter.t_d
         self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
 
@@ -310,10 +331,46 @@ class Model[C: Converter](System):
         """
         self.converter.set_enable(enable)
 
+    def modulate(
+        self, T_s: float, d_abc: Sequence[float]
+    ) -> tuple[SwitchingTimes, GateSignals, BlankingSignals]:
+        """
+        Delay the duty ratios and convert them to gate signals.
+
+        The sampling period consists of one half carrier period with double update
+        and of two with single update. The duty ratios pass through the
+        computational delay once per half carrier period, and the PWM model is
+        called for each half carrier period.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+        d_abc : Sequence[float]
+            Duty ratios computed at this sampling instant.
+
+        Returns
+        -------
+        t_steps : SwitchingTimes, shape (N,)
+            Durations of the intervals (s), summing to `T_s`.
+        q_abc : GateSignals, shape (N, n_legs)
+            Gate signals of the upper switches in each interval.
+        b_abc : BlankingSignals, shape (N, n_legs)
+            Blanking signals in each interval.
+
+        """
+        n = 2 if self.single_update else 1  # Half carrier periods per sampling period
+        parts = [self.pwm(T_s / n, self.delay(d_abc)) for _ in range(n)]
+        t_steps = np.concatenate([p[0] for p in parts])
+        q_abc = np.vstack([p[1] for p in parts])
+        b_abc = np.vstack([p[2] for p in parts])
+        return t_steps, q_abc, b_abc
+
     def save(self, sol: OdeResult) -> None:
         """Save the solution and the switching state."""
         super().save(sol)
         self._history.q_c_ab.extend([self.converter.inp.q_c_ab] * len(sol.t))
+        self._history.s_c_ab.extend([self.converter.inp.s_c_ab] * len(sol.t))
 
 
 # %%
@@ -360,6 +417,7 @@ class ModelTimeSeries:
         # first, since the derived signals can depend on the inputs that are given by
         # the states (e.g., the converter voltage on the DC-bus voltage).
         ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
+        ts[mdl.converter].s_c_ab = np.array(mdl._history.s_c_ab)
         pass_inputs()
         for subsystem in mdl.subsystems:
             ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)
@@ -386,7 +444,7 @@ class Delay:
     Parameters
     ----------
     length : int, optional
-        Length of the buffer in samples, defaults to 1.
+        Length of the buffer, i.e., the delay in calls, defaults to 1.
     elem : int, optional
         Number of elements in each sample, defaults to 3.
 

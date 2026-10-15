@@ -9,7 +9,9 @@ from motulator.common.model import Simulation, SolverCfg
 from motulator.drive import model
 
 
-def spinning_drive(kind="cvc", w_M=80.0, pwm=False, delay=1, flying_start=None):
+def spinning_drive(
+    kind="cvc", w_M=80.0, pwm=False, delay=1, flying_start=None, single_update=False
+):
     """Use a free shaft with a known initial speed and a nonzero rotor angle."""
     par = model.SynchronousMachinePars(3, 3.6, 0.036, 0.051, 0.545)
     if kind == "fvc":
@@ -29,7 +31,12 @@ def spinning_drive(kind="cvc", w_M=80.0, pwm=False, delay=1, flying_start=None):
     machine = model.SynchronousMachine(par)
     machine.state.theta_m = complex(2.1)
     mdl = model.Drive(
-        machine, mechanics, model.VoltageSourceConverter(540), pwm=pwm, delay=delay
+        machine,
+        mechanics,
+        model.VoltageSourceConverter(540),
+        pwm=pwm,
+        delay=delay,
+        single_update=single_update,
     )
     kwargs = {} if flying_start is None else {"flying_start": flying_start}
     ctrl = sm_control.VectorControlSystem(inner, **kwargs)
@@ -111,9 +118,10 @@ def test_sensored_flying_start(kind, w_M):
 
 
 @pytest.mark.parametrize("pwm,delay", [(False, 0), (True, 1), (False, 3)])
-def test_flying_start_reenable_and_speed_loop(pwm, delay):
+@pytest.mark.parametrize("single_update", [False, True])
+def test_flying_start_reenable_and_speed_loop(pwm, delay, single_update):
     """Repeated enabling primes the delay again and avoids speed-integrator windup."""
-    mdl, old_ctrl = spinning_drive(pwm=pwm, delay=delay)
+    mdl, old_ctrl = spinning_drive(pwm=pwm, delay=delay, single_update=single_update)
     ctrl = sm_control.VectorControlSystem(
         old_ctrl.vector_ctrl,
         sm_control.SpeedController(0.015, 20),

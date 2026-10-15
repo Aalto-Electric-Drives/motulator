@@ -31,7 +31,8 @@ from motulator.common.utils._utils import (
 class Inputs:
     """Input variables."""
 
-    q_c_ab: complex = 0j
+    q_c_ab: complex = 0j  # Switching state
+    s_c_ab: complex = 0j  # Current-direction vector at the latest switching instant
     i_c_ab: complex = 0j
     u_dc: float | None = None  # DC-bus voltage (V) from a DC-bus model, if connected
     enabled: bool = True
@@ -48,13 +49,17 @@ class Outputs:
 
 class VoltageSourceConverter(Subsystem):
     """
-    Lossless three-phase voltage-source converter.
+    Three-phase voltage-source converter.
 
-    The switches are ideal, except for the dead time. When a leg is blanked, i.e.,
-    neither of its switches conducts, the current direction determines which diode
-    conducts. The leg state is then `(1 - sign(i))/2`, where `i` is the phase current
-    in the beginning of the blanking interval. The DC-bus voltage is either constant or
-    given by a DC-bus model connected to the input `u_dc` (see `DCBus` and `Model`).
+    The switches are ideal, except for the dead time and the threshold voltage. When a
+    leg is blanked, i.e., neither of its switches conducts, the current direction
+    determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where
+    `i` is the phase current in the beginning of the blanking interval. The threshold
+    voltage of the conducting device, assumed equal for the switches and the diodes,
+    reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
+    determined at the latest switching instant. The DC-bus voltage is either constant
+    or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
+    `Model`).
 
     The gates can be blocked with `Model.set_enable`. During blocking, all controlled
     switches are open and the connected load's AC-port relation determines the
@@ -67,6 +72,8 @@ class VoltageSourceConverter(Subsystem):
         be fed from a DC-bus model.
     t_d : float, optional
         Dead time (s), defaults to 0.
+    u_th : float, optional
+        Threshold voltage (V) of the power devices, defaults to 0.
     sign : Callable[[np.ndarray], np.ndarray], optional
         Function of the phase currents (A) determining the leg states during blanking,
         defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
@@ -83,11 +90,13 @@ class VoltageSourceConverter(Subsystem):
         self,
         u_dc: float | None = None,
         t_d: float = 0.0,
+        u_th: float = 0.0,
         sign: Callable[[np.ndarray], np.ndarray] = np.sign,
         u_dc_sensor: Sensor | None = None,
     ) -> None:
         self.u_dc = u_dc
         self.t_d = t_d
+        self.u_th = u_th
         self.sign = sign
         self.u_dc_sensor = u_dc_sensor
         self.inp: Inputs = Inputs()
@@ -125,8 +134,9 @@ class VoltageSourceConverter(Subsystem):
 
     def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
         """Set the switching state based on the gate and blanking signals."""
-        i_abc = complex2abc(self.inp.i_c_ab)
-        self.inp.q_c_ab = abc2complex(q_abc + 0.5 * b_abc * (1 - self.sign(i_abc)))
+        s_abc = self.sign(complex2abc(self.inp.i_c_ab))
+        self.inp.q_c_ab = abc2complex(q_abc + 0.5 * b_abc * (1 - s_abc))
+        self.inp.s_c_ab = abc2complex(s_abc)
 
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A)."""
@@ -145,14 +155,17 @@ class VoltageSourceConverter(Subsystem):
             )
         self.out.enabled = self.inp.enabled
         if self.inp.enabled:
-            self.out.u_c_ab = self.inp.q_c_ab * self.out.u_dc
+            self.out.u_c_ab = (
+                self.inp.q_c_ab * self.out.u_dc - self.u_th * self.inp.s_c_ab
+            )
         else:
             if self.ac_load is None:
                 raise ValueError("A disabled converter requires a connected AC load")
             port = self.ac_load.compute_ac_port()
             if port is None:
                 raise ValueError("The connected load must implement compute_ac_port")
-            self.out.u_c_ab = blocked_voltage(port, self.out.u_dc)
+            # A conducting diode pair adds two device drops to the rail separation.
+            self.out.u_c_ab = blocked_voltage(port, self.out.u_dc + 2 * self.u_th)
 
     def meas_dc_voltage(self) -> float:
         """Measure converter DC-bus voltage (V)."""
@@ -183,6 +196,7 @@ class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
     subsystem: InitVar[T]
     u_dc: np.ndarray = field(default_factory=empty_array)
     q_c_ab: np.ndarray = field(default_factory=empty_array)
+    s_c_ab: np.ndarray = field(default_factory=empty_array)
     i_c_ab: np.ndarray = field(default_factory=empty_array)
     u_c_ab: np.ndarray = field(default_factory=empty_array)
     i_dc_int: np.ndarray = field(default_factory=empty_array)
@@ -199,7 +213,9 @@ class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
     def compute_zoh_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
         """Compute zero-order hold derived signals."""
         self.u_c_ab = np.where(
-            self.enabled, self.q_c_ab * self.u_dc, self._blocked_voltage
+            self.enabled,
+            self.q_c_ab * self.u_dc - subsystem.u_th * self.s_c_ab,
+            self._blocked_voltage,
         )
 
     def compute_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:

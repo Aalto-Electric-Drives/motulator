@@ -236,8 +236,7 @@ class Simulation:
                     T_s, ref_duty_ratio = ctrl(mdl)
                     if T_s <= _T_TOL:
                         raise ValueError("The sampling period must be positive")
-                    duty_ratio = mdl.delay(ref_duty_ratio)
-                    t_steps, q_abc, b_abc = mdl.pwm(T_s, duty_ratio)
+                    t_steps, q_abc, b_abc = mdl.modulate(T_s, ref_duty_ratio)
                     # Switching instants, accumulated from the interval durations
                     t_sw = [t0]
                     for t_step in t_steps[:-1]:

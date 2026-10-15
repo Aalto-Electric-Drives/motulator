@@ -65,6 +65,7 @@ class CompositeModel(System):
             mdl.t0 = self.t0
             mdl._history.t.extend(sol.t)
             mdl._history.q_c_ab.extend([mdl.converter.inp.q_c_ab] * len(sol.t))
+            mdl._history.s_c_ab.extend([mdl.converter.inp.s_c_ab] * len(sol.t))
 
 
 # %%

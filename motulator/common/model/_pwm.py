@@ -34,7 +34,7 @@ class PWM(Protocol):
         Parameters
         ----------
         T_s : float
-            Half carrier period (s), corresponds to sampling period.
+            Half carrier period (s).
         d_abc : Sequence[float]
             Duty ratios in range [0, 1].
 
@@ -57,9 +57,10 @@ class ZOH(PWM):
     Replace PWM with zero-order hold.
 
     The dead time reduces the gate signal duty ratios of both switches of a leg by
-    `t_d/(2*T_s)`, leaving the leg blanked for the fraction `t_d/T_s` of the sampling
-    period, unless the leg does not switch. Short pulses are suppressed, and the
-    blanking fraction is computed from the remaining on-times of both switches.
+    `t_d/(2*T_s)`, leaving the leg blanked for the fraction `t_d/T_s` of the half
+    carrier period `T_s`, unless the leg does not switch. Short pulses are
+    suppressed, and the blanking fraction is computed from the remaining on-times of
+    both switches.
     This is a switching-cycle averaged model, not a model of switching transients.
 
     Parameters
