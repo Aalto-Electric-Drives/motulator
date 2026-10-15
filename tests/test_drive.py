@@ -344,6 +344,29 @@ def test_scalar_mechanics_functions(two_mass: bool) -> None:
     assert res.mdl.mechanics.tau_L_tot[-1] == pytest.approx(7.0 + B_L(w_L) * w_L)
 
 
+def test_rotor_angle_with_long_solver_steps() -> None:
+    """The rotor angles are exact also when a solver step spans a large angle."""
+    par = model.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+    )
+    mdl = model.Drive(
+        model.SynchronousMachine(par),
+        model.ExternalRotorSpeed(),
+        model.VoltageSourceConverter(u_dc=540),
+    )
+    w_M = 300.0  # Electrical angle of 0.9 rad per sampling period
+    mdl.mechanics.set_external_rotor_speed(w_M)
+    cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, T_s=1e-3, discrete=True)
+    ctrl = sm_control.VectorControlSystem(sm_control.CurrentVectorController(par, cfg))
+    ctrl.set_torque_ref(3.0)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.3)
+
+    theta_M = np.unwrap(res.mdl.mechanics.theta_M)
+    assert theta_M == pytest.approx(w_M * res.mdl.t, abs=1e-9)
+    err = np.angle(np.exp(1j * (res.mdl.machine.theta_m - par.n_p * theta_M)))
+    assert err == pytest.approx(0, abs=1e-9)
+
+
 def test_im_parameter_conversion_round_trip() -> None:
     """The Γ and inverse-Γ parameter conversions preserve all the parameters."""
     par = model.InductionMachinePars(

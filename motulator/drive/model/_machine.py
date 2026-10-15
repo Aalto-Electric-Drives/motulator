@@ -210,7 +210,7 @@ class SynchronousMachineStates:
         | SpatialSaturatedSynchronousMachinePars
     ]
     psi_s_dq: complex = 0j
-    exp_j_theta_m: complex = complex(1)
+    theta_m: complex = 0j  # Electrical rotor angle (rad), imaginary part always zero
 
     def __post_init__(self, par) -> None:
         self.psi_s_dq = complex(par.psi_f)
@@ -265,12 +265,13 @@ class SynchronousMachine(Subsystem):
     def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
         par = self.par
+        exp_j_theta_m = np.exp(1j * state.theta_m.real)
         # Current into the magnetic circuit, i.e., the core-loss current excluded
-        i_m_dq, tau_m = par.magnetic_map(state.psi_s_dq, state.exp_j_theta_m)
+        i_m_dq, tau_m = par.magnetic_map(state.psi_s_dq, exp_j_theta_m)
         # In rotor coordinates, the rotational EMF does not affect the core-loss branch
-        u_s_dq = inp.u_s_ab * np.conj(state.exp_j_theta_m)
+        u_s_dq = inp.u_s_ab * np.conj(exp_j_theta_m)
         i_s_dq = (i_m_dq + par.G_c * u_s_dq) / (1 + par.G_c * par.R_s)
-        i_s_ab = i_s_dq * state.exp_j_theta_m
+        i_s_ab = i_s_dq * exp_j_theta_m
         tau_M = par.n_p * tau_m
         return i_s_dq, i_s_ab, tau_M
 
@@ -284,11 +285,11 @@ class SynchronousMachine(Subsystem):
         """Compute state derivatives."""
         # Rotor coordinates are internally used
         state, inp, out, par = self.state, self.inp, self.out, self.par
-        u_s_dq = inp.u_s_ab * np.conj(state.exp_j_theta_m)
+        u_s_dq = inp.u_s_ab * np.exp(-1j * state.theta_m.real)
         w_m = par.n_p * inp.w_M
         d_psi_s_dq = u_s_dq - par.R_s * out.i_s_dq - 1j * w_m * state.psi_s_dq
-        d_exp_j_theta_m = 1j * w_m * state.exp_j_theta_m
-        return [d_psi_s_dq, d_exp_j_theta_m]
+        d_theta_m = w_m
+        return [d_psi_s_dq, d_theta_m]
 
     def meas_currents(self) -> Any:
         """Measure phase currents (A)."""
@@ -309,9 +310,8 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
     t: InitVar[np.ndarray]
     subsystem: InitVar[SynchronousMachine]
     # States
-    psi_s_ab: np.ndarray = field(default_factory=empty_array)
     psi_s_dq: np.ndarray = field(default_factory=empty_array)
-    exp_j_theta_m: np.ndarray = field(default_factory=empty_array)
+    theta_m: np.ndarray = field(default_factory=empty_array)
     # Outputs
     i_s_ab: np.ndarray = field(default_factory=empty_array)
     i_s_dq: np.ndarray = field(default_factory=empty_array)
@@ -320,13 +320,15 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
     u_s_ab: np.ndarray = field(default_factory=empty_array)
     w_M: np.ndarray = field(default_factory=empty_array)
     # Derived signals
+    psi_s_ab: np.ndarray = field(default_factory=empty_array)
+    exp_j_theta_m: np.ndarray = field(default_factory=empty_array)
     w_m: np.ndarray = field(default_factory=empty_array)
-    theta_m: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: SynchronousMachine) -> None:
         """Compute time series from states."""
         self.psi_s_dq = np.array(subsystem._history["psi_s_dq"])
-        self.exp_j_theta_m = np.array(subsystem._history["exp_j_theta_m"])
+        theta_m = np.real(np.array(subsystem._history["theta_m"]))
+        self.exp_j_theta_m = np.exp(1j * theta_m)
         self.theta_m = np.angle(self.exp_j_theta_m)
         self.psi_s_ab = self.exp_j_theta_m * self.psi_s_dq
         # Provisional stator current, since u_s_ab needed for the core-loss current is
