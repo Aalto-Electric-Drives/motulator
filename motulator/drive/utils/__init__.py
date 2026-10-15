@@ -6,6 +6,12 @@ from motulator.common.utils._utils import (
     SequenceGenerator,
     Step,
 )
+from motulator.drive.utils._identification import (
+    IdentificationCfg,
+    IdentificationResults,
+    plot_identification,
+    run_identification,
+)
 from motulator.drive.utils._plots import (
     plot,
     plot_dc_bus_waveforms,
@@ -25,6 +31,8 @@ from motulator.drive.utils._sm_plot_flux_maps import plot_flux_vs_current, plot_
 __all__ = [
     "BaseValues",
     "ControlLoci",
+    "IdentificationCfg",
+    "IdentificationResults",
     "import_syre_data",
     "MachineCharacteristics",
     "MagneticModel",
@@ -33,10 +41,12 @@ __all__ = [
     "plot_stator_waveforms",
     "plot_dc_bus_waveforms",
     "plot_flux_vs_current",
+    "plot_identification",
     "SaturationModelPMSyRM",
     "SaturationModelSyRM",
     "SaturationModelBase",
     "SequenceGenerator",
     "Step",
     "plot_map",
+    "run_identification",
 ]

@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from functools import partial
 from typing import Any
 
 import numpy as np
@@ -150,8 +151,8 @@ class ControlLoci:
             i_s_dq=i_s_dq,
             psi_s_dq=psi_s_dq,
             tau_M=tau_M,
-            i_s_dq_vs_tau_M=lambda x: np.interp(x, tau_M, i_s_dq),
-            psi_s_abs_vs_tau_M=lambda x: np.interp(x, tau_M, abs(psi_s_dq)),
+            i_s_dq_vs_tau_M=partial(np.interp, xp=tau_M, fp=i_s_dq),
+            psi_s_abs_vs_tau_M=partial(np.interp, xp=tau_M, fp=abs(psi_s_dq)),
         )
 
     def compute_mtpv_flux_angle(self, psi_s_abs: float) -> tuple[float, complex]:
@@ -208,8 +209,8 @@ class ControlLoci:
             psi_s_dq=psi_s_dq,
             i_s_dq=i_s_dq,
             tau_M=tau_M,
-            tau_M_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), tau_M),
-            i_s_dq_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), i_s_dq),
+            tau_M_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=tau_M),
+            i_s_dq_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=i_s_dq),
         )
 
     def compute_const_current_locus(
@@ -252,8 +253,8 @@ class ControlLoci:
             psi_s_dq=psi_s_dq,
             i_s_dq=i_s_dq,
             tau_M=tau_M,
-            i_s_dq_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), i_s_dq),
-            tau_M_vs_psi_s_abs=lambda x: np.interp(x, abs(psi_s_dq), tau_M),
+            i_s_dq_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=i_s_dq),
+            tau_M_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=tau_M),
         )
 
     def compute_mtpv_current(self, i_s_abs: float) -> complex:

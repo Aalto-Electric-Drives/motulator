@@ -4,6 +4,7 @@ from cmath import exp
 from collections.abc import Callable
 from copy import copy
 from dataclasses import dataclass
+from functools import partial
 from math import pi, sqrt
 
 from motulator.common.utils._utils import wrap
@@ -339,6 +340,20 @@ def compute_feedback(
     return observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
 
 
+# The default gains are module-level functions, possibly with bound arguments, so that
+# the observers can be pickled (e.g., for parallel simulations)
+def _sensorless_k_o(sigma0: float, w_m: float) -> float:
+    return sigma0 + 0.2 * abs(w_m)
+
+
+def _sensored_k_o(w_m: float) -> float:
+    return 2 * pi * 15
+
+
+def _zero_k_f(w_m: float) -> float:
+    return 0.0
+
+
 def default_sensorless_k_o(
     par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
 ) -> Callable[[float], float]:
@@ -346,7 +361,7 @@ def default_sensorless_k_o(
     # Poles at zero speed are located at s = 0 and s = -2*sigma0
     L_s0 = par.incr_ind_mat(0)
     sigma0 = 0.25 * par.R_s * (1 / L_s0[0, 0] + 1 / L_s0[1, 1])
-    return lambda w_m: sigma0 + 0.2 * abs(w_m)
+    return partial(_sensorless_k_o, sigma0)
 
 
 def default_alpha_o(sensorless: bool, J: float | None) -> float:
@@ -405,8 +420,8 @@ def create_speed_flux_observer(
     if alpha_o is None:
         alpha_o = default_alpha_o(sensorless, J)
     if k_o is None:
-        k_o = default_sensorless_k_o(par) if sensorless else (lambda w_m: 2 * pi * 15)
-    k_f = (lambda w_m: 0) if k_f is None else k_f
+        k_o = default_sensorless_k_o(par) if sensorless else _sensored_k_o
+    k_f = _zero_k_f if k_f is None else k_f
 
     return SpeedFluxObserver(par, alpha_o, T_s, k_o, k_f, J)
 
@@ -438,4 +453,4 @@ def create_vhz_observer(
     """
     k_o = default_sensorless_k_o(par) if k_o is None else k_o
 
-    return FluxObserver(par, k_theta, k_o, lambda w_m: 0)
+    return FluxObserver(par, k_theta, k_o, _zero_k_f)

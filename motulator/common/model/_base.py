@@ -249,6 +249,7 @@ class Model[C: Converter](System):
             connections = {**connections, (converter, "u_dc"): (dc_bus, "u_dc")}
         super().__init__(subsystems, connections)
         self.converter: C = converter
+        self.dc_bus = dc_bus
         self.delay = Delay(delay, converter.n_legs)
         t_d = converter.t_d
         self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
