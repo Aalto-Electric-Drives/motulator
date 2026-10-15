@@ -1,11 +1,7 @@
 """Continuous-time model for electric machine drives."""
 
 from motulator.common.model._base import Model
-from motulator.common.model._converter import (
-    DCBus,
-    FrequencyConverter,
-    VoltageSourceConverter,
-)
+from motulator.common.model._converter import DCBus, VoltageSourceConverter
 from motulator.drive.model._lc_filter import LCFilter
 from motulator.drive.model._machine import InductionMachine, SynchronousMachine
 from motulator.drive.model._mechanics import (
@@ -16,7 +12,7 @@ from motulator.drive.model._mechanics import (
 
 
 # %%
-class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
+class Drive(Model[VoltageSourceConverter]):
     """
     Continuous-time system model for a machine drive.
 
@@ -26,7 +22,7 @@ class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
         Electric machine model.
     mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
         Mechanical system model.
-    converter : VoltageSourceConverter | FrequencyConverter
+    converter : VoltageSourceConverter
         Converter model.
     lc_filter : LCFilter, optional
         LC filter model. If not given, a direct connection between the converter and
@@ -36,8 +32,10 @@ class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
     delay : int, optional
         Computational delay (samples), defaults to 1.
     dc_bus : DCBus, optional
-        DC bus feeding the converter, which can be shared with other models (e.g., with
-        a grid converter system), see `CompositeModel`. Defaults to None.
+        DC bus feeding the converter, e.g., `DiodeBridgeDCBus` for a diode front end,
+        or a DC bus shared with other models (e.g., with a grid converter system), see
+        `CompositeModel`. Defaults to None, in which case the converter has a constant
+        DC-bus voltage.
 
     """
 
@@ -45,7 +43,7 @@ class Drive(Model[VoltageSourceConverter | FrequencyConverter]):
         self,
         machine: InductionMachine | SynchronousMachine,
         mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
-        converter: VoltageSourceConverter | FrequencyConverter,
+        converter: VoltageSourceConverter,
         lc_filter: LCFilter | None = None,
         pwm: bool = False,
         delay: int = 1,

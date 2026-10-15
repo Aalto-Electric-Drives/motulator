@@ -37,8 +37,8 @@ base_g = grid_utils.BaseValues.from_nominal(nom_g)
 # grid-side converter system and the drive are modeled separately, each with its own
 # PWM, and combined into a composite model.
 
-afe = grid_model.VoltageSourceConverter(u_dc=650)
-inv = drive_model.VoltageSourceConverter(u_dc=650)
+afe = grid_model.VoltageSourceConverter()
+inv = drive_model.VoltageSourceConverter()
 dc_bus = drive_model.DCBus(C_dc=470e-6, u_dc=650, converters=[afe, inv])
 
 ac_filter = grid_model.LFilter(L_f=0.1 * base_g.L)

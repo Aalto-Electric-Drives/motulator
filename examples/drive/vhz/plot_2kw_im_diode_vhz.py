@@ -28,8 +28,11 @@ par = model.InductionMachineInvGammaPars(
 machine = model.InductionMachine(par)
 k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
 mechanics = model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
-converter = model.FrequencyConverter(C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f)
-mdl = model.Drive(machine, mechanics, converter, pwm=True)
+converter = model.VoltageSourceConverter()
+dc_bus = model.DiodeBridgeDCBus(
+    C_dc=235e-6, L_dc=2e-3, U_g=nom.U, f_g=nom.f, converters=[converter]
+)
+mdl = model.Drive(machine, mechanics, converter, pwm=True, dc_bus=dc_bus)
 
 # %%
 # Configure the control system as open-loop V/Hz control.
