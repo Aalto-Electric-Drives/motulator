@@ -95,7 +95,7 @@ alt: Carrier comparison
 *Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
 ```
 
-The converter parameter `t_d` delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time.
+The converter parameter `t_d` delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time. The converter parameter `u_th` models the threshold voltage of the power devices, assumed equal for the switches and the diodes, which reduces each phase voltage by `u_th*sign(i)`, where the current direction is determined at the switching instants, as during the blanking.
 
 The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is
 
@@ -127,4 +127,4 @@ label: switching_cycle_averaging
 
 where $\dcs$ is the duty ratio space vector. This ZOH is the default option in most {doc}`/drive_examples/index` and {doc}`/grid_examples/index` examples.
 
-With the dead time, the ZOH uses the switching-cycle averaged on-times of the upper and lower switches, where pulses shorter than `t_d` are suppressed. The converter resolves the remaining blanked fraction using the current-direction function `sign`. The {func}`motulator.common.utils.dead_time_error` function gives the corresponding duty-ratio error for the control system. The transients due to changes in the duty ratios are only modeled by carrier comparison.
+With the dead time, the ZOH uses the switching-cycle averaged on-times of the upper and lower switches, where pulses shorter than `t_d` are suppressed. The converter resolves the remaining blanked fraction using the current-direction function `sign`. The {class}`motulator.common.control.InverterNonlinearity` class gives the corresponding duty-ratio error for the control system, including the threshold voltage. The transients due to changes in the duty ratios are only modeled by carrier comparison.

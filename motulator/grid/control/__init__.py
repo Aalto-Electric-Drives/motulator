@@ -1,6 +1,6 @@
 """Controllers for grid converters."""
 
-from motulator.common.control._pwm import PWM
+from motulator.common.control._pwm import PWM, InverterNonlinearity
 from motulator.grid.control._base import GridConverterControlSystem
 from motulator.grid.control._common import CurrentLimiter, DCBusVoltageController
 from motulator.grid.control._gfl_current_vector import (
@@ -31,6 +31,7 @@ from motulator.grid.control._gfm_sequence_observer import (
 
 __all__ = [
     "PWM",
+    "InverterNonlinearity",
     "CurrentController",
     "CurrentLimiter",
     "CurrentVectorController",

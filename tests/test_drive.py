@@ -16,7 +16,7 @@ import pytest
 
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
-from motulator.common.utils import dead_time_error
+from motulator.common.control import InverterNonlinearity
 from motulator.drive import model, utils
 from motulator.drive.control import _im_flux_vector, _sm_flux_vector
 from motulator.drive.utils import ControlLoci, MagneticModel
@@ -509,8 +509,9 @@ def test_discrete_current_control_angle_estimate() -> None:
 
 
 def test_discrete_current_control_dead_time() -> None:
-    """The feedforward compensation of the dead time causes no steady-state error."""
-    T_s, t_d, w_M = 200e-6, 4e-6, 75.0
+    """The feedforward compensation of the dead time and the threshold voltage causes
+    no steady-state error."""
+    T_s, t_d, u_th, w_M = 200e-6, 4e-6, 1.5, 75.0
     mdl = model.Drive(
         model.InductionMachine(
             model.InductionMachineInvGammaPars(
@@ -518,7 +519,7 @@ def test_discrete_current_control_dead_time() -> None:
             )
         ),
         model.ExternalRotorSpeed(),
-        model.VoltageSourceConverter(u_dc=540, t_d=t_d),
+        model.VoltageSourceConverter(u_dc=540, t_d=t_d, u_th=u_th),
         pwm=True,
     )
     mdl.mechanics.set_external_rotor_speed(w_M)
@@ -527,7 +528,7 @@ def test_discrete_current_control_dead_time() -> None:
     )
     vector_ctrl = im_control.CurrentVectorController(im_par(), cfg)
     vector_ctrl.observer.w_M = w_M
-    pwm = im_control.PWM(d_err=lambda i, d: dead_time_error(i, d, t_d, T_s))
+    pwm = im_control.PWM(d_err=InverterNonlinearity(t_d, u_th))
     ctrl = im_control.VectorControlSystem(vector_ctrl, pwm=pwm)
     ctrl.set_torque_ref(0.0)  # Constant magnetizing current
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)

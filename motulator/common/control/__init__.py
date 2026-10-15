@@ -7,12 +7,13 @@ from motulator.common.control._controllers import (
     PIController,
     RateLimiter,
 )
-from motulator.common.control._pwm import PWM
+from motulator.common.control._pwm import PWM, InverterNonlinearity
 
 __all__ = [
     "ComplexPIController",
     "ControlSystem",
     "DiscreteComplexController",
+    "InverterNonlinearity",
     "PIController",
     "PWM",
     "RateLimiter",

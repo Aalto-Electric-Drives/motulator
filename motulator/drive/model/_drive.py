@@ -27,15 +27,20 @@ class Drive(Model[VoltageSourceConverter]):
     lc_filter : LCFilter, optional
         LC filter model. If not given, a direct connection between the converter and
         machine is used.
-    pwm : bool, optional
-        Enable PWM model, defaults to False.
-    delay : int, optional
-        Computational delay (samples), defaults to 1.
     dc_bus : DCBus, optional
         DC bus feeding the converter, e.g., `DiodeBridgeDCBus` for a diode front end,
         or a DC bus shared with other models (e.g., with a grid converter system), see
         `CompositeModel`. Defaults to None, in which case the converter has a constant
         DC-bus voltage.
+    pwm : bool, optional
+        Enable PWM model, defaults to False.
+    delay : int, optional
+        Computational delay in half carrier periods (sampling periods with double
+        update), defaults to 1. With single update, use 2 for a delay of one
+        sampling period, see `Model`.
+    single_update : bool, optional
+        Sample and update the duty ratios once per carrier period instead of twice,
+        defaults to False, see `Model`.
 
     """
 
@@ -45,9 +50,10 @@ class Drive(Model[VoltageSourceConverter]):
         mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
         converter: VoltageSourceConverter,
         lc_filter: LCFilter | None = None,
+        dc_bus: DCBus | None = None,
         pwm: bool = False,
         delay: int = 1,
-        dc_bus: DCBus | None = None,
+        single_update: bool = False,
     ) -> None:
         self.machine = machine
         self.mechanics = mechanics
@@ -72,4 +78,12 @@ class Drive(Model[VoltageSourceConverter]):
                 (lc_filter, "u_c_ab"): (converter, "u_c_ab"),
                 (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
             }
-        super().__init__(converter, subsystems, connections, pwm, delay, dc_bus)
+        super().__init__(
+            converter,
+            subsystems,
+            connections,
+            dc_bus=dc_bus,
+            pwm=pwm,
+            delay=delay,
+            single_update=single_update,
+        )
