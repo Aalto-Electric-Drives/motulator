@@ -236,7 +236,7 @@ so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 37.216 seconds)
+   **Total running time of the script:** (0 minutes 23.192 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:
