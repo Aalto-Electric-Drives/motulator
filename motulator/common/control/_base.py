@@ -1,11 +1,13 @@
 """Base classes for controls."""
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Protocol
 
 import numpy as np
+
+from motulator.common.utils._utils import get_value
 
 
 # %%
@@ -34,18 +36,41 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
     be used with different models, measurements, feedback signals, and reference
     signals. The class provides methods for saving, post-processing, and clearing data.
 
+    The gates of the converter can be blocked with `set_enable`. While the gates are
+    blocked, the control system runs its control loop with `compute_standby_output`
+    in place of `compute_output`, so that its observers keep tracking the system,
+    and the model holds the switches open.
+
     """
 
     t: float
+    enabled: bool  # Gate enable at the latest sampling instant
+    _enable: bool | Callable[[float], bool]
     # Time and signal history
     _t: list[float]
     _history: dict[str, dict[str, list]]
 
     def __init__(self) -> None:
         self.t: float = 0.0  # Controller time
+        self.enabled: bool = True
+        self._enable: bool | Callable[[float], bool] = True
         # Initialize the data buffer
         self._t: list[float] = []
         self._history: dict[str, dict[str, list]] = {}
+
+    def set_enable(self, enable: bool | Callable[[float], bool]) -> None:
+        """
+        Set the gate enable.
+
+        Parameters
+        ----------
+        enable : bool | Callable[[float], bool]
+            Gate enable, constant or a function of time, evaluated at the sampling
+            instants. While the gates are blocked (False), the control system
+            computes its standby output, see `compute_standby_output`.
+
+        """
+        self._enable = enable
 
     def get_measurement(self, mdl: Mdl) -> Meas:
         """Get measurements from the model."""
@@ -58,6 +83,12 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
     def compute_output(self, fbk: Fbk) -> Ref:
         """Compute controller output based on feedback."""
         ...
+
+    def compute_standby_output(self, fbk: Fbk) -> Ref:
+        """Compute controller output while the gates are blocked."""
+        raise NotImplementedError(
+            f"{type(self).__name__} does not support gate blocking"
+        )
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller internal states."""
@@ -75,9 +106,13 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
 
     def run_control_loop(self, mdl: Mdl) -> tuple[float, Sequence[float]]:
         """Run the default control loop, can be overridden."""
+        self.enabled = bool(get_value(self._enable, self.t))
         meas = self.get_measurement(mdl)
         fbk = self.get_feedback(meas)
-        ref = self.compute_output(fbk)
+        if self.enabled:
+            ref = self.compute_output(fbk)
+        else:
+            ref = self.compute_standby_output(fbk)
         self.save(self.t, ref=ref, fbk=fbk)
         self.update(ref, fbk)
         return self.get_duty_ratios(ref)

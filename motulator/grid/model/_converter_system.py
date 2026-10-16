@@ -53,6 +53,7 @@ class GridConverterSystem(Model[VoltageSourceConverter]):
             (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
         }
         subsystems = [converter, ac_filter, ac_source]
+        converter.ac_load = ac_filter
         super().__init__(
             converter,
             subsystems,

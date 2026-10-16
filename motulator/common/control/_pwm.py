@@ -319,6 +319,11 @@ class PWM:
             compensation (if used) included.
 
         """
+        # A discharged DC bus, e.g., with blocked gates before the precharge
+        if u_dc <= 0:
+            self.limited_voltage = 0j
+            return [0.5, 0.5, 0.5], 0j
+
         # Modify angle in the overmodulation region
         if self.overmodulation == "six_step":
             u_c_ref_ab = self.six_step_overmodulation(u_c_ref_ab, u_dc)

@@ -39,6 +39,7 @@ class Measurements:
     i_c_ab: complex
     u_g_ab: complex
     u_dc: float
+    u_c_ab: complex | None = None  # Converter voltage, measured with blocked gates
 
 
 # %%
@@ -65,6 +66,10 @@ class InnerController[Ref: References, Fbk](Protocol):
         is the AC voltage or the reactive power, depending on the controller.
 
         """
+        ...
+
+    def compute_standby_output(self, fbk: Fbk) -> Ref:
+        """Compute control output while the gates are blocked."""
         ...
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
@@ -196,15 +201,22 @@ class GridConverterControlSystem(ControlSystem):
         u_dc = mdl.converter.meas_dc_voltage()
         i_c_ab = abc2complex(mdl.ac_filter.meas_currents())
         u_g_ab = line2complex(mdl.ac_filter.meas_pcc_voltages())
-        return Measurements(i_c_ab, u_g_ab, u_dc)
+        u_c_ab = None if self.enabled else line2complex(mdl.converter.meas_voltages())
+        return Measurements(i_c_ab, u_g_ab, u_dc, u_c_ab)
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         # The observers use the voltage of the ongoing sampling period, while the
-        # control laws use the voltage averaged over the previous and ongoing periods
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc, average=False)
-        fbk = self.inner_ctrl.get_feedback(u_c_ab, meas)
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        # control laws use the voltage averaged over the previous and ongoing periods.
+        # With blocked gates, both are the measured voltage.
+        if meas.u_c_ab is None:
+            u_c_ab_zoh = self.pwm.get_realized_voltage(
+                meas.i_c_ab, meas.u_dc, average=False
+            )
+            u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        else:
+            u_c_ab_zoh = u_c_ab = meas.u_c_ab
+        fbk = self.inner_ctrl.get_feedback(u_c_ab_zoh, meas)
         fbk.u_c = exp(-1j * fbk.theta_c) * u_c_ab
         fbk.u_dc = meas.u_dc
         return fbk
@@ -241,16 +253,28 @@ class GridConverterControlSystem(ControlSystem):
             dc_ref, get_value(v_c_or_q_g_ref, self.t), fbk
         )
         ref.u_dc = u_dc_ref
+        return self._add_duty_ratios(ref, fbk)
+
+    def compute_standby_output(self, fbk: Feedbacks) -> References:
+        """Compute controller output while the gates are blocked."""
+        ref = self.inner_ctrl.compute_standby_output(fbk)
+        if self.ext_ref.u_dc is not None:
+            ref.u_dc = get_value(self.ext_ref.u_dc, self.t)
+        return self._add_duty_ratios(ref, fbk)
+
+    def _add_duty_ratios(self, ref: References, fbk: Feedbacks) -> References:
+        """Compute the duty ratios from the voltage reference."""
         u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
         u_c_ab_ref *= exp(1j * self.k_comp * ref.T_s * fbk.w_c)
         ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
+        ref.enabled = self.enabled
         return ref
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
         super().update(ref, fbk)
         self.inner_ctrl.update(ref, fbk)
-        if self.dc_bus_voltage_ctrl and ref.u_dc is not None:
+        if self.dc_bus_voltage_ctrl and ref.u_dc is not None and self.enabled:
             self.dc_bus_voltage_ctrl.update(ref.T_s, ref.p_g)
 
     def post_process(self) -> TimeSeries:

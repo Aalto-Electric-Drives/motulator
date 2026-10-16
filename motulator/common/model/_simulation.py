@@ -12,12 +12,14 @@ from scipy.integrate import solve_ivp
 from tqdm import tqdm
 
 from motulator.common.control._base import ControlSystem
-from motulator.common.model._base import Model, ModelTimeSeries
+from motulator.common.model._base import Converter, Model, ModelTimeSeries
 from motulator.common.model._composite import CompositeModel, CompositeModelTimeSeries
 
 # Tolerance (s) for treating the sampling and switching instants of different
 # converters as simultaneous
 _T_TOL = 1e-12
+# Maximum number of diode transitions in an integration interval
+_MAX_TRANSITIONS = 100
 
 
 # %%
@@ -230,7 +232,9 @@ class Simulation:
                     T_s, ref_duty_ratio = ctrl(mdl)
                     if T_s <= _T_TOL:
                         raise ValueError("The sampling period must be positive")
-                    t_steps, q_abc, b_abc = mdl.modulate(T_s, ref_duty_ratio)
+                    t_steps, q_abc, b_abc = mdl.modulate(
+                        T_s, ref_duty_ratio, ctrl.enabled
+                    )
                     # Switching instants, accumulated from the interval durations
                     t_sw = [t0]
                     for t_step in t_steps[:-1]:
@@ -251,42 +255,76 @@ class Simulation:
 
     def _integrate(self, t_span: tuple[float, float], N_eval: int) -> None:
         """Integrate over the time span and save the solution."""
-        if t_span[1] <= t_span[0]:
+        t0, t1 = t_span
+        if t1 <= t0:
             return
-        state0 = self.mdl.get_initial_values()
-
-        # Explicit Runge-Kutta methods try the whole interval as the first step, which
-        # skips the estimation of the initial step size
-        first_step = None
-        if self.cfg.method in ("RK23", "RK45", "DOP853"):
-            first_step = min(t_span[1] - t_span[0], self.cfg.max_step)
 
         # Create array of evaluation times if N_eval is given, including the end point
         # for the final state
-        if N_eval != 0:
-            t_eval = np.linspace(t_span[0], t_span[1], N_eval + 1)
-        else:
-            t_eval = None
+        t_eval = np.linspace(t0, t1, N_eval + 1) if N_eval != 0 else None
 
-        # Integrate over t_span
-        sol = solve_ivp(
-            self.mdl.rhs,
-            t_span,
-            state0,
-            t_eval=t_eval,
-            first_step=first_step,
-            **self.cfg.solver,
-        )
-        if not sol.success:
-            raise FloatingPointError(sol.message)
+        # The transitions of the diode states of the converters with blocked gates
+        # are located as events, at which the integration is restarted
+        blocked = [c for c in self.mdl.converters if not c.inp.enabled]
+        events = [_DiodeEvent(self.mdl, c) for c in blocked]
 
-        # Set the final state, since the last call to rhs may be at an earlier instant
-        # (e.g., DOP853 with t_eval)
-        self.mdl.t0 = t_span[1]
-        self.mdl.set_states(sol.y[:, -1])
-        self.mdl.set_outputs(self.mdl.t0)
+        for _ in range(_MAX_TRANSITIONS):
+            state0 = self.mdl.get_initial_values()
 
-        # Save the solution (excluding the end point if N_eval is given)
-        if N_eval != 0:
-            sol.t, sol.y = sol.t[:-1], sol.y[:, :-1]
-        self.mdl.save(sol)
+            # Explicit Runge-Kutta methods try the whole interval as the first step,
+            # which skips the estimation of the initial step size
+            first_step = None
+            if self.cfg.method in ("RK23", "RK45", "DOP853"):
+                first_step = min(t1 - t0, self.cfg.max_step)
+
+            sol = solve_ivp(
+                self.mdl.rhs,
+                (t0, t1),
+                state0,
+                t_eval=None if t_eval is None else t_eval[t_eval >= t0],
+                events=events if events else None,
+                first_step=first_step,
+                **self.cfg.solver,
+            )
+            if not sol.success:
+                raise FloatingPointError(sol.message)
+
+            # Set the final state, since the last call to rhs may be at an earlier
+            # instant (e.g., DOP853 with t_eval), or the state at the first event
+            if sol.status == 1:
+                fired = [k for k, t_e in enumerate(sol.t_events) if t_e.size > 0]
+                k = min(fired, key=lambda k: sol.t_events[k][0])
+                t0, state = sol.t_events[k][0], sol.y_events[k][0]
+            else:
+                t0, state = t1, sol.y[:, -1]
+            self.mdl.t0 = t0
+            self.mdl.set_states(state)
+            self.mdl.set_outputs(t0)
+
+            # Save the solution (excluding the end point if N_eval is given). With
+            # t_eval, the solution may contain no points before the event.
+            if sol.status != 1 and N_eval != 0:
+                sol.t, sol.y = sol.t[:-1], sol.y[:, :-1]
+            if len(sol.t) > 0:
+                self.mdl.save(sol)
+            if sol.status != 1:
+                return
+            for converter in blocked:
+                converter.update_diodes()
+        raise FloatingPointError("Too many diode transitions in an interval")
+
+
+class _DiodeEvent:
+    """Event function for the transitions of the diode states of a converter."""
+
+    terminal = True
+    direction = -1  # The margin decreases to zero at a transition
+
+    def __init__(self, mdl: Model | CompositeModel, converter: Converter) -> None:
+        self.mdl = mdl
+        self.converter = converter
+
+    def __call__(self, t: float, state_list: list[complex]) -> float:
+        self.mdl.set_states(state_list)
+        self.mdl.set_outputs(t)
+        return self.converter.margin

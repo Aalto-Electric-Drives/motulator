@@ -20,6 +20,7 @@ class References:
     i_c: complex = 0j  # Converter current reference
     u_dc: float | None = None  # DC-bus voltage reference (set by the control system)
     d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
+    enabled: bool = True  # Gate enable (set by the control system)
 
 
 # %%

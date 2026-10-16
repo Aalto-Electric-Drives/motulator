@@ -1,12 +1,13 @@
 """Base classes for models."""
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import InitVar, dataclass, field
 from typing import TYPE_CHECKING, Any, Protocol
 
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
+from motulator.common.model._ac_port import ACPort
 from motulator.common.model._pwm import (
     ZOH,
     BlankingSignals,
@@ -69,6 +70,10 @@ class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemSta
         """Compute state derivatives."""
         ...
 
+    def compute_ac_port(self) -> ACPort | None:
+        """Compute the AC port for a converter with blocked gates, see `ACPort`."""
+        return None  # Not available by default
+
     def init_state_history(self) -> None:
         """Initialize the state history with an empty list for each state field."""
         states = vars(self.state) if self.state is not None else {}
@@ -91,6 +96,13 @@ class ConverterInputs(Protocol):
 
     q_c_ab: Any  # Switching state, held constant over each integration interval
     s_c_ab: Any  # Current-direction vector at the latest switching instant
+    enabled: bool  # Gate enable, held constant over each integration interval
+
+
+class ConverterOutputs(Protocol):
+    """Protocol for converter outputs."""
+
+    u_c_ab: Any  # Converter voltage
 
 
 class Converter(Subsystem, Protocol):
@@ -101,20 +113,39 @@ class Converter(Subsystem, Protocol):
     the dead time, and a method for setting the switching state `inp.q_c_ab` and the
     current-direction vector `inp.s_c_ab` based on the gate and blanking signals from
     the PWM model and the phase currents. The format of these is up to the converter
-    (e.g., complex space vectors in a three-phase converter).
+    (e.g., complex space vectors in a three-phase converter). When the gates are
+    blocked (`inp.enabled` is False), the converter voltage is determined by the AC
+    port of the load `ac_load` and the states of the diodes, see `ACPort`. The
+    simulation locates the transitions of the diode states as events, using the
+    margin of the states, and updates the states at the transitions.
 
     """
 
     n_legs: int  # Number of legs
     t_d: float  # Dead time (s)
+    ac_load: Subsystem | None  # Load providing the AC port for gate blocking
+    margin: float  # Margin of the diode states, zero at their transition
 
     @property
     def inp(self) -> ConverterInputs:
         """Input variables."""
         ...
 
+    @property
+    def out(self) -> ConverterOutputs:
+        """Output variables."""
+        ...
+
     def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
         """Set the switching state based on the gate and blanking signals."""
+        ...
+
+    def set_enable(self, enabled: bool) -> None:
+        """Set the gate enable, latching the diode states when the gates are blocked."""
+        ...
+
+    def update_diodes(self) -> None:
+        """Update the diode states at a transition."""
         ...
 
 
@@ -126,6 +157,8 @@ class ModelStateHistory:
     t: list[float] = field(default_factory=list)
     q_c_ab: list[complex] = field(default_factory=list)
     s_c_ab: list[complex] = field(default_factory=list)
+    enabled: list[bool] = field(default_factory=list)
+    u_c_ab: list[complex] = field(default_factory=list)  # Only with blocked gates
 
 
 class System:
@@ -165,6 +198,7 @@ class System:
         self.t0: float = 0.0
         self.subsystems = subsystems
         self.connections = connections
+        self.converters: list[Converter] = []  # Set by the subclasses
         self._history = ModelStateHistory()
         for subsystem in subsystems:
             subsystem.init_state_history()
@@ -189,6 +223,13 @@ class System:
             subsystem.set_outputs(t)
             for target, inp, out in self._outgoing[subsystem]:
                 setattr(target.inp, inp, getattr(subsystem.out, out))
+        # The voltage of a converter with blocked gates depends on the outputs of its
+        # load, which is evaluated after the converter
+        for converter in self.converters:
+            if not converter.inp.enabled:
+                converter.set_outputs(t)
+                for target, inp, out in self._outgoing[converter]:
+                    setattr(target.inp, inp, getattr(converter.out, out))
 
     def rhs(self, t: float, state_list: list[complex]) -> list[complex]:
         """Compute complete state derivative list for the solver."""
@@ -207,6 +248,18 @@ class System:
         for subsystem in self.subsystems:
             index = subsystem.extend_state_history(sol.y, index)
 
+    def _evaluate_outputs[T](self, sol: OdeResult, fcn: Callable[[], T]) -> list[T]:
+        """Evaluate `fcn` at the solution points, restoring the final state after."""
+        state = self.get_initial_values()
+        values: list[T] = []
+        for t, y in zip(sol.t, sol.y.T, strict=True):
+            self.set_states(y)
+            self.set_outputs(t)
+            values.append(fcn())
+        self.set_states(state)
+        self.set_outputs(self.t0)
+        return values
+
 
 class Model[C: Converter](System):
     """
@@ -217,7 +270,9 @@ class Model[C: Converter](System):
     model includes the dead time `converter.t_d`, and the computational delay is sized
     according to the number of legs `converter.n_legs`. The control systems of this
     package compensate for a computational delay of one sampling period, i.e.,
-    `delay=1` with double update and `delay=2` with single update.
+    `delay=1` with double update and `delay=2` with single update. The control system
+    can also block the gates of the converter, see `ControlSystem.set_enable`, in
+    which case the converter voltage is determined by the AC port of its load.
 
     Parameters
     ----------
@@ -270,6 +325,7 @@ class Model[C: Converter](System):
             connections = {**connections, (converter, "u_dc"): (dc_bus, "u_dc")}
         super().__init__(subsystems, connections)
         self.converter: C = converter
+        self.converters = [converter]
         self.dc_bus = dc_bus
         self.delay = Delay(delay, converter.n_legs)
         self.single_update = single_update
@@ -277,7 +333,7 @@ class Model[C: Converter](System):
         self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
 
     def modulate(
-        self, T_s: float, d_abc: Sequence[float]
+        self, T_s: float, d_abc: Sequence[float], enabled: bool = True
     ) -> tuple[SwitchingTimes, GateSignals, BlankingSignals]:
         """
         Delay the duty ratios and convert them to gate signals.
@@ -285,7 +341,9 @@ class Model[C: Converter](System):
         The sampling period consists of one half carrier period with double update
         and of two with single update. The duty ratios pass through the
         computational delay once per half carrier period, and the PWM model is
-        called for each half carrier period.
+        called for each half carrier period. If the gates are blocked, the duty
+        ratios still pass through the delay and the PWM model, but the gate signals
+        are zero for the whole sampling period.
 
         Parameters
         ----------
@@ -293,6 +351,8 @@ class Model[C: Converter](System):
             Sampling period (s).
         d_abc : Sequence[float]
             Duty ratios computed at this sampling instant.
+        enabled : bool, optional
+            Gate enable, defaults to True.
 
         Returns
         -------
@@ -304,8 +364,12 @@ class Model[C: Converter](System):
             Blanking signals in each interval.
 
         """
+        self.converter.set_enable(enabled)
         n = 2 if self.single_update else 1  # Half carrier periods per sampling period
         parts = [self.pwm(T_s / n, self.delay(d_abc)) for _ in range(n)]
+        if not enabled:
+            off = np.zeros((1, self.converter.n_legs))
+            return np.array([T_s]), off, off
         t_steps = np.concatenate([p[0] for p in parts])
         q_abc = np.vstack([p[1] for p in parts])
         b_abc = np.vstack([p[2] for p in parts])
@@ -314,8 +378,22 @@ class Model[C: Converter](System):
     def save(self, sol: OdeResult) -> None:
         """Save the solution and the switching state."""
         super().save(sol)
-        self._history.q_c_ab.extend([self.converter.inp.q_c_ab] * len(sol.t))
-        self._history.s_c_ab.extend([self.converter.inp.s_c_ab] * len(sol.t))
+        self._save_converter_history(sol, self)
+
+    def _save_converter_history(self, sol: OdeResult, system: System) -> None:
+        """Save the switching state, the gate enable, and the blocked voltage."""
+        n, inp = len(sol.t), self.converter.inp
+        self._history.q_c_ab.extend([inp.q_c_ab] * n)
+        self._history.s_c_ab.extend([inp.s_c_ab] * n)
+        self._history.enabled.extend([inp.enabled] * n)
+        # The voltage of a converter with blocked gates varies within the integration
+        # interval, so it is evaluated at the solution points of the system. Otherwise
+        # the voltage is derived from the switching state in the post-processing.
+        if inp.enabled:
+            u_c_ab = [complex(np.nan)] * n
+        else:
+            u_c_ab = system._evaluate_outputs(sol, lambda: self.converter.out.u_c_ab)
+        self._history.u_c_ab.extend(u_c_ab)
 
 
 # %%
@@ -363,6 +441,8 @@ class ModelTimeSeries:
         # the states (e.g., the converter voltage on the DC-bus voltage).
         ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
         ts[mdl.converter].s_c_ab = np.array(mdl._history.s_c_ab)
+        ts[mdl.converter].enabled = np.array(mdl._history.enabled)
+        ts[mdl.converter].u_c_ab = np.array(mdl._history.u_c_ab)
         pass_inputs()
         for subsystem in mdl.subsystems:
             ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)

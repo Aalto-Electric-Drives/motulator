@@ -68,6 +68,7 @@ class Drive(Model[VoltageSourceConverter]):
                 (converter, "i_c_ab"): (machine, "i_s_ab"),
                 (machine, "u_s_ab"): (converter, "u_c_ab"),
             }
+            converter.ac_load = machine
         else:
             # The machine comes after the filter, since its current can depend directly
             # on the filter voltage
@@ -78,6 +79,7 @@ class Drive(Model[VoltageSourceConverter]):
                 (lc_filter, "u_c_ab"): (converter, "u_c_ab"),
                 (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
             }
+            converter.ac_load = lc_filter
         super().__init__(
             converter,
             subsystems,
