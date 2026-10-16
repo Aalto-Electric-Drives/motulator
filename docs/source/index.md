@@ -14,6 +14,7 @@ maxdepth: 1
 installation
 usage
 contributing
+related_packages
 ```
 
 ```{toctree}
