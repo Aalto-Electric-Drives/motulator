@@ -35,6 +35,8 @@
 pip install motulator
 ```
 
+The neural-network-based magnetic models of `motulator.drive.gradnet` additionally need PyTorch, which is installed with `pip install "motulator[gradnet]"`.
+
 To develop *motulator* itself, clone the repository as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
 
 ## Quick start
@@ -86,8 +88,11 @@ If you would like to help us develop *motulator*, see these [guidelines](https:/
 Thanks go to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore-start -->
+
 <!-- markdownlint-disable -->
+
 <table>
   <tbody>
     <tr>
@@ -125,6 +130,7 @@ Thanks go to these wonderful people:
 </table>
 
 <!-- markdownlint-restore -->
+
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->

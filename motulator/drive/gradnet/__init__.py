@@ -1,4 +1,10 @@
-"""Gradient-based neural network maps."""
+"""
+Gradient-based neural network maps.
+
+This package requires PyTorch, which is installed as an optional dependency with
+`pip install "motulator[gradnet]"`.
+
+"""
 
 from motulator.drive.gradnet._dataset import get_training_data
 from motulator.drive.gradnet._gn import (
