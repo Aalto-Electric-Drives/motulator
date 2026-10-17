@@ -10,7 +10,6 @@ dependencies = [
     "scipy",
     "tqdm",
     "matplotlib",
-    "torch",
 ]
 requires-python = ">=3.12"
 authors = [
@@ -45,6 +44,7 @@ dev = [
     "pyright",
     "pip-audit",
     "pytest",
+    "torch",
 ]
 doc = [
     "numpydoc",
@@ -56,6 +56,10 @@ doc = [
     "esbonio",
     "myst-parser",
     "sphinxcontrib-bibtex",
+    "torch",
+]
+gradnet = [
+    "torch",
 ]
 
 [project.urls]

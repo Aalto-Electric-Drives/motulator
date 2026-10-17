@@ -20,9 +20,10 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: Install documentation dependencies
+    - name: Install PyTorch (CPU) and documentation dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install --index-url https://download.pytorch.org/whl/cpu torch
         pip install .[doc]
 
     - name: Build Sphinx documentation
