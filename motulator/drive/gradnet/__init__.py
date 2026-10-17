@@ -20,10 +20,8 @@ from motulator.drive.gradnet._gn import (
 )
 from motulator.drive.gradnet._plot import (
     PlotOptions,
-    plot_maps,
     plot_output_vs_angle,
     plot_surface_vs_current_and_angle,
-    sample_map_on_grid,
 )
 from motulator.drive.gradnet._stats import (
     print_current_map_errors_fem,
@@ -44,10 +42,8 @@ __all__ = [
     "FluxMapWithHarmonics",
     "get_training_data",
     "PlotOptions",
-    "plot_maps",
     "plot_output_vs_angle",
     "plot_surface_vs_current_and_angle",
-    "sample_map_on_grid",
     "print_current_map_errors_fem",
     "print_current_map_errors_meas",
     "print_flux_map_errors_fem",

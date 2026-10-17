@@ -4,7 +4,7 @@ from bisect import bisect_right
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal, cast
+from typing import Literal
 
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator, griddata
@@ -281,11 +281,11 @@ class MagneticModel:
 # %%
 class SaturationModelBase:
     """
-    Base class for analytical saturation models.
+    Base class for saturation models given as functions.
 
     This class implements a callable interface, matching the interface of
-    MagneticModel.lookup_fcn for current maps. It can be used directly as a lookup
-    function for a MagneticModel.
+    MagneticModel.lookup_fcn. It can be used directly as a lookup function for a
+    MagneticModel, and `as_magnetic_model()` samples it on a grid.
 
     """
 
@@ -351,11 +351,11 @@ class SaturationModelBase:
 
         if self._type == "current_map":
             psi_s_dq = inp_dq
-            i_s_dq = cast(np.ndarray, self(psi_s_dq))
+            i_s_dq = np.asarray(self(psi_s_dq), dtype=complex)
             model_type: Literal["current_map", "flux_map"] = "current_map"
         else:
             i_s_dq = inp_dq
-            psi_s_dq = cast(np.ndarray, self(i_s_dq))
+            psi_s_dq = np.asarray(self(i_s_dq), dtype=complex)
             model_type = "flux_map"
 
         # Calculate torque if needed
