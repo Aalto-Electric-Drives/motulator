@@ -208,13 +208,14 @@ class GridConverterControlSystem(ControlSystem):
         """Get feedback signals."""
         # The observers use the voltage of the ongoing sampling period, while the
         # control laws use the voltage averaged over the previous and ongoing periods.
-        # With blocked gates, both are the measured voltage.
-        if meas.u_c_ab is None:
-            u_c_ab_zoh = self.pwm.get_realized_voltage(
-                meas.i_c_ab, meas.u_dc, average=False
-            )
-            u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
-        else:
+        # With blocked gates, both are the measured voltage. The realized voltage is
+        # computed also then, since it passes the measured currents to the PWM for the
+        # feedforward compensation of the duty ratios applied after the release.
+        u_c_ab_zoh = self.pwm.get_realized_voltage(
+            meas.i_c_ab, meas.u_dc, average=False
+        )
+        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        if meas.u_c_ab is not None:
             u_c_ab_zoh = u_c_ab = meas.u_c_ab
         fbk = self.inner_ctrl.get_feedback(u_c_ab_zoh, meas)
         fbk.u_c = exp(-1j * fbk.theta_c) * u_c_ab

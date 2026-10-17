@@ -441,6 +441,8 @@ class PWM:
 
         """
         self._i_c_ab = i_c_ab
+        if u_dc <= 0:  # A discharged DC bus, e.g., with blocked gates
+            return 0j
         d_abc = self._d_abc[0 if average else 1 :]
         if self.d_err is not None:
             i_abc = complex2abc(i_c_ab)
