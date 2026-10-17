@@ -15,6 +15,7 @@ import pytest
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.model import CompositeModel, Simulation, SolverCfg
+from motulator.common.utils import abc2complex
 from motulator.drive import model as drive_model
 from motulator.grid import control as grid_control
 from motulator.grid import model as grid_model
@@ -153,6 +154,35 @@ def test_discharged_dc_bus(system: str) -> None:
     res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.005)
     assert res.success
     assert res.mdl.dc_bus.u_dc[-1] > 10
+
+
+def test_standby_feedforward_current() -> None:
+    """With blocked gates, the PWM compensation uses the measured currents, so it
+    vanishes in the standby duty ratios once the current has decayed."""
+
+    def sign(i: np.ndarray) -> np.ndarray:
+        return np.tanh(i / 0.1)  # Smooth, insensitive to numerical residuals
+
+    mdl = drive_model.Drive(
+        drive_model.SynchronousMachine(sm_pars()),
+        drive_model.MechanicalSystem(J=0.015),
+        drive_model.VoltageSourceConverter(u_dc=540, t_d=2e-6, sign=sign),
+    )
+    ctrl = pmsm_cvc(sensorless=False)
+    d_err = sm_control.InverterNonlinearity(t_d=2e-6, sign=sign)
+    ctrl.pwm = sm_control.PWM(d_err=d_err)
+    ctrl.set_speed_ref(2 * pi * 15)
+    ctrl.set_enable(lambda t: t < 0.1)
+    mdl.mechanics.set_external_load_torque(5)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.11)
+    assert res.success
+    standby = res.ctrl.t > 0.105
+    ref, fbk = res.ctrl.ref, res.ctrl.fbk
+    assert np.max(np.abs(fbk.i_s[standby])) < 1e-6
+    # The duty ratios equal those of the limited voltage reference
+    u_c_ab = 540 * abc2complex(ref.d_abc[standby].T)
+    u_c_ab_lim = np.exp(1j * fbk.theta_c[standby]) * ref.u_s_lim[standby]
+    assert u_c_ab == pytest.approx(u_c_ab_lim, abs=1e-6)
 
 
 @pytest.mark.parametrize("sensorless", [True, False])
