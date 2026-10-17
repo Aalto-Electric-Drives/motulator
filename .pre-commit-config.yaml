@@ -77,5 +77,8 @@ repos:
         additional_dependencies:
           - mdformat-myst
         types_or: [markdown]
+        # The all-contributors bot writes the contributor table of README.md in its
+        # own format
+        exclude: ^README\.md$
         # Example args:
         # args: ["--wrap", "88"]
