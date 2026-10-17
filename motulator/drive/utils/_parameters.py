@@ -60,7 +60,7 @@ def aux_current(psi_s: complex, i_s: complex, L_s: np.ndarray) -> complex:
 
 # %%
 class BaseSynchronousMachinePars(Protocol):
-    """Base class for synchronous machine parameters."""
+    """Base class for synchronous machine parameters, as used by the machine model."""
 
     n_p: int
     R_s: float
@@ -115,61 +115,6 @@ class BaseSynchronousMachinePars(Protocol):
         -------
         complex | ndarray
             Stator current (A) in rotor coordinates.
-
-        """
-        ...
-
-    def psi_s_dq(
-        self,
-        i_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
-    ) -> complex | np.ndarray:
-        """
-        Flux linkage as a function of current and electrical rotor angle.
-
-        Parameters
-        ----------
-        i_s_dq : complex | ndarray
-            Stator current (A) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray, optional
-            Complex exponential of the electrical rotor angle.
-
-        Returns
-        -------
-        complex | ndarray
-            Stator flux linkage in rotor coordinates (Vs).
-
-        """
-        ...
-
-    def incr_ind_mat(
-        self,
-        i_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
-    ) -> np.ndarray:
-        """
-        Incremental inductance matrix.
-
-        Parameters
-        ----------
-        i_s_dq : complex | ndarray
-            Stator current (A) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray, optional
-            Complex exponential of the electrical rotor angle.
-
-        Returns
-        -------
-        ndarray
-            Incremental inductance matrix (H).
-
-        """
-        ...
-
-    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
-        """
-        Compute the current from the flux linkage.
-
-        Root finding on the flux map is used if no current map is available.
 
         """
         ...
@@ -421,8 +366,6 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         """
         if exp_j_theta_m is None:
             raise ValueError("exp_j_theta_m must be provided")
-        if self.magnetic_map_fcn is None:
-            raise ValueError("magnetic_map_fcn must be provided")
         return self.magnetic_map_fcn(psi_s_dq, exp_j_theta_m)
 
     def i_s_dq(
@@ -434,20 +377,6 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
         if exp_j_theta_m is None:
             raise ValueError("exp_j_theta_m must be provided")
         return self.magnetic_map_fcn(psi_s_dq, exp_j_theta_m)[0]
-
-    def psi_s_dq(
-        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
-    ) -> complex | np.ndarray:
-        raise NotImplementedError("Flux map is not implemented")
-
-    def incr_ind_mat(
-        self, i_s_dq: complex | np.ndarray, exp_j_theta_m=None
-    ) -> np.ndarray:
-        raise NotImplementedError("Incremental inductance matrix is not implemented")
-
-    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
-        """Not implemented for the model with spatial harmonics."""
-        raise NotImplementedError("This method is not implemented")
 
 
 # %%

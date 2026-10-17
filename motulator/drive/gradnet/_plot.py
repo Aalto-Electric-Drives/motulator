@@ -13,11 +13,7 @@ from matplotlib import pyplot as plt
 from matplotlib import tri as mtri
 from numpy.typing import NDArray
 
-from motulator.common.utils._plotting import (
-    save_and_show,
-    set_latex_style,
-    set_screen_style,
-)
+from motulator.common.utils._plotting import save_and_show, setup_map_plot
 from motulator.common.utils._utils import BaseValues
 
 LINE_ALPHA = 0.7
@@ -125,7 +121,7 @@ def plot_maps(
         Additional keyword arguments passed to `plt.savefig()`.
 
     """
-    width, height = setup_plot_style(latex)
+    width, height = setup_map_plot(latex)
     pu_vals = base is not None
     if base is None:
         base = BaseValues.unity()
@@ -367,32 +363,6 @@ def plot_maps(
 
 
 # %%
-def setup_plot_style(latex: bool) -> tuple[float, float]:
-    """
-    Setup plot style and return figure dimensions.
-
-    Parameters
-    ----------
-    latex : bool
-        Use LaTeX fonts.
-
-    Returns
-    -------
-    tuple
-        Figure width and height.
-
-    """
-    if latex:
-        set_latex_style()
-        width = plt.rcParams["figure.figsize"][0] * 1.4
-        height = plt.rcParams["figure.figsize"][1] * 1.4
-        plt.rcParams.update({"savefig.pad_inches": 0.3})
-    else:
-        set_screen_style()
-        width, height = plt.rcParams["figure.figsize"]
-    return width, height
-
-
 # %%
 @dataclass
 class PlotOptions:
@@ -592,7 +562,7 @@ def plot_surface_vs_current_and_angle(
     if opts is None:
         opts = PlotOptions()
 
-    width, height = setup_plot_style(opts.latex)
+    width, height = setup_map_plot(opts.latex)
     base, pu_vals = _get_base_values(opts)
 
     # Build the 2D grid for evaluation
@@ -852,7 +822,7 @@ def plot_output_vs_angle(
     if opts is None:
         opts = PlotOptions()
 
-    setup_plot_style(opts.latex)
+    setup_map_plot(opts.latex)
     base, pu_vals = _get_base_values(opts)
 
     # Create plot
