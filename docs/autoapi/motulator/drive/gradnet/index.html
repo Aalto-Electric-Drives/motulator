@@ -557,12 +557,10 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.get_training_data"><code class="docutils literal notranslate"><span class="pre">get_training_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.load_gradnet"><code class="docutils literal notranslate"><span class="pre">load_gradnet()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_output_vs_angle"><code class="docutils literal notranslate"><span class="pre">plot_output_vs_angle()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_current_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_current_map_errors_meas()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_flux_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_flux_map_errors_meas()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.sample_map_on_grid"><code class="docutils literal notranslate"><span class="pre">sample_map_on_grid()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.train_gradnet"><code class="docutils literal notranslate"><span class="pre">train_gradnet()</span></code></a></li>
 </ul>
 </li>
@@ -627,23 +625,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.load_gradnet" title="motulator.drive.gradnet.load_gradnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_gradnet</span></code></a>(model_path[, activation])</p></td>
 <td><p>Load a GradNet model, inferring dimensions from the saved weights.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_maps" title="motulator.drive.gradnet.plot_maps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_maps</span></code></a>(data, component[, base, lims, ticks, ...])</p></td>
-<td><p>Plot flux linkage or current maps.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_output_vs_angle" title="motulator.drive.gradnet.plot_output_vs_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_output_vs_angle</span></code></a>(fixed_value, theta_m_range, map_fcn)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_output_vs_angle" title="motulator.drive.gradnet.plot_output_vs_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_output_vs_angle</span></code></a>(fixed_value, theta_m_range, map_fcn)</p></td>
 <td><p>Plot torque or flux linkage as a function of angle at a fixed input.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle" title="motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle</span></code></a>(current_range, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle" title="motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle</span></code></a>(current_range, ...)</p></td>
 <td><p>Plot selected output component vs selected input component over angle.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.print_current_map_errors_meas" title="motulator.drive.gradnet.print_current_map_errors_meas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_current_map_errors_meas</span></code></a>(current_map, data[, base])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.print_current_map_errors_meas" title="motulator.drive.gradnet.print_current_map_errors_meas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_current_map_errors_meas</span></code></a>(current_map, data[, base])</p></td>
 <td><p>Print error metrics for a measured current map.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.print_flux_map_errors_meas" title="motulator.drive.gradnet.print_flux_map_errors_meas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_flux_map_errors_meas</span></code></a>(flux_map, data[, base])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.print_flux_map_errors_meas" title="motulator.drive.gradnet.print_flux_map_errors_meas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_flux_map_errors_meas</span></code></a>(flux_map, data[, base])</p></td>
 <td><p>Print error metrics for a measured flux map.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.sample_map_on_grid" title="motulator.drive.gradnet.sample_map_on_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sample_map_on_grid</span></code></a>(map_fcn, map_type, d_range, q_range)</p></td>
-<td><p>Sample a (measured or learned) map callable on a rectilinear grid.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.train_gradnet" title="motulator.drive.gradnet.train_gradnet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_gradnet</span></code></a>(dataset_path, base[, is_flux_map, k, ...])</p></td>
 <td><p>Train and save the GradNet model.</p></td>
@@ -683,8 +675,10 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.gradnet.CurrentMap">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">CurrentMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_gn.html#CurrentMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.CurrentMap" title="Link to this definition">#</a></dt>
-<dd><p>Callable wrapper for GradNet current map models.</p>
-<p>The map is symmetrized about the d-axis to ensure physical consistency.</p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.utils._sm_flux_maps.SaturationModelBase</span></code></p>
+<p>Callable wrapper for GradNet current map models.</p>
+<p>The map is symmetrized about the d-axis to ensure physical consistency. The map can
+be sampled on a grid by <cite>as_magnetic_model()</cite>, e.g., for plotting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>model</strong> (<em>GradNet</em>) – Trained GradNet model for the current map.</p>
@@ -916,35 +910,6 @@ flattened and in the units of the npz file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="motulator.drive.gradnet.plot_maps">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">plot_maps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lims</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ticks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_loci</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_loci_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">savefig_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#plot_maps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.plot_maps" title="Link to this definition">#</a></dt>
-<dd><p>Plot flux linkage or current maps.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<em>MapGrid</em>) – Sampled rectilinear-grid map data.</p></li>
-<li><p><strong>component</strong> (<em>{&quot;d&quot;</em><em>, </em><em>&quot;q&quot;}</em>) – Component of the flux linkage or current to plot.</p></li>
-<li><p><strong>base</strong> (<a class="reference internal" href="../utils/index.html#motulator.drive.utils.BaseValues" title="motulator.drive.utils.BaseValues"><em>BaseValues</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Base values for per-unit conversion. If None, unity base values are used.</p></li>
-<li><p><strong>lims</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Axis limits as {‘x’: (xmin, xmax), ‘y’: (ymin, ymax), ‘z’: (zmin, zmax)}.</p></li>
-<li><p><strong>ticks</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Axis ticks as {‘x’: [x1, x2, …], ‘y’: [y1, y2, …], ‘z’: [z1, z2, …]}.</p></li>
-<li><p><strong>raw_data</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Raw validation/training data scatter overlays.</p></li>
-<li><p><strong>surface_cmap</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for the surface plot, defaults to “viridis”.</p></li>
-<li><p><strong>current_loci</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Plot constant-current loci overlays, defaults to False.</p></li>
-<li><p><strong>current_loci_levels</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em> | </em><em>ndarray</em><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Levels for the constant-current loci overlays. If list or array, the same
-levels are used for <cite>i_d</cite> and <cite>i_q</cite>. If a tuple of two lists/arrays,
-<cite>(i_d_levels, i_q_levels)</cite>. Defaults to None.</p></li>
-<li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts if True, defaults to False.</p></li>
-<li><p><strong>save_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> | </em><em>Path</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – Path to save the figure, defaults to None (not saved).</p></li>
-<li><p><strong>savefig_kwargs</strong> (<em>Any</em>) – Additional keyword arguments passed to <cite>plt.savefig()</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="motulator.drive.gradnet.plot_output_vs_angle">
 <span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">plot_output_vs_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_m_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tau_m'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'i_s_dq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trn_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#plot_output_vs_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.plot_output_vs_angle" title="Link to this definition">#</a></dt>
 <dd><p>Plot torque or flux linkage as a function of angle at a fixed input.</p>
@@ -1015,31 +980,6 @@ levels are used for <cite>i_d</cite> and <cite>i_q</cite>. If a tuple of two lis
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="motulator.drive.gradnet.sample_map_on_grid">
-<span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">sample_map_on_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_fcn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_range</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_plot.html#sample_map_on_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.sample_map_on_grid" title="Link to this definition">#</a></dt>
-<dd><p>Sample a (measured or learned) map callable on a rectilinear grid.</p>
-<p>For <cite>map_type=”current_map”</cite>, (<cite>d_range</cite>, <cite>q_range</cite>) are in (<cite>psi_d</cite>, <cite>psi_q</cite>)
-units. For <cite>map_type=”flux_map”</cite>, (<cite>d_range</cite>, <cite>q_range</cite>) are in (<cite>i_d</cite>, <cite>i_q</cite>)
-units.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>map_fcn</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>ndarray</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>ndarray</em><em>]</em>) – Callable map function.</p></li>
-<li><p><strong>map_type</strong> (<em>{&quot;current_map&quot;</em><em>, </em><em>&quot;flux_map&quot;}</em>) – Type of the map.</p></li>
-<li><p><strong>d_range</strong> (<em>ndarray</em>) – Range of values for the d-axis.</p></li>
-<li><p><strong>q_range</strong> (<em>ndarray</em>) – Range of values for the q-axis.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Sampled grid data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>MapGrid</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1163,12 +1103,10 @@ dataset, except that the number of steps per epoch is unchanged.</p></li>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.get_training_data"><code class="docutils literal notranslate"><span class="pre">get_training_data()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.load_gradnet"><code class="docutils literal notranslate"><span class="pre">load_gradnet()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_maps"><code class="docutils literal notranslate"><span class="pre">plot_maps()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_output_vs_angle"><code class="docutils literal notranslate"><span class="pre">plot_output_vs_angle()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.plot_surface_vs_current_and_angle"><code class="docutils literal notranslate"><span class="pre">plot_surface_vs_current_and_angle()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_current_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_current_map_errors_meas()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.print_flux_map_errors_meas"><code class="docutils literal notranslate"><span class="pre">print_flux_map_errors_meas()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.sample_map_on_grid"><code class="docutils literal notranslate"><span class="pre">sample_map_on_grid()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.gradnet.train_gradnet"><code class="docutils literal notranslate"><span class="pre">train_gradnet()</span></code></a></li>
 </ul>
 </li>

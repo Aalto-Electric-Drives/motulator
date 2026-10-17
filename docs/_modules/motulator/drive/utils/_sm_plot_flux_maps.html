@@ -485,6 +485,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contourpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">contour_generator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaxNLocator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 
@@ -494,9 +495,21 @@
 
 
 <span class="c1"># %%</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_xyz</span><span class="p">(</span>
+    <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Get the map input (x, y) and the plotted component of the output (z)."""</span>
+    <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">)</span> <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span> <span class="k">else</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_filter_and_plot_raw_data</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
-    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">,</span>
     <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -507,34 +520,52 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Filter and plot raw data as scatter points."""</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
-        <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-        <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+        <span class="n">raw_psi_s_dq</span><span class="p">,</span> <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">raw_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-        <span class="n">raw_psi_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+        <span class="n">raw_psi_s_dq</span><span class="p">,</span> <span class="n">raw_i_s_dq</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">i_s_dq</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_get_xyz</span><span class="p">(</span>
+        <span class="n">data_type</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">raw_i_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">raw_psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
+        <span class="n">component</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">&gt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">raw_i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">&lt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="p">)</span>
-        <span class="n">x_scatter</span><span class="p">,</span> <span class="n">y_scatter</span> <span class="o">=</span> <span class="n">raw_i_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">raw_i_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
-        <span class="n">z_scatter</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">raw_psi_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="n">raw_psi_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">&lt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">&gt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="o">&amp;</span> <span class="p">(</span><span class="n">raw_psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">&lt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="p">)</span>
-        <span class="n">x_scatter</span><span class="p">,</span> <span class="n">y_scatter</span> <span class="o">=</span> <span class="n">raw_psi_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">raw_psi_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
-        <span class="n">z_scatter</span> <span class="o">=</span> <span class="n">raw_i_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">real</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="n">raw_i_s_dq</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">imag</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_scatter</span><span class="p">,</span> <span class="n">y_scatter</span><span class="p">,</span> <span class="n">z_scatter</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_current_loci</span><span class="p">(</span>
+    <span class="n">ax</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">MagneticModel</span><span class="p">,</span>
+    <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">,</span>
+    <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">levels</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">],</span>
+    <span class="n">axlim_clip</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Plot the constant-current loci, evaluating the map along them."""</span>
+    <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+    <span class="n">inp</span><span class="p">,</span> <span class="n">in_base</span><span class="p">,</span> <span class="n">out_base</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"flux_map"</span>
+        <span class="k">else</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">field_levels</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">contours</span> <span class="o">=</span> <span class="n">contour_generator</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">line_type</span><span class="o">=</span><span class="s2">"Separate"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">field_levels</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">contours</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">level</span><span class="p">)):</span>
+                <span class="n">x_l</span><span class="p">,</span> <span class="n">y_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">line</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">(</span><span class="n">in_base</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_l</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">y_l</span><span class="p">)))</span> <span class="o">/</span> <span class="n">out_base</span>
+                <span class="n">z_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+                    <span class="n">x_l</span><span class="p">,</span>
+                    <span class="n">y_l</span><span class="p">,</span>
+                    <span class="n">z_l</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+                    <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                    <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span><span class="p">,</span>
+                <span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_labels</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -622,10 +653,12 @@
     <span class="n">lims</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ticks</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">raw_data</span><span class="p">:</span> <span class="n">MagneticModel</span>
-    <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span>
+    <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span>
     <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">raw_marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">raw_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">current_loci</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axlim_clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">surface_cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"viridis"</span><span class="p">,</span>
     <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -648,13 +681,18 @@
 <span class="sd">        Axis limits. Keys should be 'x', 'y', 'z'.</span>
 <span class="sd">    ticks : dict[str, ArrayLike], optional</span>
 <span class="sd">        Axis tick locations. Keys should be 'x', 'y', 'z'.</span>
-<span class="sd">    raw_data : MagneticModel | list[MagneticModel | tuple], optional</span>
+<span class="sd">    raw_data : MagneticModel | tuple | list[MagneticModel | tuple], optional</span>
 <span class="sd">        Raw data for comparison (shown as scatter points). A tuple of arrays is</span>
-<span class="sd">        interpreted as `(i_s_dq, psi_s_dq)` in SI units.</span>
+<span class="sd">        interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units, as returned by</span>
+<span class="sd">        `motulator.drive.gradnet.get_training_data`.</span>
 <span class="sd">    raw_marker : str | list[str], optional</span>
 <span class="sd">        Marker style for raw data.</span>
 <span class="sd">    raw_color : str | list[str], optional</span>
 <span class="sd">        Marker color for raw data.</span>
+<span class="sd">    current_loci : tuple[ArrayLike, ArrayLike], optional</span>
+<span class="sd">        Levels `(i_d_levels, i_q_levels)` of the constant-current loci, in the units of</span>
+<span class="sd">        the plot. If given, the loci are drawn on the surface instead of the wireframe.</span>
+<span class="sd">        The map is evaluated along the loci by the lookup function of `data`.</span>
 <span class="sd">    axlim_clip : bool, optional</span>
 <span class="sd">        Whether to hide the parts of the surface and wireframe outside the axis view</span>
 <span class="sd">        limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's</span>
@@ -683,13 +721,7 @@
     <span class="c1"># Create figure and axis</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">"projection"</span><span class="p">:</span> <span class="s2">"3d"</span><span class="p">})</span>
 
-    <span class="c1"># Select plot data based on map type</span>
-    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_get_xyz</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
 
     <span class="c1"># Configure axes (this determines x_lims, y_lims internally)</span>
     <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span> <span class="o">=</span> <span class="n">_configure_3d_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">lims</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
@@ -734,10 +766,13 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">surface_cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
     <span class="p">)</span>
-    <span class="c1"># Add wireframe on top</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
-    <span class="p">)</span>
+    <span class="c1"># Add constant-current loci or wireframe on top</span>
+    <span class="k">if</span> <span class="n">current_loci</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">_plot_current_loci</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">current_loci</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot_wireframe</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
+        <span class="p">)</span>
 
     <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">zlabel</span> <span class="o">=</span> <span class="n">_get_labels</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>

@@ -52,12 +52,10 @@ Functions
 
    motulator.drive.gradnet.get_training_data
    motulator.drive.gradnet.load_gradnet
-   motulator.drive.gradnet.plot_maps
    motulator.drive.gradnet.plot_output_vs_angle
    motulator.drive.gradnet.plot_surface_vs_current_and_angle
    motulator.drive.gradnet.print_current_map_errors_meas
    motulator.drive.gradnet.print_flux_map_errors_meas
-   motulator.drive.gradnet.sample_map_on_grid
    motulator.drive.gradnet.train_gradnet
 
 
@@ -116,10 +114,14 @@ Package Contents
 
 .. py:class:: CurrentMap(model)
 
+   Bases: :py:obj:`motulator.drive.utils._sm_flux_maps.SaturationModelBase`
+
+
    
    Callable wrapper for GradNet current map models.
 
-   The map is symmetrized about the d-axis to ensure physical consistency.
+   The map is symmetrized about the d-axis to ensure physical consistency. The map can
+   be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.
 
    :param model: Trained GradNet model for the current map.
    :type model: GradNet
@@ -527,55 +529,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_maps(data, component, base = None, lims = None, ticks = None, raw_data = None, surface_cmap = 'viridis', current_loci = False, current_loci_levels = None, latex = False, save_path = None, **savefig_kwargs)
-
-   
-   Plot flux linkage or current maps.
-
-   :param data: Sampled rectilinear-grid map data.
-   :type data: MapGrid
-   :param component: Component of the flux linkage or current to plot.
-   :type component: {"d", "q"}
-   :param base: Base values for per-unit conversion. If None, unity base values are used.
-   :type base: ~motulator.drive.utils.BaseValues | None, optional
-   :param lims: Axis limits as {'x': (xmin, xmax), 'y': (ymin, ymax), 'z': (zmin, zmax)}.
-   :type lims: dict[str, tuple[float, float]] | None, optional
-   :param ticks: Axis ticks as {'x': [x1, x2, ...], 'y': [y1, y2, ...], 'z': [z1, z2, ...]}.
-   :type ticks: dict[str, list[float]] | None, optional
-   :param raw_data: Raw validation/training data scatter overlays.
-   :type raw_data: tuple | list[tuple] | None, optional
-   :param surface_cmap: Colormap for the surface plot, defaults to "viridis".
-   :type surface_cmap: str, optional
-   :param current_loci: Plot constant-current loci overlays, defaults to False.
-   :type current_loci: bool, optional
-   :param current_loci_levels: Levels for the constant-current loci overlays. If list or array, the same
-                               levels are used for `i_d` and `i_q`. If a tuple of two lists/arrays,
-                               `(i_d_levels, i_q_levels)`. Defaults to None.
-   :type current_loci_levels: list | ndarray | tuple | None, optional
-   :param latex: Use LaTeX fonts if True, defaults to False.
-   :type latex: bool, optional
-   :param save_path: Path to save the figure, defaults to None (not saved).
-   :type save_path: str | Path | None, optional
-   :param savefig_kwargs: Additional keyword arguments passed to `plt.savefig()`.
-   :type savefig_kwargs: Any
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:function:: plot_output_vs_angle(fixed_value, theta_m_range, map_fcn, output = 'tau_m', input_type = 'i_s_dq', val_data = None, trn_data = None, opts = None)
 
    
@@ -684,44 +637,6 @@ Package Contents
    
    Print error metrics for a measured flux map.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: sample_map_on_grid(map_fcn, map_type, d_range, q_range)
-
-   
-   Sample a (measured or learned) map callable on a rectilinear grid.
-
-   For `map_type="current_map"`, (`d_range`, `q_range`) are in (`psi_d`, `psi_q`)
-   units. For `map_type="flux_map"`, (`d_range`, `q_range`) are in (`i_d`, `i_q`)
-   units.
-
-   :param map_fcn: Callable map function.
-   :type map_fcn: Callable[[complex | ndarray], complex | ndarray]
-   :param map_type: Type of the map.
-   :type map_type: {"current_map", "flux_map"}
-   :param d_range: Range of values for the d-axis.
-   :type d_range: ndarray
-   :param q_range: Range of values for the q-axis.
-   :type q_range: ndarray
-
-   :returns: Sampled grid data.
-   :rtype: MapGrid
 
 
 

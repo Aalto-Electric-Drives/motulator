@@ -891,11 +891,11 @@ Package Contents
 .. py:class:: SaturationModelBase(map_fcn = None, map_type = 'current_map')
 
    
-   Base class for analytical saturation models.
+   Base class for saturation models given as functions.
 
    This class implements a callable interface, matching the interface of
-   MagneticModel.lookup_fcn for current maps. It can be used directly as a lookup
-   function for a MagneticModel.
+   MagneticModel.lookup_fcn. It can be used directly as a lookup function for a
+   MagneticModel, and `as_magnetic_model()` samples it on a grid.
 
 
 
@@ -1363,7 +1363,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_map(data, component, base = None, lims = None, ticks = None, raw_data = None, raw_marker = None, raw_color = None, axlim_clip = True, surface_cmap = 'viridis', latex = False, save_path = None, **savefig_kwargs)
+.. py:function:: plot_map(data, component, base = None, lims = None, ticks = None, raw_data = None, raw_marker = None, raw_color = None, current_loci = None, axlim_clip = True, surface_cmap = 'viridis', latex = False, save_path = None, **savefig_kwargs)
 
    
    Plot component (d or q) of flux linkage or current maps.
@@ -1380,12 +1380,17 @@ Package Contents
    :param ticks: Axis tick locations. Keys should be 'x', 'y', 'z'.
    :type ticks: dict[str, ArrayLike], optional
    :param raw_data: Raw data for comparison (shown as scatter points). A tuple of arrays is
-                    interpreted as `(i_s_dq, psi_s_dq)` in SI units.
-   :type raw_data: MagneticModel | list[MagneticModel | tuple], optional
+                    interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units, as returned by
+                    `motulator.drive.gradnet.get_training_data`.
+   :type raw_data: MagneticModel | tuple | list[MagneticModel | tuple], optional
    :param raw_marker: Marker style for raw data.
    :type raw_marker: str | list[str], optional
    :param raw_color: Marker color for raw data.
    :type raw_color: str | list[str], optional
+   :param current_loci: Levels `(i_d_levels, i_q_levels)` of the constant-current loci, in the units of
+                        the plot. If given, the loci are drawn on the surface instead of the wireframe.
+                        The map is evaluated along the loci by the lookup function of `data`.
+   :type current_loci: tuple[ArrayLike, ArrayLike], optional
    :param axlim_clip: Whether to hide the parts of the surface and wireframe outside the axis view
                       limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's
                       3D plotting functions.
