@@ -356,7 +356,7 @@ Package Contents
    Plot control signals and converter voltages.
 
    :param res: Simulation results.
-   :type res: SimulationResults
+   :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
@@ -398,7 +398,7 @@ Package Contents
    Plot grid waveforms and phase angles.
 
    :param res: Simulation results.
-   :type res: SimulationResults
+   :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
@@ -507,7 +507,7 @@ Package Contents
    Plot locus of the grid voltage vector.
 
    :param res: Simulation results.
-   :type res: SimulationResults
+   :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional

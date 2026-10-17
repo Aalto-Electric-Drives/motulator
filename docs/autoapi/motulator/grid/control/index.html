@@ -899,7 +899,7 @@ PWM converter-inverter system,” IEEE Trans. Ind. Electron., 2001,
 <dd><p>Dual-voltage-forming controller.</p>
 <p>This controller regulates both the DC-bus voltage and the converter output voltage
 magnitude <a class="footnote-reference brackets" href="#mou2025" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, extending the disturbance-observer-based grid-forming control
-<a href="#id15"><span class="problematic" id="id3">[#Nur2024]_</span></a>. The disturbance observer estimates the quasi-static converter voltage
+<a class="footnote-reference brackets" href="#nur2024b" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The disturbance observer estimates the quasi-static converter voltage
 as in <cite>ObserverBasedGridFormingController</cite>, and a second observer estimates the
 disturbance power, i.e., the external power fed to the DC bus minus the grid
 power and the resistive losses, from the energy balance of the DC-bus capacitor
@@ -926,11 +926,11 @@ is the estimated external power fed to the DC bus, excluding the resistive losse
 grid-forming converters: Toward the concept of dual-voltage-forming converters,”
 IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://doi.org/10.1109/TPEL.2025.3537332">https://doi.org/10.1109/TPEL.2025.3537332</a></p>
 </aside>
-<aside class="footnote brackets" id="nur2024" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
-<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming
-converter control based on a disturbance observer,” IEEE Trans. Power Electron.,
-2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
+<aside class="footnote brackets" id="nur2024b" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional
+grid-forming converter control based on a disturbance observer,” IEEE Trans.
+Power Electron., 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
 </aside>
 </aside>
 <dl class="py method">
@@ -1267,7 +1267,7 @@ switching commands.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_observer.html#ObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.ObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
 <dd><p>Disturbance-observer-based grid-forming controller.</p>
 <p>This implements the RFPSC-type grid-forming mode of the control method described in
-<a href="#id16"><span class="problematic" id="id5">[#Nur2024]_</span></a>. Transparent current control is also implemented. Optionally, the
+<a class="footnote-reference brackets" href="#nur2024" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. Transparent current control is also implemented. Optionally, the
 active-power reference is limited to a realizable level, prioritizing the reactive
 current, as described in <a class="footnote-reference brackets" href="#maa2026" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a> (here reduced to balanced conditions). This
 limitation helps to maintain synchronism during grid-voltage sags in weak grids.</p>
@@ -1280,11 +1280,12 @@ limitation helps to maintain synchronism during grid-voltage sags in weak grids.
 <p>In this implementation, the control system operates in synchronous coordinates
 rotating at the nominal grid angular frequency, and the disturbance observer is
 designed directly in discrete time. For other implementation options, see
-<a href="#id17"><span class="problematic" id="id7">[#Nur2024]_</span></a>.</p>
+<a class="footnote-reference brackets" href="#nur2024" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id8" role="doc-footnote">
+<aside class="footnote brackets" id="nur2024" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
 <p>Nurminen, Mourouvin, Hinkkanen, Kukkola, “Multifunctional grid-forming
 converter control based on a disturbance observer,” IEEE Trans. Power Electron.,
 2024, <a class="reference external" href="https://doi.org/10.1109/TPEL.2024.3433503">https://doi.org/10.1109/TPEL.2024.3433503</a></p>
@@ -1473,7 +1474,7 @@ the measured PCC voltage is also filtered.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase space-vector PWM.</p>
 <p>This computes the duty ratios corresponding to standard space-vector PWM and
-overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. The realized voltage is reconstructed from the duty
+overmodulation <a class="footnote-reference brackets" href="#hav1999" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. The realized voltage is reconstructed from the duty
 ratios and the measured DC-bus voltage, taking into account the computational delay
 of one sampling period. The angle of the voltage reference is not advanced here:
 the control systems compensate for the delays, if needed by the controller.</p>
@@ -1489,7 +1490,7 @@ are applied, assuming that they rotate at the angular speed of the synchronous
 coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
 duty-dependent error.</p>
 <p>Optionally, the pulses are limited to a minimum width, e.g., due to the gate
-drivers <a class="footnote-reference brackets" href="#wel2006" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
+drivers <a class="footnote-reference brackets" href="#wel2006" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>: the duty ratio of a switching leg is in the range
 <cite>[d_min, 1 - d_min]</cite>, while the duty ratios 0 and 1 (a leg not switching) are not
 limited. A duty ratio in the range <cite>(0, d_min)</cite> is rounded to 0 (the pulse is
 dropped) or to <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to <cite>1 - d_min</cite> or 1,
@@ -1526,13 +1527,13 @@ period is <cite>T_s</cite>). Must match the system model.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation characteristics of
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="wel2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
 <p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
 minimum pulse-width limitations in two-level PWM voltage source inverters,”
 Proc. IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
@@ -1658,7 +1659,7 @@ changed and the realized duty ratios of the limited legs.</p></li>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1676,7 +1677,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">9</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -1707,7 +1708,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <dt class="sig sig-object py" id="motulator.grid.control.PowerSynchronizationController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">PowerSynchronizationController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_psc.html#PowerSynchronizationController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.PowerSynchronizationController" title="Link to this definition">#</a></dt>
 <dd><p>Reference-feedforward power-synchronization controller.</p>
-<p>This implements the reference-feedforward power-synchronization control <a class="footnote-reference brackets" href="#har2020" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>.</p>
+<p>This implements the reference-feedforward power-synchronization control <a class="footnote-reference brackets" href="#har2020" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><em>PowerSynchronizationControllerCfg</em></a>) – Configuration object.</p>
@@ -1716,7 +1717,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="har2020" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">10</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">10</a><span class="fn-bracket">]</span></span>
 <p>Harnefors, Rahman, Hinkkanen, Routimo, “Reference-feedforward
 power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <a class="reference external" href="https://doi.org/10.1109/TPEL.2020.2970991">https://doi.org/10.1109/TPEL.2020.2970991</a></p>
@@ -1828,7 +1829,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceObserverBasedGridFormingController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverBasedGridFormingController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="Link to this definition">#</a></dt>
 <dd><p>Sequence-separated disturbance-observer-based grid-forming controller.</p>
 <p>This implements the grid-forming mode of the control method described in
-<a class="footnote-reference brackets" href="#maa2026b" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>, with transparent current control. The positive-sequence active power
+<a class="footnote-reference brackets" href="#maa2026b" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>, with transparent current control. The positive-sequence active power
 and converter-voltage magnitude are controlled, while the negative-sequence
 converter voltage is suppressed. The disturbance observer estimates the positive-
 and negative-sequence grid voltages. The active-power reference is limited to a
@@ -1851,7 +1852,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="maa2026b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">11</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">11</a><span class="fn-bracket">]</span></span>
 <p>Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
 “Disturbance-observer-based grid-forming control for unbalanced grids,” 2026,
 <a class="reference external" href="https://arxiv.org/abs/2608.11857">https://arxiv.org/abs/2608.11857</a></p>

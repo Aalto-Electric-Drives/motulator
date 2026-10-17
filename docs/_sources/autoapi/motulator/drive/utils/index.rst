@@ -1212,7 +1212,7 @@ Package Contents
    Plot example figures with selectable subplots.
 
    :param res: Simulation results.
-   :type res: SimulationResults
+   :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
    :type base: BaseValues, optional
@@ -1257,7 +1257,7 @@ Package Contents
    Plot DC bus and grid-side waveforms.
 
    :param res: Should contain the simulated data.
-   :type res: SimulationResults
+   :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms.
    :type base: BaseValues, optional
    :param t_lims: Time axis limits. If None, uses full time range.
@@ -1428,7 +1428,7 @@ Package Contents
    Plot stator voltage and current waveforms.
 
    :param res: Should contain the simulated data.
-   :type res: SimulationResults
+   :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms.
    :type base: BaseValues, optional
    :param t_lims: Time axis limits. If None, uses full time range.
