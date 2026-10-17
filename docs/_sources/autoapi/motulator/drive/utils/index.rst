@@ -1392,8 +1392,9 @@ Package Contents
                         The map is evaluated along the loci by the lookup function of `data`.
    :type current_loci: tuple[ArrayLike, ArrayLike], optional
    :param axlim_clip: Whether to hide the parts of the surface and wireframe outside the axis view
-                      limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's
-                      3D plotting functions.
+                      limits, defaults to True. The grid is cropped to the x and y limits, and the
+                      flag is passed to the `axlim_clip` argument of matplotlib's 3D plotting
+                      functions.
    :type axlim_clip: bool, optional
    :param surface_cmap: Colormap for the surface plot, defaults to "viridis".
    :type surface_cmap: str, optional

@@ -147,7 +147,7 @@ Create a saturation model, which will be used in the control system.
 
 Compare the saturation model with the measured data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-102
+.. GENERATED FROM PYTHON SOURCE LINES 76-106
 
 .. code-block:: Python
 
@@ -159,7 +159,9 @@ Compare the saturation model with the measured data.
     )
     est_flux_map = est_current_map.invert()
 
-    # Plot the saturation model (surface) and the measured data (points)
+    # Plot the saturation model (surface) and the measured data (points), with the
+    # constant-current loci at the measured currents
+    current_loci = (i_s_dq_map[:, 0].real / base.i, i_s_dq_map[0, :].imag / base.i)
     utils.plot_map(
         est_flux_map,
         "d",
@@ -167,6 +169,7 @@ Compare the saturation model with the measured data.
         lims={"x": (-2, 2), "y": (-2, 2), "z": (0, 1)},
         ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
         raw_data=meas_flux_map,
+        current_loci=current_loci,
     )
     utils.plot_map(
         est_flux_map,
@@ -175,6 +178,7 @@ Compare the saturation model with the measured data.
         lims={"x": (-2, 2), "y": (-2, 2), "z": (-1.5, 1.5)},
         ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
         raw_data=meas_flux_map,
+        current_loci=current_loci,
     )
 
 
@@ -201,11 +205,11 @@ Compare the saturation model with the measured data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-104
+.. GENERATED FROM PYTHON SOURCE LINES 107-108
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-112
+.. GENERATED FROM PYTHON SOURCE LINES 108-116
 
 .. code-block:: Python
 
@@ -224,14 +228,14 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-117
+.. GENERATED FROM PYTHON SOURCE LINES 117-121
 
 Configure the control system. Since the inertia estimate `J` is provided in
 `FluxVectorControllerCfg`, the mechanical-model-based speed observer is used. Integral
 action in flux-vector control is not needed (`alpha_i = 0`) since the speed observer's
 load-torque disturbance estimation provides integral action.
 
-.. GENERATED FROM PYTHON SOURCE LINES 117-128
+.. GENERATED FROM PYTHON SOURCE LINES 121-132
 
 .. code-block:: Python
 
@@ -253,11 +257,11 @@ load-torque disturbance estimation provides integral action.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-130
+.. GENERATED FROM PYTHON SOURCE LINES 133-134
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-138
+.. GENERATED FROM PYTHON SOURCE LINES 134-142
 
 .. code-block:: Python
 
@@ -307,11 +311,11 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 139-140
+.. GENERATED FROM PYTHON SOURCE LINES 143-144
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-144
+.. GENERATED FROM PYTHON SOURCE LINES 144-148
 
 .. code-block:: Python
 
@@ -326,11 +330,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 145-146
+.. GENERATED FROM PYTHON SOURCE LINES 149-150
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-151
+.. GENERATED FROM PYTHON SOURCE LINES 150-155
 
 .. code-block:: Python
 
@@ -351,7 +355,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 152-161
+.. GENERATED FROM PYTHON SOURCE LINES 156-165
 
 .. rubric:: References
 
@@ -366,7 +370,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 10.791 seconds)
+   **Total running time of the script:** (0 minutes 7.553 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_sat_fvc.py:

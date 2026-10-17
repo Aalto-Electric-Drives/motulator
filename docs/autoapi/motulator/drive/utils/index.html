@@ -1643,8 +1643,9 @@ interpreted as <cite>(psi_s_dq, i_s_dq, …)</cite> in SI units, as returned by
 the plot. If given, the loci are drawn on the surface instead of the wireframe.
 The map is evaluated along the loci by the lookup function of <cite>data</cite>.</p></li>
 <li><p><strong>axlim_clip</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to hide the parts of the surface and wireframe outside the axis view
-limits, defaults to True. Passed to the <cite>axlim_clip</cite> argument of matplotlib’s
-3D plotting functions.</p></li>
+limits, defaults to True. The grid is cropped to the x and y limits, and the
+flag is passed to the <cite>axlim_clip</cite> argument of matplotlib’s 3D plotting
+functions.</p></li>
 <li><p><strong>surface_cmap</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – Colormap for the surface plot, defaults to “viridis”.</p></li>
 <li><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
 installation, defaults to False.</p></li>

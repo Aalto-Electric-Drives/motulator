@@ -695,8 +695,9 @@
 <span class="sd">        The map is evaluated along the loci by the lookup function of `data`.</span>
 <span class="sd">    axlim_clip : bool, optional</span>
 <span class="sd">        Whether to hide the parts of the surface and wireframe outside the axis view</span>
-<span class="sd">        limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's</span>
-<span class="sd">        3D plotting functions.</span>
+<span class="sd">        limits, defaults to True. The grid is cropped to the x and y limits, and the</span>
+<span class="sd">        flag is passed to the `axlim_clip` argument of matplotlib's 3D plotting</span>
+<span class="sd">        functions.</span>
 <span class="sd">    surface_cmap : str, optional</span>
 <span class="sd">        Colormap for the surface plot, defaults to "viridis".</span>
 <span class="sd">    latex : bool, optional</span>
@@ -725,6 +726,14 @@
 
     <span class="c1"># Configure axes (this determines x_lims, y_lims internally)</span>
     <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span> <span class="o">=</span> <span class="n">_configure_3d_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">lims</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
+
+    <span class="c1"># Crop the grid to the axis limits, since clipping cuts the surface at its polygons</span>
+    <span class="n">inside</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">axlim_clip</span> <span class="ow">and</span> <span class="n">inside</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">inside</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">inside</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">crop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">s_</span><span class="p">[</span><span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">cols</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">crop</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">crop</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">crop</span><span class="p">]</span>
 
     <span class="c1"># Plot raw data if provided</span>
     <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
