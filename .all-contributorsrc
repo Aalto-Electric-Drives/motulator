@@ -229,6 +229,16 @@
         "data",
         "ideas"
       ]
+    },
+    {
+      "login": "claudiiolima",
+      "name": "Claudio Lima",
+      "avatar_url": "https://avatars.githubusercontent.com/u/20281895?v=4",
+      "profile": "https://github.com/claudiiolima",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
