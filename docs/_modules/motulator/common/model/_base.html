@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -218,6 +219,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -262,6 +264,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -477,13 +480,14 @@
   <h1>Source code for motulator.common.model._base</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Base classes for models."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate._ivp.ivp</span><span class="w"> </span><span class="kn">import</span> <span class="n">OdeResult</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ZOH</span><span class="p">,</span>
     <span class="n">BlankingSignals</span><span class="p">,</span>
@@ -557,6 +561,13 @@
         <span class="o">...</span></div>
 
 
+<div class="viewcode-block" id="Subsystem.compute_ac_port">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.compute_ac_port">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_ac_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACPort</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the AC port for a converter with blocked gates, see `ACPort`."""</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Not available by default</span></div>
+
+
 <div class="viewcode-block" id="Subsystem.init_state_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.init_state_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_state_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -589,6 +600,13 @@
 
     <span class="n">q_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Switching state, held constant over each integration interval</span>
     <span class="n">s_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Current-direction vector at the latest switching instant</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># Gate enable, held constant over each integration interval</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ConverterOutputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Protocol for converter outputs."""</span>
+
+    <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Converter voltage</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Converter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
@@ -599,20 +617,39 @@
 <span class="sd">    the dead time, and a method for setting the switching state `inp.q_c_ab` and the</span>
 <span class="sd">    current-direction vector `inp.s_c_ab` based on the gate and blanking signals from</span>
 <span class="sd">    the PWM model and the phase currents. The format of these is up to the converter</span>
-<span class="sd">    (e.g., complex space vectors in a three-phase converter).</span>
+<span class="sd">    (e.g., complex space vectors in a three-phase converter). When the gates are</span>
+<span class="sd">    blocked (`inp.enabled` is False), the converter voltage is determined by the AC</span>
+<span class="sd">    port of the load `ac_load` and the states of the diodes, see `ACPort`. The</span>
+<span class="sd">    simulation locates the transitions of the diode states as events, using the</span>
+<span class="sd">    margin of the states, and updates the states at the transitions.</span>
 
 <span class="sd">    """</span>
 
     <span class="n">n_legs</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Number of legs</span>
     <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Dead time (s)</span>
+    <span class="n">ac_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># Load providing the AC port for gate blocking</span>
+    <span class="n">margin</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Margin of the diode states, zero at their transition</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConverterInputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Input variables."""</span>
         <span class="o">...</span>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">out</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConverterOutputs</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Output variables."""</span>
+        <span class="o">...</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">set_gate_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set the switching state based on the gate and blanking signals."""</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the gate enable, latching the diode states when the gates are blocked."""</span>
+        <span class="o">...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_diodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update the diode states at a transition."""</span>
         <span class="o">...</span>
 
 
@@ -624,6 +661,8 @@
     <span class="n">t</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">q_c_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
     <span class="n">s_c_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># Only with blocked gates</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">System</span><span class="p">:</span>
@@ -663,6 +702,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="n">subsystems</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="n">connections</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Converter</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Set by the subclasses</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_history</span> <span class="o">=</span> <span class="n">ModelStateHistory</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
             <span class="n">subsystem</span><span class="o">.</span><span class="n">init_state_history</span><span class="p">()</span>
@@ -687,6 +727,13 @@
             <span class="n">subsystem</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">))</span>
+        <span class="c1"># The voltage of a converter with blocked gates depends on the outputs of its</span>
+        <span class="c1"># load, which is evaluated after the converter</span>
+        <span class="k">for</span> <span class="n">converter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+                <span class="n">converter</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">converter</span><span class="p">]:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Compute complete state derivative list for the solver."""</span>
@@ -705,6 +752,18 @@
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">extend_state_history</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_outputs</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">:</span> <span class="n">OdeResult</span><span class="p">,</span> <span class="n">fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Evaluate `fcn` at the solution points, restoring the final state after."""</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
+        <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fcn</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span>
+
 
 <div class="viewcode-block" id="Model">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model">[docs]</a>
@@ -717,7 +776,9 @@
 <span class="sd">    model includes the dead time `converter.t_d`, and the computational delay is sized</span>
 <span class="sd">    according to the number of legs `converter.n_legs`. The control systems of this</span>
 <span class="sd">    package compensate for a computational delay of one sampling period, i.e.,</span>
-<span class="sd">    `delay=1` with double update and `delay=2` with single update.</span>
+<span class="sd">    `delay=1` with double update and `delay=2` with single update. The control system</span>
+<span class="sd">    can also block the gates of the converter, see `ControlSystem.set_enable`, in</span>
+<span class="sd">    which case the converter voltage is determined by the AC port of its load.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -770,6 +831,7 @@
             <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">connections</span><span class="p">,</span> <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">):</span> <span class="p">(</span><span class="n">dc_bus</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">)}</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">:</span> <span class="n">C</span> <span class="o">=</span> <span class="n">converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converters</span> <span class="o">=</span> <span class="p">[</span><span class="n">converter</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus</span> <span class="o">=</span> <span class="n">dc_bus</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">converter</span><span class="o">.</span><span class="n">n_legs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="o">=</span> <span class="n">single_update</span>
@@ -787,7 +849,10 @@
 <span class="sd">        The sampling period consists of one half carrier period with double update</span>
 <span class="sd">        and of two with single update. The duty ratios pass through the</span>
 <span class="sd">        computational delay once per half carrier period, and the PWM model is</span>
-<span class="sd">        called for each half carrier period.</span>
+<span class="sd">        called for each half carrier period. If the gates of the converter are</span>
+<span class="sd">        blocked (`converter.inp.enabled` is False), the duty ratios still pass</span>
+<span class="sd">        through the delay and the PWM model, but the gate signals are zero for the</span>
+<span class="sd">        whole sampling period.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -808,6 +873,9 @@
 <span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="k">else</span> <span class="mi">1</span>  <span class="c1"># Half carrier periods per sampling period</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">d_abc</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="n">off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">n_legs</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">T_s</span><span class="p">]),</span> <span class="n">off</span><span class="p">,</span> <span class="n">off</span>
         <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
         <span class="n">q_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
         <span class="n">b_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
@@ -819,9 +887,23 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">:</span> <span class="n">OdeResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Save the solution and the switching state."""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">q_c_ab</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">s_c_ab</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">))</span></div>
-</div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_save_converter_history</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_converter_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">:</span> <span class="n">OdeResult</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">System</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Save the switching state, the gate enable, and the blocked voltage."""</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">inp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">inp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">q_c_ab</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">s_c_ab</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">enabled</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="c1"># The voltage of a converter with blocked gates varies within the integration</span>
+        <span class="c1"># interval, so it is evaluated at the solution points of the system. Otherwise</span>
+        <span class="c1"># the voltage is derived from the switching state in the post-processing.</span>
+        <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="p">[</span><span class="nb">complex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)]</span> <span class="o">*</span> <span class="n">n</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">_evaluate_outputs</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">u_c_ab</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">)</span></div>
 
 
 
@@ -881,6 +963,8 @@
         <span class="c1"># the states (e.g., the converter voltage on the DC-bus voltage).</span>
         <span class="n">ts</span><span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">]</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">q_c_ab</span><span class="p">)</span>
         <span class="n">ts</span><span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">]</span><span class="o">.</span><span class="n">s_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">s_c_ab</span><span class="p">)</span>
+        <span class="n">ts</span><span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">]</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">enabled</span><span class="p">)</span>
+        <span class="n">ts</span><span class="p">[</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="p">]</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">_history</span><span class="o">.</span><span class="n">u_c_ab</span><span class="p">)</span>
         <span class="n">pass_inputs</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
             <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span><span class="o">.</span><span class="n">compute_zoh_input_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">)</span>

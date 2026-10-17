@@ -170,6 +170,11 @@ Package Contents
    be used with different models, measurements, feedback signals, and reference
    signals. The class provides methods for saving, post-processing, and clearing data.
 
+   The gates of the converter can be blocked with `set_enable`. While the gates are
+   blocked, the control system runs its control loop with `compute_standby_output`
+   in place of `compute_output`, so that its observers keep tracking the system,
+   and the model holds the switches open.
+
 
 
 
@@ -235,10 +240,60 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_standby_output(fbk)
+      :abstractmethod:
+
+
+      
+      Compute controller output while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_duty_ratios(ref)
 
       
       Extract duty ratios from the reference signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_enable()
+
+      
+      Evaluate the gate enable at the controller time.
 
 
 
@@ -360,6 +415,34 @@ Package Contents
       
       Save a single timestep of data.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_enable(enable)
+
+      
+      Set the gate enable.
+
+      :param enable: Gate enable, constant or a function of time, evaluated at the sampling
+                     instants. While the gates are blocked (False), the control system
+                     computes its standby output, see `compute_standby_output`.
+      :type enable: bool | Callable[[float], bool]
 
 
 

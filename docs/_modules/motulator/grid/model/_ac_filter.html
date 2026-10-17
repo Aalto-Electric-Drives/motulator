@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -218,6 +219,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -262,6 +264,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -489,7 +492,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span><span class="p">,</span> <span class="n">Sensor</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span><span class="p">,</span> <span class="n">complex2line</span><span class="p">,</span> <span class="n">empty_array</span>
 
 
@@ -599,6 +602,15 @@
         <span class="n">R_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_g</span>
         <span class="n">d_i_c_ab</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">-</span> <span class="n">inp</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">-</span> <span class="n">R_t</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">L_t</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">d_i_c_ab</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LFilter.compute_ac_port">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.compute_ac_port">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_ac_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACPort</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the AC port for a converter with blocked gates, see `ACPort`."""</span>
+        <span class="n">state</span><span class="p">,</span> <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_g</span><span class="p">)</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span>
+        <span class="k">return</span> <span class="n">ACPort</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="LFilter.meas_currents">
@@ -774,6 +786,15 @@
         <span class="n">d_u_f_ab</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span> <span class="o">-</span> <span class="n">state</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_f</span>
         <span class="n">d_i_g_ab</span> <span class="o">=</span> <span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span> <span class="o">-</span> <span class="n">inp</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">-</span> <span class="n">R_t</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_g_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">L_t</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">d_i_c_ab</span><span class="p">,</span> <span class="n">d_u_f_ab</span><span class="p">,</span> <span class="n">d_i_g_ab</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="LCLFilter.compute_ac_port">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.compute_ac_port">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_ac_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACPort</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the AC port for a converter with blocked gates, see `ACPort`."""</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_fc</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span>
+        <span class="k">return</span> <span class="n">ACPort</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_fc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LCLFilter.meas_currents">

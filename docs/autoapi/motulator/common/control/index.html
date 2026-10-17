@@ -203,6 +203,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -223,6 +224,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -267,6 +269,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -535,12 +538,15 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem"><code class="docutils literal notranslate"><span class="pre">ControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.clear_data"><code class="docutils literal notranslate"><span class="pre">ControlSystem.clear_data()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_duty_ratios"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_duty_ratios()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_enable"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_measurement()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">ControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.run_control_loop"><code class="docutils literal notranslate"><span class="pre">ControlSystem.run_control_loop()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.save"><code class="docutils literal notranslate"><span class="pre">ControlSystem.save()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.set_enable"><code class="docutils literal notranslate"><span class="pre">ControlSystem.set_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ControlSystem.update()</span></code></a></li>
 </ul>
 </li>
@@ -699,6 +705,10 @@ complex vectors,” IEEE Trans. Ind. Appl., 2000, <a class="reference external" 
 <p>This class defines the interface for control systems. It is a generic class that can
 be used with different models, measurements, feedback signals, and reference
 signals. The class provides methods for saving, post-processing, and clearing data.</p>
+<p>The gates of the converter can be blocked with <cite>set_enable</cite>. While the gates are
+blocked, the control system runs its control loop with <cite>compute_standby_output</cite>
+in place of <cite>compute_output</cite>, so that its observers keep tracking the system,
+and the model holds the switches open.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.clear_data">
 <span class="sig-name descname"><span class="pre">clear_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.clear_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.clear_data" title="Link to this definition">#</a></dt>
@@ -725,6 +735,20 @@ signals. The class provides methods for saving, post-processing, and clearing da
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.compute_standby_output">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.compute_standby_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute controller output while the gates are blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>Fbk</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Ref</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_duty_ratios">
 <span class="sig-name descname"><span class="pre">get_duty_ratios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_duty_ratios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_duty_ratios" title="Link to this definition">#</a></dt>
 <dd><p>Extract duty ratios from the reference signals.</p>
@@ -734,6 +758,17 @@ signals. The class provides methods for saving, post-processing, and clearing da
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)">collections.abc.Sequence</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_enable">
+<span class="sig-name descname"><span class="pre">get_enable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_enable" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the gate enable at the controller time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -801,6 +836,22 @@ signals. The class provides methods for saving, post-processing, and clearing da
 <li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>signal_groups</strong> (<em>Any</em>)</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.set_enable">
+<span class="sig-name descname"><span class="pre">set_enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.set_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.set_enable" title="Link to this definition">#</a></dt>
+<dd><p>Set the gate enable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enable</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>]</em>) – Gate enable, constant or a function of time, evaluated at the sampling
+instants. While the gates are blocked (False), the control system
+computes its standby output, see <cite>compute_standby_output</cite>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1310,12 +1361,15 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem"><code class="docutils literal notranslate"><span class="pre">ControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.clear_data"><code class="docutils literal notranslate"><span class="pre">ControlSystem.clear_data()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_duty_ratios"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_duty_ratios()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_enable"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_measurement()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">ControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.run_control_loop"><code class="docutils literal notranslate"><span class="pre">ControlSystem.run_control_loop()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.save"><code class="docutils literal notranslate"><span class="pre">ControlSystem.save()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.set_enable"><code class="docutils literal notranslate"><span class="pre">ControlSystem.set_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ControlSystem.update()</span></code></a></li>
 </ul>
 </li>

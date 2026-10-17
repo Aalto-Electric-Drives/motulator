@@ -198,6 +198,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -218,6 +219,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -262,6 +264,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -492,11 +495,18 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ACPort</span><span class="p">,</span>
+    <span class="n">diode_margin</span><span class="p">,</span>
+    <span class="n">leg_voltages</span><span class="p">,</span>
+    <span class="n">update_diodes</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">abc2complex</span><span class="p">,</span>
     <span class="n">complex2abc</span><span class="p">,</span>
+    <span class="n">complex2line</span><span class="p">,</span>
     <span class="n">empty_array</span><span class="p">,</span>
     <span class="n">get_value</span><span class="p">,</span>
 <span class="p">)</span>
@@ -509,6 +519,7 @@
 
     <span class="n">q_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Switching state</span>
     <span class="n">s_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Current-direction vector at the latest switching instant</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Gate enable</span>
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># DC-bus voltage (V) from a DC-bus model, if connected</span>
 
@@ -536,6 +547,14 @@
 <span class="sd">    determined at the latest switching instant. The DC-bus voltage is either constant</span>
 <span class="sd">    or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and</span>
 <span class="sd">    `Model`).</span>
+
+<span class="sd">    When the gates are blocked (`inp.enabled` is False), all the switches are open, and</span>
+<span class="sd">    the antiparallel diodes conduct according to the currents: a leg carrying current</span>
+<span class="sd">    is clamped to a rail, and a leg without current floats at the voltage keeping its</span>
+<span class="sd">    current at zero. The diode states are updated at their transitions, which the</span>
+<span class="sd">    simulation locates as events, see `Simulation`. The voltage is computed from the</span>
+<span class="sd">    AC port of the load `ac_load`, see `ACPort`, and the threshold voltage is included</span>
+<span class="sd">    in the diode drops.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -573,6 +592,38 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="n">u_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set by the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Diode states of the legs with blocked gates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># Margin of the diode states, see `diode_margin`</span>
+
+<div class="viewcode-block" id="VoltageSourceConverter.set_enable">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.set_enable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the gate enable, latching the diode states when the gates are blocked."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="o">=</span> <span class="n">update_diodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rail_voltage</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ac_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACPort</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get the AC port of the load."""</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span><span class="o">.</span><span class="n">compute_ac_port</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Gate blocking requires a load with an AC port"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">port</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rail_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Voltage (V) between the rails, including the drops of the diodes."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span>
+
+<div class="viewcode-block" id="VoltageSourceConverter.update_diodes">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.update_diodes">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_diodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Update the diode states at a transition, see `update_diodes`."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="o">=</span> <span class="n">update_diodes</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rail_voltage</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span>
+        <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="VoltageSourceConverter.set_gate_signals">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.set_gate_signals">[docs]</a>
@@ -587,7 +638,12 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.compute_internal_dc_current">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the internal DC current (A)."""</span>
-        <span class="k">return</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">))</span></div>
+        <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
+        <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># A single state, in the simulation</span>
+            <span class="k">return</span> <span class="n">i_dc</span>
+        <span class="c1"># With blocked gates, the diodes rectify the phase currents</span>
+        <span class="n">i_dc_diodes</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">complex2abc</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span> <span class="n">i_dc</span><span class="p">,</span> <span class="n">i_dc_diodes</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.set_outputs">
@@ -601,7 +657,15 @@
                 <span class="s2">"The DC-bus voltage must be given, unless the converter is fed from a "</span>
                 <span class="s2">"DC-bus model"</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rail_voltage</span><span class="p">()</span>
+            <span class="n">u_abc</span> <span class="o">=</span> <span class="n">leg_voltages</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">u_abc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="n">diode_margin</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">,</span> <span class="n">u_abc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.meas_dc_voltage">
@@ -611,6 +675,13 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc_sensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">u_dc_sensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="VoltageSourceConverter.meas_voltages">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.meas_voltages">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">meas_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Measure the converter line-to-line voltages u_ab and u_bc (V)."""</span>
+        <span class="k">return</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="VoltageSourceConverter.rhs">
@@ -640,6 +711,7 @@
     <span class="n">u_dc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">q_c_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">s_c_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">i_dc_int</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
@@ -651,7 +723,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_zoh_input_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute zero-order hold derived signals."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">-</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">u_th</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_c_ab</span>
+        <span class="c1"># The voltage with blocked gates is saved by the model</span>
+        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">-</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">u_th</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_c_ab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_c_ab</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_input_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Process input time series."""</span>

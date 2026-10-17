@@ -171,6 +171,30 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
@@ -386,8 +410,8 @@ Module Contents
 
    This class implements the parts common to the drive control systems: the feedback
    voltages, the modulation, and the speed reference. Subclasses implement
-   `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`
-   and `_compute_inner_output`.
+   `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`,
+   `_compute_inner_output`, and `_compute_inner_standby_output`.
 
    The inner controller gets the realized voltage of the ongoing sampling period for
    its observer, while the feedback voltage `u_s` for the control laws is the realized
@@ -398,6 +422,12 @@ Module Contents
    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
    angle is not advanced, which is used if the controller takes the delays into
    account itself, e.g., in a direct discrete-time design.
+
+   While the gates are blocked (see `set_enable`), the feedback voltages are the
+   measured converter voltage, so the observers keep tracking the machine, and the
+   inner controller computes its standby output: its regulators track the measured
+   operating point, from which the control continues when the gates are released,
+   while the speed controller is not updated.
 
    :param pwm: Pulse-width modulator.
    :type pwm: PWM
@@ -431,6 +461,30 @@ Module Contents
 
       
       Compute controller output based on feedback.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute controller output while the gates are blocked.
 
 
 
@@ -717,6 +771,30 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
@@ -932,6 +1010,30 @@ Module Contents
 
       
       Calculate references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
 
 
 

@@ -170,6 +170,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(u_c_ab, meas)
 
       
@@ -433,6 +457,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(u_c_ab, meas)
 
       
@@ -645,6 +693,30 @@ Package Contents
 
       
       Compute controller outputs based on feedback.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute controller output while the gates are blocked.
 
 
 
@@ -963,6 +1035,30 @@ Package Contents
 
       
       Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
 
 
 
@@ -1598,6 +1694,32 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_standby_output(fbk)
+      :abstractmethod:
+
+
+      
+      Compute references while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(u_c_ab, meas)
 
       
@@ -1761,6 +1883,30 @@ Package Contents
 
       
       Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
 
 
 

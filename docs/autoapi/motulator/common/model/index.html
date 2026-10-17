@@ -203,6 +203,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -223,6 +224,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -267,6 +269,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -527,6 +530,7 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ACPort"><code class="docutils literal notranslate"><span class="pre">ACPort</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CompositeModel"><code class="docutils literal notranslate"><span class="pre">CompositeModel</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CompositeModel.save"><code class="docutils literal notranslate"><span class="pre">CompositeModel.save()</span></code></a></li>
@@ -570,6 +574,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem"><code class="docutils literal notranslate"><span class="pre">Subsystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">Subsystem.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">Subsystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.extend_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.extend_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.init_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.init_state_history()</span></code></a></li>
@@ -603,43 +608,46 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.CarrierComparison" title="motulator.common.model.CarrierComparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.ACPort" title="motulator.common.model.ACPort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACPort</span></code></a></p></td>
+<td><p>Relation between the terminal current and voltage of a load.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.CarrierComparison" title="motulator.common.model.CarrierComparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></p></td>
 <td><p>Carrier comparison.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeModel</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeModel</span></code></a></p></td>
 <td><p>Composite of models sharing subsystems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.CompositeModelTimeSeries" title="motulator.common.model.CompositeModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeModelTimeSeries</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.CompositeModelTimeSeries" title="motulator.common.model.CompositeModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeModelTimeSeries</span></code></a></p></td>
 <td><p>Time series of the simulation results of a composite model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBus</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBus</span></code></a></p></td>
 <td><p>Capacitive DC bus feeding converters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.DiodeBridgeDCBus" title="motulator.common.model.DiodeBridgeDCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridgeDCBus</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.DiodeBridgeDCBus" title="motulator.common.model.DiodeBridgeDCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridgeDCBus</span></code></a></p></td>
 <td><p>DC bus fed from a six-pulse diode bridge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code></a></p></td>
 <td><p>Base class for system models with a converter driven by a control system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.ModelTimeSeries" title="motulator.common.model.ModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.ModelTimeSeries" title="motulator.common.model.ModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></p></td>
 <td><p>Time series of the simulation results.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
 <td><p>Sensor with a gain error, an offset, and additive Gaussian noise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
 <td><p>Container for simulation results.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.SolverCfg" title="motulator.common.model.SolverCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SolverCfg" title="motulator.common.model.SolverCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverCfg</span></code></a></p></td>
 <td><p>Solver configuration parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Subsystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Subsystem</span></code></a></p></td>
 <td><p>Protocol defining the interface for all subsystems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a></p></td>
 <td><p>Base class for subsystem time series.</p></td>
 </tr>
 </tbody>
@@ -648,6 +656,25 @@
 </section>
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.model.ACPort">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">ACPort</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_port.html#ACPort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ACPort" title="Link to this definition">#</a></dt>
+<dd><p>Relation between the terminal current and voltage of a load.</p>
+<p>The current derivative of the load at the converter terminals is <code class="docutils literal notranslate"><span class="pre">di/dt</span> <span class="pre">=</span> <span class="pre">Y</span> <span class="pre">&#64;</span> <span class="pre">(u</span>
+<span class="pre">-</span> <span class="pre">e)</span></code> in stationary coordinates, where <cite>u</cite> is the converter voltage. The matrix
+<cite>Y</cite> acts on the real and imaginary parts of the space vectors. The converter uses
+the port to compute its voltage when its gates are blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Current (A).</p></li>
+<li><p><strong>e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Voltage (V) at which the current derivative is zero.</p></li>
+<li><p><strong>Y</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>, </em><em>2</em><em>)</em>) – Inverse differential inductance matrix (1/H).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.CarrierComparison">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CarrierComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2**12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CarrierComparison" title="Link to this definition">#</a></dt>
@@ -933,7 +960,9 @@ vector <cite>s_c_ab</cite>, which are held constant over each integration interv
 model includes the dead time <cite>converter.t_d</cite>, and the computational delay is sized
 according to the number of legs <cite>converter.n_legs</cite>. The control systems of this
 package compensate for a computational delay of one sampling period, i.e.,
-<cite>delay=1</cite> with double update and <cite>delay=2</cite> with single update.</p>
+<cite>delay=1</cite> with double update and <cite>delay=2</cite> with single update. The control system
+can also block the gates of the converter, see <cite>ControlSystem.set_enable</cite>, in
+which case the converter voltage is determined by the AC port of its load.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -963,7 +992,10 @@ update, <cite>delay=2</cite> loads the duty ratios at the next sampling instant 
 <p>The sampling period consists of one half carrier period with double update
 and of two with single update. The duty ratios pass through the
 computational delay once per half carrier period, and the PWM model is
-called for each half carrier period.</p>
+called for each half carrier period. If the gates of the converter are
+blocked (<cite>converter.inp.enabled</cite> is False), the duty ratios still pass
+through the delay and the PWM model, but the gate signals are zero for the
+whole sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1172,6 +1204,17 @@ representations of the subsystem. The state history is a dict of lists, keyed by
 the names of the state fields. The model initializes it by <cite>init_state_history</cite>
 and extends it by <cite>extend_state_history</cite>.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Subsystem.compute_ac_port">
+<span class="sig-name descname"><span class="pre">compute_ac_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.compute_ac_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.compute_ac_port" title="Link to this definition">#</a></dt>
+<dd><p>Compute the AC port for a converter with blocked gates, see <cite>ACPort</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>motulator.common.model._ac_port.ACPort | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Subsystem.create_time_series">
 <span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.create_time_series" title="Link to this definition">#</a></dt>
 <dd><p>Create time-series representation of this subsystem.</p>
@@ -1353,6 +1396,7 @@ and extends it by <cite>extend_state_history</cite>.</p>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ACPort"><code class="docutils literal notranslate"><span class="pre">ACPort</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CompositeModel"><code class="docutils literal notranslate"><span class="pre">CompositeModel</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CompositeModel.save"><code class="docutils literal notranslate"><span class="pre">CompositeModel.save()</span></code></a></li>
@@ -1396,6 +1440,7 @@ and extends it by <cite>extend_state_history</cite>.</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem"><code class="docutils literal notranslate"><span class="pre">Subsystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">Subsystem.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">Subsystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.extend_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.extend_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.init_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.init_state_history()</span></code></a></li>

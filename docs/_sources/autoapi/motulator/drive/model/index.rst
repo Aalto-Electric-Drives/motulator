@@ -739,6 +739,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: compute_ac_port()
+
+      
+      Compute the AC port for a converter with blocked gates, see `ACPort`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: compute_outputs(state, inp)
 
       
@@ -1154,6 +1178,30 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: compute_ac_port()
+
+      
+      Compute the AC port for a converter with blocked gates, see `ACPort`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: create_time_series(t)
 
@@ -2074,6 +2122,30 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: compute_ac_port()
+
+      
+      Compute the AC port for a converter with blocked gates, see `ACPort`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: compute_outputs(state, inp)
 
       
@@ -2700,6 +2772,14 @@ Package Contents
    or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
    `Model`).
 
+   When the gates are blocked (`inp.enabled` is False), all the switches are open, and
+   the antiparallel diodes conduct according to the currents: a leg carrying current
+   is clamped to a rail, and a leg without current floats at the voltage keeping its
+   current at zero. The diode states are updated at their transitions, which the
+   simulation locates as events, see `Simulation`. The voltage is computed from the
+   AC port of the load `ac_load`, see `ACPort`, and the threshold voltage is included
+   in the diode drops.
+
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
                 be fed from a DC-bus model.
    :type u_dc: float, optional
@@ -2803,10 +2883,58 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: meas_voltages()
+
+      
+      Measure the converter line-to-line voltages u_ab and u_bc (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: rhs(t)
 
       
       Default empty implementation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_enable(enabled)
+
+      
+      Set the gate enable, latching the diode states when the gates are blocked.
 
 
 
@@ -2855,6 +2983,30 @@ Package Contents
 
       
       Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update_diodes()
+
+      
+      Update the diode states at a transition, see `update_diodes`.
 
 
 

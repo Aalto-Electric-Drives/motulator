@@ -205,6 +205,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -225,6 +226,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -269,6 +271,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -528,6 +531,7 @@
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gate-blocking">Gate Blocking</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carrier-comparison">Carrier Comparison</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#switching-cycle-averaging">Switching-Cycle Averaging</a></li>
 </ul>
@@ -582,6 +586,15 @@
 <div class="math notranslate nohighlight" id="equation-dc-current">
 <span class="eqno">(2)<a class="headerlink" href="#equation-dc-current" title="Link to this equation">#</a></span>\[    \idc' = \qA \iA + \qB \iB + \qC \iC\]</div>
 <p>The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC currents <span class="math notranslate nohighlight">\(\idc'\)</span> of all the converters are subtracted from the external current <span class="math notranslate nohighlight">\(\idc\)</span>. The models of the converter systems sharing the DC bus are combined using the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.CompositeModel</span></code></a> class, see <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc.html"><span class="doc">2.2-kW IPMSM, active front end, CVC</span></a>. The DC bus can also be fed from a diode bridge rectifier, see <a class="reference internal" href="../drive/diode_bridge.html"><span class="doc">Six-Pulse Diode Bridge</span></a>.</p>
+</section>
+<section id="gate-blocking">
+<h2>Gate Blocking<a class="headerlink" href="#gate-blocking" title="Link to this heading">#</a></h2>
+<p>The control system can block the gates of the converter, see <code class="docutils literal notranslate"><span class="pre">set_enable</span></code> of <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ControlSystem</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ctrl</span><span class="o">.</span><span class="n">set_enable</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">0.05</span><span class="p">)</span>  <span class="c1"># Gates blocked before 0.05 s</span>
+</pre></div>
+</div>
+<p>While the gates are blocked, all the switches are open, and the antiparallel diodes conduct according to the instantaneous phase currents. A leg carrying current is clamped to the negative rail if the current flows out of the converter and to the positive rail otherwise. A leg without current floats at the voltage that keeps its current at zero, as long as this voltage is between the rails; otherwise, its diode starts to conduct. Hence, a spinning machine coasts at open circuit if its voltage is below the DC-bus voltage, and it feeds the DC bus through the diodes otherwise, as does the grid when the DC bus is charged at the start-up. The threshold voltage <span class="math notranslate nohighlight">\(\uth\)</span> is included in the diode drops. The floating leg voltages are computed from the AC port of the load, i.e., the relation <span class="math notranslate nohighlight">\(\mathrm{d}\boldsymbol{i}/\mathrm{d}t = \mathbf{Y}(\boldsymbol{u} - \boldsymbol{e})\)</span> between the terminal current and voltage, which the machine and filter models provide, see <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.ACPort" title="motulator.common.model.ACPort"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.ACPort</span></code></a>. The machine models with core losses do not provide the port.</p>
+<p>The switching state <code class="docutils literal notranslate"><span class="pre">q_c_ab</span></code> is zero while the gates are blocked, and the converter voltage <code class="docutils literal notranslate"><span class="pre">u_c_ab</span></code> is saved at the solution points of the solver. The gate enable is available as <code class="docutils literal notranslate"><span class="pre">enabled</span></code> in the converter time series and in the reference signals of the control system. See <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html"><span class="doc">2.2-kW IPMSM, blocked gates, CVC</span></a> and <a class="reference internal" href="../../grid_examples/grid_following/plot_10kva_startup_gfl.html"><span class="doc">10-kVA, start-up, GFL</span></a> for examples.</p>
 </section>
 <section id="carrier-comparison">
 <h2>Carrier Comparison<a class="headerlink" href="#carrier-comparison" title="Link to this heading">#</a></h2>
@@ -671,6 +684,7 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gate-blocking">Gate Blocking</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carrier-comparison">Carrier Comparison</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#switching-cycle-averaging">Switching-Cycle Averaging</a></li>
 </ul>

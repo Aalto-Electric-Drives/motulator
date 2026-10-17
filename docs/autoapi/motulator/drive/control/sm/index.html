@@ -203,6 +203,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -223,6 +224,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -267,6 +269,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -533,6 +536,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
@@ -545,6 +549,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.set_speed_ref()</span></code></a></li>
@@ -557,6 +562,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
@@ -566,6 +572,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.get_feedback"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.post_process"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.update()</span></code></a></li>
@@ -823,6 +830,20 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController.compute_standby_output">
+<span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController.compute_standby_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references while the gates are blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._sm_observers.ObserverOutputs</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.drive.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController.get_feedback">
 <span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
@@ -959,8 +980,8 @@ reference is not advanced (<cite>k_comp = 0</cite> in <cite>CurrentVectorControl
 <p>Base class for drive control systems.</p>
 <p>This class implements the parts common to the drive control systems: the feedback
 voltages, the modulation, and the speed reference. Subclasses implement
-<cite>get_measurement</cite>, <cite>update</cite>, <cite>post_process</cite>, and the hooks <cite>_get_inner_feedback</cite>
-and <cite>_compute_inner_output</cite>.</p>
+<cite>get_measurement</cite>, <cite>update</cite>, <cite>post_process</cite>, and the hooks <cite>_get_inner_feedback</cite>,
+<cite>_compute_inner_output</cite>, and <cite>_compute_inner_standby_output</cite>.</p>
 <p>The inner controller gets the realized voltage of the ongoing sampling period for
 its observer, while the feedback voltage <cite>u_s</cite> for the control laws is the realized
 voltage averaged over the previous and the ongoing sampling periods. Before the
@@ -970,6 +991,11 @@ computational delay of one sampling period and the delay of half a sampling peri
 caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the
 angle is not advanced, which is used if the controller takes the delays into
 account itself, e.g., in a direct discrete-time design.</p>
+<p>While the gates are blocked (see <cite>set_enable</cite>), the feedback voltages are the
+measured converter voltage, so the observers keep tracking the machine, and the
+inner controller computes its standby output: its regulators track the measured
+operating point, from which the control continues when the gates are released,
+while the speed controller is not updated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -991,6 +1017,20 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute controller output based on feedback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.drive.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem.compute_standby_output">
+<span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem.compute_standby_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute controller output while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
@@ -1196,6 +1236,20 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.FluxVectorController.compute_standby_output">
+<span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#FluxVectorController.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxVectorController.compute_standby_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references while the gates are blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._sm_observers.ObserverOutputs</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.drive.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.FluxVectorController.get_feedback">
 <span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#FluxVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
@@ -1330,6 +1384,20 @@ decoupling between the stator flux and torque channels are used <a class="footno
 <dt class="sig sig-object py" id="motulator.drive.control.sm.ObserverBasedVHzController.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#ObserverBasedVHzController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ObserverBasedVHzController.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Calculate references.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._sm_observers.ObserverOutputs</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.drive.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.ObserverBasedVHzController.compute_standby_output">
+<span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#ObserverBasedVHzController.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ObserverBasedVHzController.compute_standby_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute references while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._sm_observers.ObserverOutputs</em>)</p>
@@ -2525,6 +2593,7 @@ and flux-vector control).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
@@ -2537,6 +2606,7 @@ and flux-vector control).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.set_speed_ref()</span></code></a></li>
@@ -2549,6 +2619,7 @@ and flux-vector control).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
@@ -2558,6 +2629,7 @@ and flux-vector control).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.get_feedback"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.post_process"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.ObserverBasedVHzController.update"><code class="docutils literal notranslate"><span class="pre">ObserverBasedVHzController.update()</span></code></a></li>

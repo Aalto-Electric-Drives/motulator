@@ -32,6 +32,7 @@ Classes
 
 .. autoapisummary::
 
+   motulator.common.model.ACPort
    motulator.common.model.CarrierComparison
    motulator.common.model.CompositeModel
    motulator.common.model.CompositeModelTimeSeries
@@ -49,6 +50,40 @@ Classes
 
 Package Contents
 ----------------
+
+.. py:class:: ACPort
+
+   
+   Relation between the terminal current and voltage of a load.
+
+   The current derivative of the load at the converter terminals is ``di/dt = Y @ (u
+   - e)`` in stationary coordinates, where `u` is the converter voltage. The matrix
+   `Y` acts on the real and imaginary parts of the space vectors. The converter uses
+   the port to compute its voltage when its gates are blocked.
+
+   :param i: Current (A).
+   :type i: complex
+   :param e: Voltage (V) at which the current derivative is zero.
+   :type e: complex
+   :param Y: Inverse differential inductance matrix (1/H).
+   :type Y: ndarray, shape (2, 2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: CarrierComparison(N = 2**12, t_d = 0.0)
 
@@ -521,7 +556,9 @@ Package Contents
    model includes the dead time `converter.t_d`, and the computational delay is sized
    according to the number of legs `converter.n_legs`. The control systems of this
    package compensate for a computational delay of one sampling period, i.e.,
-   `delay=1` with double update and `delay=2` with single update.
+   `delay=1` with double update and `delay=2` with single update. The control system
+   can also block the gates of the converter, see `ControlSystem.set_enable`, in
+   which case the converter voltage is determined by the AC port of its load.
 
    :param converter: Converter model.
    :type converter: Converter
@@ -572,7 +609,10 @@ Package Contents
       The sampling period consists of one half carrier period with double update
       and of two with single update. The duty ratios pass through the
       computational delay once per half carrier period, and the PWM model is
-      called for each half carrier period.
+      called for each half carrier period. If the gates of the converter are
+      blocked (`converter.inp.enabled` is False), the duty ratios still pass
+      through the delay and the PWM model, but the gate signals are zero for the
+      whole sampling period.
 
       :param T_s: Sampling period (s).
       :type T_s: float
@@ -907,6 +947,30 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: compute_ac_port()
+
+      
+      Compute the AC port for a converter with blocked gates, see `ACPort`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
    .. py:method:: create_time_series(t)
 

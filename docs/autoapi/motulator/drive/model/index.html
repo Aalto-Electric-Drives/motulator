@@ -203,6 +203,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../related_packages.html">Related Packages</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
@@ -223,6 +224,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
@@ -267,6 +269,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_lcl_gfl.html">10-kVA, LCL filter, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_dc_bus_gfl.html">10-kVA, DC bus, GFL</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_gfl.html">10-kVA, GFL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../grid_examples/grid_following/plot_10kva_startup_gfl.html">10-kVA, start-up, GFL</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../grid_examples/grid_forming/index.html">Grid-Forming Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -559,6 +562,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine"><code class="docutils literal notranslate"><span class="pre">InductionMachine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">InductionMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">InductionMachine.meas_currents()</span></code></a></li>
@@ -587,6 +591,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">LCFilter.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.create_time_series"><code class="docutils literal notranslate"><span class="pre">LCFilter.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.meas_capacitor_voltages"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_capacitor_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.meas_currents"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_currents()</span></code></a></li>
@@ -633,6 +638,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.meas_currents()</span></code></a></li>
@@ -667,9 +673,12 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.compute_internal_dc_current()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.create_time_series"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.rhs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.update_diodes"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.update_diodes()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1147,6 +1156,17 @@ drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="htt
 </aside>
 </aside>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.InductionMachine.compute_ac_port">
+<span class="sig-name descname"><span class="pre">compute_ac_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#InductionMachine.compute_ac_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.InductionMachine.compute_ac_port" title="Link to this definition">#</a></dt>
+<dd><p>Compute the AC port for a converter with blocked gates, see <cite>ACPort</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../common/model/index.html#motulator.common.model.ACPort" title="motulator.common.model.ACPort">motulator.common.model.ACPort</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.InductionMachine.compute_outputs">
 <span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#InductionMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.InductionMachine.compute_outputs" title="Link to this definition">#</a></dt>
 <dd><p>Compute output variables.</p>
@@ -1488,6 +1508,17 @@ defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method
 </ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.LCFilter.compute_ac_port">
+<span class="sig-name descname"><span class="pre">compute_ac_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_lc_filter.html#LCFilter.compute_ac_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.LCFilter.compute_ac_port" title="Link to this definition">#</a></dt>
+<dd><p>Compute the AC port for a converter with blocked gates, see <cite>ACPort</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../common/model/index.html#motulator.common.model.ACPort" title="motulator.common.model.ACPort">motulator.common.model.ACPort</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.LCFilter.create_time_series">
 <span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_lc_filter.html#LCFilter.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.LCFilter.create_time_series" title="Link to this definition">#</a></dt>
@@ -2045,6 +2076,17 @@ current depends directly on the stator voltage. This algebraic loop is solved in
 closed form. The electromagnetic torque is produced by the current flowing into the
 magnetic circuit, i.e., the core-loss current is excluded from the torque.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachine.compute_ac_port">
+<span class="sig-name descname"><span class="pre">compute_ac_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#SynchronousMachine.compute_ac_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachine.compute_ac_port" title="Link to this definition">#</a></dt>
+<dd><p>Compute the AC port for a converter with blocked gates, see <cite>ACPort</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../common/model/index.html#motulator.common.model.ACPort" title="motulator.common.model.ACPort">motulator.common.model.ACPort</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachine.compute_outputs">
 <span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#SynchronousMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachine.compute_outputs" title="Link to this definition">#</a></dt>
 <dd><p>Compute output variables.</p>
@@ -2407,6 +2449,13 @@ reduces each phase voltage by <cite>u_th*sign(i)</cite>, where the current direc
 determined at the latest switching instant. The DC-bus voltage is either constant
 or given by a DC-bus model connected to the input <cite>u_dc</cite> (see <cite>DCBus</cite> and
 <cite>Model</cite>).</p>
+<p>When the gates are blocked (<cite>inp.enabled</cite> is False), all the switches are open, and
+the antiparallel diodes conduct according to the currents: a leg carrying current
+is clamped to a rail, and a leg without current floats at the voltage keeping its
+current at zero. The diode states are updated at their transitions, which the
+simulation locates as events, see <cite>Simulation</cite>. The voltage is computed from the
+AC port of the load <cite>ac_load</cite>, see <cite>ACPort</cite>, and the threshold voltage is included
+in the diode drops.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2461,6 +2510,17 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.meas_voltages">
+<span class="sig-name descname"><span class="pre">meas_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.meas_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.meas_voltages" title="Link to this definition">#</a></dt>
+<dd><p>Measure the converter line-to-line voltages u_ab and u_bc (V).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.rhs">
 <span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.rhs" title="Link to this definition">#</a></dt>
 <dd><p>Default empty implementation.</p>
@@ -2470,6 +2530,20 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.set_enable">
+<span class="sig-name descname"><span class="pre">set_enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.set_enable" title="Link to this definition">#</a></dt>
+<dd><p>Set the gate enable, latching the diode states when the gates are blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2501,6 +2575,17 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.update_diodes">
+<span class="sig-name descname"><span class="pre">update_diodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.update_diodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.update_diodes" title="Link to this definition">#</a></dt>
+<dd><p>Update the diode states at a transition, see <cite>update_diodes</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2591,6 +2676,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine"><code class="docutils literal notranslate"><span class="pre">InductionMachine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">InductionMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">InductionMachine.meas_currents()</span></code></a></li>
@@ -2619,6 +2705,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter"><code class="docutils literal notranslate"><span class="pre">LCFilter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">LCFilter.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.create_time_series"><code class="docutils literal notranslate"><span class="pre">LCFilter.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.meas_capacitor_voltages"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_capacitor_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.LCFilter.meas_currents"><code class="docutils literal notranslate"><span class="pre">LCFilter.meas_currents()</span></code></a></li>
@@ -2665,6 +2752,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_ac_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.meas_currents()</span></code></a></li>
@@ -2699,9 +2787,12 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.compute_internal_dc_current()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.create_time_series"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.rhs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.VoltageSourceConverter.update_diodes"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.update_diodes()</span></code></a></li>
 </ul>
 </li>
 </ul>
