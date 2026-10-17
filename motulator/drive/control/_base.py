@@ -9,7 +9,7 @@ from typing import Protocol
 from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._controllers import PIController, RateLimiter
 from motulator.common.control._pwm import PWM
-from motulator.common.utils._utils import abc2complex, get_value, wrap
+from motulator.common.utils._utils import abc2complex, get_value, line2complex, wrap
 from motulator.drive.control._common import References, SpeedController
 from motulator.drive.model._drive import Drive
 
@@ -41,6 +41,7 @@ class Measurements:
     u_dc: float
     w_M: float | None = None
     theta_M: float | None = None  # Mechanical angular position
+    u_c_ab: complex | None = None  # Converter voltage, measured with blocked gates
 
 
 # %%
@@ -62,6 +63,10 @@ class VectorController[Ref, Fbk](Protocol):
 
     def compute_output(self, tau_M_ref: float, fbk: Fbk) -> Ref:
         """Compute control output from feedback signals."""
+        ...
+
+    def compute_standby_output(self, fbk: Fbk) -> Ref:
+        """Compute control output while the gates are blocked."""
         ...
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
@@ -87,6 +92,10 @@ class VHzController[Ref, Fbk](Protocol):
         """Compute control output from feedback signals."""
         ...
 
+    def compute_standby_output(self, fbk: Fbk) -> Ref:
+        """Compute control output while the gates are blocked."""
+        ...
+
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller states."""
         ...
@@ -103,8 +112,8 @@ class DriveControlSystem(ControlSystem):
 
     This class implements the parts common to the drive control systems: the feedback
     voltages, the modulation, and the speed reference. Subclasses implement
-    `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`
-    and `_compute_inner_output`.
+    `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`,
+    `_compute_inner_output`, and `_compute_inner_standby_output`.
 
     The inner controller gets the realized voltage of the ongoing sampling period for
     its observer, while the feedback voltage `u_s` for the control laws is the realized
@@ -115,6 +124,12 @@ class DriveControlSystem(ControlSystem):
     caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
     angle is not advanced, which is used if the controller takes the delays into
     account itself, e.g., in a direct discrete-time design.
+
+    While the gates are blocked (see `set_enable`), the feedback voltages are the
+    measured converter voltage, so the observers keep tracking the machine, and the
+    inner controller computes its standby output: its regulators track the measured
+    operating point, from which the control continues when the gates are released,
+    while the speed controller is not updated.
 
     Parameters
     ----------
@@ -157,22 +172,46 @@ class DriveControlSystem(ControlSystem):
         """Compute the references, including the speed reference `w_M`."""
         raise NotImplementedError
 
+    def _compute_inner_standby_output(self, fbk: Feedbacks) -> References:
+        """Compute the references while the gates are blocked."""
+        raise NotImplementedError
+
+    def _measure_converter_voltage(self, mdl: Drive) -> complex | None:
+        """Measure the converter voltage while the gates are blocked."""
+        if self.enabled:
+            return None
+        return line2complex(mdl.converter.meas_voltages())
+
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         # The observers use the voltage of the ongoing sampling period, while the
-        # control laws use the voltage averaged over the previous and ongoing periods
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc, average=False)
-        fbk = self._get_inner_feedback(u_c_ab, meas)
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        # control laws use the voltage averaged over the previous and ongoing periods.
+        # With blocked gates, both are the measured voltage.
+        if meas.u_c_ab is None:
+            u_c_ab_zoh = self.pwm.get_realized_voltage(
+                meas.i_c_ab, meas.u_dc, average=False
+            )
+            u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        else:
+            u_c_ab_zoh = u_c_ab = meas.u_c_ab
+        fbk = self._get_inner_feedback(u_c_ab_zoh, meas)
         fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
         fbk.u_dc = meas.u_dc
         return fbk
 
     def compute_output(self, fbk: Feedbacks) -> References:
         """Compute controller output based on feedback."""
-        ref = self._compute_inner_output(fbk)
+        return self._add_duty_ratios(self._compute_inner_output(fbk), fbk)
+
+    def compute_standby_output(self, fbk: Feedbacks) -> References:
+        """Compute controller output while the gates are blocked."""
+        return self._add_duty_ratios(self._compute_inner_standby_output(fbk), fbk)
+
+    def _add_duty_ratios(self, ref: References, fbk: Feedbacks) -> References:
+        """Compute the duty ratios and the limited voltage reference."""
         ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)
         ref.u_s_lim = exp(-1j * fbk.theta_c) * self.pwm.limited_voltage
+        ref.enabled = self.enabled
         return ref
 
     def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
@@ -261,12 +300,19 @@ class VectorControlSystem(DriveControlSystem):
         else:
             w_M = mdl.mechanics.meas_speed()
             theta_M = wrap(mdl.mechanics.meas_position())
-        return Measurements(i_c_ab, u_dc, w_M, theta_M)
+        u_c_ab = self._measure_converter_voltage(mdl)
+        return Measurements(i_c_ab, u_dc, w_M, theta_M, u_c_ab)
 
     def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
         return self.vector_ctrl.get_feedback(
             u_s_ab, meas.i_c_ab, meas.w_M, meas.theta_M
         )
+
+    def _compute_inner_standby_output(self, fbk: Feedbacks) -> References:
+        ref = self.vector_ctrl.compute_standby_output(fbk)
+        if self.speed_ctrl is not None and self.ext_ref.w_M is not None:
+            ref.w_M = get_value(self.ext_ref.w_M, self.t)
+        return ref
 
     def _compute_inner_output(self, fbk: Feedbacks) -> References:
         if self.speed_ctrl is not None:  # Speed-control mode
@@ -287,7 +333,7 @@ class VectorControlSystem(DriveControlSystem):
         """Update controller states."""
         super().update(ref, fbk)
         self.vector_ctrl.update(ref, fbk)
-        if self.speed_ctrl is not None:
+        if self.speed_ctrl is not None and self.enabled:
             self.speed_ctrl.update(ref.T_s, ref.tau_M)
 
     def post_process(self) -> TimeSeries:
@@ -326,17 +372,26 @@ class VHzControlSystem(DriveControlSystem):
         """Get measurements."""
         u_dc = mdl.converter.meas_dc_voltage()
         i_s_ab = abc2complex(mdl.machine.meas_currents())
-        return Measurements(i_s_ab, u_dc)
+        u_c_ab = self._measure_converter_voltage(mdl)
+        return Measurements(i_s_ab, u_dc, u_c_ab=u_c_ab)
 
     def _get_inner_feedback(self, u_s_ab: complex, meas: Measurements) -> Feedbacks:
         if self.ext_ref.w_M is None:
-            raise ValueError("Speed reference must be set")
-        w_M_ref = get_value(self.ext_ref.w_M, self.t)
+            if self.enabled:
+                raise ValueError("Speed reference must be set")
+            w_M_ref = 0.0  # No speed reference is needed while the gates are blocked
+        else:
+            w_M_ref = get_value(self.ext_ref.w_M, self.t)
         self._w_M_ref = self.rate_limiter(self.vhz_ctrl.T_s, w_M_ref)
         return self.vhz_ctrl.get_feedback(u_s_ab, meas.i_c_ab, self._w_M_ref)
 
     def _compute_inner_output(self, fbk: Feedbacks) -> References:
         ref = self.vhz_ctrl.compute_output(fbk)
+        ref.w_M = self._w_M_ref
+        return ref
+
+    def _compute_inner_standby_output(self, fbk: Feedbacks) -> References:
+        ref = self.vhz_ctrl.compute_standby_output(fbk)
         ref.w_M = self._w_M_ref
         return ref
 

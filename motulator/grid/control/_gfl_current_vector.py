@@ -200,6 +200,13 @@ class CurrentVectorController:
         ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
         return ref
 
+    def compute_standby_output(self, fbk: PLLOutputs) -> References:
+        """Compute references while the gates are blocked."""
+        # The current controller tracks the measured current and voltage
+        ref = References(T_s=self.cfg.T_s, i_c=fbk.i_c)
+        ref.u_c = self.current_ctrl.compute_output(ref.i_c, fbk.i_c, fbk.u_g)
+        return ref
+
     def update(self, ref: References, fbk: PLLOutputs) -> None:
         """Update states."""
         self.current_ctrl.update(ref.T_s, fbk.u_c, fbk.w_c)

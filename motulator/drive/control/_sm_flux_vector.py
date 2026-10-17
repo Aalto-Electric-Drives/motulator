@@ -229,6 +229,13 @@ class FluxVectorController:
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
+    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
+        """Compute references while the gates are blocked."""
+        # The flux and torque controller tracks the estimated flux and torque
+        ref = References(T_s=self.cfg.T_s, tau_M=fbk.tau_M, psi_s=abs(fbk.psi_s))
+        ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
+        return ref
+
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
@@ -335,6 +342,13 @@ class ObserverBasedVHzController:
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             self.tau_M_lpf, fbk.w_m, fbk.u_dc
         )
+        ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
+        return ref
+
+    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
+        """Compute references while the gates are blocked."""
+        # The flux and torque controller tracks the estimated flux and torque
+        ref = References(T_s=self.cfg.T_s, tau_M=fbk.tau_M, psi_s=abs(fbk.psi_s))
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 

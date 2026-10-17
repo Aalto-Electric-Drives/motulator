@@ -30,6 +30,7 @@ class References:
     u_s_lim: complex = 0j  # Limited voltage reference (set by the control system)
     w_M: float | None = None  # Speed reference (set by the control system)
     d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
+    enabled: bool = True  # Gate enable (set by the control system)
 
 
 # %%

@@ -118,6 +118,13 @@ class PowerSynchronizationController:
         ref.u_c = ref.v_c + self.R_a * (ref.i_c - fbk.i_c) + self.cfg.R * fbk.i_c
         return ref
 
+    def compute_standby_output(self, fbk: Feedbacks) -> References:
+        """Compute references while the gates are blocked."""
+        # The controller has no means to synchronize with the grid without the power
+        raise NotImplementedError(
+            "Power-synchronization control does not support gate blocking"
+        )
+
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update states."""
         self.i_c_flt += ref.T_s * self.cfg.w_b * (fbk.i_c - self.i_c_flt)

@@ -12,7 +12,7 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
+from motulator.common.model import ACPort, Sensor, Subsystem, SubsystemTimeSeries
 from motulator.common.utils._utils import complex2abc, complex2line, empty_array
 
 
@@ -112,6 +112,12 @@ class LFilter(Subsystem):
         R_t = self.R_f + self.R_g
         d_i_c_ab = (inp.u_c_ab - inp.e_g_ab - R_t * state.i_c_ab) / L_t
         return [d_i_c_ab]
+
+    def compute_ac_port(self) -> ACPort:
+        """Compute the AC port for a converter with blocked gates, see `ACPort`."""
+        state, inp = self.state, self.inp
+        e = inp.e_g_ab + (self.R_f + self.R_g) * state.i_c_ab
+        return ACPort(state.i_c_ab, e, np.eye(2) / (self.L_f + self.L_g))
 
     def meas_currents(self) -> Any:
         """Measure the converter phase currents (A)."""
@@ -266,6 +272,12 @@ class LCLFilter(Subsystem):
         d_u_f_ab = (state.i_c_ab - state.i_g_ab) / self.C_f
         d_i_g_ab = (state.u_f_ab - inp.e_g_ab - R_t * state.i_g_ab) / L_t
         return [d_i_c_ab, d_u_f_ab, d_i_g_ab]
+
+    def compute_ac_port(self) -> ACPort:
+        """Compute the AC port for a converter with blocked gates, see `ACPort`."""
+        state = self.state
+        e = state.u_f_ab + self.R_fc * state.i_c_ab
+        return ACPort(state.i_c_ab, e, np.eye(2) / self.L_fc)
 
     def meas_currents(self) -> Any:
         """Measure the converter phase currents (A)."""

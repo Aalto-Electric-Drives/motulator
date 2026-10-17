@@ -13,6 +13,12 @@ A protocol for discrete-time control systems is available in {class}`motulator.c
 
 Using this protocol is not compulsory, but it may simplify the implementation of new control systems.
 
+## Gate Enable
+
+The control system can block the gates of the converter with `set_enable`, constantly or as a function of time, which is evaluated at the sampling instants. While the gates are blocked, the control loop runs as usual, but the reference signals are computed by `compute_standby_output` instead of `compute_output`: the observers and phase-locked loops keep tracking the system using the measured converter voltage, the regulators track the measured operating point, and the outer controllers (the speed controller and the DC-bus voltage controller) are not updated. Hence, the drive or grid converter starts from its actual operating point when the gates are released, e.g., after the DC bus has been charged through the diodes and the phase-locked loop has locked. The model of the converter with blocked gates is described in {doc}`/model/common/converters`.
+
+The drive control systems and the grid-following and observer-based grid-forming control systems implement the standby output. A sensorless induction machine drive loses its speed estimate while the gates are blocked, since the rotor flux decays, and the standby output alone does not restart it; a flying-start method, not included in this package, is needed for that. The power-synchronization controller cannot synchronize with the grid without power, so it does not support gate blocking.
+
 ## Data Flow and Storage
 
 [Figure 1](fig:overall_system) illustrates the structure and data flow in a typical simulation model. [Figure 2](fig:discrete_control_system) exemplifies an internal structure of a typical control system. The text in italics refers to the default object names used in the software.

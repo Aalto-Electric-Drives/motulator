@@ -43,4 +43,4 @@ When contributing code, please follow this workflow:
 
 Once a pull request has been created, it will be reviewed, and changes might be suggested, which you can make by simply adding new commits to your branch. After the successful review, we will merge your changes into the main repository.
 
-We aim to keep the codebase clean and maintainable. Therefore, we may not be able to accept all contributions (even if they are well-written and feasible). For this reason, it is advisable to discuss possible contributions beforehand in an issue.
+We aim to keep the codebase clean and maintainable. Therefore, we may not be able to accept all contributions (even if they are well-written and feasible). For this reason, it is advisable to discuss possible contributions beforehand in an issue. Larger contributions, such as new control methods, are best published as separate packages, see {doc}`/related_packages`.

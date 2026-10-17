@@ -68,6 +68,18 @@ label: DC_current
 
 The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models of the converter systems sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge rectifier, see {doc}`/model/drive/diode_bridge`.
 
+## Gate Blocking
+
+The control system can block the gates of the converter, see `set_enable` of {class}`motulator.common.control.ControlSystem`:
+
+```python
+ctrl.set_enable(lambda t: t >= 0.05)  # Gates blocked before 0.05 s
+```
+
+While the gates are blocked, all the switches are open, and the antiparallel diodes conduct according to the instantaneous phase currents. A leg carrying current is clamped to the negative rail if the current flows out of the converter and to the positive rail otherwise. A leg without current floats at the voltage that keeps its current at zero, as long as this voltage is between the rails; otherwise, its diode starts to conduct. Hence, a spinning machine coasts at open circuit if its voltage is below the DC-bus voltage, and it feeds the DC bus through the diodes otherwise, as does the grid when the DC bus is charged at the start-up. The threshold voltage $\uth$ is included in the diode drops. The floating leg voltages are computed from the AC port of the load, i.e., the relation $\mathrm{d}\boldsymbol{i}/\mathrm{d}t = \mathbf{Y}(\boldsymbol{u} - \boldsymbol{e})$ between the terminal current and voltage, which the machine and filter models provide, see {class}`motulator.common.model.ACPort`. The machine models with core losses do not provide the port.
+
+The switching state `q_c_ab` is zero while the gates are blocked, and the converter voltage `u_c_ab` is saved at the solution points of the solver. The gate enable is available as `enabled` in the converter time series and in the reference signals of the control system. See {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc` and {doc}`/grid_examples/grid_following/plot_10kva_startup_gfl` for examples.
+
 ## Carrier Comparison
 
 In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals $\qA$, $\qB$, and $\qC$ from duty ratios $\dA$, $\dB$, and $\dC$. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.

@@ -337,11 +337,20 @@ class CurrentVectorController:
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
         return ref
 
+    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
+        """Compute references while the gates are blocked."""
+        # The current controller tracks the measured current and voltage
+        ref = References(T_s=self.T_s, psi_s=abs(fbk.psi_s), i_s=fbk.i_s)
+        ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
+        return ref
+
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc)
-        u_s = ref.u_s_lim if self.cfg.discrete else fbk.u_s
+        # The discrete-time controller takes its limited output, except with blocked
+        # gates, when the measured voltage is the realized one
+        u_s = ref.u_s_lim if self.cfg.discrete and ref.enabled else fbk.u_s
         self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
 
     def post_process(self, ts: TimeSeries) -> None:

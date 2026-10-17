@@ -11,7 +11,8 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import Sensor, Subsystem, SubsystemTimeSeries
+from motulator.common.model import ACPort, Sensor, Subsystem, SubsystemTimeSeries
+from motulator.common.model._ac_port import jacobian
 from motulator.common.utils._utils import complex2abc, empty_array, get_value, wrap
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
@@ -126,6 +127,24 @@ class InductionMachine(Subsystem):
         d_psi_s_ab = inp.u_s_ab - par.R_s * out.i_s_ab
         d_psi_r_ab = -par.R_r * out.i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
         return [d_psi_s_ab, d_psi_r_ab]
+
+    def compute_ac_port(self) -> ACPort:
+        """Compute the AC port for a converter with blocked gates, see `ACPort`."""
+        state, inp, par = self.state, self.inp, self.par
+        if par.G_c:
+            raise NotImplementedError("Gate blocking is not supported with core losses")
+        i_s_ab, i_r_ab, _ = self.compute_outputs(state, inp)
+
+        def current(psi_s_ab: complex) -> complex:
+            """Stator current as a function of the stator flux."""
+            L_s = get_value(par.L_s, abs(psi_s_ab))
+            return psi_s_ab / L_s + (psi_s_ab - state.psi_r_ab) / par.L_ell
+
+        # The stator current derivative is Y*(u_s - R_s*i_s) - d_psi_r/dt/L_ell
+        Y = jacobian(current, state.psi_s_ab)
+        d_psi_r_ab = -par.R_r * i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
+        e = np.linalg.solve(Y, [d_psi_r_ab.real, d_psi_r_ab.imag]) / par.L_ell
+        return ACPort(i_s_ab, par.R_s * i_s_ab + complex(e[0], e[1]), Y)
 
     def meas_currents(self) -> Any:
         """Measure phase currents (A)."""
@@ -288,6 +307,32 @@ class SynchronousMachine(Subsystem):
         self.out.i_s_dq, self.out.i_s_ab, self.out.tau_M = self.compute_outputs(
             self.state, self.inp
         )
+
+    def compute_ac_port(self) -> ACPort:
+        """Compute the AC port for a converter with blocked gates, see `ACPort`."""
+        state, inp, par = self.state, self.inp, self.par
+        if par.G_c:
+            raise NotImplementedError("Gate blocking is not supported with core losses")
+        exp_j_theta_m = np.exp(1j * state.theta_m.real)
+        w_m = par.n_p * inp.w_M
+        i_s_dq = complex(par.magnetic_map(state.psi_s_dq, exp_j_theta_m)[0])
+        # Inverse differential inductance in rotor coordinates and the current
+        # derivative due to the spatial harmonics at a constant flux
+        psi_s_dq = state.psi_s_dq
+        J = jacobian(lambda psi: par.magnetic_map(psi, exp_j_theta_m)[0], psi_s_dq)
+        h = 1e-4
+        d_i_s_theta = (
+            complex(par.magnetic_map(psi_s_dq, exp_j_theta_m * np.exp(1j * h))[0])
+            - complex(par.magnetic_map(psi_s_dq, exp_j_theta_m * np.exp(-1j * h))[0])
+        ) / (2 * h)
+        # The stator current derivative in stator coordinates is J*(u_s - R_s*i_s -
+        # 1j*w_m*psi_s) + w_m*(d_i_s_theta + 1j*i_s), in rotor coordinates
+        i_rot = w_m * (d_i_s_theta + 1j * i_s_dq)
+        v = np.linalg.solve(J, [i_rot.real, i_rot.imag])
+        e_dq = par.R_s * i_s_dq + 1j * w_m * state.psi_s_dq - complex(v[0], v[1])
+        c, s = exp_j_theta_m.real, exp_j_theta_m.imag
+        R = np.array([[c, -s], [s, c]])
+        return ACPort(i_s_dq * exp_j_theta_m, e_dq * exp_j_theta_m, R @ J @ R.T)
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""

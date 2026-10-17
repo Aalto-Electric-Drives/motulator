@@ -57,6 +57,7 @@ class CompositeModel(System):
                         )
         super().__init__(subsystems, connections)
         self.models = models
+        self.converters = [mdl.converter for mdl in models.values()]
 
     def save(self, sol: OdeResult) -> None:
         """Save the solution and the switching states of the models."""
@@ -64,8 +65,7 @@ class CompositeModel(System):
         for mdl in self.models.values():
             mdl.t0 = self.t0
             mdl._history.t.extend(sol.t)
-            mdl._history.q_c_ab.extend([mdl.converter.inp.q_c_ab] * len(sol.t))
-            mdl._history.s_c_ab.extend([mdl.converter.inp.s_c_ab] * len(sol.t))
+            mdl._save_converter_history(sol, self)
 
 
 # %%

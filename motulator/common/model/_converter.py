@@ -15,11 +15,18 @@ from typing import Any
 
 import numpy as np
 
+from motulator.common.model._ac_port import (
+    ACPort,
+    diode_margin,
+    leg_voltages,
+    update_diodes,
+)
 from motulator.common.model._base import Subsystem, SubsystemTimeSeries
 from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import (
     abc2complex,
     complex2abc,
+    complex2line,
     empty_array,
     get_value,
 )
@@ -32,6 +39,7 @@ class Inputs:
 
     q_c_ab: complex = 0j  # Switching state
     s_c_ab: complex = 0j  # Current-direction vector at the latest switching instant
+    enabled: bool = True  # Gate enable
     i_c_ab: complex = 0j
     u_dc: float | None = None  # DC-bus voltage (V) from a DC-bus model, if connected
 
@@ -57,6 +65,14 @@ class VoltageSourceConverter(Subsystem):
     determined at the latest switching instant. The DC-bus voltage is either constant
     or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
     `Model`).
+
+    When the gates are blocked (`inp.enabled` is False), all the switches are open, and
+    the antiparallel diodes conduct according to the currents: a leg carrying current
+    is clamped to a rail, and a leg without current floats at the voltage keeping its
+    current at zero. The diode states are updated at their transitions, which the
+    simulation locates as events, see `Simulation`. The voltage is computed from the
+    AC port of the load `ac_load`, see `ACPort`, and the threshold voltage is included
+    in the diode drops.
 
     Parameters
     ----------
@@ -94,6 +110,32 @@ class VoltageSourceConverter(Subsystem):
         self.inp: Inputs = Inputs()
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc)
         self.state = None
+        self.ac_load: Subsystem | None = None  # Set by the model
+        self._diodes = np.zeros(3)  # Diode states of the legs with blocked gates
+        self.margin = np.inf  # Margin of the diode states, see `diode_margin`
+
+    def set_enable(self, enabled: bool) -> None:
+        """Set the gate enable, latching the diode states when the gates are blocked."""
+        if not enabled and self.inp.enabled:
+            self._diodes = update_diodes(self._ac_port(), self._rail_voltage())
+        self.inp.enabled = enabled
+
+    def _ac_port(self) -> ACPort:
+        """Get the AC port of the load."""
+        port = None if self.ac_load is None else self.ac_load.compute_ac_port()
+        if port is None:
+            raise ValueError("Gate blocking requires a load with an AC port")
+        return port
+
+    def _rail_voltage(self) -> float:
+        """Voltage (V) between the rails, including the drops of the diodes."""
+        return self.out.u_dc + 2 * self.u_th
+
+    def update_diodes(self) -> None:
+        """Update the diode states at a transition, see `update_diodes`."""
+        self._diodes = update_diodes(
+            self._ac_port(), self._rail_voltage(), self._diodes
+        )
 
     def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
         """Set the switching state based on the gate and blanking signals."""
@@ -103,7 +145,12 @@ class VoltageSourceConverter(Subsystem):
 
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A)."""
-        return 1.5 * np.real(inp.q_c_ab * np.conj(inp.i_c_ab))
+        i_dc = 1.5 * (inp.q_c_ab * inp.i_c_ab.conjugate()).real
+        if inp.enabled is True:  # A single state, in the simulation
+            return i_dc
+        # With blocked gates, the diodes rectify the phase currents
+        i_dc_diodes = -0.5 * np.sum(np.abs(complex2abc(inp.i_c_ab)), axis=0)
+        return np.where(inp.enabled, i_dc, i_dc_diodes)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -114,13 +161,25 @@ class VoltageSourceConverter(Subsystem):
                 "The DC-bus voltage must be given, unless the converter is fed from a "
                 "DC-bus model"
             )
-        self.out.u_c_ab = self.inp.q_c_ab * self.out.u_dc - self.u_th * self.inp.s_c_ab
+        if self.inp.enabled:
+            self.out.u_c_ab = (
+                self.inp.q_c_ab * self.out.u_dc - self.u_th * self.inp.s_c_ab
+            )
+        else:
+            port, u_dc = self._ac_port(), self._rail_voltage()
+            u_abc = leg_voltages(port, u_dc, self._diodes)
+            self.out.u_c_ab = abc2complex(u_abc)
+            self.margin = diode_margin(port, u_dc, self._diodes, u_abc)
 
     def meas_dc_voltage(self) -> float:
         """Measure converter DC-bus voltage (V)."""
         if self.u_dc_sensor is None:
             return self.out.u_dc
         return float(self.u_dc_sensor(self.out.u_dc))
+
+    def meas_voltages(self) -> np.ndarray:
+        """Measure the converter line-to-line voltages u_ab and u_bc (V)."""
+        return complex2line(self.out.u_c_ab)
 
     def rhs(self, t: float) -> list[complex]:
         """Default empty implementation."""
@@ -142,6 +201,7 @@ class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
     u_dc: np.ndarray = field(default_factory=empty_array)
     q_c_ab: np.ndarray = field(default_factory=empty_array)
     s_c_ab: np.ndarray = field(default_factory=empty_array)
+    enabled: np.ndarray = field(default_factory=empty_array)
     i_c_ab: np.ndarray = field(default_factory=empty_array)
     u_c_ab: np.ndarray = field(default_factory=empty_array)
     i_dc_int: np.ndarray = field(default_factory=empty_array)
@@ -153,7 +213,9 @@ class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
 
     def compute_zoh_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
         """Compute zero-order hold derived signals."""
-        self.u_c_ab = self.q_c_ab * self.u_dc - subsystem.u_th * self.s_c_ab
+        # The voltage with blocked gates is saved by the model
+        u_c_ab = self.q_c_ab * self.u_dc - subsystem.u_th * self.s_c_ab
+        self.u_c_ab = np.where(self.enabled, u_c_ab, self.u_c_ab)
 
     def compute_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
         """Process input time series."""

@@ -351,6 +351,24 @@ class SequenceObserverBasedGridFormingController:
 
         return ref
 
+    def compute_standby_output(
+        self, fbk: SequenceObserverOutputs
+    ) -> SequenceReferences:
+        """Compute references while the gates are blocked."""
+        # The voltage references equal the estimated quasi-static converter voltages
+        ref = SequenceReferences(
+            T_s=self.T_s,
+            p_g=fbk.p_g,
+            v_c=abs(fbk.v_cp),
+            i_c=fbk.i_c,
+            i_cp=fbk.i_cp,
+            i_cn=fbk.i_cn,
+            u_cp=fbk.v_cp,
+            u_cn=fbk.v_cn,
+        )
+        ref.u_c = self.exp_j_delay * ref.u_cp + self.exp_j_delay.conjugate() * ref.u_cn
+        return ref
+
     def update(self, ref: SequenceReferences, fbk: SequenceObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)

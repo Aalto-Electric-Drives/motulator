@@ -1,5 +1,6 @@
 """Model package."""
 
+from motulator.common.model._ac_port import ACPort
 from motulator.common.model._base import (
     Model,
     ModelTimeSeries,
@@ -13,6 +14,7 @@ from motulator.common.model._sensor import Sensor
 from motulator.common.model._simulation import Simulation, SimulationResults, SolverCfg
 
 __all__ = [
+    "ACPort",
     "CarrierComparison",
     "CompositeModel",
     "CompositeModelTimeSeries",
