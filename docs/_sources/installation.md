@@ -26,6 +26,12 @@ Then, install *motulator*:
 pip install motulator
 ```
 
+The neural-network-based magnetic models of the {mod}`motulator.drive.gradnet` package, used in the GradNet examples, additionally need PyTorch. To install it as an optional dependency, use the command:
+
+```bash
+pip install "motulator[gradnet]"
+```
+
 ```{note}
 Instead of global installation described above, using a [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments) is generally recommended. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.
 ```
@@ -50,7 +56,7 @@ Several powerful open-source IDEs are available for Python. The following instru
 
 1. [Create a virtual environment](https://code.visualstudio.com/docs/python/environments) in the workspace.
 
-1. Enable installation of optional dependencies from `pyproject.toml` (selecting at least `dev` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command `pip install .` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run `pip install .[dev,doc]`).
+1. Enable installation of optional dependencies from `pyproject.toml` (selecting at least `dev` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command `pip install .` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run `pip install .[dev,doc]`). The `dev` and `doc` dependencies include PyTorch.
 
 After completing the above steps, the virtual environment can be found in the `.venv` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the `dev` dependencies, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code).
 

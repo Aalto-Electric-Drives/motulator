@@ -146,6 +146,10 @@
   
 
   
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
 
     </header>
@@ -501,7 +505,9 @@
 <button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -517,6 +523,16 @@
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-results">Simulation Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conventions">Conventions</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -528,7 +544,50 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h1>
-<p>After <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>, <em>motulator</em> can be used by creating a continuous-time system model, a discrete-time controller, and a simulation object. The <a class="reference internal" href="drive_examples/index.html"><span class="doc">Drives</span></a> and <a class="reference internal" href="grid_examples/index.html"><span class="doc">Grid Converters</span></a> examples include a variety of different scripts to run the simulation. System model and controller configurations can be changed as shown in the examples. Furthermore, new features can be added by modifying the source code.</p>
+<p>After <a class="reference internal" href="installation.html"><span class="doc">Installation</span></a>, <em>motulator</em> can be used by creating a continuous-time system model, a discrete-time control system, and a simulation object.</p>
+<section id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
+<p>A complete simulation takes about 20 lines. This example runs sensorless flux-vector control of a 2.2-kW interior permanent-magnet synchronous machine drive:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">motulator.drive.control.sm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">control</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span>
+
+<span class="c1"># Continuous-time system model: 2.2-kW IPMSM, mechanics, and converter</span>
+<span class="n">par</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachinePars</span><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.6</span><span class="p">,</span> <span class="n">L_d</span><span class="o">=</span><span class="mf">0.036</span><span class="p">,</span> <span class="n">L_q</span><span class="o">=</span><span class="mf">0.051</span><span class="p">,</span> <span class="n">psi_f</span><span class="o">=</span><span class="mf">0.545</span><span class="p">)</span>
+<span class="n">mdl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Drive</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">SynchronousMachine</span><span class="p">(</span><span class="n">par</span><span class="p">),</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">MechanicalSystem</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">),</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">VoltageSourceConverter</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="mi">540</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># Discrete-time control system: sensorless flux-vector control</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorControllerCfg</span><span class="p">(</span><span class="n">i_s_max</span><span class="o">=</span><span class="mf">6.5</span><span class="p">,</span> <span class="n">sensorless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ctrl</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">VectorControlSystem</span><span class="p">(</span>
+    <span class="n">control</span><span class="o">.</span><span class="n">FluxVectorController</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">cfg</span><span class="p">),</span> <span class="n">control</span><span class="o">.</span><span class="n">SpeedController</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">alpha_s</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Speed reference and load torque</span>
+<span class="n">ctrl</span><span class="o">.</span><span class="n">set_speed_ref</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>  <span class="c1"># rad/s</span>
+<span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_load_torque</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span>  <span class="c1"># Nm</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">mdl</span><span class="p">,</span> <span class="n">ctrl</span><span class="p">)</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">utils</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To go further, start from the <a class="reference external" href="https://aalto-electric-drives.github.io/motulator/drive_examples/index.html">drive examples</a> and <a class="reference external" href="https://aalto-electric-drives.github.io/motulator/grid_examples/index.html">grid examples</a>. New system models and controllers can be developed using the existing ones as templates.</p>
+</section>
+<section id="simulation-results">
+<h2>Simulation Results<a class="headerlink" href="#simulation-results" title="Link to this heading">#</a></h2>
+<p>The <a class="reference internal" href="autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.SimulationResults</span></code></a> object returned by the simulation contains the time series of the system model in <code class="docutils literal notranslate"><span class="pre">res.mdl</span></code> and those of the control system in <code class="docutils literal notranslate"><span class="pre">res.ctrl</span></code>, see <a class="reference internal" href="control/common/control_system.html"><span class="doc">Control System Framework</span></a>. The plotting functions, such as <a class="reference internal" href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot" title="motulator.drive.utils.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.plot()</span></code></a> and <a class="reference internal" href="autoapi/motulator/grid/utils/index.html#motulator.grid.utils.plot_control_signals" title="motulator.grid.utils.plot_control_signals"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.grid.utils.plot_control_signals()</span></code></a>, plot the main signals in SI units or, if base values are given, in per-unit values.</p>
+</section>
+<section id="conventions">
+<h2>Conventions<a class="headerlink" href="#conventions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Space vectors are peak-valued complex numbers, see <a class="reference internal" href="model/common/space_vectors.html"><span class="doc">Space Vectors</span></a>. The suffix <code class="docutils literal notranslate"><span class="pre">_ab</span></code> marks stationary coordinates and <code class="docutils literal notranslate"><span class="pre">_dq</span></code> synchronous (rotor) coordinates, e.g., <code class="docutils literal notranslate"><span class="pre">i_s_ab</span></code> and <code class="docutils literal notranslate"><span class="pre">psi_s_dq</span></code>. Inside the controllers, the vectors are in the controller coordinates and have no suffix.</p></li>
+<li><p>Reference values end in <code class="docutils literal notranslate"><span class="pre">_ref</span></code>, e.g., <code class="docutils literal notranslate"><span class="pre">tau_M_ref</span></code>. Signals inside the controllers are estimates without a special suffix.</p></li>
+<li><p>Lowercase <code class="docutils literal notranslate"><span class="pre">m</span></code> denotes electrical and uppercase <code class="docutils literal notranslate"><span class="pre">M</span></code> mechanical quantities, e.g., the electrical angular speed <code class="docutils literal notranslate"><span class="pre">w_m</span> <span class="pre">=</span> <span class="pre">n_p*w_M</span></code> and the mechanical angular speed <code class="docutils literal notranslate"><span class="pre">w_M</span></code>.</p></li>
+<li><p>SI units are used. The per-unit base values <a class="reference internal" href="autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.utils.BaseValues</span></code></a> are only used for plotting.</p></li>
+</ul>
+</section>
 </section>
 
 
@@ -566,6 +625,25 @@
             </div>
             
             
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-results">Simulation Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conventions">Conventions</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

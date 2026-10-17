@@ -243,7 +243,7 @@ V/Hz control, the drive becomes unstable, while it is stable under O-V/Hz contro
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 51.437 seconds)
+   **Total running time of the script:** (1 minutes 4.138 seconds)
 
 
 .. _sphx_glr_download_drive_examples_identification_plot_45kw_im_vhz_identification.py:

@@ -1952,65 +1952,6 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
-      :abstractmethod:
-
-
-      
-      Incremental inductance matrix.
-
-      :param i_s_dq: Stator current (A) in rotor coordinates.
-      :type i_s_dq: complex | ndarray
-      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray, optional
-
-      :returns: Incremental inductance matrix (H).
-      :rtype: ndarray
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: iterate_i_s_dq(psi_s_dq)
-      :abstractmethod:
-
-
-      
-      Not implemented for the model with spatial harmonics.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
 
       
@@ -2024,39 +1965,6 @@ Package Contents
       :returns: Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
                 pole pair.
       :rtype: Tuple [complex | ndarray, float | ndarray]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
-      :abstractmethod:
-
-
-      
-      Flux linkage as a function of current and electrical rotor angle.
-
-      :param i_s_dq: Stator current (A) in rotor coordinates.
-      :type i_s_dq: complex | ndarray
-      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray, optional
-
-      :returns: Stator flux linkage in rotor coordinates (Vs).
-      :rtype: complex | ndarray
 
 
 

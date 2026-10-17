@@ -8,6 +8,8 @@ motulator.drive.gradnet
    
    Gradient-based neural network maps.
 
+   This package requires PyTorch, which is installed as an optional dependency with
+   `pip install "motulator[gradnet]"`.
 
 
 

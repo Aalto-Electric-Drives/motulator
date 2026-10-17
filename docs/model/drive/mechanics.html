@@ -566,17 +566,17 @@
 <p><span class="caption-text"><em>Figure 1:</em> Block diagram of a stiff mechanical system.</span><a class="headerlink" href="#fig-mech-block" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id2">
+<figure class="align-center" id="id3">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/mech_block.svg"><img alt="Block diagram of a stiff mechanical system." class="invert-colors-dark only-dark" src="../../_images/mech_block.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 1:</em> Block diagram of a stiff mechanical system.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Block diagram of a stiff mechanical system.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="two-mass-mechanical-system">
 <h2>Two-Mass Mechanical System<a class="headerlink" href="#two-mass-mechanical-system" title="Link to this heading">#</a></h2>
-<p>A two-mass mechanical system is modeled in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.TwoMassMechanicalSystem</span></code></a> class. The dynamics are governed by <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id43" title="Saarakkala and Hinkkanen. Identification of two-mass mechanical systems using torque excitation: design and experimental evaluation. IEEE Trans. Ind. Appl., 2015. doi:10.1109/TIA.2015.2416128.">Saarakkala and Hinkkanen, 2015</a>]</span></p>
+<p>A two-mass mechanical system is modeled in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.TwoMassMechanicalSystem</span></code></a> class. The dynamics are governed by <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id44" title="Saarakkala and Hinkkanen. Identification of two-mass mechanical systems using torque excitation: design and experimental evaluation. IEEE Trans. Ind. Appl., 2015. doi:10.1109/TIA.2015.2416128.">Saarakkala and Hinkkanen, 2015</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-mech-two-mass">
 <span class="eqno">(4)<a class="headerlink" href="#equation-mech-two-mass" title="Link to this equation">#</a></span>\[\begin{split}    \JM\frac{\D\omegaM}{\D t} &amp;= \tauM - \tauS \\
     \JL\frac{\D\omegaL}{\D t} &amp;= \tauS - \tauLtot \\
@@ -593,11 +593,11 @@
 <p><span class="caption-text"><em>Figure 2:</em> Block diagram of a two-mass mechanical system.</span><a class="headerlink" href="#fig-two-mass-block" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id3">
+<figure class="align-center" id="id4">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/two_mass_block.svg"><img alt="Block diagram of a two-mass mechanical system." class="invert-colors-dark only-dark" src="../../_images/two_mass_block.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram of a two-mass mechanical system.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram of a two-mass mechanical system.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -605,6 +605,7 @@
 <h2>Externally Specified Rotor Speed<a class="headerlink" href="#externally-specified-rotor-speed" title="Link to this heading">#</a></h2>
 <p>It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed <span class="math notranslate nohighlight">\(\omegaM\)</span> as a function of time, see the class <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.ExternalRotorSpeed</span></code></a>. This feature is typically needed when torque-control mode is studied.</p>
 <p>See the example <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html"><span class="doc">2.2-kW IM, CVC, torque-control mode</span></a>.</p>
+<p>The externally specified rotor speed is also used for identifying the mechanical impedance <span class="math notranslate nohighlight">\(Z_\mathrm{M}(s) = -\Delta\tauM(s)/\Delta\omegaM(s)\)</span>, which describes the dynamics of the machine and its control system as seen from the shaft <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id19" title="Hartikainen, Tiitinen, Laine, and Hinkkanen. Identification of mechanical impedance of an electric machine drive for drivetrain design. In Proc. IEEE IEMDC. 2023. doi:10.1109/IEMDC55163.2023.10238992.">Hartikainen <em>et al.</em>, 2023</a>]</span>. After the system has been simulated to the operating point, small-signal speed excitations are superimposed on the rotor speed, and the impedance is computed from the torque response at each excitation frequency. See <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.run_identification" title="motulator.drive.utils.run_identification"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.run_identification()</span></code></a> and the example <a class="reference internal" href="../../drive_examples/identification/plot_45kw_im_vhz_identification.html"><span class="doc">45-kW IM, V/Hz control, mechanical impedance identification</span></a>.</p>
 </section>
 </section>
 

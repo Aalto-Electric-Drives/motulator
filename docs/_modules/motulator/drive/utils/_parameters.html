@@ -540,7 +540,7 @@
 
 <span class="c1"># %%</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseSynchronousMachinePars</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Base class for synchronous machine parameters."""</span>
+<span class="w">    </span><span class="sd">"""Base class for synchronous machine parameters, as used by the machine model."""</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
@@ -595,61 +595,6 @@
 <span class="sd">        -------</span>
 <span class="sd">        complex | ndarray</span>
 <span class="sd">            Stator current (A) in rotor coordinates.</span>
-
-<span class="sd">        """</span>
-        <span class="o">...</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Flux linkage as a function of current and electrical rotor angle.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        i_s_dq : complex | ndarray</span>
-<span class="sd">            Stator current (A) in rotor coordinates.</span>
-<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
-<span class="sd">            Complex exponential of the electrical rotor angle.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        complex | ndarray</span>
-<span class="sd">            Stator flux linkage in rotor coordinates (Vs).</span>
-
-<span class="sd">        """</span>
-        <span class="o">...</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Incremental inductance matrix.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        i_s_dq : complex | ndarray</span>
-<span class="sd">            Stator current (A) in rotor coordinates.</span>
-<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
-<span class="sd">            Complex exponential of the electrical rotor angle.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        ndarray</span>
-<span class="sd">            Incremental inductance matrix (H).</span>
-
-<span class="sd">        """</span>
-        <span class="o">...</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Compute the current from the flux linkage.</span>
-
-<span class="sd">        Root finding on the flux map is used if no current map is available.</span>
 
 <span class="sd">        """</span>
         <span class="o">...</span>
@@ -935,8 +880,6 @@
 <span class="sd">        """</span>
         <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"exp_j_theta_m must be provided"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"magnetic_map_fcn must be provided"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
 
 
@@ -951,29 +894,6 @@
         <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"exp_j_theta_m must be provided"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.psi_s_dq">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.psi_s_dq">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Flux map is not implemented"</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.incr_ind_mat">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.incr_ind_mat">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="o">=</span><span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Incremental inductance matrix is not implemented"</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.iterate_i_s_dq">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Not implemented for the model with spatial harmonics."""</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"This method is not implemented"</span><span class="p">)</span></div>
 </div>
 
 

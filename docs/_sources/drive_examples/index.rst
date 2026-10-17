@@ -582,7 +582,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 GradNet Models
 --------------
 
-These examples use our physics-constrained neural-network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics [#Li2026]_. The gradient network (GradNet) architecture is based on [#Cha2025]_. This folder contains measured datasets for two PM synchronous reluctance machines: a four-pole 5.6-kW machine (Baldor ECS101M0H7EF4) and a 10-pole 28-kW machine (Brusa HSM1.10.18.04). Additionally, a FEM dataset with spatial harmonics is provided for the 5.6-kW machine.
+These examples use our physics-constrained neural-network framework for dynamic modeling of saturable synchronous machines, including spatial harmonics [#Li2026]_. The gradient network (GradNet) architecture is based on [#Cha2025]_. This folder contains measured datasets for two PM synchronous reluctance machines: a four-pole 5.6-kW machine (Baldor ECS101M0H7EF4) and a 10-pole 28-kW machine (Brusa HSM1.10.18.04). Additionally, a FEM dataset with spatial harmonics is provided for the 5.6-kW machine. These examples require PyTorch, which is installed with ``pip install "motulator[gradnet]"``.
 
 .. rubric:: References
 

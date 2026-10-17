@@ -431,6 +431,10 @@ label: sm_speed_obs_ro_lin
 
 The critically damped design is obtained by setting $\kotheta = 2\alphao$ and $\koomega = \alphao^2$, where $\alphao$ is the desired pole location. The inertia estimate is avoided, but the lag limits achievable speed-control bandwidth {cite}`Tii2025a`.
 
+### Signal Injection
+
+At low speeds, the back-EMF-based error signal in {eq}`sm_obs_eps` becomes unreliable. In salient machines, the error signal can be obtained by high-frequency signal injection instead. The {class}`motulator.drive.control.sm.SignalInjectionController` class injects a square-wave voltage of the amplitude $U_\mathrm{inj}$ in the direction of the estimated d-axis, alternating its sign every $N_\mathrm{inj}$ sampling periods {cite}`Kim2012`. Due to the magnetic saliency, a position error causes a q-component in the resulting current ripple in the estimated rotor coordinates. To compensate for the cross-saturation errors, the measured current is mapped to the flux linkage $\hatpsisfcn(\is')$ by the flux map, and the error signal $\varepsilon$ is demodulated from the second difference of its q-component over two injection half-periods {cite}`You2018`. The error signal drives the position estimate as in {eq}`sm_obs` and the speed observer {eq}`speed_obs`, which uses the mechanical model if the inertia estimate is given {cite}`Kim2003` and reduces to {eq}`speed_obs_ro` otherwise. The gains are selected for the critically damped dynamics as above. See the examples {doc}`/drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj` and {doc}`/drive_examples/signal_inj/plot_7kw_syrm_signal_inj`.
+
 ## Discrete-Time Implementation
 
 The flux observers {eq}`im_obs` and {eq}`sm_obs` are implemented in discrete time. The equations below are given for a constant sampling period $\Ts$. At each sampling instant $k$, the flux estimate is first corrected,

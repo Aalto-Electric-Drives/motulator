@@ -588,6 +588,18 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_zoh_input_derived_signals()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.compute_internal_dc_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.create_time_series"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.create_time_series()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.rhs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.update_diodes"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.update_diodes()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -649,6 +661,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a></p></td>
 <td><p>Base class for subsystem time series.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.VoltageSourceConverter" title="motulator.common.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
+<td><p>Three-phase voltage-source converter.</p></td>
 </tr>
 </tbody>
 </table>
@@ -794,7 +809,7 @@ e.g., from a battery or a braking chopper, can also be fed to the DC bus.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>C_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – DC-bus capacitance (F).</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Initial DC-bus voltage (V).</p></li>
-<li><p><strong>converters</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="../../drive/model/index.html#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a><em>]</em>) – Converters fed from the DC bus.</p></li>
+<li><p><strong>converters</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="#motulator.common.model.VoltageSourceConverter" title="motulator.common.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a><em>]</em>) – Converters fed from the DC bus.</p></li>
 </ul>
 </dd>
 </dl>
@@ -885,7 +900,7 @@ converters, see <cite>DCBus</cite>.</p>
 <li><p><strong>L_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – DC-bus inductance (H).</p></li>
 <li><p><strong>U_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Grid voltage (V, line-line, rms).</p></li>
 <li><p><strong>f_g</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Grid frequency (Hz).</p></li>
-<li><p><strong>converters</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="../../drive/model/index.html#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a><em>]</em>) – Converters fed from the DC bus.</p></li>
+<li><p><strong>converters</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="#motulator.common.model.VoltageSourceConverter" title="motulator.common.model.VoltageSourceConverter"><em>VoltageSourceConverter</em></a><em>]</em>) – Converters fed from the DC bus.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1344,6 +1359,163 @@ and extends it by <cite>extend_state_history</cite>.</p>
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
+<p>Three-phase voltage-source converter.</p>
+<p>The switches are ideal, except for the dead time and the threshold voltage. When a
+leg is blanked, i.e., neither of its switches conducts, the current direction
+determines which diode conducts. The leg state is then <cite>(1 - sign(i))/2</cite>, where
+<cite>i</cite> is the phase current in the beginning of the blanking interval. The threshold
+voltage of the conducting device, assumed equal for the switches and the diodes,
+reduces each phase voltage by <cite>u_th*sign(i)</cite>, where the current direction is also
+determined at the latest switching instant. The DC-bus voltage is either constant
+or given by a DC-bus model connected to the input <cite>u_dc</cite> (see <cite>DCBus</cite> and
+<cite>Model</cite>).</p>
+<p>When the gates are blocked (<cite>inp.enabled</cite> is False), all the switches are open, and
+the antiparallel diodes conduct according to the currents: a leg carrying current
+is clamped to a rail, and a leg without current floats at the voltage keeping its
+current at zero. The diode states are updated at their transitions, which the
+simulation locates as events, see <cite>Simulation</cite>. The voltage is computed from the
+AC port of the load <cite>ac_load</cite>, see <cite>ACPort</cite>, and the threshold voltage is included
+in the diode drops.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Constant DC-bus voltage (V). Defaults to None, in which case the converter must
+be fed from a DC-bus model.</p></li>
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the power devices, defaults to 0.</p></li>
+<li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Function of the phase currents (A) determining the leg states during blanking,
+defaults to <cite>np.sign</cite>. A smooth function, such as <cite>2/pi*arctan(i/i_d)</cite>, can be
+used to model the effect of parasitic capacitances, for example.</p></li>
+<li><p><strong>u_dc_sensor</strong> (<a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><em>Sensor</em></a><em>, </em><em>optional</em>) – DC-bus voltage sensor, defaults to an ideal measurement.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.compute_internal_dc_current">
+<span class="sig-name descname"><span class="pre">compute_internal_dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.compute_internal_dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.compute_internal_dc_current" title="Link to this definition">#</a></dt>
+<dd><p>Compute the internal DC current (A).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inp</strong> (<em>Any</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.create_time_series">
+<span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.create_time_series" title="Link to this definition">#</a></dt>
+<dd><p>Create time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, VoltageSourceConverterTimeSeries]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.meas_dc_voltage">
+<span class="sig-name descname"><span class="pre">meas_dc_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.meas_dc_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.meas_dc_voltage" title="Link to this definition">#</a></dt>
+<dd><p>Measure converter DC-bus voltage (V).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.meas_voltages">
+<span class="sig-name descname"><span class="pre">meas_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.meas_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.meas_voltages" title="Link to this definition">#</a></dt>
+<dd><p>Measure the converter line-to-line voltages u_ab and u_bc (V).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.rhs">
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.rhs" title="Link to this definition">#</a></dt>
+<dd><p>Default empty implementation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.set_enable">
+<span class="sig-name descname"><span class="pre">set_enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.set_enable" title="Link to this definition">#</a></dt>
+<dd><p>Set the gate enable, latching the diode states when the gates are blocked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.set_gate_signals">
+<span class="sig-name descname"><span class="pre">set_gate_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_gate_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.set_gate_signals" title="Link to this definition">#</a></dt>
+<dd><p>Set the switching state based on the gate and blanking signals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_abc</strong> (<em>numpy.ndarray</em>)</p></li>
+<li><p><strong>b_abc</strong> (<em>numpy.ndarray</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.set_outputs" title="Link to this definition">#</a></dt>
+<dd><p>Set output variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.update_diodes">
+<span class="sig-name descname"><span class="pre">update_diodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.update_diodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.update_diodes" title="Link to this definition">#</a></dt>
+<dd><p>Update the diode states at a transition, see <cite>update_diodes</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -1452,6 +1624,18 @@ and extends it by <cite>extend_state_history</cite>.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_input_derived_signals()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_zoh_input_derived_signals()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.compute_internal_dc_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.create_time_series"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.create_time_series()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.rhs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.update_diodes"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.update_diodes()</span></code></a></li>
 </ul>
 </li>
 </ul>

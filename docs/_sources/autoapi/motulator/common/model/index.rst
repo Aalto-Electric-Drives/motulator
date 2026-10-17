@@ -46,6 +46,7 @@ Classes
    motulator.common.model.SolverCfg
    motulator.common.model.Subsystem
    motulator.common.model.SubsystemTimeSeries
+   motulator.common.model.VoltageSourceConverter
 
 
 Package Contents
@@ -1170,6 +1171,279 @@ Package Contents
 
       
       Compute additional time series using subsystem's ZOH inputs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VoltageSourceConverter(u_dc = None, t_d = 0.0, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
+
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+
+
+   
+   Three-phase voltage-source converter.
+
+   The switches are ideal, except for the dead time and the threshold voltage. When a
+   leg is blanked, i.e., neither of its switches conducts, the current direction
+   determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where
+   `i` is the phase current in the beginning of the blanking interval. The threshold
+   voltage of the conducting device, assumed equal for the switches and the diodes,
+   reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
+   determined at the latest switching instant. The DC-bus voltage is either constant
+   or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
+   `Model`).
+
+   When the gates are blocked (`inp.enabled` is False), all the switches are open, and
+   the antiparallel diodes conduct according to the currents: a leg carrying current
+   is clamped to a rail, and a leg without current floats at the voltage keeping its
+   current at zero. The diode states are updated at their transitions, which the
+   simulation locates as events, see `Simulation`. The voltage is computed from the
+   AC port of the load `ac_load`, see `ACPort`, and the threshold voltage is included
+   in the diode drops.
+
+   :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
+                be fed from a DC-bus model.
+   :type u_dc: float, optional
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
+   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :type u_th: float, optional
+   :param sign: Function of the phase currents (A) determining the leg states during blanking,
+                defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
+                used to model the effect of parasitic capacitances, for example.
+   :type sign: Callable[[np.ndarray], np.ndarray], optional
+   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
+   :type u_dc_sensor: Sensor, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_internal_dc_current(inp)
+
+      
+      Compute the internal DC current (A).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_dc_voltage()
+
+      
+      Measure converter DC-bus voltage (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: meas_voltages()
+
+      
+      Measure the converter line-to-line voltages u_ab and u_bc (V).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Default empty implementation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_enable(enabled)
+
+      
+      Set the gate enable, latching the diode states when the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_gate_signals(q_abc, b_abc)
+
+      
+      Set the switching state based on the gate and blanking signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update_diodes()
+
+      
+      Update the diode states at a transition, see `update_diodes`.
 
 
 

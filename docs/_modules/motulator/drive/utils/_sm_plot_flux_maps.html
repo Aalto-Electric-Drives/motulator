@@ -488,29 +488,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaxNLocator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">save_and_show</span><span class="p">,</span>
-    <span class="n">set_latex_style</span><span class="p">,</span>
-    <span class="n">set_screen_style</span><span class="p">,</span>
-    <span class="n">set_style</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_and_show</span><span class="p">,</span> <span class="n">set_style</span><span class="p">,</span> <span class="n">setup_map_plot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_flux_maps</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagneticModel</span>
-
-
-<span class="c1"># %%</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot_style</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Set up the plot style and return the figure size."""</span>
-    <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-        <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.4</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.4</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">"savefig.pad_inches"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">})</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">size</span>
 
 
 <span class="c1"># %%</span>
@@ -691,7 +671,7 @@
 
 <span class="sd">    """</span>
     <span class="c1"># Setup style and base values</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="n">_setup_plot_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">setup_map_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
     <span class="n">pu_vals</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
