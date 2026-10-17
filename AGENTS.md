@@ -22,7 +22,7 @@ The package is split into `common` (shared base classes), `drive` (machine drive
 
 `Simulation.simulate()` alternates between the control systems and the ODE solver:
 
-1. Each control system is called at its own sampling instants (the first one at `mdl.t0`, or at `t_start` given to `Simulation`): `ctrl(mdl)` returns `(T_s, d_abc)`. The controller can change `T_s` at every step.
+1. Each control system is called at its own sampling instants (the first one at `mdl.t0`, or at `t_start` given to `Simulation`): `ctrl(mdl)` returns `(T_s, d_abc)`. The controller can change `T_s` at every step. Before the call, the gate enable `ctrl.get_enable()` is applied to the converter, so that the measurements see a converter with blocked gates; the diode transitions of a blocked converter are located as solver events.
 1. `mdl.delay` applies the computational delay, and `mdl.pwm` converts the duty ratios into switching intervals: `ZOH` (averaged, default) or `CarrierComparison` (`pwm=True` in the model constructor).
 1. `solve_ivp` integrates `mdl.rhs` between the sampling and switching instants of all the converters, with the switching states `converter.inp.q_c_ab` held constant.
 

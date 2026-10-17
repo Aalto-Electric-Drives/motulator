@@ -333,7 +333,7 @@ class Model[C: Converter](System):
         self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
 
     def modulate(
-        self, T_s: float, d_abc: Sequence[float], enabled: bool = True
+        self, T_s: float, d_abc: Sequence[float]
     ) -> tuple[SwitchingTimes, GateSignals, BlankingSignals]:
         """
         Delay the duty ratios and convert them to gate signals.
@@ -341,9 +341,10 @@ class Model[C: Converter](System):
         The sampling period consists of one half carrier period with double update
         and of two with single update. The duty ratios pass through the
         computational delay once per half carrier period, and the PWM model is
-        called for each half carrier period. If the gates are blocked, the duty
-        ratios still pass through the delay and the PWM model, but the gate signals
-        are zero for the whole sampling period.
+        called for each half carrier period. If the gates of the converter are
+        blocked (`converter.inp.enabled` is False), the duty ratios still pass
+        through the delay and the PWM model, but the gate signals are zero for the
+        whole sampling period.
 
         Parameters
         ----------
@@ -351,8 +352,6 @@ class Model[C: Converter](System):
             Sampling period (s).
         d_abc : Sequence[float]
             Duty ratios computed at this sampling instant.
-        enabled : bool, optional
-            Gate enable, defaults to True.
 
         Returns
         -------
@@ -364,10 +363,9 @@ class Model[C: Converter](System):
             Blanking signals in each interval.
 
         """
-        self.converter.set_enable(enabled)
         n = 2 if self.single_update else 1  # Half carrier periods per sampling period
         parts = [self.pwm(T_s / n, self.delay(d_abc)) for _ in range(n)]
-        if not enabled:
+        if not self.converter.inp.enabled:
             off = np.zeros((1, self.converter.n_legs))
             return np.array([T_s]), off, off
         t_steps = np.concatenate([p[0] for p in parts])

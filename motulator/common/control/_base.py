@@ -72,6 +72,10 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
         """
         self._enable = enable
 
+    def get_enable(self) -> bool:
+        """Evaluate the gate enable at the controller time."""
+        return bool(get_value(self._enable, self.t))
+
     def get_measurement(self, mdl: Mdl) -> Meas:
         """Get measurements from the model."""
         ...
@@ -106,7 +110,7 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
 
     def run_control_loop(self, mdl: Mdl) -> tuple[float, Sequence[float]]:
         """Run the default control loop, can be overridden."""
-        self.enabled = bool(get_value(self._enable, self.t))
+        self.enabled = self.get_enable()
         meas = self.get_measurement(mdl)
         fbk = self.get_feedback(meas)
         if self.enabled:

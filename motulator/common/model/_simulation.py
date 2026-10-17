@@ -229,12 +229,16 @@ class Simulation:
             for k, (mdl, ctrl) in enumerate(self._pairs):
                 # Control, computational delay, and carrier comparison
                 if k in due:
+                    # The gate enable takes effect at the sampling instant, so that
+                    # the control system measures the converter with blocked gates
+                    enabled = ctrl.get_enable()
+                    if enabled != mdl.converter.inp.enabled:
+                        mdl.converter.set_enable(enabled)
+                        self.mdl.set_outputs(t0)
                     T_s, ref_duty_ratio = ctrl(mdl)
                     if T_s <= _T_TOL:
                         raise ValueError("The sampling period must be positive")
-                    t_steps, q_abc, b_abc = mdl.modulate(
-                        T_s, ref_duty_ratio, ctrl.enabled
-                    )
+                    t_steps, q_abc, b_abc = mdl.modulate(T_s, ref_duty_ratio)
                     # Switching instants, accumulated from the interval durations
                     t_sw = [t0]
                     for t_step in t_steps[:-1]:

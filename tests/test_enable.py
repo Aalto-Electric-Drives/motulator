@@ -73,7 +73,9 @@ def test_open_circuit(pwm: bool, discrete: bool) -> None:
     np.testing.assert_allclose(converter.u_c_ab, emf, atol=1e-6)
     assert not np.any(converter.enabled)
     assert not np.any(res.ctrl.ref.enabled)
-    # The current controller tracks the measured voltage in standby
+    # The control system measures the EMF from the first sampling instant on, and the
+    # current controller tracks the measured voltage in standby
+    np.testing.assert_allclose(np.abs(res.ctrl.fbk.u_s), 3 * 100 * 0.545, rtol=1e-6)
     assert res.ctrl.ref.u_s[-1] == pytest.approx(res.ctrl.fbk.u_s[-1], abs=1)
 
 
