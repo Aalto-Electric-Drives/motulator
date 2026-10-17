@@ -8,29 +8,9 @@ import numpy as np
 from matplotlib.ticker import MaxNLocator
 from numpy.typing import ArrayLike
 
-from motulator.common.utils._plotting import (
-    save_and_show,
-    set_latex_style,
-    set_screen_style,
-    set_style,
-)
+from motulator.common.utils._plotting import save_and_show, set_style, setup_map_plot
 from motulator.common.utils._utils import BaseValues
 from motulator.drive.utils._sm_flux_maps import MagneticModel
-
-
-# %%
-def _setup_plot_style(latex: bool) -> tuple[float, float]:
-    """Set up the plot style and return the figure size."""
-    if latex:
-        set_latex_style()
-        width = plt.rcParams["figure.figsize"][0] * 1.4
-        height = plt.rcParams["figure.figsize"][1] * 1.4
-        size = (width, height)
-        plt.rcParams.update({"savefig.pad_inches": 0.3})
-    else:
-        set_screen_style()
-        size = plt.rcParams["figure.figsize"]
-    return size
 
 
 # %%
@@ -209,7 +189,7 @@ def plot_map(
 
     """
     # Setup style and base values
-    size = _setup_plot_style(latex)
+    size = setup_map_plot(latex)
     pu_vals = base is not None
     if base is None:
         base = BaseValues.unity()

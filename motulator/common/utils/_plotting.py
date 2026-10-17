@@ -75,6 +75,16 @@ def setup_time_series_plot(latex: bool) -> tuple[float, float]:
     return width, height * (2.2 if latex else 1.8)
 
 
+def setup_map_plot(latex: bool) -> tuple[float, float]:
+    """Set the style and return the figure size (width, height) for 3D map plots."""
+    set_style(latex)
+    width, height = plt.rcParams["figure.figsize"]
+    if latex:
+        plt.rcParams.update({"savefig.pad_inches": 0.3})
+        return 1.4 * width, 1.4 * height
+    return width, height
+
+
 # %%
 def configure_axes(
     axes: list,

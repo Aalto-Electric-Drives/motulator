@@ -17,8 +17,8 @@ from motulator.common.utils._utils import BaseValues, complex2abc
 
 
 # %%
-def _plot_speeds(ax, ctrl, mdl, base: BaseValues) -> None:
-    """Plot angular speeds."""
+def _plot_speeds(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
+    """Plot angular speeds, using the LaTeX subscript `M` of mechanical quantities."""
     if hasattr(ctrl.ref, "w_M") and np.any(ctrl.ref.w_M):
         ax.plot(
             ctrl.t,
@@ -34,8 +34,8 @@ def _plot_speeds(ax, ctrl, mdl, base: BaseValues) -> None:
     ax.legend()
 
 
-def _plot_torques(ax, ctrl, mdl, base: BaseValues) -> None:
-    """Plot torques."""
+def _plot_torques(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
+    """Plot torques, using the LaTeX subscript `M` of mechanical quantities."""
     # Plot torque reference only if it is nonzero
     if hasattr(ctrl.ref, "tau_M") and np.any(ctrl.ref.tau_M):
         ax.plot(
@@ -184,8 +184,7 @@ def plot(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Process base values and set LaTeX subscript for M
-    global M  # noqa: PLW0603
+    # Process base values and set the LaTeX subscript of mechanical quantities
     if base is None:
         pu_vals = False
         base = BaseValues.unity()
@@ -228,11 +227,11 @@ def plot(
     # Plot selected subplots
     for ax, name in zip(axes, subplots, strict=True):
         plot_func, label_si, label_pu = subplot_map[name]
-        if name in ["speed", "torque", "flux"]:
+        if name in ["speed", "torque"]:
+            plot_func(ax, res.ctrl, res.mdl, base, M)
+        elif name == "flux":
             plot_func(ax, res.ctrl, res.mdl, base)
-        elif name == "current":
-            plot_func(ax, res.ctrl, base)
-        elif name == "voltage":
+        else:
             plot_func(ax, res.ctrl, base)
         ax.set_ylabel(label_pu if pu_vals else label_si)
 
