@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.common.control._pwm &#8212; motulator 0.14.0 documentation</title>
+    <title>motulator.common.control._pwm &#8212; motulator 0.14.1 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=8eac8a5b"></script>
+    <script src="../../../../_static/documentation_options.js?v=35500846"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.14.0 documentation</p>
+    <p class="title logo__title">motulator 0.14.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -940,6 +940,8 @@
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="n">i_c_ab</span>
+        <span class="k">if</span> <span class="n">u_dc</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># A discharged DC bus, e.g., with blocked gates</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="n">j</span>
         <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">average</span> <span class="k">else</span> <span class="mi">1</span> <span class="p">:]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">)</span>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.control._base &#8212; motulator 0.14.0 documentation</title>
+    <title>motulator.grid.control._base &#8212; motulator 0.14.1 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=8eac8a5b"></script>
+    <script src="../../../../_static/documentation_options.js?v=35500846"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.14.0 documentation</p>
+    <p class="title logo__title">motulator 0.14.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -707,13 +707,14 @@
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
         <span class="c1"># control laws use the voltage averaged over the previous and ongoing periods.</span>
-        <span class="c1"># With blocked gates, both are the measured voltage.</span>
-        <span class="k">if</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span>
-                <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># With blocked gates, both are the measured voltage. The realized voltage is</span>
+        <span class="c1"># computed also then, since it passes the measured currents to the PWM for the</span>
+        <span class="c1"># feedforward compensation of the duty ratios applied after the release.</span>
+        <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span>
+            <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab_zoh</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
