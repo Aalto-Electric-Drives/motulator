@@ -11,3 +11,5 @@ label: grid_voltage_vector
 ```
 
 where $e_\mathrm{g+}$ and $e_\mathrm{g-}$ are the magnitudes of the positive-sequence and negative-sequence components, respectively, and $\phi_+$ and $\phi_-$ are the positive-sequence and negative-sequence phase shifts, respectively. The angle $\thetag$ is obtained by integrating the angular frequency $\omegag$. All parameters can be given as time-varying functions to simulate various fault conditions.
+
+For identifying the output admittance of the converter, the {class}`motulator.grid.model.ThreePhaseSourceWithSignalInjection` class adds the excitation $\mathbf{u}_\mathrm{e}\cos(2\pi f_\mathrm{e}t)$ to the positive-sequence component in the synchronous coordinates of the source. The identification is run by {func}`motulator.grid.utils.run_identification`: the system is first simulated to the operating point, after which the PCC voltage is imposed by a stiff source and small-signal excitations are injected in the d- and q-axes. See the examples {doc}`/grid_examples/identification/plot_10kva_gfl_identification` and {doc}`/grid_examples/identification/plot_13kva_do_gfm_identification`.

@@ -152,6 +152,40 @@ p_\mathrm{max} &= \frac{\alpha_\mathrm{l}}{s + \alpha_\mathrm{l}} \frac{3}{2} |\
 
 where $i_\mathrm{d,max}$ is the maximum active current and $\alpha_\mathrm{l}$ is the power-limitation bandwidth. The limited active-power reference is $\bar p_\mathrm{g}^\mathrm{ref} = \mathrm{sign}(\pgref) \min(|\pgref|, p_\mathrm{max})$. The maximum active current should be chosen somewhat below the current limit $i_\mathrm{max}$, e.g., $i_\mathrm{d,max} = 1.1$ p.u. when $i_\mathrm{max} = 1.3$ p.u. {cite}`Maa2026`. This limitation is enabled in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class by setting the parameter `i_d_max`. Its effect is demonstrated in the example {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
 
+## Unbalanced Grids
+
+The disturbance model {eq}`system_model1` assumes a balanced grid voltage. In unbalanced grids, the grid voltage also contains a negative-sequence component. The method in {cite}`Maa2026` extends the disturbance model accordingly: in the coordinates rotating at the nominal grid angular frequency $\hatomegag$, the positive-sequence component $\mathbf{u}_\mathrm{g+}$ is modeled as constant and the negative-sequence component $\mathbf{u}_\mathrm{g-}$ as rotating at the angular speed $-2\hatomegag$. Then, the hold-equivalent model {eq}`hold_equivalent_gfm` becomes
+
+```{math}
+---
+label: hold_equivalent_seq_gfm
+---
+\ic(k+1) = \Phi\ic(k) + \gamma_\mathrm{c}\uc(k) + \gamma_\mathrm{g}\mathbf{u}_\mathrm{g+}(k) + \Phi\gamma_\mathrm{g}\mathbf{u}_\mathrm{g-}(k)
+```
+
+and the corresponding disturbance observer is
+
+```{math}
+---
+label: sequence_observer_gfm
+---
+\hat{\mathbf{u}}_\mathrm{g+}(k) &= \hat{\mathbf{u}}_\mathrm{g+}(k-1) + k_+\left[\ic(k) - \hatic(k)\right] \\
+\hat{\mathbf{u}}_\mathrm{g-}(k) &= \Phi^2\hat{\mathbf{u}}_\mathrm{g-}(k-1) + k_-\left[\ic(k) - \hatic(k)\right] \\
+\hatic(k+1) &= \Phi\ic(k) + \gamma_\mathrm{c}\uc(k) + \gamma_\mathrm{g}\hat{\mathbf{u}}_\mathrm{g+}(k) + \Phi\gamma_\mathrm{g}\hat{\mathbf{u}}_\mathrm{g-}(k)
+```
+
+where the gains $k_+$ and $k_-$ place the two poles of the estimation-error dynamics at $\e^{p_1\alphao\Ts}$ and $\e^{p_2\alphao\Ts}$, with the normalized poles $p_1 = -1 - \jj$ and $p_2 = -0.58 - \jj$ by default. The converter current is separated into its quasi-static sequence components $\mathbf{i}_\mathrm{c+}$ and $\mathbf{i}_\mathrm{c-}$ by a complex first-order filter, whose coefficients are selected such that the separation is exact for both sequences in the periodic steady state. The quasi-static converter voltages of the sequences are
+
+```{math}
+---
+label: quasi_static_seq_gfm
+---
+\hat{\mathbf{v}}_\mathrm{c+} &= \hat{\mathbf{u}}_\mathrm{g+} + \jj\hatomegag\hat L\mathbf{i}_\mathrm{c+} \\
+\hat{\mathbf{v}}_\mathrm{c-} &= \hat{\mathbf{u}}_\mathrm{g-} - \jj\hatomegag\hat L\mathbf{i}_\mathrm{c-}
+```
+
+The positive-sequence active power $\hat p_\mathrm{g+} = (3/2)\RE\{\hat{\mathbf{u}}_\mathrm{g+}\mathbf{i}_\mathrm{c+}^*\}$ and the magnitude $|\hat{\mathbf{v}}_\mathrm{c+}|$ are controlled by a feedback law similar to {eq}`control_law_gfm`, while the negative-sequence feedback correction $-\jj k_\mathrm{n}\hat{\mathbf{v}}_\mathrm{c-}$ drives $\hat{\mathbf{v}}_\mathrm{c-}$ to zero, i.e., the negative-sequence converter voltage is suppressed. The feedback corrections are realized by transparent current control, where both sequence current references are scaled by a common factor such that the peak phase current does not exceed $i_\mathrm{max}$. In the active-power limitation {eq}`power_limitation_gfm`, the positive-sequence voltage reference and current are used, and the maximum active current $i_\mathrm{d,max}$ is reduced by the negative-sequence current magnitude $|\mathbf{i}_\mathrm{c-}|$, which prioritizes the reactive and negative-sequence currents. The computational and modulation delays are compensated for by advancing the angle of the positive-sequence voltage reference by $1.5\hatomegag\Ts$ and retarding that of the negative sequence by the same angle. This method is implemented in the {class}`motulator.grid.control.SequenceObserverBasedGridFormingController` class and demonstrated in the example {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm_negseq`.
+
 ## Dual-Voltage-Forming Control
 
 The disturbance-observer-based control can be extended to regulate the DC-bus voltage directly, without a cascaded DC-bus voltage controller {cite}`Mou2025`. In addition to the quasi-static converter voltage $\hatvc$, the disturbance power $p_\mathrm{dis} = p_\mathrm{ext} - \pg - (3/2)R|\ic|^2$ is estimated, where $p_\mathrm{ext}$ is the external power fed to the DC bus and the last term is the resistive losses (omitted in {cite}`Mou2025`). The estimate is obtained from the energy balance of the DC-bus capacitor and the inductor,
