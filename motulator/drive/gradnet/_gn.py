@@ -27,6 +27,8 @@ import torch.nn.functional as F
 from torch import nn
 from torch.nn import init
 
+from motulator.drive.utils._sm_flux_maps import SaturationModelBase
+
 
 # %%
 class Softmax(nn.Module):
@@ -296,11 +298,12 @@ def load_gradnet(
 
 
 # %%
-class CurrentMap:
+class CurrentMap(SaturationModelBase):
     """
     Callable wrapper for GradNet current map models.
 
-    The map is symmetrized about the d-axis to ensure physical consistency.
+    The map is symmetrized about the d-axis to ensure physical consistency. The map can
+    be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.
 
     Parameters
     ----------
@@ -310,6 +313,7 @@ class CurrentMap:
     """
 
     def __init__(self, model: GradNet) -> None:
+        super().__init__(map_type="current_map")
         self.model = model
         self.in_base = model.psi_base.item()
         self.out_base = model.i_base.item()
@@ -386,6 +390,7 @@ class FluxMap(CurrentMap):
 
     def __init__(self, model: GradNet) -> None:
         super().__init__(model)
+        self._type = "flux_map"
         self.in_base = model.i_base.item()
         self.out_base = model.psi_base.item()
 

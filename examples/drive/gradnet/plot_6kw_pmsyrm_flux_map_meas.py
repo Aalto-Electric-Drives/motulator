@@ -62,38 +62,35 @@ train_data, val_data = gn.get_training_data(
 # Plot the flux map.
 
 # Sample the map on a grid for plotting
-flux_map = gn.sample_map_on_grid(
-    flux_map_fcn,
-    map_type="flux_map",
-    d_range=np.linspace(-2, 2, 50) * base.i,
-    q_range=np.linspace(-2.5, 2.5, 50) * base.i,
+flux_map = flux_map_fcn.as_magnetic_model(
+    d_range=np.linspace(-2, 2, 50) * base.i, q_range=np.linspace(-2.5, 2.5, 50) * base.i
 )
 
 # Constant current contours corresponding to the measured dataset, for visualization
 i_d_levels = np.arange(-20, 22, 2) / base.i
 i_q_levels = np.arange(-26, 28, 2) / base.i
-current_loci_levels = (i_d_levels, i_q_levels)
+current_loci = (i_d_levels, i_q_levels)
 
-gn.plot_maps(
+utils.plot_map(
     flux_map,
     "d",
     base,
-    current_loci=True,
     lims={"x": (-2, 2), "y": (-2.5, 2.5), "z": (0, 1)},
     ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2], "z": [0, 0.5, 1]},
     raw_data=[val_data, train_data],
-    current_loci_levels=current_loci_levels,
+    current_loci=current_loci,
+    axlim_clip=False,
 )
 
-gn.plot_maps(
+utils.plot_map(
     flux_map,
     "q",
     base,
-    current_loci=True,
     lims={"x": (-2, 2), "y": (-2.5, 2.5), "z": (-1.5, 1.5)},
     ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2], "z": [-1.5, 0, 1.5]},
     raw_data=[val_data, train_data],
-    current_loci_levels=current_loci_levels,
+    current_loci=current_loci,
+    axlim_clip=False,
 )
 
 # %%

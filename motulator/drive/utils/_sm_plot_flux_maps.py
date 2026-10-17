@@ -5,6 +5,7 @@ from typing import Literal
 
 import matplotlib.pyplot as plt
 import numpy as np
+from contourpy import contour_generator
 from matplotlib.ticker import MaxNLocator
 from numpy.typing import ArrayLike
 
@@ -14,9 +15,21 @@ from motulator.drive.utils._sm_flux_maps import MagneticModel
 
 
 # %%
+def _get_xyz(
+    data_type: str, i_s_dq: np.ndarray, psi_s_dq: np.ndarray, component: str
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Get the map input (x, y) and the plotted component of the output (z)."""
+    inp, out = (i_s_dq, psi_s_dq) if data_type == "flux_map" else (psi_s_dq, i_s_dq)
+    return (
+        np.real(inp),
+        np.imag(inp),
+        np.real(out) if component == "d" else np.imag(out),
+    )
+
+
 def _filter_and_plot_raw_data(
     ax,
-    raw_data: MagneticModel | tuple[np.ndarray, np.ndarray],
+    raw_data: MagneticModel | tuple[np.ndarray, ...],
     base: BaseValues,
     data_type: str,
     component: str,
@@ -27,34 +40,52 @@ def _filter_and_plot_raw_data(
 ) -> None:
     """Filter and plot raw data as scatter points."""
     if isinstance(raw_data, tuple):
-        raw_i_s_dq = raw_data[0] / base.i
-        raw_psi_s_dq = raw_data[1] / base.psi
+        raw_psi_s_dq, raw_i_s_dq = raw_data[0], raw_data[1]
     else:
-        raw_i_s_dq = raw_data.i_s_dq / base.i
-        raw_psi_s_dq = raw_data.psi_s_dq / base.psi
+        raw_psi_s_dq, raw_i_s_dq = raw_data.psi_s_dq, raw_data.i_s_dq
+    x, y, z = _get_xyz(
+        data_type,
+        np.asarray(raw_i_s_dq) / base.i,
+        np.asarray(raw_psi_s_dq) / base.psi,
+        component,
+    )
+    mask = (x >= x_lims[0]) & (x <= x_lims[1]) & (y >= y_lims[0]) & (y <= y_lims[1])
+    ax.scatter(x[mask], y[mask], z[mask], s=5, marker=marker, color=color)
 
-    if data_type == "flux_map":
-        mask = (
-            (raw_i_s_dq.real >= x_lims[0])
-            & (raw_i_s_dq.real <= x_lims[1])
-            & (raw_i_s_dq.imag >= y_lims[0])
-            & (raw_i_s_dq.imag <= y_lims[1])
-        )
-        x_scatter, y_scatter = raw_i_s_dq[mask].real, raw_i_s_dq[mask].imag
-        z_scatter = (
-            raw_psi_s_dq[mask].real if component == "d" else raw_psi_s_dq[mask].imag
-        )
-    else:
-        mask = (
-            (raw_psi_s_dq.real >= x_lims[0])
-            & (raw_psi_s_dq.real <= x_lims[1])
-            & (raw_psi_s_dq.imag >= y_lims[0])
-            & (raw_psi_s_dq.imag <= y_lims[1])
-        )
-        x_scatter, y_scatter = raw_psi_s_dq[mask].real, raw_psi_s_dq[mask].imag
-        z_scatter = raw_i_s_dq[mask].real if component == "d" else raw_i_s_dq[mask].imag
 
-    ax.scatter(x_scatter, y_scatter, z_scatter, marker=marker, color=color)
+def _plot_current_loci(
+    ax,
+    data: MagneticModel,
+    base: BaseValues,
+    component: str,
+    levels: tuple[ArrayLike, ArrayLike],
+    axlim_clip: bool,
+) -> None:
+    """Plot the constant-current loci, evaluating the map along them."""
+    i_s_dq, psi_s_dq = data.i_s_dq / base.i, data.psi_s_dq / base.psi
+    inp, in_base, out_base = (
+        (i_s_dq, base.i, base.psi)
+        if data.type == "flux_map"
+        else (psi_s_dq, base.psi, base.i)
+    )
+    x, y = np.real(inp), np.imag(inp)
+    fields = (np.real(i_s_dq), np.imag(i_s_dq))
+    for field, field_levels in zip(fields, levels, strict=True):
+        contours = contour_generator(x, y, field, line_type="Separate")
+        for level in np.atleast_1d(field_levels):
+            for line in contours.lines(float(level)):
+                x_l, y_l = np.asarray(line).T
+                out = np.asarray(data(in_base * (x_l + 1j * y_l))) / out_base
+                z_l = np.real(out) if component == "d" else np.imag(out)
+                ax.plot(
+                    x_l,
+                    y_l,
+                    z_l,
+                    color="black",
+                    linewidth=0.5,
+                    alpha=0.5,
+                    axlim_clip=axlim_clip,
+                )
 
 
 def _get_labels(data_type: str, component: str, pu_vals: bool) -> tuple[str, str, str]:
@@ -140,10 +171,12 @@ def plot_map(
     lims: dict[str, tuple[float, float]] | None = None,
     ticks: dict[str, ArrayLike] | None = None,
     raw_data: MagneticModel
-    | list[MagneticModel | tuple[np.ndarray, np.ndarray]]
+    | tuple[np.ndarray, ...]
+    | list[MagneticModel | tuple[np.ndarray, ...]]
     | None = None,
     raw_marker: str | list[str] | None = None,
     raw_color: str | list[str] | None = None,
+    current_loci: tuple[ArrayLike, ArrayLike] | None = None,
     axlim_clip: bool = True,
     surface_cmap: str = "viridis",
     latex: bool = False,
@@ -166,13 +199,18 @@ def plot_map(
         Axis limits. Keys should be 'x', 'y', 'z'.
     ticks : dict[str, ArrayLike], optional
         Axis tick locations. Keys should be 'x', 'y', 'z'.
-    raw_data : MagneticModel | list[MagneticModel | tuple], optional
+    raw_data : MagneticModel | tuple | list[MagneticModel | tuple], optional
         Raw data for comparison (shown as scatter points). A tuple of arrays is
-        interpreted as `(i_s_dq, psi_s_dq)` in SI units.
+        interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units, as returned by
+        `motulator.drive.gradnet.get_training_data`.
     raw_marker : str | list[str], optional
         Marker style for raw data.
     raw_color : str | list[str], optional
         Marker color for raw data.
+    current_loci : tuple[ArrayLike, ArrayLike], optional
+        Levels `(i_d_levels, i_q_levels)` of the constant-current loci, in the units of
+        the plot. If given, the loci are drawn on the surface instead of the wireframe.
+        The map is evaluated along the loci by the lookup function of `data`.
     axlim_clip : bool, optional
         Whether to hide the parts of the surface and wireframe outside the axis view
         limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's
@@ -201,13 +239,7 @@ def plot_map(
     # Create figure and axis
     fig, ax = plt.subplots(figsize=size, subplot_kw={"projection": "3d"})
 
-    # Select plot data based on map type
-    if data.type == "flux_map":
-        x, y = i_s_dq.real, i_s_dq.imag
-        z = psi_s_dq.real if component == "d" else psi_s_dq.imag
-    else:
-        x, y = psi_s_dq.real, psi_s_dq.imag
-        z = i_s_dq.real if component == "d" else i_s_dq.imag
+    x, y, z = _get_xyz(data.type, i_s_dq, psi_s_dq, component)
 
     # Configure axes (this determines x_lims, y_lims internally)
     x_lims, y_lims = _configure_3d_axes(ax, data.type, i_s_dq, psi_s_dq, lims, ticks)
@@ -252,10 +284,13 @@ def plot_map(
     ax.plot_surface(  # type: ignore
         x, y, z, cmap=surface_cmap, alpha=0.5, axlim_clip=axlim_clip
     )
-    # Add wireframe on top
-    ax.plot_wireframe(  # type: ignore
-        x, y, z, color="black", linewidth=0.5, alpha=0.5, axlim_clip=axlim_clip
-    )
+    # Add constant-current loci or wireframe on top
+    if current_loci is not None:
+        _plot_current_loci(ax, data, base, component, current_loci, axlim_clip)
+    else:
+        ax.plot_wireframe(  # type: ignore
+            x, y, z, color="black", linewidth=0.5, alpha=0.5, axlim_clip=axlim_clip
+        )
 
     xlabel, ylabel, zlabel = _get_labels(data.type, component, pu_vals)
     ax.set_xlabel(xlabel)
