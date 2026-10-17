@@ -213,8 +213,9 @@ def plot_map(
         The map is evaluated along the loci by the lookup function of `data`.
     axlim_clip : bool, optional
         Whether to hide the parts of the surface and wireframe outside the axis view
-        limits, defaults to True. Passed to the `axlim_clip` argument of matplotlib's
-        3D plotting functions.
+        limits, defaults to True. The grid is cropped to the x and y limits, and the
+        flag is passed to the `axlim_clip` argument of matplotlib's 3D plotting
+        functions.
     surface_cmap : str, optional
         Colormap for the surface plot, defaults to "viridis".
     latex : bool, optional
@@ -243,6 +244,14 @@ def plot_map(
 
     # Configure axes (this determines x_lims, y_lims internally)
     x_lims, y_lims = _configure_3d_axes(ax, data.type, i_s_dq, psi_s_dq, lims, ticks)
+
+    # Crop the grid to the axis limits, since clipping cuts the surface at its polygons
+    inside = (x >= x_lims[0]) & (x <= x_lims[1]) & (y >= y_lims[0]) & (y <= y_lims[1])
+    if axlim_clip and inside.any():
+        rows = np.flatnonzero(inside.any(axis=1))
+        cols = np.flatnonzero(inside.any(axis=0))
+        crop = np.s_[rows[0] : rows[-1] + 1, cols[0] : cols[-1] + 1]
+        x, y, z = x[crop], y[crop], z[crop]
 
     # Plot raw data if provided
     if raw_data is not None:
