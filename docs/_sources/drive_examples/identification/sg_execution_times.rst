@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**02:13.596** total execution time for 1 file **from drive_examples/identification**:
+**01:40.251** total execution time for 1 file **from drive_examples/identification**:
 
 .. container::
 
@@ -33,5 +33,5 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_identification_plot_45kw_im_vhz_identification.py` (``plot_45kw_im_vhz_identification.py``)
-     - 02:13.596
+     - 01:40.251
      - 0.0

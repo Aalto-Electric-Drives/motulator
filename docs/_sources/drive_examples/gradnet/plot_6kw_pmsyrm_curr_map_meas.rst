@@ -243,7 +243,7 @@ Print statistical error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.363 seconds)
+   **Total running time of the script:** (0 minutes 0.287 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_curr_map_meas.py:
