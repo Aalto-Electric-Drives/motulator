@@ -81,7 +81,9 @@ est_current_map = est_current_map.as_magnetic_model(
 )
 est_flux_map = est_current_map.invert()
 
-# Plot the saturation model (surface) and the measured data (points)
+# Plot the saturation model (surface) and the measured data (points), with the
+# constant-current loci at the measured currents
+current_loci = (i_s_dq_map[:, 0].real / base.i, i_s_dq_map[0, :].imag / base.i)
 utils.plot_map(
     est_flux_map,
     "d",
@@ -89,6 +91,7 @@ utils.plot_map(
     lims={"x": (-2, 2), "y": (-2, 2), "z": (0, 1)},
     ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
     raw_data=meas_flux_map,
+    current_loci=current_loci,
 )
 utils.plot_map(
     est_flux_map,
@@ -97,6 +100,7 @@ utils.plot_map(
     lims={"x": (-2, 2), "y": (-2, 2), "z": (-1.5, 1.5)},
     ticks={"x": [-2, -1, 0, 1, 2], "y": [-2, -1, 0, 1, 2]},
     raw_data=meas_flux_map,
+    current_loci=current_loci,
 )
 
 # %%
