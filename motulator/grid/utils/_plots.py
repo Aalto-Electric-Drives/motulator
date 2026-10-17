@@ -138,7 +138,7 @@ def plot_control_signals(
 
     Parameters
     ----------
-    res : SimulationResults
+    res : ~motulator.common.model.SimulationResults
         Simulation results.
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted
@@ -266,7 +266,7 @@ def plot_grid_waveforms(
 
     Parameters
     ----------
-    res : SimulationResults
+    res : ~motulator.common.model.SimulationResults
         Simulation results.
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted
@@ -343,7 +343,7 @@ def plot_voltage_vector(
 
     Parameters
     ----------
-    res : SimulationResults
+    res : ~motulator.common.model.SimulationResults
         Simulation results.
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted

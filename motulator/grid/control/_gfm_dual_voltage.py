@@ -127,7 +127,7 @@ class DualVoltageFormingController:
 
     This controller regulates both the DC-bus voltage and the converter output voltage
     magnitude [#Mou2025]_, extending the disturbance-observer-based grid-forming control
-    [#Nur2024]_. The disturbance observer estimates the quasi-static converter voltage
+    [#Nur2024b]_. The disturbance observer estimates the quasi-static converter voltage
     as in `ObserverBasedGridFormingController`, and a second observer estimates the
     disturbance power, i.e., the external power fed to the DC bus minus the grid
     power and the resistive losses, from the energy balance of the DC-bus capacitor
@@ -155,9 +155,9 @@ class DualVoltageFormingController:
        grid-forming converters: Toward the concept of dual-voltage-forming converters,"
        IEEE Trans. Power Electron., 2025, https://doi.org/10.1109/TPEL.2025.3537332
 
-    .. [#Nur2024] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional grid-forming
-       converter control based on a disturbance observer," IEEE Trans. Power Electron.,
-       2024, https://doi.org/10.1109/TPEL.2024.3433503
+    .. [#Nur2024b] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
+       grid-forming converter control based on a disturbance observer," IEEE Trans.
+       Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
     """
 

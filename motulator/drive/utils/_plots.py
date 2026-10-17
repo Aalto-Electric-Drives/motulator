@@ -159,7 +159,7 @@ def plot(
 
     Parameters
     ----------
-    res : SimulationResults
+    res : ~motulator.common.model.SimulationResults
         Simulation results.
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted
@@ -285,7 +285,7 @@ def plot_stator_waveforms(
 
     Parameters
     ----------
-    res : SimulationResults
+    res : ~motulator.common.model.SimulationResults
         Should contain the simulated data.
     base : BaseValues, optional
         Base values for scaling the waveforms.
@@ -376,7 +376,7 @@ def plot_dc_bus_waveforms(
 
     Parameters
     ----------
-    res : SimulationResults
+    res : ~motulator.common.model.SimulationResults
         Should contain the simulated data.
     base : BaseValues, optional
         Base values for scaling the waveforms.

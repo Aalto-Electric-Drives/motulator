@@ -31,6 +31,8 @@ keywords = [
 ]
 classifiers = [
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
 ]
@@ -39,11 +41,11 @@ classifiers = [
 dev = [
     "ipykernel",
     "ruff",
-    "toml",
     "pre-commit",
     "pyright",
     "pip-audit",
     "pytest",
+    "esbonio",
     "torch",
 ]
 doc = [
@@ -53,7 +55,6 @@ doc = [
     "sphinx-copybutton",
     "sphinx-gallery",
     "sphinx-book-theme",
-    "esbonio",
     "myst-parser",
     "sphinxcontrib-bibtex",
     "torch",
