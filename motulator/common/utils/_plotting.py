@@ -60,8 +60,20 @@ def set_latex_style() -> None:
 
 
 # %%
-def set_style(latex: bool) -> None:
-    """Configure matplotlib for LaTeX documents or for screen viewing."""
+def set_style(latex: bool = False) -> None:
+    """
+    Configure matplotlib for screen viewing or for LaTeX documents.
+
+    The plotting functions of motulator use this style, and it can be set before
+    drawing other figures in the same style (e.g., in related packages).
+
+    Parameters
+    ----------
+    latex : bool, optional
+        Use the style for LaTeX documents instead of the style for screen viewing,
+        defaults to False.
+
+    """
     if latex:
         set_latex_style()
     else:

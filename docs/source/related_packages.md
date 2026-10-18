@@ -1,19 +1,19 @@
 # Related Packages
 
-The packages listed on this page extend *motulator* with additional models, control methods, and tools. Their authors maintain them and answer the issues in their own repositories; the maintainers of *motulator* do not review, test, or support them.
+The packages listed on this page extend *motulator* with additional models, control methods, and tools. Each package is maintained in its own repository, separately from *motulator*, and its issues are handled there.
 
 ## Packages
 
 <!-- One row per package: name linked to the repository, one-sentence description,
      and the latest motulator release the package has been tested with. -->
 
-| Package | Description | Tested with |
-| ------- | ----------- | ----------- |
-|         |             |             |
+| Package                                                                               | Description                                                                          | Tested with |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------- |
+| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase) | Multi-three-phase machine drives based on the decoupled multi-stator transformation. | 0.14.1      |
 
 ## Listing a Package
 
-A package can be listed if it is open source, installable with `pip`, and has a README with at least one runnable example. To list it, open an [issue](https://github.com/Aalto-Electric-Drives/motulator/issues) or a pull request that adds a row to the table. The authors keep the tested release up to date; packages that no longer work or are no longer maintained may be removed from the list.
+A package can be listed if it is open source, installable with `pip`, and has a README with at least one runnable example. To list it, open an [issue](https://github.com/Aalto-Electric-Drives/motulator/issues) or a pull request that adds a row to the table. The maintainers of a package keep the tested release up to date; packages that no longer work or are no longer maintained may be removed from the list.
 
 ## Developing a Package
 
