@@ -309,7 +309,7 @@ switching periods differ, and the switching instants are not aligned.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 45.929 seconds)
+   **Total running time of the script:** (0 minutes 45.420 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_afe_cvc.py:

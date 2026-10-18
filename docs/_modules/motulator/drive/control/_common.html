@@ -659,6 +659,8 @@
         <span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">tau_M_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_s</span> <span class="o">=</span> <span class="n">alpha_s</span>
         <span class="n">alpha_i</span> <span class="o">=</span> <span class="n">alpha_s</span> <span class="k">if</span> <span class="n">alpha_i</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">alpha_i</span>
         <span class="n">k_p</span> <span class="o">=</span> <span class="p">(</span><span class="n">alpha_s</span> <span class="o">+</span> <span class="n">alpha_i</span><span class="p">)</span> <span class="o">*</span> <span class="n">J</span>
         <span class="n">k_i</span> <span class="o">=</span> <span class="n">alpha_s</span> <span class="o">*</span> <span class="n">alpha_i</span> <span class="o">*</span> <span class="n">J</span>
