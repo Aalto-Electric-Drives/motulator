@@ -11,10 +11,9 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: '3.12'
-    - name: Install PyTorch (CPU) and documentation dependencies
+    - name: Install the documentation dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install --index-url https://download.pytorch.org/whl/cpu torch
         pip install .[doc]
     - name: Build Sphinx documentation
       run: |

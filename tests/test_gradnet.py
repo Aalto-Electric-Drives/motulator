@@ -1,50 +1,53 @@
-"""Tests for GradNet models."""
+"""Tests for the GradNet functions and maps."""
 
 import numpy as np
 import pytest
-import torch
 
 import motulator.drive.gradnet as gn
-from motulator.drive.gradnet import training
-from motulator.drive.gradnet.training import GradNet
-
-ACTIVATIONS = [
-    training.Softmax,
-    training.PNormGradient,
-    training.Squareplus,
-    training.AlgebraicSigmoid,
-]
 
 
-@pytest.mark.parametrize("activation", ACTIVATIONS)
-def test_function(activation: type[torch.nn.Module], tmp_path) -> None:
+def random_function(
+    activation: str, in_dim: int, num_modules: int = 2, embed_dim: int = 6
+) -> gn.GradNetFunction:
+    """Function with random parameters."""
+    rng = np.random.default_rng(0)
+    return gn.GradNetFunction(
+        W=rng.normal(size=(num_modules, embed_dim, in_dim)),
+        b=rng.normal(size=(num_modules, embed_dim)),
+        beta_log=rng.normal(size=num_modules),
+        mu_log=rng.normal(size=2),
+        bias=rng.normal(size=in_dim),
+        activation=activation,
+        p=8 if activation == "PNormGradient" else 0,
+        psi_base=0.5,
+        i_base=5.0,
+    )
+
+
+@pytest.mark.parametrize("activation", gn.ACTIVATIONS)
+def test_function(activation: str, tmp_path) -> None:
     """
-    The numpy function equals the model, and its analytic Jacobian equals the one
-    computed with automatic differentiation, also after saving and loading.
+    The analytic Jacobian of the function equals the finite differences, and the
+    function is unchanged by saving and loading.
     """
-    torch.manual_seed(0)
-    model = GradNet(in_dim=4, mu_dim=2, num_modules=2, activation=activation)
-    fcn = gn.GradNetFunction.from_model(model)
+    fcn = random_function(activation, in_dim=4)
+    x = np.random.default_rng(1).normal(size=(5, 4))
+    y, jac = fcn(x, jacobian=True)
+    h = 1e-6
+    jac_fd = np.stack(
+        [(fcn(x + h * e)[0] - fcn(x - h * e)[0]) / (2 * h) for e in np.eye(4)], -1
+    )
+    assert jac is not None and np.allclose(jac, jac_fd, rtol=1e-6, atol=1e-6)
     fcn.save(tmp_path / "model.npz")
-    loaded = gn.load_gradnet(tmp_path / "model.npz")
-    # The model in double precision has the parameters of the function
-    model = model.double()
-    x = torch.randn(5, 4, dtype=torch.float64)
-    y = model(x).detach().numpy()
-    jac = torch.autograd.functional.jacobian(lambda z: model(z).sum(dim=0), x)
-    jac = jac.permute(1, 0, 2).numpy()
-    for f in (fcn, loaded):
-        y_np, jac_np = f(x.numpy(), jacobian=True)
-        assert np.allclose(y_np, y)
-        assert jac_np is not None and np.allclose(jac_np, jac)
+    y_loaded, jac_loaded = gn.load_gradnet(tmp_path / "model.npz")(x, jacobian=True)
+    assert jac_loaded is not None and np.array_equal(jac_loaded, jac)
+    assert np.array_equal(y_loaded, y)
 
 
-@pytest.mark.parametrize("activation", ACTIVATIONS)
-def test_map_jacobian(activation: type[torch.nn.Module]) -> None:
+@pytest.mark.parametrize("activation", gn.ACTIVATIONS)
+def test_map_jacobian(activation: str) -> None:
     """The Jacobian of the symmetrized map equals the finite differences."""
-    torch.manual_seed(1)
-    model = GradNet(in_dim=2, mu_dim=2, activation=activation, psi_base=0.5, i_base=5)
-    current_map = gn.CurrentMap(model)
+    current_map = gn.CurrentMap(random_function(activation, in_dim=2))
     psi = np.array([0.3 + 0.2j, -0.1 - 0.4j, 0.05j])
     h = 1e-6
     d_d = (current_map(psi + h) - current_map(psi - h)) / (2 * h)
@@ -57,14 +60,12 @@ def test_map_jacobian(activation: type[torch.nn.Module]) -> None:
     assert np.allclose(current_map(psi.conj()), np.conj(current_map(psi)))
 
 
-def test_unsupported_models() -> None:
-    """Models that cannot be converted to the numpy function are rejected."""
-    exponents = iter((2, 8))
-    for activation in (
-        torch.nn.Softplus,  # Not a GradNet activation
-        lambda: training.Softmax(dim=0),  # Not along the last axis
-        lambda: training.PNormGradient(p=next(exponents)),  # Different modules
-    ):
-        model = training.GradNet(num_modules=2, activation=activation)
-        with pytest.raises(ValueError):
-            gn.GradNetFunction.from_model(model)
+def test_map_with_harmonics() -> None:
+    """The map with harmonics is symmetric about the d-axis, including the torque."""
+    harm_map = gn.CurrentMapWithHarmonics(random_function("Softmax", in_dim=4), k=6)
+    psi = np.array([0.3 + 0.2j, -0.1 - 0.4j, 0.05j])
+    theta_m = np.array([0.1, 0.5, 1.0])
+    i_s, tau_m = harm_map(psi, np.exp(1j * theta_m))
+    i_s_conj, tau_m_conj = harm_map(psi.conj(), np.exp(-1j * theta_m))
+    assert np.allclose(i_s_conj, np.conj(i_s))
+    assert np.allclose(tau_m_conj, -tau_m)

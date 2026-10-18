@@ -1,16 +1,17 @@
 """
 Trained GradNets as numpy functions and the magnetic maps based on them.
 
-A trained network (see `GradNet`) is evaluated in double precision with numpy, so the
-maps need no PyTorch. The function `GradNetFunction` holds the parameters of the
-network, and it is saved to and loaded from an npz file.
+A trained network is evaluated in double precision with numpy, so the maps need no
+PyTorch. The function `GradNetFunction` holds the parameters of the network, and it is
+saved to and loaded from an npz file. The networks are trained with the related
+package motulator-gradnet.
 
 """
 
 from collections.abc import Callable
 from dataclasses import dataclass, fields
 from pathlib import Path
-from typing import Any, cast
+from typing import cast
 
 import numpy as np
 
@@ -36,7 +37,7 @@ def _diag(d: np.ndarray) -> np.ndarray:
 def softmax(
     z: np.ndarray, jacobian: bool, beta: float, p: int
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """Softmax activation, see `Softmax`."""
+    """Softmax activation softmax(beta*z) along the last axis."""
     s = np.exp(beta * (z - z.max(axis=-1, keepdims=True)))
     s /= s.sum(axis=-1, keepdims=True)
     if not jacobian:
@@ -47,7 +48,7 @@ def softmax(
 def pnorm_gradient(
     z: np.ndarray, jacobian: bool, beta: float, p: int
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """p-norm gradient activation, see `PNormGradient`."""
+    """Gradient of the smooth p-norm (1 + sum((beta*z)**p))**(1/p)/beta."""
     q = p - 1
     z = beta * z
     norm = 1 + np.sum(z ** (q + 1), axis=-1, keepdims=True)
@@ -63,7 +64,7 @@ def pnorm_gradient(
 def squareplus(
     z: np.ndarray, jacobian: bool, beta: float, p: int
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """Squareplus activation, see `Squareplus`."""
+    """Squareplus activation (z + sqrt(z**2 + beta))/2."""
     r = np.sqrt(z**2 + beta)
     return 0.5 * (z + r), _diag(0.5 * (1 + z / r)) if jacobian else None
 
@@ -71,12 +72,12 @@ def squareplus(
 def algebraic_sigmoid(
     z: np.ndarray, jacobian: bool, beta: float, p: int
 ) -> tuple[np.ndarray, np.ndarray | None]:
-    """Algebraic sigmoid activation, see `AlgebraicSigmoid`."""
+    """Algebraic sigmoid activation z/sqrt(z**2 + beta)."""
     r = np.sqrt(z**2 + beta)
     return z / r, _diag(beta / r**3) if jacobian else None
 
 
-# Activations by the names of their classes
+# Activations by name, the contract with the related package motulator-gradnet
 ACTIVATIONS: dict[str, Activation] = {
     "Softmax": softmax,
     "PNormGradient": pnorm_gradient,
@@ -92,8 +93,9 @@ class GradNetFunction:
     Trained GradNet as a numpy function in double precision.
 
     The function maps the per-unit input, shape (..., in_dim), to the per-unit output
-    of the same shape, see `GradNet`. It is created from a trained model by
-    `from_model`, saved to an npz file by `save`, and loaded by `load_gradnet`.
+    of the same shape, which is the gradient of the scalar state function of the
+    network. It is created from a trained model by the related package
+    motulator-gradnet, saved to an npz file by `save`, and loaded by `load_gradnet`.
 
     Parameters
     ----------
@@ -132,44 +134,6 @@ class GradNetFunction:
         self._act = ACTIVATIONS[self.activation]
         self._beta = np.exp(self.beta_log)
         self._mu = np.pad(np.exp(self.mu_log), (0, self.bias.size - self.mu_log.size))
-
-    @classmethod
-    def from_model(cls, model: Any) -> "GradNetFunction":
-        """
-        Create the function from a trained `GradNet` model.
-
-        The modules of the model must have the same activation, one of `ACTIVATIONS`
-        applied along the last axis (the default), with the same exponent `p`.
-
-        """
-        # Activation of the modules: the name, the axis, and the exponent q = p - 1
-        activations = {
-            (type(m.act).__name__, getattr(m.act, "dim", -1), getattr(m.act, "q", -1))
-            for m in model.blocks
-        }
-        if len(activations) != 1:
-            raise ValueError("The modules must have the same activation")
-        name, dim, q = activations.pop()
-        if name not in ACTIVATIONS:
-            raise ValueError(f"Activation {name} not supported, see ACTIVATIONS")
-        if dim != -1:
-            raise ValueError("The activation must be applied along the last axis")
-        par = {
-            key: value.detach().cpu().numpy().astype(float)
-            for key, value in model.state_dict().items()
-        }
-        modules = range(len(model.blocks))
-        return cls(
-            W=np.stack([par[f"blocks.{k}.W"] for k in modules]),
-            b=np.stack([par[f"blocks.{k}.b"] for k in modules]),
-            beta_log=np.array([par[f"blocks.{k}.act.beta_log"] for k in modules]),
-            mu_log=par["mu_log"],
-            bias=par["bias"],
-            activation=name,
-            p=q + 1,
-            psi_base=float(par["psi_base"]),
-            i_base=float(par["i_base"]),
-        )
 
     def save(self, path: Path | str) -> None:
         """Save the parameters to an npz file."""
@@ -230,13 +194,6 @@ def load_gradnet(model_path: Path | str) -> GradNetFunction:
     return GradNetFunction(**par)
 
 
-def _function(model: Any) -> GradNetFunction:
-    """Function of a trained network, given as a function or a `GradNet` model."""
-    if isinstance(model, GradNetFunction):
-        return model
-    return GradNetFunction.from_model(model)
-
-
 # %%
 class CurrentMap(SaturationModelBase):
     """
@@ -247,14 +204,14 @@ class CurrentMap(SaturationModelBase):
 
     Parameters
     ----------
-    model : GradNetFunction | GradNet
-        Trained GradNet model for the current map.
+    model : GradNetFunction
+        Trained GradNet for the current map, see `load_gradnet`.
 
     """
 
-    def __init__(self, model: Any) -> None:
+    def __init__(self, model: GradNetFunction) -> None:
         super().__init__(map_type="current_map")
-        self.fcn = _function(model)
+        self.fcn = model
         self.in_base, self.out_base = self.fcn.psi_base, self.fcn.i_base
 
     def _evaluate(
@@ -318,12 +275,12 @@ class FluxMap(CurrentMap):
 
     Parameters
     ----------
-    model : GradNetFunction | GradNet
-        Trained GradNet model for the flux-linkage map.
+    model : GradNetFunction
+        Trained GradNet for the flux-linkage map, see `load_gradnet`.
 
     """
 
-    def __init__(self, model: Any) -> None:
+    def __init__(self, model: GradNetFunction) -> None:
         super().__init__(model)
         self._type = "flux_map"
         self.in_base, self.out_base = self.fcn.i_base, self.fcn.psi_base
@@ -336,15 +293,15 @@ class CurrentMapWithHarmonics:
 
     Parameters
     ----------
-    model : GradNetFunction | GradNet
-        Trained GradNet model for the current map with harmonics.
+    model : GradNetFunction
+        Trained GradNet for the current map with harmonics, see `load_gradnet`.
     k : int, optional
         Spatial harmonic order, defaults to 6.
 
     """
 
-    def __init__(self, model: Any, k: int = 6) -> None:
-        self.fcn = _function(model)
+    def __init__(self, model: GradNetFunction, k: int = 6) -> None:
+        self.fcn = model
         self.i_base, self.psi_base = self.fcn.i_base, self.fcn.psi_base
         self.tau_base = 1.5 * self.psi_base * self.i_base
         self.in_base, self.out_base = self.psi_base, self.i_base
@@ -408,14 +365,14 @@ class FluxMapWithHarmonics(CurrentMapWithHarmonics):
 
     Parameters
     ----------
-    model : GradNetFunction | GradNet
-        Trained GradNet model for the flux map with harmonics.
+    model : GradNetFunction
+        Trained GradNet for the flux map with harmonics, see `load_gradnet`.
     k : int, optional
         Spatial harmonic order, defaults to 6.
 
     """
 
-    def __init__(self, model: Any, k: int = 6) -> None:
+    def __init__(self, model: GradNetFunction, k: int = 6) -> None:
         super().__init__(model, k)
         self.in_base, self.out_base = self.i_base, self.psi_base
 

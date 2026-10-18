@@ -46,7 +46,6 @@ dev = [
     "pip-audit",
     "pytest",
     "esbonio",
-    "torch",
 ]
 doc = [
     "numpydoc",
@@ -57,10 +56,6 @@ doc = [
     "sphinx-book-theme",
     "myst-parser",
     "sphinxcontrib-bibtex",
-    "torch",
-]
-gradnet = [
-    "torch",
 ]
 
 [project.urls]

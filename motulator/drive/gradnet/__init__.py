@@ -1,13 +1,14 @@
 """
 Gradient-based neural network maps.
 
-The trained networks (see `load_gradnet`) and the maps based on them (e.g.,
-`CurrentMap`) are evaluated with NumPy. Training the networks (see `training`)
-requires PyTorch.
+The magnetic maps (e.g., `CurrentMap`) evaluate trained gradient networks (GradNets)
+with NumPy, see `load_gradnet`. The networks are trained with the related package
+motulator-gradnet, https://github.com/Aalto-Electric-Drives/motulator-gradnet.
 
 """
 
 from motulator.drive.gradnet._maps import (
+    ACTIVATIONS,
     CurrentMap,
     CurrentMapWithHarmonics,
     FluxMap,
@@ -15,30 +16,13 @@ from motulator.drive.gradnet._maps import (
     GradNetFunction,
     load_gradnet,
 )
-from motulator.drive.gradnet._plot import (
-    PlotOptions,
-    plot_output_vs_angle,
-    plot_surface_vs_current_and_angle,
-)
-from motulator.drive.gradnet._stats import (
-    print_current_map_errors_fem,
-    print_current_map_errors_meas,
-    print_flux_map_errors_fem,
-    print_flux_map_errors_meas,
-)
 
 __all__ = [
+    "ACTIVATIONS",
     "CurrentMap",
     "CurrentMapWithHarmonics",
     "FluxMap",
     "FluxMapWithHarmonics",
     "GradNetFunction",
-    "PlotOptions",
-    "plot_output_vs_angle",
-    "plot_surface_vs_current_and_angle",
-    "print_current_map_errors_fem",
-    "print_current_map_errors_meas",
-    "print_flux_map_errors_fem",
-    "print_flux_map_errors_meas",
     "load_gradnet",
 ]
