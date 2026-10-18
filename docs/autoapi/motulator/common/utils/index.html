@@ -546,6 +546,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2line"><code class="docutils literal notranslate"><span class="pre">complex2line()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.line2complex"><code class="docutils literal notranslate"><span class="pre">line2complex()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.set_style"><code class="docutils literal notranslate"><span class="pre">set_style()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -597,6 +598,9 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.utils.line2complex" title="motulator.common.utils.line2complex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">line2complex</span></code></a>(u)</p></td>
 <td><p>Transform two line-to-line quantities to a complex space vector.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.utils.set_style" title="motulator.common.utils.set_style"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_style</span></code></a>([latex])</p></td>
+<td><p>Configure matplotlib for screen viewing or for LaTeX documents.</p></td>
 </tr>
 </tbody>
 </table>
@@ -817,6 +821,23 @@ data points.</p>
 </div>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.utils.set_style">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.utils.</span></span><span class="sig-name descname"><span class="pre">set_style</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">latex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/utils/_plotting.html#set_style"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.utils.set_style" title="Link to this definition">#</a></dt>
+<dd><p>Configure matplotlib for screen viewing or for LaTeX documents.</p>
+<p>The plotting functions of motulator use this style, and it can be set before
+drawing other figures in the same style (e.g., in related packages).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>latex</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Use the style for LaTeX documents instead of the style for screen viewing,
+defaults to False.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -882,6 +903,7 @@ data points.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2abc"><code class="docutils literal notranslate"><span class="pre">complex2abc()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.complex2line"><code class="docutils literal notranslate"><span class="pre">complex2line()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.line2complex"><code class="docutils literal notranslate"><span class="pre">line2complex()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.utils.set_style"><code class="docutils literal notranslate"><span class="pre">set_style()</span></code></a></li>
 </ul>
 </li>
 </ul>

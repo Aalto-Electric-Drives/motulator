@@ -47,6 +47,7 @@ Functions
    motulator.common.utils.complex2abc
    motulator.common.utils.complex2line
    motulator.common.utils.line2complex
+   motulator.common.utils.set_style
 
 
 Package Contents
@@ -384,6 +385,35 @@ Package Contents
    >>> y = line2complex([2, -1])
    >>> y
    (1-0.5773502691896258j)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: set_style(latex = False)
+
+   
+   Configure matplotlib for screen viewing or for LaTeX documents.
+
+   The plotting functions of motulator use this style, and it can be set before
+   drawing other figures in the same style (e.g., in related packages).
+
+   :param latex: Use the style for LaTeX documents instead of the style for screen viewing,
+                 defaults to False.
+   :type latex: bool, optional
 
 
 
