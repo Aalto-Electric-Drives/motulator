@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**03:53.311** total execution time for 13 files **from drive_examples/current_vector**:
+**02:41.254** total execution time for 13 files **from drive_examples/current_vector**:
 
 .. container::
 
@@ -33,41 +33,41 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_afe_dvf_cvc.py` (``plot_2kw_ipmsm_afe_dvf_cvc.py``)
-     - 00:47.452
+     - 00:32.263
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_afe_cvc.py` (``plot_2kw_ipmsm_afe_cvc.py``)
-     - 00:45.420
+     - 00:30.849
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py` (``plot_2kw_im_dead_time_cvc.py``)
-     - 00:38.733
+     - 00:26.429
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py` (``plot_5kw_pmsyrm_thor_sat_cvc.py``)
-     - 00:20.046
+     - 00:16.546
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc.py` (``plot_6kw_pmsyrm_sat_cvc.py``)
-     - 00:19.158
-     - 0.0
-   * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_blocked_cvc.py` (``plot_2kw_ipmsm_blocked_cvc.py``)
-     - 00:13.475
+     - 00:12.755
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_diode_cvc.py` (``plot_2kw_ipmsm_diode_cvc.py``)
-     - 00:13.399
+     - 00:08.853
+     - 0.0
+   * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_blocked_cvc.py` (``plot_2kw_ipmsm_blocked_cvc.py``)
+     - 00:08.774
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_cvc_tq.py` (``plot_2kw_im_cvc_tq.py``)
-     - 00:08.252
+     - 00:05.660
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_sat_cvc.py` (``plot_2kw_im_sat_cvc.py``)
-     - 00:06.803
+     - 00:04.743
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py` (``plot_2kw_ipmsm_cvc_adapt.py``)
-     - 00:06.574
+     - 00:04.566
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_7kw_syrm_cvc.py` (``plot_7kw_syrm_cvc.py``)
-     - 00:05.439
+     - 00:03.757
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py` (``plot_2kw_im_cvc_discrete.py``)
-     - 00:05.382
+     - 00:03.659
      - 0.0
    * - :ref:`sphx_glr_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py` (``plot_6kw_pmsyrm_sat_cvc_discrete.py``)
-     - 00:03.177
+     - 00:02.398
      - 0.0
