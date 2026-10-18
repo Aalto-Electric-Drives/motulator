@@ -79,6 +79,16 @@ Almost all control methods in the examples have also been implemented and tested
 
 <br clear="right">
 
+## Related packages
+
+The following packages extend *motulator*, each maintained in its own repository:
+
+- [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase): multi-three-phase machine drives based on the decoupled multi-stator transformation
+- [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance): mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps
+- [motulator-export](https://github.com/Aalto-Electric-Drives/motulator-export): export of drive and grid converter systems to PLECS and Simulink, with the control algorithms ported to C
+
+See the [related packages](https://aalto-electric-drives.github.io/motulator/related_packages.html) page for the tested releases and for listing a package.
+
 ## Contributing
 
 If you would like to help us develop *motulator*, see these [guidelines](https://aalto-electric-drives.github.io/motulator/contributing.html) first.
