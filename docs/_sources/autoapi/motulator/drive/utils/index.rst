@@ -34,8 +34,6 @@ Classes
 
    motulator.drive.utils.BaseValues
    motulator.drive.utils.ControlLoci
-   motulator.drive.utils.IdentificationCfg
-   motulator.drive.utils.IdentificationResults
    motulator.drive.utils.MachineCharacteristics
    motulator.drive.utils.MagneticModel
    motulator.drive.utils.NominalValues
@@ -55,10 +53,8 @@ Functions
    motulator.drive.utils.plot
    motulator.drive.utils.plot_dc_bus_waveforms
    motulator.drive.utils.plot_flux_vs_current
-   motulator.drive.utils.plot_identification
    motulator.drive.utils.plot_map
    motulator.drive.utils.plot_stator_waveforms
-   motulator.drive.utils.run_identification
 
 
 Package Contents
@@ -405,85 +401,6 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
-
-.. py:class:: IdentificationCfg
-
-   
-   Configuration parameters for mechanical impedance identification.
-
-   :param abs_w_e: Magnitude of the rotor speed excitation (mechanical rad/s) at the first
-                   frequency.
-   :type abs_w_e: float
-   :param freqs: Excitation frequencies (Hz), defaults to 100 logarithmically spaced frequencies
-                 from 1 Hz to 1 kHz.
-   :type freqs: ndarray, optional
-   :param amplitude_multiplier: Excitation magnitude at the last frequency relative to the first one, defaults
-                                to 5. The magnitude changes linearly over the frequency array. Use 1 for a
-                                constant magnitude.
-   :type amplitude_multiplier: float, optional
-   :param t0: Simulation time (s) for reaching the operating point, defaults to 1.0.
-   :type t0: float, optional
-   :param t1: Additional simulation time (s) for reaching the sinusoidal steady state during
-              signal injection, defaults to 0.5.
-   :type t1: float, optional
-   :param N_eval: Number of evenly spaced data points the solver should return for each
-                  integration interval, i.e., for each sampling period or, if carrier comparison
-                  is used, for each switching interval, defaults to 10.
-   :type N_eval: int, optional
-   :param n_periods_excitation: Number of excitation signal periods used in calculating the DFT, defaults to 4.
-                                At least 3 are needed if `use_window` is True.
-   :type n_periods_excitation: int, optional
-   :param multiprocess: If True, the frequencies are simulated in parallel using all available CPU
-                        cores, defaults to True. The model and the control system are copied to the
-                        worker processes, which can require pickling them. Lambda functions and nested
-                        functions (e.g., as references) cannot be pickled, but module-level functions
-                        can.
-   :type multiprocess: bool, optional
-   :param use_window: Whether to use window function for calculating DFT, defaults to True.
-   :type use_window: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: IdentificationResults
-
-   
-   Container for identification results.
-
-   Contains fields for the excitation frequency `f_e`, the mechanical impedance `Z_M`,
-   and the operating-point rotor speed `w_M0` and electromagnetic torque `tau_M0`. The
-   results can be saved, e.g., by ``scipy.io.savemat(path, dataclasses.asdict(res))``.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: MachineCharacteristics(par)
 
@@ -1333,36 +1250,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_identification(res, latex = False)
-
-   
-   Plot the magnitude and phase of the mechanical impedance.
-
-   The passivity limits of the phase, -90° and 90°, are shown as dashed lines on the
-   side of the phase values.
-
-   :param res: Identification results, or several results by their legend labels.
-   :type res: IdentificationResults | Mapping[str, IdentificationResults]
-   :param latex: Use latex for plots, defaults to False.
-   :type latex: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:function:: plot_map(data, component, base = None, lims = None, ticks = None, raw_data = None, raw_marker = None, raw_color = None, current_loci = None, axlim_clip = True, surface_cmap = 'viridis', latex = False, save_path = None, **savefig_kwargs)
 
    
@@ -1444,59 +1331,6 @@ Package Contents
    :param save_path: Path to save the figure. If None, the figure is not saved.
    :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: run_identification(cfg, mdl, ctrl)
-
-   
-   Run the identification.
-
-   The mechanical impedance ``Z_M = -Delta tau_M/Delta w_M`` describes the dynamics of
-   the machine and its control system, as seen from the shaft [#Har2023]_. The rotor
-   speed is imposed by the `ExternalRotorSpeed` model of `mdl`, i.e., no mechanical
-   system is used. The system is first simulated to the operating point, given by the
-   rotor speed and the references of the control system. Then, small-signal speed
-   excitations are injected and the impedance is computed from the electromagnetic
-   torque response at each excitation frequency.
-
-   :param cfg: Identification configuration.
-   :type cfg: IdentificationCfg
-   :param mdl: Continuous-time system model, whose mechanics is `ExternalRotorSpeed`.
-   :type mdl: Drive
-   :param ctrl: Discrete-time control system, e.g., `VHzControlSystem` or
-                `VectorControlSystem`.
-   :type ctrl: ~motulator.drive.control.im.DriveControlSystem
-
-   :returns: Mechanical impedance and the operating point.
-   :rtype: IdentificationResults
-
-   .. rubric:: Notes
-
-   The mechanical impedance is passive at the frequencies where its real part is
-   nonnegative, i.e., its phase is within ±90°. Combined with any passive mechanical
-   system, a drive whose mechanical impedance is passive at all frequencies is stable.
-
-   .. rubric:: References
-
-   .. [#Har2023] Hartikainen, Tiitinen, Laine, Hinkkanen, "Identification of
-      mechanical impedance of an electric machine drive for drivetrain design," Proc.
-      IEEE IEMDC, 2023, https://doi.org/10.1109/IEMDC55163.2023.10238992
 
 
 

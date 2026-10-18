@@ -107,4 +107,4 @@ It is also possible to omit the mechanical dynamics and directly specify the act
 
 See the example {doc}`/drive_examples/current_vector/plot_2kw_im_cvc_tq`.
 
-The externally specified rotor speed is also used for identifying the mechanical impedance $Z_\mathrm{M}(s) = -\Delta\tauM(s)/\Delta\omegaM(s)$, which describes the dynamics of the machine and its control system as seen from the shaft {cite}`Har2023`. After the system has been simulated to the operating point, small-signal speed excitations are superimposed on the rotor speed, and the impedance is computed from the torque response at each excitation frequency. See {func}`motulator.drive.utils.run_identification` and the example {doc}`/drive_examples/identification/plot_45kw_im_vhz_identification`.
+The externally specified rotor speed is also used for measuring the mechanical impedance $Z_\mathrm{M}(s) = -\Delta\tauM(s)/\Delta\omegaM(s)$, which describes the dynamics of the machine and its control system as seen from the shaft {cite}`Har2023`, see the package [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance).

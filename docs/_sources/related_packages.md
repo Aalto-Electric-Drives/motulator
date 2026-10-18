@@ -7,9 +7,10 @@ The packages listed on this page extend *motulator* with additional models, cont
 <!-- One row per package: name linked to the repository, one-sentence description,
      and the latest motulator release the package has been tested with. -->
 
-| Package                                                                               | Description                                                                          | Tested with |
-| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------- |
-| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase) | Multi-three-phase machine drives based on the decoupled multi-stator transformation. | 0.14.1      |
+| Package                                                                               | Description                                                                                                    | Tested with |
+| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------- |
+| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase) | Multi-three-phase machine drives based on the decoupled multi-stator transformation.                           | 0.14.1      |
+| [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance)   | Mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps. | 0.15.0      |
 
 ## Listing a Package
 

@@ -58,7 +58,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Grid-Following Control" href="grid_following/index.html" />
-    <link rel="prev" title="45-kW IM, V/Hz control, mechanical impedance identification" href="../drive_examples/identification/plot_45kw_im_vhz_identification.html" />
+    <link rel="prev" title="5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics" href="../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -258,10 +258,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../drive_examples/identification/index.html">Mechanical Impedance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../drive_examples/identification/plot_45kw_im_vhz_identification.html">45-kW IM, V/Hz control, mechanical impedance identification</a></li>
-</ul>
-</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Grid Converters</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -277,11 +273,6 @@
 <li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="identification/index.html">Output Admittance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="identification/plot_10kva_gfl_identification.html">10-kVA, GFL, converter output admittance identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="identification/plot_13kva_do_gfm_identification.html">12.5-kVA, DO-GFM, converter output admittance identification</a></li>
 </ul>
 </details></li>
 </ul>
@@ -533,7 +524,6 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-following-control">Grid-Following Control</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-forming-control">Grid-Forming Control</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-admittance-identification">Output Admittance Identification</a></li>
 </ul>
             </nav>
         </div>
@@ -594,23 +584,6 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter during a grid-voltage sag in a weak grid. Apart from the sag, the converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm. The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u. The active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_sag_thumb.png" />
 <p><a class="reference internal" href="grid_forming/plot_13kva_do_gfm_sag.html"><span class="doc">12.5-kVA, DO-GFM, grid-voltage sag</span></a></p>
   <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM, grid-voltage sag</div>
-</div></div></section>
-<section id="output-admittance-identification">
-<h2>Output Admittance Identification<a class="headerlink" href="#output-admittance-identification" title="Link to this heading">#</a></h2>
-<p>These examples demonstrate numerical identification of grid converter output admittance <a class="footnote-reference brackets" href="#maa2026a" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="maa2026a" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
-<p>Määttä, Kukkola, Seppänen, Hinkkanen, “Open-source Python tool for grid converter output admittance identification,” 2026, <a class="reference external" href="https://arxiv.org/abs/2607.10653">https://arxiv.org/abs/2607.10653</a></p>
-</aside>
-</aside>
-<div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 10-kVA grid-following (GFL) converter. The converter and grid models are the same as in /grid_examples/grid_following/plot_10kva_gfl."><img alt="" src="../_images/sphx_glr_plot_10kva_gfl_identification_thumb.png" />
-<p><a class="reference internal" href="identification/plot_10kva_gfl_identification.html"><span class="doc">10-kVA, GFL, converter output admittance identification</span></a></p>
-  <div class="sphx-glr-thumbnail-title">10-kVA, GFL, converter output admittance identification</div>
-</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates converter output admittance identification using a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter. The converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm."><img alt="" src="../_images/sphx_glr_plot_13kva_do_gfm_identification_thumb.png" />
-<p><a class="reference internal" href="identification/plot_13kva_do_gfm_identification.html"><span class="doc">12.5-kVA, DO-GFM, converter output admittance identification</span></a></p>
-  <div class="sphx-glr-thumbnail-title">12.5-kVA, DO-GFM, converter output admittance identification</div>
 </div></div><div class="toctree-wrapper compound">
 </div>
 <div class="sphx-glr-footer sphx-glr-footer-gallery docutils container">
@@ -637,12 +610,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../drive_examples/identification/plot_45kw_im_vhz_identification.html"
+       href="../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">45-kW IM, V/Hz control, mechanical impedance identification</p>
+        <p class="prev-next-title">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</p>
       </div>
     </a>
     <a class="right-next"
@@ -674,7 +647,6 @@
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-following-control">Grid-Following Control</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-forming-control">Grid-Forming Control</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-admittance-identification">Output Admittance Identification</a></li>
 </ul>
   </nav></div>
 

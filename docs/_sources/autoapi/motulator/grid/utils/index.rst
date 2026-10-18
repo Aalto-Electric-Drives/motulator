@@ -33,8 +33,6 @@ Classes
 .. autoapisummary::
 
    motulator.grid.utils.BaseValues
-   motulator.grid.utils.IdentificationCfg
-   motulator.grid.utils.IdentificationResults
    motulator.grid.utils.NominalValues
    motulator.grid.utils.SequenceGenerator
    motulator.grid.utils.Step
@@ -47,10 +45,7 @@ Functions
 
    motulator.grid.utils.plot_control_signals
    motulator.grid.utils.plot_grid_waveforms
-   motulator.grid.utils.plot_identification
-   motulator.grid.utils.plot_vector_identification
    motulator.grid.utils.plot_voltage_vector
-   motulator.grid.utils.run_identification
 
 
 Package Contents
@@ -171,90 +166,6 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
-
-.. py:class:: IdentificationCfg
-
-   
-   Configuration parameters for converter output admittance identification.
-
-   :param abs_u_e: Magnitude of the voltage excitation (V) at the first frequency.
-   :type abs_u_e: float
-   :param freqs: Excitation frequencies (Hz, in dq-coordinates), defaults to 100 logarithmically
-                 spaced frequencies from 1 Hz to 10 kHz.
-   :type freqs: ndarray, optional
-   :param amplitude_multiplier: Excitation magnitude at the last frequency relative to the first one, defaults
-                                to 5. The magnitude changes linearly over the frequency array. Use 1 for a
-                                constant magnitude.
-   :type amplitude_multiplier: float, optional
-   :param t0: Stop time for initial simulating to the operating point (s), defaults to 1.0.
-              Should be set large enough to reach steady-state.
-   :type t0: float, optional
-   :param t1: Additional simulation time for reaching sinusoidal steady-state during signal
-              injection (s), defaults to 0.05.
-   :type t1: float, optional
-   :param N_eval: Number of evenly spaced data points the solver should return for each
-                  integration interval, i.e., for each sampling period or, if carrier comparison
-                  is used, for each switching interval, defaults to 10.
-   :type N_eval: int, optional
-   :param n_periods_excitation: Number of excitation signal periods used in calculating the DFT, defaults to 4.
-                                At least 3 are needed if `use_window` is True.
-   :type n_periods_excitation: int, optional
-   :param n_periods_init: Number of fundamental periods to include for calculating operating-point
-                          vectors, defaults to 1.
-   :type n_periods_init: int, optional
-   :param multiprocess: If True, the frequencies are simulated in parallel using all available CPU
-                        cores, defaults to True. The model and the control system are copied to the
-                        worker processes, which can require pickling them. Lambda functions and nested
-                        functions (e.g., as references) cannot be pickled, but module-level functions
-                        can.
-   :type multiprocess: bool, optional
-   :param use_window: Whether to use window function for calculating DFT, defaults to True.
-   :type use_window: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: IdentificationResults
-
-   
-   Container for identification results.
-
-   Contains fields for excitation signal frequency `f_e`, elements of the output
-   admittance matrix `[Y_dd, Y_qd; Y_dq, Y_qq]`, and the following operating-point
-   vectors (in synchronous coordinates aligned with the PCC voltage): grid current
-   `i_g0`, grid voltage `e_g0`, PCC voltage `u_g0` and converter voltage `u_c0`. The
-   results can be saved, e.g., by ``scipy.io.savemat(path, dataclasses.asdict(res))``.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
 
 .. py:class:: NominalValues
 
@@ -442,70 +353,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:function:: plot_identification(res, plot_style = 're_im', plot_passivity_index = True, latex = False)
-
-   
-   Plot the identification results
-
-   :param res: Should contain the results from the identification.
-   :type res: IdentificationResults
-   :param plot_style: Style for plotting of identification results, defaults to "re_im". Options are:
-                      - "polar": plot magnitude and phase
-                      - "re_im": plot real and imaginary parts
-   :type plot_style: Literal["polar", "re_im"], optional
-   :param plot_passivity_index: Plot input feedforward passivity index calculated from the identification
-                                results, defaults to True.
-   :type plot_passivity_index: bool, optional
-   :param latex: Use latex for plots, defaults to False.
-   :type latex: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: plot_vector_identification(res, base, latex = False)
-
-   
-   Plot the converter voltage, PCC voltage, grid voltage, and grid current vectors in
-   the operating point.
-
-   :param res: Should contain the results from the identification.
-   :type res: IdentificationResults
-   :param base: Base values for per-unit conversion.
-   :type base: BaseValues
-   :param latex: Use latex for plots, defaults to False.
-   :type latex: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:function:: plot_voltage_vector(res, base = None, save_path = None, **savefig_kwargs)
 
    
@@ -519,53 +366,6 @@ Package Contents
    :param save_path: Path to save the figure. If None, the figure is not saved.
    :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: run_identification(cfg, mdl, ctrl)
-
-   
-   Run the identification.
-
-   The system is first simulated to the operating point. Then, the output admittance
-   of the converter is identified at the PCC: the PCC voltage is imposed by a stiff
-   voltage source, whose magnitude and frequency equal those of the operating point,
-   and small-signal voltage excitations are injected in the d- and q-axes. The grid
-   impedance of `mdl` as well as any time variation and negative-sequence component of
-   its source only affect the operating point. A DC bus of `mdl` is included in the
-   identification.
-
-   :param cfg: Identification configuration.
-   :type cfg: IdentificationCfg
-   :param mdl: Continuous-time system model.
-   :type mdl: GridConverterSystem
-   :param ctrl: Discrete-time control system.
-   :type ctrl: GridConverterControlSystem
-
-   :returns: Admittance matrix elements and the operating point.
-   :rtype: IdentificationResults
-
-   .. rubric:: Notes
-
-   With carrier-comparison PWM, background switching harmonics can bias the identified
-   admittance at the excitation frequency. Results near switching harmonics and their
-   sidebands may depend strongly on the excitation amplitude and its phase relative to
-   the carrier, even when the numerical solution has converged.
 
 
 

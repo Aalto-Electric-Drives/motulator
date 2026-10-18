@@ -260,10 +260,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/identification/index.html">Mechanical Impedance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/identification/plot_45kw_im_vhz_identification.html">45-kW IM, V/Hz control, mechanical impedance identification</a></li>
-</ul>
-</details></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../grid_examples/index.html">Grid Converters</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -279,11 +275,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm.html">12.5-kVA, DO-GFM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm_negseq.html">12.5-kVA, DO-GFM with sequence separation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../grid_examples/grid_forming/plot_13kva_do_gfm_sag.html">12.5-kVA, DO-GFM, grid-voltage sag</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../grid_examples/identification/index.html">Output Admittance Identification</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/identification/plot_10kva_gfl_identification.html">10-kVA, GFL, converter output admittance identification</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../grid_examples/identification/plot_13kva_do_gfm_identification.html">12.5-kVA, DO-GFM, converter output admittance identification</a></li>
 </ul>
 </details></li>
 </ul>
@@ -608,7 +599,7 @@
 <h2>Externally Specified Rotor Speed<a class="headerlink" href="#externally-specified-rotor-speed" title="Link to this heading">#</a></h2>
 <p>It is also possible to omit the mechanical dynamics and directly specify the actual rotor speed <span class="math notranslate nohighlight">\(\omegaM\)</span> as a function of time, see the class <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed" title="motulator.drive.model.ExternalRotorSpeed"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.ExternalRotorSpeed</span></code></a>. This feature is typically needed when torque-control mode is studied.</p>
 <p>See the example <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html"><span class="doc">2.2-kW IM, CVC, torque-control mode</span></a>.</p>
-<p>The externally specified rotor speed is also used for identifying the mechanical impedance <span class="math notranslate nohighlight">\(Z_\mathrm{M}(s) = -\Delta\tauM(s)/\Delta\omegaM(s)\)</span>, which describes the dynamics of the machine and its control system as seen from the shaft <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id19" title="Hartikainen, Tiitinen, Laine, and Hinkkanen. Identification of mechanical impedance of an electric machine drive for drivetrain design. In Proc. IEEE IEMDC. 2023. doi:10.1109/IEMDC55163.2023.10238992.">Hartikainen <em>et al.</em>, 2023</a>]</span>. After the system has been simulated to the operating point, small-signal speed excitations are superimposed on the rotor speed, and the impedance is computed from the torque response at each excitation frequency. See <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.run_identification" title="motulator.drive.utils.run_identification"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.run_identification()</span></code></a> and the example <a class="reference internal" href="../../drive_examples/identification/plot_45kw_im_vhz_identification.html"><span class="doc">45-kW IM, V/Hz control, mechanical impedance identification</span></a>.</p>
+<p>The externally specified rotor speed is also used for measuring the mechanical impedance <span class="math notranslate nohighlight">\(Z_\mathrm{M}(s) = -\Delta\tauM(s)/\Delta\omegaM(s)\)</span>, which describes the dynamics of the machine and its control system as seen from the shaft <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id19" title="Hartikainen, Tiitinen, Laine, and Hinkkanen. Identification of mechanical impedance of an electric machine drive for drivetrain design. In Proc. IEEE IEMDC. 2023. doi:10.1109/IEMDC55163.2023.10238992.">Hartikainen <em>et al.</em>, 2023</a>]</span>, see the package <a class="reference external" href="https://github.com/Aalto-Electric-Drives/motulator-impedance">motulator-impedance</a>.</p>
 </section>
 </section>
 
