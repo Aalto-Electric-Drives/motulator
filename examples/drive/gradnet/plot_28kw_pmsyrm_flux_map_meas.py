@@ -15,6 +15,7 @@ import numpy as np
 
 import motulator.drive.gradnet as gn
 from motulator.drive import utils
+from motulator.drive.gradnet import training
 
 # %%
 # Compute base values based on the nominal values.
@@ -28,15 +29,15 @@ base = utils.BaseValues.from_nominal(nom, n_p=5)
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
 dataset_path = p / "datasets/brusa_meas.npz"
-trained_path = p / "trained_models/brusa_meas_flux_map_pnorm_d12_sub100.pth"
+trained_path = p / "trained_models/brusa_meas_flux_map_pnorm_d12_sub100.npz"
 subsample = 100
-activation = gn.PNormGradient
+activation = training.PNormGradient
 
 # %%
 # Train the model.
 
 if not trained_path.exists():
-    gn.train_gradnet(
+    training.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -50,13 +51,13 @@ if not trained_path.exists():
 # %%
 # Create the GradNet model and its callable.
 
-model = gn.load_gradnet(trained_path, activation=activation)
+model = gn.load_gradnet(trained_path)
 flux_map_fcn = gn.FluxMap(model)
 
 # %%
 # Load the dataset for comparison and split it into training and validation sets.
 
-train_data, val_data = gn.get_training_data(
+train_data, val_data = training.get_training_data(
     str(dataset_path), base=base, subsample=subsample
 )
 

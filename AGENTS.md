@@ -38,7 +38,7 @@ A `System` is a list of subsystems plus a wiring table, and a `Model` (e.g., `dr
 
 ### GradNet (`drive/gradnet/`)
 
-Neural-network flux and current maps (PyTorch) learned from measured or FEM data, used by the saturated machine models and controllers. Trained models and datasets are in `examples/drive/gradnet/`.
+Neural-network flux and current maps learned from measured or FEM data, used by the saturated machine models and controllers. The networks are trained with PyTorch (`training`, an optional dependency) and saved as npz files, which the maps (`_maps.py`) evaluate with NumPy in double precision. Trained models and datasets are in `examples/drive/gradnet/`.
 
 ## Conventions
 

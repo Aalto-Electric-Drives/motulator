@@ -11,6 +11,7 @@ from pathlib import Path
 
 import motulator.drive.gradnet as gn
 from motulator.drive import utils
+from motulator.drive.gradnet import training
 
 # %%
 # Compute base values based on the nominal values.
@@ -24,10 +25,10 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
 dataset_path = p / "datasets/baldor_fem.npz"
-trained_path = p / "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.pth"
+trained_path = p / "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.npz"
 subsample = 20
 
-activation = gn.PNormGradient
+activation = training.PNormGradient
 
 # %%
 # Train the model. The FEM data is on a uniform grid, so the loss is dominated by the
@@ -35,7 +36,7 @@ activation = gn.PNormGradient
 # is weighted by 10 to improve the accuracy at low currents.
 
 if not trained_path.exists():
-    gn.train_gradnet(
+    training.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -51,14 +52,16 @@ if not trained_path.exists():
 # %%
 # Create the GradNet model and its callable.
 
-model = gn.load_gradnet(trained_path, activation=activation)
+model = gn.load_gradnet(trained_path)
 flux_map_fcn = gn.FluxMap(model)
 
 
 # %%
 # Load the validation data, i.e., the complement of the training data.
 
-_, val_data = gn.get_training_data(str(dataset_path), base=base, subsample=subsample)
+_, val_data = training.get_training_data(
+    str(dataset_path), base=base, subsample=subsample
+)
 
 
 # %%

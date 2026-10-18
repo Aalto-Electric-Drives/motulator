@@ -7,6 +7,9 @@ by construction [#Cha2025]_. In our case, the scalar state function is either th
 magnetic energy or co-energy, depending on whether the current map or flux map is
 modeled. The monotonicity of the flux-linkage--current map is also ensured.
 
+The networks are defined and trained with PyTorch. A trained network is evaluated in
+double precision with numpy, see `GradNetFunction` and the maps (e.g., `CurrentMap`).
+
 References
 ----------
 .. [#Li2026] Li, Foissner, Martin, Piippo, Hinkkanen, "Gradient networks for universal
@@ -18,16 +21,11 @@ References
 """
 
 from collections.abc import Callable
-from pathlib import Path
-from typing import Any, cast
 
-import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
 from torch.nn import init
-
-from motulator.drive.utils._sm_flux_maps import SaturationModelBase
 
 
 # %%
@@ -45,12 +43,6 @@ class Softmax(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return F.softmax(torch.exp(self.beta_log) * x, dim=self.dim)
-
-    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
-        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
-        beta = torch.exp(self.beta_log)
-        s = F.softmax(beta * x, dim=-1)
-        return beta * (torch.diag_embed(s) - s.unsqueeze(-1) * s.unsqueeze(-2))
 
 
 # %%
@@ -86,17 +78,6 @@ class PNormGradient(nn.Module):
         norm = norm.pow(self.q / (self.q + 1))
         return x.pow(self.q) / norm
 
-    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
-        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
-        beta = torch.exp(self.beta_log)
-        x = beta * x
-        q = self.q
-        norm = 1 + torch.sum(x.pow(q + 1), dim=-1, keepdim=True)
-        x_q = x.pow(q)
-        outer = x_q.unsqueeze(-1) * x_q.unsqueeze(-2) / norm.unsqueeze(-1)
-        scale = (beta * q * norm.pow(-q / (q + 1))).unsqueeze(-1)
-        return scale * (torch.diag_embed(x.pow(q - 1)) - outer)
-
 
 # %%
 class Squareplus(nn.Module):
@@ -109,12 +90,6 @@ class Squareplus(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return 0.5 * (x + torch.sqrt(x**2 + torch.exp(self.beta_log)))
 
-    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
-        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
-        return torch.diag_embed(
-            0.5 * (1 + x / torch.sqrt(x**2 + torch.exp(self.beta_log)))
-        )
-
 
 # %%
 class AlgebraicSigmoid(nn.Module):
@@ -126,11 +101,6 @@ class AlgebraicSigmoid(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return x / torch.sqrt(x**2 + torch.exp(self.beta_log))
-
-    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
-        """Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""
-        c = torch.exp(self.beta_log)
-        return torch.diag_embed(c / (x**2 + c).pow(1.5))
 
 
 # %%
@@ -162,12 +132,6 @@ class GradNetModule(nn.Module):
         z = self.act(z)
         z = F.linear(z, weight=self.W.T)
         return z
-
-    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
-        """Jacobian matrix W^T J_act W, shape (..., in_dim, in_dim)."""
-        z = F.linear(x, weight=self.W, bias=self.b)
-        act = cast(Any, self.act)  # Activations provide the jacobian method
-        return self.W.T @ act.jacobian(z) @ self.W
 
 
 # %%
@@ -234,283 +198,3 @@ class GradNet(nn.Module):
         for block in self.blocks:
             z += block(x)
         return z
-
-    def jacobian(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Jacobian matrix of the output with respect to the input.
-
-        Parameters
-        ----------
-        x : torch.Tensor, shape (..., in_dim)
-            Input.
-
-        Returns
-        -------
-        torch.Tensor, shape (..., in_dim, in_dim)
-            Jacobian matrix (the Hessian of the underlying scalar state function).
-
-        """
-        mu = F.pad(torch.exp(self.mu_log), (0, self.non_mu_dim))
-        jac = torch.diag(mu).expand(*x.shape[:-1], -1, -1)
-        for block in self.blocks:
-            jac = jac + cast(GradNetModule, block).jacobian(x)
-        return jac
-
-
-# %%
-def load_gradnet(
-    model_path: Path | str, activation: Callable[[], nn.Module] | None = None
-) -> GradNet:
-    """
-    Load a GradNet model, inferring dimensions from the saved weights.
-
-    Parameters
-    ----------
-    model_path : Path | str
-        Path to the saved model file.
-    activation : Callable[[], nn.Module] | None, optional
-        Activation function factory, defaults to PNormGradient.
-
-    Returns
-    -------
-    GradNet
-        Loaded GradNet model.
-
-    """
-    # Load state dict
-    state_dict = torch.load(model_path, map_location="cpu")
-    # Dimensions inferred from state dict
-    in_dim = int(state_dict["blocks.0.W"].shape[1])
-    embed_dim = int(state_dict["blocks.0.W"].shape[0])
-    mu_dim = int(state_dict["mu_log"].numel())
-    num_modules = len(
-        [k for k in state_dict if k.startswith("blocks.") and k.endswith(".W")]
-    )
-    # Choose activation
-    if activation is None:
-        activation = PNormGradient
-
-    # Create and load model
-    model = GradNet(in_dim, mu_dim, num_modules, embed_dim, activation)
-    model.load_state_dict(state_dict, strict=False)
-    model.eval()
-    return model
-
-
-# %%
-class CurrentMap(SaturationModelBase):
-    """
-    Callable wrapper for GradNet current map models.
-
-    The map is symmetrized about the d-axis to ensure physical consistency. The map can
-    be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.
-
-    Parameters
-    ----------
-    model : GradNet
-        Trained GradNet model for the current map.
-
-    """
-
-    def __init__(self, model: GradNet) -> None:
-        super().__init__(map_type="current_map")
-        self.model = model
-        self.in_base = model.psi_base.item()
-        self.out_base = model.i_base.item()
-
-    def _inputs(self, x_dq: complex | np.ndarray) -> torch.Tensor:
-        """Per-unit inputs and their conjugates as (d, q) pairs, shape (2, ..., 2)."""
-        x = np.asarray(np.divide(x_dq, self.in_base), dtype=np.complex64)
-        return torch.view_as_real(torch.from_numpy(np.array([x, x.conj()])))
-
-    def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """
-        Evaluate the stator current at given stator flux linkage.
-
-        Parameters
-        ----------
-        psi_s_dq : complex | np.ndarray
-            Stator flux linkage (Vs).
-
-        Returns
-        -------
-        complex | np.ndarray
-            Stator current (A).
-
-        """
-        with torch.inference_mode():
-            y = torch.view_as_complex(self.model(self._inputs(psi_s_dq))).numpy()
-
-        # Symmetrize
-        i_s_dq = 0.5 * self.out_base * (y[0] + y[1].conj())
-        return i_s_dq.item() if i_s_dq.size == 1 else i_s_dq
-
-    def jacobian(self, x_dq: complex | np.ndarray) -> np.ndarray:
-        """
-        Jacobian matrix of the symmetrized map.
-
-        The Jacobian is computed analytically, which is accurate also in single
-        precision (unlike finite differences).
-
-        Parameters
-        ----------
-        x_dq : complex | np.ndarray
-            Input of the map (flux linkage in Vs or current in A).
-
-        Returns
-        -------
-        np.ndarray, shape (..., 2, 2)
-            Jacobian matrix [[dy_d/dx_d, dy_d/dx_q], [dy_q/dx_d, dy_q/dx_q]], where y is
-            the output of the map, in SI units.
-
-        """
-        with torch.inference_mode():
-            jac = self.model.jacobian(self._inputs(x_dq)).numpy().astype(float)
-
-        # Symmetrize: the conjugation corresponds to S = diag(1, -1) on both sides
-        s = np.array([1.0, -1.0])
-        jac = 0.5 * (jac[0] + s[:, None] * jac[1] * s[None, :])
-        return jac * (self.out_base / self.in_base)
-
-
-# %%
-class FluxMap(CurrentMap):
-    """
-    Callable wrapper for GradNet flux-linkage map models.
-
-    The map returns the stator flux linkage (Vs) at the given stator current (A). It
-    is symmetrized about the d-axis to ensure physical consistency.
-
-    Parameters
-    ----------
-    model : GradNet
-        Trained GradNet model for the flux-linkage map.
-
-    """
-
-    def __init__(self, model: GradNet) -> None:
-        super().__init__(model)
-        self._type = "flux_map"
-        self.in_base = model.i_base.item()
-        self.out_base = model.psi_base.item()
-
-
-# %%
-class CurrentMapWithHarmonics:
-    """
-    Callable wrapper for GradNet current maps with spatial harmonics.
-
-    Parameters
-    ----------
-    model : GradNet
-        Trained GradNet model for the current map with harmonics.
-    k : int, optional
-        Spatial harmonic order, defaults to 6.
-
-    """
-
-    def __init__(self, model: GradNet, k: int = 6) -> None:
-        self.i_base = model.i_base.item()
-        self.psi_base = model.psi_base.item()
-        self.tau_base = 1.5 * self.psi_base * self.i_base
-        self.in_base, self.out_base = self.psi_base, self.i_base
-        self.model = model
-        # Harmonic order
-        self.k = k
-
-    def _torque(
-        self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
-    ) -> np.ndarray:
-        """Torque (p.u.) from the flux linkage x, current y, and the magnetic energy."""
-        return np.imag(y * x.conj()) - dW_dtheta
-
-    def __call__(
-        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
-    ) -> tuple[complex | np.ndarray, float | np.ndarray]:
-        """
-        Evaluate the current and torque at given flux linkage and rotor position.
-
-        Parameters
-        ----------
-        psi_s_dq : complex | np.ndarray
-            Stator flux linkage (Vs).
-        exp_j_theta_m : complex | np.ndarray
-            Exponential of the rotor electrical angle.
-
-        Returns
-        -------
-        tuple[complex | np.ndarray, float | np.ndarray]
-            Stator current (A) and electromagnetic torque (Nm) per pole pair.
-
-        """
-        # Per-unit input and the rotor-position input exp(j*k*theta_m) as (d, q, cos,
-        # sin), together with their conjugates
-        x, exp_j_k_theta = np.broadcast_arrays(
-            np.asarray(np.divide(psi_s_dq, self.in_base), dtype=np.complex64),
-            np.asarray(np.power(exp_j_theta_m, self.k), dtype=np.complex64),
-        )
-        z = np.stack([x, exp_j_k_theta], axis=-1)
-        inputs = torch.view_as_real(torch.from_numpy(np.array([z, z.conj()])))
-
-        with torch.inference_mode():
-            outputs = self.model(inputs.flatten(-2)).unflatten(-1, (2, 2))
-            outputs = torch.view_as_complex(outputs).numpy()
-
-        # Symmetrize the output and dW/dcos + j*dW/dsin of the state function W
-        outputs = 0.5 * (outputs[0] + outputs[1].conj())
-        y, dW = outputs[..., 0], outputs[..., 1]
-
-        # Torque in per-unit
-        dW_dtheta = self.k * (exp_j_k_theta.conj() * dW).imag
-        tau_m = self._torque(x, y, dW_dtheta)
-
-        # Scale back to physical units
-        y = self.out_base * y
-        tau_m = self.tau_base * tau_m
-        return (y.item(), tau_m.item()) if y.size == 1 else (y, tau_m)
-
-
-# %%
-class FluxMapWithHarmonics(CurrentMapWithHarmonics):
-    """
-    Callable wrapper for GradNet flux maps with spatial harmonics.
-
-    Parameters
-    ----------
-    model : GradNet
-        Trained GradNet model for the flux map with harmonics.
-    k : int, optional
-        Spatial harmonic order, defaults to 6.
-
-    """
-
-    def __init__(self, model: GradNet, k: int = 6) -> None:
-        super().__init__(model, k)
-        self.in_base, self.out_base = self.i_base, self.psi_base
-
-    def _torque(
-        self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
-    ) -> np.ndarray:
-        """Torque (p.u.) from the current x, flux linkage y, and the co-energy."""
-        return np.imag(x * y.conj()) + dW_dtheta
-
-    def __call__(
-        self, i_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
-    ) -> tuple[complex | np.ndarray, float | np.ndarray]:
-        """
-        Evaluate the flux linkage and torque at given current and rotor position.
-
-        Parameters
-        ----------
-        i_s_dq : complex | np.ndarray
-            Stator current (A).
-        exp_j_theta_m : complex | np.ndarray
-            Exponential of the rotor electrical angle.
-
-        Returns
-        -------
-        tuple[complex | np.ndarray, float | np.ndarray]
-            Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.
-
-        """
-        return super().__call__(i_s_dq, exp_j_theta_m)

@@ -19,6 +19,7 @@ from motulator.drive.gradnet._dataset import (
     SpatialHarmonicsDataset,
     get_loader,
 )
+from motulator.drive.gradnet._maps import GradNetFunction
 
 
 # %%
@@ -192,12 +193,14 @@ def train_gradnet(  # noqa: PLR0913
     lr : float, optional
         Learning rate for the optimizer, defaults to 1e-3.
     save_model_path : str | Path | None, optional
-        Path to save the trained model. If None, saves to `model.pth` in current
-        directory.
+        Path to save the trained model (npz file, see `GradNetFunction`). If None,
+        saves to `model.npz` in current directory.
     subsample : int, optional
         Subsampling factor for the training data, defaults to 1 (uses all data).
     activation : Callable[[], torch.nn.Module] | None, optional
-        Activation function factory, defaults to PNormGradient.
+        Activation function factory, defaults to PNormGradient. The trained model is
+        saved as a numpy function, which supports the activations `Softmax`,
+        `PNormGradient`, `Squareplus`, and `AlgebraicSigmoid` (see `GradNetFunction`).
     device : torch.device | None, optional
         Device to use for training. If None, automatically selects CUDA if available,
         otherwise CPU.
@@ -253,6 +256,7 @@ def train_gradnet(  # noqa: PLR0913
         psi_base=dataset.psi_base,
         i_base=dataset.i_base,
     ).to(device)
+    GradNetFunction.from_model(model)  # Raises if the model cannot be saved
     _run_training_loop(
         model,
         data_loader,
@@ -271,12 +275,12 @@ def train_gradnet(  # noqa: PLR0913
     for name, param in model.named_parameters():
         print(f"{name}: {param.shape}\n{param.data}\n{'-' * 40}")
 
-    # Save model
+    # Save the model as a numpy function
     if save_model_path is None:
-        save_model_path = Path.cwd() / "model.pth"
+        save_model_path = Path.cwd() / "model.npz"
     save_model_path = Path(save_model_path)
     save_model_path.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(model.state_dict(), save_model_path)
+    GradNetFunction.from_model(model).save(save_model_path)
 
 
 def _run_training_loop(
