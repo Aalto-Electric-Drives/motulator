@@ -19,7 +19,7 @@ class Feedbacks(Protocol):
     """Protocol defining the required fields for feedback signals."""
 
     w_M: float  # Mechanical angular speed
-    w_c: float  # Angular speed of the coordinate system
+    w_c: float  # Angular speed of the coordinate system (not post-processed)
     theta_c: float  # Angular position of the coordinate system
     u_s: complex  # Stator voltage (controller coordinates) for the control laws
     u_dc: float  # DC-bus voltage
@@ -74,7 +74,15 @@ class VectorController[Ref, Fbk](Protocol):
         ...
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller outputs."""
+        """
+        Post-process controller outputs.
+
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
+        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+        i.e., it remains that of the controller coordinates, which equals that of the
+        new coordinates in steady state.
+
+        """
         ...
 
 
@@ -101,7 +109,15 @@ class VHzController[Ref, Fbk](Protocol):
         ...
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller outputs."""
+        """
+        Post-process controller outputs.
+
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
+        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+        i.e., it remains that of the controller coordinates, which equals that of the
+        new coordinates in steady state.
+
+        """
         ...
 
 

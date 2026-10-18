@@ -376,8 +376,10 @@ class SequenceObserverBasedGridFormingController:
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
-        # Transform the complex signals to the coordinates aligned with v_cp
-        T = np.exp(-1j * np.angle(ts.fbk.v_cp))
+        # Transform the complex signals to the coordinates aligned with v_cp, and
+        # update the angle of the coordinates accordingly
+        theta = np.angle(ts.fbk.v_cp)
+        T = np.exp(-1j * theta)
         ts.ref.u_c = T * ts.ref.u_c
         ts.ref.u_cp = T * ts.ref.u_cp
         ts.ref.u_cn = T * ts.ref.u_cn
@@ -395,3 +397,4 @@ class SequenceObserverBasedGridFormingController:
         ts.fbk.v_cn = T * ts.fbk.v_cn
         ts.fbk.u_gp = T * ts.fbk.u_gp
         ts.fbk.u_gn = T * ts.fbk.u_gn
+        ts.fbk.theta_c = wrap(ts.fbk.theta_c + theta)

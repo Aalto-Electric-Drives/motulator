@@ -16,7 +16,7 @@ from motulator.grid.model import GridConverterSystem
 class Feedbacks(Protocol):
     """Protocol defining the required fields for feedback signals."""
 
-    w_c: float  # Angular speed of the coordinate system (rad/s)
+    w_c: float  # Angular speed of the coordinate system (rad/s), not post-processed
     theta_c: float  # Angular position of the coordinate system (rad)
     u_c: complex  # Converter voltage (controller coordinates) for the control laws
     u_dc: float  # DC-bus voltage (V)
@@ -77,7 +77,15 @@ class InnerController[Ref: References, Fbk](Protocol):
         ...
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller outputs."""
+        """
+        Post-process controller outputs.
+
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
+        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+        i.e., it remains that of the controller coordinates, which equals that of the
+        new coordinates in steady state.
+
+        """
         ...
 
 
