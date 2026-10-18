@@ -342,7 +342,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/training/index.html">motulator.drive.gradnet.training</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
@@ -499,6 +502,7 @@
     <span class="n">SpatialHarmonicsDataset</span><span class="p">,</span>
     <span class="n">get_loader</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.gradnet._maps</span><span class="w"> </span><span class="kn">import</span> <span class="n">GradNetFunction</span>
 
 
 <span class="c1"># %%</span>
@@ -630,7 +634,7 @@
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="train_gradnet">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.train_gradnet">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.train_gradnet">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">train_gradnet</span><span class="p">(</span>  <span class="c1"># noqa: PLR0913</span>
     <span class="n">dataset_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
     <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span><span class="p">,</span>
@@ -674,12 +678,14 @@
 <span class="sd">    lr : float, optional</span>
 <span class="sd">        Learning rate for the optimizer, defaults to 1e-3.</span>
 <span class="sd">    save_model_path : str | Path | None, optional</span>
-<span class="sd">        Path to save the trained model. If None, saves to `model.pth` in current</span>
-<span class="sd">        directory.</span>
+<span class="sd">        Path to save the trained model (npz file, see `GradNetFunction`). If None,</span>
+<span class="sd">        saves to `model.npz` in current directory.</span>
 <span class="sd">    subsample : int, optional</span>
 <span class="sd">        Subsampling factor for the training data, defaults to 1 (uses all data).</span>
 <span class="sd">    activation : Callable[[], torch.nn.Module] | None, optional</span>
-<span class="sd">        Activation function factory, defaults to PNormGradient.</span>
+<span class="sd">        Activation function factory, defaults to PNormGradient. The trained model is</span>
+<span class="sd">        saved as a numpy function, which supports the activations `Softmax`,</span>
+<span class="sd">        `PNormGradient`, `Squareplus`, and `AlgebraicSigmoid` (see `GradNetFunction`).</span>
 <span class="sd">    device : torch.device | None, optional</span>
 <span class="sd">        Device to use for training. If None, automatically selects CUDA if available,</span>
 <span class="sd">        otherwise CPU.</span>
@@ -735,6 +741,7 @@
         <span class="n">psi_base</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">psi_base</span><span class="p">,</span>
         <span class="n">i_base</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">i_base</span><span class="p">,</span>
     <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">GradNetFunction</span><span class="o">.</span><span class="n">from_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># Raises if the model cannot be saved</span>
     <span class="n">_run_training_loop</span><span class="p">(</span>
         <span class="n">model</span><span class="p">,</span>
         <span class="n">data_loader</span><span class="p">,</span>
@@ -753,12 +760,12 @@
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">param</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="s1">'-'</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">40</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="c1"># Save model</span>
+    <span class="c1"># Save the model as a numpy function</span>
     <span class="k">if</span> <span class="n">save_model_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">save_model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"model.pth"</span>
+        <span class="n">save_model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"model.npz"</span>
     <span class="n">save_model_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">save_model_path</span><span class="p">)</span>
     <span class="n">save_model_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="n">save_model_path</span><span class="p">)</span></div>
+    <span class="n">GradNetFunction</span><span class="o">.</span><span class="n">from_model</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">save_model_path</span><span class="p">)</span></div>
 
 
 

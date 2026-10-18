@@ -8,8 +8,9 @@ motulator.drive.gradnet
    
    Gradient-based neural network maps.
 
-   This package requires PyTorch, which is installed as an optional dependency with
-   `pip install "motulator[gradnet]"`.
+   The trained networks (see `load_gradnet`) and the maps based on them (e.g.,
+   `CurrentMap`) are evaluated with NumPy. Training the networks (see `training`)
+   requires PyTorch.
 
 
 
@@ -27,6 +28,15 @@ motulator.drive.gradnet
 
    ..
        !! processed by numpydoc !!
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/motulator/drive/gradnet/training/index
 
 
 Classes
@@ -34,15 +44,12 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.gradnet.AlgebraicSigmoid
    motulator.drive.gradnet.CurrentMap
    motulator.drive.gradnet.CurrentMapWithHarmonics
    motulator.drive.gradnet.FluxMap
    motulator.drive.gradnet.FluxMapWithHarmonics
-   motulator.drive.gradnet.PNormGradient
+   motulator.drive.gradnet.GradNetFunction
    motulator.drive.gradnet.PlotOptions
-   motulator.drive.gradnet.Softmax
-   motulator.drive.gradnet.Squareplus
 
 
 Functions
@@ -50,67 +57,15 @@ Functions
 
 .. autoapisummary::
 
-   motulator.drive.gradnet.get_training_data
    motulator.drive.gradnet.load_gradnet
    motulator.drive.gradnet.plot_output_vs_angle
    motulator.drive.gradnet.plot_surface_vs_current_and_angle
    motulator.drive.gradnet.print_current_map_errors_meas
    motulator.drive.gradnet.print_flux_map_errors_meas
-   motulator.drive.gradnet.train_gradnet
 
 
 Package Contents
 ----------------
-
-.. py:class:: AlgebraicSigmoid(beta_log0 = -3.0)
-
-   Bases: :py:obj:`torch.nn.Module`
-
-
-   
-   Sigmoid-type activation function with one learnable parameter.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: jacobian(x)
-
-      
-      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: CurrentMap(model)
 
@@ -124,7 +79,7 @@ Package Contents
    be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.
 
    :param model: Trained GradNet model for the current map.
-   :type model: GradNet
+   :type model: GradNetFunction | GradNet
 
 
 
@@ -147,9 +102,6 @@ Package Contents
 
       
       Jacobian matrix of the symmetrized map.
-
-      The Jacobian is computed analytically, which is accurate also in single
-      precision (unlike finite differences).
 
       :param x_dq: Input of the map (flux linkage in Vs or current in A).
       :type x_dq: complex | np.ndarray
@@ -182,7 +134,7 @@ Package Contents
    Callable wrapper for GradNet current maps with spatial harmonics.
 
    :param model: Trained GradNet model for the current map with harmonics.
-   :type model: GradNet
+   :type model: GradNetFunction | GradNet
    :param k: Spatial harmonic order, defaults to 6.
    :type k: int, optional
 
@@ -215,7 +167,7 @@ Package Contents
    is symmetrized about the d-axis to ensure physical consistency.
 
    :param model: Trained GradNet model for the flux-linkage map.
-   :type model: GradNet
+   :type model: GradNetFunction | GradNet
 
 
 
@@ -243,7 +195,7 @@ Package Contents
    Callable wrapper for GradNet flux maps with spatial harmonics.
 
    :param model: Trained GradNet model for the flux map with harmonics.
-   :type model: GradNet
+   :type model: GradNetFunction | GradNet
    :param k: Spatial harmonic order, defaults to 6.
    :type k: int, optional
 
@@ -264,17 +216,33 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: PNormGradient(dim = -1, p = 8, beta_log0 = 0.0, freeze_beta = False)
-
-   Bases: :py:obj:`torch.nn.Module`
-
+.. py:class:: GradNetFunction
 
    
-   p-norm gradient activation function.
+   Trained GradNet as a numpy function in double precision.
 
-   Defined as the gradient of S(z) = (1 + sum((beta*z_n)**p))**(1/p)/beta, where p is a
-   positive even integer. This potential function corresponds to a smooth p-norm, which
-   is convex, thus guaranteeing monotonicity.
+   The function maps the per-unit input, shape (..., in_dim), to the per-unit output
+   of the same shape, see `GradNet`. It is created from a trained model by
+   `from_model`, saved to an npz file by `save`, and loaded by `load_gradnet`.
+
+   :param W: Weights of the modules.
+   :type W: ndarray, shape (num_modules, embed_dim, in_dim)
+   :param b: Biases of the modules.
+   :type b: ndarray, shape (num_modules, embed_dim)
+   :param beta_log: Logarithms of the scales of the activations of the modules.
+   :type beta_log: ndarray, shape (num_modules,)
+   :param mu_log: Logarithms of the coefficients of the linear term.
+   :type mu_log: ndarray, shape (mu_dim,)
+   :param bias: Bias of the output.
+   :type bias: ndarray, shape (in_dim,)
+   :param activation: Name of the activation function, see `ACTIVATIONS`.
+   :type activation: str
+   :param p: Exponent of the p-norm gradient activation (0 for the other activations).
+   :type p: int
+   :param psi_base: Base value of the flux linkage (Vs).
+   :type psi_base: float
+   :param i_base: Base value of the current (A).
+   :type i_base: float
 
 
 
@@ -293,10 +261,38 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: jacobian(x)
+   .. py:method:: from_model(model)
+      :classmethod:
+
 
       
-      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
+      Create the function from a trained `GradNet` model.
+
+      The modules of the model must have the same activation, one of `ACTIVATIONS`
+      applied along the last axis (the default), with the same exponent `p`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: save(path)
+
+      
+      Save the parameters to an npz file.
 
 
 
@@ -359,158 +355,16 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Softmax(dim = -1, beta_log0 = 2.0, freeze_beta = False)
-
-   Bases: :py:obj:`torch.nn.Module`
-
+.. py:function:: load_gradnet(model_path)
 
    
-   Softmax activation function.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: jacobian(x)
-
-      
-      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:class:: Squareplus(beta_log0 = -2.0)
-
-   Bases: :py:obj:`torch.nn.Module`
-
-
-   
-   Rectifier-type activation function with one learnable parameter.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: jacobian(x)
-
-      
-      Jacobian matrix, shape (..., n, n), for inputs of shape (..., n).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-.. py:function:: get_training_data(dataset_path, base, subsample = 1, other_keys = None)
-
-   
-   Get the training and validation data used by the model.
-
-   This function re-instantiates the dataset with the same parameters to reproduce
-   the training set. Validation data is the set difference (complement).
-
-   :param dataset_path: Path to the npz file containing the dataset.
-   :type dataset_path: str
-   :param base: Base values of the target machine. They are only needed to re-instantiate the
-                dataset; the returned data are not normalized.
-   :type base: ~motulator.drive.utils.BaseValues
-   :param subsample: Subsampling rate used in the training, defaults to 1 (no subsampling).
-   :type subsample: int, optional
-   :param other_keys: Additional fields of the npz file to be returned after the flux linkage and
-                      current, defaults to None (no additional fields).
-   :type other_keys: list[str] | None, optional
-
-   :returns: ((train_psi, train_i, ...), (val_psi, val_i, ...)), where the arrays are
-             flattened and in the units of the npz file.
-   :rtype: tuple
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: load_gradnet(model_path, activation = None)
-
-   
-   Load a GradNet model, inferring dimensions from the saved weights.
+   Load a trained GradNet from an npz file, see `GradNetFunction`.
 
    :param model_path: Path to the saved model file.
    :type model_path: Path | str
-   :param activation: Activation function factory, defaults to PNormGradient.
-   :type activation: Callable[[], nn.Module] | None, optional
 
-   :returns: Loaded GradNet model.
-   :rtype: GradNet
+   :returns: Trained network as a numpy function.
+   :rtype: GradNetFunction
 
 
 
@@ -637,69 +491,6 @@ Package Contents
    
    Print error metrics for a measured flux map.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: train_gradnet(dataset_path, base, is_flux_map=False, k = None, num_modules = 1, embed_dim = 12, batch_size = 128, epochs = 2000, lr = 0.001, save_model_path = None, subsample = 1, activation = None, device = None, *, i_low = 0.0, weight_low = 1.0)
-
-   
-   Train and save the GradNet model.
-
-   :param dataset_path: Path to the training data file (npz format).
-   :type dataset_path: str | Path
-   :param base: Base values of the target machine. The training data are normalized with the
-                base current and flux linkage, which are also stored in the model.
-   :type base: ~motulator.drive.utils.BaseValues
-   :param is_flux_map: Whether the model is a flux map or current map, defaults to False.
-   :type is_flux_map: bool, optional
-   :param k: Spatial harmonics order. If None, no harmonics are used, defaults to None.
-   :type k: int | None, optional
-   :param num_modules: Number of GradNet modules, defaults to 1.
-   :type num_modules: int, optional
-   :param embed_dim: Embedding dimension for the GradNet modules, defaults to 12.
-   :type embed_dim: int, optional
-   :param batch_size: Batch size for training, defaults to 128.
-   :type batch_size: int, optional
-   :param epochs: Number of training epochs, defaults to 2000.
-   :type epochs: int, optional
-   :param lr: Learning rate for the optimizer, defaults to 1e-3.
-   :type lr: float, optional
-   :param save_model_path: Path to save the trained model. If None, saves to `model.pth` in current
-                           directory.
-   :type save_model_path: str | Path | None, optional
-   :param subsample: Subsampling factor for the training data, defaults to 1 (uses all data).
-   :type subsample: int, optional
-   :param activation: Activation function factory, defaults to PNormGradient.
-   :type activation: Callable[[], torch.nn.Module] | None, optional
-   :param device: Device to use for training. If None, automatically selects CUDA if available,
-                  otherwise CPU.
-   :type device: torch.device | None, optional
-   :param i_low: Current limit (A, peak value) defining the low-current region, defaults to 0.
-   :type i_low: float, optional
-   :param weight_low: Loss weight of the data points whose current magnitude is below `i_low`,
-                      defaults to 1 (unweighted loss). The low-current region is determined by the
-                      current of the data point for both flux and current maps. A weight above 1
-                      improves the accuracy at low currents, where a uniform data grid gives only a
-                      few points. The weights are normalized with their mean over the training set,
-                      so the loss of each batch is an unbiased estimate of the weighted loss of the
-                      whole set, which corresponds to repeating those points `weight_low` times in the
-                      dataset, except that the number of steps per epoch is unchanged.
-   :type weight_low: float, optional
 
 
 

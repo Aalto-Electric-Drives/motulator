@@ -37,8 +37,8 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Configure the system model using the GradNet saturation model with spatial harmonics,
 # trained on the FEM data.
 
-path = "trained_models/baldor_fem_curr_map_harm_softmax_d48_sub10.pth"
-gradnet = gn.load_gradnet(p / path, activation=gn.Softmax)
+path = "trained_models/baldor_fem_curr_map_harm_softmax_d48_sub10.npz"
+gradnet = gn.load_gradnet(p / path)
 magnetic_map = gn.CurrentMapWithHarmonics(gradnet)
 par = model.SpatialSaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, magnetic_map_fcn=magnetic_map
@@ -53,8 +53,8 @@ mdl = model.Drive(machine, mechanics, converter)
 # Configure the control system.
 
 # Load the GradNet flux map trained on the FEM data for the estimated machine model
-path = "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.pth"
-est_flux_map = gn.FluxMap(gn.load_gradnet(p / path, activation=gn.PNormGradient))
+path = "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.npz"
+est_flux_map = gn.FluxMap(gn.load_gradnet(p / path))
 
 # Parametrize the estimated machine model and the control system
 est_par = control.SaturatedSynchronousMachinePars(

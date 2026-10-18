@@ -24,7 +24,7 @@
 This example trains a GradNet flux-linkage map for a four-pole 5.6-kW PM synchronous
 reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmonics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-17
+.. GENERATED FROM PYTHON SOURCE LINES 9-18
 
 .. code-block:: Python
 
@@ -35,6 +35,7 @@ reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial ha
 
     import motulator.drive.gradnet as gn
     from motulator.drive import utils
+    from motulator.drive.gradnet import training
 
 
 
@@ -43,11 +44,11 @@ reluctance machine (ABB Baldor ECS101M0H7EF4) from a FEM dataset with spatial ha
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -62,11 +63,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Set up the paths and parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-28
+.. GENERATED FROM PYTHON SOURCE LINES 26-29
 
 .. code-block:: Python
 
@@ -80,20 +81,20 @@ Set up the paths and parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Flux map with spatial harmonics, trained on FEM data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-37
+.. GENERATED FROM PYTHON SOURCE LINES 31-38
 
 .. code-block:: Python
 
 
     dataset_path = p / "datasets/baldor_fem.npz"
-    trained_path = p / "trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.pth"
+    trained_path = p / "trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.npz"
     subsample = 10
     k = 6
-    activation = gn.PNormGradient
+    activation = training.PNormGradient
 
 
 
@@ -102,17 +103,17 @@ Flux map with spatial harmonics, trained on FEM data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 39-40
 
 Train the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-52
+.. GENERATED FROM PYTHON SOURCE LINES 40-53
 
 .. code-block:: Python
 
 
     if not trained_path.exists():
-        gn.train_gradnet(
+        training.train_gradnet(
             dataset_path=dataset_path,
             base=base,
             save_model_path=trained_path,
@@ -130,17 +131,17 @@ Train the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Load the dataset for visualization comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-60
+.. GENERATED FROM PYTHON SOURCE LINES 55-61
 
 .. code-block:: Python
 
 
     # Get the training and validation data (complement) from the helper function
-    trn_data, val_data = gn.get_training_data(
+    trn_data, val_data = training.get_training_data(
         str(dataset_path), base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
     )
 
@@ -151,16 +152,16 @@ Load the dataset for visualization comparison.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Load the GradNet model and create its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-66
+.. GENERATED FROM PYTHON SOURCE LINES 63-67
 
 .. code-block:: Python
 
 
-    model = gn.load_gradnet(trained_path, activation=activation)
+    model = gn.load_gradnet(trained_path)
     harm_map = gn.FluxMapWithHarmonics(model, k=k)
 
 
@@ -170,11 +171,11 @@ Load the GradNet model and create its callable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Evaluate the model at single point.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-77
+.. GENERATED FROM PYTHON SOURCE LINES 69-78
 
 .. code-block:: Python
 
@@ -203,11 +204,11 @@ Evaluate the model at single point.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 79-80
 
 Plot torque surface.
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-102
+.. GENERATED FROM PYTHON SOURCE LINES 80-103
 
 .. code-block:: Python
 
@@ -246,11 +247,11 @@ Plot torque surface.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-104
+.. GENERATED FROM PYTHON SOURCE LINES 104-105
 
 Plot torque vs angle.
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-119
+.. GENERATED FROM PYTHON SOURCE LINES 105-120
 
 .. code-block:: Python
 
@@ -281,11 +282,11 @@ Plot torque vs angle.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-121
+.. GENERATED FROM PYTHON SOURCE LINES 121-122
 
 Print statistical error metrics on validation data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-124
+.. GENERATED FROM PYTHON SOURCE LINES 122-125
 
 .. code-block:: Python
 
@@ -310,7 +311,7 @@ Print statistical error metrics on validation data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.397 seconds)
+   **Total running time of the script:** (0 minutes 0.752 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_fem_harm.py:

@@ -342,7 +342,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../autoapi/motulator/drive/gradnet/training/index.html">motulator.drive.gradnet.training</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
@@ -487,6 +490,9 @@
 <span class="sd">magnetic energy or co-energy, depending on whether the current map or flux map is</span>
 <span class="sd">modeled. The monotonicity of the flux-linkage--current map is also ensured.</span>
 
+<span class="sd">The networks are defined and trained with PyTorch. A trained network is evaluated in</span>
+<span class="sd">double precision with numpy, see `GradNetFunction` and the maps (e.g., `CurrentMap`).</span>
+
 <span class="sd">References</span>
 <span class="sd">----------</span>
 <span class="sd">.. [#Li2026] Li, Foissner, Martin, Piippo, Hinkkanen, "Gradient networks for universal</span>
@@ -498,21 +504,16 @@
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">nn</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">init</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_flux_maps</span><span class="w"> </span><span class="kn">import</span> <span class="n">SaturationModelBase</span>
-
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="Softmax">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Softmax">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.Softmax">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Softmax</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Softmax activation function."""</span>
 
@@ -526,22 +527,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Softmax.jacobian">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Softmax.jacobian">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""</span>
-        <span class="n">beta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">diag_embed</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span></div>
-</div>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span></div>
 
 
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="PNormGradient">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PNormGradient">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.PNormGradient">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PNormGradient</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    p-norm gradient activation function.</span>
@@ -572,27 +564,13 @@
         <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span>
-
-<div class="viewcode-block" id="PNormGradient.jacobian">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PNormGradient.jacobian">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""</span>
-        <span class="n">beta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">x</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span>
-        <span class="n">norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">x_q</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-        <span class="n">outer</span> <span class="o">=</span> <span class="n">x_q</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x_q</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="n">q</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="o">-</span><span class="n">q</span> <span class="o">/</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">diag_embed</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">-</span> <span class="n">outer</span><span class="p">)</span></div>
-</div>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="p">)</span> <span class="o">/</span> <span class="n">norm</span></div>
 
 
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="Squareplus">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Squareplus">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.Squareplus">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Squareplus</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Rectifier-type activation function with one learnable parameter."""</span>
 
@@ -601,22 +579,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">beta_log0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)))</span>
-
-<div class="viewcode-block" id="Squareplus.jacobian">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Squareplus.jacobian">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag_embed</span><span class="p">(</span>
-            <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)))</span>
-        <span class="p">)</span></div>
-</div>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)))</span></div>
 
 
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="AlgebraicSigmoid">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.AlgebraicSigmoid">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.AlgebraicSigmoid">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AlgebraicSigmoid</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Sigmoid-type activation function with one learnable parameter."""</span>
 
@@ -625,15 +594,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">beta_log0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">))</span>
-
-<div class="viewcode-block" id="AlgebraicSigmoid.jacobian">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.AlgebraicSigmoid.jacobian">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Jacobian matrix, shape (..., n, n), for inputs of shape (..., n)."""</span>
-        <span class="n">c</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag_embed</span><span class="p">(</span><span class="n">c</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mf">1.5</span><span class="p">))</span></div>
-</div>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beta_log</span><span class="p">))</span></div>
 
 
 
@@ -667,14 +628,10 @@
         <span class="n">z</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">z</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Jacobian matrix W^T J_act W, shape (..., in_dim, in_dim)."""</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
-        <span class="n">act</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Any</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">)</span>  <span class="c1"># Activations provide the jacobian method</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">act</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">@</span> <span class="bp">self</span><span class="o">.</span><span class="n">W</span>
-
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="GradNet">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.GradNet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GradNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modular and monotonous gradient network.</span>
@@ -737,304 +694,7 @@
         <span class="c1"># Add modules</span>
         <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
             <span class="n">z</span> <span class="o">+=</span> <span class="n">block</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">z</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Jacobian matrix of the output with respect to the input.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        x : torch.Tensor, shape (..., in_dim)</span>
-<span class="sd">            Input.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        torch.Tensor, shape (..., in_dim, in_dim)</span>
-<span class="sd">            Jacobian matrix (the Hessian of the underlying scalar state function).</span>
-
-<span class="sd">        """</span>
-        <span class="n">mu</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu_log</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">non_mu_dim</span><span class="p">))</span>
-        <span class="n">jac</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">blocks</span><span class="p">:</span>
-            <span class="n">jac</span> <span class="o">=</span> <span class="n">jac</span> <span class="o">+</span> <span class="n">cast</span><span class="p">(</span><span class="n">GradNetModule</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">jac</span>
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="load_gradnet">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.load_gradnet">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">load_gradnet</span><span class="p">(</span>
-    <span class="n">model_path</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span> <span class="n">activation</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GradNet</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Load a GradNet model, inferring dimensions from the saved weights.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model_path : Path | str</span>
-<span class="sd">        Path to the saved model file.</span>
-<span class="sd">    activation : Callable[[], nn.Module] | None, optional</span>
-<span class="sd">        Activation function factory, defaults to PNormGradient.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    GradNet</span>
-<span class="sd">        Loaded GradNet model.</span>
-
-<span class="sd">    """</span>
-    <span class="c1"># Load state dict</span>
-    <span class="n">state_dict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">map_location</span><span class="o">=</span><span class="s2">"cpu"</span><span class="p">)</span>
-    <span class="c1"># Dimensions inferred from state dict</span>
-    <span class="n">in_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">"blocks.0.W"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">embed_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">"blocks.0.W"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">mu_dim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="s2">"mu_log"</span><span class="p">]</span><span class="o">.</span><span class="n">numel</span><span class="p">())</span>
-    <span class="n">num_modules</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">state_dict</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"blocks."</span><span class="p">)</span> <span class="ow">and</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".W"</span><span class="p">)]</span>
-    <span class="p">)</span>
-    <span class="c1"># Choose activation</span>
-    <span class="k">if</span> <span class="n">activation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">activation</span> <span class="o">=</span> <span class="n">PNormGradient</span>
-
-    <span class="c1"># Create and load model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">GradNet</span><span class="p">(</span><span class="n">in_dim</span><span class="p">,</span> <span class="n">mu_dim</span><span class="p">,</span> <span class="n">num_modules</span><span class="p">,</span> <span class="n">embed_dim</span><span class="p">,</span> <span class="n">activation</span><span class="p">)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">state_dict</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">model</span></div>
-
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="CurrentMap">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.CurrentMap">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">CurrentMap</span><span class="p">(</span><span class="n">SaturationModelBase</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Callable wrapper for GradNet current map models.</span>
-
-<span class="sd">    The map is symmetrized about the d-axis to ensure physical consistency. The map can</span>
-<span class="sd">    be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : GradNet</span>
-<span class="sd">        Trained GradNet model for the current map.</span>
-
-<span class="sd">    """</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">GradNet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">map_type</span><span class="o">=</span><span class="s2">"current_map"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">psi_base</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">i_base</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Per-unit inputs and their conjugates as (d, q) pairs, shape (2, ..., 2)."""</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">x_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">view_as_real</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">conj</span><span class="p">()])))</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Evaluate the stator current at given stator flux linkage.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        psi_s_dq : complex | np.ndarray</span>
-<span class="sd">            Stator flux linkage (Vs).</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        complex | np.ndarray</span>
-<span class="sd">            Stator current (A).</span>
-
-<span class="sd">        """</span>
-        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">():</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">view_as_complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inputs</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)))</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-
-        <span class="c1"># Symmetrize</span>
-        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">i_s_dq</span>
-
-<div class="viewcode-block" id="CurrentMap.jacobian">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.CurrentMap.jacobian">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Jacobian matrix of the symmetrized map.</span>
-
-<span class="sd">        The Jacobian is computed analytically, which is accurate also in single</span>
-<span class="sd">        precision (unlike finite differences).</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        x_dq : complex | np.ndarray</span>
-<span class="sd">            Input of the map (flux linkage in Vs or current in A).</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        np.ndarray, shape (..., 2, 2)</span>
-<span class="sd">            Jacobian matrix [[dy_d/dx_d, dy_d/dx_q], [dy_q/dx_d, dy_q/dx_q]], where y is</span>
-<span class="sd">            the output of the map, in SI units.</span>
-
-<span class="sd">        """</span>
-        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">():</span>
-            <span class="n">jac</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_inputs</span><span class="p">(</span><span class="n">x_dq</span><span class="p">))</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-
-        <span class="c1"># Symmetrize: the conjugation corresponds to S = diag(1, -1) on both sides</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
-        <span class="n">jac</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">jac</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">s</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">jac</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
-        <span class="k">return</span> <span class="n">jac</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">)</span></div>
-</div>
-
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="FluxMap">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.FluxMap">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FluxMap</span><span class="p">(</span><span class="n">CurrentMap</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Callable wrapper for GradNet flux-linkage map models.</span>
-
-<span class="sd">    The map returns the stator flux linkage (Vs) at the given stator current (A). It</span>
-<span class="sd">    is symmetrized about the d-axis to ensure physical consistency.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : GradNet</span>
-<span class="sd">        Trained GradNet model for the flux-linkage map.</span>
-
-<span class="sd">    """</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">GradNet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="s2">"flux_map"</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">i_base</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">psi_base</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
-
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="CurrentMapWithHarmonics">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.CurrentMapWithHarmonics">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">CurrentMapWithHarmonics</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Callable wrapper for GradNet current maps with spatial harmonics.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : GradNet</span>
-<span class="sd">        Trained GradNet model for the current map with harmonics.</span>
-<span class="sd">    k : int, optional</span>
-<span class="sd">        Spatial harmonic order, defaults to 6.</span>
-
-<span class="sd">    """</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">GradNet</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">i_base</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">psi_base</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tau_base</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="c1"># Harmonic order</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_torque</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dW_dtheta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Torque (p.u.) from the flux linkage x, current y, and the magnetic energy."""</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span> <span class="o">-</span> <span class="n">dW_dtheta</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Evaluate the current and torque at given flux linkage and rotor position.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        psi_s_dq : complex | np.ndarray</span>
-<span class="sd">            Stator flux linkage (Vs).</span>
-<span class="sd">        exp_j_theta_m : complex | np.ndarray</span>
-<span class="sd">            Exponential of the rotor electrical angle.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple[complex | np.ndarray, float | np.ndarray]</span>
-<span class="sd">            Stator current (A) and electromagnetic torque (Nm) per pole pair.</span>
-
-<span class="sd">        """</span>
-        <span class="c1"># Per-unit input and the rotor-position input exp(j*k*theta_m) as (d, q, cos,</span>
-        <span class="c1"># sin), together with their conjugates</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">exp_j_k_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">),</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">exp_j_theta_m</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">),</span>
-        <span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">exp_j_k_theta</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">view_as_real</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">z</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">conj</span><span class="p">()])))</span>
-
-        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">inference_mode</span><span class="p">():</span>
-            <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">unflatten</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-            <span class="n">outputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">view_as_complex</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-
-        <span class="c1"># Symmetrize the output and dW/dcos + j*dW/dsin of the state function W</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">outputs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span>
-        <span class="n">y</span><span class="p">,</span> <span class="n">dW</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">outputs</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-
-        <span class="c1"># Torque in per-unit</span>
-        <span class="n">dW_dtheta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span> <span class="o">*</span> <span class="n">dW</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span>
-        <span class="n">tau_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dW_dtheta</span><span class="p">)</span>
-
-        <span class="c1"># Scale back to physical units</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">*</span> <span class="n">y</span>
-        <span class="n">tau_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_base</span> <span class="o">*</span> <span class="n">tau_m</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">tau_m</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">tau_m</span><span class="p">)</span></div>
-
-
-
-<span class="c1"># %%</span>
-<div class="viewcode-block" id="FluxMapWithHarmonics">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.FluxMapWithHarmonics">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FluxMapWithHarmonics</span><span class="p">(</span><span class="n">CurrentMapWithHarmonics</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Callable wrapper for GradNet flux maps with spatial harmonics.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    model : GradNet</span>
-<span class="sd">        Trained GradNet model for the flux map with harmonics.</span>
-<span class="sd">    k : int, optional</span>
-<span class="sd">        Spatial harmonic order, defaults to 6.</span>
-
-<span class="sd">    """</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">GradNet</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_base</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_torque</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dW_dtheta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Torque (p.u.) from the current x, flux linkage y, and the co-energy."""</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span> <span class="o">+</span> <span class="n">dW_dtheta</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Evaluate the flux linkage and torque at given current and rotor position.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        i_s_dq : complex | np.ndarray</span>
-<span class="sd">            Stator current (A).</span>
-<span class="sd">        exp_j_theta_m : complex | np.ndarray</span>
-<span class="sd">            Exponential of the rotor electrical angle.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple[complex | np.ndarray, float | np.ndarray]</span>
-<span class="sd">            Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.</span>
-
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">z</span></div>
 
 </pre></div>
 

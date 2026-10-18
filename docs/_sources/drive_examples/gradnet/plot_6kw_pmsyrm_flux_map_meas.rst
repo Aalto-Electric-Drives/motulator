@@ -24,7 +24,7 @@
 This example trains a GradNet flux-linkage map for a four-pole 5.6-kW PM synchronous
 reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-17
+.. GENERATED FROM PYTHON SOURCE LINES 9-18
 
 .. code-block:: Python
 
@@ -35,6 +35,7 @@ reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.
 
     import motulator.drive.gradnet as gn
     from motulator.drive import utils
+    from motulator.drive.gradnet import training
 
 
 
@@ -43,11 +44,11 @@ reluctance machine (Baldor ECS101M0H7EF4) from a measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 19-20
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 20-24
 
 .. code-block:: Python
 
@@ -62,11 +63,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Set up the paths and parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-33
+.. GENERATED FROM PYTHON SOURCE LINES 26-34
 
 .. code-block:: Python
 
@@ -74,9 +75,9 @@ Set up the paths and parameters.
     p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
     dataset_path = p / "datasets/baldor_meas.npz"
-    trained_path = p / "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.pth"
+    trained_path = p / "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.npz"
     subsample = 10
-    activation = gn.PNormGradient
+    activation = training.PNormGradient
 
 
 
@@ -85,17 +86,17 @@ Set up the paths and parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 35-36
 
 Train the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-48
+.. GENERATED FROM PYTHON SOURCE LINES 36-49
 
 .. code-block:: Python
 
 
     if not trained_path.exists():
-        gn.train_gradnet(
+        training.train_gradnet(
             dataset_path=dataset_path,
             base=base,
             save_model_path=trained_path,
@@ -113,16 +114,16 @@ Train the model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the GradNet model and its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-54
+.. GENERATED FROM PYTHON SOURCE LINES 51-55
 
 .. code-block:: Python
 
 
-    model = gn.load_gradnet(trained_path, activation=activation)
+    model = gn.load_gradnet(trained_path)
     flux_map_fcn = gn.FluxMap(model)
 
 
@@ -132,16 +133,16 @@ Create the GradNet model and its callable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
+.. GENERATED FROM PYTHON SOURCE LINES 56-57
 
 Load the dataset for comparison and split it into training and validation sets.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-61
+.. GENERATED FROM PYTHON SOURCE LINES 57-62
 
 .. code-block:: Python
 
 
-    train_data, val_data = gn.get_training_data(
+    train_data, val_data = training.get_training_data(
         str(dataset_path), base=base, subsample=subsample
     )
 
@@ -152,11 +153,11 @@ Load the dataset for comparison and split it into training and validation sets.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 63-64
 
 Plot the flux map.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-96
+.. GENERATED FROM PYTHON SOURCE LINES 64-97
 
 .. code-block:: Python
 
@@ -217,11 +218,11 @@ Plot the flux map.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-98
+.. GENERATED FROM PYTHON SOURCE LINES 98-99
 
 Print error metrics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-100
+.. GENERATED FROM PYTHON SOURCE LINES 99-101
 
 .. code-block:: Python
 
@@ -243,7 +244,7 @@ Print error metrics.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.394 seconds)
+   **Total running time of the script:** (0 minutes 0.410 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_flux_map_meas.py:

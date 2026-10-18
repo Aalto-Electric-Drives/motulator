@@ -96,8 +96,8 @@ trained on the FEM data.
 .. code-block:: Python
 
 
-    path = "trained_models/baldor_fem_curr_map_harm_softmax_d48_sub10.pth"
-    gradnet = gn.load_gradnet(p / path, activation=gn.Softmax)
+    path = "trained_models/baldor_fem_curr_map_harm_softmax_d48_sub10.npz"
+    gradnet = gn.load_gradnet(p / path)
     magnetic_map = gn.CurrentMapWithHarmonics(gradnet)
     par = model.SpatialSaturatedSynchronousMachinePars(
         n_p=2, R_s=0.63, magnetic_map_fcn=magnetic_map
@@ -125,8 +125,8 @@ Configure the control system.
 
 
     # Load the GradNet flux map trained on the FEM data for the estimated machine model
-    path = "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.pth"
-    est_flux_map = gn.FluxMap(gn.load_gradnet(p / path, activation=gn.PNormGradient))
+    path = "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.npz"
+    est_flux_map = gn.FluxMap(gn.load_gradnet(p / path))
 
     # Parametrize the estimated machine model and the control system
     est_par = control.SaturatedSynchronousMachinePars(
@@ -192,7 +192,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 32.912 seconds)
+   **Total running time of the script:** (0 minutes 23.603 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_gn_fvc_fem_harm.py:

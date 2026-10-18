@@ -93,8 +93,8 @@ trained on the measured dataset.
 .. code-block:: Python
 
 
-    path = "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.pth"
-    gradnet = gn.load_gradnet(p / path, activation=gn.Squareplus)
+    path = "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.npz"
+    gradnet = gn.load_gradnet(p / path)
     current_map = gn.CurrentMap(gradnet)
     par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.63, i_s_dq_fcn=current_map)
 
@@ -121,8 +121,8 @@ trained on the measured dataset.
 
 
     # Parametrize the estimated machine model
-    path = "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.pth"
-    est_flux_map = gn.FluxMap(gn.load_gradnet(p / path, activation=gn.PNormGradient))
+    path = "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.npz"
+    est_flux_map = gn.FluxMap(gn.load_gradnet(p / path))
     est_par = control.SaturatedSynchronousMachinePars(
         n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
     )
@@ -242,7 +242,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 30.448 seconds)
+   **Total running time of the script:** (0 minutes 21.636 seconds)
 
 
 .. _sphx_glr_download_drive_examples_gradnet_plot_6kw_pmsyrm_gn_fvc_meas.py:

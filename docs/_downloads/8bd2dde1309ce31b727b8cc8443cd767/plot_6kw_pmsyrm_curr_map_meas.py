@@ -13,6 +13,7 @@ import numpy as np
 
 import motulator.drive.gradnet as gn
 from motulator.drive import utils
+from motulator.drive.gradnet import training
 
 # %%
 # Compute base values based on the nominal values.
@@ -26,15 +27,15 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
 dataset_path = p / "datasets/baldor_meas.npz"
-trained_path = p / "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.pth"
+trained_path = p / "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.npz"
 subsample = 10
-activation = gn.Squareplus
+activation = training.Squareplus
 
 # %%
 # Train the model.
 
 if not trained_path.exists():
-    gn.train_gradnet(
+    training.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -47,13 +48,13 @@ if not trained_path.exists():
 # %%
 # Create the GradNet model and its callable.
 
-model = gn.load_gradnet(trained_path, activation=activation)
+model = gn.load_gradnet(trained_path)
 current_map_fcn = gn.CurrentMap(model)
 
 # %%
 # Load the dataset for comparison and split it into training and validation sets.
 
-train_data, val_data = gn.get_training_data(
+train_data, val_data = training.get_training_data(
     str(dataset_path), subsample=subsample, base=base
 )
 

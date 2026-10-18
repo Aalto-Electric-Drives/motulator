@@ -24,7 +24,7 @@
 This example trains a GradNet current map for a four-pole 5.6-kW PM synchronous
 reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmonics.
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-15
+.. GENERATED FROM PYTHON SOURCE LINES 9-16
 
 .. code-block:: Python
 
@@ -33,13 +33,14 @@ reluctance machine (Baldor ECS101M0H7EF4) from a FEM dataset with spatial harmon
 
     import motulator.drive.gradnet as gn
     from motulator.drive import utils
+    from motulator.drive.gradnet import training
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
@@ -48,11 +49,11 @@ Compute base values based on the nominal values.
     base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Set up the paths and parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-32
+.. GENERATED FROM PYTHON SOURCE LINES 24-33
 
 .. code-block:: Python
 
@@ -60,25 +61,25 @@ Set up the paths and parameters.
     p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
     dataset_path = p / "datasets/baldor_fem.npz"
-    trained_path = p / "trained_models" / "baldor_fem_curr_map_harm_softmax_d48_sub10.pth"
+    trained_path = p / "trained_models" / "baldor_fem_curr_map_harm_softmax_d48_sub10.npz"
     subsample = 10
     k = 6
-    activation = gn.Softmax
+    activation = training.Softmax
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-36
+.. GENERATED FROM PYTHON SOURCE LINES 34-37
 
 Train the model. The FEM data is on a uniform grid, so the loss is dominated by the
 saturated region. The loss of the data points whose current magnitude is below 12 A
 is weighted by 10 to improve the accuracy at low currents.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-50
+.. GENERATED FROM PYTHON SOURCE LINES 37-51
 
 .. code-block:: Python
 
 
     if not trained_path.exists():
-        gn.train_gradnet(
+        training.train_gradnet(
             dataset_path=dataset_path,
             base=base,
             save_model_path=trained_path,
@@ -91,39 +92,39 @@ is weighted by 10 to improve the accuracy at low currents.
             weight_low=10,
         )
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Load the dataset for visualization comparison.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-58
+.. GENERATED FROM PYTHON SOURCE LINES 53-59
 
 .. code-block:: Python
 
 
     # Get the training and validation data (complement) from the helper function
-    _, val_data = gn.get_training_data(
+    _, val_data = training.get_training_data(
         str(dataset_path), base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
     )
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 60-61
 
 Load the GradNet model and create its callable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 61-65
 
 .. code-block:: Python
 
 
-    model = gn.load_gradnet(trained_path, activation=activation)
+    model = gn.load_gradnet(trained_path)
     harm_map = gn.CurrentMapWithHarmonics(model, k=k)
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 66-67
 
 Print statistical error metrics on validation data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-70
 
 .. code-block:: Python
 

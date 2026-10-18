@@ -34,8 +34,8 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Configure the system model using the GradNet current map, without spatial harmonics,
 # trained on the measured dataset.
 
-path = "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.pth"
-gradnet = gn.load_gradnet(p / path, activation=gn.Squareplus)
+path = "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.npz"
+gradnet = gn.load_gradnet(p / path)
 current_map = gn.CurrentMap(gradnet)
 par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.63, i_s_dq_fcn=current_map)
 
@@ -49,8 +49,8 @@ mdl = model.Drive(machine, mechanics, converter)
 # trained on the measured dataset.
 
 # Parametrize the estimated machine model
-path = "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.pth"
-est_flux_map = gn.FluxMap(gn.load_gradnet(p / path, activation=gn.PNormGradient))
+path = "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.npz"
+est_flux_map = gn.FluxMap(gn.load_gradnet(p / path))
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
 )

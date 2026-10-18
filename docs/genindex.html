@@ -342,7 +342,10 @@
 <li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/drive/gradnet/training/index.html">motulator.drive.gradnet.training</a></li>
+</ul>
+</details></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
@@ -527,7 +530,7 @@
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ACPort">ACPort (class in motulator.common.model)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.AlgebraicSigmoid">AlgebraicSigmoid (class in motulator.drive.gradnet)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.AlgebraicSigmoid">AlgebraicSigmoid (class in motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.alpha">alpha (motulator.drive.control.im.InductionMachineInvGammaPars attribute)</a>
 
@@ -971,6 +974,8 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.from_inv_gamma_pars">(motulator.drive.model.InductionMachinePars class method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.GradNetFunction.from_model">from_model() (motulator.drive.gradnet.GradNetFunction class method)</a>
+</li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues.from_nominal">from_nominal() (motulator.common.utils.BaseValues class method)</a>
 
       <ul>
@@ -1061,7 +1066,11 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.get_realized_voltage">(motulator.grid.control.PWM method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.get_training_data">get_training_data() (in module motulator.drive.gradnet)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.get_training_data">get_training_data() (in module motulator.drive.gradnet.training)</a>
+</li>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.GradNet">GradNet (class in motulator.drive.gradnet.training)</a>
+</li>
+      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.GradNetFunction">GradNetFunction (class in motulator.drive.gradnet)</a>
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem">GridConverterControlSystem (class in motulator.grid.control)</a>
 </li>
@@ -1161,18 +1170,8 @@
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.AlgebraicSigmoid.jacobian">jacobian() (motulator.drive.gradnet.AlgebraicSigmoid method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.CurrentMap.jacobian">(motulator.drive.gradnet.CurrentMap method)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.CurrentMap.jacobian">jacobian() (motulator.drive.gradnet.CurrentMap method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PNormGradient.jacobian">(motulator.drive.gradnet.PNormGradient method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Softmax.jacobian">(motulator.drive.gradnet.Softmax method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Squareplus.jacobian">(motulator.drive.gradnet.Squareplus method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1343,6 +1342,8 @@
 </li>
         <li><a href="autoapi/motulator/drive/gradnet/index.html#module-motulator.drive.gradnet">motulator.drive.gradnet</a>
 </li>
+        <li><a href="autoapi/motulator/drive/gradnet/training/index.html#module-motulator.drive.gradnet.training">motulator.drive.gradnet.training</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#module-motulator.drive.model">motulator.drive.model</a>
 </li>
         <li><a href="autoapi/motulator/drive/utils/index.html#module-motulator.drive.utils">motulator.drive.utils</a>
@@ -1426,6 +1427,13 @@
 
       <ul>
         <li><a href="autoapi/motulator/drive/gradnet/index.html#module-motulator.drive.gradnet">module</a>
+</li>
+      </ul></li>
+      <li>
+    motulator.drive.gradnet.training
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/gradnet/training/index.html#module-motulator.drive.gradnet.training">module</a>
 </li>
       </ul></li>
       <li>
@@ -1578,7 +1586,7 @@
 </li>
       <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PlotOptions">PlotOptions (class in motulator.drive.gradnet)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PNormGradient">PNormGradient (class in motulator.drive.gradnet)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.PNormGradient">PNormGradient (class in motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.post_process">post_process() (motulator.common.control.ControlSystem method)</a>
 
@@ -1759,6 +1767,8 @@
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.save">(motulator.common.model.Model method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.GradNetFunction.save">(motulator.drive.gradnet.GradNetFunction method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CompositeModel.save">(motulator.drive.model.CompositeModel method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CompositeModel.save">(motulator.grid.model.CompositeModel method)</a>
@@ -1934,7 +1944,7 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.six_step_overmodulation">(motulator.grid.control.PWM static method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Softmax">Softmax (class in motulator.drive.gradnet)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.Softmax">Softmax (class in motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SolverCfg.solver">solver (motulator.common.model.SolverCfg property)</a>
 </li>
@@ -1960,7 +1970,7 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedObserver">(class in motulator.drive.control.sm)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.Squareplus">Squareplus (class in motulator.drive.gradnet)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.Squareplus">Squareplus (class in motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.Step">Step (class in motulator.common.utils)</a>
 
@@ -2010,7 +2020,7 @@
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.TimeSeries">TimeSeries (class in motulator.common.control)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.train_gradnet">train_gradnet() (in module motulator.drive.gradnet)</a>
+      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.train_gradnet">train_gradnet() (in module motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem">TwoMassMechanicalSystem (class in motulator.drive.model)</a>
 </li>
