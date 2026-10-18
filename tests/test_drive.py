@@ -18,7 +18,7 @@ import pytest
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.control import InverterNonlinearity
-from motulator.drive import model, utils
+from motulator.drive import model
 from motulator.drive.control import _im_flux_vector, _sm_flux_vector
 from motulator.drive.utils import ControlLoci, MagneticModel
 
@@ -190,7 +190,7 @@ def assert_controller_coordinates(res: Any) -> None:
 
 
 def test_models_and_control_systems_can_be_pickled() -> None:
-    """Models and control systems can be pickled, e.g., for parallel identification."""
+    """Models and control systems can be pickled, e.g., for parallel simulations."""
     for make_mdl, make_ctrl in CASES.values():
         pickle.dumps((make_mdl(), make_ctrl()))
 
@@ -230,65 +230,6 @@ def test_observer_based_vhz() -> None:
     assert np.mean(res.mdl.machine.w_M[end]) == pytest.approx(w_M_ref, rel=0.05)
     assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
     assert_controller_coordinates(res)
-
-
-def test_mechanical_impedance_of_open_loop_vhz() -> None:
-    """The identified mechanical impedance equals that of the linearized machine."""
-    # Under open-loop V/Hz control, the stator voltage is constant in coordinates
-    # rotating at w_s, so the mechanical impedance is that of the machine alone
-    par = im_par()
-    R_s, R_R, L_sgm, L_M, n_p = par.R_s, par.R_R, par.L_sgm, par.L_M, par.n_p
-    w_s, psi_s, w_M0 = 2 * pi * 25, 1.04, 70.0  # Slip 2*pi*25 - 2*70 = 17 rad/s
-    mdl = model.Drive(
-        model.InductionMachine(par),
-        model.ExternalRotorSpeed(),
-        model.VoltageSourceConverter(u_dc=540),
-    )
-    mdl.mechanics.set_external_rotor_speed(w_M0)
-    est_par = im_control.InductionMachineInvGammaPars(
-        n_p=n_p, R_s=0, R_R=0, L_sgm=0, L_M=np.inf
-    )
-    cfg = im_control.ObserverBasedVHzControllerCfg(
-        psi_s_nom=psi_s, i_s_max=np.inf, alpha_f=0, alpha_tau=0, alpha_psi=0
-    )
-    ctrl = im_control.VHzControlSystem(
-        im_control.ObserverBasedVHzController(est_par, cfg)
-    )
-    ctrl.set_speed_ref(w_s / n_p)
-    freqs = np.array([10.0, 100.0])
-    id_cfg = utils.IdentificationCfg(
-        abs_w_e=0.5, freqs=freqs, t0=0.5, t1=0.2, multiprocess=False
-    )
-    res = utils.run_identification(id_cfg, mdl, ctrl)
-
-    # Linearized model in coordinates rotating at w_s, the real state vector being
-    # [Re{psi_s}, Re{psi_R}, Im{psi_s}, Im{psi_R}]
-    A_c = np.array(
-        [
-            [-R_s / L_sgm - 1j * w_s, R_s / L_sgm],
-            [R_R / L_sgm, -R_R / L_sgm - R_R / L_M - 1j * (w_s - n_p * w_M0)],
-        ]
-    )
-    psi_s0, psi_R0 = np.linalg.solve(A_c, [-1j * w_s * psi_s, 0])
-    i_s0 = (psi_s0 - psi_R0) / L_sgm
-    A = np.block([[np.real(A_c), -np.imag(A_c)], [np.imag(A_c), np.real(A_c)]])
-    b_c = np.array([0, 1j * n_p * psi_R0])  # Input vector of the rotor speed
-    B = np.concatenate((np.real(b_c), np.imag(b_c)))
-
-    def im_row(r: np.ndarray) -> np.ndarray:
-        """Row vector of the real state vector giving Im{r @ [psi_s, psi_R]}."""
-        return np.concatenate((np.imag(r), np.real(r)))
-
-    # Torque 1.5*n_p*Im{i_s*conj(psi_R)}, linearized
-    C = im_row(np.conj(psi_R0) * np.array([1, -1]) / L_sgm)
-    C -= im_row(np.conj(i_s0) * np.array([0, 1]))
-    C *= 1.5 * n_p
-    tau_M0 = 1.5 * n_p * np.imag(i_s0 * np.conj(psi_R0))
-    Z_M = [-C @ np.linalg.solve(2j * pi * f * np.eye(4) - A, B) for f in freqs]
-
-    assert res.w_M0 == pytest.approx(w_M0)
-    assert res.tau_M0 == pytest.approx(tau_M0, rel=0.01)
-    assert res.Z_M == pytest.approx(Z_M, rel=0.01)
 
 
 def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
