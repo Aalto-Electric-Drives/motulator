@@ -718,3 +718,49 @@ def test_zero_field_weakening_gain() -> None:
     """The field-weakening gain zero is used as such."""
     ref_gen = im_control.CurrentReferenceGenerator(im_par(), 1.04, 10.6, 314, 0.95, 0)
     assert ref_gen.k_fw == 0
+
+
+@pytest.mark.parametrize(
+    ("machine", "controller", "cfg"),
+    [
+        (
+            "sm",
+            sm_control.FluxVectorController,
+            sm_control.FluxVectorControllerCfg(6.5),
+        ),
+        (
+            "sm",
+            sm_control.CurrentVectorController,
+            sm_control.CurrentVectorControllerCfg(6.5),
+        ),
+        (
+            "sm",
+            sm_control.ObserverBasedVHzController,
+            sm_control.ObserverBasedVHzControllerCfg(6.5),
+        ),
+        (
+            "im",
+            im_control.FluxVectorController,
+            im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6),
+        ),
+        (
+            "im",
+            im_control.CurrentVectorController,
+            im_control.CurrentVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6),
+        ),
+        (
+            "im",
+            im_control.ObserverBasedVHzController,
+            im_control.ObserverBasedVHzControllerCfg(psi_s_nom=1.04, i_s_max=10.6),
+        ),
+    ],
+    ids=["sm_fvc", "sm_cvc", "sm_vhz", "im_fvc", "im_cvc", "im_vhz"],
+)
+def test_controller_stores_cfg(machine: str, controller: Any, cfg: Any) -> None:
+    """The controller stores its configuration (e.g., for exporting the controller)."""
+    par: Any = im_par()
+    if machine == "sm":
+        par = sm_control.SynchronousMachinePars(
+            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+        )
+    assert controller(par, cfg).cfg is cfg
