@@ -282,8 +282,15 @@ class ObserverBasedGridFormingController:
 
 
 def transform_to_v_c_coordinates(ts: TimeSeries) -> None:
-    """Transform the complex signals to the coordinates aligned with `v_c`."""
-    T = np.exp(-1j * np.angle(ts.fbk.v_c))
+    """
+    Transform the complex signals to the coordinates aligned with `v_c`.
+
+    The angle `fbk.theta_c` is updated to the angle of these coordinates, so that the
+    stationary signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`.
+
+    """
+    theta = np.angle(ts.fbk.v_c)
+    T = np.exp(-1j * theta)
     ts.ref.u_c = T * ts.ref.u_c
     ts.ref.i_c = T * ts.ref.i_c
     ts.fbk.u_c = T * ts.fbk.u_c
@@ -291,3 +298,4 @@ def transform_to_v_c_coordinates(ts: TimeSeries) -> None:
     ts.fbk.i_c = T * ts.fbk.i_c
     ts.fbk.u_g = T * ts.fbk.u_g
     ts.fbk.v_c = T * ts.fbk.v_c
+    ts.fbk.theta_c = wrap(ts.fbk.theta_c + theta)

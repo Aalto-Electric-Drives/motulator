@@ -20,12 +20,25 @@ class References(Protocol):
 
 @dataclass
 class TimeSeries:
-    """Container for control system's discrete-time data."""
+    """
+    Container for control system's discrete-time data.
+
+    Each signal group saved by `ControlSystem.save` becomes an attribute in
+    `ControlSystem.post_process`, e.g., `fbk` and `ref`.
+
+    """
 
     t: np.ndarray = field(default_factory=lambda: np.array([]))
     # Populated in post_process
     fbk: Any = field(default_factory=dict)
     ref: Any = field(default_factory=dict)
+
+    def __getattr__(self, name: str) -> SimpleNamespace:
+        """Declare the other signal groups for type checkers."""
+        # Only called if the attribute is not found, i.e., the group was not saved
+        raise AttributeError(
+            f"{type(self).__name__!r} object has no attribute {name!r}"
+        )
 
 
 class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):

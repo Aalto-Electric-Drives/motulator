@@ -30,6 +30,16 @@ def grid_powers(res: SimulationResults, t_start: float) -> tuple[float, float]:
     return float(np.mean(s_g.real)), float(np.mean(s_g.imag))
 
 
+def assert_controller_coordinates(res: SimulationResults) -> None:
+    """The post-processed controller signals are in coordinates at the angle theta_c."""
+    i_c_ab = res.mdl.ac_filter.i_c_ab
+    i_c_ab_meas = np.interp(res.ctrl.t, res.mdl.t, i_c_ab.real) + 1j * np.interp(
+        res.ctrl.t, res.mdl.t, i_c_ab.imag
+    )
+    i_c_ab_ctrl = np.exp(1j * res.ctrl.fbk.theta_c) * res.ctrl.fbk.i_c
+    assert i_c_ab_ctrl == pytest.approx(i_c_ab_meas, abs=1e-3 * np.max(np.abs(i_c_ab)))
+
+
 def system(L_g: float = 0.0, u_dc: float | None = 650) -> model.GridConverterSystem:
     """Grid converter system, fed by a DC bus if `u_dc` is None."""
     converter = model.VoltageSourceConverter(u_dc=u_dc)
@@ -62,6 +72,7 @@ def test_grid_following() -> None:
     p_g, q_g = grid_powers(res, 0.08)
     assert p_g == pytest.approx(p_g_ref, abs=0.02 * 10e3)
     assert q_g == pytest.approx(q_g_ref, abs=0.02 * 10e3)
+    assert_controller_coordinates(res)
 
 
 def test_dual_voltage_forming() -> None:
@@ -108,6 +119,7 @@ def test_dual_voltage_forming() -> None:
     fbk, ctrl_end = res.ctrl.fbk, res.ctrl.t > 0.55
     p_ext_est = fbk.p_dis + fbk.p_g + 1.5 * R_f * np.abs(fbk.i_c) ** 2
     assert np.mean(p_ext_est[ctrl_end]) == pytest.approx(p_ext_end, rel=0.03)
+    assert_controller_coordinates(res)
 
 
 @pytest.mark.parametrize("method", ["observer", "psc"])
@@ -135,6 +147,7 @@ def test_grid_forming(method: str) -> None:
 
     p_g, _ = grid_powers(res, 0.35)
     assert p_g == pytest.approx(p_g_ref, abs=0.02 * 10e3)
+    assert_controller_coordinates(res)
     if method == "psc":
         return
     # The post-processed signals are in the same coordinates, aligned with v_c
@@ -165,6 +178,7 @@ def test_grid_forming_unbalanced(u_dc: float) -> None:
     # The observer uses the realized voltage, which avoids a power error in saturation
     p_g, _ = grid_powers(res, 0.36)
     assert p_g == pytest.approx(p_g_ref, abs=0.01 * 10e3)
+    assert_controller_coordinates(res)
     # Without the negative-sequence converter voltage, the negative-sequence grid
     # voltage drives the negative-sequence current through the total inductance
     t = 0.36 + 1e-4 * np.arange(400)  # Two fundamental periods, evenly sampled

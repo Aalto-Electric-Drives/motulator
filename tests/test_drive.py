@@ -10,6 +10,7 @@ sign errors but tolerate retuning of the controllers.
 import pickle
 from dataclasses import astuple, replace
 from math import pi, tanh
+from typing import Any
 
 import numpy as np
 import pytest
@@ -175,6 +176,17 @@ def test_speed_control(case: str) -> None:
     # The speed controller would hide errors in the torque control loop, so check the
     # torque reference too
     assert tau_M_ref == pytest.approx(tau_M, abs=0.05 * 14)
+    assert_controller_coordinates(res)
+
+
+def assert_controller_coordinates(res: Any) -> None:
+    """The post-processed controller signals are in coordinates at the angle theta_c."""
+    i_s_ab = res.mdl.machine.i_s_ab
+    i_s_ab_meas = np.interp(res.ctrl.t, res.mdl.t, i_s_ab.real) + 1j * np.interp(
+        res.ctrl.t, res.mdl.t, i_s_ab.imag
+    )
+    i_s_ab_ctrl = np.exp(1j * res.ctrl.fbk.theta_c) * res.ctrl.fbk.i_s
+    assert i_s_ab_ctrl == pytest.approx(i_s_ab_meas, abs=1e-3 * np.max(np.abs(i_s_ab)))
 
 
 def test_models_and_control_systems_can_be_pickled() -> None:
@@ -217,6 +229,7 @@ def test_observer_based_vhz() -> None:
     # V/Hz control has no speed controller, so the slip is allowed for
     assert np.mean(res.mdl.machine.w_M[end]) == pytest.approx(w_M_ref, rel=0.05)
     assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
+    assert_controller_coordinates(res)
 
 
 def test_mechanical_impedance_of_open_loop_vhz() -> None:

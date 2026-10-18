@@ -74,7 +74,13 @@ class VectorController[Ref, Fbk](Protocol):
         ...
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller outputs."""
+        """
+        Post-process controller outputs.
+
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
+        to the angle of these coordinates.
+
+        """
         ...
 
 
@@ -101,7 +107,13 @@ class VHzController[Ref, Fbk](Protocol):
         ...
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller outputs."""
+        """
+        Post-process controller outputs.
+
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
+        to the angle of these coordinates.
+
+        """
         ...
 
 
