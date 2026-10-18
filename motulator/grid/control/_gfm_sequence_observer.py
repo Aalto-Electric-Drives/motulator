@@ -295,6 +295,7 @@ class SequenceObserverBasedGridFormingController:
     k_comp = 0.0
 
     def __init__(self, cfg: SequenceObserverBasedGridFormingControllerCfg) -> None:
+        self.cfg = cfg
         self.observer = SequenceObserver(
             u_nom=cfg.u_nom,
             w_nom=cfg.w_nom,

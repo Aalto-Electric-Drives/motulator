@@ -7,6 +7,7 @@ state, with loose tolerances.
 """
 
 from dataclasses import replace
+from typing import Any
 
 import numpy as np
 import pytest
@@ -263,3 +264,36 @@ def test_power_references_follow_current_limit() -> None:
     s_g = 1.5 * fbk.u_g * ref.i_c.conjugate()
     assert (ref.p_g, ref.q_g) == pytest.approx((s_g.real, s_g.imag))
     assert abs(ref.p_g + 1j * ref.q_g) == pytest.approx(1.5 * 300 * 10)
+
+
+@pytest.mark.parametrize(
+    ("controller", "cfg"),
+    [
+        (
+            control.CurrentVectorController,
+            control.CurrentVectorControllerCfg(i_max=30, L=L_BASE),
+        ),
+        (
+            control.ObserverBasedGridFormingController,
+            control.ObserverBasedGridFormingControllerCfg(i_max=30, L=L_BASE),
+        ),
+        (
+            control.SequenceObserverBasedGridFormingController,
+            control.SequenceObserverBasedGridFormingControllerCfg(
+                i_max=30, i_d_max=25, L=L_BASE
+            ),
+        ),
+        (
+            control.DualVoltageFormingController,
+            control.DualVoltageFormingControllerCfg(i_max=30, L=L_BASE, C_dc=1e-3),
+        ),
+        (
+            control.PowerSynchronizationController,
+            control.PowerSynchronizationControllerCfg(i_max=30),
+        ),
+    ],
+    ids=["gfl", "do_gfm", "sequence_gfm", "dual_voltage", "psc"],
+)
+def test_controller_stores_cfg(controller: Any, cfg: Any) -> None:
+    """The controller stores its configuration (e.g., for exporting the controller)."""
+    assert controller(cfg).cfg is cfg

@@ -234,6 +234,7 @@ class FluxVectorController:
         cfg: FluxVectorControllerCfg,
     ) -> None:
         par = copy(par)  # The observer updates the saturation state of this copy
+        self.cfg = cfg
         self.reference_gen = ReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.tau_M_max, cfg.k_u, cfg.k_b
         )

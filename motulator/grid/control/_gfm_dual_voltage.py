@@ -166,6 +166,7 @@ class DualVoltageFormingController:
     k_comp = 1.5
 
     def __init__(self, cfg: DualVoltageFormingControllerCfg) -> None:
+        self.cfg = cfg
         self.observer = Observer(
             u_nom=cfg.u_nom,
             w_nom=cfg.w_nom,
