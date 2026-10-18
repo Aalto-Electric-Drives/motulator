@@ -367,10 +367,8 @@ sphinx_gallery_conf = {
             "../../examples/drive/vhz",
             "../../examples/drive/signal_inj",
             "../../examples/drive/gradnet",
-            "../../examples/drive/identification",
             "../../examples/grid/grid_following",
             "../../examples/grid/grid_forming",
-            "../../examples/grid/identification",
         ]
     ),
     "within_subsection_order": ExampleSortKey,

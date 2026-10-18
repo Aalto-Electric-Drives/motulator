@@ -126,7 +126,7 @@ class ThreePhaseSourceWithSignalInjection(ThreePhaseSource):
 
     The excitation ``u_e*cos(2*pi*f_e*t)`` is added to the positive-sequence component
     in the synchronous coordinates of the source. This model is intended for converter
-    output admittance identification.
+    output admittance measurement.
 
     Parameters
     ----------
