@@ -264,6 +264,11 @@ def plot_grid_waveforms(
     """
     Plot grid waveforms and phase angles.
 
+    The phase angles are the grid voltage angle and the angle `fbk.theta_c` of the
+    coordinates of the post-processed controller signals. For the observer-based
+    grid-forming controllers, these coordinates are aligned with the estimated
+    quasi-static converter voltage `v_c` (or its positive-sequence component).
+
     Parameters
     ----------
     res : ~motulator.common.model.SimulationResults

@@ -286,7 +286,8 @@ def transform_to_v_c_coordinates(ts: TimeSeries) -> None:
     Transform the complex signals to the coordinates aligned with `v_c`.
 
     The angle `fbk.theta_c` is updated to the angle of these coordinates, so that the
-    stationary signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`.
+    stationary signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`. The
+    angular speed `fbk.w_c` is not changed.
 
     """
     theta = np.angle(ts.fbk.v_c)

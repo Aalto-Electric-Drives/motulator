@@ -333,7 +333,7 @@ def to_rotor_flux_coordinates(ts: TimeSeries) -> None:
     `fbk.theta_c` is updated to the angle of the new coordinates. Hence, the stationary
     signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_s`, and the other
     signal groups in the controller coordinates can be rotated by the change of
-    `fbk.theta_c`.
+    `fbk.theta_c`. The angular speed `fbk.w_c` is not changed.
 
     """
     theta = np.angle(ts.fbk.psi_R)
