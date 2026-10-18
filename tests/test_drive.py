@@ -739,6 +739,12 @@ def test_zero_field_weakening_gain() -> None:
             sm_control.ObserverBasedVHzControllerCfg(6.5),
         ),
         (
+            # Stored by the constructor of CurrentVectorController
+            "sm",
+            sm_control.SignalInjectionController,
+            sm_control.CurrentVectorControllerCfg(6.5),
+        ),
+        (
             "im",
             im_control.FluxVectorController,
             im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6),
@@ -754,7 +760,7 @@ def test_zero_field_weakening_gain() -> None:
             im_control.ObserverBasedVHzControllerCfg(psi_s_nom=1.04, i_s_max=10.6),
         ),
     ],
-    ids=["sm_fvc", "sm_cvc", "sm_vhz", "im_fvc", "im_cvc", "im_vhz"],
+    ids=["sm_fvc", "sm_cvc", "sm_vhz", "sm_signal_inj", "im_fvc", "im_cvc", "im_vhz"],
 )
 def test_controller_stores_cfg(machine: str, controller: Any, cfg: Any) -> None:
     """The controller stores its configuration (e.g., for exporting the controller)."""
