@@ -26,7 +26,7 @@ Then, install *motulator*:
 pip install motulator
 ```
 
-The neural-network-based magnetic models of the {mod}`motulator.drive.gradnet` package, used in the GradNet examples, additionally need PyTorch. To install it as an optional dependency, use the command:
+PyTorch is needed for training the neural-network-based magnetic models of the {mod}`motulator.drive.gradnet` package and for the GradNet examples that show the training data, while the trained models need only NumPy. To install PyTorch as an optional dependency, use the command:
 
 ```bash
 pip install "motulator[gradnet]"

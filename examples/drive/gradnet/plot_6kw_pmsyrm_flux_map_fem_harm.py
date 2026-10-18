@@ -13,6 +13,7 @@ import numpy as np
 
 import motulator.drive.gradnet as gn
 from motulator.drive import utils
+from motulator.drive.gradnet import training
 
 # %%
 # Compute base values based on the nominal values.
@@ -29,16 +30,16 @@ p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 # Flux map with spatial harmonics, trained on FEM data.
 
 dataset_path = p / "datasets/baldor_fem.npz"
-trained_path = p / "trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.pth"
+trained_path = p / "trained_models/baldor_fem_flux_map_harm_pnorm_d48_sub10.npz"
 subsample = 10
 k = 6
-activation = gn.PNormGradient
+activation = training.PNormGradient
 
 # %%
 # Train the model.
 
 if not trained_path.exists():
-    gn.train_gradnet(
+    training.train_gradnet(
         dataset_path=dataset_path,
         base=base,
         save_model_path=trained_path,
@@ -53,14 +54,14 @@ if not trained_path.exists():
 # Load the dataset for visualization comparison.
 
 # Get the training and validation data (complement) from the helper function
-trn_data, val_data = gn.get_training_data(
+trn_data, val_data = training.get_training_data(
     str(dataset_path), base=base, subsample=subsample, other_keys=["theta_m", "tau_m"]
 )
 
 # %%
 # Load the GradNet model and create its callable.
 
-model = gn.load_gradnet(trained_path, activation=activation)
+model = gn.load_gradnet(trained_path)
 harm_map = gn.FluxMapWithHarmonics(model, k=k)
 
 # %%
