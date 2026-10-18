@@ -1089,6 +1089,8 @@ Package Contents
    
    Container for control system's discrete-time data.
 
+   Each signal group saved by `ControlSystem.save` becomes an attribute in
+   `ControlSystem.post_process`, e.g., `fbk` and `ref`.
 
 
 

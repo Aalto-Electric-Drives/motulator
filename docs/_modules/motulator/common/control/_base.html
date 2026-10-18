@@ -505,12 +505,25 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.TimeSeries">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeSeries</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Container for control system's discrete-time data."""</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Container for control system's discrete-time data.</span>
+
+<span class="sd">    Each signal group saved by `ControlSystem.save` becomes an attribute in</span>
+<span class="sd">    `ControlSystem.post_process`, e.g., `fbk` and `ref`.</span>
+
+<span class="sd">    """</span>
 
     <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]))</span>
     <span class="c1"># Populated in post_process</span>
     <span class="n">fbk</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-    <span class="n">ref</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span></div>
+    <span class="n">ref</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleNamespace</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Declare the other signal groups for type checkers."""</span>
+        <span class="c1"># Only called if the attribute is not found, i.e., the group was not saved</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> object has no attribute </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span>
+        <span class="p">)</span></div>
 
 
 

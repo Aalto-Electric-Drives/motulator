@@ -752,6 +752,11 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot grid waveforms and phase angles.</span>
 
+<span class="sd">    The phase angles are the grid voltage angle and the angle `fbk.theta_c` of the</span>
+<span class="sd">    coordinates of the post-processed controller signals. For the observer-based</span>
+<span class="sd">    grid-forming controllers, these coordinates are aligned with the estimated</span>
+<span class="sd">    quasi-static converter voltage `v_c` (or its positive-sequence component).</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    res : ~motulator.common.model.SimulationResults</span>

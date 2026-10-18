@@ -830,14 +830,28 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">to_rotor_flux_coordinates</span><span class="p">(</span><span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Transform the controller time series to estimated rotor flux coordinates."""</span>
-    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_R</span><span class="p">))</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Transform the controller time series to estimated rotor flux coordinates.</span>
+
+<span class="sd">    All complex signals of the feedback and reference groups are rotated, and the angle</span>
+<span class="sd">    `fbk.theta_c` is updated to the angle of the new coordinates. Hence, the stationary</span>
+<span class="sd">    signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_s`, and the other</span>
+<span class="sd">    signal groups in the controller coordinates can be rotated by the change of</span>
+<span class="sd">    `fbk.theta_c`. The angular speed `fbk.w_c` is not changed.</span>
+
+<span class="sd">    """</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_R</span><span class="p">)</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
     <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_s</span>
     <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span>
     <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_s</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_s_zoh</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span>
     <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span>
     <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_R</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">e_o</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">e_o</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+</span> <span class="n">theta</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>

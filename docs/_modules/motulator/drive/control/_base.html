@@ -502,7 +502,7 @@
 <span class="w">    </span><span class="sd">"""Protocol defining the required fields for feedback signals."""</span>
 
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Mechanical angular speed</span>
-    <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular speed of the coordinate system</span>
+    <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular speed of the coordinate system (not post-processed)</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular position of the coordinate system</span>
     <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator voltage (controller coordinates) for the control laws</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage</span>
@@ -557,7 +557,15 @@
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Post-process controller outputs."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Post-process controller outputs.</span>
+
+<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated</span>
+<span class="sd">        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
+<span class="sd">        i.e., it remains that of the controller coordinates, which equals that of the</span>
+<span class="sd">        new coordinates in steady state.</span>
+
+<span class="sd">        """</span>
         <span class="o">...</span>
 
 
@@ -584,7 +592,15 @@
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Post-process controller outputs."""</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Post-process controller outputs.</span>
+
+<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated</span>
+<span class="sd">        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
+<span class="sd">        i.e., it remains that of the controller coordinates, which equals that of the</span>
+<span class="sd">        new coordinates in steady state.</span>
+
+<span class="sd">        """</span>
         <span class="o">...</span>
 
 
