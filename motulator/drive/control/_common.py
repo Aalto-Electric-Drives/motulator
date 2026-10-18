@@ -183,6 +183,8 @@ class SpeedController(PIController):
         alpha_i: float | None = None,
         tau_M_max: float = inf,
     ) -> None:
+        self.J = J
+        self.alpha_s = alpha_s
         alpha_i = alpha_s if alpha_i is None else alpha_i
         k_p = (alpha_s + alpha_i) * J
         k_i = alpha_s * alpha_i * J

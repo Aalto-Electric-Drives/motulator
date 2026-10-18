@@ -9,7 +9,7 @@ sign errors but tolerate retuning of the controllers.
 
 import pickle
 from dataclasses import astuple, replace
-from math import pi, tanh
+from math import inf, pi, tanh
 from typing import Any
 
 import numpy as np
@@ -770,3 +770,13 @@ def test_controller_stores_cfg(machine: str, controller: Any, cfg: Any) -> None:
             n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
         )
     assert controller(par, cfg).cfg is cfg
+
+
+def test_speed_controller_stores_arguments() -> None:
+    """The speed controller stores its arguments (e.g., for exporting the controller):
+    the inertia and the bandwidth, and the resolved integral action bandwidth and the
+    torque limit of the PI controller."""
+    ctrl = sm_control.SpeedController(J=0.015, alpha_s=25.0)
+    assert (ctrl.J, ctrl.alpha_s, ctrl.alpha_i, ctrl.u_max) == (0.015, 25.0, 25.0, inf)
+    ctrl = sm_control.SpeedController(J=0.015, alpha_s=25.0, alpha_i=5.0, tau_M_max=14)
+    assert (ctrl.J, ctrl.alpha_s, ctrl.alpha_i, ctrl.u_max) == (0.015, 25.0, 5.0, 14)
