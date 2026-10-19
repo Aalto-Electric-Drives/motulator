@@ -207,6 +207,8 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
@@ -239,18 +241,6 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="drive_examples/gradnet/index.html">GradNet Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.html">5.6-kW PM-SyRM, train flux map, FEM data, no spatial harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem.html">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_28kw_pmsyrm_flux_map_meas.html">28-kW PM-SyRM, train flux map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas.html">5.6-kW PM-SyRM, train flux map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas.html">5.6-kW PM-SyRM, train current map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_28kw_pmsyrm_curr_map_meas.html">28-kW PM-SyRM, train current map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
 </ul>
@@ -333,10 +323,7 @@
 <li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/drive/gradnet/training/index.html">motulator.drive.gradnet.training</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
@@ -520,8 +507,6 @@
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.abc2complex">abc2complex() (in module motulator.common.utils)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ACPort">ACPort (class in motulator.common.model)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.AlgebraicSigmoid">AlgebraicSigmoid (class in motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.alpha">alpha (motulator.drive.control.im.InductionMachineInvGammaPars attribute)</a>
 
@@ -965,8 +950,6 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.from_inv_gamma_pars">(motulator.drive.model.InductionMachinePars class method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.GradNetFunction.from_model">from_model() (motulator.drive.gradnet.GradNetFunction class method)</a>
-</li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues.from_nominal">from_nominal() (motulator.common.utils.BaseValues class method)</a>
 
       <ul>
@@ -1057,10 +1040,6 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.get_realized_voltage">(motulator.grid.control.PWM method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.get_training_data">get_training_data() (in module motulator.drive.gradnet.training)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.GradNet">GradNet (class in motulator.drive.gradnet.training)</a>
-</li>
       <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.GradNetFunction">GradNetFunction (class in motulator.drive.gradnet)</a>
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem">GridConverterControlSystem (class in motulator.grid.control)</a>
@@ -1321,8 +1300,6 @@
 </li>
         <li><a href="autoapi/motulator/drive/gradnet/index.html#module-motulator.drive.gradnet">motulator.drive.gradnet</a>
 </li>
-        <li><a href="autoapi/motulator/drive/gradnet/training/index.html#module-motulator.drive.gradnet.training">motulator.drive.gradnet.training</a>
-</li>
         <li><a href="autoapi/motulator/drive/model/index.html#module-motulator.drive.model">motulator.drive.model</a>
 </li>
         <li><a href="autoapi/motulator/drive/utils/index.html#module-motulator.drive.utils">motulator.drive.utils</a>
@@ -1406,13 +1383,6 @@
 
       <ul>
         <li><a href="autoapi/motulator/drive/gradnet/index.html#module-motulator.drive.gradnet">module</a>
-</li>
-      </ul></li>
-      <li>
-    motulator.drive.gradnet.training
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/gradnet/training/index.html#module-motulator.drive.gradnet.training">module</a>
 </li>
       </ul></li>
       <li>
@@ -1547,17 +1517,9 @@
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_map">plot_map() (in module motulator.drive.utils)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.plot_output_vs_angle">plot_output_vs_angle() (in module motulator.drive.gradnet)</a>
-</li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_stator_waveforms">plot_stator_waveforms() (in module motulator.drive.utils)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.plot_surface_vs_current_and_angle">plot_surface_vs_current_and_angle() (in module motulator.drive.gradnet)</a>
-</li>
       <li><a href="autoapi/motulator/grid/utils/index.html#motulator.grid.utils.plot_voltage_vector">plot_voltage_vector() (in module motulator.grid.utils)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.PlotOptions">PlotOptions (class in motulator.drive.gradnet)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.PNormGradient">PNormGradient (class in motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.post_process">post_process() (motulator.common.control.ControlSystem method)</a>
 
@@ -1602,10 +1564,6 @@
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationController">PowerSynchronizationController (class in motulator.grid.control)</a>
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControllerCfg">PowerSynchronizationControllerCfg (class in motulator.grid.control)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.print_current_map_errors_meas">print_current_map_errors_meas() (in module motulator.drive.gradnet)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.print_flux_map_errors_meas">print_flux_map_errors_meas() (in module motulator.drive.gradnet)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.SaturationModelPMSyRM.psi_n">psi_n (motulator.drive.utils.SaturationModelPMSyRM attribute)</a>
 </li>
@@ -1911,8 +1869,6 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.six_step_overmodulation">(motulator.grid.control.PWM static method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.Softmax">Softmax (class in motulator.drive.gradnet.training)</a>
-</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SolverCfg.solver">solver (motulator.common.model.SolverCfg property)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SolverCfg">SolverCfg (class in motulator.common.model)</a>
@@ -1937,8 +1893,6 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedObserver">(class in motulator.drive.control.sm)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.Squareplus">Squareplus (class in motulator.drive.gradnet.training)</a>
-</li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.Step">Step (class in motulator.common.utils)</a>
 
       <ul>
@@ -1986,8 +1940,6 @@
       <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ThreePhaseSourceWithSignalInjection">ThreePhaseSourceWithSignalInjection (class in motulator.grid.model)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.TimeSeries">TimeSeries (class in motulator.common.control)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/gradnet/training/index.html#motulator.drive.gradnet.training.train_gradnet">train_gradnet() (in module motulator.drive.gradnet.training)</a>
 </li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem">TwoMassMechanicalSystem (class in motulator.drive.model)</a>
 </li>

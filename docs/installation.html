@@ -212,6 +212,8 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
@@ -244,18 +246,6 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="drive_examples/gradnet/index.html">GradNet Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.html">5.6-kW PM-SyRM, train flux map, FEM data, no spatial harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem.html">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_28kw_pmsyrm_flux_map_meas.html">28-kW PM-SyRM, train flux map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_meas.html">5.6-kW PM-SyRM, train flux map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_curr_map_meas.html">5.6-kW PM-SyRM, train current map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_28kw_pmsyrm_curr_map_meas.html">28-kW PM-SyRM, train current map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
 </ul>
@@ -338,10 +328,7 @@
 <li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="autoapi/motulator/drive/gradnet/training/index.html">motulator.drive.gradnet.training</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
@@ -554,10 +541,6 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>motulator
 </pre></div>
 </div>
-<p>PyTorch is needed for training the neural-network-based magnetic models of the <a class="reference internal" href="autoapi/motulator/drive/gradnet/index.html#module-motulator.drive.gradnet" title="motulator.drive.gradnet"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.drive.gradnet</span></code></a> package and for the GradNet examples that show the training data, while the trained models need only NumPy. To install PyTorch as an optional dependency, use the command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"motulator[gradnet]"</span>
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Instead of global installation described above, using a <a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments">virtual environment</a> is generally recommended. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.</p>
@@ -577,7 +560,7 @@
 </li>
 <li><p>Launch VS Code from the cloned project’s root directory on the command line (or choose the proper directory after launching VS Code).</p></li>
 <li><p><a class="reference external" href="https://code.visualstudio.com/docs/python/environments">Create a virtual environment</a> in the workspace.</p></li>
-<li><p>Enable installation of optional dependencies from <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (selecting at least <code class="docutils literal notranslate"><span class="pre">dev</span></code> is recommended). Alternatively, for installing the project with its core dependencies, you may run the command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.[dev,doc]</span></code>). The <code class="docutils literal notranslate"><span class="pre">dev</span></code> and <code class="docutils literal notranslate"><span class="pre">doc</span></code> dependencies include PyTorch.</p></li>
+<li><p>Enable installation of optional dependencies from <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (selecting at least <code class="docutils literal notranslate"><span class="pre">dev</span></code> is recommended). Alternatively, for installing the project with its core dependencies, you may run the command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.[dev,doc]</span></code>).</p></li>
 </ol>
 <p>After completing the above steps, the virtual environment can be found in the <code class="docutils literal notranslate"><span class="pre">.venv</span></code> directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies, you can also use the interactive IPython console (click on the <em>Play</em> button dropdown menu in VS Code).</p>
 <p>If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for <em>Terminal: Select Default Profile</em>). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.</p>

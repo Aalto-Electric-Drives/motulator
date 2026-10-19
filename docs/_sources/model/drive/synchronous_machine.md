@@ -103,7 +103,7 @@ alt: Synchronous machine model seen from stator coordinates
 ```
 
 ```{note}
-Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ also depend on the angle $\thetam$. This effect is typically omitted in dynamic models, but it can optionally be included in the machine model using the {class}`motulator.drive.model.SpatialSaturatedSynchronousMachinePars` class, see the example {doc}`/drive_examples/gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
+Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ also depend on the angle $\thetam$. This effect is typically omitted in dynamic models, but it can optionally be included in the machine model using the {class}`motulator.drive.model.SpatialSaturatedSynchronousMachinePars` class, see the example {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
 ```
 
 ### Linear Magnetic Model
@@ -136,7 +136,7 @@ label: sm_flux_linkage_map
 
 ```
 
-In practice, these maps can be realized as lookup tables, explicit mathematical functions {cite}`Hin2017,Woo2023,Lel2024`, or neural networks {cite}`Lee2025`. Gradient-based neural-network maps, which can be learned from measured or finite-element data, are provided in the {mod}`motulator.drive.gradnet` package, see the {doc}`/drive_examples/gradnet/index` examples.
+In practice, these maps can be realized as lookup tables, explicit mathematical functions {cite}`Hin2017,Woo2023,Lel2024`, or neural networks {cite}`Lee2025`. GradNet magnetic models {cite}`Li2026`, based on gradient networks {cite}`Cha2025`, model the current or flux linkage map as the gradient of the magnetic energy or co-energy; they are evaluated by the {mod}`motulator.drive.gradnet` package and trained from measured or finite-element data with the related package [motulator-gradnet](https://aalto-electric-drives.github.io/motulator-gradnet/), see the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas` and {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
 
 Methods for manipulating and plotting the magnetic models are provided in the classes {class}`motulator.drive.utils.MagneticModel`, {func}`motulator.drive.utils.plot_map`, and {func}`motulator.drive.utils.plot_flux_vs_current`. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the {func}`motulator.drive.utils.MagneticModel.invert` method.
 

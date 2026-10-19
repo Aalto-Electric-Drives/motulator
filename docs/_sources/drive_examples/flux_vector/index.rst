@@ -5,7 +5,7 @@
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control.
+These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control. The examples with GradNet magnetic models [#Li2026]_, based on gradient networks [#Cha2025]_, which model the current or flux linkage map as the gradient of the magnetic energy or co-energy, use models trained from measured and FEM data with the related package `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 .. rubric:: References
 
@@ -16,6 +16,10 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 .. [#Tii2025a] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2024.3429650
 
 .. [#Tii2025b] Tiitinen, Hinkkanen, Harnefors, "Sensorless flux-vector control framework: An extension for induction machines," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2025.3559958
+
+.. [#Li2026] Li, Foissner, Martin, Piippo, Hinkkanen, "Gradient networks for universal magnetic modeling of synchronous machines," 2026, https://arxiv.org/abs/2602.14947
+
+.. [#Cha2025] Chaudhari, Pranav, Moura, "Gradient networks," IEEE Trans. Signal Process., 2025, https://doi.org/10.1109/TSP.2024.3496692
 
 
 .. raw:: html
@@ -82,6 +86,40 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics. The models are trained with the related package motulator-gradnet.">
+
+.. only:: html
+
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_gn_fvc_fem_harm_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, GradNet from FEM data, FVC</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system. The models are trained with the related package motulator-gradnet.">
+
+.. only:: html
+
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_6kw_pmsyrm_gn_fvc_meas_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, GradNet from measured data, FVC</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 6.7-kW synchronous reluctance machine (SyRM) drive.">
 
 .. only:: html
@@ -127,6 +165,8 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
    /drive_examples/flux_vector/plot_2kw_ipmsm_fvc
    /drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc
    /drive_examples/flux_vector/plot_2kw_im_sat_fvc
+   /drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm
+   /drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas
    /drive_examples/flux_vector/plot_7kw_syrm_sat_fvc
    /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc
 

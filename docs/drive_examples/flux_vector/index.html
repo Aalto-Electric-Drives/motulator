@@ -208,6 +208,8 @@
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
 </ul>
@@ -240,18 +242,6 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_2kw_ipmsm_signal_inj.html">2.2-kW IPMSM, signal injection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../signal_inj/plot_7kw_syrm_signal_inj.html">6.7-kW saturated SyRM, signal injection</a></li>
-</ul>
-</details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../gradnet/index.html">GradNet Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm.html">5.6-kW PM-SyRM, train flux map, FEM data, no spatial harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/train_6kw_pmsyrm_curr_map_fem.html">5.6-kW PM-SyRM, train current map, FEM data with spatial harmonics</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_28kw_pmsyrm_flux_map_meas.html">28-kW PM-SyRM, train flux map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_flux_map_meas.html">5.6-kW PM-SyRM, train flux map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_curr_map_meas.html">5.6-kW PM-SyRM, train current map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_28kw_pmsyrm_curr_map_meas.html">28-kW PM-SyRM, train current map, measured data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../gradnet/plot_6kw_pmsyrm_flux_map_fem_harm.html">5.6-kW PM-SyRM, train flux map, FEM data with spatial harmonics</a></li>
 </ul>
 </details></li>
 </ul>
@@ -334,10 +324,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html">motulator.drive.control.sm</a></li>
 </ul>
 </details></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../autoapi/motulator/drive/gradnet/training/index.html">motulator.drive.gradnet.training</a></li>
-</ul>
-</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/gradnet/index.html">motulator.drive.gradnet</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/model/index.html">motulator.drive.model</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html">motulator.drive.utils</a></li>
 </ul>
@@ -522,7 +509,7 @@
                   
   <section id="flux-vector-control">
 <span id="sphx-glr-drive-examples-flux-vector"></span><h1>Flux-Vector Control<a class="headerlink" href="#flux-vector-control" title="Link to this heading">#</a></h1>
-<p>These examples demonstrate flux-vector control (FVC) of electric machine drives <a class="footnote-reference brackets" href="#pel2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In the implemented control system, decoupling between the stator flux and torque channels are used according to <a class="footnote-reference brackets" href="#awa2019" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to <a class="footnote-reference brackets" href="#tii2025a" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> for synchronous machines and <a class="footnote-reference brackets" href="#tii2025b" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> for induction machines. The magnetic saturation is modeled and taken into account in control.</p>
+<p>These examples demonstrate flux-vector control (FVC) of electric machine drives <a class="footnote-reference brackets" href="#pel2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. In the implemented control system, decoupling between the stator flux and torque channels are used according to <a class="footnote-reference brackets" href="#awa2019" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to <a class="footnote-reference brackets" href="#tii2025a" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> for synchronous machines and <a class="footnote-reference brackets" href="#tii2025b" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> for induction machines. The magnetic saturation is modeled and taken into account in control. The examples with GradNet magnetic models <a class="footnote-reference brackets" href="#li2026" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>, based on gradient networks <a class="footnote-reference brackets" href="#cha2025" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>, which model the current or flux linkage map as the gradient of the magnetic energy or co-energy, use models trained from measured and FEM data with the related package <a class="reference external" href="https://aalto-electric-drives.github.io/motulator-gradnet/">motulator-gradnet</a>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="pel2009" role="doc-footnote">
@@ -541,6 +528,14 @@
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Tiitinen, Hinkkanen, Harnefors, “Sensorless flux-vector control framework: An extension for induction machines,” IEEE Trans. Ind. Electron., 2025, <a class="reference external" href="https://doi.org/10.1109/TIE.2025.3559958">https://doi.org/10.1109/TIE.2025.3559958</a></p>
 </aside>
+<aside class="footnote brackets" id="li2026" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Li, Foissner, Martin, Piippo, Hinkkanen, “Gradient networks for universal magnetic modeling of synchronous machines,” 2026, <a class="reference external" href="https://arxiv.org/abs/2602.14947">https://arxiv.org/abs/2602.14947</a></p>
+</aside>
+<aside class="footnote brackets" id="cha2025" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
+<p>Chaudhari, Pranav, Moura, “Gradient networks,” IEEE Trans. Signal Process., 2025, <a class="reference external" href="https://doi.org/10.1109/TSP.2024.3496692">https://doi.org/10.1109/TSP.2024.3496692</a></p>
+</aside>
 </aside>
 <div id='sg-tag-list' class='sphx-glr-tag-list'></div><div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive."><img alt="" src="../../_images/sphx_glr_plot_2kw_ipmsm_fvc_thumb.png" />
 <p><a class="reference internal" href="plot_2kw_ipmsm_fvc.html"><span class="doc">2.2-kW IPMSM, FVC</span></a></p>
@@ -551,6 +546,12 @@
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW induction machine (IM) drive. The magnetic saturation is included in the machine model and taken into account in the control system. This example also applies the mechanical-model-based speed observer."><img alt="" src="../../_images/sphx_glr_plot_2kw_im_sat_fvc_thumb.png" />
 <p><a class="reference internal" href="plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a></p>
   <div class="sphx-glr-thumbnail-title">2.2-kW saturated IM, FVC</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics. The models are trained with the related package motulator-gradnet."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_gn_fvc_fem_harm_thumb.png" />
+<p><a class="reference internal" href="plot_6kw_pmsyrm_gn_fvc_fem_harm.html"><span class="doc">5.6-kW PM-SyRM, GradNet from FEM data, FVC</span></a></p>
+  <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, GradNet from FEM data, FVC</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system. The models are trained with the related package motulator-gradnet."><img alt="" src="../../_images/sphx_glr_plot_6kw_pmsyrm_gn_fvc_meas_thumb.png" />
+<p><a class="reference internal" href="plot_6kw_pmsyrm_gn_fvc_meas.html"><span class="doc">5.6-kW PM-SyRM, GradNet from measured data, FVC</span></a></p>
+  <div class="sphx-glr-thumbnail-title">5.6-kW PM-SyRM, GradNet from measured data, FVC</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a saturated 6.7-kW synchronous reluctance machine (SyRM) drive."><img alt="" src="../../_images/sphx_glr_plot_7kw_syrm_sat_fvc_thumb.png" />
 <p><a class="reference internal" href="plot_7kw_syrm_sat_fvc.html"><span class="doc">6.7-kW saturated SyRM, FVC</span></a></p>
   <div class="sphx-glr-thumbnail-title">6.7-kW saturated SyRM, FVC</div>

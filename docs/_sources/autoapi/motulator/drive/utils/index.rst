@@ -1267,8 +1267,7 @@ Package Contents
    :param ticks: Axis tick locations. Keys should be 'x', 'y', 'z'.
    :type ticks: dict[str, ArrayLike], optional
    :param raw_data: Raw data for comparison (shown as scatter points). A tuple of arrays is
-                    interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units, as returned by
-                    `motulator.drive.gradnet.get_training_data`.
+                    interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units.
    :type raw_data: MagneticModel | tuple | list[MagneticModel | tuple], optional
    :param raw_marker: Marker style for raw data.
    :type raw_marker: str | list[str], optional
