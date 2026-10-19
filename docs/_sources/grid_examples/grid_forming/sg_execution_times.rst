@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:17.925** total execution time for 4 files **from grid_examples/grid_forming**:
+**00:11.727** total execution time for 4 files **from grid_examples/grid_forming**:
 
 .. container::
 
@@ -33,14 +33,14 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_do_gfm_negseq.py` (``plot_13kva_do_gfm_negseq.py``)
-     - 00:05.661
+     - 00:03.701
      - 0.0
    * - :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_do_gfm_sag.py` (``plot_13kva_do_gfm_sag.py``)
-     - 00:04.420
-     - 0.0
-   * - :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_do_gfm.py` (``plot_13kva_do_gfm.py``)
-     - 00:03.940
+     - 00:02.940
      - 0.0
    * - :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_rfpsc_gfm.py` (``plot_13kva_rfpsc_gfm.py``)
-     - 00:03.904
+     - 00:02.546
+     - 0.0
+   * - :ref:`sphx_glr_grid_examples_grid_forming_plot_13kva_do_gfm.py` (``plot_13kva_do_gfm.py``)
+     - 00:02.539
      - 0.0
