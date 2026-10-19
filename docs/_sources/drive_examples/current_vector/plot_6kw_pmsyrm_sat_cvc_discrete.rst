@@ -247,7 +247,7 @@ remains well damped. In the largest steps, the voltage is limited.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.200 seconds)
+   **Total running time of the script:** (0 minutes 3.138 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py:
