@@ -1,57 +1,57 @@
 # Installation
 
-First, install Python on your computer. On Windows and Mac systems, you can install it from the [Python official website](https://www.python.org/). On Linux systems, Python is typically preinstalled.
+*motulator* requires Python 3.12 or newer. On Windows and macOS, Python can be installed from the [Python official website](https://www.python.org/). On Linux, Python is typically preinstalled.
 
-For plotting figures in Python, a graphical user interface (GUI) library is required. The *Tkinter* GUI library comes by default with Python on Windows and Mac systems. On some Linux systems, you may need to install it separately. On Ubuntu, you can install it with the command:
+The plots need a GUI library for *matplotlib*. The *Tkinter* library comes with Python on Windows and macOS. On some Linux systems, it must be installed separately, e.g., on Ubuntu with the command:
 
 ```bash
 sudo apt install python3-tk
 ```
 
-Alternatively, you can use another GUI library such as [PyQt6](https://pypi.org/project/PyQt6/).
-
-Install *motulator* using one of the following options.
+Alternatively, another GUI library, such as [PyQt6](https://pypi.org/project/PyQt6/), can be used.
 
 ## Option 1: Use pip
 
-The simplest way to install *motulator* is to use `pip`. Ensure that you have the latest `pip`, which can be updated with the command:
+Install the package in a [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/). On Linux and macOS:
 
 ```bash
-pip install --upgrade pip
-```
-
-Then, install *motulator*:
-
-```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install motulator
 ```
 
-```{note}
-Instead of global installation described above, using a [virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments) is generally recommended. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.
+On Windows:
+
+```powershell
+py -m venv .venv
+.venv\Scripts\activate
+pip install motulator
 ```
+
+If PowerShell does not allow running the activation script, allow it with `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`.
 
 ## Option 2: Clone the Repository
 
-For developers and advanced users, we recommend cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages.
+Clone the repository to run the examples, some of which use the data files in `examples/`, or to modify the system models and controllers. On Linux and macOS:
 
-Several powerful open-source IDEs are available for Python. The following instructions are for [VS Code](https://code.visualstudio.com):
+```bash
+git clone https://github.com/Aalto-Electric-Drives/motulator
+cd motulator
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev,doc]"
+```
 
-1. Install VS Code, Python, and `git` on your computer. Install also the recommended Python extensions in VS Code.
+On Windows, create and activate the virtual environment as in Option 1. The `dev` dependencies are needed for the tests and the code checks, and the `doc` dependencies for building this documentation. In [VS Code](https://code.visualstudio.com/docs/python/environments), the virtual environment can also be created with the Python extension.
 
-1. Clone the project (or fork it first and then clone your fork) using the command:
+Then run an example, e.g.:
 
-   ```bash
-   git clone https://github.com/Aalto-Electric-Drives/motulator
-   ```
+```bash
+python examples/drive/flux_vector/plot_2kw_ipmsm_fvc.py
+```
 
-   This will create a folder called *motulator* in your current directory.
+The tests are run with `pytest`, and the documentation, which also runs all the examples, is built with the command:
 
-1. Launch VS Code from the cloned project's root directory on the command line (or choose the proper directory after launching VS Code).
-
-1. [Create a virtual environment](https://code.visualstudio.com/docs/python/environments) in the workspace.
-
-1. Enable installation of optional dependencies from `pyproject.toml` (selecting at least `dev` is recommended). Alternatively, for installing the project with its core dependencies, you may run the command `pip install .` in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run `pip install .[dev,doc]`).
-
-After completing the above steps, the virtual environment can be found in the `.venv` directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the `dev` dependencies, you can also use the interactive IPython console (click on the *Play* button dropdown menu in VS Code).
-
-If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for *Terminal: Select Default Profile*). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.
+```bash
+sphinx-build -b html docs/source docs/build/html
+```
