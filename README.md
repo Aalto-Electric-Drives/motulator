@@ -96,11 +96,8 @@ See the [related packages](https://aalto-electric-drives.github.io/motulator/rel
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-
 <!-- prettier-ignore-start -->
-
 <!-- markdownlint-disable -->
-
 <table>
   <tbody>
     <tr>
@@ -127,7 +124,7 @@ See the [related packages](https://aalto-electric-drives.github.io/motulator/rel
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MiSaren"><img src="https://avatars.githubusercontent.com/u/166725462?v=4?s=50" width="50px;" alt="Mikko Sarén"/><br /><sub><b>Mikko Sarén</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=MiSaren" title="Code">💻</a> <a href="#example-MiSaren" title="Examples">💡</a> <a href="#ideas-MiSaren" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/maattaj11"><img src="https://avatars.githubusercontent.com/u/165767331?v=4?s=50" width="50px;" alt="Juho Määttä"/><br /><sub><b>Juho Määttä</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=maattaj11" title="Code">💻</a> <a href="#example-maattaj11" title="Examples">💡</a> <a href="#ideas-maattaj11" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rayanmour"><img src="https://avatars.githubusercontent.com/u/111271373?v=4?s=50" width="50px;" alt="rayanmour"/><br /><sub><b>rayanmour</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=rayanmour" title="Code">💻</a> <a href="#example-rayanmour" title="Examples">💡</a> <a href="#ideas-rayanmour" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/Aalto-Electric-Drives/motulator/pulls?q=is%3Apr+reviewed-by%3Arayanmour" title="Reviewed Pull Requests">👀</a> <a href="#mentoring-rayanmour" title="Mentoring">🧑‍🏫</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://cusma.algo.xyz/"><img src="https://avatars.githubusercontent.com/u/65770425?v=4?s=50" width="50px;" alt="Cosimo Bassi"/><br /><sub><b>Cosimo Bassi</b></sub></a><br /><a href="#infra-cusma" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://cusma.algo.xyz/"><img src="https://avatars.githubusercontent.com/u/65770425?v=4?s=50" width="50px;" alt="Cosimo Bassi"/><br /><sub><b>Cosimo Bassi</b></sub></a><br /><a href="#infra-cusma" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=cusma" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Exiaolibur"><img src="https://avatars.githubusercontent.com/u/134478666?v=4?s=50" width="50px;" alt="Junyi Li"/><br /><sub><b>Junyi Li</b></sub></a><br /><a href="https://github.com/Aalto-Electric-Drives/motulator/commits?author=Exiaolibur" title="Code">💻</a> <a href="#example-Exiaolibur" title="Examples">💡</a> <a href="#ideas-Exiaolibur" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
     <tr>
@@ -138,7 +135,6 @@ See the [related packages](https://aalto-electric-drives.github.io/motulator/rel
 </table>
 
 <!-- markdownlint-restore -->
-
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
