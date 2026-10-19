@@ -524,46 +524,47 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
-<p>First, install Python on your computer. On Windows and Mac systems, you can install it from the <a class="reference external" href="https://www.python.org/">Python official website</a>. On Linux systems, Python is typically preinstalled.</p>
-<p>For plotting figures in Python, a graphical user interface (GUI) library is required. The <em>Tkinter</em> GUI library comes by default with Python on Windows and Mac systems. On some Linux systems, you may need to install it separately. On Ubuntu, you can install it with the command:</p>
+<p><em>motulator</em> requires Python 3.12 or newer. On Windows and macOS, Python can be installed from the <a class="reference external" href="https://www.python.org/">Python official website</a>. On Linux, Python is typically preinstalled.</p>
+<p>The plots need a GUI library for <em>matplotlib</em>. The <em>Tkinter</em> library comes with Python on Windows and macOS. On some Linux systems, it must be installed separately, e.g., on Ubuntu with the command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-tk
 </pre></div>
 </div>
-<p>Alternatively, you can use another GUI library such as <a class="reference external" href="https://pypi.org/project/PyQt6/">PyQt6</a>.</p>
-<p>Install <em>motulator</em> using one of the following options.</p>
+<p>Alternatively, another GUI library, such as <a class="reference external" href="https://pypi.org/project/PyQt6/">PyQt6</a>, can be used.</p>
 <section id="option-1-use-pip">
 <h2>Option 1: Use pip<a class="headerlink" href="#option-1-use-pip" title="Link to this heading">#</a></h2>
-<p>The simplest way to install <em>motulator</em> is to use <code class="docutils literal notranslate"><span class="pre">pip</span></code>. Ensure that you have the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>, which can be updated with the command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+<p>Install the package in a <a class="reference external" href="https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/">virtual environment</a>. On Linux and macOS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>motulator
 </pre></div>
 </div>
-<p>Then, install <em>motulator</em>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>motulator
+<p>On Windows:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">py</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">motulator</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Instead of global installation described above, using a <a class="reference external" href="https://packaging.python.org/guides/installing-using-pip-and-virtual-environments">virtual environment</a> is generally recommended. Virtual environments are easiest to create and manage using some integrated development environment (IDE), see Option 2 below.</p>
-</div>
+<p>If PowerShell does not allow running the activation script, allow it with <code class="docutils literal notranslate"><span class="pre">Set-ExecutionPolicy</span> <span class="pre">-ExecutionPolicy</span> <span class="pre">RemoteSigned</span> <span class="pre">-Scope</span> <span class="pre">CurrentUser</span></code>.</p>
 </section>
 <section id="option-2-clone-the-repository">
 <h2>Option 2: Clone the Repository<a class="headerlink" href="#option-2-clone-the-repository" title="Link to this heading">#</a></h2>
-<p>For developers and advanced users, we recommend cloning the repository from GitHub. This option allows you to get the most recent version of the repository. Furthermore, you can then modify the system models and example controllers. It is also advisable to use a virtual environment to avoid conflicts with other Python packages.</p>
-<p>Several powerful open-source IDEs are available for Python. The following instructions are for <a class="reference external" href="https://code.visualstudio.com">VS Code</a>:</p>
-<ol class="arabic">
-<li><p>Install VS Code, Python, and <code class="docutils literal notranslate"><span class="pre">git</span></code> on your computer. Install also the recommended Python extensions in VS Code.</p></li>
-<li><p>Clone the project (or fork it first and then clone your fork) using the command:</p>
+<p>Clone the repository to run the examples, some of which use the data files in <code class="docutils literal notranslate"><span class="pre">examples/</span></code>, or to modify the system models and controllers. On Linux and macOS:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Aalto-Electric-Drives/motulator
+<span class="nb">cd</span><span class="w"> </span>motulator
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev,doc]"</span>
 </pre></div>
 </div>
-<p>This will create a folder called <em>motulator</em> in your current directory.</p>
-</li>
-<li><p>Launch VS Code from the cloned project’s root directory on the command line (or choose the proper directory after launching VS Code).</p></li>
-<li><p><a class="reference external" href="https://code.visualstudio.com/docs/python/environments">Create a virtual environment</a> in the workspace.</p></li>
-<li><p>Enable installation of optional dependencies from <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (selecting at least <code class="docutils literal notranslate"><span class="pre">dev</span></code> is recommended). Alternatively, for installing the project with its core dependencies, you may run the command <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> in the VS Code terminal after the virtual environment is created and activated (or to include optional dependencies, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.[dev,doc]</span></code>).</p></li>
-</ol>
-<p>After completing the above steps, the virtual environment can be found in the <code class="docutils literal notranslate"><span class="pre">.venv</span></code> directory at the root of the repository. Now you should be able to run all the examples as well as to modify the existing code. When you start VS Code next time, it will automatically detect the virtual environment and use it. If you installed the <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies, you can also use the interactive IPython console (click on the <em>Play</em> button dropdown menu in VS Code).</p>
-<p>If you use Windows, you may need to change the default terminal from the PowerShell to the Command Prompt (press Ctrl+Shift+P for the command palette and search for <em>Terminal: Select Default Profile</em>). We hope that these instructions allow you to create a virtual environment and start working on the project. Similar steps can be followed for other IDEs.</p>
+<p>On Windows, create and activate the virtual environment as in Option 1. The <code class="docutils literal notranslate"><span class="pre">dev</span></code> dependencies are needed for the tests and the code checks, and the <code class="docutils literal notranslate"><span class="pre">doc</span></code> dependencies for building this documentation. In <a class="reference external" href="https://code.visualstudio.com/docs/python/environments">VS Code</a>, the virtual environment can also be created with the Python extension.</p>
+<p>Then run an example, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/drive/flux_vector/plot_2kw_ipmsm_fvc.py
+</pre></div>
+</div>
+<p>The tests are run with <code class="docutils literal notranslate"><span class="pre">pytest</span></code>, and the documentation, which also runs all the examples, is built with the command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs/source<span class="w"> </span>docs/build/html
+</pre></div>
+</div>
 </section>
 </section>
 
