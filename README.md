@@ -7,7 +7,6 @@
 [![Build Status](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml/badge.svg)](https://github.com/Aalto-Electric-Drives/motulator/actions/workflows/update_gh-pages.yml)
 [![License](https://img.shields.io/github/license/Aalto-Electric-Drives/motulator)](https://github.com/Aalto-Electric-Drives/motulator/blob/main/LICENSE)
 [![DOI](https://zenodo.org/badge/377399301.svg)](https://zenodo.org/doi/10.5281/zenodo.10223090)
-[![All Contributors](https://img.shields.io/badge/all_contributors-22-orange.svg?style=flat-square)](#contributors)
 
 **[Documentation](https://aalto-electric-drives.github.io/motulator/)** ·
 **[Drive examples](https://aalto-electric-drives.github.io/motulator/drive_examples/index.html)** ·
@@ -31,11 +30,17 @@
 
 ## Installation
 
+Install the package from PyPI in a [virtual environment](https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/). On Linux and macOS:
+
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install motulator
 ```
 
-To develop *motulator* itself, clone the repository as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
+On Windows, the environment is created and activated with `py -m venv .venv` and `.venv\Scripts\activate`.
+
+For development, clone the repository and install the package with `pip install -e ".[dev]"`, as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
 
 ## Quick start
 
@@ -88,13 +93,7 @@ The following packages extend *motulator*, each maintained in its own repository
 
 See the [related packages](https://aalto-electric-drives.github.io/motulator/related_packages.html) page for the tested releases and for listing a package.
 
-## Contributing
-
-If you would like to help us develop *motulator*, see these [guidelines](https://aalto-electric-drives.github.io/motulator/contributing.html) first.
-
 ## Contributors
-
-Thanks go to these wonderful people:
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 
@@ -143,8 +142,6 @@ Thanks go to these wonderful people:
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Acknowledgment
 
