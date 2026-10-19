@@ -4,15 +4,16 @@ The packages listed on this page extend *motulator* with additional models, cont
 
 ## Packages
 
-<!-- One row per package: name linked to the repository, one-sentence description,
-     and the latest motulator release the package has been tested with. -->
+<!-- One row per package, in alphabetical order: name linked to the repository,
+     one-sentence description, and the latest motulator release the package has been
+     tested with. -->
 
 | Package                                                                               | Description                                                                                                    | Tested with |
 | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------- |
-| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase) | Multi-three-phase machine drives based on the decoupled multi-stator transformation.                           | 0.15.0      |
-| [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance)   | Mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps. | 0.15.0      |
 | [motulator-export](https://github.com/Aalto-Electric-Drives/motulator-export)         | Export of drive and grid converter systems to PLECS and Simulink, with the control algorithms ported to C.     | 0.15.2      |
 | [motulator-gradnet](https://github.com/Aalto-Electric-Drives/motulator-gradnet)       | Training of gradient-network magnetic models of synchronous machines from measured or finite-element data.     | 0.15.2      |
+| [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance)   | Mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps. | 0.15.0      |
+| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase) | Multi-three-phase machine drives based on the decoupled multi-stator transformation.                           | 0.15.0      |
 
 ## Listing a Package
 
