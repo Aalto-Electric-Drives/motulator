@@ -13,6 +13,7 @@
 
 import os
 import sys
+import tomllib
 
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../motulator"))
@@ -25,8 +26,9 @@ project = "motulator"
 copyright = "2026, Aalto Electric Drives"
 author = "Aalto Electric Drives"
 
-# The full version, including alpha/beta/rc tags
-release = "0.16.0"
+# The full version, including alpha/beta/rc tags, from pyproject.toml
+with open(os.path.join(os.path.dirname(__file__), "../../pyproject.toml"), "rb") as f:
+    release = tomllib.load(f)["project"]["version"]
 
 # -- General configuration -------------------------------------------------------------
 
