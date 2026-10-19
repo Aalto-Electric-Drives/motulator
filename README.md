@@ -35,8 +35,6 @@
 pip install motulator
 ```
 
-Training the neural-network-based magnetic models of `motulator.drive.gradnet` additionally needs PyTorch, which is installed with `pip install "motulator[gradnet]"`; the trained models need only NumPy.
-
 To develop *motulator* itself, clone the repository as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
 
 ## Quick start
@@ -86,6 +84,7 @@ The following packages extend *motulator*, each maintained in its own repository
 - [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase): multi-three-phase machine drives based on the decoupled multi-stator transformation
 - [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance): mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps
 - [motulator-export](https://github.com/Aalto-Electric-Drives/motulator-export): export of drive and grid converter systems to PLECS and Simulink, with the control algorithms ported to C
+- [motulator-gradnet](https://github.com/Aalto-Electric-Drives/motulator-gradnet): training of gradient-network magnetic models of synchronous machines from measured or finite-element data
 
 See the [related packages](https://aalto-electric-drives.github.io/motulator/related_packages.html) page for the tested releases and for listing a package.
 

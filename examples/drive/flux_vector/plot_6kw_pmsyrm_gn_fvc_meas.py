@@ -1,19 +1,16 @@
 """
-5.6-kW PM-SyRM, GradNet from FEM data, FVC
-==========================================
+5.6-kW PM-SyRM, GradNet from measured data, FVC
+===============================================
 
 This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
-machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for
-both the machine model and the control system. The machine model uses a GradNet
-current map with spatial harmonics, while the control system uses a GradNet flux map
-without spatial harmonics. The models are trained in
-:doc:`/drive_examples/gradnet/train_6kw_pmsyrm_curr_map_fem` and
-:doc:`/drive_examples/gradnet/train_6kw_pmsyrm_flux_map_fem_no_harm`.
+machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
+spatial harmonics are used for both the machine model and the control system. The
+models are trained with the related package
+`motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 """
 
 # %%
-
 from pathlib import Path
 
 import numpy as np
@@ -34,15 +31,13 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
 # %%
-# Configure the system model using the GradNet saturation model with spatial harmonics,
-# trained on the FEM data.
+# Configure the system model using the GradNet current map, without spatial harmonics,
+# trained on the measured dataset.
 
-path = "trained_models/baldor_fem_curr_map_harm_softmax_d48_sub10.npz"
+path = "trained_models/baldor_meas_curr_map_squareplus_d12_sub10.npz"
 gradnet = gn.load_gradnet(p / path)
-magnetic_map = gn.CurrentMapWithHarmonics(gradnet)
-par = model.SpatialSaturatedSynchronousMachinePars(
-    n_p=2, R_s=0.63, magnetic_map_fcn=magnetic_map
-)
+current_map = gn.CurrentMap(gradnet)
+par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.63, i_s_dq_fcn=current_map)
 
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.05)
@@ -50,22 +45,33 @@ converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
 # %%
-# Configure the control system.
+# Configure the control system using the GradNet flux map, without spatial harmonics,
+# trained on the measured dataset.
 
-# Load the GradNet flux map trained on the FEM data for the estimated machine model
-path = "trained_models/baldor_fem_flux_map_pnorm_d12_sub20.npz"
+# Parametrize the estimated machine model
+path = "trained_models/baldor_meas_flux_map_pnorm_d6_sub10.npz"
 est_flux_map = gn.FluxMap(gn.load_gradnet(p / path))
-
-# Parametrize the estimated machine model and the control system
 est_par = control.SaturatedSynchronousMachinePars(
     n_p=2, R_s=0.63, psi_s_dq_fcn=est_flux_map
 )
+
+# Configure the control system
 cfg = control.FluxVectorControllerCfg(
     i_s_max=2 * base.i, alpha_i=0, alpha_o=2 * np.pi * 8, J=0.05, sensorless=False
 )
 vector_ctrl = control.FluxVectorController(est_par, cfg)
 speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
+
+# %%
+# Visualize the control loci.
+
+i_s_vals = [1, 2, 3]  # Current values for the plots
+mc = utils.MachineCharacteristics(est_par)
+mc.plot_flux_vs_torque(i_s_vals, base)
+mc.plot_current_vs_torque(i_s_vals, base)
+mc.plot_current_loci(i_s_vals, base)
+mc.plot_flux_loci(i_s_vals, base)
 
 # %%
 # Set the speed reference and the external load torque.

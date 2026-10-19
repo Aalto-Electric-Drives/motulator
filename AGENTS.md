@@ -38,7 +38,7 @@ A `System` is a list of subsystems plus a wiring table, and a `Model` (e.g., `dr
 
 ### GradNet (`drive/gradnet/`)
 
-Neural-network flux and current maps learned from measured or FEM data, used by the saturated machine models and controllers. The networks are trained with PyTorch (`training`, an optional dependency) and saved as npz files, which the maps (`_maps.py`) evaluate with NumPy in double precision. Trained models and datasets are in `examples/drive/gradnet/`.
+Neural-network flux and current maps learned from measured or FEM data, used by the saturated machine models and controllers. The networks are trained with PyTorch in the related package motulator-gradnet and saved as npz files (`GradNetFunction`), which the maps evaluate with NumPy in double precision. The npz format and the activation functions are the interface between the packages. Trained models are in `examples/drive/flux_vector/trained_models/`.
 
 ## Conventions
 
@@ -50,4 +50,4 @@ Neural-network flux and current maps learned from measured or FEM data, used by 
 
 ### Examples
 
-Sphinx-Gallery renders `examples/**/plot_*.py` into the documentation, so their format matters: a module docstring with a title and `=` underline, and `# %%` cell separators followed by comment text. Scripts not starting with `plot_` (e.g., `train_*.py`) are not executed during the docs build. Section order and in-section sorting (by code length) are set in `sphinx_gallery_conf` in `docs/source/conf.py`. Citations such as `[#Qu2012]_` refer to footnotes at the end of the example.
+Sphinx-Gallery renders `examples/**/plot_*.py` into the documentation, so their format matters: a module docstring with a title and `=` underline, and `# %%` cell separators followed by comment text. Scripts not starting with `plot_` are not executed during the docs build. Section order and in-section sorting (by code length) are set in `sphinx_gallery_conf` in `docs/source/conf.py`. Citations such as `[#Qu2012]_` refer to footnotes at the end of the example.
