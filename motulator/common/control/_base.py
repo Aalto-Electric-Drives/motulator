@@ -51,8 +51,8 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
 
     The gates of the converter can be blocked with `set_enable`. While the gates are
     blocked, the control system runs its control loop with `compute_standby_output`
-    in place of `compute_output`, so that its observers keep tracking the system,
-    and the model holds the switches open.
+    in place of `compute_output`, so that its observers keep running, and the model
+    holds the switches open.
 
     """
 

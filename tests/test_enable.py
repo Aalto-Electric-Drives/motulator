@@ -66,7 +66,7 @@ def test_open_circuit(pwm: bool, discrete: bool) -> None:
     ctrl = pmsm_cvc(sensorless=False, discrete=discrete)
     ctrl.set_speed_ref(100)
     ctrl.set_enable(False)
-    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.01)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.05)
     assert res.success
     machine, converter = res.mdl.machine, res.mdl.converter
     assert np.max(np.abs(machine.i_s_ab)) < 1e-6
@@ -74,9 +74,10 @@ def test_open_circuit(pwm: bool, discrete: bool) -> None:
     np.testing.assert_allclose(converter.u_c_ab, emf, atol=1e-6)
     assert not np.any(converter.enabled)
     assert not np.any(res.ctrl.ref.enabled)
-    # The control system measures the EMF from the first sampling instant on, and the
-    # current controller tracks the measured voltage in standby
-    np.testing.assert_allclose(np.abs(res.ctrl.fbk.u_s), 3 * 100 * 0.545, rtol=1e-6)
+    # The converter voltage is not measured: the feedback voltage is the open-circuit
+    # voltage of the observer model, which converges to the EMF as the speed estimate
+    # does, and the current controller tracks it in standby
+    assert abs(res.ctrl.fbk.u_s[-1]) == pytest.approx(3 * 100 * 0.545, rel=1e-3)
     assert res.ctrl.ref.u_s[-1] == pytest.approx(res.ctrl.fbk.u_s[-1], abs=1)
 
 
@@ -208,6 +209,11 @@ def test_drive_restart(sensorless: bool) -> None:
     assert np.max(i_s[t < 0.02]) < 1e-6
     assert np.max(i_s[(t > 0.31) & (t < 0.35)]) < 1e-6
     assert np.interp(0.35, t, w_M) < 0.95 * np.interp(0.3, t, w_M)
+    # The flying start catches the speed within a few sampling periods
+    if sensorless:
+        k = np.searchsorted(res.ctrl.t, 0.352)
+        w_M_est, w_M_act = res.ctrl.fbk.w_M[k], np.interp(res.ctrl.t[k], t, w_M)
+        assert w_M_est == pytest.approx(w_M_act, rel=0.1)
     # Restart and speed tracking
     assert np.interp(0.6, t, w_M) == pytest.approx(2 * pi * 30, rel=0.05)
     assert np.max(i_s[t > 0.35]) < 1.1 * 6.5

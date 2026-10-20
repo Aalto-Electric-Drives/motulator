@@ -225,7 +225,7 @@ class CurrentVectorController:
 
     def get_feedback(
         self,
-        u_s_ab: complex,
+        u_s_ab: complex | None,
         i_s_ab: complex,
         w_M_meas: float | None,
         theta_M_meas: float | None,
@@ -245,21 +245,18 @@ class CurrentVectorController:
         ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
         return ref
 
-    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
-        """Compute references while the gates are blocked."""
-        # The current controller tracks the measured current and voltage
-        ref = References(T_s=self.T_s, psi_s=abs(fbk.psi_s), i_s=fbk.i_s)
-        ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
-        return ref
-
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         # The discrete-time controller takes its limited output, except with blocked
-        # gates, when the measured voltage is the realized one
+        # gates, when the open-circuit voltage of the observer is the realized one
         u_s = ref.u_s_lim if self.cfg.discrete and ref.enabled else fbk.u_s
         self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
         self.reference_gen.update(ref.T_s)
+
+    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
+        """Initialize the estimates after the release, see `SpeedFluxObserver`."""
+        self.observer.catch(delta_i_s_ab, i_s_ab, T_s)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

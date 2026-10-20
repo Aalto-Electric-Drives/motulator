@@ -210,7 +210,7 @@ class FluxVectorController:
 
     def get_feedback(
         self,
-        u_s_ab: complex,
+        u_s_ab: complex | None,
         i_s_ab: complex,
         w_M_meas: float | None,  # Not used, needed for the interface
         theta_M_meas: float | None,
@@ -229,19 +229,16 @@ class FluxVectorController:
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
-    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
-        """Compute references while the gates are blocked."""
-        # The flux and torque controller tracks the estimated flux and torque
-        ref = References(T_s=self.cfg.T_s, tau_M=fbk.tau_M, psi_s=abs(fbk.psi_s))
-        ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        return ref
-
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
         if self.online_ref:
             self.reference_gen.update(ref.T_s)
+
+    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
+        """Initialize the estimates after the release, see `SpeedFluxObserver`."""
+        self.observer.catch(delta_i_s_ab, i_s_ab, T_s)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
@@ -331,7 +328,7 @@ class ObserverBasedVHzController:
         self.T_s = cfg.T_s
 
     def get_feedback(
-        self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float
+        self, u_s_ab: complex | None, i_s_ab: complex, w_M_ref: float
     ) -> ObserverOutputs:
         """Get feedback signals."""
         return self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref)
