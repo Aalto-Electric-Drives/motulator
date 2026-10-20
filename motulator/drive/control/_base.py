@@ -360,15 +360,6 @@ class VectorControlSystem(DriveControlSystem):
                 self.vector_ctrl.catch(delta_i_c_ab, meas.i_c_ab, self._T_s)
         return super().get_feedback(meas)
 
-    def compute_output(self, fbk: Feedbacks) -> References:
-        """Compute controller output, the zero vector at the flying start."""
-        if self._catch == 2:
-            ref = self._compute_inner_standby_output(fbk)
-            ref.u_s = 0j
-            self._T_s = ref.T_s
-            return self._add_duty_ratios(ref, fbk)
-        return super().compute_output(fbk)
-
     def _get_inner_feedback(
         self, u_s_ab: complex | None, meas: Measurements
     ) -> Feedbacks:
@@ -396,7 +387,12 @@ class VectorControlSystem(DriveControlSystem):
                 raise ValueError("Torque reference must be set")
             w_M_ref = None
             tau_M_ref = get_value(self.ext_ref.tau_M, self.t)
+        if self._catch == 2:
+            tau_M_ref = 0.0  # Zero torque reference at the flying start
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
+        if self._catch == 2:
+            ref.u_s = 0j  # The zero vector, see `get_feedback`
+            self._T_s = ref.T_s
         ref.w_M = w_M_ref
         return ref
 
