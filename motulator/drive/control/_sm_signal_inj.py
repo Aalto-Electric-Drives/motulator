@@ -163,8 +163,10 @@ class SignalInjectionObserver:
     def w_M(self, value: float) -> None:
         self.speed_observer.w_M = value
 
-    def compute_output(self, u_s_ab: complex, i_s_ab: complex) -> ObserverOutputs:
-        """Compute output."""
+    def compute_output(
+        self, u_s_ab: complex | None, i_s_ab: complex
+    ) -> ObserverOutputs:
+        """Compute output, the open-circuit voltage used if `u_s_ab` is None."""
         # Unpack and initialize the output signals
         par = self.par
         out = ObserverOutputs()
@@ -172,9 +174,15 @@ class SignalInjectionObserver:
         out.theta_m = out.theta_c = self.theta_m
         out.w_m = par.n_p * out.w_M
 
-        # Current and voltage vectors in (estimated) rotor coordinates
+        # Current vector in (estimated) rotor coordinates and the flux map
         out.i_s = exp(-1j * out.theta_m) * i_s_ab
-        out.u_s_zoh = exp(-1j * out.theta_m) * u_s_ab
+        psi_s = complex(par.psi_s_dq(out.i_s))
+
+        # Voltage vector, or the open-circuit voltage if unknown (blocked gates)
+        if u_s_ab is not None:
+            out.u_s_zoh = exp(-1j * out.theta_m) * u_s_ab
+        else:
+            out.u_s_zoh = 1j * out.w_m * psi_s + par.R_s * out.i_s
 
         # Compute the mechanical position error signal
         out.eps = self.injection.compute_error(i_s_ab, out.theta_m)
@@ -183,7 +191,6 @@ class SignalInjectionObserver:
         out.w_c = out.w_m + self.k_theta * out.eps
 
         # Torque estimate based on the measured current and the flux map
-        psi_s = complex(par.psi_s_dq(out.i_s))
         out.tau_M = 1.5 * par.n_p * (out.i_s * psi_s.conjugate()).imag
 
         return out

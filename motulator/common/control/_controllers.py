@@ -174,6 +174,23 @@ class ComplexPIController:
         """
         self.u_i += T_s * (self.alpha_i + 1j * w_c) * (u - self.v)
 
+    def preset(self, u: complex, w_c: float) -> None:
+        """
+        Preset the integral state to the steady state of the output.
+
+        In the steady state, the reference and feedback signals are zero, and the
+        output is `u`, e.g., the back-EMF of a machine at zero current.
+
+        Parameters
+        ----------
+        u : complex
+            Controller output.
+        w_c : float
+            Angular speed of the reference frame (rad/s), not needed in this design.
+
+        """
+        self.u_i = u
+
 
 # %%
 class DiscreteComplexController:
@@ -271,6 +288,27 @@ class DiscreteComplexController:
         self.u_i += T_s * k_i * (self._e - (self._u - u) / k_t)
         self.u_lim = u
         self.w_c = w_c
+
+    def preset(self, u: complex, w_c: float) -> None:
+        """
+        Preset the integral state to the steady state of the output.
+
+        In the steady state, the reference and feedback signals are zero, and the
+        output is `u`, e.g., the back-EMF of a machine at zero current. The limited
+        output of the previous sampling period is kept, since it has been realized.
+        Hence, the next output equals `u` only if the previous one did, and otherwise
+        it also compensates for their difference.
+
+        Parameters
+        ----------
+        u : complex
+            Controller output.
+        w_c : float
+            Angular speed of the coordinates (rad/s).
+
+        """
+        self.w_c = w_c
+        self.u_i = (1 + self._gains(w_c)[3]) * u
 
 
 # %%

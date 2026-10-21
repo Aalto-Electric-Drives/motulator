@@ -236,10 +236,6 @@ class FluxVectorController:
         if self.online_ref:
             self.reference_gen.update(ref.T_s)
 
-    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
-        """Initialize the estimates after the release, see `SpeedFluxObserver`."""
-        self.observer.catch(delta_i_s_ab, i_s_ab, T_s)
-
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
 

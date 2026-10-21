@@ -231,9 +231,16 @@ class CurrentVectorController:
         theta_M_meas: float | None,
     ) -> ObserverOutputs:
         """Get the feedback signals."""
-        return compute_feedback(
+        fbk = compute_feedback(
             self.observer, self.sensorless, u_s_ab, i_s_ab, theta_M_meas
         )
+        if fbk.caught:
+            # In standby, the states tracked the speed estimate held by the observer,
+            # so they restart from the zero-torque operating point of the caught speed
+            # (zero current, since the catch requires magnets)
+            self.reference_gen.i_s_ref = 0j
+            self.current_ctrl.preset(1j * fbk.w_m * fbk.psi_f, fbk.w_c)
+        return fbk
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
@@ -253,10 +260,6 @@ class CurrentVectorController:
         u_s = ref.u_s_lim if self.cfg.discrete and ref.enabled else fbk.u_s
         self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
         self.reference_gen.update(ref.T_s)
-
-    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
-        """Initialize the estimates after the release, see `SpeedFluxObserver`."""
-        self.observer.catch(delta_i_s_ab, i_s_ab, T_s)
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""

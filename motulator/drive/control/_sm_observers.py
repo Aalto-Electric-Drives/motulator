@@ -40,6 +40,7 @@ class ObserverOutputs:
     theta_m: float = 0.0  # Electrical rotor angle estimate
     psi_f: float = 0.0  # PM-flux linkage estimate
     h: float = 0.0  # Weight of the external position error signal
+    caught: bool = False  # Estimates initialized by a flying start
 
 
 # %%
@@ -140,9 +141,8 @@ class FluxObserver:
             Stator voltage (V) in stator coordinates, averaged over the ongoing
             sampling period, i.e., from this sampling instant to the next one. If
             None (unknown voltage, e.g., with blocked gates), the open-circuit
-            voltage of the model is used: the back-EMF of the flux estimate at the
-            rotor speed, averaged over the sampling period, and the resistive
-            voltage drop.
+            voltage of the model is used: the back-EMF of the flux estimate,
+            averaged over the sampling period, and the resistive voltage drop.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -189,10 +189,8 @@ class FluxObserver:
         # Angular speed of the coordinate system
         out.w_c = out.w_m + self.k_theta * par.n_p * out.eps
 
-        # Voltage vector in the observer coordinates, or the open-circuit voltage of
-        # the model if the voltage is unknown (blocked gates): the back-EMF of the
-        # flux estimate at the rotor speed, averaged over the sampling period (that
-        # of the previous period), and the resistive voltage drop
+        # Voltage vector in the observer coordinates, or the open-circuit voltage if
+        # unknown, averaged over a period of the length of the previous one
         if u_s_ab is not None:
             out.u_s_zoh = exp(-1j * out.theta_c) * u_s_ab
         elif self._T_s > 0:
@@ -284,6 +282,8 @@ class SpeedFluxObserver:
         # Create component observers
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_theta, k_o, k_f)
+        # Current at the start of the latest sampling period with an unknown voltage
+        self._i_s_ab: complex | None = None
 
     @property
     def w_M(self) -> float:
@@ -312,12 +312,9 @@ class SpeedFluxObserver:
         Parameters
         ----------
         u_s_ab : complex | None
-            Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one. If
-            None (unknown voltage, e.g., with blocked gates), the open-circuit
-            voltage of the model is used: the back-EMF of the flux estimate at the
-            rotor speed, averaged over the sampling period, and the resistive
-            voltage drop.
+            Stator voltage (V) in stator coordinates, or None if unknown, see
+            :class:`FluxObserver`. When the voltage is known again, the estimates are
+            initialized with a flying start, unless `h` = 1, see `catch`.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         eps_ext : float, optional
@@ -332,9 +329,17 @@ class SpeedFluxObserver:
             Estimated feedback signals for the control system.
 
         """
+        caught = False
+        if u_s_ab is None:
+            self._i_s_ab = i_s_ab
+        elif self._i_s_ab is not None:
+            if h < 1:
+                delta_i_s_ab = i_s_ab - self._i_s_ab
+                caught = self.catch(delta_i_s_ab, i_s_ab, self.flux_observer._T_s)
+            self._i_s_ab = None
         w_M, tau_L = self.speed_observer.compute_output()
         out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M, eps_ext, h)
-        out.tau_L = tau_L
+        out.tau_L, out.caught = tau_L, caught
         return out
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
@@ -351,6 +356,11 @@ class SpeedFluxObserver:
         [#Tan2009]_), the direction of rotation being taken from the speed estimate.
         The resistive voltage drop and the cross-coupling of the current are
         neglected.
+
+        This method is called by `compute_output` at the first sampling instant with
+        a known voltage after unknown ones. The period is the last of them, in which
+        the control system applies the zero voltage vector after the release of the
+        gates (see `VectorControlSystem`).
 
         Parameters
         ----------

@@ -13,8 +13,8 @@ again: the stator current decays through the diodes within a millisecond, after 
 the loaded machine coasts at open circuit, since its voltage is below the DC-bus
 voltage, and decelerates. At 0.8 s, the gates are released, and the control system
 catches the rotating machine with a flying start: it initializes its observer from the
-current response to a zero-voltage period (cf. [#Tan2009]_), after which the drive
-returns to the speed reference.
+current response to a zero-voltage period (cf. [#Tan2009]_) and its current controller
+from the resulting back-EMF, after which the drive returns to the speed reference.
 
 """
 

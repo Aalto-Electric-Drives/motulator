@@ -346,9 +346,6 @@ class CurrentVectorController:
         u_s = ref.u_s_lim if self.cfg.discrete and ref.enabled else fbk.u_s
         self.current_ctrl.update(ref.T_s, u_s, fbk.w_c)
 
-    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
-        """No initialization after the release, since the rotor flux has decayed."""
-
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
         to_rotor_flux_coordinates(ts)
