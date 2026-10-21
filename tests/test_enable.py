@@ -263,6 +263,31 @@ def test_flying_start_zero_torque(ctrl_type: str) -> None:
     assert np.max(np.abs(res.mdl.machine.i_s_ab[t > 0.4])) < 1.5 * i_sc
 
 
+def test_catch_with_residual_current() -> None:
+    """The flying start leaves the estimates if the current has not decayed, since
+    the resistive decay of the current would be taken for the back-EMF."""
+    par = sm_pars()
+    machine = drive_model.SynchronousMachine(par)
+    machine.state.psi_s_dq = complex(par.psi_s_dq(5 + 0j))  # Residual d-axis current
+    mechanics = drive_model.ExternalRotorSpeed()
+    mechanics.set_external_rotor_speed(0)
+    mdl = drive_model.Drive(
+        machine, mechanics, drive_model.VoltageSourceConverter(u_dc=540)
+    )
+    vector_ctrl = sm_control.CurrentVectorController(
+        par, sm_control.CurrentVectorControllerCfg(i_s_max=6.5)
+    )
+    vector_ctrl.observer.flux_observer.psi_s = machine.state.psi_s_dq
+    ctrl = sm_control.VectorControlSystem(vector_ctrl)
+    ctrl.set_torque_ref(0)
+    ctrl.set_enable(lambda t: t >= 125e-6)  # Blocked for one sampling period
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=1e-3)
+    assert res.success
+    assert abs(res.ctrl.fbk.i_s[1]) > 3  # The current has not decayed at the release
+    assert np.max(np.abs(res.ctrl.fbk.w_M)) < 0.1
+    assert np.max(np.abs(res.ctrl.fbk.theta_m)) < 0.01
+
+
 def test_catch_without_magnets() -> None:
     """The flying start leaves the estimates of a machine without magnets."""
     par = drive_model.SynchronousMachinePars(

@@ -364,8 +364,9 @@ class SpeedFluxObserver:
         Returns
         -------
         bool
-            True if the estimates were initialized, False if the back-EMF is below
-            the resistive voltage drop (standstill) or the machine has no magnets.
+            True if the estimates were initialized, False if the back-EMF estimate
+            does not exceed the resistive voltage drop of the current (standstill, or
+            a current that has not decayed) or the machine has no magnets.
 
         References
         ----------
@@ -379,7 +380,10 @@ class SpeedFluxObserver:
         L = par.incr_ind_mat(0j)
         L_d, L_q = L[0, 0], L[1, 1]
         e_s_ab = -L_q * delta_i_s_ab / T_s  # Back-EMF
-        if abs(e_s_ab) <= par.R_s * abs(i_s_ab) or par.psi_f == 0:
+        # The resistive decay of a residual current (the d-axis current through L_d)
+        # must not be taken for the back-EMF
+        i_max = max(abs(i_s_ab), abs(i_s_ab - delta_i_s_ab))
+        if abs(e_s_ab) <= par.R_s * i_max * max(L_q / L_d, 1) or par.psi_f == 0:
             return False
         sign = 1.0 if self.w_M >= 0 else -1.0
         w_m = sign * abs(e_s_ab) / par.psi_f
