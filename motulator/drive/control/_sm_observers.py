@@ -140,9 +140,8 @@ class FluxObserver:
         u_s_ab : complex | None
             Stator voltage (V) in stator coordinates, averaged over the ongoing
             sampling period, i.e., from this sampling instant to the next one. If
-            None (unknown voltage, e.g., with blocked gates), the open-circuit
-            voltage of the model is used: the back-EMF of the flux estimate,
-            averaged over the sampling period, and the resistive voltage drop.
+            None (unknown voltage, e.g., with blocked gates), the flux estimate
+            follows the current model alone.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -173,8 +172,11 @@ class FluxObserver:
         # Current vector in (estimated) rotor coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
 
-        # Flux estimation error
+        # Flux estimation error. If the voltage is unknown, the flux estimate follows
+        # the current model alone, so the error is zero.
         psi_s_dq = complex(self.par.psi_s_dq(out.i_s))
+        if u_s_ab is None:
+            out.psi_s = psi_s_dq
         out.e_o = psi_s_dq - out.psi_s
 
         # Auxiliary flux
