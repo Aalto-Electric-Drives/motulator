@@ -211,8 +211,12 @@ def test_drive_restart(sensorless: bool) -> None:
     assert np.max(i_s[(t > 0.31) & (t < 0.35)]) < 1e-6
     assert np.interp(0.35, t, w_M) < 0.95 * np.interp(0.3, t, w_M)
     # The flying start: the standby output and the first output after the release are
-    # the zero vector, and the catch at the second step gives the speed
+    # the zero vector, and the catch at the second step gives the speed. The speed
+    # estimate holds while the current decays through the diodes.
     if sensorless:
+        k = np.searchsorted(res.ctrl.t, 0.3)
+        w_M_hold = res.ctrl.fbk.w_M[k - 1 : k + 16]
+        assert w_M_hold == pytest.approx(w_M_hold[0], rel=0.01)
         k = np.searchsorted(res.ctrl.t, 0.35)
         assert res.ctrl.ref.d_abc[k - 1 : k + 1] == pytest.approx(0.5)
         w_M_est = res.ctrl.fbk.w_M[k + 1]
