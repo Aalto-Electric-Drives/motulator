@@ -618,9 +618,8 @@ Module Contents
 
       :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
                      sampling period, i.e., from this sampling instant to the next one. If
-                     None (unknown voltage, e.g., with blocked gates), the open-circuit
-                     voltage of the model is used: the back-EMF of the flux estimate,
-                     averaged over the sampling period, and the resistive voltage drop.
+                     None (unknown voltage, e.g., with blocked gates), the flux estimate
+                     follows the current model alone.
       :type u_s_ab: complex | None
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex

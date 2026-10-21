@@ -608,9 +608,8 @@
 <span class="sd">        u_s_ab : complex | None</span>
 <span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
 <span class="sd">            sampling period, i.e., from this sampling instant to the next one. If</span>
-<span class="sd">            None (unknown voltage, e.g., with blocked gates), the open-circuit</span>
-<span class="sd">            voltage of the model is used: the back-EMF of the flux estimate,</span>
-<span class="sd">            averaged over the sampling period, and the resistive voltage drop.</span>
+<span class="sd">            None (unknown voltage, e.g., with blocked gates), the flux estimate</span>
+<span class="sd">            follows the current model alone.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
@@ -641,8 +640,11 @@
         <span class="c1"># Current vector in (estimated) rotor coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
 
-        <span class="c1"># Flux estimation error</span>
+        <span class="c1"># Flux estimation error. If the voltage is unknown, the flux estimate follows</span>
+        <span class="c1"># the current model alone, so the error is zero.</span>
         <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">psi_s_dq</span>
         <span class="n">out</span><span class="o">.</span><span class="n">e_o</span> <span class="o">=</span> <span class="n">psi_s_dq</span> <span class="o">-</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span>
 
         <span class="c1"># Auxiliary flux</span>

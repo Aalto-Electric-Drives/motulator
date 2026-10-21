@@ -1110,9 +1110,8 @@ adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>) – Stator voltage (V) in stator coordinates, averaged over the ongoing
 sampling period, i.e., from this sampling instant to the next one. If
-None (unknown voltage, e.g., with blocked gates), the open-circuit
-voltage of the model is used: the back-EMF of the flux estimate,
-averaged over the sampling period, and the resistive voltage drop.</p></li>
+None (unknown voltage, e.g., with blocked gates), the flux estimate
+follows the current model alone.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Mechanical rotor speed (rad/s), typically from the speed observer.</p></li>
 <li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – External mechanical position error signal (rad), defaults to 0.</p></li>
