@@ -591,10 +591,8 @@
 <span class="sd">        u_s_ab : complex | None</span>
 <span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
 <span class="sd">            sampling period, i.e., from this sampling instant to the next one. If</span>
-<span class="sd">            None (unknown voltage, e.g., with blocked gates), the open-circuit</span>
-<span class="sd">            voltage of the model is used: the back-EMF of the decaying rotor flux</span>
-<span class="sd">            estimate, averaged over the sampling period, and the resistive voltage</span>
-<span class="sd">            drop.</span>
+<span class="sd">            None (unknown voltage, e.g., with blocked gates), the flux estimate</span>
+<span class="sd">            follows the current model alone.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
@@ -624,7 +622,10 @@
         <span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">w_M</span>
 
-        <span class="c1"># Rotor flux estimate</span>
+        <span class="c1"># Rotor flux estimate. If the voltage is unknown, the flux estimate follows the</span>
+        <span class="c1"># current model alone, so the estimation error is zero.</span>
+        <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_psi_R_pred</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
         <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">L_sgm</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
 
         <span class="c1"># Slip angular frequency</span>
