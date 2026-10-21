@@ -400,6 +400,12 @@
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"
        inkscape:connector-curvature="0" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#marker3363);marker-mid:none;marker-end:url(#DotM)"
+       d="M 230,200 H 240 V 135"
+       sodipodi:nodetypes="ccc"
+       id="path136"
+       inkscape:connector-curvature="0" />
     <rect
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect34"

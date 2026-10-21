@@ -11,10 +11,19 @@ For current limitation, the priority is given to the flux. The stator flux limit
 label: im_cl
 ---
     \psi_\mathrm{s}^\mathrm{cl} &= \hatLsgm \ismax + \hatabspsiR \\
-    \tau_\mathrm{M}^\mathrm{cl} &= \frac{3\np}{2} \hatabspsiR \sqrt{(\ismax)^2 - \left(\frac{\hatabspsiR}{\hatLM}\right)^2}
+    \tau_\mathrm{M}^\mathrm{cl} &= \frac{3\np}{2} \frac{\hatabspsiR}{\hatLsgm} \sqrt{(\abspsisref)^2 - (\psi_\mathrm{sd}^\mathrm{cl})^2}
 ```
 
-where $\hatabspsiR$ is the rotor flux magnitude estimate and $\ismax$ is the maximum current. The breakdown torque limit is
+where $\hatabspsiR$ is the rotor flux magnitude estimate and $\ismax$ is the maximum current. The torque limit is the torque at which the current magnitude reaches $\ismax$ for the stator flux reference $\abspsisref$, whose d-component in rotor flux coordinates is then
+
+```{math}
+---
+label: im_cl_d
+---
+    \psi_\mathrm{sd}^\mathrm{cl} = \frac{(\abspsisref)^2 + \hatabspsiR^2 - (\hatLsgm \ismax)^2}{2\hatabspsiR}
+```
+
+The breakdown torque limit is
 
 ```{math}
 ---
