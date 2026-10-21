@@ -410,7 +410,6 @@ class VectorControlSystem(DriveControlSystem):
         # the control continues when the gates are released
         ref = self.vector_ctrl.compute_output(0.0, fbk)
         if self.flying_start is not None:
-            ref.u_s = 0j  # The zero vector of the flying start
             self.flying_start.T_s = ref.T_s
         if self.speed_ctrl is not None and self.ext_ref.w_M is not None:
             ref.w_M = get_value(self.ext_ref.w_M, self.t)
@@ -436,6 +435,12 @@ class VectorControlSystem(DriveControlSystem):
         if self._standby():  # The first step after the release, see `FlyingStart`
             return self.compute_standby_output(fbk)
         return super().compute_output(fbk)
+
+    def modulate(self, T_s: float, u_s_ref: complex, fbk: Feedbacks) -> Sequence[float]:
+        """Compute the duty ratios, the zero vector in the flying start."""
+        if self.flying_start is not None and self.flying_start.standby:
+            u_s_ref = 0j
+        return super().modulate(T_s, u_s_ref, fbk)
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
