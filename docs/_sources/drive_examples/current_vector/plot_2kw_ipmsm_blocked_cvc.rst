@@ -23,16 +23,19 @@
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are blocked
-before the start and during coasting. While the gates are blocked, the control system
-runs in standby: its observer tracks the machine using the measured converter voltage,
-and its current controller tracks the measured operating point, from which the control
-continues when the gates are released at 0.05 s. The drive then accelerates under speed
-control. At 0.6 s, the gates are blocked again: the stator current decays through the
-diodes within a millisecond, after which the loaded machine coasts at open circuit,
-since its voltage is below the DC-bus voltage. At 0.8 s, the gates are released, and
-the drive returns to the speed reference.
+before the start and during coasting. The converter output voltage is not measured.
+While the gates are blocked, the control system runs in standby: its observer runs on
+its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its
+current controller computes its output for zero torque. The gates are released at
+0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked
+again: the stator current decays through the diodes within a millisecond, after which
+the loaded machine coasts at open circuit, since its voltage is below the DC-bus
+voltage, and decelerates. At 0.8 s, the gates are released, and the control system
+catches the rotating machine with a flying start: it initializes its observer from the
+current response to a zero-voltage period (cf. [#Tan2009]_) and its current controller
+from the resulting back-EMF, after which the drive returns to the speed reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-27
+.. GENERATED FROM PYTHON SOURCE LINES 22-30
 
 .. code-block:: Python
 
@@ -51,11 +54,11 @@ the drive returns to the speed reference.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-33
+.. GENERATED FROM PYTHON SOURCE LINES 32-36
 
 .. code-block:: Python
 
@@ -70,11 +73,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-35
+.. GENERATED FROM PYTHON SOURCE LINES 37-38
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-42
+.. GENERATED FROM PYTHON SOURCE LINES 38-45
 
 .. code-block:: Python
 
@@ -92,11 +95,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-44
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-51
+.. GENERATED FROM PYTHON SOURCE LINES 47-54
 
 .. code-block:: Python
 
@@ -114,11 +117,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Set the gate enable, the speed reference, and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-58
+.. GENERATED FROM PYTHON SOURCE LINES 56-61
 
 .. code-block:: Python
 
@@ -134,11 +137,11 @@ Set the gate enable, the speed reference, and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-60
+.. GENERATED FROM PYTHON SOURCE LINES 62-63
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-65
+.. GENERATED FROM PYTHON SOURCE LINES 63-68
 
 .. code-block:: Python
 
@@ -159,13 +162,14 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-69
+.. GENERATED FROM PYTHON SOURCE LINES 69-73
 
-Plot the speed, the stator current magnitude, and the DC current of the converter,
-the intervals with blocked gates shaded. The DC current is negative while the stator
-current decays through the diodes.
+Plot the speed and its estimate, the stator current magnitude, and the DC current of
+the converter, the intervals with blocked gates shaded. The DC current is negative
+while the stator current decays through the diodes. The speed estimate holds while
+the machine coasts and catches the actual speed after the release.
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-90
+.. GENERATED FROM PYTHON SOURCE LINES 73-96
 
 .. code-block:: Python
 
@@ -180,6 +184,7 @@ current decays through the diodes.
         for k_off, k_on in zip(edges[::2], edges[1::2], strict=True):
             ax.axvspan(t_ctrl[k_off], t_ctrl[min(k_on, len(t_ctrl) - 1)], color="0.9")
     ax1.plot(res.mdl.t, w_M, label=r"$\omega_\mathrm{M}$")
+    ax1.plot(t_ctrl, res.ctrl.fbk.w_M / base.w_M, label=r"$\hat{\omega}_\mathrm{M}$")
     ax1.plot(t_ctrl, res.ctrl.ref.w_M / base.w_M, "--", label=r"$\omega_\mathrm{M,ref}$")
     ax1.set_ylabel("Speed (p.u.)")
     ax1.legend()
@@ -193,6 +198,7 @@ current decays through the diodes.
 
 
 
+
 .. image-sg:: /drive_examples/current_vector/images/sphx_glr_plot_2kw_ipmsm_blocked_cvc_002.png
    :alt: plot 2kw ipmsm blocked cvc
    :srcset: /drive_examples/current_vector/images/sphx_glr_plot_2kw_ipmsm_blocked_cvc_002.png
@@ -202,10 +208,18 @@ current decays through the diodes.
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 97-102
+
+.. rubric:: References
+
+.. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, "Starting
+   procedure of rotational sensorless PMSM in the rotating condition," IEEE Trans.
+   Ind. Appl., 2009, https://doi.org/10.1109/TIA.2008.2009496
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.630 seconds)
+   **Total running time of the script:** (0 minutes 13.271 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_blocked_cvc.py:

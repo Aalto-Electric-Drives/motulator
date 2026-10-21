@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -461,7 +461,7 @@
   <h1>Source code for motulator.drive.control._sm_observers</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Observers for synchronous machine drives."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
@@ -502,7 +502,8 @@
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Coordinate system angle</span>
     <span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Electrical rotor angle estimate</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># PM-flux linkage estimate</span>
-    <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Weight of the external position error signal</span></div>
+    <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Weight of the external position error signal</span>
+    <span class="n">caught</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Estimates initialized by a flying start</span></div>
 
 
 
@@ -586,12 +587,14 @@
         <span class="c1"># States</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
+        <span class="c1"># Other memory variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Length of the previous sampling period</span>
 
 <div class="viewcode-block" id="FluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
         <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -602,9 +605,12 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        u_s_ab : complex</span>
+<span class="sd">        u_s_ab : complex | None</span>
 <span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
-<span class="sd">            sampling period, i.e., from this sampling instant to the next one.</span>
+<span class="sd">            sampling period, i.e., from this sampling instant to the next one. If</span>
+<span class="sd">            None (unknown voltage, e.g., with blocked gates), the open-circuit</span>
+<span class="sd">            voltage of the model is used: the back-EMF of the flux estimate,</span>
+<span class="sd">            averaged over the sampling period, and the resistive voltage drop.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
@@ -632,9 +638,8 @@
         <span class="c1"># Coordinate system angle equals the estimated rotor angle</span>
         <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span>
 
-        <span class="c1"># Current and voltage vectors in (estimated) rotor coordinates</span>
+        <span class="c1"># Current vector in (estimated) rotor coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
 
         <span class="c1"># Flux estimation error</span>
         <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
@@ -651,6 +656,16 @@
 
         <span class="c1"># Angular speed of the coordinate system</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
+
+        <span class="c1"># Voltage vector in the observer coordinates, or the open-circuit voltage if</span>
+        <span class="c1"># unknown, averaged over a period of the length of the previous one</span>
+        <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">emf</span> <span class="o">=</span> <span class="p">(</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">emf</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
 
         <span class="c1"># Torque estimate</span>
         <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span>
@@ -680,7 +695,8 @@
         <span class="n">Phi</span><span class="p">,</span> <span class="n">Gamma</span> <span class="o">=</span> <span class="n">hold_equivalent</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">Phi</span> <span class="o">*</span> <span class="p">(</span><span class="n">psi_s</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span><span class="p">)</span> <span class="o">-</span> <span class="n">Gamma</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_f</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps_f</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_f</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">w_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps_f</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">=</span> <span class="n">T_s</span></div>
 </div>
 
 
@@ -741,6 +757,8 @@
         <span class="c1"># Create component observers</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span> <span class="o">=</span> <span class="n">SpeedObserver</span><span class="p">(</span><span class="n">k_w</span><span class="p">,</span> <span class="n">k_tau</span><span class="p">,</span> <span class="n">J</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span> <span class="o">=</span> <span class="n">FluxObserver</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">k_theta</span><span class="p">,</span> <span class="n">k_o</span><span class="p">,</span> <span class="n">k_f</span><span class="p">)</span>
+        <span class="c1"># Current at the start of the latest sampling period with an unknown voltage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">w_M</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -759,16 +777,21 @@
 <div class="viewcode-block" id="SpeedFluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the feedback signals for the control system.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        u_s_ab : complex</span>
-<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
-<span class="sd">            sampling period, i.e., from this sampling instant to the next one.</span>
+<span class="sd">        u_s_ab : complex | None</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, or None if unknown, see</span>
+<span class="sd">            :class:`FluxObserver`. When the voltage is known again, the estimates are</span>
+<span class="sd">            initialized with a flying start, unless `h` = 1, see `catch`.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        eps_ext : float, optional</span>
@@ -783,9 +806,17 @@
 <span class="sd">            Estimated feedback signals for the control system.</span>
 
 <span class="sd">        """</span>
+        <span class="n">caught</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ab</span> <span class="o">=</span> <span class="n">i_s_ab</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">delta_i_s_ab</span> <span class="o">=</span> <span class="n">i_s_ab</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ab</span>
+                <span class="n">caught</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">catch</span><span class="p">(</span><span class="n">delta_i_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">_T_s</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_i_s_ab</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">w_M</span><span class="p">,</span> <span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">()</span>
         <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">tau_L</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">caught</span> <span class="o">=</span> <span class="n">tau_L</span><span class="p">,</span> <span class="n">caught</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
 
@@ -795,6 +826,67 @@
 <span class="w">        </span><span class="sd">"""Update the state estimates."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SpeedFluxObserver.catch">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver.catch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">catch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta_i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Initialize the estimates from the current response to a zero-voltage period.</span>
+
+<span class="sd">        The back-EMF drives the current along the negative q axis of the rotor, which</span>
+<span class="sd">        gives the rotor angle and the speed magnitude (a flying start, cf.</span>
+<span class="sd">        [#Tan2009]_), the direction of rotation being taken from the speed estimate.</span>
+<span class="sd">        The resistive voltage drop and the cross-coupling of the current are</span>
+<span class="sd">        neglected.</span>
+
+<span class="sd">        This method is called by `compute_output` at the first sampling instant with</span>
+<span class="sd">        a known voltage after unknown ones. The period is the last of them, in which</span>
+<span class="sd">        the control system applies the zero voltage vector after the release of the</span>
+<span class="sd">        gates (see `VectorControlSystem`).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        delta_i_s_ab : complex</span>
+<span class="sd">            Change of the stator current (A) over the period, in stator coordinates.</span>
+<span class="sd">        i_s_ab : complex</span>
+<span class="sd">            Stator current (A) at the end of the period, in stator coordinates.</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Length of the period (s).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the estimates were initialized, False if the back-EMF estimate</span>
+<span class="sd">            does not exceed the resistive voltage drop of the current (standstill, or</span>
+<span class="sd">            a current that has not decayed) or the machine has no magnets.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,</span>
+<span class="sd">           "Starting procedure of rotational sensorless PMSM in the rotating</span>
+<span class="sd">           condition," IEEE Trans. Ind. Appl., 2009,</span>
+<span class="sd">           https://doi.org/10.1109/TIA.2008.2009496</span>
+
+<span class="sd">        """</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">par</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">L_d</span><span class="p">,</span> <span class="n">L_q</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">e_s_ab</span> <span class="o">=</span> <span class="o">-</span><span class="n">L_q</span> <span class="o">*</span> <span class="n">delta_i_s_ab</span> <span class="o">/</span> <span class="n">T_s</span>  <span class="c1"># Back-EMF</span>
+        <span class="c1"># The resistive decay of a residual current (the d-axis current through L_d)</span>
+        <span class="c1"># must not be taken for the back-EMF</span>
+        <span class="n">i_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i_s_ab</span> <span class="o">-</span> <span class="n">delta_i_s_ab</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e_s_ab</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">i_max</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">L_q</span> <span class="o">/</span> <span class="n">L_d</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">1.0</span>
+        <span class="n">w_m</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">e_s_ab</span><span class="p">)</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">psi_f</span>
+        <span class="c1"># The response lags the rotor angle at the end of the period, since the</span>
+        <span class="c1"># back-EMF rotates during the period</span>
+        <span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">phase</span><span class="p">(</span><span class="n">e_s_ab</span><span class="p">)</span> <span class="o">-</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">w_m</span> <span class="o">*</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">L_q</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">L_d</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_m</span> <span class="o">/</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">theta_m</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span><span class="p">))</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 </div>
 
 
@@ -802,7 +894,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_feedback</span><span class="p">(</span>
     <span class="n">observer</span><span class="p">:</span> <span class="n">SpeedFluxObserver</span><span class="p">,</span>
     <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-    <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+    <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
     <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>

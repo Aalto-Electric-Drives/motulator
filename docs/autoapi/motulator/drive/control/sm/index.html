@@ -226,8 +226,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -517,7 +517,6 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
@@ -543,7 +542,6 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
@@ -601,6 +599,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedController"><code class="docutils literal notranslate"><span class="pre">SpeedController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.catch"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.catch()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.theta_m"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.theta_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
@@ -626,7 +625,9 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_speed_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.set_torque_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_torque_ref()</span></code></a></li>
@@ -811,27 +812,13 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController.compute_standby_output">
-<span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController.compute_standby_output" title="Link to this definition">#</a></dt>
-<dd><p>Compute references while the gates are blocked.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._sm_observers.ObserverOutputs</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController.get_feedback">
 <span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
 <li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
@@ -972,11 +959,10 @@ computational delay of one sampling period and the delay of half a sampling peri
 caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the
 angle is not advanced, which is used if the controller takes the delays into
 account itself, e.g., in a direct discrete-time design.</p>
-<p>While the gates are blocked (see <cite>set_enable</cite>), the feedback voltages are the
-measured converter voltage, so the observers keep tracking the machine, and the
-inner controller computes its standby output: its regulators track the measured
-operating point, from which the control continues when the gates are released,
-while the speed controller is not updated.</p>
+<p>While the gates are blocked (see <cite>set_enable</cite>), the control system is in standby:
+the observers run on their open-circuit model, since the converter voltage is
+unknown, the inner controller computes its output for zero torque, and the speed
+controller is not updated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1122,8 +1108,11 @@ adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates, averaged over the ongoing
-sampling period, i.e., from this sampling instant to the next one.</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>) – Stator voltage (V) in stator coordinates, averaged over the ongoing
+sampling period, i.e., from this sampling instant to the next one. If
+None (unknown voltage, e.g., with blocked gates), the open-circuit
+voltage of the model is used: the back-EMF of the flux estimate,
+averaged over the sampling period, and the resistive voltage drop.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Mechanical rotor speed (rad/s), typically from the speed observer.</p></li>
 <li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – External mechanical position error signal (rad), defaults to 0.</p></li>
@@ -1217,27 +1206,13 @@ Electron., 2022, <a class="reference external" href="https://doi.org/10.1109/TIE
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.FluxVectorController.compute_standby_output">
-<span class="sig-name descname"><span class="pre">compute_standby_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#FluxVectorController.compute_standby_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxVectorController.compute_standby_output" title="Link to this definition">#</a></dt>
-<dd><p>Compute references while the gates are blocked.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._sm_observers.ObserverOutputs</em>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.FluxVectorController.get_feedback">
 <span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M_meas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta_M_meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#FluxVectorController.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxVectorController.get_feedback" title="Link to this definition">#</a></dt>
 <dd><p>Get the feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
 <li><p><strong>w_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>theta_M_meas</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>)</p></li>
@@ -1396,7 +1371,7 @@ decoupling between the stator flux and torque channels are used <a class="footno
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
 <li><p><strong>w_M_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 </ul>
@@ -2169,14 +2144,57 @@ mechanical system model is not used.</p></li>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.SpeedFluxObserver.catch">
+<span class="sig-name descname"><span class="pre">catch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver.catch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.catch" title="Link to this definition">#</a></dt>
+<dd><p>Initialize the estimates from the current response to a zero-voltage period.</p>
+<p>The back-EMF drives the current along the negative q axis of the rotor, which
+gives the rotor angle and the speed magnitude (a flying start, cf.
+<a class="footnote-reference brackets" href="#tan2009" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>), the direction of rotation being taken from the speed estimate.
+The resistive voltage drop and the cross-coupling of the current are
+neglected.</p>
+<p>This method is called by <cite>compute_output</cite> at the first sampling instant with
+a known voltage after unknown ones. The period is the last of them, in which
+the control system applies the zero voltage vector after the release of the
+gates (see <cite>VectorControlSystem</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delta_i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Change of the stator current (A) over the period, in stator coordinates.</p></li>
+<li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator current (A) at the end of the period, in stator coordinates.</p></li>
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Length of the period (s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the estimates were initialized, False if the back-EMF estimate
+does not exceed the resistive voltage drop of the current (standstill, or
+a current that has not decayed) or the machine has no magnets.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="tan2009" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">18</a><span class="fn-bracket">]</span></span>
+<p>Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,
+“Starting procedure of rotational sensorless PMSM in the rotating
+condition,” IEEE Trans. Ind. Appl., 2009,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009496">https://doi.org/10.1109/TIA.2008.2009496</a></p>
+</aside>
+</aside>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SpeedFluxObserver.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps_ext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute the feedback signals for the control system.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator voltage (V) in stator coordinates, averaged over the ongoing
-sampling period, i.e., from this sampling instant to the next one.</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>) – Stator voltage (V) in stator coordinates, or None if unknown, see
+<a class="reference internal" href="#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">FluxObserver</span></code></a>. When the voltage is known again, the estimates are
+initialized with a flying start, unless <cite>h</cite> = 1, see <cite>catch</cite>.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – External mechanical position error signal (rad), defaults to 0.</p></li>
 <li><p><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Weight of <cite>eps_ext</cite> in the range [0, 1], defaults to 0, i.e., the model-
@@ -2239,7 +2257,7 @@ based error signal is used exclusively.</p></li>
 <dd><p>Speed observer.</p>
 <p>This observer estimates the mechanical rotor speed based on the mechanical system
 model and the error signal. If the inertia of the mechanical system is provided, the
-load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>.</p>
+load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2255,7 +2273,7 @@ not used.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="lor1991" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">18</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">19</a><span class="fn-bracket">]</span></span>
 <p>Lorenz, Van Patten, “High-resolution velocity estimation for
 all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
@@ -2435,6 +2453,11 @@ defaults to 0 (no core losses).</p></li>
 <p>This class defines the interface for drive control systems. It is a generic class
 that can be used with different inner controllers (such as current-vector control
 and flux-vector control).</p>
+<p>A sensorless drive stays in standby with the zero voltage vector also at the first
+sampling instant after the release of the gates. Due to the computational delay,
+the first two sampling periods are then zero-voltage periods, and the observer of
+a synchronous machine catches the rotating machine from the current response to
+the first one (a flying start).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2445,6 +2468,20 @@ and flux-vector control).</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.VectorControlSystem.compute_output">
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VectorControlSystem.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VectorControlSystem.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Compute controller output based on feedback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>motulator.drive.control._common.References</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.VectorControlSystem.get_measurement">
 <span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VectorControlSystem.get_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VectorControlSystem.get_measurement" title="Link to this definition">#</a></dt>
 <dd><p>Get measurements from sensors.</p>
@@ -2454,6 +2491,24 @@ and flux-vector control).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Measurements</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.VectorControlSystem.modulate">
+<span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VectorControlSystem.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VectorControlSystem.modulate" title="Link to this definition">#</a></dt>
+<dd><p>Compute the duty ratios, the zero vector in standby if sensorless.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>u_s_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)">collections.abc.Sequence</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2574,7 +2629,6 @@ and flux-vector control).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController.update"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController.update()</span></code></a></li>
@@ -2600,7 +2654,6 @@ and flux-vector control).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController"><code class="docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.compute_standby_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.get_feedback"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.post_process"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.FluxVectorController.update"><code class="docutils literal notranslate"><span class="pre">FluxVectorController.update()</span></code></a></li>
@@ -2658,6 +2711,7 @@ and flux-vector control).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedController"><code class="docutils literal notranslate"><span class="pre">SpeedController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.catch"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.catch()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.theta_m"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.theta_m</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
@@ -2683,7 +2737,9 @@ and flux-vector control).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.get_measurement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.post_process()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.set_speed_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_speed_ref()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.VectorControlSystem.set_torque_ref"><code class="docutils literal notranslate"><span class="pre">VectorControlSystem.set_torque_ref()</span></code></a></li>

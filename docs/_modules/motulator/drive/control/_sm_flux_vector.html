@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -678,7 +678,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
         <span class="n">w_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Not used, needed for the interface</span>
         <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -697,16 +697,6 @@
         <span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span><span class="o">.</span><span class="n">compute_flux_and_torque_refs</span><span class="p">(</span>
             <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_m</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="p">)</span>
-        <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ref</span></div>
-
-
-<div class="viewcode-block" id="FluxVectorController.compute_standby_output">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController.compute_standby_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_standby_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Compute references while the gates are blocked."""</span>
-        <span class="c1"># The flux and torque controller tracks the estimated flux and torque</span>
-        <span class="n">ref</span> <span class="o">=</span> <span class="n">References</span><span class="p">(</span><span class="n">T_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">fbk</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">psi_s</span><span class="o">=</span><span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">))</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_torque_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ref</span></div>
 
@@ -820,7 +810,7 @@
 <div class="viewcode-block" id="ObserverBasedVHzController.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ObserverBasedVHzController.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">)</span></div>

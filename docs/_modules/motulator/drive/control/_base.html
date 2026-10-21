@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -470,7 +470,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">TimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PWM</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">line2complex</span><span class="p">,</span> <span class="n">wrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">wrap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">References</span><span class="p">,</span> <span class="n">SpeedController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">Drive</span>
 
@@ -483,6 +483,7 @@
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular speed of the coordinate system (not post-processed)</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular position of the coordinate system</span>
     <span class="n">u_s</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator voltage (controller coordinates) for the control laws</span>
+    <span class="n">u_s_zoh</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Stator voltage (controller coordinates) for the observers</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage</span>
 
 
@@ -502,7 +503,6 @@
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">theta_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Mechanical angular position</span>
-    <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Converter voltage, measured with blocked gates</span>
 
 
 <span class="c1"># %%</span>
@@ -514,20 +514,16 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
         <span class="n">w_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">theta_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get feedback signals from measurements."""</span>
+<span class="w">        </span><span class="sd">"""Get feedback signals from measurements, `u_s_ab` None if unknown."""</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ref</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute control output from feedback signals."""</span>
-        <span class="o">...</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_standby_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ref</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Compute control output while the gates are blocked."""</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">Ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -553,8 +549,10 @@
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">k_comp</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angle-advance factor, see DriveControlSystem</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get feedback signals from measurements."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">w_M_ref</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Get feedback signals from measurements, `u_s_ab` None if unknown."""</span>
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Fbk</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Ref</span><span class="p">:</span>
@@ -604,11 +602,10 @@
 <span class="sd">    angle is not advanced, which is used if the controller takes the delays into</span>
 <span class="sd">    account itself, e.g., in a direct discrete-time design.</span>
 
-<span class="sd">    While the gates are blocked (see `set_enable`), the feedback voltages are the</span>
-<span class="sd">    measured converter voltage, so the observers keep tracking the machine, and the</span>
-<span class="sd">    inner controller computes its standby output: its regulators track the measured</span>
-<span class="sd">    operating point, from which the control continues when the gates are released,</span>
-<span class="sd">    while the speed controller is not updated.</span>
+<span class="sd">    While the gates are blocked (see `set_enable`), the control system is in standby:</span>
+<span class="sd">    the observers run on their open-circuit model, since the converter voltage is</span>
+<span class="sd">    unknown, the inner controller computes its output for zero torque, and the speed</span>
+<span class="sd">    controller is not updated.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -646,7 +643,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">ref_fcn</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get the feedback signals from the inner controller."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
@@ -658,11 +657,9 @@
 <span class="w">        </span><span class="sd">"""Compute the references while the gates are blocked."""</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_measure_converter_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure the converter voltage while the gates are blocked."""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">line2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_voltages</span><span class="p">())</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_standby</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Standby of the control system, while the gates are blocked."""</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span>
 
 <div class="viewcode-block" id="DriveControlSystem.get_feedback">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.get_feedback">[docs]</a>
@@ -670,17 +667,21 @@
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
         <span class="c1"># control laws use the voltage averaged over the previous and ongoing periods.</span>
-        <span class="c1"># With blocked gates, both are the measured voltage. The realized voltage is</span>
-        <span class="c1"># computed also then, since it passes the measured currents to the PWM for the</span>
-        <span class="c1"># feedforward compensation of the duty ratios applied after the release.</span>
+        <span class="c1"># The realized voltage is computed also with blocked gates, since it passes</span>
+        <span class="c1"># the measured currents to the PWM for the feedforward compensation of the</span>
+        <span class="c1"># duty ratios applied after the release.</span>
         <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span>
             <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
         <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span>
-        <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inner_feedback</span><span class="p">(</span><span class="n">u_c_ab_zoh</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
-        <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standby</span><span class="p">():</span>
+            <span class="c1"># The voltage is unknown with blocked gates, so the observers run on their</span>
+            <span class="c1"># open-circuit model, whose voltage is used for the control laws too</span>
+            <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inner_feedback</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
+            <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_s_zoh</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_inner_feedback</span><span class="p">(</span><span class="n">u_c_ab_zoh</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
+            <span class="n">fbk</span><span class="o">.</span><span class="n">u_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>
         <span class="k">return</span> <span class="n">fbk</span></div>
 
@@ -735,6 +736,12 @@
 <span class="sd">    that can be used with different inner controllers (such as current-vector control</span>
 <span class="sd">    and flux-vector control).</span>
 
+<span class="sd">    A sensorless drive stays in standby with the zero voltage vector also at the first</span>
+<span class="sd">    sampling instant after the release of the gates. Due to the computational delay,</span>
+<span class="sd">    the first two sampling periods are then zero-voltage periods, and the observer of</span>
+<span class="sd">    a synchronous machine catches the rotating machine from the current response to</span>
+<span class="sd">    the first one (a flying start).</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    vector_ctrl : VectorController</span>
@@ -755,6 +762,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pwm</span> <span class="k">if</span> <span class="n">pwm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">PWM</span><span class="p">(),</span> <span class="n">vector_ctrl</span><span class="o">.</span><span class="n">k_comp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span> <span class="o">=</span> <span class="n">vector_ctrl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="o">=</span> <span class="n">speed_ctrl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_release_step</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># First sampling instant after the release</span>
 
 <div class="viewcode-block" id="VectorControlSystem.set_speed_ref">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.set_speed_ref">[docs]</a>
@@ -806,17 +814,24 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">w_M</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
             <span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_position</span><span class="p">())</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_measure_converter_voltage</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_standby</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_release_step</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span>
             <span class="n">u_s_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">theta_M</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_inner_standby_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
-        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">compute_standby_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
+        <span class="c1"># Zero torque reference: the inner controller computes the voltage of the</span>
+        <span class="c1"># zero-torque operating point (with field weakening if needed), from which</span>
+        <span class="c1"># the control continues when the gates are released</span>
+        <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ref</span>
@@ -836,14 +851,33 @@
         <span class="n">ref</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M_ref</span>
         <span class="k">return</span> <span class="n">ref</span>
 
+<div class="viewcode-block" id="VectorControlSystem.compute_output">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.compute_output">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute controller output based on feedback."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standby</span><span class="p">():</span>  <span class="c1"># The first sampling instant after the release</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_standby_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VectorControlSystem.modulate">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.modulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Compute the duty ratios, the zero vector in standby if sensorless."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standby</span><span class="p">():</span>
+            <span class="n">u_s_ref</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="VectorControlSystem.update">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.update">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Update controller states."""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standby</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">speed_ctrl</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_release_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span></div>
 
 
 <div class="viewcode-block" id="VectorControlSystem.post_process">
@@ -890,11 +924,12 @@
 <span class="w">        </span><span class="sd">"""Get measurements."""</span>
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
         <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_measure_converter_voltage</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="o">=</span><span class="n">u_c_ab</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Speed reference must be set"</span><span class="p">)</span>

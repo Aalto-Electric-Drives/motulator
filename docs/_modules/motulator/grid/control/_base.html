@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -500,7 +500,6 @@
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="n">u_g_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Converter voltage, measured with blocked gates</span>
 
 
 <span class="c1"># %%</span>
@@ -686,8 +685,7 @@
         <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
         <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">line2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_pcc_voltages</span><span class="p">())</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="k">else</span> <span class="n">line2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_voltages</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GridConverterControlSystem.get_feedback">
@@ -696,15 +694,17 @@
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
         <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
         <span class="c1"># control laws use the voltage averaged over the previous and ongoing periods.</span>
-        <span class="c1"># With blocked gates, both are the measured voltage. The realized voltage is</span>
-        <span class="c1"># computed also then, since it passes the measured currents to the PWM for the</span>
-        <span class="c1"># feedforward compensation of the duty ratios applied after the release.</span>
+        <span class="c1"># With blocked gates, the converter voltage equals the measured PCC voltage</span>
+        <span class="c1"># (the filter capacitor voltage with an LCL filter) once the current has</span>
+        <span class="c1"># decayed, so both are that voltage. The realized voltage is computed also</span>
+        <span class="c1"># then, since it passes the measured currents to the PWM for the feedforward</span>
+        <span class="c1"># compensation of the duty ratios applied after the release.</span>
         <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span>
             <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
         <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_c_ab</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_g_ab</span>
         <span class="n">fbk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inner_ctrl</span><span class="o">.</span><span class="n">get_feedback</span><span class="p">(</span><span class="n">u_c_ab_zoh</span><span class="p">,</span> <span class="n">meas</span><span class="p">)</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_c_ab</span>
         <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span>

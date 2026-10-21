@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -542,6 +542,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison">CarrierComparison (class in motulator.common.model)</a>
 </li>
+      <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver.catch">catch() (motulator.drive.control.sm.SpeedFluxObserver method)</a>
+</li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.clear_data">clear_data() (motulator.common.control.ControlSystem method)</a>
 </li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.complex2abc">complex2abc() (in module motulator.common.utils)</a>
@@ -657,6 +659,8 @@
 </li>
         <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedObserver.compute_output">(motulator.drive.control.im.SpeedObserver method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VectorControlSystem.compute_output">(motulator.drive.control.im.VectorControlSystem method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController.compute_output">(motulator.drive.control.sm.CurrentController method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorController.compute_output">(motulator.drive.control.sm.CurrentVectorController method)</a>
@@ -680,6 +684,8 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver.compute_output">(motulator.drive.control.sm.SpeedFluxObserver method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedObserver.compute_output">(motulator.drive.control.sm.SpeedObserver method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.VectorControlSystem.compute_output">(motulator.drive.control.sm.VectorControlSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentVectorController.compute_output">(motulator.grid.control.CurrentVectorController method)</a>
 </li>
@@ -713,19 +719,11 @@
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.compute_standby_output">compute_standby_output() (motulator.common.control.ControlSystem method)</a>
 
       <ul>
-        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentVectorController.compute_standby_output">(motulator.drive.control.im.CurrentVectorController method)</a>
-</li>
         <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem.compute_standby_output">(motulator.drive.control.im.DriveControlSystem method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorController.compute_standby_output">(motulator.drive.control.im.FluxVectorController method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ObserverBasedVHzController.compute_standby_output">(motulator.drive.control.im.ObserverBasedVHzController method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorController.compute_standby_output">(motulator.drive.control.sm.CurrentVectorController method)</a>
-</li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DriveControlSystem.compute_standby_output">(motulator.drive.control.sm.DriveControlSystem method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController.compute_standby_output">(motulator.drive.control.sm.FluxVectorController method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.ObserverBasedVHzController.compute_standby_output">(motulator.drive.control.sm.ObserverBasedVHzController method)</a>
 </li>
@@ -1273,7 +1271,11 @@
       <ul>
         <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem.modulate">(motulator.drive.control.im.DriveControlSystem method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VectorControlSystem.modulate">(motulator.drive.control.im.VectorControlSystem method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DriveControlSystem.modulate">(motulator.drive.control.sm.DriveControlSystem method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.VectorControlSystem.modulate">(motulator.drive.control.sm.VectorControlSystem method)</a>
 </li>
       </ul></li>
       <li>
@@ -1565,6 +1567,12 @@
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PowerSynchronizationControllerCfg">PowerSynchronizationControllerCfg (class in motulator.grid.control)</a>
 </li>
+      <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController.preset">preset() (motulator.common.control.ComplexPIController method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.DiscreteComplexController.preset">(motulator.common.control.DiscreteComplexController method)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.SaturationModelPMSyRM.psi_n">psi_n (motulator.drive.utils.SaturationModelPMSyRM attribute)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.psi_s_dq">psi_s_dq (motulator.drive.utils.MagneticModel attribute)</a>

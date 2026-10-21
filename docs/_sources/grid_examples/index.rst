@@ -93,7 +93,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates the start-up of a grid-following converter with DC-bus voltage control. The converter gates are blocked at first. The DC bus is charged from its initial voltage of 500 V through the antiparallel diodes toward the peak line-to-line voltage of the grid, while the phase-locked loop synchronizes with the grid and the current controller tracks the measured converter voltage. The gates are released at 40 ms, after which the DC-bus voltage controller raises the voltage to 650 V, with the power limited to the nominal power. A reactive power reference step follows.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates the start-up of a grid-following converter with DC-bus voltage control. The converter gates are blocked at first. The DC bus is charged from its initial voltage of 500 V through the antiparallel diodes toward the peak line-to-line voltage of the grid, while the phase-locked loop synchronizes with the grid and the current controller tracks the measured grid voltage. The gates are released at 40 ms, after which the DC-bus voltage controller raises the voltage to 650 V, with the power limited to the nominal power. A reactive power reference step follows.">
 
 .. only:: html
 

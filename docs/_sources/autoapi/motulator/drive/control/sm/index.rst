@@ -171,30 +171,6 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_standby_output(fbk)
-
-      
-      Compute references while the gates are blocked.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
 
       
@@ -423,11 +399,10 @@ Module Contents
    angle is not advanced, which is used if the controller takes the delays into
    account itself, e.g., in a direct discrete-time design.
 
-   While the gates are blocked (see `set_enable`), the feedback voltages are the
-   measured converter voltage, so the observers keep tracking the machine, and the
-   inner controller computes its standby output: its regulators track the measured
-   operating point, from which the control continues when the gates are released,
-   while the speed controller is not updated.
+   While the gates are blocked (see `set_enable`), the control system is in standby:
+   the observers run on their open-circuit model, since the converter voltage is
+   unknown, the inner controller computes its output for zero torque, and the speed
+   controller is not updated.
 
    :param pwm: Pulse-width modulator.
    :type pwm: PWM
@@ -642,8 +617,11 @@ Module Contents
       Compute the feedback signals for the control system.
 
       :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
-                     sampling period, i.e., from this sampling instant to the next one.
-      :type u_s_ab: complex
+                     sampling period, i.e., from this sampling instant to the next one. If
+                     None (unknown voltage, e.g., with blocked gates), the open-circuit
+                     voltage of the model is used: the back-EMF of the flux estimate,
+                     averaged over the sampling period, and the resistive voltage drop.
+      :type u_s_ab: complex | None
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
       :param w_M: Mechanical rotor speed (rad/s), typically from the speed observer.
@@ -751,30 +729,6 @@ Module Contents
 
       
       Compute references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: compute_standby_output(fbk)
-
-      
-      Compute references while the gates are blocked.
 
 
 
@@ -2237,14 +2191,68 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: catch(delta_i_s_ab, i_s_ab, T_s)
+
+      
+      Initialize the estimates from the current response to a zero-voltage period.
+
+      The back-EMF drives the current along the negative q axis of the rotor, which
+      gives the rotor angle and the speed magnitude (a flying start, cf.
+      [#Tan2009]_), the direction of rotation being taken from the speed estimate.
+      The resistive voltage drop and the cross-coupling of the current are
+      neglected.
+
+      This method is called by `compute_output` at the first sampling instant with
+      a known voltage after unknown ones. The period is the last of them, in which
+      the control system applies the zero voltage vector after the release of the
+      gates (see `VectorControlSystem`).
+
+      :param delta_i_s_ab: Change of the stator current (A) over the period, in stator coordinates.
+      :type delta_i_s_ab: complex
+      :param i_s_ab: Stator current (A) at the end of the period, in stator coordinates.
+      :type i_s_ab: complex
+      :param T_s: Length of the period (s).
+      :type T_s: float
+
+      :returns: True if the estimates were initialized, False if the back-EMF estimate
+                does not exceed the resistive voltage drop of the current (standstill, or
+                a current that has not decayed) or the machine has no magnets.
+      :rtype: bool
+
+      .. rubric:: References
+
+      .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,
+         "Starting procedure of rotational sensorless PMSM in the rotating
+         condition," IEEE Trans. Ind. Appl., 2009,
+         https://doi.org/10.1109/TIA.2008.2009496
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: compute_output(u_s_ab, i_s_ab, eps_ext = 0.0, h = 0.0)
 
       
       Compute the feedback signals for the control system.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
-                     sampling period, i.e., from this sampling instant to the next one.
-      :type u_s_ab: complex
+      :param u_s_ab: Stator voltage (V) in stator coordinates, or None if unknown, see
+                     :class:`FluxObserver`. When the voltage is known again, the estimates are
+                     initialized with a flying start, unless `h` = 1, see `catch`.
+      :type u_s_ab: complex | None
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
       :param eps_ext: External mechanical position error signal (rad), defaults to 0.
@@ -2696,6 +2704,12 @@ Module Contents
    that can be used with different inner controllers (such as current-vector control
    and flux-vector control).
 
+   A sensorless drive stays in standby with the zero voltage vector also at the first
+   sampling instant after the release of the gates. Due to the computational delay,
+   the first two sampling periods are then zero-voltage periods, and the observer of
+   a synchronous machine catches the rotating machine from the current response to
+   the first one (a flying start).
+
    :param vector_ctrl: Vector controller whose input is the torque reference.
    :type vector_ctrl: VectorController
    :param speed_ctrl: Speed controller. If None (default), torque-control mode is used.
@@ -2720,10 +2734,58 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:method:: compute_output(fbk)
+
+      
+      Compute controller output based on feedback.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_measurement(mdl)
 
       
       Get measurements from sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: modulate(T_s, u_s_ref, fbk)
+
+      
+      Compute the duty ratios, the zero vector in standby if sensorless.
 
 
 

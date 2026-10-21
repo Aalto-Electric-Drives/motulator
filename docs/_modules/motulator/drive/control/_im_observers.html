@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -577,7 +577,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
         <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -588,9 +588,13 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        u_s_ab : complex</span>
+<span class="sd">        u_s_ab : complex | None</span>
 <span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
-<span class="sd">            sampling period, i.e., from this sampling instant to the next one.</span>
+<span class="sd">            sampling period, i.e., from this sampling instant to the next one. If</span>
+<span class="sd">            None (unknown voltage, e.g., with blocked gates), the open-circuit</span>
+<span class="sd">            voltage of the model is used: the back-EMF of the decaying rotor flux</span>
+<span class="sd">            estimate, averaged over the sampling period, and the resistive voltage</span>
+<span class="sd">            drop.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
@@ -613,9 +617,8 @@
         <span class="c1"># Initialize the output signals</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span><span class="n">psi_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">,</span> <span class="n">theta_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_c</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
 
-        <span class="c1"># Current and voltage vectors in synchronous coordinates</span>
+        <span class="c1"># Current vector in synchronous coordinates</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
 
         <span class="c1"># Mechanical and electrical angular speeds of the rotor</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M</span>
@@ -631,6 +634,17 @@
         <span class="c1"># Angular speed of the coordinate system equals synchronous angular frequency</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_s</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">w_r</span>
         <span class="c1"># out.w_c = out.w_m  # Use rotor coordinates instead of synchronous coordinates</span>
+
+        <span class="c1"># Voltage vector in the observer coordinates, or the open-circuit voltage if</span>
+        <span class="c1"># unknown, averaged over a period of the length of the previous one. The</span>
+        <span class="c1"># rotor flux decays as in the current model below, so their predictions match.</span>
+        <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Phi</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">)</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="p">(</span><span class="n">Phi</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">-</span> <span class="n">par</span><span class="o">.</span><span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">psi_R</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
 
         <span class="c1"># Estimation error, i.e., the difference between the rotor flux predictions of</span>
         <span class="c1"># the current model and the voltage model</span>
@@ -746,16 +760,20 @@
 <div class="viewcode-block" id="SpeedFluxObserver.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedFluxObserver.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+        <span class="n">eps_ext</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute feedback signals with speed estimation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        u_s_ab : complex</span>
-<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
-<span class="sd">            sampling period, i.e., from this sampling instant to the next one.</span>
+<span class="sd">        u_s_ab : complex | None</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, or None if unknown, see</span>
+<span class="sd">            :class:`FluxObserver`.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        eps_ext : float, optional</span>
@@ -789,7 +807,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_feedback</span><span class="p">(</span>
     <span class="n">observer</span><span class="p">:</span> <span class="n">SpeedFluxObserver</span><span class="p">,</span>
     <span class="n">sensorless</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-    <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
+    <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span>
     <span class="n">w_M_meas</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>

@@ -128,6 +128,37 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: preset(u, w_c)
+
+      
+      Preset the integral state to the steady state of the output.
+
+      In the steady state, the reference and feedback signals are zero, and the
+      output is `u`, e.g., the back-EMF of a machine at zero current.
+
+      :param u: Controller output.
+      :type u: complex
+      :param w_c: Angular speed of the reference frame (rad/s), not needed in this design.
+      :type w_c: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: update(T_s, u, w_c)
 
       
@@ -172,8 +203,8 @@ Package Contents
 
    The gates of the converter can be blocked with `set_enable`. While the gates are
    blocked, the control system runs its control loop with `compute_standby_output`
-   in place of `compute_output`, so that its observers keep tracking the system,
-   and the model holds the switches open.
+   in place of `compute_output`, so that its observers keep running, and the model
+   holds the switches open.
 
 
 
@@ -546,6 +577,40 @@ Package Contents
 
       :returns: **u** -- Controller output.
       :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: preset(u, w_c)
+
+      
+      Preset the integral state to the steady state of the output.
+
+      In the steady state, the reference and feedback signals are zero, and the
+      output is `u`, e.g., the back-EMF of a machine at zero current. The limited
+      output of the previous sampling period is kept, since it has been realized.
+      Hence, the next output equals `u` only if the previous one did, and otherwise
+      it also compensates for their difference.
+
+      :param u: Controller output.
+      :type u: complex
+      :param w_c: Angular speed of the coordinates (rad/s).
+      :type w_c: float
 
 
 

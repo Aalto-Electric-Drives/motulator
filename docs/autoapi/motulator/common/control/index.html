@@ -226,8 +226,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -513,6 +513,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController"><code class="docutils literal notranslate"><span class="pre">ComplexPIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.compute_output"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.preset"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.preset()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.update"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.update()</span></code></a></li>
 </ul>
 </li>
@@ -533,6 +534,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.preset"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.preset()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>
@@ -659,6 +661,25 @@ complex vectors,” IEEE Trans. Ind. Appl., 2000, <a class="reference external" 
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.ComplexPIController.preset">
+<span class="sig-name descname"><span class="pre">preset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#ComplexPIController.preset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController.preset" title="Link to this definition">#</a></dt>
+<dd><p>Preset the integral state to the steady state of the output.</p>
+<p>In the steady state, the reference and feedback signals are zero, and the
+output is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Controller output.</p></li>
+<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed of the reference frame (rad/s), not needed in this design.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ComplexPIController.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#ComplexPIController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController.update" title="Link to this definition">#</a></dt>
 <dd><p>Update the integral state.</p>
@@ -688,8 +709,8 @@ be used with different models, measurements, feedback signals, and reference
 signals. The class provides methods for saving, post-processing, and clearing data.</p>
 <p>The gates of the converter can be blocked with <cite>set_enable</cite>. While the gates are
 blocked, the control system runs its control loop with <cite>compute_standby_output</cite>
-in place of <cite>compute_output</cite>, so that its observers keep tracking the system,
-and the model holds the switches open.</p>
+in place of <cite>compute_output</cite>, so that its observers keep running, and the model
+holds the switches open.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.clear_data">
 <span class="sig-name descname"><span class="pre">clear_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.clear_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.clear_data" title="Link to this definition">#</a></dt>
@@ -910,6 +931,28 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.DiscreteComplexController.preset">
+<span class="sig-name descname"><span class="pre">preset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#DiscreteComplexController.preset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.DiscreteComplexController.preset" title="Link to this definition">#</a></dt>
+<dd><p>Preset the integral state to the steady state of the output.</p>
+<p>In the steady state, the reference and feedback signals are zero, and the
+output is <cite>u</cite>, e.g., the back-EMF of a machine at zero current. The limited
+output of the previous sampling period is kept, since it has been realized.
+Hence, the next output equals <cite>u</cite> only if the previous one did, and otherwise
+it also compensates for their difference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Controller output.</p></li>
+<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed of the coordinates (rad/s).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1338,6 +1381,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController"><code class="docutils literal notranslate"><span class="pre">ComplexPIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.compute_output"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.preset"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.preset()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ComplexPIController.update"><code class="docutils literal notranslate"><span class="pre">ComplexPIController.update()</span></code></a></li>
 </ul>
 </li>
@@ -1358,6 +1402,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.preset"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.preset()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>

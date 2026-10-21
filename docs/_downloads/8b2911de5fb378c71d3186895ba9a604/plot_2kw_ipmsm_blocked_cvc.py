@@ -4,14 +4,17 @@
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are blocked
-before the start and during coasting. While the gates are blocked, the control system
-runs in standby: its observer tracks the machine using the measured converter voltage,
-and its current controller tracks the measured operating point, from which the control
-continues when the gates are released at 0.05 s. The drive then accelerates under speed
-control. At 0.6 s, the gates are blocked again: the stator current decays through the
-diodes within a millisecond, after which the loaded machine coasts at open circuit,
-since its voltage is below the DC-bus voltage. At 0.8 s, the gates are released, and
-the drive returns to the speed reference.
+before the start and during coasting. The converter output voltage is not measured.
+While the gates are blocked, the control system runs in standby: its observer runs on
+its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its
+current controller computes its output for zero torque. The gates are released at
+0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked
+again: the stator current decays through the diodes within a millisecond, after which
+the loaded machine coasts at open circuit, since its voltage is below the DC-bus
+voltage, and decelerates. At 0.8 s, the gates are released, and the control system
+catches the rotating machine with a flying start: it initializes its observer from the
+current response to a zero-voltage period (cf. [#Tan2009]_) and its current controller
+from the resulting back-EMF, after which the drive returns to the speed reference.
 
 """
 
@@ -63,9 +66,10 @@ res = sim.simulate(t_stop=1.2)
 utils.plot(res, base)
 
 # %%
-# Plot the speed, the stator current magnitude, and the DC current of the converter,
-# the intervals with blocked gates shaded. The DC current is negative while the stator
-# current decays through the diodes.
+# Plot the speed and its estimate, the stator current magnitude, and the DC current of
+# the converter, the intervals with blocked gates shaded. The DC current is negative
+# while the stator current decays through the diodes. The speed estimate holds while
+# the machine coasts and catches the actual speed after the release.
 
 t_ctrl, enabled = res.ctrl.t, res.ctrl.ref.enabled
 w_M = res.mdl.mechanics.w_M / base.w_M
@@ -77,6 +81,7 @@ for ax in (ax1, ax2, ax3):
     for k_off, k_on in zip(edges[::2], edges[1::2], strict=True):
         ax.axvspan(t_ctrl[k_off], t_ctrl[min(k_on, len(t_ctrl) - 1)], color="0.9")
 ax1.plot(res.mdl.t, w_M, label=r"$\omega_\mathrm{M}$")
+ax1.plot(t_ctrl, res.ctrl.fbk.w_M / base.w_M, label=r"$\hat{\omega}_\mathrm{M}$")
 ax1.plot(t_ctrl, res.ctrl.ref.w_M / base.w_M, "--", label=r"$\omega_\mathrm{M,ref}$")
 ax1.set_ylabel("Speed (p.u.)")
 ax1.legend()
@@ -87,3 +92,10 @@ ax3.set_ylabel(r"$i_\mathrm{dc}$ (p.u.)")
 ax3.set_xlabel("Time (s)")
 ax3.set_xlim(0, 1.2)
 plt.show()
+
+# %%
+# .. rubric:: References
+#
+# .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, "Starting
+#    procedure of rotational sensorless PMSM in the rotating condition," IEEE Trans.
+#    Ind. Appl., 2009, https://doi.org/10.1109/TIA.2008.2009496

@@ -221,8 +221,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete.html">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
@@ -624,8 +624,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">w_M</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Compute output."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute output, the open-circuit voltage used if `u_s_ab` is None."""</span>
         <span class="c1"># Unpack and initialize the output signals</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">()</span>
@@ -633,9 +635,15 @@
         <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_M</span>
 
-        <span class="c1"># Current and voltage vectors in (estimated) rotor coordinates</span>
+        <span class="c1"># Current vector in (estimated) rotor coordinates and the flux map</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
-        <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
+        <span class="n">psi_s</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
+
+        <span class="c1"># Voltage vector, or the open-circuit voltage if unknown (blocked gates)</span>
+        <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ab</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">*</span> <span class="n">psi_s</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
 
         <span class="c1"># Compute the mechanical position error signal</span>
         <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">injection</span><span class="o">.</span><span class="n">compute_error</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span>
@@ -644,7 +652,6 @@
         <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
 
         <span class="c1"># Torque estimate based on the measured current and the flux map</span>
-        <span class="n">psi_s</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
         <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">*</span> <span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">imag</span>
 
         <span class="k">return</span> <span class="n">out</span>

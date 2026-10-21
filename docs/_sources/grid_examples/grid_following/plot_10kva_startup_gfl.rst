@@ -25,9 +25,9 @@ This example simulates the start-up of a grid-following converter with DC-bus vo
 control. The converter gates are blocked at first. The DC bus is charged from its
 initial voltage of 500 V through the antiparallel diodes toward the peak line-to-line
 voltage of the grid, while the phase-locked loop synchronizes with the grid and the
-current controller tracks the measured converter voltage. The gates are released at
-40 ms, after which the DC-bus voltage controller raises the voltage to 650 V, with the
-power limited to the nominal power. A reactive power reference step follows.
+current controller tracks the measured grid voltage. The gates are released at 40 ms,
+after which the DC-bus voltage controller raises the voltage to 650 V, with the power
+limited to the nominal power. A reactive power reference step follows.
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-21
 
@@ -212,7 +212,7 @@ voltage of the grid, the current pulses shrinking as the voltage approaches it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.147 seconds)
+   **Total running time of the script:** (0 minutes 2.540 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_startup_gfl.py:
