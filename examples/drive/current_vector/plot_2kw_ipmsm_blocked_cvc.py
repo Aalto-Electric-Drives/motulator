@@ -11,10 +11,10 @@ current controller computes its output for zero torque. The gates are released a
 0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked
 again: the stator current decays through the diodes within a millisecond, after which
 the loaded machine coasts at open circuit, since its voltage is below the DC-bus
-voltage, and decelerates. At 0.8 s, the gates are released: the control system applies
-the zero voltage vector for one sampling period and initializes its observer from the
-current response (a flying start, cf. [#Tan2009]_), after which the drive returns to
-the speed reference.
+voltage, and decelerates. At 0.8 s, the gates are released, and the control system
+catches the rotating machine with a flying start: it initializes its observer from the
+current response to a zero-voltage period (cf. [#Tan2009]_), after which the drive
+returns to the speed reference.
 
 """
 

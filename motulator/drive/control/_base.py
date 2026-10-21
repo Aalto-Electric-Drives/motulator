@@ -67,9 +67,9 @@ class VectorController[Ref, Fbk](Protocol):
 
     def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
         """
-        Initialize the estimates after the release of the gates from the current
-        response `delta_i_s_ab` to a zero-voltage period of length `T_s`, `i_s_ab`
-        being the current at the end of the period.
+        Initialize the estimates from the current response `delta_i_s_ab` to a
+        zero-voltage period of length `T_s`, `i_s_ab` being the current at its end,
+        see `FlyingStart`.
         """
         ...
 
@@ -147,13 +147,11 @@ class DriveControlSystem(ControlSystem):
     angle is not advanced, which is used if the controller takes the delays into
     account itself, e.g., in a direct discrete-time design.
 
-    While the gates are blocked (see `set_enable`), the converter voltage is
-    unknown, so the observers run on their open-circuit model (the back-EMF of the
-    flux estimate), which keeps the estimates consistent while the machine coasts,
-    and the inner controller computes its output for zero torque, while the speed
-    controller is not updated. The control continues from zero torque when the gates
-    are released. A sensorless vector-controlled drive catches the rotating machine
-    with a flying start, see `VectorControlSystem`.
+    While the gates are blocked (see `set_enable`), the control system is in standby:
+    the observers run on their open-circuit model, since the converter voltage is
+    unknown, the inner controller computes its output for zero torque, and the speed
+    controller is not updated. A sensorless vector-controlled drive catches the
+    rotating machine after the release with a flying start, see `FlyingStart`.
 
     Parameters
     ----------
@@ -202,6 +200,10 @@ class DriveControlSystem(ControlSystem):
         """Compute the references while the gates are blocked."""
         raise NotImplementedError
 
+    def _standby(self) -> bool:
+        """Standby of the control system, while the gates are blocked."""
+        return not self.enabled
+
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         # The observers use the voltage of the ongoing sampling period, while the
@@ -213,14 +215,14 @@ class DriveControlSystem(ControlSystem):
             meas.i_c_ab, meas.u_dc, average=False
         )
         u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
-        if self.enabled:
-            fbk = self._get_inner_feedback(u_c_ab_zoh, meas)
-            fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
-        else:
+        if self._standby():
             # The voltage is unknown with blocked gates, so the observers run on their
             # open-circuit model, whose voltage is used for the control laws too
             fbk = self._get_inner_feedback(None, meas)
             fbk.u_s = fbk.u_s_zoh
+        else:
+            fbk = self._get_inner_feedback(u_c_ab_zoh, meas)
+            fbk.u_s = exp(-1j * fbk.theta_c) * u_c_ab
         fbk.u_dc = meas.u_dc
         return fbk
 
@@ -254,21 +256,67 @@ class DriveControlSystem(ControlSystem):
 
 
 # %%
+class FlyingStart:
+    """
+    Flying start of a sensorless drive after the release of the gates.
+
+    The control system stays in standby (the zero voltage vector and zero torque) at
+    the first sampling instant after the release, so the first sampling period is a
+    zero-voltage period, and the vector controller then initializes its estimates
+    from the current response, see its `catch` method.
+
+    """
+
+    def __init__(self) -> None:
+        # 1 while the gates are blocked, 2 at the first sampling instant after the
+        # release, 0 otherwise
+        self.step: int = 0
+        self.T_s: float = 0.0  # Length of the zero-voltage period
+        self._i_c_ab: complex = 0j  # Current at its start
+
+    @property
+    def standby(self) -> bool:
+        """Standby, also at the first sampling instant after the release."""
+        return self.step != 0
+
+    def advance(self, enabled: bool, i_c_ab: complex) -> complex | None:
+        """
+        Advance the step at a sampling instant.
+
+        Parameters
+        ----------
+        enabled : bool
+            Gate enable.
+        i_c_ab : complex
+            Measured converter current (A) in stationary coordinates.
+
+        Returns
+        -------
+        complex | None
+            Change of the current over the zero-voltage period at its end, otherwise
+            None.
+
+        """
+        if not enabled:
+            self.step = 1
+        elif self.step == 1:
+            self.step = 2
+            self._i_c_ab = i_c_ab
+        elif self.step == 2:
+            self.step = 0
+            return i_c_ab - self._i_c_ab
+        return None
+
+
+# %%
 class VectorControlSystem(DriveControlSystem):
     """
     Vector control system.
 
     This class defines the interface for drive control systems. It is a generic class
     that can be used with different inner controllers (such as current-vector control
-    and flux-vector control).
-
-    If the inner controller is sensorless, the control system catches the rotating
-    machine after the release of the gates with a flying start: the first output
-    after the release is the zero voltage vector, applied in the next sampling period
-    due to the computational delay, and the estimates are initialized from the
-    current response at the end of that period, see `catch` of the vector controller.
-    The direction of rotation is taken from the speed estimate, so the catch fails if
-    the machine has reversed while the gates were blocked.
+    and flux-vector control). A sensorless drive catches the rotating machine after
+    the release of the gates with a flying start, see `FlyingStart`.
 
     Parameters
     ----------
@@ -290,10 +338,7 @@ class VectorControlSystem(DriveControlSystem):
         super().__init__(pwm if pwm is not None else PWM(), vector_ctrl.k_comp)
         self.vector_ctrl = vector_ctrl
         self.speed_ctrl = speed_ctrl
-        # Flying start after the release of the gates, see `get_feedback`
-        self._catch: int = 0  # Step of the flying start, 0 if none
-        self._i_c_ab: complex = 0j  # Current at the start of the zero-voltage period
-        self._T_s: float = 0.0  # Length of the zero-voltage period
+        self.flying_start = FlyingStart() if vector_ctrl.sensorless else None
 
     def set_speed_ref(self, ref_fcn: float | Callable[[float], float]) -> None:
         """
@@ -339,25 +384,17 @@ class VectorControlSystem(DriveControlSystem):
             theta_M = wrap(mdl.mechanics.meas_position())
         return Measurements(i_c_ab, u_dc, w_M, theta_M)
 
+    def _standby(self) -> bool:
+        if self.flying_start is not None:
+            return self.flying_start.standby
+        return not self.enabled
+
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals, with the flying start after the release."""
-        # A sensorless drive catches the rotating machine after the release of the
-        # gates: the first output after the release is the zero voltage vector, which
-        # is applied in the next sampling period (the computational delay), and the
-        # estimates are initialized from the current response at the end of that
-        # period, see `catch` of the vector controller
-        if self.vector_ctrl.sensorless:
-            if not self.enabled:
-                self._catch = 1
-            elif self._catch == 1:
-                self._catch = 2  # The zero vector is computed at this step
-            elif self._catch == 2:
-                self._catch = 3  # The zero-voltage period starts
-                self._i_c_ab = meas.i_c_ab
-            elif self._catch == 3:
-                self._catch = 0
-                delta_i_c_ab = meas.i_c_ab - self._i_c_ab
-                self.vector_ctrl.catch(delta_i_c_ab, meas.i_c_ab, self._T_s)
+        if self.flying_start is not None:
+            delta_i_c_ab = self.flying_start.advance(self.enabled, meas.i_c_ab)
+            if delta_i_c_ab is not None:
+                self.vector_ctrl.catch(delta_i_c_ab, meas.i_c_ab, self.flying_start.T_s)
         return super().get_feedback(meas)
 
     def _get_inner_feedback(
@@ -372,6 +409,9 @@ class VectorControlSystem(DriveControlSystem):
         # zero-torque operating point (with field weakening if needed), from which
         # the control continues when the gates are released
         ref = self.vector_ctrl.compute_output(0.0, fbk)
+        if self.flying_start is not None:
+            ref.u_s = 0j  # The zero vector of the flying start
+            self.flying_start.T_s = ref.T_s
         if self.speed_ctrl is not None and self.ext_ref.w_M is not None:
             ref.w_M = get_value(self.ext_ref.w_M, self.t)
         return ref
@@ -387,20 +427,21 @@ class VectorControlSystem(DriveControlSystem):
                 raise ValueError("Torque reference must be set")
             w_M_ref = None
             tau_M_ref = get_value(self.ext_ref.tau_M, self.t)
-        if self._catch == 2:
-            tau_M_ref = 0.0  # Zero torque reference at the flying start
         ref = self.vector_ctrl.compute_output(tau_M_ref, fbk)
-        if self._catch == 2:
-            ref.u_s = 0j  # The zero vector, see `get_feedback`
-            self._T_s = ref.T_s
         ref.w_M = w_M_ref
         return ref
+
+    def compute_output(self, fbk: Feedbacks) -> References:
+        """Compute controller output based on feedback."""
+        if self._standby():  # The first step after the release, see `FlyingStart`
+            return self.compute_standby_output(fbk)
+        return super().compute_output(fbk)
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update controller states."""
         super().update(ref, fbk)
         self.vector_ctrl.update(ref, fbk)
-        if self.speed_ctrl is not None and self.enabled:
+        if self.speed_ctrl is not None and not self._standby():
             self.speed_ctrl.update(ref.T_s, ref.tau_M)
 
     def post_process(self) -> TimeSeries:

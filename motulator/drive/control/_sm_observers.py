@@ -342,26 +342,30 @@ class SpeedFluxObserver:
         self.speed_observer.update(T_s, out.eps, out.tau_M)
         self.flux_observer.update(T_s, out)
 
-    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> None:
+    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> bool:
         """
         Initialize the estimates from the current response to a zero-voltage period.
 
-        This method catches a rotating machine after the release of the gates (a
-        flying start, cf. [#Tan2009]_). With zero voltage, the back-EMF drives the
-        current along the negative q axis of the rotor, so the current response gives
-        the rotor angle and the speed magnitude. The direction of rotation is taken
-        from the speed estimate, since it is unobservable from one period. The
-        resistive voltage drop and the cross-coupling of the current are neglected.
+        The back-EMF drives the current along the negative q axis of the rotor, which
+        gives the rotor angle and the speed magnitude (a flying start, cf.
+        [#Tan2009]_), the direction of rotation being taken from the speed estimate.
+        The resistive voltage drop and the cross-coupling of the current are
+        neglected.
 
         Parameters
         ----------
         delta_i_s_ab : complex
-            Change of the stator current (A) over the zero-voltage period, in stator
-            coordinates.
+            Change of the stator current (A) over the period, in stator coordinates.
         i_s_ab : complex
             Stator current (A) at the end of the period, in stator coordinates.
         T_s : float
             Length of the period (s).
+
+        Returns
+        -------
+        bool
+            True if the estimates were initialized, False if the back-EMF is below
+            the resistive voltage drop (standstill) or the machine has no magnets.
 
         References
         ----------
@@ -372,15 +376,20 @@ class SpeedFluxObserver:
 
         """
         par = self.flux_observer.par
-        L_q = par.incr_ind_mat(0j)[1, 1]
+        L = par.incr_ind_mat(0j)
+        L_d, L_q = L[0, 0], L[1, 1]
         e_s_ab = -L_q * delta_i_s_ab / T_s  # Back-EMF
-        if e_s_ab == 0:
-            return  # Standstill
+        if abs(e_s_ab) <= par.R_s * abs(i_s_ab) or par.psi_f == 0:
+            return False
         sign = 1.0 if self.w_M >= 0 else -1.0
-        theta_m = wrap(phase(e_s_ab) - sign * pi / 2)
-        self.w_M = sign * abs(e_s_ab) / (par.psi_f * par.n_p)
+        w_m = sign * abs(e_s_ab) / par.psi_f
+        # The response lags the rotor angle at the end of the period, since the
+        # back-EMF rotates during the period
+        theta_m = wrap(phase(e_s_ab) - sign * pi / 2 + w_m * T_s * L_q / (2 * L_d))
+        self.w_M = w_m / par.n_p
         self.flux_observer.theta_m = theta_m
         self.flux_observer.psi_s = complex(par.psi_s_dq(exp(-1j * theta_m) * i_s_ab))
+        return True
 
 
 def compute_feedback(

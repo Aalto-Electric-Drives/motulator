@@ -209,14 +209,74 @@ def test_drive_restart(sensorless: bool) -> None:
     assert np.max(i_s[t < 0.02]) < 1e-6
     assert np.max(i_s[(t > 0.31) & (t < 0.35)]) < 1e-6
     assert np.interp(0.35, t, w_M) < 0.95 * np.interp(0.3, t, w_M)
-    # The flying start catches the speed within a few sampling periods
+    # The flying start: the standby output and the first output after the release are
+    # the zero vector, and the catch at the second step gives the speed
     if sensorless:
-        k = np.searchsorted(res.ctrl.t, 0.352)
-        w_M_est, w_M_act = res.ctrl.fbk.w_M[k], np.interp(res.ctrl.t[k], t, w_M)
-        assert w_M_est == pytest.approx(w_M_act, rel=0.1)
+        k = np.searchsorted(res.ctrl.t, 0.35)
+        assert res.ctrl.ref.d_abc[k - 1 : k + 1] == pytest.approx(0.5)
+        w_M_est = res.ctrl.fbk.w_M[k + 1]
+        assert w_M_est == pytest.approx(np.interp(res.ctrl.t[k + 1], t, w_M), rel=0.02)
     # Restart and speed tracking
     assert np.interp(0.6, t, w_M) == pytest.approx(2 * pi * 30, rel=0.05)
     assert np.max(i_s[t > 0.35]) < 1.1 * 6.5
+
+
+@pytest.mark.parametrize("ctrl_type", ["cvc", "discrete_cvc", "fvc"])
+def test_flying_start_zero_torque(ctrl_type: str) -> None:
+    """A sensorless drive released with zero torque after a decelerating coast draws no
+    current beyond the short-circuit pulse of the zero-voltage periods."""
+    par = sm_pars()
+    mechanics = drive_model.MechanicalSystem(J=0.015)
+    mdl = drive_model.Drive(
+        drive_model.SynchronousMachine(par),
+        mechanics,
+        drive_model.VoltageSourceConverter(u_dc=540),
+    )
+    if ctrl_type == "fvc":
+        vector_ctrl = sm_control.FluxVectorController(
+            par, sm_control.FluxVectorControllerCfg(i_s_max=6.5)
+        )
+    else:
+        cfg = sm_control.CurrentVectorControllerCfg(
+            i_s_max=6.5, discrete=ctrl_type == "discrete_cvc"
+        )
+        vector_ctrl = sm_control.CurrentVectorController(par, cfg)
+    ctrl = sm_control.VectorControlSystem(vector_ctrl)
+    ctrl.set_torque_ref(lambda t: (t < 0.3) * 8.0)
+    ctrl.set_enable(lambda t: t < 0.3 or t >= 0.4)
+    mechanics.set_external_load_torque(lambda t: (t > 0.3) * 10.0)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.45)
+    assert res.success
+    t, w_M = res.mdl.t, res.mdl.mechanics.w_M
+    # The machine decelerates while coasting, so the open-circuit model of the
+    # observer and the integral state of the current controller are off at the release
+    w_M_rel = np.interp(0.4, t, w_M)
+    assert w_M_rel < 0.7 * np.interp(0.3, t, w_M)
+    # The catch at the second step after the release
+    k = np.searchsorted(res.ctrl.t, 0.4) + 1
+    assert res.ctrl.fbk.w_M[k] == pytest.approx(w_M_rel, rel=0.02)
+    theta_m = np.interp(res.ctrl.t[k], t, res.mdl.machine.theta_m)
+    assert abs(np.angle(np.exp(1j * (res.ctrl.fbk.theta_m[k] - theta_m)))) < 0.05
+    # The back-EMF drives the current during the two zero-voltage periods, after which
+    # the control continues with zero torque from the initialized states
+    i_sc = 2 * 3 * w_M_rel * 0.545 * 125e-6 / 0.051
+    assert np.max(np.abs(res.mdl.machine.i_s_ab[t > 0.4])) < 1.5 * i_sc
+
+
+def test_catch_without_magnets() -> None:
+    """The flying start leaves the estimates of a machine without magnets."""
+    par = drive_model.SynchronousMachinePars(
+        n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0
+    )
+    ctrl = sm_control.CurrentVectorController(
+        par, sm_control.CurrentVectorControllerCfg(i_s_max=10, psi_s_min=0.5)
+    )
+    observer = ctrl.observer
+    observer.w_M = 100
+    observer.flux_observer.theta_m = 1
+    assert not observer.catch(delta_i_s_ab=1j, i_s_ab=1j, T_s=125e-6)
+    assert observer.w_M == 100
+    assert observer.flux_observer.theta_m == 1
 
 
 def test_induction_machine_restart() -> None:
