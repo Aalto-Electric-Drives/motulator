@@ -14,6 +14,7 @@ import pytest
 
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
+from motulator.common.control import ComplexPIController, DiscreteComplexController
 from motulator.common.model import CompositeModel, Simulation, SolverCfg
 from motulator.common.utils import abc2complex
 from motulator.drive import model as drive_model
@@ -66,7 +67,7 @@ def test_open_circuit(pwm: bool, discrete: bool) -> None:
     ctrl = pmsm_cvc(sensorless=False, discrete=discrete)
     ctrl.set_speed_ref(100)
     ctrl.set_enable(False)
-    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.01)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.05)
     assert res.success
     machine, converter = res.mdl.machine, res.mdl.converter
     assert np.max(np.abs(machine.i_s_ab)) < 1e-6
@@ -74,9 +75,10 @@ def test_open_circuit(pwm: bool, discrete: bool) -> None:
     np.testing.assert_allclose(converter.u_c_ab, emf, atol=1e-6)
     assert not np.any(converter.enabled)
     assert not np.any(res.ctrl.ref.enabled)
-    # The control system measures the EMF from the first sampling instant on, and the
-    # current controller tracks the measured voltage in standby
-    np.testing.assert_allclose(np.abs(res.ctrl.fbk.u_s), 3 * 100 * 0.545, rtol=1e-6)
+    # The converter voltage is not measured: the feedback voltage is the open-circuit
+    # voltage of the observer model, which converges to the EMF as the speed estimate
+    # does, and the current controller tracks it in standby
+    assert abs(res.ctrl.fbk.u_s[-1]) == pytest.approx(3 * 100 * 0.545, rel=1e-3)
     assert res.ctrl.ref.u_s[-1] == pytest.approx(res.ctrl.fbk.u_s[-1], abs=1)
 
 
@@ -208,13 +210,125 @@ def test_drive_restart(sensorless: bool) -> None:
     assert np.max(i_s[t < 0.02]) < 1e-6
     assert np.max(i_s[(t > 0.31) & (t < 0.35)]) < 1e-6
     assert np.interp(0.35, t, w_M) < 0.95 * np.interp(0.3, t, w_M)
+    # The flying start: the standby output and the first output after the release are
+    # the zero vector, and the catch at the second step gives the speed
+    if sensorless:
+        k = np.searchsorted(res.ctrl.t, 0.35)
+        assert res.ctrl.ref.d_abc[k - 1 : k + 1] == pytest.approx(0.5)
+        w_M_est = res.ctrl.fbk.w_M[k + 1]
+        assert w_M_est == pytest.approx(np.interp(res.ctrl.t[k + 1], t, w_M), rel=0.02)
     # Restart and speed tracking
     assert np.interp(0.6, t, w_M) == pytest.approx(2 * pi * 30, rel=0.05)
     assert np.max(i_s[t > 0.35]) < 1.1 * 6.5
 
 
-def test_induction_machine_restart() -> None:
-    """A sensored induction machine drive restarts after its flux has decayed."""
+@pytest.mark.parametrize("ctrl_type", ["cvc", "discrete_cvc", "fvc"])
+def test_flying_start_zero_torque(ctrl_type: str) -> None:
+    """A sensorless drive released with zero torque after a decelerating coast draws no
+    current beyond the short-circuit pulse of the zero-voltage periods."""
+    par = sm_pars()
+    mechanics = drive_model.MechanicalSystem(J=0.015)
+    mdl = drive_model.Drive(
+        drive_model.SynchronousMachine(par),
+        mechanics,
+        drive_model.VoltageSourceConverter(u_dc=540),
+    )
+    if ctrl_type == "fvc":
+        vector_ctrl = sm_control.FluxVectorController(
+            par, sm_control.FluxVectorControllerCfg(i_s_max=6.5)
+        )
+    else:
+        cfg = sm_control.CurrentVectorControllerCfg(
+            i_s_max=6.5, discrete=ctrl_type == "discrete_cvc"
+        )
+        vector_ctrl = sm_control.CurrentVectorController(par, cfg)
+    ctrl = sm_control.VectorControlSystem(vector_ctrl)
+    ctrl.set_torque_ref(lambda t: (t < 0.3) * 8.0)
+    ctrl.set_enable(lambda t: t < 0.3 or t >= 0.43)
+    mechanics.set_external_load_torque(lambda t: (t > 0.3) * 10.0)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.48)
+    assert res.success
+    t, w_M = res.mdl.t, res.mdl.mechanics.w_M
+    # The machine decelerates while coasting, so the open-circuit model of the
+    # observer and the integral state of the current controller are off at the release
+    w_M_rel = np.interp(0.43, t, w_M)
+    assert w_M_rel < 0.5 * np.interp(0.3, t, w_M)
+    # The catch at the second sampling instant after the release
+    k = np.searchsorted(res.ctrl.t, 0.43) + 1
+    assert np.flatnonzero(res.ctrl.fbk.caught).tolist() == [k]
+    assert res.ctrl.fbk.w_M[k] == pytest.approx(w_M_rel, rel=0.02)
+    theta_m = np.interp(res.ctrl.t[k], t, res.mdl.machine.theta_m)
+    assert abs(np.angle(np.exp(1j * (res.ctrl.fbk.theta_m[k] - theta_m)))) < 0.05
+    # The back-EMF drives the current during the two zero-voltage periods, after which
+    # the control continues with zero torque from the initialized states
+    i_sc = 2 * 3 * w_M_rel * 0.545 * 125e-6 / 0.051
+    assert np.max(np.abs(res.mdl.machine.i_s_ab[t > 0.43])) < 1.2 * i_sc
+
+
+def test_catch_with_residual_current() -> None:
+    """The flying start leaves the estimates if the current has not decayed, since
+    the resistive decay of the current would be taken for the back-EMF."""
+    par = sm_pars()
+    machine = drive_model.SynchronousMachine(par)
+    machine.state.psi_s_dq = complex(par.psi_s_dq(5 + 0j))  # Residual d-axis current
+    mechanics = drive_model.ExternalRotorSpeed()
+    mechanics.set_external_rotor_speed(0)
+    mdl = drive_model.Drive(
+        machine, mechanics, drive_model.VoltageSourceConverter(u_dc=540)
+    )
+    vector_ctrl = sm_control.CurrentVectorController(
+        par, sm_control.CurrentVectorControllerCfg(i_s_max=6.5)
+    )
+    vector_ctrl.observer.flux_observer.psi_s = machine.state.psi_s_dq
+    ctrl = sm_control.VectorControlSystem(vector_ctrl)
+    ctrl.set_torque_ref(0)
+    ctrl.set_enable(lambda t: t >= 125e-6)  # Blocked for one sampling period
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=1e-3)
+    assert res.success
+    assert abs(res.ctrl.fbk.i_s[1]) > 3  # The current has not decayed at the release
+    assert np.max(np.abs(res.ctrl.fbk.w_M)) < 0.1
+    assert np.max(np.abs(res.ctrl.fbk.theta_m)) < 0.01
+
+
+def test_catch_without_magnets() -> None:
+    """The flying start leaves the estimates of a machine without magnets."""
+    par = drive_model.SynchronousMachinePars(
+        n_p=2, R_s=0.54, L_d=41.5e-3, L_q=6.2e-3, psi_f=0
+    )
+    ctrl = sm_control.CurrentVectorController(
+        par, sm_control.CurrentVectorControllerCfg(i_s_max=10, psi_s_min=0.5)
+    )
+    observer = ctrl.observer
+    observer.w_M = 100
+    observer.flux_observer.theta_m = 1
+    assert not observer.catch(delta_i_s_ab=1j, i_s_ab=1j, T_s=125e-6)
+    assert observer.w_M == 100
+    assert observer.flux_observer.theta_m == 1
+
+
+@pytest.mark.parametrize("discrete", [False, True])
+def test_controller_preset(discrete: bool) -> None:
+    """The preset integral state (used after the catch) is the steady state, in which
+    the output with zero reference and feedback holds."""
+    T_s, u, w_c = 125e-6, 100j, 300.0
+    ctrl: ComplexPIController | DiscreteComplexController
+    if discrete:
+        ctrl = DiscreteComplexController(alpha_c=2 * pi * 200, T_s=T_s)
+    else:
+        ctrl = ComplexPIController(k_p=2500, k_i=1.6e6, k_t=1250)
+    ctrl.preset(u, w_c)
+    if isinstance(ctrl, DiscreteComplexController):
+        ctrl.u_lim = u  # The steady state includes the previous output
+    for _ in range(3):
+        assert ctrl.compute_output(0j, 0j) == pytest.approx(u)
+        ctrl.update(T_s, u, w_c)
+
+
+@pytest.mark.parametrize("sensorless", [False, True])
+def test_induction_machine_restart(sensorless: bool) -> None:
+    """An induction machine drive restarts after its flux has decayed, the flux
+    estimate decaying with it (the speed estimate of a sensorless drive holds, which
+    suffices here, since the unloaded machine keeps its speed)."""
     par = drive_model.InductionMachineInvGammaPars(
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
@@ -225,7 +339,7 @@ def test_induction_machine_restart() -> None:
         drive_model.VoltageSourceConverter(u_dc=540),
     )
     cfg = im_control.CurrentVectorControllerCfg(
-        psi_s_nom=0.9, i_s_max=7, sensorless=False
+        psi_s_nom=0.9, i_s_max=7, sensorless=sensorless
     )
     ctrl = im_control.VectorControlSystem(
         im_control.CurrentVectorController(par, cfg),
@@ -237,8 +351,31 @@ def test_induction_machine_restart() -> None:
     assert res.success
     t, w_M = res.mdl.t, res.mdl.mechanics.w_M
     assert np.max(np.abs(res.mdl.machine.i_s_ab[(t > 0.35) & (t < 0.5)])) < 1e-6
-    assert np.abs(res.mdl.machine.psi_R_ab[np.searchsorted(t, 0.5)]) < 0.2
+    psi_R = np.abs(res.mdl.machine.psi_R_ab[np.searchsorted(t, 0.5)])
+    assert psi_R < 0.2
+    k = np.searchsorted(res.ctrl.t, 0.5) - 1
+    assert np.abs(res.ctrl.fbk.psi_R[k]) == pytest.approx(psi_R, abs=0.02)
     assert np.interp(0.8, t, w_M) == pytest.approx(2 * pi * 30, rel=0.05)
+
+
+def test_signal_injection_start() -> None:
+    """A signal-injection drive starts from standby."""
+    par = sm_pars()
+    mdl = drive_model.Drive(
+        drive_model.SynchronousMachine(par),
+        drive_model.MechanicalSystem(J=0.015),
+        drive_model.VoltageSourceConverter(u_dc=540),
+    )
+    cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, alpha_o=2 * pi * 40)
+    ctrl = sm_control.VectorControlSystem(
+        sm_control.SignalInjectionController(par, cfg),
+        sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+    )
+    ctrl.set_speed_ref(lambda t: (t > 0.02) * 20)
+    ctrl.set_enable(lambda t: t >= 0.02)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.4)
+    assert res.success
+    assert res.mdl.mechanics.w_M[-1] == pytest.approx(20, rel=0.05)
 
 
 def test_grid_converter_startup() -> None:

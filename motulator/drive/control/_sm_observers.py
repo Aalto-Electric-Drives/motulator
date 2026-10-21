@@ -1,6 +1,6 @@
 """Observers for synchronous machine drives."""
 
-from cmath import exp
+from cmath import exp, phase
 from collections.abc import Callable
 from copy import copy
 from dataclasses import dataclass
@@ -40,6 +40,7 @@ class ObserverOutputs:
     theta_m: float = 0.0  # Electrical rotor angle estimate
     psi_f: float = 0.0  # PM-flux linkage estimate
     h: float = 0.0  # Weight of the external position error signal
+    caught: bool = False  # Estimates initialized by a flying start
 
 
 # %%
@@ -120,10 +121,12 @@ class FluxObserver:
         # States
         self.theta_m: float = 0.0
         self.psi_s: complex = complex(par.psi_f)
+        # Other memory variables
+        self._T_s: float = 0.0  # Length of the previous sampling period
 
     def compute_output(
         self,
-        u_s_ab: complex,
+        u_s_ab: complex | None,
         i_s_ab: complex,
         w_M: float,
         eps_ext: float = 0.0,
@@ -134,9 +137,12 @@ class FluxObserver:
 
         Parameters
         ----------
-        u_s_ab : complex
+        u_s_ab : complex | None
             Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one.
+            sampling period, i.e., from this sampling instant to the next one. If
+            None (unknown voltage, e.g., with blocked gates), the open-circuit
+            voltage of the model is used: the back-EMF of the flux estimate,
+            averaged over the sampling period, and the resistive voltage drop.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -164,9 +170,8 @@ class FluxObserver:
         # Coordinate system angle equals the estimated rotor angle
         out.theta_c = out.theta_m = self.theta_m
 
-        # Current and voltage vectors in (estimated) rotor coordinates
+        # Current vector in (estimated) rotor coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
-        out.u_s_zoh = exp(-1j * out.theta_c) * u_s_ab
 
         # Flux estimation error
         psi_s_dq = complex(self.par.psi_s_dq(out.i_s))
@@ -183,6 +188,16 @@ class FluxObserver:
 
         # Angular speed of the coordinate system
         out.w_c = out.w_m + self.k_theta * par.n_p * out.eps
+
+        # Voltage vector in the observer coordinates, or the open-circuit voltage if
+        # unknown, averaged over a period of the length of the previous one
+        if u_s_ab is not None:
+            out.u_s_zoh = exp(-1j * out.theta_c) * u_s_ab
+        elif self._T_s > 0:
+            emf = (exp(1j * out.w_m * self._T_s) - 1) / self._T_s * out.psi_s
+            out.u_s_zoh = emf + par.R_s * out.i_s
+        else:
+            out.u_s_zoh = 1j * out.w_m * out.psi_s + par.R_s * out.i_s
 
         # Torque estimate
         out.tau_M = 1.5 * par.n_p * (out.i_s * out.psi_s.conjugate()).imag
@@ -210,6 +225,7 @@ class FluxObserver:
         self.psi_s = Phi * (psi_s + T_s * out.u_s_zoh) - Gamma * par.R_s * out.i_s
         self.theta_m = wrap(self.theta_m + T_s * out.w_c)
         self.par.psi_f += T_s * self.k_f(out.w_m) * out.eps_f
+        self._T_s = T_s
 
 
 # %%
@@ -266,6 +282,8 @@ class SpeedFluxObserver:
         # Create component observers
         self.speed_observer = SpeedObserver(k_w, k_tau, J)
         self.flux_observer = FluxObserver(par, k_theta, k_o, k_f)
+        # Current at the start of the latest sampling period with an unknown voltage
+        self._i_s_ab: complex | None = None
 
     @property
     def w_M(self) -> float:
@@ -282,16 +300,21 @@ class SpeedFluxObserver:
         return self.flux_observer.theta_m
 
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, eps_ext: float = 0.0, h: float = 0.0
+        self,
+        u_s_ab: complex | None,
+        i_s_ab: complex,
+        eps_ext: float = 0.0,
+        h: float = 0.0,
     ) -> ObserverOutputs:
         """
         Compute the feedback signals for the control system.
 
         Parameters
         ----------
-        u_s_ab : complex
-            Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one.
+        u_s_ab : complex | None
+            Stator voltage (V) in stator coordinates, or None if unknown, see
+            :class:`FluxObserver`. When the voltage is known again, the estimates are
+            initialized with a flying start, unless `h` = 1, see `catch`.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         eps_ext : float, optional
@@ -306,9 +329,17 @@ class SpeedFluxObserver:
             Estimated feedback signals for the control system.
 
         """
+        caught = False
+        if u_s_ab is None:
+            self._i_s_ab = i_s_ab
+        elif self._i_s_ab is not None:
+            if h < 1:
+                delta_i_s_ab = i_s_ab - self._i_s_ab
+                caught = self.catch(delta_i_s_ab, i_s_ab, self.flux_observer._T_s)
+            self._i_s_ab = None
         w_M, tau_L = self.speed_observer.compute_output()
         out = self.flux_observer.compute_output(u_s_ab, i_s_ab, w_M, eps_ext, h)
-        out.tau_L = tau_L
+        out.tau_L, out.caught = tau_L, caught
         return out
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
@@ -316,11 +347,69 @@ class SpeedFluxObserver:
         self.speed_observer.update(T_s, out.eps, out.tau_M)
         self.flux_observer.update(T_s, out)
 
+    def catch(self, delta_i_s_ab: complex, i_s_ab: complex, T_s: float) -> bool:
+        """
+        Initialize the estimates from the current response to a zero-voltage period.
+
+        The back-EMF drives the current along the negative q axis of the rotor, which
+        gives the rotor angle and the speed magnitude (a flying start, cf.
+        [#Tan2009]_), the direction of rotation being taken from the speed estimate.
+        The resistive voltage drop and the cross-coupling of the current are
+        neglected.
+
+        This method is called by `compute_output` at the first sampling instant with
+        a known voltage after unknown ones. The period is the last of them, in which
+        the control system applies the zero voltage vector after the release of the
+        gates (see `VectorControlSystem`).
+
+        Parameters
+        ----------
+        delta_i_s_ab : complex
+            Change of the stator current (A) over the period, in stator coordinates.
+        i_s_ab : complex
+            Stator current (A) at the end of the period, in stator coordinates.
+        T_s : float
+            Length of the period (s).
+
+        Returns
+        -------
+        bool
+            True if the estimates were initialized, False if the back-EMF estimate
+            does not exceed the resistive voltage drop of the current (standstill, or
+            a current that has not decayed) or the machine has no magnets.
+
+        References
+        ----------
+        .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,
+           "Starting procedure of rotational sensorless PMSM in the rotating
+           condition," IEEE Trans. Ind. Appl., 2009,
+           https://doi.org/10.1109/TIA.2008.2009496
+
+        """
+        par = self.flux_observer.par
+        L = par.incr_ind_mat(0j)
+        L_d, L_q = L[0, 0], L[1, 1]
+        e_s_ab = -L_q * delta_i_s_ab / T_s  # Back-EMF
+        # The resistive decay of a residual current (the d-axis current through L_d)
+        # must not be taken for the back-EMF
+        i_max = max(abs(i_s_ab), abs(i_s_ab - delta_i_s_ab))
+        if abs(e_s_ab) <= par.R_s * i_max * max(L_q / L_d, 1) or par.psi_f == 0:
+            return False
+        sign = 1.0 if self.w_M >= 0 else -1.0
+        w_m = sign * abs(e_s_ab) / par.psi_f
+        # The response lags the rotor angle at the end of the period, since the
+        # back-EMF rotates during the period
+        theta_m = wrap(phase(e_s_ab) - sign * pi / 2 + w_m * T_s * L_q / (2 * L_d))
+        self.w_M = w_m / par.n_p
+        self.flux_observer.theta_m = theta_m
+        self.flux_observer.psi_s = complex(par.psi_s_dq(exp(-1j * theta_m) * i_s_ab))
+        return True
+
 
 def compute_feedback(
     observer: SpeedFluxObserver,
     sensorless: bool,
-    u_s_ab: complex,
+    u_s_ab: complex | None,
     i_s_ab: complex,
     theta_M_meas: float | None,
 ) -> ObserverOutputs:

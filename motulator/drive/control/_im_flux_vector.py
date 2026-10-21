@@ -251,7 +251,7 @@ class FluxVectorController:
 
     def get_feedback(
         self,
-        u_s_ab: complex,
+        u_s_ab: complex | None,
         i_s_ab: complex,
         w_M_meas: float | None,
         theta_M_meas: float | None,
@@ -267,13 +267,6 @@ class FluxVectorController:
         ref.psi_s, ref.tau_M = self.reference_gen.compute_output(
             ref.tau_M, fbk.w_s, abs(fbk.psi_R), fbk.u_dc
         )
-        ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
-        return ref
-
-    def compute_standby_output(self, fbk: ObserverOutputs) -> References:
-        """Compute references while the gates are blocked."""
-        # The flux and torque controller tracks the estimated flux and torque
-        ref = References(T_s=self.T_s, tau_M=fbk.tau_M, psi_s=abs(fbk.psi_s))
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 
@@ -370,7 +363,7 @@ class ObserverBasedVHzController:
             self.h = 1.0  # Disables the model-based correction
 
     def get_feedback(
-        self, u_s_ab: complex, i_s_ab: complex, w_M_ref: float
+        self, u_s_ab: complex | None, i_s_ab: complex, w_M_ref: float
     ) -> ObserverOutputs:
         """Get feedback signals."""
         return self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref, 0.0, self.h)

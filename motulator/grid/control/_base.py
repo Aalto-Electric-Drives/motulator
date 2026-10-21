@@ -39,7 +39,6 @@ class Measurements:
     i_c_ab: complex
     u_g_ab: complex
     u_dc: float
-    u_c_ab: complex | None = None  # Converter voltage, measured with blocked gates
 
 
 # %%
@@ -209,22 +208,23 @@ class GridConverterControlSystem(ControlSystem):
         u_dc = mdl.converter.meas_dc_voltage()
         i_c_ab = abc2complex(mdl.ac_filter.meas_currents())
         u_g_ab = line2complex(mdl.ac_filter.meas_pcc_voltages())
-        u_c_ab = None if self.enabled else line2complex(mdl.converter.meas_voltages())
-        return Measurements(i_c_ab, u_g_ab, u_dc, u_c_ab)
+        return Measurements(i_c_ab, u_g_ab, u_dc)
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
         # The observers use the voltage of the ongoing sampling period, while the
         # control laws use the voltage averaged over the previous and ongoing periods.
-        # With blocked gates, both are the measured voltage. The realized voltage is
-        # computed also then, since it passes the measured currents to the PWM for the
-        # feedforward compensation of the duty ratios applied after the release.
+        # With blocked gates, the converter voltage equals the measured PCC voltage
+        # (the filter capacitor voltage with an LCL filter) once the current has
+        # decayed, so both are that voltage. The realized voltage is computed also
+        # then, since it passes the measured currents to the PWM for the feedforward
+        # compensation of the duty ratios applied after the release.
         u_c_ab_zoh = self.pwm.get_realized_voltage(
             meas.i_c_ab, meas.u_dc, average=False
         )
         u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
-        if meas.u_c_ab is not None:
-            u_c_ab_zoh = u_c_ab = meas.u_c_ab
+        if not self.enabled:
+            u_c_ab_zoh = u_c_ab = meas.u_g_ab
         fbk = self.inner_ctrl.get_feedback(u_c_ab_zoh, meas)
         fbk.u_c = exp(-1j * fbk.theta_c) * u_c_ab
         fbk.u_dc = meas.u_dc

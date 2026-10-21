@@ -109,7 +109,7 @@ class FluxObserver:
 
     def compute_output(
         self,
-        u_s_ab: complex,
+        u_s_ab: complex | None,
         i_s_ab: complex,
         w_M: float,
         eps_ext: float = 0.0,
@@ -120,9 +120,13 @@ class FluxObserver:
 
         Parameters
         ----------
-        u_s_ab : complex
+        u_s_ab : complex | None
             Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one.
+            sampling period, i.e., from this sampling instant to the next one. If
+            None (unknown voltage, e.g., with blocked gates), the open-circuit
+            voltage of the model is used: the back-EMF of the decaying rotor flux
+            estimate, averaged over the sampling period, and the resistive voltage
+            drop.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -145,9 +149,8 @@ class FluxObserver:
         # Initialize the output signals
         out = ObserverOutputs(psi_s=self.psi_s, theta_c=self.theta_c, h=h)
 
-        # Current and voltage vectors in synchronous coordinates
+        # Current vector in synchronous coordinates
         out.i_s = exp(-1j * out.theta_c) * i_s_ab
-        out.u_s_zoh = exp(-1j * out.theta_c) * u_s_ab
 
         # Mechanical and electrical angular speeds of the rotor
         out.w_M = w_M
@@ -163,6 +166,17 @@ class FluxObserver:
         # Angular speed of the coordinate system equals synchronous angular frequency
         out.w_c = out.w_s = out.w_m + out.w_r
         # out.w_c = out.w_m  # Use rotor coordinates instead of synchronous coordinates
+
+        # Voltage vector in the observer coordinates, or the open-circuit voltage if
+        # unknown, averaged over a period of the length of the previous one. The
+        # rotor flux decays as in the current model below, so their predictions match.
+        if u_s_ab is not None:
+            out.u_s_zoh = exp(-1j * out.theta_c) * u_s_ab
+        elif self._T_s > 0:
+            Phi = exp(1j * out.w_m * self._T_s) * (1 - par.alpha * self._T_s)
+            out.u_s_zoh = (Phi - 1) / self._T_s * out.psi_R + par.R_s * out.i_s
+        else:
+            out.u_s_zoh = (1j * out.w_m - par.alpha) * out.psi_R + par.R_s * out.i_s
 
         # Estimation error, i.e., the difference between the rotor flux predictions of
         # the current model and the voltage model
@@ -269,16 +283,20 @@ class SpeedFluxObserver:
         self.speed_observer.w_M = value
 
     def compute_output(
-        self, u_s_ab: complex, i_s_ab: complex, eps_ext: float = 0.0, h: float = 0.0
+        self,
+        u_s_ab: complex | None,
+        i_s_ab: complex,
+        eps_ext: float = 0.0,
+        h: float = 0.0,
     ) -> ObserverOutputs:
         """
         Compute feedback signals with speed estimation.
 
         Parameters
         ----------
-        u_s_ab : complex
-            Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one.
+        u_s_ab : complex | None
+            Stator voltage (V) in stator coordinates, or None if unknown, see
+            :class:`FluxObserver`.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         eps_ext : float, optional
@@ -307,7 +325,7 @@ class SpeedFluxObserver:
 def compute_feedback(
     observer: SpeedFluxObserver,
     sensorless: bool,
-    u_s_ab: complex,
+    u_s_ab: complex | None,
     i_s_ab: complex,
     w_M_meas: float | None,
 ) -> ObserverOutputs:
