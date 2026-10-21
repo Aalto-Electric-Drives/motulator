@@ -132,12 +132,16 @@ class ReferenceGenerator:
             # Breakdown torque limit
             k = self.k_b * par.L_M / (par.L_M + par.L_sgm)
             tau_b = 0.75 * par.n_p * k * psi_s_ref**2 / par.L_sgm
-            # Current limit
-            tau_M_cl = (
-                1.5 * par.n_p * psi_R * sqrt(self.i_s_max**2 - (psi_R / par.L_M) ** 2)
-                if psi_R < par.L_M * self.i_s_max
-                else 0
-            )
+            # Current limit: the stator flux on the circle psi_s_ref stays within the
+            # circle L_sgm*i_s_max around the rotor flux, which gives the maximum
+            # q-component of the stator flux in rotor flux coordinates
+            tau_M_cl = 0.0
+            if psi_R > 0:
+                psi_sd = (psi_s_ref**2 + psi_R**2 - (par.L_sgm * self.i_s_max) ** 2) / (
+                    2 * psi_R
+                )
+                psi_sq = sqrt(max(psi_s_ref**2 - max(psi_sd, 0) ** 2, 0))
+                tau_M_cl = 1.5 * par.n_p * psi_R * psi_sq / par.L_sgm
             # Limited torque reference
             tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_cl) * sign(
                 tau_M_ref

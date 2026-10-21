@@ -325,10 +325,12 @@ def test_controller_preset(discrete: bool) -> None:
 
 
 @pytest.mark.parametrize("sensorless", [False, True])
-def test_induction_machine_restart(sensorless: bool) -> None:
-    """An induction machine drive restarts after its flux has decayed, the flux
-    estimate decaying with it (the speed estimate of a sensorless drive holds, which
-    suffices here, since the unloaded machine keeps its speed)."""
+@pytest.mark.parametrize("ctrl_type", ["cvc", "fvc"])
+def test_induction_machine_restart(ctrl_type: str, sensorless: bool) -> None:
+    """An induction machine drive starts and restarts after its flux has decayed
+    within the current limit, the flux estimate decaying with it (the speed estimate
+    of a sensorless drive holds, which suffices here, since the unloaded machine keeps
+    its speed)."""
     par = drive_model.InductionMachineInvGammaPars(
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
@@ -338,18 +340,27 @@ def test_induction_machine_restart(sensorless: bool) -> None:
         mechanics,
         drive_model.VoltageSourceConverter(u_dc=540),
     )
-    cfg = im_control.CurrentVectorControllerCfg(
-        psi_s_nom=0.9, i_s_max=7, sensorless=sensorless
-    )
+    if ctrl_type == "fvc":
+        vector_ctrl = im_control.FluxVectorController(
+            par,
+            im_control.FluxVectorControllerCfg(
+                psi_s_nom=0.9, i_s_max=7, sensorless=sensorless
+            ),
+        )
+    else:
+        cfg = im_control.CurrentVectorControllerCfg(
+            psi_s_nom=0.9, i_s_max=7, sensorless=sensorless
+        )
+        vector_ctrl = im_control.CurrentVectorController(par, cfg)
     ctrl = im_control.VectorControlSystem(
-        im_control.CurrentVectorController(par, cfg),
-        im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+        vector_ctrl, im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
     )
     ctrl.set_speed_ref(2 * pi * 30)
     ctrl.set_enable(lambda t: t < 0.3 or t >= 0.5)
     res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.8)
     assert res.success
     t, w_M = res.mdl.t, res.mdl.mechanics.w_M
+    assert np.max(np.abs(res.mdl.machine.i_s_ab)) < 1.05 * 7
     assert np.max(np.abs(res.mdl.machine.i_s_ab[(t > 0.35) & (t < 0.5)])) < 1e-6
     psi_R = np.abs(res.mdl.machine.psi_R_ab[np.searchsorted(t, 0.5)])
     assert psi_R < 0.2
