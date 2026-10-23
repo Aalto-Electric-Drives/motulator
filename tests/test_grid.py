@@ -218,21 +218,27 @@ def test_observers() -> None:
     assert e[1:] == pytest.approx(np.exp(-alpha_o * T_s) * e[:-1], abs=1e-9 * U_NOM)
 
     # The error of the sequence observer satisfies the characteristic equation of the
-    # poles exp(p*alpha_o*T_s)
-    p, u_gp, u_gn, err = (-1 - 1j, -0.58 - 1j), 0.8 * U_NOM, 0.2j * U_NOM, []
-    observer = SequenceObserver(U_NOM, W_NOM, L, alpha_o, p, T_s)
+    # poles placed by the natural frequency and the damping ratio: a complex pair, a
+    # double pole, and the real poles -W_NOM and -0.58*W_NOM of the published tuning
+    u_gp, u_gn = 0.8 * U_NOM, 0.2j * U_NOM
     u_c, i_c = exact_model(u_gp, u_gn, L, t)
-    for u_c_ab, i_c_ab, t_k in zip(u_c, i_c, t, strict=True):
-        out = observer.compute_output(u_c_ab, i_c_ab)
-        observer.update(T_s, out)
-        err.append([u_gp - out.u_gp, u_gn * np.exp(-2j * W_NOM * t_k) - out.u_gn])
-    e = np.array(err)
-    z_1, z_2 = np.exp(np.array(p) * alpha_o * T_s)
-    e_pred = (z_1 + z_2) * e[1:-1] - z_1 * z_2 * e[:-2]
-    assert e[2:] == pytest.approx(e_pred, abs=1e-9 * U_NOM)
+    for w_o, zeta_o, p in [
+        (0.6 * W_NOM, 0.7, 0.6 * W_NOM * (-0.7 + np.array([1, -1]) * 0.51**0.5 * 1j)),
+        (0.65 * W_NOM, 1.0, np.array([-0.65, -0.65]) * W_NOM),
+        (0.58**0.5 * W_NOM, 1.58 / (2 * 0.58**0.5), np.array([-1, -0.58]) * W_NOM),
+    ]:
+        observer, err = SequenceObserver(U_NOM, W_NOM, L, w_o, zeta_o, T_s), []
+        for u_c_ab, i_c_ab, t_k in zip(u_c, i_c, t, strict=True):
+            out = observer.compute_output(u_c_ab, i_c_ab)
+            observer.update(T_s, out)
+            err.append([u_gp - out.u_gp, u_gn * np.exp(-2j * W_NOM * t_k) - out.u_gn])
+        e = np.array(err)
+        z_1, z_2 = np.exp((p - 1j * W_NOM) * T_s)
+        e_pred = (z_1 + z_2) * e[1:-1] - z_1 * z_2 * e[:-2]
+        assert e[2:] == pytest.approx(e_pred, abs=1e-9 * U_NOM)
 
     # Exact sequence separation
-    observer = SequenceObserver(U_NOM, W_NOM, L, alpha_o, p, T_s)
+    observer = SequenceObserver(U_NOM, W_NOM, L, 0.65 * W_NOM, 1.0, T_s)
     i_cp, i_cn, seq = 10.0, 4j, []
     for t_k in T_s * np.arange(1000):
         i_c_ab = i_cp * np.exp(1j * W_NOM * t_k) + i_cn * np.exp(-1j * W_NOM * t_k)
