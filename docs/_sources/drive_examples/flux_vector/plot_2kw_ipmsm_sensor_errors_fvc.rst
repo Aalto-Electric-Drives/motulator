@@ -185,7 +185,7 @@ currents are the measured ones, while the torque is the actual one.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.218 seconds)
+   **Total running time of the script:** (0 minutes 10.417 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sensor_errors_fvc.py:

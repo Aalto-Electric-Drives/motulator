@@ -467,7 +467,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span><span class="p">,</span> <span class="n">rotate_coordinates</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Measurements</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.grid.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -768,24 +768,8 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">transform_to_v_c_coordinates</span><span class="p">(</span><span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Transform the complex signals to the coordinates aligned with `v_c`.</span>
-
-<span class="sd">    The angle `fbk.theta_c` is updated to the angle of these coordinates, so that the</span>
-<span class="sd">    stationary signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`. The</span>
-<span class="sd">    angular speed `fbk.w_c` is not changed.</span>
-
-<span class="sd">    """</span>
-    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">)</span>
-    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">u_c</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">i_c</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_c_zoh</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_c</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">u_g</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span>
-    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+</span> <span class="n">theta</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Transform the controller time series to the coordinates aligned with `v_c`."""</span>
+    <span class="n">rotate_coordinates</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">v_c</span><span class="p">))</span>
 </pre></div>
 
                 </article>

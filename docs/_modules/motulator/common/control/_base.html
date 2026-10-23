@@ -468,7 +468,7 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">wrap</span>
 
 
 <span class="c1"># %%</span>
@@ -503,6 +503,32 @@
             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> object has no attribute </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span>
         <span class="p">)</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rotate_coordinates</span><span class="p">(</span><span class="n">ts</span><span class="p">:</span> <span class="n">TimeSeries</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Transform the controller time series to rotated coordinates.</span>
+
+<span class="sd">    All complex signals of the feedback and reference groups are transformed from the</span>
+<span class="sd">    controller coordinates to the coordinates rotated by `theta`, and the angle</span>
+<span class="sd">    `fbk.theta_c` is updated to the angle of the new coordinates. Hence, the stationary</span>
+<span class="sd">    signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`. The angular</span>
+<span class="sd">    speed `fbk.w_c` is not changed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ts : TimeSeries</span>
+<span class="sd">        Controller time series.</span>
+<span class="sd">    theta : ndarray</span>
+<span class="sd">        Angle of the new coordinates in the controller coordinates (rad).</span>
+
+<span class="sd">    """</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="p">,</span> <span class="n">ts</span><span class="o">.</span><span class="n">ref</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">group</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">T</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">ts</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">+</span> <span class="n">theta</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ControlSystem">
