@@ -396,16 +396,23 @@ class Model[C: Converter](System):
 
 # %%
 class SubsystemTimeSeries[S: Subsystem](Protocol):
-    """Base class for subsystem time series."""
+    """
+    Base class for subsystem time series.
+
+    The outputs are computed when the time series is created or, if they depend
+    directly on the inputs, in `set_outputs`. The signals computed in
+    `compute_derived_signals` are not passed to other subsystems.
+
+    """
 
     t: np.ndarray
 
-    def compute_zoh_input_derived_signals(self, t: np.ndarray, subsystem: S) -> None:
-        """Compute additional time series using subsystem's ZOH inputs."""
+    def set_outputs(self, t: np.ndarray, subsystem: S) -> None:
+        """Compute the outputs that depend directly on the inputs."""
         pass
 
-    def compute_input_derived_signals(self, t: np.ndarray, subsystem: S) -> None:
-        """Compute additional time series using subsystem's regular inputs."""
+    def compute_derived_signals(self, t: np.ndarray, subsystem: S) -> None:
+        """Compute the other signals that depend on the inputs."""
         pass
 
 
@@ -430,27 +437,19 @@ class ModelTimeSeries:
             name, ts[subsystem] = subsystem.create_time_series(self.t)
             setattr(self, name, ts[subsystem])
 
-        def pass_inputs() -> None:
-            for (target, inp), (src, out) in mdl.connections.items():
-                setattr(ts[target], inp, np.array(getattr(ts[src], out)))
-
-        # Switching states and the signals derived from them. The inputs are passed
-        # first, since the derived signals can depend on the inputs that are given by
-        # the states (e.g., the converter voltage on the DC-bus voltage).
         ts[mdl.converter].q_c_ab = np.array(mdl._history.q_c_ab)
         ts[mdl.converter].s_c_ab = np.array(mdl._history.s_c_ab)
         ts[mdl.converter].enabled = np.array(mdl._history.enabled)
         ts[mdl.converter].u_c_ab = np.array(mdl._history.u_c_ab)
-        pass_inputs()
+        # Outputs in the evaluation order of the simulation, passed to the inputs
+        # immediately, see `System.set_outputs`
         for subsystem in mdl.subsystems:
-            ts[subsystem].compute_zoh_input_derived_signals(self.t, subsystem)
-        # Inputs from the connections and the signals derived from them. The second
-        # pass propagates the signals corrected in the first pass (e.g., the stator
-        # current with core losses).
-        for _ in range(2):
-            pass_inputs()
-            for subsystem in mdl.subsystems:
-                ts[subsystem].compute_input_derived_signals(self.t, subsystem)
+            ts[subsystem].set_outputs(self.t, subsystem)
+            for target, inp, out in mdl._outgoing[subsystem]:
+                setattr(ts[target], inp, np.array(getattr(ts[subsystem], out)))
+        # Signals derived from the inputs, which are all available now
+        for subsystem in mdl.subsystems:
+            ts[subsystem].compute_derived_signals(self.t, subsystem)
 
     def __getattr__(self, name: str) -> Any:
         """Support type checking for dynamic attributes."""

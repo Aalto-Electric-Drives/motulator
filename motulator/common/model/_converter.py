@@ -211,14 +211,14 @@ class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
         u_dc = np.nan if subsystem.u_dc is None else subsystem.u_dc
         self.u_dc = np.full(np.size(t), u_dc)
 
-    def compute_zoh_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
-        """Compute zero-order hold derived signals."""
+    def set_outputs(self, t: np.ndarray, subsystem: T) -> None:
+        """Compute the converter voltage."""
         # The voltage with blocked gates is saved by the model
         u_c_ab = self.q_c_ab * self.u_dc - subsystem.u_th * self.s_c_ab
         self.u_c_ab = np.where(self.enabled, u_c_ab, self.u_c_ab)
 
-    def compute_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
-        """Process input time series."""
+    def compute_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
+        """Compute the internal DC current."""
         self.i_dc_int = subsystem.compute_internal_dc_current(self)
 
 
