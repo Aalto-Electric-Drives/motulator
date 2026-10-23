@@ -6,7 +6,7 @@ from math import cos, pi, sqrt
 
 import numpy as np
 
-from motulator.common.control._base import TimeSeries
+from motulator.common.control._base import TimeSeries, rotate_coordinates
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
 from motulator.grid.control._common import PowerReferenceLimiter, References
@@ -377,25 +377,5 @@ class SequenceObserverBasedGridFormingController:
 
     def post_process(self, ts: TimeSeries) -> None:
         """Post-process controller time series."""
-        # Transform the complex signals to the coordinates aligned with v_cp, and
-        # update the angle of the coordinates accordingly
-        theta = np.angle(ts.fbk.v_cp)
-        T = np.exp(-1j * theta)
-        ts.ref.u_c = T * ts.ref.u_c
-        ts.ref.u_cp = T * ts.ref.u_cp
-        ts.ref.u_cn = T * ts.ref.u_cn
-        ts.ref.i_c = T * ts.ref.i_c
-        ts.ref.i_cp = T * ts.ref.i_cp
-        ts.ref.i_cn = T * ts.ref.i_cn
-        ts.fbk.u_c = T * ts.fbk.u_c
-        ts.fbk.u_c_zoh = T * ts.fbk.u_c_zoh
-        ts.fbk.i_c = T * ts.fbk.i_c
-        ts.fbk.i_cp = T * ts.fbk.i_cp
-        ts.fbk.i_cn = T * ts.fbk.i_cn
-        ts.fbk.i_f = T * ts.fbk.i_f
-        ts.fbk.v_c = T * ts.fbk.v_c
-        ts.fbk.v_cp = T * ts.fbk.v_cp
-        ts.fbk.v_cn = T * ts.fbk.v_cn
-        ts.fbk.u_gp = T * ts.fbk.u_gp
-        ts.fbk.u_gn = T * ts.fbk.u_gn
-        ts.fbk.theta_c = wrap(ts.fbk.theta_c + theta)
+        # Transform to the coordinates aligned with v_cp
+        rotate_coordinates(ts, np.angle(ts.fbk.v_cp))

@@ -7,7 +7,7 @@ from typing import Any, Protocol
 
 import numpy as np
 
-from motulator.common.utils._utils import get_value
+from motulator.common.utils._utils import get_value, wrap
 
 
 # %%
@@ -39,6 +39,32 @@ class TimeSeries:
         raise AttributeError(
             f"{type(self).__name__!r} object has no attribute {name!r}"
         )
+
+
+def rotate_coordinates(ts: TimeSeries, theta: np.ndarray) -> None:
+    """
+    Transform the controller time series to rotated coordinates.
+
+    All complex signals of the feedback and reference groups are transformed from the
+    controller coordinates to the coordinates rotated by `theta`, and the angle
+    `fbk.theta_c` is updated to the angle of the new coordinates. Hence, the stationary
+    signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`. The angular
+    speed `fbk.w_c` is not changed.
+
+    Parameters
+    ----------
+    ts : TimeSeries
+        Controller time series.
+    theta : ndarray
+        Angle of the new coordinates in the controller coordinates (rad).
+
+    """
+    T = np.exp(-1j * theta)
+    for group in (ts.fbk, ts.ref):
+        for name, x in list(vars(group).items()):
+            if np.iscomplexobj(x):
+                setattr(group, name, T * x)
+    ts.fbk.theta_c = wrap(ts.fbk.theta_c + theta)
 
 
 class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
