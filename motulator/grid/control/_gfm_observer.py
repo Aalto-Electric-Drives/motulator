@@ -6,7 +6,7 @@ from math import pi, sqrt
 
 import numpy as np
 
-from motulator.common.control._base import TimeSeries
+from motulator.common.control._base import TimeSeries, rotate_coordinates
 from motulator.common.utils._utils import wrap
 from motulator.grid.control._base import Measurements
 from motulator.grid.control._common import (
@@ -283,21 +283,5 @@ class ObserverBasedGridFormingController:
 
 
 def transform_to_v_c_coordinates(ts: TimeSeries) -> None:
-    """
-    Transform the complex signals to the coordinates aligned with `v_c`.
-
-    The angle `fbk.theta_c` is updated to the angle of these coordinates, so that the
-    stationary signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_c`. The
-    angular speed `fbk.w_c` is not changed.
-
-    """
-    theta = np.angle(ts.fbk.v_c)
-    T = np.exp(-1j * theta)
-    ts.ref.u_c = T * ts.ref.u_c
-    ts.ref.i_c = T * ts.ref.i_c
-    ts.fbk.u_c = T * ts.fbk.u_c
-    ts.fbk.u_c_zoh = T * ts.fbk.u_c_zoh
-    ts.fbk.i_c = T * ts.fbk.i_c
-    ts.fbk.u_g = T * ts.fbk.u_g
-    ts.fbk.v_c = T * ts.fbk.v_c
-    ts.fbk.theta_c = wrap(ts.fbk.theta_c + theta)
+    """Transform the controller time series to the coordinates aligned with `v_c`."""
+    rotate_coordinates(ts, np.angle(ts.fbk.v_c))
