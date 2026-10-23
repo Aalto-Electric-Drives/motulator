@@ -1125,6 +1125,9 @@ Package Contents
    
    Base class for subsystem time series.
 
+   The outputs are computed when the time series is created or, if they depend
+   directly on the inputs, in `set_outputs`. The signals computed in
+   `compute_derived_signals` are not passed to other subsystems.
 
 
 
@@ -1143,10 +1146,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_input_derived_signals(t, subsystem)
+   .. py:method:: compute_derived_signals(t, subsystem)
 
       
-      Compute additional time series using subsystem's regular inputs.
+      Compute the other signals that depend on the inputs.
 
 
 
@@ -1167,10 +1170,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_zoh_input_derived_signals(t, subsystem)
+   .. py:method:: set_outputs(t, subsystem)
 
       
-      Compute additional time series using subsystem's ZOH inputs.
+      Compute the outputs that depend directly on the inputs.
 
 
 

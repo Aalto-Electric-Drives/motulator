@@ -565,8 +565,8 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_input_derived_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_zoh_input_derived_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_derived_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.set_outputs"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.set_outputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">
@@ -1304,10 +1304,13 @@ and extends it by <cite>extend_state_history</cite>.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">SubsystemTimeSeries</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#SubsystemTimeSeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.SubsystemTimeSeries" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Base class for subsystem time series.</p>
+<p>The outputs are computed when the time series is created or, if they depend
+directly on the inputs, in <cite>set_outputs</cite>. The signals computed in
+<cite>compute_derived_signals</cite> are not passed to other subsystems.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.SubsystemTimeSeries.compute_input_derived_signals">
-<span class="sig-name descname"><span class="pre">compute_input_derived_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#SubsystemTimeSeries.compute_input_derived_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.SubsystemTimeSeries.compute_input_derived_signals" title="Link to this definition">#</a></dt>
-<dd><p>Compute additional time series using subsystem’s regular inputs.</p>
+<dt class="sig sig-object py" id="motulator.common.model.SubsystemTimeSeries.compute_derived_signals">
+<span class="sig-name descname"><span class="pre">compute_derived_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#SubsystemTimeSeries.compute_derived_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.SubsystemTimeSeries.compute_derived_signals" title="Link to this definition">#</a></dt>
+<dd><p>Compute the other signals that depend on the inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1322,9 +1325,9 @@ and extends it by <cite>extend_state_history</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals">
-<span class="sig-name descname"><span class="pre">compute_zoh_input_derived_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#SubsystemTimeSeries.compute_zoh_input_derived_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals" title="Link to this definition">#</a></dt>
-<dd><p>Compute additional time series using subsystem’s ZOH inputs.</p>
+<dt class="sig sig-object py" id="motulator.common.model.SubsystemTimeSeries.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#SubsystemTimeSeries.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.SubsystemTimeSeries.set_outputs" title="Link to this definition">#</a></dt>
+<dd><p>Compute the outputs that depend directly on the inputs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1603,8 +1606,8 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_input_derived_signals()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_zoh_input_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_zoh_input_derived_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.compute_derived_signals"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.compute_derived_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.SubsystemTimeSeries.set_outputs"><code class="docutils literal notranslate"><span class="pre">SubsystemTimeSeries.set_outputs()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a><ul class="nav section-nav flex-column">
