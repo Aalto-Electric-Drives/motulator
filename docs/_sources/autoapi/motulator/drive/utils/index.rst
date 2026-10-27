@@ -51,7 +51,6 @@ Functions
 
    motulator.drive.utils.import_syre_data
    motulator.drive.utils.plot
-   motulator.drive.utils.plot_dc_bus_waveforms
    motulator.drive.utils.plot_flux_vs_current
    motulator.drive.utils.plot_map
    motulator.drive.utils.plot_stator_waveforms
@@ -1128,7 +1127,8 @@ Package Contents
    
    Plot example figures with selectable subplots.
 
-   :param res: Simulation results.
+   :param res: Simulation results. Without a control system, the magnitudes of the stator
+               current and voltage are plotted instead of the controller signals.
    :type res: ~motulator.common.model.SimulationResults
    :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
                 in SI units.
@@ -1146,46 +1146,6 @@ Package Contents
    :type y_ticks: list[ArrayLike | None], optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
-   :type latex: bool, optional
-   :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str | Path, optional
-   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: plot_dc_bus_waveforms(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
-
-   
-   Plot DC bus and grid-side waveforms.
-
-   :param res: Should contain the simulated data.
-   :type res: ~motulator.common.model.SimulationResults
-   :param base: Base values for scaling the waveforms.
-   :type base: BaseValues, optional
-   :param t_lims: Time axis limits. If None, uses full time range.
-   :type t_lims: tuple[float, float], optional
-   :param t_ticks: Time axis tick locations.
-   :type t_ticks: ArrayLike, optional
-   :param y_lims: y-axis limits for each subplot.
-   :type y_lims: list[tuple[float, float] | None], optional
-   :param y_ticks: y-axis tick locations for each subplot.
-   :type y_ticks: list[ArrayLike | None], optional
-   :param latex: Use LaTeX fonts for the labels, requires a working LaTeX installation.
    :type latex: bool, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
    :type save_path: str | Path, optional

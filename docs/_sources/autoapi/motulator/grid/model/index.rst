@@ -34,6 +34,7 @@ Classes
 
    motulator.grid.model.CompositeModel
    motulator.grid.model.DCBus
+   motulator.grid.model.DiodeBridge
    motulator.grid.model.GridConverterSystem
    motulator.grid.model.LCLFilter
    motulator.grid.model.LFilter
@@ -50,7 +51,7 @@ Package Contents
 
 .. py:class:: CompositeModel(models)
 
-   Bases: :py:obj:`motulator.common.model._base.System`
+   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`None`\ ]
 
 
    
@@ -58,15 +59,16 @@ Package Contents
 
    The models are coupled through shared subsystem objects, e.g., a DC bus given to
    the models of a grid converter and a drive. Each model keeps its converter, PWM
-   model, and computational delay, and it is driven by its own control system in the
-   simulation, see `Simulation`. The subsystems are evaluated in the order of the
-   models, a shared subsystem at its first occurrence. The order is not resolved
-   automatically: a shared subsystem whose outputs other subsystems depend on
-   directly must come first in each model, as `Model` places the DC bus.
+   model, and computational delay, and the model of a controlled converter is driven
+   by its own control system in the simulation, see `Simulation`. The subsystems are
+   evaluated in the order of the models, a shared subsystem at its first occurrence.
+   The order is not resolved automatically: a shared subsystem whose outputs other
+   subsystems depend on directly must come first in each model, as `Model` places the
+   DC bus.
 
-   :param models: Models by name, each with its own converter. The names are used for the
-                  control systems and the results, so they must be valid attribute names (not
-                  starting with an underscore, and not `t`).
+   :param models: Models by name. The names are used for the control systems and the results, so
+                  they must be valid attribute names (not starting with an underscore, and not
+                  `t`).
    :type models: dict[str, Model]
 
 
@@ -89,7 +91,7 @@ Package Contents
    .. py:method:: save(sol)
 
       
-      Save the solution and the switching states of the models.
+      Save the solution and the time histories of the models.
 
 
 
@@ -110,7 +112,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: DCBus(C_dc, u_dc, converters)
+.. py:class:: DCBus(C_dc, u_dc)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
@@ -118,18 +120,17 @@ Package Contents
    
    Capacitive DC bus feeding converters.
 
-   The DC bus feeds the given converters, whose DC currents are computed from their
-   switching states and AC currents. The DC-bus voltage is connected to the input
-   `u_dc` of each converter by the model (see `Model`). The DC bus can be shared by
-   the converters of several models (see `CompositeModel`). An external current,
-   e.g., from a battery or a braking chopper, can also be fed to the DC bus.
+   The DC bus feeds the converters of the models it is given to, see `Model`. The
+   models connect the DC-bus voltage to the input `u_dc` of their converters and
+   register the converters in `converters`, whose DC currents the DC bus computes from
+   their switching states and AC currents. The DC bus can be shared by the converters
+   of several models, see `CompositeModel`. An external current, e.g., from a battery
+   or a braking chopper, can also be fed to the DC bus.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
    :param u_dc: Initial DC-bus voltage (V).
    :type u_dc: float
-   :param converters: Converters fed from the DC bus.
-   :type converters: Sequence[VoltageSourceConverter]
 
 
 
@@ -268,16 +269,284 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: DiodeBridge(u_dc = None, u_th = 0.0)
+
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+
+
+   
+   Three-phase six-pulse diode bridge.
+
+   The diodes conduct according to the currents of the load `ac_load`: a leg carrying
+   current is clamped to a rail, and a leg without current floats at the voltage
+   keeping its current at zero. The voltage is computed from the AC port of the load,
+   see `ACPort`. The diode states are updated at their transitions, which the
+   simulation locates as events, see `Simulation`. Hence, the commutation of the
+   current between the legs follows from the inductance of the load, e.g., an AC
+   filter and the grid. The threshold voltage of the diodes is included in the diode
+   drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
+   model is connected to it (see `DCBus` and `Model`).
+
+   :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
+                fed from a DC-bus model.
+   :type u_dc: float, optional
+   :param u_th: Threshold voltage (V) of the diodes, defaults to 0.
+   :type u_th: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: blocked
+      :type: bool
+
+      
+      Only the diodes conduct, as the bridge has no switches.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_internal_dc_current(inp)
+
+      
+      Compute the internal DC current (A), rectified by the diodes.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: extend_history(n, u_c_ab)
+
+      
+      Extend the history over the solution points of an integration interval.
+
+      :param n: Number of solution points.
+      :type n: int
+      :param u_c_ab: Voltages (V) evaluated at the solution points if only the diodes conduct,
+                     otherwise None.
+      :type u_c_ab: Sequence[complex] | None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: init_state_history()
+
+      
+      Initialize the history of the voltage, which is evaluated by the model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: margin
+      :type: float
+
+      
+      Margin of the diode states at the latest evaluation, see `diode_margin`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Default empty implementation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update_diodes()
+
+      
+      Update the diode states at a transition, see `update_diodes`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, pwm = False, delay = 1, single_update = False)
 
-   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`motulator.common.model._converter.VoltageSourceConverter`\ ]
+   Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`C`\ ]
 
 
    
    Continuous-time model for grid-converter systems.
 
+   The converter is connected to the grid through the AC filter. A voltage-source
+   converter is driven by a control system, while a diode bridge has none, see
+   `Simulation`.
+
    :param converter: Converter model.
-   :type converter: VoltageSourceConverter
+   :type converter: DiodeBridge | VoltageSourceConverter
    :param ac_filter: AC filter model.
    :type ac_filter: LFilter | LCLFilter
    :param ac_source: Three-phase voltage source.
@@ -286,7 +555,7 @@ Package Contents
                   a drive), see `CompositeModel`. Defaults to None, in which case the converter
                   has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
-   :param pwm: Enable PWM model, defaults to False.
+   :param pwm: Enable the PWM model of a voltage-source converter, defaults to False.
    :type pwm: bool, optional
    :param delay: Computational delay in half carrier periods (sampling periods with double
                  update), defaults to 1. With single update, use 2 for a delay of one
@@ -840,7 +1109,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Simulation(mdl, ctrl, show_progress = True, cfg = None, t_start = None)
+.. py:class:: Simulation(mdl, ctrl = None, show_progress = True, cfg = None, t_start = None)
 
    
    Simulation environment.
@@ -849,13 +1118,16 @@ Package Contents
    sampling period of its next control cycle. The control systems of a composite
    model can have different sampling periods, and their sampling instants need not
    coincide. The switching states of the converters are held constant between the
-   sampling and switching instants of all the converters.
+   sampling and switching instants of all the converters. A model whose converter is
+   not controlled (see `ControlledConverter`), e.g., a diode bridge or a machine
+   connected directly to the grid, has no control system.
 
    :param mdl: Continuous-time system model.
-   :type mdl: Model | CompositeModel
-   :param ctrl: Discrete-time control system. For a composite model, the control systems of
-                the models by the model names.
-   :type ctrl: ControlSystem | Mapping[str, ControlSystem]
+   :type mdl: Model
+   :param ctrl: Discrete-time control system of a model with a controlled converter. For a
+                composite model, the control systems of the models with controlled converters
+                by the model names. Defaults to None, i.e., no control systems.
+   :type ctrl: ControlSystem | Mapping[str, ControlSystem], optional
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
    :param cfg: Solver configuration parameters.
@@ -889,15 +1161,17 @@ Package Contents
       
       Solve continuous-time system model and call control system.
 
-      The simulation runs until the first sampling instant after `t_stop`. A
-      subsequent call continues the simulation.
+      The simulation runs until the first sampling instant after `t_stop`, or
+      until `t_stop` without control systems. A subsequent call continues the
+      simulation.
 
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
                      integration interval, i.e., for each interval between the sampling and
-                     switching instants. Defaults to 0, in which case the number and spacing of
-                     points is selected by the solver.
+                     switching instants, or for the whole simulation without control systems.
+                     Defaults to 0, in which case the number and spacing of points is selected
+                     by the solver.
       :type N_eval: int, optional
 
 
@@ -932,8 +1206,9 @@ Package Contents
 
    .. attribute:: ctrl
 
-      Results from the digital control system. For a composite model, the results of
-      each control system is an attribute by the model name.
+      Results from the digital control system, None for a model without a control
+      system. For a composite model, the results of each control system are an
+      attribute by the model name (None for a model without a control system).
 
       :type: Any
 
@@ -963,7 +1238,7 @@ Package Contents
 
 .. py:class:: ThreePhaseSource(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, e_g_neg = 0.0, phi_neg = 0.0)
 
-   Bases: :py:obj:`motulator.common.model.Subsystem`
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
 
 
    
@@ -1104,7 +1379,7 @@ Package Contents
 
 .. py:class:: ThreePhaseSourceWithSignalInjection(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, u_e = 0j, f_e = 0.0)
 
-   Bases: :py:obj:`ThreePhaseSource`
+   Bases: :py:obj:`motulator.common.model.ThreePhaseSource`
 
 
    
@@ -1168,7 +1443,7 @@ Package Contents
 
 .. py:class:: VoltageSourceConverter(u_dc = None, t_d = 0.0, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
 
-   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+   Bases: :py:obj:`DiodeBridge`
 
 
    
@@ -1180,17 +1455,13 @@ Package Contents
    `i` is the phase current in the beginning of the blanking interval. The threshold
    voltage of the conducting device, assumed equal for the switches and the diodes,
    reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
-   determined at the latest switching instant. The DC-bus voltage is either constant
-   or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
-   `Model`).
+   determined at the latest switching instant. The DC-bus voltage is the input
+   `u_dc`, which is constant unless a DC-bus model is connected to it (see `DCBus`
+   and `Model`).
 
    When the gates are blocked (`inp.enabled` is False), all the switches are open, and
-   the antiparallel diodes conduct according to the currents: a leg carrying current
-   is clamped to a rail, and a leg without current floats at the voltage keeping its
-   current at zero. The diode states are updated at their transitions, which the
-   simulation locates as events, see `Simulation`. The voltage is computed from the
-   AC port of the load `ac_load`, see `ACPort`, and the threshold voltage is included
-   in the diode drops.
+   the converter operates as a diode bridge, see `DiodeBridge`. The diode states are
+   latched from the current directions when the gates are blocked.
 
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
                 be fed from a DC-bus model.
@@ -1223,6 +1494,31 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+   .. py:property:: blocked
+      :type: bool
+
+      
+      Only the diodes conduct while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: compute_internal_dc_current(inp)
 
       
@@ -1251,6 +1547,54 @@ Package Contents
 
       
       Create time series.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: extend_history(n, u_c_ab)
+
+      
+      Extend the history, the switching state held constant, see `DiodeBridge`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: init_state_history()
+
+      
+      Initialize the history of the switching state and the voltage.
 
 
 
@@ -1319,34 +1663,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: rhs(t)
-
-      
-      Default empty implementation.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: set_enable(enabled)
 
       
-      Set the gate enable, latching the diode states when the gates are blocked.
+      Set the gate enable.
 
 
 
@@ -1395,30 +1715,6 @@ Package Contents
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: update_diodes()
-
-      
-      Update the diode states at a transition, see `update_diodes`.
 
 
 

@@ -5,7 +5,7 @@
 V/Hz Control
 ------------
 
-These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` demonstrates the use of a two-mass mechanics model. Furthermore, the examples :doc:`/drive_examples/vhz/plot_2kw_im_diode_vhz` and :doc:`/drive_examples/vhz/plot_2kw_im_lc_vhz` show operation of an induction machine under pure open-loop V/Hz control with a diode front-end rectifier and with an LC filter, respectively.
+These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous machines [#Tii2025aa]_ and induction machines [#Tii2025bb]_. The example :doc:`/drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz` demonstrates the use of a two-mass mechanics model. Furthermore, the example :doc:`/drive_examples/vhz/plot_2kw_im_lc_vhz` shows operation of an induction machine under open-loop V/Hz control with an LC filter.
 
 .. rubric:: References
 
@@ -78,23 +78,6 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM) drive. A diode bridge, stiff three-phase grid, and a DC link are modeled.">
-
-.. only:: html
-
-  .. image:: /drive_examples/vhz/images/thumb/sphx_glr_plot_2kw_im_diode_vhz_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/vhz/plot_2kw_im_diode_vhz`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW IM, diode bridge, V/Hz control</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive equipped with an output LC filter.">
 
 .. only:: html
@@ -140,7 +123,6 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
    /drive_examples/vhz/plot_2kw_im_ovhz
    /drive_examples/vhz/plot_2kw_ipmsm_ovhz
    /drive_examples/vhz/plot_7kw_syrm_sat_ovhz
-   /drive_examples/vhz/plot_2kw_im_diode_vhz
    /drive_examples/vhz/plot_2kw_im_lc_vhz
    /drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz
 

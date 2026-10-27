@@ -71,7 +71,7 @@ Configure the system model.
     ac_filter = model.LFilter(L_f=0.2 * base.L)
     ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
     converter = model.VoltageSourceConverter()
-    dc_bus = model.DCBus(C_dc=1e-3, u_dc=600, converters=[converter])
+    dc_bus = model.DCBus(C_dc=1e-3, u_dc=600)
     mdl = model.GridConverterSystem(converter, ac_filter, ac_source, dc_bus=dc_bus)
 
 
@@ -167,7 +167,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.121 seconds)
+   **Total running time of the script:** (0 minutes 0.779 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_dc_bus_gfl.py:
