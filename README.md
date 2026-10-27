@@ -22,8 +22,8 @@
 
 ## Features
 
-- **Machine models:** induction machines, synchronous reluctance machines, and permanent-magnet synchronous machines, including magnetic saturation and two-mass mechanics
-- **Grid converter models:** L and LCL filters, inductive-resistive grids, and DC-bus dynamics
+- **Machine models:** induction machines, synchronous reluctance machines, and permanent-magnet synchronous machines, including magnetic saturation and two-mass mechanics, fed from a converter or directly from the grid
+- **Grid converter models:** L and LCL filters, inductive-resistive grids, DC-bus dynamics, and diode bridges
 - **Drive control:** V/Hz control, current-vector and flux-vector control, sensorless observers, and signal injection
 - **Grid converter control:** grid-following and grid-forming control, including disturbance-observer-based and power-synchronization methods
 - **Ready-to-run examples** as Python scripts and Jupyter notebooks, including neural-network-based flux maps learned from measured data

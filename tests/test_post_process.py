@@ -3,12 +3,15 @@ Tests for the post-processing of the controller time series.
 
 Some controllers transform their post-processed signals to other coordinates and update
 the angle `fbk.theta_c` of the coordinates accordingly. The tests check that the
-stationary signals, `exp(1j*fbk.theta_c)` times each complex signal, are unchanged.
+stationary signals, `exp(1j*fbk.theta_c)` times each complex signal, are unchanged. The
+state history of a model subsystem, from which its time series is computed, is also
+tested.
 
 """
 
 from collections.abc import Callable
 from copy import deepcopy
+from dataclasses import dataclass
 from math import pi
 from types import SimpleNamespace
 from typing import Any
@@ -17,6 +20,7 @@ import numpy as np
 import pytest
 
 from motulator.common.control import TimeSeries
+from motulator.common.model import Subsystem
 from motulator.drive.control._common import References as DriveReferences
 from motulator.drive.control._im_observers import (
     ObserverOutputs as InductionMachineObserverOutputs,
@@ -108,3 +112,43 @@ def test_transformation_keeps_stationary_signals(case: str) -> None:
                 assert np.exp(1j * theta_c_new) * x_new == pytest.approx(
                     np.exp(1j * theta_c) * x
                 ), name
+
+
+# %%
+@dataclass
+class _States:
+    """States of the subsystem below."""
+
+    x: complex = 0j
+
+
+class _SubsystemWithSignal(Subsystem):
+    """Subsystem with a state and another signal in its history."""
+
+    def __init__(self) -> None:
+        self.inp = None
+        self.out = None
+        self.state = _States()
+
+    def set_outputs(self, t: float) -> None:
+        pass
+
+    def rhs(self, t: float) -> list[complex]:
+        return [0j]
+
+    def create_time_series(self, t: np.ndarray) -> Any:
+        raise NotImplementedError
+
+    def init_state_history(self) -> None:
+        super().init_state_history()
+        self._history["y"] = []
+
+
+def test_state_history_extended_by_states_only() -> None:
+    """The state history is extended by the states, whose number gives the index of
+    the next subsystem, even if the history holds other signals as well."""
+    subsystem = _SubsystemWithSignal()
+    subsystem.init_state_history()
+    sol_y = [[1.0, 2.0], [3.0, 4.0]]  # Two states of a model, two solution points
+    assert subsystem.extend_state_history(sol_y, 1) == 2
+    assert subsystem._history == {"x": [3.0, 4.0], "y": []}

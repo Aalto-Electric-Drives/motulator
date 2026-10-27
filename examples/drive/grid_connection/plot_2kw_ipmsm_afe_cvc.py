@@ -17,6 +17,7 @@ from math import pi
 import matplotlib.pyplot as plt
 
 import motulator.drive.control.sm as sm_control
+from motulator.common.model import CompositeModel, DCBus, Simulation, ThreePhaseSource
 from motulator.common.utils import complex2abc
 from motulator.drive import model as drive_model
 from motulator.drive import utils as drive_utils
@@ -39,10 +40,10 @@ base_g = grid_utils.BaseValues.from_nominal(nom_g)
 
 afe = grid_model.VoltageSourceConverter()
 inv = drive_model.VoltageSourceConverter()
-dc_bus = drive_model.DCBus(C_dc=470e-6, u_dc=650, converters=[afe, inv])
+dc_bus = DCBus(C_dc=470e-6, u_dc=650)
 
 ac_filter = grid_model.LFilter(L_f=0.1 * base_g.L)
-ac_source = grid_model.ThreePhaseSource(w_g=base_g.w, e_g=base_g.u)
+ac_source = ThreePhaseSource(w_g=base_g.w, e_g=base_g.u)
 grid_sys = grid_model.GridConverterSystem(
     afe, ac_filter, ac_source, pwm=True, dc_bus=dc_bus
 )
@@ -54,7 +55,7 @@ machine = drive_model.SynchronousMachine(par)
 mechanics = drive_model.MechanicalSystem(J=0.015)
 drive_sys = drive_model.Drive(machine, mechanics, inv, pwm=True, dc_bus=dc_bus)
 
-mdl = drive_model.CompositeModel({"grid": grid_sys, "drive": drive_sys})
+mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 
 # %%
 # Configure the control systems. The grid-side control runs at 10 kHz (5-kHz switching
@@ -92,9 +93,7 @@ mechanics.set_external_load_torque(lambda t: (t > 0.4) * nom_m.tau)
 # not synchronized: the machine-side control starts 40 µs after the grid-side control.
 # The results of each model and its control system are available by the model names.
 
-sim = drive_model.Simulation(
-    mdl, {"grid": ctrl_g, "drive": ctrl_m}, t_start={"drive": 40e-6}
-)
+sim = Simulation(mdl, {"grid": ctrl_g, "drive": ctrl_m}, t_start={"drive": 40e-6})
 res = sim.simulate(t_stop=1)
 res_drive = drive_model.SimulationResults(res.mdl.drive, res.ctrl.drive)
 res_grid = grid_model.SimulationResults(res.mdl.grid, res.ctrl.grid)

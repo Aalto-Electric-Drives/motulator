@@ -1,5 +1,6 @@
-"""Continuous-time model for electric machine drives."""
+"""Continuous-time models for electric machine drives and grid-connected machines."""
 
+from motulator.common.model._ac_source import ThreePhaseSource
 from motulator.common.model._base import Model
 from motulator.common.model._converter import DCBus, VoltageSourceConverter
 from motulator.drive.model._lc_filter import LCFilter
@@ -28,8 +29,8 @@ class Drive(Model[VoltageSourceConverter]):
         LC filter model. If not given, a direct connection between the converter and
         machine is used.
     dc_bus : DCBus, optional
-        DC bus feeding the converter, e.g., `DiodeBridgeDCBus` for a diode front end,
-        or a DC bus shared with other models (e.g., with a grid converter system), see
+        DC bus feeding the converter, which can be shared with other models (e.g., with
+        a grid converter system with a diode bridge or an active front end), see
         `CompositeModel`. Defaults to None, in which case the converter has a constant
         DC-bus voltage.
     pwm : bool, optional
@@ -89,3 +90,45 @@ class Drive(Model[VoltageSourceConverter]):
             delay=delay,
             single_update=single_update,
         )
+
+
+# %%
+class GridConnectedMachine(Model[None]):
+    """
+    Continuous-time system model for a machine connected directly to the grid.
+
+    The stator terminals of the machine are connected to a three-phase voltage source,
+    e.g., to model the direct-on-line start of an induction machine. A series grid
+    impedance can be lumped into the machine parameters, e.g., into the stator
+    resistance and the leakage inductance of the inverse-Γ model of an induction
+    machine. The model has no converter, so it is simulated without a control system,
+    see `Simulation`.
+
+    Parameters
+    ----------
+    machine : InductionMachine | SynchronousMachine
+        Electric machine model.
+    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
+        Mechanical system model.
+    ac_source : ThreePhaseSource
+        Three-phase voltage source.
+
+    """
+
+    def __init__(
+        self,
+        machine: InductionMachine | SynchronousMachine,
+        mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
+        ac_source: ThreePhaseSource,
+    ) -> None:
+        self.machine = machine
+        self.mechanics = mechanics
+        self.ac_source = ac_source
+        connections = {
+            (machine, "u_s_ab"): (ac_source, "e_g_ab"),
+            (machine, "w_M"): (mechanics, "w_M"),
+            (mechanics, "tau_M"): (machine, "tau_M"),
+        }
+        # The source comes first, since the stator current can depend directly on the
+        # voltage
+        super().__init__(None, [ac_source, machine, mechanics], connections)

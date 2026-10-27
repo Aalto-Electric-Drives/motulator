@@ -1,8 +1,9 @@
 """
 Tests for models sharing a DC bus and simulated with several control systems.
 
-The closed-loop test checks the power balance of a drive with an active front end,
-whose control systems have different sampling periods, with loose tolerances.
+The closed-loop tests check the power balance of a drive with a diode bridge or an
+active front end, whose control systems have different sampling periods, with loose
+tolerances.
 
 """
 
@@ -13,7 +14,7 @@ import pytest
 from scipy.integrate import trapezoid
 
 import motulator.drive.control.sm as sm_control
-from motulator.common.model import CompositeModel, DCBus, Simulation
+from motulator.common.model import CompositeModel, DCBus, Simulation, ThreePhaseSource
 from motulator.drive import model as drive_model
 from motulator.grid import control as grid_control
 from motulator.grid import model as grid_model
@@ -56,7 +57,7 @@ def grid_system(
     return grid_model.GridConverterSystem(
         afe,
         grid_model.LFilter(L_f=L_F),
-        grid_model.ThreePhaseSource(w_g=2 * pi * 50, e_g=np.sqrt(2 / 3) * 400),
+        ThreePhaseSource(w_g=2 * pi * 50, e_g=np.sqrt(2 / 3) * 400),
         pwm=pwm,
         dc_bus=dc_bus,
     )
@@ -114,7 +115,7 @@ def test_composite_of_one_model_equals_model(pwm: bool) -> None:
 
     def simulate(composite: bool) -> drive_model.SimulationResults:
         conv = drive_model.VoltageSourceConverter()
-        dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv])
+        dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
         dc_bus.set_external_dc_current(lambda t: (t > 0.05) * 5)
         mdl = ipmsm_drive(conv, dc_bus, pwm)
         ctrl = ipmsm_cvc(T_S_DRIVE)
@@ -134,38 +135,45 @@ def test_composite_of_one_model_equals_model(pwm: bool) -> None:
     np.testing.assert_array_equal(res.mdl.machine.w_M, ref.mdl.machine.w_M)
 
 
-def test_diode_bridge_dc_bus() -> None:
-    """The diode bridge charges the DC bus, and its current does not reverse."""
-    conv = drive_model.VoltageSourceConverter()
-    dc_bus = drive_model.DiodeBridgeDCBus(
-        C_dc=235e-6, L_dc=1e-3, U_g=400, f_g=50, converters=[conv]
+def test_diode_bridge_front_end() -> None:
+    """The diode bridge, which has no control system, feeds the drive."""
+    dc_bus = DCBus(C_dc=235e-6, u_dc=np.sqrt(2) * 400)
+    grid_sys = grid_model.GridConverterSystem(
+        grid_model.DiodeBridge(),
+        grid_model.LFilter(L_f=0.5e-3),
+        ThreePhaseSource(w_g=2 * pi * 50, e_g=np.sqrt(2 / 3) * 400),
+        dc_bus=dc_bus,
     )
-    mdl = ipmsm_drive(conv, dc_bus, pwm=True)
+    drive_sys = ipmsm_drive(drive_model.VoltageSourceConverter(), dc_bus)
+    mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
     ctrl = ipmsm_cvc(T_S_DRIVE)
     ctrl.set_speed_ref(lambda t: (t > 0.02) * 100.0)
-    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.1) * 7.0)
-    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.3)
+    drive_sys.mechanics.set_external_load_torque(lambda t: (t > 0.1) * 7.0)
+    res = Simulation(mdl, {"drive": ctrl}, show_progress=False).simulate(t_stop=0.3)
     assert res.success
+    assert res.ctrl.grid is None
 
     # Averages over the last 100 ms
-    t, dc_bus_ts = res.mdl.t, res.mdl.dc_bus
-    u_dc = time_average(dc_bus_ts.u_dc, t, 0.2)
-    p_dc = time_average(dc_bus_ts.u_di * dc_bus_ts.i_L, t, 0.2)
-    p_M = time_average(res.mdl.machine.tau_M * res.mdl.machine.w_M, t, 0.2)
-    w_M = time_average(res.mdl.machine.w_M, t, 0.2)
+    t, grid_ts, drive_ts = res.mdl.t, res.mdl.grid, res.mdl.drive
+    np.testing.assert_array_equal(grid_ts.converter.u_dc, drive_ts.dc_bus.u_dc)
+    u_dc = time_average(drive_ts.dc_bus.u_dc, t, 0.2)
+    p_g = 1.5 * np.real(grid_ts.ac_filter.e_g_ab * np.conj(grid_ts.ac_filter.i_g_ab))
+    p_g = -time_average(p_g, t, 0.2)
+    p_M = time_average(drive_ts.machine.tau_M * drive_ts.machine.w_M, t, 0.2)
+    w_M = time_average(drive_ts.machine.w_M, t, 0.2)
 
     assert 1.35 * 400 * 0.95 < u_dc < np.sqrt(2) * 400  # Between the mean and peak
-    assert np.min(dc_bus_ts.i_L) > -0.01  # Only numerical undershoot
+    assert np.max(grid_ts.converter.i_dc_int) < 1e-3  # The diodes only rectify
     assert w_M == pytest.approx(100.0, rel=0.05)  # Still recovering from the load step
-    # The rectified power covers the mechanical power and the losses
-    assert p_dc == pytest.approx(p_M, rel=0.15) and p_dc > p_M > 0.9 * 7.0 * 100.0
+    # The grid power covers the mechanical power and the losses
+    assert p_g == pytest.approx(p_M, rel=0.15) and p_g > p_M > 0.9 * 7.0 * 100.0
 
 
 def test_active_front_end_drive() -> None:
     """The grid power balances the mechanical power through the shared DC bus."""
     afe = grid_model.VoltageSourceConverter(u_dc=U_DC)
     inv = drive_model.VoltageSourceConverter(u_dc=U_DC)
-    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[afe, inv])
+    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
     grid_sys = grid_system(afe, dc_bus, pwm=True)
     drive_sys = ipmsm_drive(inv, dc_bus, pwm=True)
     mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
@@ -215,7 +223,7 @@ def test_simulation_continues_between_calls() -> None:
         # the sampling periods
         afe = grid_model.VoltageSourceConverter(u_dc=U_DC, t_d=2e-6)
         inv = drive_model.VoltageSourceConverter(u_dc=U_DC, t_d=2e-6)
-        dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[afe, inv])
+        dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
         grid_sys = grid_system(afe, dc_bus, pwm=True)
         drive_sys = ipmsm_drive(inv, dc_bus, pwm=True)
         mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
@@ -240,7 +248,7 @@ def test_sampling_period_changes_during_run() -> None:
     """A control system can change its sampling period at any step."""
     afe = grid_model.VoltageSourceConverter(u_dc=U_DC)
     inv = drive_model.VoltageSourceConverter(u_dc=U_DC)
-    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[afe, inv])
+    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
     mdl = CompositeModel(
         {"grid": grid_system(afe, dc_bus), "drive": ipmsm_drive(inv, dc_bus)}
     )
@@ -260,36 +268,53 @@ def test_sampling_period_changes_during_run() -> None:
     assert w_M == pytest.approx(50.0, rel=0.05)
 
 
-def test_dc_bus_misuse_is_rejected() -> None:
-    """The DC bus and the models check their mutual wiring."""
-    conv = drive_model.VoltageSourceConverter(u_dc=U_DC)
-    with pytest.raises(ValueError):  # The converter is not fed from the DC bus
-        ipmsm_drive(conv, DCBus(C_dc=C_DC, u_dc=U_DC, converters=[]))
+@pytest.mark.parametrize("passive", [True, False])
+def test_constant_dc_bus_voltage(passive: bool) -> None:
+    """Without a DC bus, the DC-bus voltage of a converter is the constant given to
+    it, which can be zero but must be given."""
+
+    def system(u_dc: float | None) -> grid_model.GridConverterSystem:
+        converter = (
+            grid_model.DiodeBridge(u_dc)
+            if passive
+            else grid_model.VoltageSourceConverter(u_dc)
+        )
+        ac_source = ThreePhaseSource(w_g=2 * pi * 50, e_g=np.sqrt(2 / 3) * 400)
+        return grid_model.GridConverterSystem(
+            converter, grid_model.LFilter(L_f=L_F), ac_source
+        )
+
     with pytest.raises(ValueError):  # Neither a DC-bus voltage nor a DC bus
-        mdl = ipmsm_drive(drive_model.VoltageSourceConverter(), None)
-        Simulation(mdl, ipmsm_cvc(T_S_DRIVE), show_progress=False).simulate(1e-3)
-    with pytest.raises(ValueError):  # The converters must be distinct
-        DCBus(C_dc=C_DC, u_dc=U_DC, converters=[conv, conv])
+        system(None).set_outputs(0.0)
+    mdl = system(0.0)
+    mdl.set_outputs(0.0)
+    assert mdl.converter.out.u_dc == 0.0
+    mdl = system(U_DC)
+    ctrl = None if passive else afe_ctrl()
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(2e-3)
+    np.testing.assert_array_equal(res.mdl.converter.u_dc, U_DC)
+
+
+def test_misuse_is_rejected() -> None:
+    """The models, the DC bus, and the simulation check their mutual wiring."""
+    conv = drive_model.VoltageSourceConverter(u_dc=U_DC)
     afe = grid_model.VoltageSourceConverter(u_dc=U_DC)
-    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC, converters=[afe, conv])
+    dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
+    grid_sys = grid_system(afe, dc_bus)
     drive_sys = ipmsm_drive(conv, dc_bus)
     with pytest.raises(ValueError):  # The models must have distinct converters
         CompositeModel({"a": drive_sys, "b": drive_sys})
     with pytest.raises(ValueError):  # Invalid model name
         CompositeModel({"__class__": drive_sys})
     ctrl = ipmsm_cvc(T_S_DRIVE)
+    with pytest.raises(ValueError):  # The DC bus also feeds the grid converter
+        Simulation(drive_sys, ctrl)
+    mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
+    with pytest.raises(ValueError):  # A control system is needed for each converter
+        Simulation(mdl, {"drive": ctrl})
     for t_start in (-1e-3, float("nan"), float("inf")):
         with pytest.raises(ValueError):  # Invalid first sampling instant
-            Simulation(drive_sys, ctrl, t_start=t_start)
+            Simulation(
+                mdl, {"grid": afe_ctrl(), "drive": ctrl}, t_start={"drive": t_start}
+            )
     assert ctrl.t == 0  # The control system is left unchanged
-    with pytest.raises(ValueError):  # The DC bus is not given to the grid model
-        CompositeModel(
-            {
-                "grid": grid_model.GridConverterSystem(
-                    afe,
-                    grid_model.LFilter(L_f=L_F),
-                    grid_model.ThreePhaseSource(w_g=2 * pi * 50, e_g=1.0),
-                ),
-                "drive": ipmsm_drive(conv, dc_bus),
-            }
-        )

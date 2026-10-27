@@ -1,6 +1,6 @@
 # Three-Phase Source
 
-A model for an ideal three-phase source is implemented in the {class}`motulator.grid.model.ThreePhaseSource` class. Typically, this model is used to represent the grid voltage source. The voltage space vector is calculated as a combination of a positive-sequence component and (optionally) a negative-sequence components as
+A model for an ideal three-phase source is implemented in the {class}`motulator.common.model.ThreePhaseSource` class. Typically, this model is used to represent the grid voltage source, which feeds a grid converter or a diode bridge through an AC filter, or a machine connected directly to the grid, see {class}`motulator.drive.model.GridConnectedMachine`. The voltage space vector is calculated as a combination of a positive-sequence component and (optionally) a negative-sequence components as
 
 ```{math}
 ---

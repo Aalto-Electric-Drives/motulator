@@ -8,5 +8,4 @@ induction_machine
 synchronous_machine
 mechanics
 ac_filter
-diode_bridge
 ```

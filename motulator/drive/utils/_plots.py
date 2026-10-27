@@ -17,9 +17,14 @@ from motulator.common.utils._utils import BaseValues, complex2abc
 
 
 # %%
+def _has(ctrl, group: str, name: str) -> bool:
+    """Check if the controller signal is available and not identically zero."""
+    return ctrl is not None and bool(np.any(getattr(getattr(ctrl, group), name, 0)))
+
+
 def _plot_speeds(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
     """Plot angular speeds, using the LaTeX subscript `M` of mechanical quantities."""
-    if hasattr(ctrl.ref, "w_M") and np.any(ctrl.ref.w_M):
+    if _has(ctrl, "ref", "w_M"):
         ax.plot(
             ctrl.t,
             ctrl.ref.w_M / base.w_M,
@@ -28,16 +33,20 @@ def _plot_speeds(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
             label=rf"$\omega_{M}^\mathrm{{ref}}$",
         )
     ax.plot(mdl.t, mdl.machine.w_M / base.w_M, label=rf"$\omega_{M}$")
-    ax.plot(
-        ctrl.t, ctrl.fbk.w_M / base.w_M, label=rf"$\hat{{\omega}}_{M}$", ds="steps-post"
-    )
+    if ctrl is not None:
+        ax.plot(
+            ctrl.t,
+            ctrl.fbk.w_M / base.w_M,
+            label=rf"$\hat{{\omega}}_{M}$",
+            ds="steps-post",
+        )
     ax.legend()
 
 
 def _plot_torques(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
     """Plot torques, using the LaTeX subscript `M` of mechanical quantities."""
     # Plot torque reference only if it is nonzero
-    if hasattr(ctrl.ref, "tau_M") and np.any(ctrl.ref.tau_M):
+    if _has(ctrl, "ref", "tau_M"):
         ax.plot(
             ctrl.t,
             ctrl.ref.tau_M / base.tau,
@@ -47,7 +56,7 @@ def _plot_torques(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
         )
     ax.plot(mdl.t, mdl.machine.tau_M / base.tau, label=rf"$\tau_{M}$")
     # Plot estimated torque only if it is nonzero
-    if hasattr(ctrl.fbk, "tau_M") and np.any(ctrl.fbk.tau_M):
+    if _has(ctrl, "fbk", "tau_M"):
         ax.plot(
             ctrl.t,
             ctrl.fbk.tau_M / base.tau,
@@ -64,9 +73,14 @@ def _plot_torques(ax, ctrl, mdl, base: BaseValues, M: str) -> None:
     ax.legend(loc="upper right")
 
 
-def _plot_currents(ax, ctrl, base: BaseValues) -> None:
-    """Plot currents."""
-    if hasattr(ctrl.ref, "i_s") and np.any(ctrl.ref.i_s):
+def _plot_currents(ax, ctrl, mdl, base: BaseValues) -> None:
+    """Plot currents, the magnitude of the stator current without control signals."""
+    if ctrl is None:
+        i_s = np.abs(mdl.machine.i_s_ab) / base.i
+        ax.plot(mdl.t, i_s, label=r"$i_\mathrm{s}$")
+        ax.legend(loc="upper right")
+        return
+    if _has(ctrl, "ref", "i_s"):
         ax.plot(
             ctrl.t,
             ctrl.ref.i_s.real / base.i,
@@ -77,7 +91,7 @@ def _plot_currents(ax, ctrl, base: BaseValues) -> None:
     ax.plot(
         ctrl.t, ctrl.fbk.i_s.real / base.i, label=r"$i_\mathrm{d}$", ds="steps-post"
     )
-    if hasattr(ctrl.ref, "i_s") and np.any(ctrl.ref.i_s):
+    if _has(ctrl, "ref", "i_s"):
         ax.plot(
             ctrl.t,
             ctrl.ref.i_s.imag / base.i,
@@ -91,8 +105,14 @@ def _plot_currents(ax, ctrl, base: BaseValues) -> None:
     ax.legend(loc="upper right")
 
 
-def _plot_voltages(ax, ctrl, base: BaseValues) -> None:
-    """Plot voltages."""
+def _plot_voltages(ax, ctrl, mdl, base: BaseValues) -> None:
+    """Plot voltages, the magnitude of the stator voltage without control signals."""
+    if ctrl is None:
+        u_s = np.abs(mdl.machine.u_s_ab) / base.u
+        ax.plot(mdl.t, u_s, label=r"$u_\mathrm{s}$")
+        ax.legend(loc="lower right")
+        ax.set_ylim(0, 1.2 * np.max(u_s, initial=1e-3))
+        return
     ax.plot(
         ctrl.t,
         np.abs(ctrl.fbk.u_s) / base.u,
@@ -113,7 +133,7 @@ def _plot_voltages(ax, ctrl, base: BaseValues) -> None:
 
 def _plot_flux_linkages(ax, ctrl, mdl, base: BaseValues) -> None:
     """Plot flux linkages."""
-    if hasattr(ctrl.ref, "psi_s") and np.any(ctrl.ref.psi_s):
+    if _has(ctrl, "ref", "psi_s"):
         ax.plot(
             ctrl.t,
             np.abs(ctrl.ref.psi_s) / base.psi,
@@ -130,7 +150,7 @@ def _plot_flux_linkages(ax, ctrl, mdl, base: BaseValues) -> None:
             "-.",
             label=r"$\psi_\mathrm{R}$",
         )
-    if hasattr(ctrl.fbk, "psi_s"):
+    if ctrl is not None and hasattr(ctrl.fbk, "psi_s"):
         ax.plot(
             ctrl.t,
             np.abs(ctrl.fbk.psi_s) / base.psi,
@@ -160,7 +180,8 @@ def plot(
     Parameters
     ----------
     res : ~motulator.common.model.SimulationResults
-        Simulation results.
+        Simulation results. Without a control system, the magnitudes of the stator
+        current and voltage are plotted instead of the controller signals.
     base : BaseValues, optional
         Base values for scaling the waveforms. If not given, the waveforms are plotted
         in SI units.
@@ -229,10 +250,8 @@ def plot(
         plot_func, label_si, label_pu = subplot_map[name]
         if name in ["speed", "torque"]:
             plot_func(ax, res.ctrl, res.mdl, base, M)
-        elif name == "flux":
-            plot_func(ax, res.ctrl, res.mdl, base)
         else:
-            plot_func(ax, res.ctrl, base)
+            plot_func(ax, res.ctrl, res.mdl, base)
         ax.set_ylabel(label_pu if pu_vals else label_si)
 
     # Configure all axes
@@ -247,25 +266,30 @@ def plot(
 # %%
 def _plot_phase_voltages(ax, mdl, ctrl, base: BaseValues) -> None:
     """Plot phase voltages."""
-    u_s_ab = np.exp(1j * ctrl.fbk.theta_c) * ctrl.fbk.u_s
-
     ax.plot(mdl.t, mdl.machine.u_s_ab.real / base.u, label=r"$u_\mathrm{sa}$")
-    ax.plot(
-        ctrl.t, u_s_ab.real / base.u, label=r"$\hat{u}_\mathrm{sa}$", ds="steps-post"
-    )
+    if ctrl is not None:
+        u_s_ab = np.exp(1j * ctrl.fbk.theta_c) * ctrl.fbk.u_s
+        ax.plot(
+            ctrl.t,
+            u_s_ab.real / base.u,
+            label=r"$\hat{u}_\mathrm{sa}$",
+            ds="steps-post",
+        )
     ax.legend()
 
 
 def _plot_phase_currents(ax, mdl, ctrl, base: BaseValues) -> None:
     """Plot phase currents."""
-    i_s_ab = np.exp(1j * ctrl.fbk.theta_c) * ctrl.fbk.i_s
-
     ax.plot(
         mdl.t,
         complex2abc(mdl.machine.i_s_ab).T / base.i,
         label=[r"$i_\mathrm{sa}$", r"$i_\mathrm{sb}$", r"$i_\mathrm{sc}$"],
     )
-    ax.plot(ctrl.t, i_s_ab.real / base.i, label=r"$i_\mathrm{sa}(k)$", ds="steps-post")
+    if ctrl is not None:
+        i_s_ab = np.exp(1j * ctrl.fbk.theta_c) * ctrl.fbk.i_s
+        ax.plot(
+            ctrl.t, i_s_ab.real / base.i, label=r"$i_\mathrm{sa}(k)$", ds="steps-post"
+        )
     ax.legend()
 
 
@@ -326,102 +350,6 @@ def plot_stator_waveforms(
     # Plot subplots
     _plot_phase_voltages(ax1, res.mdl, res.ctrl, base)
     _plot_phase_currents(ax2, res.mdl, res.ctrl, base)
-
-    # Configure all axes
-    configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
-    # Add axis labels
-    if pu_vals:
-        ax1.set_ylabel("Voltage (p.u.)")
-        ax2.set_ylabel("Current (p.u.)")
-    else:
-        ax1.set_ylabel("Voltage (V)")
-        ax2.set_ylabel("Current (A)")
-    fig.align_ylabels()
-    axes[-1].set_xlabel("Time (s)")
-
-    save_and_show(save_path, **savefig_kwargs)
-
-
-# %%
-def _plot_dc_bus_voltages(ax, mdl, base: BaseValues) -> None:
-    """Plot DC bus and grid voltages."""
-    ax.plot(mdl.t, mdl.dc_bus.u_di / base.u, label=r"$u_\mathrm{di}$")
-    ax.plot(mdl.t, mdl.dc_bus.u_dc / base.u, label=r"$u_\mathrm{dc}$")
-    ax.plot(mdl.t, mdl.dc_bus.u_g_abc.T[:, 0] / base.u, label=r"$u_\mathrm{ga}$")
-    ax.legend()
-
-
-def _plot_dc_bus_currents(ax, mdl, base: BaseValues) -> None:
-    """Plot DC bus and grid currents."""
-    ax.plot(mdl.t, mdl.dc_bus.i_L / base.i, label=r"$i_\mathrm{L}$")
-    ax.plot(mdl.t, mdl.converter.i_dc_int / base.i, label=r"$i_\mathrm{dc}$")
-    ax.plot(mdl.t, mdl.dc_bus.i_g_ab.real / base.i, label=r"$i_\mathrm{ga}$")
-    ax.legend()
-
-
-def plot_dc_bus_waveforms(
-    res: SimulationResults,
-    base: BaseValues | None = None,
-    t_lims: tuple[float, float] | None = None,
-    t_ticks: ArrayLike | None = None,
-    y_lims: list[tuple[float, float] | None] | None = None,
-    y_ticks: list[ArrayLike | None] | None = None,
-    latex: bool = False,
-    save_path: str | Path | None = None,
-    **savefig_kwargs,
-) -> None:
-    """
-    Plot DC bus and grid-side waveforms.
-
-    Parameters
-    ----------
-    res : ~motulator.common.model.SimulationResults
-        Should contain the simulated data.
-    base : BaseValues, optional
-        Base values for scaling the waveforms.
-    t_lims : tuple[float, float], optional
-        Time axis limits. If None, uses full time range.
-    t_ticks : ArrayLike, optional
-        Time axis tick locations.
-    y_lims : list[tuple[float, float] | None], optional
-        y-axis limits for each subplot.
-    y_ticks : list[ArrayLike | None], optional
-        y-axis tick locations for each subplot.
-    latex : bool, optional
-        Use LaTeX fonts for the labels, requires a working LaTeX installation.
-    save_path : str | Path, optional
-        Path to save the figure. If None, the figure is not saved.
-    **savefig_kwargs
-        Additional keyword arguments passed to plt.savefig().
-
-    """
-    # Check if diode bridge data exists
-    if not (hasattr(res.mdl, "dc_bus") and hasattr(res.mdl.dc_bus, "i_L")):
-        print("DC bus data not available in simulation results.")
-        return
-
-    # Setup plot style
-    set_style(latex)
-
-    # Process base values
-    if base is None:
-        pu_vals = False
-        base = BaseValues.unity()
-    else:
-        pu_vals = True
-
-    # Set time limits
-    if t_lims is None:
-        t_lims = (0, res.mdl.t[-1])
-
-    # Create figure
-    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    axes = [ax1, ax2]
-
-    # Plot subplots
-    _plot_dc_bus_voltages(ax1, res.mdl, base)
-    _plot_dc_bus_currents(ax2, res.mdl, base)
 
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)

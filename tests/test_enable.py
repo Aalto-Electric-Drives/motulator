@@ -36,7 +36,7 @@ def spinning_pmsm(
     converter = drive_model.VoltageSourceConverter(u_dc, u_th=u_th)
     dc_bus = None
     if u_dc is None:
-        dc_bus = drive_model.DCBus(C_dc=2e-3, u_dc=540, converters=[converter])
+        dc_bus = drive_model.DCBus(C_dc=2e-3, u_dc=540)
     mechanics = drive_model.ExternalRotorSpeed()
     mechanics.set_external_rotor_speed(w_M)
     par = sm_pars()
@@ -106,7 +106,7 @@ def test_passive_rectification(N_eval: int, T_s: float) -> None:
 def test_two_blocked_converters() -> None:
     """Two converters with blocked gates on a shared DC bus have their own events."""
     converters = [drive_model.VoltageSourceConverter() for _ in range(2)]
-    dc_bus = drive_model.DCBus(C_dc=2e-3, u_dc=540, converters=converters)
+    dc_bus = drive_model.DCBus(C_dc=2e-3, u_dc=540)
     models, ctrls = {}, {}
     for name, converter, w_M in zip(
         ["gen", "idle"], converters, [400, 100], strict=True
@@ -129,7 +129,7 @@ def test_two_blocked_converters() -> None:
 def test_discharged_dc_bus(system: str) -> None:
     """A discharged DC bus is charged with blocked gates, the PWM compensation set."""
     converter = drive_model.VoltageSourceConverter(u_th=1.5)
-    dc_bus = drive_model.DCBus(C_dc=1e-3, u_dc=0, converters=[converter])
+    dc_bus = drive_model.DCBus(C_dc=1e-3, u_dc=0)
     d_err = sm_control.InverterNonlinearity(t_d=1e-6, u_th=1.5)
     if system == "drive":
         mechanics = drive_model.ExternalRotorSpeed()
@@ -399,7 +399,7 @@ def test_grid_converter_startup() -> None:
     Z_BASE = U_NOM / (np.sqrt(2) * 14.5)
     L_BASE, R = Z_BASE / W_NOM, 0.02 * Z_BASE
     converter = grid_model.VoltageSourceConverter()
-    dc_bus = grid_model.DCBus(C_dc=1e-3, u_dc=500, converters=[converter])
+    dc_bus = grid_model.DCBus(C_dc=1e-3, u_dc=500)
     ac_filter = grid_model.LCLFilter(
         L_fc=0.1 * L_BASE, L_fg=0.05 * L_BASE, C_f=0.1e-3, R_fc=R, R_fg=R
     )
