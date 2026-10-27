@@ -12,14 +12,23 @@ from scipy.integrate import solve_ivp
 from tqdm import tqdm
 
 from motulator.common.control._base import ControlSystem
-from motulator.common.model._base import Converter, Model, ModelTimeSeries
+from motulator.common.model._base import (
+    ControlledConverter,
+    Converter,
+    Model,
+    ModelTimeSeries,
+)
 from motulator.common.model._composite import CompositeModel, CompositeModelTimeSeries
+from motulator.common.model._converter import DCBus
 
 # Tolerance (s) for treating the sampling and switching instants of different
-# converters as simultaneous
+# converters as simultaneous, and diode transitions as stuck
 _T_TOL = 1e-12
-# Maximum number of diode transitions in an integration interval
-_MAX_TRANSITIONS = 100
+# Maximum number of consecutive diode transitions at the same instant
+_MAX_STUCK = 10
+# Default maximum step (s) while a converter is blocked or without control systems, of
+# the order of a sampling period
+_MAX_STEP = 1e-4
 
 
 # %%
@@ -31,7 +40,12 @@ class SolverCfg:
     Parameters
     ----------
     max_step : float, optional
-        Maximum step size for the integrator, defaults to `inf`.
+        Maximum step size (s) for the integrator. Defaults to None, i.e., 1e-4 s while
+        the gates of a converter are blocked, so that the solver locates the
+        transitions of the diodes driven by the AC voltages, and without control
+        systems, so that the solver resolves the waveforms. Otherwise, the step size is
+        not limited, since the sampling and switching instants limit the integration
+        intervals.
     method : str, optional
         Integration method, defaults to "RK45".
     rtol : float, optional
@@ -41,7 +55,7 @@ class SolverCfg:
 
     """
 
-    max_step: float = np.inf
+    max_step: float | None = None
     method: str = "RK45"
     rtol: float = 1e-3
     atol: float = 1e-6
@@ -69,8 +83,9 @@ class SimulationResults:
         Results from the continuous-time model. For a composite model, the time series
         of each model is an attribute by the model name.
     ctrl : Any
-        Results from the digital control system. For a composite model, the results of
-        each control system is an attribute by the model name.
+        Results from the digital control system, None for a model without a control
+        system. For a composite model, the results of each control system are an
+        attribute by the model name (None for a model without a control system).
     success : bool
         False if the simulation stopped before the stop time due to a numerical
         failure, in which case the results cover the time until the failure.
@@ -90,15 +105,18 @@ class Simulation:
     sampling period of its next control cycle. The control systems of a composite
     model can have different sampling periods, and their sampling instants need not
     coincide. The switching states of the converters are held constant between the
-    sampling and switching instants of all the converters.
+    sampling and switching instants of all the converters. A model whose converter is
+    not controlled (see `ControlledConverter`), e.g., a diode bridge or a machine
+    connected directly to the grid, has no control system.
 
     Parameters
     ----------
-    mdl : Model | CompositeModel
+    mdl : Model
         Continuous-time system model.
-    ctrl : ControlSystem | Mapping[str, ControlSystem]
-        Discrete-time control system. For a composite model, the control systems of
-        the models by the model names.
+    ctrl : ControlSystem | Mapping[str, ControlSystem], optional
+        Discrete-time control system of a model with a controlled converter. For a
+        composite model, the control systems of the models with controlled converters
+        by the model names. Defaults to None, i.e., no control systems.
     show_progress : bool, optional
         Show progress during simulation, defaults to True.
     cfg : SolverCfg, optional
@@ -114,8 +132,8 @@ class Simulation:
 
     def __init__(
         self,
-        mdl: Model | CompositeModel,
-        ctrl: ControlSystem | Mapping[str, ControlSystem],
+        mdl: Model,
+        ctrl: ControlSystem | Mapping[str, ControlSystem] | None = None,
         show_progress: bool = True,
         cfg: SolverCfg | None = None,
         t_start: float | Mapping[str, float] | None = None,
@@ -125,30 +143,49 @@ class Simulation:
         self.show_progress = show_progress
         self.cfg = cfg if cfg is not None else SolverCfg()
         self.mdl = mdl
-        self.ctrl = ctrl
-        # Pairs of the models and their control systems, and the first sampling
-        # instants given for the control systems
+        # Models and control systems by name, a single model by the name ""
         if isinstance(mdl, CompositeModel):
-            if not isinstance(ctrl, Mapping) or ctrl.keys() != mdl.models.keys():
-                raise ValueError("A control system must be given for each model")
-            if t_start is not None and (
-                not isinstance(t_start, Mapping) or t_start.keys() - ctrl.keys()
-            ):
+            if not isinstance(ctrl, Mapping | None):
+                raise ValueError("A composite model takes the control systems by name")
+            if not isinstance(t_start, Mapping | None):
                 raise ValueError("t_start must be a mapping by the model names")
-            self._pairs = [(mdl.models[name], ctrl[name]) for name in mdl.models]
-            t_start = {} if t_start is None else t_start
-            self._t_sample = [t_start.get(name, mdl.t0) for name in mdl.models]
-            given = [(ctrl[name], t) for name, t in t_start.items()]
+            models: Mapping[str, Model] = mdl.models
+            ctrls = dict(ctrl or {})
+            starts = dict(t_start or {})
         else:
             if isinstance(ctrl, Mapping) or isinstance(t_start, Mapping):
                 raise ValueError("A single model takes a single control system")
-            self._pairs = [(mdl, ctrl)]
-            self._t_sample = [mdl.t0 if t_start is None else t_start]
-            given = [] if t_start is None else [(ctrl, t_start)]
+            models = {"": mdl}
+            ctrls = {} if ctrl is None else {"": ctrl}
+            starts = {} if t_start is None else {"": t_start}
+        controlled = [
+            name
+            for name, model in models.items()
+            if isinstance(model.converter, ControlledConverter)
+        ]
+        if ctrls.keys() != set(controlled):
+            raise ValueError(
+                "A control system must be given for each model with a controlled "
+                "converter, and only for these models"
+            )
+        if starts.keys() - ctrls.keys():
+            raise ValueError("t_start must be given for the control systems")
+        # A DC bus computes the currents of all its converters, so their models must be
+        # simulated too
+        for dc_bus in mdl.subsystems:
+            if isinstance(dc_bus, DCBus) and not all(
+                c in mdl.converters for c in dc_bus.converters
+            ):
+                raise ValueError("A converter fed from the DC bus is not in the model")
+        # Pairs of the models and their control systems, and their sampling instants
+        self._models = models
+        self._ctrls = ctrls
+        self._pairs = [(models[name], ctrls[name]) for name in controlled]
+        self._t_sample = [starts.get(name, mdl.t0) for name in controlled]
         if not all(mdl.t0 <= t < np.inf for t in self._t_sample):
             raise ValueError("t_start must not be earlier than the model time")
-        for ctrl_k, t in given:
-            ctrl_k.t = t
+        for name, t in starts.items():
+            ctrls[name].t = t
         # Pending switching events (instant, gate signals, blanking signals) of each
         # converter
         self._events: list[list[tuple[float, np.ndarray, np.ndarray]]] = [
@@ -159,8 +196,9 @@ class Simulation:
         """
         Solve continuous-time system model and call control system.
 
-        The simulation runs until the first sampling instant after `t_stop`. A
-        subsequent call continues the simulation.
+        The simulation runs until the first sampling instant after `t_stop`, or
+        until `t_stop` without control systems. A subsequent call continues the
+        simulation.
 
         Parameters
         ----------
@@ -169,8 +207,9 @@ class Simulation:
         N_eval : int, optional
             Number of evenly spaced data points to be returned by the solver for each
             integration interval, i.e., for each interval between the sampling and
-            switching instants. Defaults to 0, in which case the number and spacing of
-            points is selected by the solver.
+            switching instants, or for the whole simulation without control systems.
+            Defaults to 0, in which case the number and spacing of points is selected
+            by the solver.
 
         """
         progress_bar = None
@@ -205,15 +244,14 @@ class Simulation:
             warnings.warn(msg, RuntimeWarning, stacklevel=2)
 
         # Post-process the solution data
-        if isinstance(self.mdl, CompositeModel) and isinstance(self.ctrl, Mapping):
+        ctrl_ts = {name: ctrl.post_process() for name, ctrl in self._ctrls.items()}
+        if isinstance(self.mdl, CompositeModel):
             mdl_ts = CompositeModelTimeSeries(self.mdl)
-            ctrl_ts = SimpleNamespace(
-                **{name: ctrl.post_process() for name, ctrl in self.ctrl.items()}
-            )
-        else:
-            mdl_ts = ModelTimeSeries(self._pairs[0][0])
-            ctrl_ts = self._pairs[0][1].post_process()
-        return SimulationResults(mdl_ts, ctrl_ts, success=error is None)
+            names = self.mdl.models
+            ctrl_ts = SimpleNamespace(**{name: ctrl_ts.get(name) for name in names})
+            return SimulationResults(mdl_ts, ctrl_ts, success=error is None)
+        mdl_ts = ModelTimeSeries(self.mdl)
+        return SimulationResults(mdl_ts, ctrl_ts.get(""), success=error is None)
 
     @np.errstate(invalid="raise")
     def _run_simulation_loop(
@@ -224,7 +262,7 @@ class Simulation:
         while True:
             t0 = self.mdl.t0
             due = [k for k, t in enumerate(t_sample) if t <= t0 + _T_TOL]
-            if due and t0 > t_stop:
+            if (due and t0 > t_stop) or (not self._pairs and t0 >= t_stop):
                 break
             for k, (mdl, ctrl) in enumerate(self._pairs):
                 # Control, computational delay, and carrier comparison
@@ -254,7 +292,7 @@ class Simulation:
                     _, q_abc, b_abc = events[k].pop(0)
                     mdl.converter.set_gate_signals(q_abc, b_abc)
             # Integrate until the next sampling or switching instant
-            t1 = min(t_sample + [ev[0][0] for ev in events if ev])
+            t1 = min(t_sample + [ev[0][0] for ev in events if ev], default=t_stop)
             self._integrate((t0, t1), N_eval)
 
     def _integrate(self, t_span: tuple[float, float], N_eval: int) -> None:
@@ -267,19 +305,22 @@ class Simulation:
         # for the final state
         t_eval = np.linspace(t0, t1, N_eval + 1) if N_eval != 0 else None
 
-        # The transitions of the diode states of the converters with blocked gates
-        # are located as events, at which the integration is restarted
-        blocked = [c for c in self.mdl.converters if not c.inp.enabled]
+        # The transitions of the diode states of the blocked converters are located as
+        # events, at which the integration is restarted
+        blocked = [c for c in self.mdl.converters if c.blocked]
         events = [_DiodeEvent(self.mdl, c) for c in blocked]
+        solver = self.cfg.solver
+        if solver["max_step"] is None:
+            solver["max_step"] = _MAX_STEP if blocked or not self._pairs else np.inf
 
-        for _ in range(_MAX_TRANSITIONS):
+        n_stuck = 0  # Consecutive transitions at the same instant
+        while True:
             state0 = self.mdl.get_initial_values()
 
             # Explicit Runge-Kutta methods try the whole interval as the first step,
             # which skips the estimation of the initial step size
-            first_step = None
-            if self.cfg.method in ("RK23", "RK45", "DOP853"):
-                first_step = min(t1 - t0, self.cfg.max_step)
+            explicit = self.cfg.method in ("RK23", "RK45", "DOP853")
+            first_step = min(t1 - t0, solver["max_step"]) if explicit else None
 
             sol = solve_ivp(
                 self.mdl.rhs,
@@ -288,7 +329,7 @@ class Simulation:
                 t_eval=None if t_eval is None else t_eval[t_eval >= t0],
                 events=events if events else None,
                 first_step=first_step,
-                **self.cfg.solver,
+                **solver,
             )
             if not sol.success:
                 raise FloatingPointError(sol.message)
@@ -298,10 +339,16 @@ class Simulation:
             if sol.status == 1:
                 fired = [k for k, t_e in enumerate(sol.t_events) if t_e.size > 0]
                 k = min(fired, key=lambda k: sol.t_events[k][0])
-                t0, state = sol.t_events[k][0], sol.y_events[k][0]
+                t_e, state = sol.t_events[k][0], sol.y_events[k][0]
+                n_stuck = n_stuck + 1 if t_e <= t0 + _T_TOL else 0
+                t0 = t_e
             else:
                 t0, state = t1, sol.y[:, -1]
+            # The models of a composite model have their own clocks, which advance
+            # with the integration, regardless of the saved points
             self.mdl.t0 = t0
+            for mdl in self._models.values():
+                mdl.t0 = t0
             self.mdl.set_states(state)
             self.mdl.set_outputs(t0)
 
@@ -313,9 +360,10 @@ class Simulation:
                 self.mdl.save(sol)
             if sol.status != 1:
                 return
+            if n_stuck > _MAX_STUCK:
+                raise FloatingPointError(f"Diode transitions stuck at {t0} s")
             for converter in blocked:
                 converter.update_diodes()
-        raise FloatingPointError("Too many diode transitions in an interval")
 
 
 class _DiodeEvent:
@@ -324,7 +372,7 @@ class _DiodeEvent:
     terminal = True
     direction = -1  # The margin decreases to zero at a transition
 
-    def __init__(self, mdl: Model | CompositeModel, converter: Converter) -> None:
+    def __init__(self, mdl: Model, converter: Converter) -> None:
         self.mdl = mdl
         self.converter = converter
 

@@ -9,7 +9,7 @@ from motulator.common.control._base import ControlSystem, TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, get_value, line2complex
 from motulator.grid.control._common import DCBusVoltageController, References
-from motulator.grid.model import GridConverterSystem
+from motulator.grid.model import GridConverterSystem, VoltageSourceConverter
 
 
 # %%
@@ -203,7 +203,9 @@ class GridConverterControlSystem(ControlSystem):
             raise ValueError("DC-bus voltage control requires dc_bus_voltage_ctrl")
         self.ext_ref.u_dc = ref_fcn
 
-    def get_measurement(self, mdl: GridConverterSystem) -> Measurements:
+    def get_measurement(
+        self, mdl: GridConverterSystem[VoltageSourceConverter]
+    ) -> Measurements:
         """Get measurements from sensors."""
         u_dc = mdl.converter.meas_dc_voltage()
         i_c_ab = abc2complex(mdl.ac_filter.meas_currents())

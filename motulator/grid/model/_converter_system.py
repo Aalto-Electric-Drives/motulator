@@ -1,19 +1,23 @@
 """Continuous-time grid converter system model."""
 
+from motulator.common.model._ac_source import ThreePhaseSource
 from motulator.common.model._base import Model
-from motulator.common.model._converter import DCBus, VoltageSourceConverter
+from motulator.common.model._converter import DCBus, DiodeBridge
 from motulator.grid.model._ac_filter import LCLFilter, LFilter
-from motulator.grid.model._ac_source import ThreePhaseSource
 
 
 # %%
-class GridConverterSystem(Model[VoltageSourceConverter]):
+class GridConverterSystem[C: DiodeBridge](Model[C]):
     """
     Continuous-time model for grid-converter systems.
 
+    The converter is connected to the grid through the AC filter. A voltage-source
+    converter is driven by a control system, while a diode bridge has none, see
+    `Simulation`.
+
     Parameters
     ----------
-    converter : VoltageSourceConverter
+    converter : DiodeBridge | VoltageSourceConverter
         Converter model.
     ac_filter : LFilter | LCLFilter
         AC filter model.
@@ -24,7 +28,7 @@ class GridConverterSystem(Model[VoltageSourceConverter]):
         a drive), see `CompositeModel`. Defaults to None, in which case the converter
         has a constant DC-bus voltage.
     pwm : bool, optional
-        Enable PWM model, defaults to False.
+        Enable the PWM model of a voltage-source converter, defaults to False.
     delay : int, optional
         Computational delay in half carrier periods (sampling periods with double
         update), defaults to 1. With single update, use 2 for a delay of one
@@ -37,7 +41,7 @@ class GridConverterSystem(Model[VoltageSourceConverter]):
 
     def __init__(
         self,
-        converter: VoltageSourceConverter,
+        converter: C,
         ac_filter: LFilter | LCLFilter,
         ac_source: ThreePhaseSource,
         dc_bus: DCBus | None = None,

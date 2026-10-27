@@ -43,7 +43,7 @@ def assert_controller_coordinates(res: SimulationResults) -> None:
 def system(L_g: float = 0.0, u_dc: float | None = 650) -> model.GridConverterSystem:
     """Grid converter system, fed by a DC bus if `u_dc` is None."""
     converter = model.VoltageSourceConverter(u_dc=u_dc)
-    dc_bus = None if u_dc else model.DCBus(C_dc=1e-3, u_dc=650, converters=[converter])
+    dc_bus = None if u_dc else model.DCBus(C_dc=1e-3, u_dc=650)
     return model.GridConverterSystem(
         converter,
         model.LFilter(L_f=0.2 * L_BASE, L_g=L_g),
@@ -79,7 +79,7 @@ def test_dual_voltage_forming() -> None:
     """Dual-voltage-forming control tracks the DC-bus voltage and feeds the power."""
     u_dc_ref, p_ext = 650.0, -5e3
     converter = model.VoltageSourceConverter()
-    dc_bus = model.DCBus(C_dc=1e-3, u_dc=u_dc_ref, converters=[converter])
+    dc_bus = model.DCBus(C_dc=1e-3, u_dc=u_dc_ref)
     dc_bus.set_external_dc_current(lambda t: (t > 0.05) * p_ext / u_dc_ref)
     R_f = 0.05 * Z_BASE
     mdl = model.GridConverterSystem(

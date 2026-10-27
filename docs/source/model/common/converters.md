@@ -2,7 +2,7 @@
 
 ## Model
 
-[Figure 1](fig:inverter) shows a three-phase two-level voltage-source converter, where $\udc$ is the DC-bus voltage, $\idc$ is the external DC current, and $\Cdc$ is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. The model with a constant DC-bus voltage is provided in the {class}`motulator.drive.model.VoltageSourceConverter` class. It can be extended with a diode bridge model, see {doc}`/model/drive/diode_bridge`.
+[Figure 1](fig:inverter) shows a three-phase two-level voltage-source converter, where $\udc$ is the DC-bus voltage, $\idc$ is the external DC current, and $\Cdc$ is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. The model is provided in the {class}`motulator.common.model.VoltageSourceConverter` class. Without the transistors, the converter is a six-pulse diode bridge, see [Diode Bridge](sec:diode_bridge).
 
 ```{figure} ../figs/inverter.svg
 ---
@@ -48,7 +48,7 @@ alt: Voltage-source converter and carrier comparison
 *Figure 2:* Equivalent circuit of a three-phase voltage-source converter, connected to a generic three-phase load. The neutral point of the load is marked with n. In this example, the positions of the bi-positional switches correspond to the instantaneous switching states $\qA = 1$, $\qB = 0$, and $\qC = 0$.
 ```
 
-By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, the converter can be fed from the DC-bus model in the {class}`motulator.common.model.DCBus` class. If the DC bus is fed from an external current source $\idc$, the DC-bus dynamics are
+By default, the DC-bus voltage is constant, i.e., the DC-bus capacitor is replaced with a constant DC voltage source. Alternatively, the converter can be fed from the DC-bus model in the {class}`motulator.common.model.DCBus` class, which is given to the model of the converter. If the DC bus is fed from an external current source $\idc$, the DC-bus dynamics are
 
 ```{math}
 ---
@@ -66,7 +66,7 @@ label: DC_current
     \idc' = \qA \iA + \qB \iB + \qC \iC
 ```
 
-The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models of the converter systems sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge rectifier, see {doc}`/model/drive/diode_bridge`.
+The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC bus is given to the models of all the converters, which register their converters in it, and the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge, see [Diode Bridge](sec:diode_bridge).
 
 ## Gate Blocking
 
@@ -79,6 +79,12 @@ ctrl.set_enable(lambda t: t >= 0.05)  # Gates blocked before 0.05 s
 While the gates are blocked, all the switches are open, and the antiparallel diodes conduct according to the instantaneous phase currents. A leg carrying current is clamped to the negative rail if the current flows out of the converter and to the positive rail otherwise. A leg without current floats at the voltage that keeps its current at zero, as long as this voltage is between the rails; otherwise, its diode starts to conduct. Hence, a spinning machine coasts at open circuit if its voltage is below the DC-bus voltage, and it feeds the DC bus through the diodes otherwise, as does the grid when the DC bus is charged at the start-up. The threshold voltage $u_\mathrm{th}$ is included in the diode drops. The floating leg voltages are computed from the AC port of the load, i.e., the relation $\mathrm{d}\boldsymbol{i}/\mathrm{d}t = \mathbf{Y}(\boldsymbol{u} - \boldsymbol{e})$ between the terminal current and voltage, which the machine and filter models provide, see {class}`motulator.common.model.ACPort`. The machine models with core losses do not provide the port.
 
 The switching state `q_c_ab` is zero while the gates are blocked, and the converter voltage `u_c_ab` is saved at the solution points of the solver. The gate enable is available as `enabled` in the converter time series and in the reference signals of the control system. See {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc` and {doc}`/grid_examples/grid_following/plot_10kva_startup_gfl` for examples.
+
+(sec:diode_bridge)=
+
+## Diode Bridge
+
+A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class, of which {class}`motulator.common.model.VoltageSourceConverter` is a subclass. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class. The model has no control system, see {class}`motulator.common.model.Simulation`, and it can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
 
 ## Carrier Comparison
 

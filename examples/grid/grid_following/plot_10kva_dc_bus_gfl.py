@@ -25,7 +25,7 @@ base = utils.BaseValues.from_nominal(nom)
 ac_filter = model.LFilter(L_f=0.2 * base.L)
 ac_source = model.ThreePhaseSource(w_g=base.w, e_g=base.u)
 converter = model.VoltageSourceConverter()
-dc_bus = model.DCBus(C_dc=1e-3, u_dc=600, converters=[converter])
+dc_bus = model.DCBus(C_dc=1e-3, u_dc=600)
 mdl = model.GridConverterSystem(converter, ac_filter, ac_source, dc_bus=dc_bus)
 
 # %%
