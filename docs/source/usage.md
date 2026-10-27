@@ -13,7 +13,7 @@ end-before: '## From simulation to the laboratory'
 
 ## Simulation Results
 
-The {class}`motulator.common.model.SimulationResults` object returned by the simulation contains the time series of the system model in `res.mdl` and those of the control system in `res.ctrl`, see {doc}`/control/common/control_system`. A model without a controlled converter, e.g., a machine connected directly to the grid, is simulated without a control system, and `res.ctrl` is then None. The plotting functions, such as {func}`motulator.drive.utils.plot` and {func}`motulator.grid.utils.plot_control_signals`, plot the main signals in SI units or, if base values are given, in per-unit values.
+The {class}`motulator.common.model.SimulationResults` object returned by the simulation contains the time series of the system model in `res.mdl` and those of the control system in `res.ctrl`, see {doc}`/control/common/control_system`. The plotting functions, such as {func}`motulator.drive.utils.plot` and {func}`motulator.grid.utils.plot_control_signals`, plot the main signals in SI units or, if base values are given, in per-unit values.
 
 ## Conventions
 

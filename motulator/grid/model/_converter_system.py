@@ -11,9 +11,7 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
     """
     Continuous-time model for grid-converter systems.
 
-    The converter is connected to the grid through the AC filter. A voltage-source
-    converter is driven by a control system, while a diode bridge has none, see
-    `Simulation`.
+    The converter is connected to the grid through the AC filter.
 
     Parameters
     ----------

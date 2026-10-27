@@ -279,7 +279,11 @@ class Model[C: Converter | None]:
         self.converters: list[Converter] = [] if converter is None else [converter]
         self.dc_bus = dc_bus
         self.single_update = single_update
+        # The converter driven by a control system, checked once, since the check of a
+        # runtime-checkable protocol is slow (see `modulate`)
+        self._controlled: ControlledConverter | None = None
         if isinstance(converter, ControlledConverter):
+            self._controlled = converter
             self.delay = Delay(delay, converter.n_legs)
             t_d = converter.t_d
             self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
@@ -353,12 +357,12 @@ class Model[C: Converter | None]:
             Blanking signals in each interval.
 
         """
-        converter = self.converter
-        if not isinstance(converter, ControlledConverter):
+        converter = self._controlled
+        if converter is None:
             raise ValueError("The model has no controlled converter")
         n = 2 if self.single_update else 1  # Half carrier periods per sampling period
         parts = [self.pwm(T_s / n, self.delay(d_abc)) for _ in range(n)]
-        if converter.blocked:
+        if not converter.inp.enabled:
             off = np.zeros((1, converter.n_legs))
             return np.array([T_s]), off, off
         t_steps = np.concatenate([p[0] for p in parts])
