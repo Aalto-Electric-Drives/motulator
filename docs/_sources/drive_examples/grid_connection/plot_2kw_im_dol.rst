@@ -135,7 +135,7 @@ DC components, which depend on the instant of the connection.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.668 seconds)
+   **Total running time of the script:** (0 minutes 1.461 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_dol.py:
