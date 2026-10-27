@@ -8,14 +8,14 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model._base import Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import empty_array, get_value
+from motulator.common.utils._utils import empty_array, get_value, wrap
 
 
 @dataclass
 class States:
     """State variables."""
 
-    exp_j_theta_g: complex = complex(1)
+    theta_g: complex = 0j  # Angle (rad), imaginary part always zero
 
 
 @dataclass
@@ -83,16 +83,23 @@ class ThreePhaseSource(Subsystem):
         e_g_ab += e_g_neg * np.conj(exp_j_theta_g * np.exp(1j * phi_neg))
         return e_g_ab
 
+    def set_states(self, state_list: list[complex], index: int) -> int:
+        """Set the state, keeping the angle within [-pi, pi)."""
+        # The angle is wrapped only in the state of the model, which the next
+        # integration interval starts from, so the solver sees no discontinuity
+        index = super().set_states(state_list, index)
+        self.state.theta_g = wrap(self.state.theta_g.real)
+        return index
+
     def set_outputs(self, t) -> None:
         """Set output variables."""
-        self.out.e_g_ab = self.generate_space_vector(t, self.state.exp_j_theta_g)
-        self.out.exp_j_theta_g = self.state.exp_j_theta_g
+        exp_j_theta_g = np.exp(1j * self.state.theta_g.real)
+        self.out.e_g_ab = self.generate_space_vector(t, exp_j_theta_g)
+        self.out.exp_j_theta_g = exp_j_theta_g
 
     def rhs(self, t) -> list[complex]:
         """Compute the state derivative."""
-        w_g = get_value(self.w_g, t)
-        d_exp_j_theta_g = 1j * w_g * self.state.exp_j_theta_g
-        return [d_exp_j_theta_g]
+        return [get_value(self.w_g, t)]
 
     def create_time_series(
         self, t: np.ndarray
@@ -114,7 +121,8 @@ class ThreePhaseSourceTimeSeries(SubsystemTimeSeries):
 
     def __post_init__(self, t: np.ndarray, subsystem: ThreePhaseSource) -> None:
         """Compute output time series from the states."""
-        self.exp_j_theta_g = np.array(subsystem._history["exp_j_theta_g"])
-        self.w_g = np.vectorize(get_value)(subsystem.w_g, t)
+        theta_g = np.real(np.array(subsystem._history["theta_g"]))
+        self.exp_j_theta_g = np.exp(1j * theta_g)
         self.theta_g = np.angle(self.exp_j_theta_g)
+        self.w_g = np.vectorize(get_value)(subsystem.w_g, t)
         self.e_g_ab = subsystem.generate_space_vector(t, self.exp_j_theta_g)
