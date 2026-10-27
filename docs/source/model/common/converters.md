@@ -84,13 +84,34 @@ The switching state `q_c_ab` is zero while the gates are blocked, and the conver
 
 ## Diode Bridge
 
-A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class. The model can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
+A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class, see [Figure 3](fig:diode_bridge). The model can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
+
+```{figure} ../figs/diode_bridge.svg
+---
+name: fig:diode_bridge
+class: only-light
+width: 100%
+align: center
+alt: Six-pulse diode bridge supplied from the grid through AC inductors
+---
+*Figure 3:* Six-pulse diode bridge supplied from the grid through the inductors of an L filter. The DC-side terminals correspond to those of the converter in [Figure 1](fig:inverter).
+```
+
+```{figure} ../figs/diode_bridge.svg
+---
+class: invert-colors-dark only-dark
+width: 100%
+align: center
+alt: Six-pulse diode bridge supplied from the grid through AC inductors
+---
+*Figure 3:* Six-pulse diode bridge supplied from the grid through the inductors of an L filter. The DC-side terminals correspond to those of the converter in [Figure 1](fig:inverter).
+```
 
 ## Carrier Comparison
 
 In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals $\qA$, $\qB$, and $\qC$ from duty ratios $\dA$, $\dB$, and $\dC$. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.
 
-[Figure 3](fig:carrier_comparison) shows the principle of carrier comparison. The logic shown in the figure is implemented in the {class}`motulator.common.model.CarrierComparison` class, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations. The sampling period $\Ts$ is returned by the control method, and it does not need to be constant.
+[Figure 4](fig:carrier_comparison) shows the principle of carrier comparison. The logic shown in the figure is implemented in the {class}`motulator.common.model.CarrierComparison` class, where the switching instants are explicitly computed in the beginning of each sampling period (instead of searching for zero crossings), allowing faster simulations. The sampling period $\Ts$ is returned by the control method, and it does not need to be constant.
 
 ```{figure} ../figs/carrier_comparison.svg
 ---
@@ -100,7 +121,7 @@ width: 100%
 align: center
 alt: Carrier comparison
 ---
-*Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
+*Figure 4:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
 ```
 
 ```{figure} ../figs/carrier_comparison.svg
@@ -110,7 +131,7 @@ width: 100%
 align: center
 alt: Carrier comparison
 ---
-*Figure 3:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
+*Figure 4:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
 ```
 
 The converter parameter `t_d` delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time. The converter parameter `u_th` models the threshold voltage of the power devices, assumed equal for the switches and the diodes, which reduces each phase voltage by `u_th*sign(i)`, where the current direction is determined at the switching instants, as during the blanking.
