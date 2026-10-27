@@ -66,7 +66,7 @@ label: DC_current
     \idc' = \qA \iA + \qB \iB + \qC \iC
 ```
 
-The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC bus is given to the models of all the converters, which register their converters in it, and the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge, see [Diode Bridge](sec:diode_bridge).
+The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC bus is given to the models of all the converters, and the DC currents $\idc'$ of all the converters are subtracted from the external current $\idc$. The models sharing the DC bus are combined using the {class}`motulator.common.model.CompositeModel` class, see {doc}`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc`. The DC bus can also be fed from a diode bridge, see [Diode Bridge](sec:diode_bridge).
 
 ## Gate Blocking
 
@@ -84,7 +84,7 @@ The switching state `q_c_ab` is zero while the gates are blocked, and the conver
 
 ## Diode Bridge
 
-A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class, of which {class}`motulator.common.model.VoltageSourceConverter` is a subclass. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class. The model has no control system, see {class}`motulator.common.model.Simulation`, and it can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
+A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class. The model can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
 
 ## Carrier Comparison
 

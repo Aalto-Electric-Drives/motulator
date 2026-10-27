@@ -4,8 +4,7 @@
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive, fed from a six-pulse diode bridge.
-The diode bridge is supplied from a stiff grid through an AC choke, and it has no
-control system.
+The diode bridge is supplied from a stiff grid through an AC choke.
 
 """
 
@@ -65,8 +64,8 @@ ctrl.set_speed_ref(lambda t: (t > 0.2) * base.w_M)
 mechanics.set_external_load_torque(lambda t: (t > 0.6) * nom.tau)
 
 # %%
-# Create the simulation object and simulate. Only the drive has a control system. Plot
-# the drive results in per-unit values.
+# Create the simulation object, with the control system of the drive by the model
+# name, and simulate. Plot the drive results in per-unit values.
 
 sim = Simulation(mdl, {"drive": ctrl})
 res = sim.simulate(t_stop=1)

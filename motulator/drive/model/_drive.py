@@ -101,8 +101,7 @@ class GridConnectedMachine(Model[None]):
     e.g., to model the direct-on-line start of an induction machine. A series grid
     impedance can be lumped into the machine parameters, e.g., into the stator
     resistance and the leakage inductance of the inverse-Γ model of an induction
-    machine. The model has no converter, so it is simulated without a control system,
-    see `Simulation`.
+    machine.
 
     Parameters
     ----------

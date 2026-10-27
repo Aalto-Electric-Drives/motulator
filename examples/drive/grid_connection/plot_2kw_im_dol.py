@@ -4,8 +4,7 @@
 
 This example simulates the direct-on-line start of a 2.2-kW induction machine (IM),
 whose stator is connected directly to a stiff grid. The machine drives a fan, whose
-load torque is proportional to the square of the speed. The model has no converter, so
-it is simulated without a control system.
+load torque is proportional to the square of the speed.
 
 """
 
