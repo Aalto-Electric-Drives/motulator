@@ -11,9 +11,11 @@ from motulator.common.utils._utils import complex2abc
 
 # Time constant (s) at which the residual current of a floating leg decays
 _TAU = 1e-4
-# Tolerances of the diode-state transitions: current (A) and voltage (V)
-_I_TOL = 1e-9
-_U_TOL = 1e-9
+# Tolerances of the diode-state transitions: current (A) and voltage (V). They exceed
+# the numerical noise of the solution, e.g., in the residual currents of floating legs,
+# so that the margin of the diode states is positive after a transition.
+_I_TOL = 1e-4
+_U_TOL = 1e-3
 # Transformations between the phase quantities and the real and imaginary parts of
 # the space vectors, as matrices
 _A = np.array([[1.0, 0.0], [-0.5, np.sqrt(3) / 2], [-0.5, -np.sqrt(3) / 2]])
