@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Voltage-Source Converter &#8212; motulator 0.18.0 documentation</title>
+    <title>Voltage-Source Converter &#8212; motulator 0.19.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=4033e70d"></script>
+    <script src="../../_static/documentation_options.js?v=bce9d2e1"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.18.0 documentation</p>
+    <p class="title logo__title">motulator 0.19.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -570,7 +570,7 @@
 <p>where the converter-side DC current depends on the phase currents <span class="math notranslate nohighlight">\(\iA\)</span>, <span class="math notranslate nohighlight">\(\iB\)</span>, and <span class="math notranslate nohighlight">\(\iC\)</span> as</p>
 <div class="math notranslate nohighlight" id="equation-dc-current">
 <span class="eqno">(2)<a class="headerlink" href="#equation-dc-current" title="Link to this equation">#</a></span>\[    \idc' = \qA \iA + \qB \iB + \qC \iC\]</div>
-<p>The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC bus is given to the models of all the converters, which register their converters in it, and the DC currents <span class="math notranslate nohighlight">\(\idc'\)</span> of all the converters are subtracted from the external current <span class="math notranslate nohighlight">\(\idc\)</span>. The models sharing the DC bus are combined using the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.CompositeModel</span></code></a> class, see <a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html"><span class="doc">2.2-kW IPMSM, active front end, CVC</span></a>. The DC bus can also be fed from a diode bridge, see <a class="reference internal" href="#sec-diode-bridge"><span class="std std-ref">Diode Bridge</span></a>.</p>
+<p>The DC bus can also be shared by several converters, e.g., by the grid-side and machine-side converters of a drive with an active front end. In this case, the DC bus is given to the models of all the converters, and the DC currents <span class="math notranslate nohighlight">\(\idc'\)</span> of all the converters are subtracted from the external current <span class="math notranslate nohighlight">\(\idc\)</span>. The models sharing the DC bus are combined using the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.CompositeModel</span></code></a> class, see <a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html"><span class="doc">2.2-kW IPMSM, active front end, CVC</span></a>. The DC bus can also be fed from a diode bridge, see <a class="reference internal" href="#sec-diode-bridge"><span class="std std-ref">Diode Bridge</span></a>.</p>
 </section>
 <section id="gate-blocking">
 <h2>Gate Blocking<a class="headerlink" href="#gate-blocking" title="Link to this heading">#</a></h2>
@@ -583,7 +583,7 @@
 </section>
 <section id="diode-bridge">
 <span id="sec-diode-bridge"></span><h2>Diode Bridge<a class="headerlink" href="#diode-bridge" title="Link to this heading">#</a></h2>
-<p>A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.DiodeBridge</span></code></a> class, of which <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.VoltageSourceConverter" title="motulator.common.model.VoltageSourceConverter"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.VoltageSourceConverter</span></code></a> is a subclass. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the <a class="reference internal" href="../../autoapi/motulator/grid/model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.model.GridConverterSystem</span></code></a> class. The model has no control system, see <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.Simulation</span></code></a>, and it can share its DC bus with other models, e.g., with a drive, see <a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_im_diode_vhz.html"><span class="doc">2.2-kW IM, diode bridge, V/Hz control</span></a>.</p>
+<p>A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the <a class="reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.model.DiodeBridge</span></code></a> class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the <a class="reference internal" href="../../autoapi/motulator/grid/model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.model.GridConverterSystem</span></code></a> class. The model can share its DC bus with other models, e.g., with a drive, see <a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_im_diode_vhz.html"><span class="doc">2.2-kW IM, diode bridge, V/Hz control</span></a>.</p>
 </section>
 <section id="carrier-comparison">
 <h2>Carrier Comparison<a class="headerlink" href="#carrier-comparison" title="Link to this heading">#</a></h2>

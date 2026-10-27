@@ -23,10 +23,9 @@
 
 This example simulates the direct-on-line start of a 2.2-kW induction machine (IM),
 whose stator is connected directly to a stiff grid. The machine drives a fan, whose
-load torque is proportional to the square of the speed. The model has no converter, so
-it is simulated without a control system.
+load torque is proportional to the square of the speed.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-15
+.. GENERATED FROM PYTHON SOURCE LINES 12-14
 
 .. code-block:: Python
 
@@ -39,11 +38,11 @@ it is simulated without a control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 16-17
+.. GENERATED FROM PYTHON SOURCE LINES 15-16
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-21
+.. GENERATED FROM PYTHON SOURCE LINES 16-20
 
 .. code-block:: Python
 
@@ -58,12 +57,12 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-24
+.. GENERATED FROM PYTHON SOURCE LINES 21-23
 
 Configure the system model. The machine is connected to the grid at the start, when
 the phase-a voltage is at its peak.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-34
+.. GENERATED FROM PYTHON SOURCE LINES 23-33
 
 .. code-block:: Python
 
@@ -84,12 +83,12 @@ the phase-a voltage is at its peak.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-37
+.. GENERATED FROM PYTHON SOURCE LINES 34-36
 
 Create the simulation object, simulate, and plot the results in per-unit values. The
 currents and voltages are plotted as the magnitudes of their space vectors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 37-42
+.. GENERATED FROM PYTHON SOURCE LINES 36-41
 
 .. code-block:: Python
 
@@ -110,12 +109,12 @@ currents and voltages are plotted as the magnitudes of their space vectors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-45
+.. GENERATED FROM PYTHON SOURCE LINES 42-44
 
 Plot the stator voltage and currents during the start. The currents contain decaying
 DC components, which depend on the instant of the connection.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-47
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 .. code-block:: Python
 
@@ -136,7 +135,7 @@ DC components, which depend on the instant of the connection.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.937 seconds)
+   **Total running time of the script:** (0 minutes 0.668 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_dol.py:

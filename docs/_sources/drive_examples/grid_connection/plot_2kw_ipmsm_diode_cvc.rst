@@ -23,10 +23,9 @@
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive, fed from a six-pulse diode bridge.
-The diode bridge is supplied from a stiff grid through an AC choke, and it has no
-control system.
+The diode bridge is supplied from a stiff grid through an AC choke.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-22
+.. GENERATED FROM PYTHON SOURCE LINES 12-21
 
 .. code-block:: Python
 
@@ -46,11 +45,11 @@ control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-28
+.. GENERATED FROM PYTHON SOURCE LINES 23-27
 
 .. code-block:: Python
 
@@ -65,12 +64,12 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+.. GENERATED FROM PYTHON SOURCE LINES 28-30
 
 Configure the system model. The diode bridge and the inverter share the DC bus, and
 their models are combined into a composite model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-50
+.. GENERATED FROM PYTHON SOURCE LINES 30-49
 
 .. code-block:: Python
 
@@ -100,11 +99,11 @@ their models are combined into a composite model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-61
+.. GENERATED FROM PYTHON SOURCE LINES 51-60
 
 .. code-block:: Python
 
@@ -124,11 +123,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-67
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -143,12 +142,12 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-70
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
 
-Create the simulation object and simulate. Only the drive has a control system. Plot
-the drive results in per-unit values.
+Create the simulation object, with the control system of the drive by the model
+name, and simulate. Plot the drive results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-79
+.. GENERATED FROM PYTHON SOURCE LINES 69-78
 
 .. code-block:: Python
 
@@ -185,12 +184,12 @@ the drive results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-82
+.. GENERATED FROM PYTHON SOURCE LINES 79-81
 
 Plot the grid voltages and currents. The diode bridge conducts in pulses, as the
 DC-bus voltage is close to the peak of the line-to-line grid voltage.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-84
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 .. code-block:: Python
 
@@ -211,7 +210,7 @@ DC-bus voltage is close to the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 18.502 seconds)
+   **Total running time of the script:** (0 minutes 12.572 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_ipmsm_diode_cvc.py:

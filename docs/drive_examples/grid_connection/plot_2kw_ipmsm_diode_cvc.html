@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2.2-kW IPMSM, diode bridge, CVC &#8212; motulator 0.18.0 documentation</title>
+    <title>2.2-kW IPMSM, diode bridge, CVC &#8212; motulator 0.19.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=4033e70d"></script>
+    <script src="../../_static/documentation_options.js?v=bce9d2e1"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.18.0 documentation</p>
+    <p class="title logo__title">motulator 0.19.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -519,8 +519,7 @@ to download the full example code.</p>
 <span id="sphx-glr-drive-examples-grid-connection-plot-2kw-ipmsm-diode-cvc-py"></span><h1>2.2-kW IPMSM, diode bridge, CVC<a class="headerlink" href="#kw-ipmsm-diode-bridge-cvc" title="Link to this heading">#</a></h1>
 <p>This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive, fed from a six-pulse diode bridge.
-The diode bridge is supplied from a stiff grid through an AC choke, and it has no
-control system.</p>
+The diode bridge is supplied from a stiff grid through an AC choke.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-math sphx-glr-backref-type-py-function reference external" href="https://docs.python.org/3/library/math.html#math.sqrt" title="math.sqrt"><span class="n">sqrt</span></a><span class="w">
 </span><span class="w">
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="nn">.</span><span class="nn">control</span><span class="nn">.</span><span class="nn">sm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">control</span><span class="w">
@@ -567,8 +566,8 @@ their models are combined into a composite model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">ctrl</span><span class="o">.</span><span class="n">set_speed_ref</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">*</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="p">)</span><span class="w">
 </span><a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-method reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_external_load_torque" title="motulator.drive.model.MechanicalSystem.set_external_load_torque"><span class="n">mechanics</span><span class="o">.</span><span class="n">set_external_load_torque</span></a><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">*</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="int"><span class="n">nom</span><span class="o">.</span><span class="n">tau</span></a><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<p>Create the simulation object and simulate. Only the drive has a control system. Plot
-the drive results in per-unit values.</p>
+<p>Create the simulation object, with the control system of the drive by the model
+name, and simulate. Plot the drive results in per-unit values.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><span class="n">sim</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><span class="n">Simulation</span></a><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.CompositeModel" title="motulator.common.model.CompositeModel"><span class="n">mdl</span></a><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;</span><span class="s2">drive</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">ctrl</span><span class="p">}</span><span class="p">)</span><span class="w">
 </span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-method reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.Simulation.simulate" title="motulator.common.model.Simulation.simulate"><span class="n">sim</span><span class="o">.</span><span class="n">simulate</span></a><span class="p">(</span><span class="n">t_stop</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="w">
 </span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_drive</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">drive_model</span><span class="o">.</span><span class="n">SimulationResults</span></a><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.ModelTimeSeries" title="motulator.common.model.ModelTimeSeries"><span class="n">res</span><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">drive</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-control sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><span class="n">res</span><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">drive</span></a><span class="p">)</span><span class="w">
@@ -585,7 +584,7 @@ the drive results in per-unit values.</p>
 DC-bus voltage is close to the peak of the line-to-line grid voltage.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-motulator-grid-utils sphx-glr-backref-type-py-function reference internal" href="../../autoapi/motulator/grid/utils/index.html#motulator.grid.utils.plot_grid_waveforms" title="motulator.grid.utils.plot_grid_waveforms"><span class="n">grid_utils</span><span class="o">.</span><span class="n">plot_grid_waveforms</span></a><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_grid</span></a><span class="p">,</span> <span class="n">t_lims</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.825</span><span class="p">)</span><span class="p">,</span> <span class="n">plot_pcc_voltage</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<img src="../../_images/sphx_glr_plot_2kw_ipmsm_diode_cvc_003.png" srcset="../../_images/sphx_glr_plot_2kw_ipmsm_diode_cvc_003.png" alt="plot 2kw ipmsm diode cvc" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 18.502 seconds)</p>
+<img src="../../_images/sphx_glr_plot_2kw_ipmsm_diode_cvc_003.png" srcset="../../_images/sphx_glr_plot_2kw_ipmsm_diode_cvc_003.png" alt="plot 2kw ipmsm diode cvc" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 12.572 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-grid-connection-plot-2kw-ipmsm-diode-cvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2cc48552bc6b1d6c8d58b94efd8d26bf/plot_2kw_ipmsm_diode_cvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_ipmsm_diode_cvc.ipynb</span></code></a></p>

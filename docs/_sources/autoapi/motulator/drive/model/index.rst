@@ -560,8 +560,7 @@ Package Contents
    e.g., to model the direct-on-line start of an induction machine. A series grid
    impedance can be lumped into the machine parameters, e.g., into the stator
    resistance and the leakage inductance of the inverse-Γ model of an induction
-   machine. The model has no converter, so it is simulated without a control system,
-   see `Simulation`.
+   machine.
 
    :param machine: Electric machine model.
    :type machine: InductionMachine | SynchronousMachine
@@ -1679,9 +1678,7 @@ Package Contents
    sampling period of its next control cycle. The control systems of a composite
    model can have different sampling periods, and their sampling instants need not
    coincide. The switching states of the converters are held constant between the
-   sampling and switching instants of all the converters. A model whose converter is
-   not controlled (see `ControlledConverter`), e.g., a diode bridge or a machine
-   connected directly to the grid, has no control system.
+   sampling and switching instants of all the converters.
 
    :param mdl: Continuous-time system model.
    :type mdl: Model

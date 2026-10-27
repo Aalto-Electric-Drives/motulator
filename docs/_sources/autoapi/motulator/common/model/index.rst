@@ -1269,9 +1269,7 @@ Package Contents
    sampling period of its next control cycle. The control systems of a composite
    model can have different sampling periods, and their sampling instants need not
    coincide. The switching states of the converters are held constant between the
-   sampling and switching instants of all the converters. A model whose converter is
-   not controlled (see `ControlledConverter`), e.g., a diode bridge or a machine
-   connected directly to the grid, has no control system.
+   sampling and switching instants of all the converters.
 
    :param mdl: Continuous-time system model.
    :type mdl: Model

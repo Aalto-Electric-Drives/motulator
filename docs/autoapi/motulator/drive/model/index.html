@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.model &#8212; motulator 0.18.0 documentation</title>
+    <title>motulator.drive.model &#8212; motulator 0.19.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=4033e70d"></script>
+    <script src="../../../../_static/documentation_options.js?v=bce9d2e1"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.18.0 documentation</p>
+    <p class="title logo__title">motulator 0.19.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -1032,8 +1032,7 @@ determined by an external function rather than by torque dynamics.</p>
 e.g., to model the direct-on-line start of an induction machine. A series grid
 impedance can be lumped into the machine parameters, e.g., into the stator
 resistance and the leakage inductance of the inverse-Γ model of an induction
-machine. The model has no converter, so it is simulated without a control system,
-see <cite>Simulation</cite>.</p>
+machine.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1780,9 +1779,7 @@ generators of the same seed would produce identical noise.</p></li>
 sampling period of its next control cycle. The control systems of a composite
 model can have different sampling periods, and their sampling instants need not
 coincide. The switching states of the converters are held constant between the
-sampling and switching instants of all the converters. A model whose converter is
-not controlled (see <cite>ControlledConverter</cite>), e.g., a diode bridge or a machine
-connected directly to the grid, has no control system.</p>
+sampling and switching instants of all the converters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

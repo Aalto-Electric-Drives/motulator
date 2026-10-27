@@ -23,7 +23,7 @@
 
 This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM)
 drive, fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid
-through an AC choke, and it has no control system.
+through an AC choke.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-23
 
@@ -146,8 +146,8 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 69-71
 
-Create the simulation object and simulate. Only the drive has a control system. Plot
-the drive results in per-unit values.
+Create the simulation object, with the control system of the drive by the model
+name, and simulate. Plot the drive results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 71-79
 
@@ -246,7 +246,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.572 seconds)
+   **Total running time of the script:** (0 minutes 15.113 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:
