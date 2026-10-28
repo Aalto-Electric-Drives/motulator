@@ -184,11 +184,8 @@ class Simulation:
             raise ValueError("t_start must not be earlier than the model time")
         for name, t in starts.items():
             ctrls[name].t = t
-        # Pending switching events (instant, gate signals, blanking signals) of each
-        # converter
-        self._events: list[list[tuple[float, np.ndarray, np.ndarray]]] = [
-            [] for _ in self._pairs
-        ]
+        # Pending switching events (instant, gate states) of each converter
+        self._events: list[list[tuple[float, np.ndarray]]] = [[] for _ in self._pairs]
 
     def simulate(self, t_stop: float = 1.0, N_eval: int = 0) -> SimulationResults:
         """
@@ -263,7 +260,7 @@ class Simulation:
             if (due and t0 > t_stop) or (not self._pairs and t0 >= t_stop):
                 break
             for k, (mdl, ctrl) in enumerate(self._pairs):
-                # Control, computational delay, and carrier comparison
+                # Control and modulation
                 if k in due:
                     # The gate enable takes effect at the sampling instant, so that
                     # the control system measures the converter with blocked gates
@@ -271,24 +268,24 @@ class Simulation:
                     if enabled != mdl.converter.inp.enabled:
                         mdl.converter.set_enable(enabled)
                         self.mdl.set_outputs(t0)
-                    T_s, ref_duty_ratio = ctrl(mdl)
+                    T_s, command = ctrl(mdl)
                     if T_s <= _T_TOL:
                         raise ValueError("The sampling period must be positive")
-                    t_steps, q_abc, b_abc = mdl.modulate(T_s, ref_duty_ratio)
+                    t_steps, gates = mdl.converter.modulate(T_s, command)
                     # Switching instants, accumulated from the interval durations
                     t_sw = [t0]
-                    for t_step in t_steps[:-1]:
+                    for t_step in t_steps:
                         t_sw.append(t_sw[-1] + t_step)
-                    events[k] = list(zip(t_sw, q_abc, b_abc, strict=True))
+                    events[k] = list(zip(t_sw[:-1], gates, strict=True))
                     # The next sampling instant is based on the current instant, so a
                     # sampling instant merged with an instant of another converter
                     # within the tolerance shifts the subsequent instants accordingly
-                    t_sample[k] = t_sw[-1] + t_steps[-1]
+                    t_sample[k] = t_sw[-1]
                     update_progress()
-                # Set the switching state due at this instant
+                # Set the gate states due at this instant
                 while events[k] and events[k][0][0] <= t0 + _T_TOL:
-                    _, q_abc, b_abc = events[k].pop(0)
-                    mdl.converter.set_gate_signals(q_abc, b_abc)
+                    _, g = events[k].pop(0)
+                    mdl.converter.set_gates(g)
             # Integrate until the next sampling or switching instant
             t1 = min(t_sample + [ev[0][0] for ev in events if ev], default=t_stop)
             self._integrate((t0, t1), N_eval)

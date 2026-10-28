@@ -21,6 +21,12 @@ from motulator.common.model._ac_port import (
     update_diodes,
 )
 from motulator.common.model._base import Converter, Subsystem, SubsystemTimeSeries
+from motulator.common.model._pwm import (
+    ZOH,
+    GateStates,
+    SwitchingTimes,
+    TwoLevelModulator,
+)
 from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import (
     abc2complex,
@@ -199,15 +205,18 @@ class VoltageSourceConverter(DiodeBridge):
     """
     Three-phase voltage-source converter.
 
-    The switches are ideal, except for the dead time and the threshold voltage. When a
-    leg is blanked, i.e., neither of its switches conducts, the current direction
-    determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where
-    `i` is the phase current in the beginning of the blanking interval. The threshold
-    voltage of the conducting device, assumed equal for the switches and the diodes,
-    reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
-    determined at the latest switching instant. The DC-bus voltage is the input
-    `u_dc`, which is constant unless a DC-bus model is connected to it (see `DCBus`
-    and `Model`).
+    The modulator converts the duty ratios of the control system into the gate states
+    of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+    including the computational delay and the dead time, see `ZOH` and
+    `CarrierComparison`. The switches are ideal, except for the dead time and the
+    threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
+    the current direction determines which diode conducts. The leg state is then
+    `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking
+    interval. The threshold voltage of the conducting device, assumed equal for the
+    switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the
+    current direction is also determined at the latest switching instant. The DC-bus
+    voltage is the input `u_dc`, which is constant unless a DC-bus model is connected
+    to it (see `DCBus` and `Model`).
 
     When the gates are blocked (`inp.enabled` is False), all the switches are open, and
     the converter operates as a diode bridge, see `DiodeBridge`. The diode states are
@@ -218,8 +227,12 @@ class VoltageSourceConverter(DiodeBridge):
     u_dc : float, optional
         Constant DC-bus voltage (V). Defaults to None, in which case the converter must
         be fed from a DC-bus model.
-    t_d : float, optional
-        Dead time (s), defaults to 0.
+    modulator : TwoLevelModulator, optional
+        Modulator converting the command of the control system into the gate states,
+        see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle
+        averaged model of the duty ratios without the dead time and with the
+        computational delay of one sampling period. A modulator keeps its state, so
+        each converter needs its own.
     u_th : float, optional
         Threshold voltage (V) of the power devices, defaults to 0.
     sign : Callable[[np.ndarray], np.ndarray], optional
@@ -231,18 +244,16 @@ class VoltageSourceConverter(DiodeBridge):
 
     """
 
-    n_legs: int = 3
-
     def __init__(
         self,
         u_dc: float | None = None,
-        t_d: float = 0.0,
+        modulator: TwoLevelModulator[Any] | None = None,
         u_th: float = 0.0,
         sign: Callable[[np.ndarray], np.ndarray] = np.sign,
         u_dc_sensor: Sensor | None = None,
     ) -> None:
         super().__init__(u_dc, u_th)
-        self.t_d = t_d
+        self.modulator = ZOH() if modulator is None else modulator
         self.sign = sign
         self.u_dc_sensor = u_dc_sensor
         self.inp: VoltageSourceConverterInputs = VoltageSourceConverterInputs(u_dc=u_dc)
@@ -258,8 +269,45 @@ class VoltageSourceConverter(DiodeBridge):
             self._diodes = None  # Latched again when the gates are blocked
         self.inp.enabled = enabled
 
-    def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
-        """Set the switching state based on the gate and blanking signals."""
+    def modulate(self, T_s: float, command: Any) -> tuple[SwitchingTimes, GateStates]:
+        """
+        Convert the command to the gate states and their durations.
+
+        The command passes through the modulator also while the gates are blocked,
+        but the gate states are then zero for the whole sampling period.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+        command : Any
+            Command computed at this sampling instant, the duty ratios for `ZOH` and
+            `CarrierComparison`.
+
+        Returns
+        -------
+        t_steps : SwitchingTimes, shape (N,)
+            Durations of the intervals (s), summing to `T_s`.
+        gates : GateStates, shape (N, 2, 3)
+            Gate signals of the upper switches and blanking signals in each interval.
+
+        """
+        t_steps, gates = self.modulator(T_s, command)
+        if self.inp.enabled:
+            return t_steps, gates
+        return np.array([T_s]), np.zeros_like(gates[:1])
+
+    def set_gates(self, gates: np.ndarray) -> None:
+        """
+        Set the switching state based on the gate state of an interval.
+
+        Parameters
+        ----------
+        gates : ndarray, shape (2, 3)
+            Gate signals of the upper switches and blanking signals.
+
+        """
+        q_abc, b_abc = gates
         s_abc = self.sign(complex2abc(self.inp.i_c_ab))
         self.inp.q_c_ab = abc2complex(q_abc + 0.5 * b_abc * (1 - s_abc))
         self.inp.s_c_ab = abc2complex(s_abc)

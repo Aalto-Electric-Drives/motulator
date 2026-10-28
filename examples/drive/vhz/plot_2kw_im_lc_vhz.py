@@ -30,9 +30,9 @@ par = model.InductionMachineInvGammaPars(
 machine = model.InductionMachine(par)
 k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
 mechanics = model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
-converter = model.VoltageSourceConverter(u_dc=540)
+converter = model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison())
 lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=0.1)
-mdl = model.Drive(machine, mechanics, converter, lc_filter, pwm=True)
+mdl = model.Drive(machine, mechanics, converter, lc_filter)
 
 # %%
 # Control system (parametrized as open-loop V/Hz control).

@@ -1,7 +1,7 @@
 """Base control system for grid converters."""
 
 from cmath import exp
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -272,6 +272,10 @@ class GridConverterControlSystem(ControlSystem):
         if self.ext_ref.u_dc is not None:
             ref.u_dc = get_value(self.ext_ref.u_dc, self.t)
         return self._add_duty_ratios(ref, fbk)
+
+    def get_command(self, ref: References) -> tuple[float, Sequence[float]]:
+        """Extract the sampling period and the duty ratios from the references."""
+        return ref.T_s, ref.d_abc
 
     def _add_duty_ratios(self, ref: References, fbk: Feedbacks) -> References:
         """Compute the duty ratios from the voltage reference."""

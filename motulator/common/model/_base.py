@@ -8,13 +8,7 @@ import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
 from motulator.common.model._ac_port import ACPort
-from motulator.common.model._pwm import (
-    ZOH,
-    BlankingSignals,
-    CarrierComparison,
-    GateSignals,
-    SwitchingTimes,
-)
+from motulator.common.model._pwm import GateStates, SwitchingTimes
 
 if TYPE_CHECKING:
     from motulator.common.model._converter import DCBus
@@ -148,8 +142,6 @@ class Converter(Subsystem, Protocol):
 class ControlledConverterInputs(Protocol):
     """Protocol for the inputs of controlled converters."""
 
-    q_c_ab: Any  # Switching state, held constant over each integration interval
-    s_c_ab: Any  # Current-direction vector at the latest switching instant
     enabled: bool  # Gate enable, held constant over each integration interval
 
 
@@ -159,25 +151,28 @@ class ControlledConverter(Protocol):
     Protocol defining the gate control of converters.
 
     A controlled converter is a converter (see `Converter`) whose switches are driven by
-    a control system. It provides the number of legs, the dead time, and a method for
-    setting the switching state `inp.q_c_ab` and the current-direction vector
-    `inp.s_c_ab` based on the gate and blanking signals from the PWM model and the
-    phase currents. The format of these is up to the converter (e.g., complex space
-    vectors in a three-phase converter). The control system can block the gates
-    (`inp.enabled` is False), in which case only the diodes conduct.
+    a control system. Its modulator converts the command of the control system (e.g.,
+    the duty ratios) into the gate states and their durations within the sampling
+    period, see `Modulator`. The simulation sets the gate states at the switching
+    instants, from which the converter resolves its switching state (e.g., from the
+    gate signals and the phase currents during the blanking). The format of the
+    command and the gate states is up to the converter and its modulator. The control
+    system can block the gates (`inp.enabled` is False), in which case only the
+    diodes conduct.
 
     """
-
-    n_legs: int  # Number of legs
-    t_d: float  # Dead time (s)
 
     @property
     def inp(self) -> ControlledConverterInputs:
         """Input variables."""
         ...
 
-    def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
-        """Set the switching state based on the gate and blanking signals."""
+    def modulate(self, T_s: float, command: Any) -> tuple[SwitchingTimes, GateStates]:
+        """Convert the command to the gate states and their durations."""
+        ...
+
+    def set_gates(self, gates: np.ndarray) -> None:
+        """Set the switching state based on the gate states."""
         ...
 
     def set_enable(self, enabled: bool) -> None:
@@ -198,14 +193,9 @@ class Model[C: Converter | None]:
 
     A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
     controlled one (see `ControlledConverter`), which is driven by a control system, see
-    `Simulation`. The controlled converter gets the switching state `q_c_ab` and the
-    current-direction vector `s_c_ab`, which are held constant over each integration
-    interval. The PWM model includes the dead time `converter.t_d`, and the
-    computational delay is sized according to the number of legs `converter.n_legs`.
-    The control systems of this package compensate for a computational delay of one
-    sampling period, i.e., `delay=1` with double update and `delay=2` with single
-    update. The control system can also block the gates of the converter, see
-    `ControlSystem.set_enable`.
+    `Simulation`. The modulator of the controlled converter includes the computational
+    delay and the PWM model, see `Modulator`. The control system can also block the
+    gates of the converter, see `ControlSystem.set_enable`.
 
     Parameters
     ----------
@@ -220,19 +210,6 @@ class Model[C: Converter | None]:
         voltage. The DC bus is added to the subsystems, and the converter is registered
         in it. The DC bus can be shared with other models, see `CompositeModel`.
         Defaults to None, in which case the converter has a constant DC-bus voltage.
-    pwm : bool, optional
-        Enable the PWM model of a controlled converter, defaults to False.
-    delay : int, optional
-        Computational delay of a controlled converter in half carrier periods from the
-        sampling instant to the loading of the duty ratios, defaults to 0. With double
-        update, this equals the delay in sampling periods.
-    single_update : bool, optional
-        Sample and update the duty ratios of a controlled converter once per carrier
-        period, i.e., the sampling period of the control system equals the carrier
-        period, defaults to False (double update, the sampling period is half the
-        carrier period). With single update, `delay=2` loads the duty ratios at the next
-        sampling instant and `delay=1` at the carrier extremum between the sampling
-        instants.
 
     """
 
@@ -242,14 +219,9 @@ class Model[C: Converter | None]:
         subsystems: list[Subsystem],
         connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
         dc_bus: "DCBus | None" = None,
-        pwm: bool = False,
-        delay: int = 0,
-        single_update: bool = False,
     ) -> None:
         if converter is not None and converter not in subsystems:
             raise ValueError("The converter must be included in the subsystems")
-        if pwm and not isinstance(converter, ControlledConverter):
-            raise ValueError("PWM requires a controlled converter")
         if dc_bus is not None:
             if converter is None:
                 raise ValueError("A DC bus requires a converter")
@@ -278,15 +250,6 @@ class Model[C: Converter | None]:
         self.converter: C = converter
         self.converters: list[Converter] = [] if converter is None else [converter]
         self.dc_bus = dc_bus
-        self.single_update = single_update
-        # The converter driven by a control system, checked once, since the check of a
-        # runtime-checkable protocol is slow (see `modulate`)
-        self._controlled: ControlledConverter | None = None
-        if isinstance(converter, ControlledConverter):
-            self._controlled = converter
-            self.delay = Delay(delay, converter.n_legs)
-            t_d = converter.t_d
-            self.pwm = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
         self._t: list[float] = []  # Time history
         for subsystem in subsystems:
             subsystem.init_state_history()
@@ -325,50 +288,6 @@ class Model[C: Converter | None]:
             if derivatives := subsystem.rhs(t):
                 rhs_list.extend(derivatives)
         return rhs_list
-
-    def modulate(
-        self, T_s: float, d_abc: Sequence[float]
-    ) -> tuple[SwitchingTimes, GateSignals, BlankingSignals]:
-        """
-        Delay the duty ratios and convert them to gate signals.
-
-        The sampling period consists of one half carrier period with double update
-        and of two with single update. The duty ratios pass through the
-        computational delay once per half carrier period, and the PWM model is
-        called for each half carrier period. If the gates of the converter are
-        blocked (`converter.inp.enabled` is False), the duty ratios still pass
-        through the delay and the PWM model, but the gate signals are zero for the
-        whole sampling period.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-        d_abc : Sequence[float]
-            Duty ratios computed at this sampling instant.
-
-        Returns
-        -------
-        t_steps : SwitchingTimes, shape (N,)
-            Durations of the intervals (s), summing to `T_s`.
-        q_abc : GateSignals, shape (N, n_legs)
-            Gate signals of the upper switches in each interval.
-        b_abc : BlankingSignals, shape (N, n_legs)
-            Blanking signals in each interval.
-
-        """
-        converter = self._controlled
-        if converter is None:
-            raise ValueError("The model has no controlled converter")
-        n = 2 if self.single_update else 1  # Half carrier periods per sampling period
-        parts = [self.pwm(T_s / n, self.delay(d_abc)) for _ in range(n)]
-        if not converter.inp.enabled:
-            off = np.zeros((1, converter.n_legs))
-            return np.array([T_s]), off, off
-        t_steps = np.concatenate([p[0] for p in parts])
-        q_abc = np.vstack([p[1] for p in parts])
-        b_abc = np.vstack([p[2] for p in parts])
-        return t_steps, q_abc, b_abc
 
     def save(self, sol: OdeResult) -> None:
         """Save the solution and the signals of the converters."""
@@ -455,41 +374,3 @@ class ModelTimeSeries:
         # This helps type checkers understand dynamic attributes
         error_msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
         raise AttributeError(error_msg)
-
-
-# %%
-class Delay:
-    """
-    Computational delay modeled as a ring buffer.
-
-    Parameters
-    ----------
-    length : int, optional
-        Length of the buffer, i.e., the delay in calls, defaults to 1.
-    elem : int, optional
-        Number of elements in each sample, defaults to 3.
-
-    """
-
-    def __init__(self, length: int = 1, elem: int = 3) -> None:
-        self.data = [elem * [0] for _ in range(length)]  # Creates zero lists
-
-    def __call__(self, u: Any) -> Any:
-        """
-        Delay the input.
-
-        Parameters
-        ----------
-        u : array_like, shape (elem,)
-            Input array.
-
-        Returns
-        -------
-        array_like, shape (elem,)
-            Output array.
-
-        """
-        # Add the latest value to the end of the list
-        self.data.append(u)
-        # Pop the first element and return it
-        return self.data.pop(0)

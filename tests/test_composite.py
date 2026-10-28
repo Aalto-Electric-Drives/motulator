@@ -33,9 +33,7 @@ def time_average(x: np.ndarray, t: np.ndarray, t_start: float) -> float:
 
 
 def ipmsm_drive(
-    converter: drive_model.VoltageSourceConverter,
-    dc_bus: DCBus | None,
-    pwm: bool = False,
+    converter: drive_model.VoltageSourceConverter, dc_bus: DCBus | None
 ) -> drive_model.Drive:
     """2.2-kW IPMSM drive."""
     par = drive_model.SynchronousMachinePars(
@@ -45,20 +43,18 @@ def ipmsm_drive(
         drive_model.SynchronousMachine(par),
         drive_model.MechanicalSystem(J=0.015),
         converter,
-        pwm=pwm,
         dc_bus=dc_bus,
     )
 
 
 def grid_system(
-    afe: grid_model.VoltageSourceConverter, dc_bus: DCBus, pwm: bool = False
+    afe: grid_model.VoltageSourceConverter, dc_bus: DCBus
 ) -> grid_model.GridConverterSystem:
     """Grid converter system of the active front end."""
     return grid_model.GridConverterSystem(
         afe,
         grid_model.LFilter(L_f=L_F),
         ThreePhaseSource(w_g=2 * pi * 50, e_g=np.sqrt(2 / 3) * 400),
-        pwm=pwm,
         dc_bus=dc_bus,
     )
 
@@ -114,10 +110,11 @@ def test_composite_of_one_model_equals_model(pwm: bool) -> None:
     """A composite of a single model gives the same results as the model alone."""
 
     def simulate(composite: bool) -> drive_model.SimulationResults:
-        conv = drive_model.VoltageSourceConverter()
+        modulator = drive_model.CarrierComparison() if pwm else None
+        conv = drive_model.VoltageSourceConverter(modulator=modulator)
         dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
         dc_bus.set_external_dc_current(lambda t: (t > 0.05) * 5)
-        mdl = ipmsm_drive(conv, dc_bus, pwm)
+        mdl = ipmsm_drive(conv, dc_bus)
         ctrl = ipmsm_cvc(T_S_DRIVE)
         ctrl.set_speed_ref(lambda t: (t > 0.02) * 50.0)
         if not composite:
@@ -171,11 +168,11 @@ def test_diode_bridge_front_end() -> None:
 
 def test_active_front_end_drive() -> None:
     """The grid power balances the mechanical power through the shared DC bus."""
-    afe = grid_model.VoltageSourceConverter(u_dc=U_DC)
-    inv = drive_model.VoltageSourceConverter(u_dc=U_DC)
+    afe = grid_model.VoltageSourceConverter(U_DC, grid_model.CarrierComparison())
+    inv = drive_model.VoltageSourceConverter(U_DC, drive_model.CarrierComparison())
     dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
-    grid_sys = grid_system(afe, dc_bus, pwm=True)
-    drive_sys = ipmsm_drive(inv, dc_bus, pwm=True)
+    grid_sys = grid_system(afe, dc_bus)
+    drive_sys = ipmsm_drive(inv, dc_bus)
     mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 
     ctrl_g, ctrl_m = afe_ctrl(), ipmsm_cvc(T_S_DRIVE)
@@ -221,11 +218,15 @@ def test_simulation_continues_between_calls() -> None:
     def simulate(t_stops: list[float]) -> np.ndarray:
         # PWM with dead time on both sides, whose blanking state continues across
         # the sampling periods
-        afe = grid_model.VoltageSourceConverter(u_dc=U_DC, t_d=2e-6)
-        inv = drive_model.VoltageSourceConverter(u_dc=U_DC, t_d=2e-6)
+        afe = grid_model.VoltageSourceConverter(
+            U_DC, grid_model.CarrierComparison(t_d=2e-6)
+        )
+        inv = drive_model.VoltageSourceConverter(
+            U_DC, drive_model.CarrierComparison(t_d=2e-6)
+        )
         dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
-        grid_sys = grid_system(afe, dc_bus, pwm=True)
-        drive_sys = ipmsm_drive(inv, dc_bus, pwm=True)
+        grid_sys = grid_system(afe, dc_bus)
+        drive_sys = ipmsm_drive(inv, dc_bus)
         mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
         ctrl_g, ctrl_m = afe_ctrl(), ipmsm_cvc(T_S_DRIVE)
         ctrl_m.set_speed_ref(50.0)
