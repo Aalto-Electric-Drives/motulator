@@ -413,11 +413,13 @@ class DCBus(Subsystem):
     Capacitive DC bus feeding converters.
 
     The DC bus feeds the converters of the models it is given to, see `Model`. The
-    models connect the DC-bus voltage to the input `u_dc` of their converters and
-    register the converters in `converters`, whose DC currents the DC bus computes from
-    their switching states and AC currents. The DC bus can be shared by the converters
-    of several models, see `CompositeModel`. An external current, e.g., from a battery
-    or a braking chopper, can also be fed to the DC bus.
+    model connects its converter to the DC bus through `connect`, which registers the
+    converter in `converters` and gives the connections of its DC terminals, i.e., the
+    DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
+    currents of the registered converters, computed from their switching states and
+    AC currents. The DC bus can be shared by the converters of several models, see
+    `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
+    can also be fed to the DC bus.
 
     Parameters
     ----------
@@ -434,6 +436,27 @@ class DCBus(Subsystem):
         self.inp: DCBusInputs = DCBusInputs()
         self.out: DCBusOutputs = DCBusOutputs(u_dc)
         self.state: DCBusStates = DCBusStates(u_dc)
+
+    def connect(
+        self, converter: Converter
+    ) -> dict[tuple[Subsystem, str], tuple[Subsystem, str]]:
+        """
+        Register a converter and get the connections of its DC terminals.
+
+        Parameters
+        ----------
+        converter : Converter
+            Converter fed from the DC bus.
+
+        Returns
+        -------
+        dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+            Connections from the DC bus to the converter, see `Model`.
+
+        """
+        if converter not in self.converters:
+            self.converters.append(converter)
+        return {(converter, "u_dc"): (self, "u_dc")}
 
     def set_external_dc_current(self, i_dc: float | Callable[[float], float]) -> None:
         """Set external DC current (A), constant or a function of time."""

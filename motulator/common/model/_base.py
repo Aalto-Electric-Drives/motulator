@@ -195,10 +195,10 @@ class Model[C: Converter | None]:
     connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]
         Connections as `{(target, input_name): (source, output_name)}`.
     dc_bus : DCBus, optional
-        DC bus feeding the converter, whose input `u_dc` is connected to the DC-bus
-        voltage. The DC bus is added to the subsystems, and the converter is registered
-        in it. The DC bus can be shared with other models, see `CompositeModel`.
-        Defaults to None, in which case the converter has a constant DC-bus voltage.
+        DC bus feeding the converter. The DC bus is added to the subsystems, and the
+        converter is connected to it, see `DCBus.connect`. The DC bus can be shared
+        with other models, see `CompositeModel`. Defaults to None, in which case the
+        converter has a constant DC-bus voltage.
 
     """
 
@@ -216,12 +216,10 @@ class Model[C: Converter | None]:
                 raise ValueError("A DC bus requires a converter")
             if dc_bus in subsystems:
                 raise ValueError("The DC bus must not be included in the subsystems")
-            if converter not in dc_bus.converters:
-                dc_bus.converters.append(converter)
             # The DC bus comes first, since the converter voltage depends directly on
             # the DC-bus voltage
             subsystems = [dc_bus, *subsystems]
-            connections = {**connections, (converter, "u_dc"): (dc_bus, "u_dc")}
+            connections = {**connections, **dc_bus.connect(converter)}
         # Group the connections by the source for passing the outputs to the inputs
         self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
             s: [] for s in subsystems
