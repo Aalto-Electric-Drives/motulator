@@ -480,6 +480,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ACPort</span><span class="p">,</span>
+    <span class="n">current_direction</span><span class="p">,</span>
     <span class="n">diode_margin</span><span class="p">,</span>
     <span class="n">leg_voltages</span><span class="p">,</span>
     <span class="n">update_diodes</span><span class="p">,</span>
@@ -704,9 +705,10 @@
 <span class="sd">    `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking</span>
 <span class="sd">    interval. The threshold voltage of the conducting device, assumed equal for the</span>
 <span class="sd">    switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the</span>
-<span class="sd">    current direction is also determined at the latest switching instant. The DC-bus</span>
-<span class="sd">    voltage is the input `u_dc`, which is constant unless a DC-bus model is connected</span>
-<span class="sd">    to it (see `DCBus` and `Model`).</span>
+<span class="sd">    current direction is also determined at the latest switching instant. A current</span>
+<span class="sd">    within the tolerance of the diode-state transitions has no direction, see</span>
+<span class="sd">    `current_direction`. The DC-bus voltage is the input `u_dc`, which is constant</span>
+<span class="sd">    unless a DC-bus model is connected to it (see `DCBus` and `Model`).</span>
 
 <span class="sd">    When the gates are blocked (`inp.enabled` is False), all the switches are open, and</span>
 <span class="sd">    the converter operates as a diode bridge, see `DiodeBridge`. The diode states are</span>
@@ -806,7 +808,7 @@
 
 <span class="sd">        """</span>
         <span class="n">q_abc</span><span class="p">,</span> <span class="n">b_abc</span> <span class="o">=</span> <span class="n">gates</span>
-        <span class="n">s_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">))</span>
+        <span class="n">s_abc</span> <span class="o">=</span> <span class="n">current_direction</span><span class="p">(</span><span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">q_abc</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">b_abc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s_abc</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">s_abc</span><span class="p">)</span></div>
 

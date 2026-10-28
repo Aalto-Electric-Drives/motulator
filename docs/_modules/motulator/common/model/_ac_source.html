@@ -472,14 +472,14 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">wrap</span>
 
 
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">States</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""State variables."""</span>
 
-    <span class="n">exp_j_theta_g</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">theta_g</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Angle (rad), imaginary part always zero</span>
 
 
 <span class="nd">@dataclass</span>
@@ -552,21 +552,31 @@
         <span class="k">return</span> <span class="n">e_g_ab</span></div>
 
 
+<div class="viewcode-block" id="ThreePhaseSource.set_states">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.ThreePhaseSource.set_states">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the state, keeping the angle within [-pi, pi)."""</span>
+        <span class="c1"># The angle is wrapped only in the state of the model, which the next</span>
+        <span class="c1"># integration interval starts from, so the solver sees no discontinuity</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_g</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_g</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">index</span></div>
+
+
 <div class="viewcode-block" id="ThreePhaseSource.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.ThreePhaseSource.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set output variables."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_space_vector</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_g</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_g</span></div>
+        <span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_g</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_space_vector</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">exp_j_theta_g</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">exp_j_theta_g</span></div>
 
 
 <div class="viewcode-block" id="ThreePhaseSource.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.ThreePhaseSource.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Compute the state derivative."""</span>
-        <span class="n">w_g</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-        <span class="n">d_exp_j_theta_g</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_g</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">exp_j_theta_g</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">d_exp_j_theta_g</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_g</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="ThreePhaseSource.create_time_series">
@@ -593,9 +603,10 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">ThreePhaseSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute output time series from the states."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"exp_j_theta_g"</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">get_value</span><span class="p">)(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">w_g</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"theta_g"</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_g</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_g</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">get_value</span><span class="p">)(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">w_g</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">generate_space_vector</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_g</span><span class="p">)</span>
 </pre></div>
 

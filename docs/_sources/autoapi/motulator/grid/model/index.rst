@@ -1489,6 +1489,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_states(state_list, index)
+
+      
+      Set the state, keeping the angle within [-pi, pi).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: ThreePhaseSourceWithSignalInjection(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, u_e = 0j, f_e = 0.0)
 
    Bases: :py:obj:`motulator.common.model.ThreePhaseSource`
@@ -1570,9 +1594,10 @@ Package Contents
    `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking
    interval. The threshold voltage of the conducting device, assumed equal for the
    switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the
-   current direction is also determined at the latest switching instant. The DC-bus
-   voltage is the input `u_dc`, which is constant unless a DC-bus model is connected
-   to it (see `DCBus` and `Model`).
+   current direction is also determined at the latest switching instant. A current
+   within the tolerance of the diode-state transitions has no direction, see
+   `current_direction`. The DC-bus voltage is the input `u_dc`, which is constant
+   unless a DC-bus model is connected to it (see `DCBus` and `Model`).
 
    When the gates are blocked (`inp.enabled` is False), all the switches are open, and
    the converter operates as a diode bridge, see `DiodeBridge`. The diode states are

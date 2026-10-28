@@ -581,6 +581,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.generate_space_vector"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.generate_space_vector()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.rhs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.set_outputs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.set_states"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a><ul class="nav section-nav flex-column">
@@ -1518,6 +1519,23 @@ to represent, e.g., a current source as well.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.ThreePhaseSource.set_states">
+<span class="sig-name descname"><span class="pre">set_states</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_source.html#ThreePhaseSource.set_states"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ThreePhaseSource.set_states" title="Link to this definition">#</a></dt>
+<dd><p>Set the state, keeping the angle within [-pi, pi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_list</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>)</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1572,9 +1590,10 @@ the current direction determines which diode conducts. The leg state is then
 <cite>(1 - sign(i))/2</cite>, where <cite>i</cite> is the phase current in the beginning of the blanking
 interval. The threshold voltage of the conducting device, assumed equal for the
 switches and the diodes, reduces each phase voltage by <cite>u_th*sign(i)</cite>, where the
-current direction is also determined at the latest switching instant. The DC-bus
-voltage is the input <cite>u_dc</cite>, which is constant unless a DC-bus model is connected
-to it (see <cite>DCBus</cite> and <cite>Model</cite>).</p>
+current direction is also determined at the latest switching instant. A current
+within the tolerance of the diode-state transitions has no direction, see
+<cite>current_direction</cite>. The DC-bus voltage is the input <cite>u_dc</cite>, which is constant
+unless a DC-bus model is connected to it (see <cite>DCBus</cite> and <cite>Model</cite>).</p>
 <p>When the gates are blocked (<cite>inp.enabled</cite> is False), all the switches are open, and
 the converter operates as a diode bridge, see <cite>DiodeBridge</cite>. The diode states are
 latched from the current directions when the gates are blocked.</p>
@@ -1923,6 +1942,7 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.generate_space_vector"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.generate_space_vector()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.rhs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.set_outputs"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.set_outputs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSource.set_states"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSource.set_states()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a><ul class="nav section-nav flex-column">

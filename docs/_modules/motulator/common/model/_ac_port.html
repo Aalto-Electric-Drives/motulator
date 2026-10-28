@@ -625,6 +625,32 @@
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">margin</span><span class="p">)</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">current_direction</span><span class="p">(</span>
+    <span class="n">i_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Directions of the phase currents, given by `sign`.</span>
+
+<span class="sd">    A current within the tolerance of the diode-state transitions has the direction</span>
+<span class="sd">    zero, so that a leg without current, e.g., a floating leg of a blocked converter,</span>
+<span class="sd">    has no direction.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i_abc : ndarray, shape (3,)</span>
+<span class="sd">        Phase currents (A).</span>
+<span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
+<span class="sd">        Function of the phase currents giving their directions, defaults to `np.sign`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray, shape (3,)</span>
+<span class="sd">        Directions of the currents.</span>
+
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_abc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_I_TOL</span><span class="p">,</span> <span class="n">sign</span><span class="p">(</span><span class="n">i_abc</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">update_diodes</span><span class="p">(</span>
     <span class="n">port</span><span class="p">:</span> <span class="n">ACPort</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">diodes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -654,7 +680,7 @@
 <span class="sd">    """</span>
     <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">diodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">diodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_abc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_I_TOL</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">i_abc</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">diodes</span> <span class="o">=</span> <span class="n">current_direction</span><span class="p">(</span><span class="n">i_abc</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">diodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">diodes</span> <span class="o">*</span> <span class="n">i_abc</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">diodes</span><span class="p">)</span>
     <span class="c1"># The current circulates between the legs conducting in opposite directions.</span>
