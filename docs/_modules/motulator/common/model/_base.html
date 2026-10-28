@@ -651,9 +651,9 @@
 <span class="sd">    instants, from which the converter resolves its switching state (e.g., from the</span>
 <span class="sd">    gate signals and the phase currents during the blanking). The format of the</span>
 <span class="sd">    command and the gate states is up to the converter and its modulator. The control</span>
-<span class="sd">    system can block the gates through `set_enable`, in which case only the diodes</span>
-<span class="sd">    conduct, and the input `inp.enabled` holds the gate enable, constant over each</span>
-<span class="sd">    integration interval. By default, blocking the gates is not supported.</span>
+<span class="sd">    system can block the gates through `set_enable` at its sampling instants, after</span>
+<span class="sd">    which only the diodes conduct (see `Converter.blocked`). By default, blocking the</span>
+<span class="sd">    gates is not supported.</span>
 
 <span class="sd">    """</span>
 
@@ -676,7 +676,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set the gate enable, blocking the gates not supported by default."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"The converter does not support gate blocking"</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> does not support gate blocking"</span><span class="p">)</span></div>
 </div>
 
 

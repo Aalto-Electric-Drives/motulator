@@ -273,8 +273,6 @@ Package Contents
 
 
    .. py:method:: compute_standby_output(fbk)
-      :abstractmethod:
-
 
       
       Compute controller output while the gates are blocked.

@@ -318,9 +318,9 @@ Package Contents
    instants, from which the converter resolves its switching state (e.g., from the
    gate signals and the phase currents during the blanking). The format of the
    command and the gate states is up to the converter and its modulator. The control
-   system can block the gates through `set_enable`, in which case only the diodes
-   conduct, and the input `inp.enabled` holds the gate enable, constant over each
-   integration interval. By default, blocking the gates is not supported.
+   system can block the gates through `set_enable` at its sampling instants, after
+   which only the diodes conduct (see `Converter.blocked`). By default, blocking the
+   gates is not supported.
 
 
 

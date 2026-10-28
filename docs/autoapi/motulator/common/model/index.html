@@ -890,9 +890,9 @@ period, see <cite>Modulator</cite>. The simulation sets the gate states at the s
 instants, from which the converter resolves its switching state (e.g., from the
 gate signals and the phase currents during the blanking). The format of the
 command and the gate states is up to the converter and its modulator. The control
-system can block the gates through <cite>set_enable</cite>, in which case only the diodes
-conduct, and the input <cite>inp.enabled</cite> holds the gate enable, constant over each
-integration interval. By default, blocking the gates is not supported.</p>
+system can block the gates through <cite>set_enable</cite> at its sampling instants, after
+which only the diodes conduct (see <cite>Converter.blocked</cite>). By default, blocking the
+gates is not supported.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.ControlledConverter.modulate">
 <span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#ControlledConverter.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ControlledConverter.modulate" title="Link to this definition">#</a></dt>
