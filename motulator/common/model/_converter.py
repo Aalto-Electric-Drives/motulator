@@ -21,7 +21,12 @@ from motulator.common.model._ac_port import (
     leg_voltages,
     update_diodes,
 )
-from motulator.common.model._base import Converter, Subsystem, SubsystemTimeSeries
+from motulator.common.model._base import (
+    ControlledConverter,
+    Converter,
+    Subsystem,
+    SubsystemTimeSeries,
+)
 from motulator.common.model._pwm import (
     ZOH,
     GateStates,
@@ -55,7 +60,7 @@ class Outputs:
     u_dc: float
 
 
-class DiodeBridge(Subsystem):
+class DiodeBridge(Converter):
     """
     Three-phase six-pulse diode bridge.
 
@@ -86,7 +91,7 @@ class DiodeBridge(Subsystem):
         self.inp = DiodeBridgeInputs(u_dc=u_dc)
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc)
         self.state = None
-        self.ac_load: Subsystem | None = None  # Set by the model
+        self.ac_load = None  # Set by the model
         # Diode states of the legs, latched from the current directions at the first
         # evaluation, see `update_diodes`
         self._diodes: np.ndarray | None = None
@@ -202,7 +207,7 @@ class VoltageSourceConverterInputs(DiodeBridgeInputs):
     enabled: bool = True  # Gate enable
 
 
-class VoltageSourceConverter(DiodeBridge):
+class VoltageSourceConverter(DiodeBridge, ControlledConverter):
     """
     Three-phase voltage-source converter.
 

@@ -2,6 +2,7 @@
 
 from collections.abc import Callable, Sequence
 from dataclasses import InitVar, dataclass, field
+from math import inf
 from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
 import numpy as np
@@ -87,62 +88,53 @@ class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemSta
         ...
 
 
-class ConverterOutputs(Protocol):
-    """Protocol for converter outputs."""
-
-    u_c_ab: Any  # Converter voltage
-
-
 class Converter(Subsystem, Protocol):
     """
     Protocol defining the interface for converters.
 
     In addition to the subsystem interface, a converter provides its internal DC
     current, which a DC bus draws (see `DCBus`), and the states of its diodes. While
-    only the diodes conduct (`blocked` is True), the converter voltage is determined by
-    the AC port of the load `ac_load` and the states of the diodes, see `ACPort`. The
-    simulation then locates the transitions of the diode states as events, using the
-    margin of the states, and updates the states at the transitions. Since the voltage
-    varies within the integration interval, the model evaluates it at the solution
-    points and passes it to `extend_history`, which also saves the other signals of the
-    converter that are not states.
+    only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is
+    determined by the AC port of the load `ac_load` and the states of the diodes, see
+    `ACPort`. The simulation then locates the transitions of the diode states as
+    events, using the margin of the states, and updates the states at the transitions.
+    Since the voltage varies within the integration interval, the model evaluates it
+    at the solution points and passes it to `extend_history`, which also saves the
+    other signals of the converter that are not states.
+
+    The diodes and the DC bus are optional capabilities: by default, the gates are
+    never blocked, so there are no diode-state transitions, and the converter cannot
+    be fed from a DC bus. A converter subclassing this protocol implements only the
+    capabilities it has.
 
     """
 
-    ac_load: Subsystem | None  # Load providing the AC port
+    ac_load: Subsystem | None = None  # Load providing the AC port
 
     @property
     def margin(self) -> float:
         """Margin of the diode states, zero at their transition."""
-        ...
-
-    @property
-    def out(self) -> ConverterOutputs:
-        """Output variables."""
-        ...
+        return inf  # No transitions
 
     @property
     def blocked(self) -> bool:
         """Only the diodes conduct."""
-        ...
+        return False
 
     def update_diodes(self) -> None:
-        """Update the diode states at a transition."""
-        ...
+        """Update the diode states at a transition, nothing by default."""
+        return
 
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A) from the inputs."""
-        ...
+        raise TypeError(
+            f"{type(self).__name__} must override compute_internal_dc_current to be "
+            "fed from a DC bus"
+        )
 
     def extend_history(self, n: int, u_c_ab: Sequence[Any] | None) -> None:
         """Extend the history over `n` solution points, `u_c_ab` if blocked."""
         ...
-
-
-class ControlledConverterInputs(Protocol):
-    """Protocol for the inputs of controlled converters."""
-
-    enabled: bool  # Gate enable, held constant over each integration interval
 
 
 @runtime_checkable
@@ -157,15 +149,11 @@ class ControlledConverter(Protocol):
     instants, from which the converter resolves its switching state (e.g., from the
     gate signals and the phase currents during the blanking). The format of the
     command and the gate states is up to the converter and its modulator. The control
-    system can block the gates (`inp.enabled` is False), in which case only the
-    diodes conduct.
+    system can block the gates through `set_enable`, in which case only the diodes
+    conduct, and the input `inp.enabled` holds the gate enable, constant over each
+    integration interval. By default, blocking the gates is not supported.
 
     """
-
-    @property
-    def inp(self) -> ControlledConverterInputs:
-        """Input variables."""
-        ...
 
     def modulate(self, T_s: float, command: Any) -> tuple[SwitchingTimes, GateStates]:
         """Convert the command to the gate states and their durations."""
@@ -176,8 +164,9 @@ class ControlledConverter(Protocol):
         ...
 
     def set_enable(self, enabled: bool) -> None:
-        """Set the gate enable."""
-        ...
+        """Set the gate enable, blocking the gates not supported by default."""
+        if not enabled:
+            raise NotImplementedError("The converter does not support gate blocking")
 
 
 # %%
