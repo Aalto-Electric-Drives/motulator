@@ -129,9 +129,7 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
 
     def compute_standby_output(self, fbk: Fbk) -> Ref:
         """Compute controller output while the gates are blocked."""
-        raise NotImplementedError(
-            f"{type(self).__name__} does not support gate blocking"
-        )
+        raise TypeError(f"{type(self).__name__} does not support gate blocking")
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller internal states."""

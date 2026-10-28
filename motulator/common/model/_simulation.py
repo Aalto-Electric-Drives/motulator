@@ -265,7 +265,7 @@ class Simulation:
                     # The gate enable takes effect at the sampling instant, so that
                     # the control system measures the converter with blocked gates
                     enabled = ctrl.get_enable()
-                    if enabled != mdl.converter.inp.enabled:
+                    if enabled == mdl.converter.blocked:  # The enable changes
                         mdl.converter.set_enable(enabled)
                         self.mdl.set_outputs(t0)
                     T_s, command = ctrl(mdl)

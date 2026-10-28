@@ -32,7 +32,6 @@ class Inputs:
 
     i_c_ab: complex = 0j
     q_c_ab: complex = 0j
-    enabled: bool = True
 
 
 @dataclass
@@ -116,7 +115,7 @@ def test_converter_without_diodes_and_dc_bus() -> None:
     converter = IdealConverter(u_dc=650.0)
     assert converter.ac_load is None and not converter.blocked
     assert converter.margin == inf
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(TypeError):
         converter.set_enable(False)
     with pytest.raises(TypeError):  # A DC bus would draw the current
         converter.compute_internal_dc_current(converter.inp)
