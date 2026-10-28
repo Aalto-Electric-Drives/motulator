@@ -303,6 +303,7 @@ def test_misuse_is_rejected() -> None:
     dc_bus = DCBus(C_dc=C_DC, u_dc=U_DC)
     grid_sys = grid_system(afe, dc_bus)
     drive_sys = ipmsm_drive(conv, dc_bus)
+    assert dc_bus.converters == [afe, conv]  # Registered by the models
     with pytest.raises(ValueError):  # The models must have distinct converters
         CompositeModel({"a": drive_sys, "b": drive_sys})
     with pytest.raises(ValueError):  # Invalid model name
