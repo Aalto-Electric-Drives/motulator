@@ -485,7 +485,12 @@
     <span class="n">leg_voltages</span><span class="p">,</span>
     <span class="n">update_diodes</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Converter</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ControlledConverter</span><span class="p">,</span>
+    <span class="n">Converter</span><span class="p">,</span>
+    <span class="n">Subsystem</span><span class="p">,</span>
+    <span class="n">SubsystemTimeSeries</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ZOH</span><span class="p">,</span>
     <span class="n">GateStates</span><span class="p">,</span>
@@ -521,7 +526,7 @@
 
 <div class="viewcode-block" id="DiodeBridge">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DiodeBridge</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiodeBridge</span><span class="p">(</span><span class="n">Converter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Three-phase six-pulse diode bridge.</span>
 
@@ -552,7 +557,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">DiodeBridgeInputs</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="n">u_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set by the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set by the model</span>
         <span class="c1"># Diode states of the legs, latched from the current directions at the first</span>
         <span class="c1"># evaluation, see `update_diodes`</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -692,7 +697,7 @@
 
 <div class="viewcode-block" id="VoltageSourceConverter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">VoltageSourceConverter</span><span class="p">(</span><span class="n">DiodeBridge</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VoltageSourceConverter</span><span class="p">(</span><span class="n">DiodeBridge</span><span class="p">,</span> <span class="n">ControlledConverter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Three-phase voltage-source converter.</span>
 
@@ -931,11 +936,13 @@
 <span class="sd">    Capacitive DC bus feeding converters.</span>
 
 <span class="sd">    The DC bus feeds the converters of the models it is given to, see `Model`. The</span>
-<span class="sd">    models connect the DC-bus voltage to the input `u_dc` of their converters and</span>
-<span class="sd">    register the converters in `converters`, whose DC currents the DC bus computes from</span>
-<span class="sd">    their switching states and AC currents. The DC bus can be shared by the converters</span>
-<span class="sd">    of several models, see `CompositeModel`. An external current, e.g., from a battery</span>
-<span class="sd">    or a braking chopper, can also be fed to the DC bus.</span>
+<span class="sd">    model connects its converter to the DC bus through `connect`, which registers the</span>
+<span class="sd">    converter in `converters` and gives the connections of its DC terminals, i.e., the</span>
+<span class="sd">    DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC</span>
+<span class="sd">    currents of the registered converters, computed from their switching states and</span>
+<span class="sd">    AC currents. The DC bus can be shared by the converters of several models, see</span>
+<span class="sd">    `CompositeModel`. An external current, e.g., from a battery or a braking chopper,</span>
+<span class="sd">    can also be fed to the DC bus.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -952,6 +959,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">DCBusInputs</span> <span class="o">=</span> <span class="n">DCBusInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">DCBusOutputs</span> <span class="o">=</span> <span class="n">DCBusOutputs</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">DCBusStates</span> <span class="o">=</span> <span class="n">DCBusStates</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DCBus.connect">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DCBus.connect">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">converter</span><span class="p">:</span> <span class="n">Converter</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Register a converter and get the connections of its DC terminals.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        converter : Converter</span>
+<span class="sd">            Converter fed from the DC bus.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict[tuple[Subsystem, str], tuple[Subsystem, str]]</span>
+<span class="sd">            Connections from the DC bus to the converter, see `Model`.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">converter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">converter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">):</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">)}</span></div>
+
 
 <div class="viewcode-block" id="DCBus.set_external_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DCBus.set_external_dc_current">[docs]</a>

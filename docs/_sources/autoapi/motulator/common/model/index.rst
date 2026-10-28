@@ -318,8 +318,9 @@ Package Contents
    instants, from which the converter resolves its switching state (e.g., from the
    gate signals and the phase currents during the blanking). The format of the
    command and the gate states is up to the converter and its modulator. The control
-   system can block the gates (`inp.enabled` is False), in which case only the
-   diodes conduct.
+   system can block the gates through `set_enable`, in which case only the diodes
+   conduct, and the input `inp.enabled` holds the gate enable, constant over each
+   integration interval. By default, blocking the gates is not supported.
 
 
 
@@ -337,31 +338,6 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
-
-   .. py:property:: inp
-      :type: ControlledConverterInputs
-
-      
-      Input variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
    .. py:method:: modulate(T_s, command)
 
@@ -390,7 +366,7 @@ Package Contents
    .. py:method:: set_enable(enabled)
 
       
-      Set the gate enable.
+      Set the gate enable, blocking the gates not supported by default.
 
 
 
@@ -445,13 +421,18 @@ Package Contents
 
    In addition to the subsystem interface, a converter provides its internal DC
    current, which a DC bus draws (see `DCBus`), and the states of its diodes. While
-   only the diodes conduct (`blocked` is True), the converter voltage is determined by
-   the AC port of the load `ac_load` and the states of the diodes, see `ACPort`. The
-   simulation then locates the transitions of the diode states as events, using the
-   margin of the states, and updates the states at the transitions. Since the voltage
-   varies within the integration interval, the model evaluates it at the solution
-   points and passes it to `extend_history`, which also saves the other signals of the
-   converter that are not states.
+   only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is
+   determined by the AC port of the load `ac_load` and the states of the diodes, see
+   `ACPort`. The simulation then locates the transitions of the diode states as
+   events, using the margin of the states, and updates the states at the transitions.
+   Since the voltage varies within the integration interval, the model evaluates it
+   at the solution points and passes it to `extend_history`, which also saves the
+   other signals of the converter that are not states.
+
+   The diodes and the DC bus are optional capabilities: by default, the gates are
+   never blocked, so there are no diode-state transitions, and the converter cannot
+   be fed from a DC bus. A converter subclassing this protocol implements only the
+   capabilities it has.
 
 
 
@@ -568,35 +549,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:property:: out
-      :type: ConverterOutputs
-
-      
-      Output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: update_diodes()
 
       
-      Update the diode states at a transition.
+      Update the diode states at a transition, nothing by default.
 
 
 
@@ -626,11 +582,13 @@ Package Contents
    Capacitive DC bus feeding converters.
 
    The DC bus feeds the converters of the models it is given to, see `Model`. The
-   models connect the DC-bus voltage to the input `u_dc` of their converters and
-   register the converters in `converters`, whose DC currents the DC bus computes from
-   their switching states and AC currents. The DC bus can be shared by the converters
-   of several models, see `CompositeModel`. An external current, e.g., from a battery
-   or a braking chopper, can also be fed to the DC bus.
+   model connects its converter to the DC bus through `connect`, which registers the
+   converter in `converters` and gives the connections of its DC terminals, i.e., the
+   DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
+   currents of the registered converters, computed from their switching states and
+   AC currents. The DC bus can be shared by the converters of several models, see
+   `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
+   can also be fed to the DC bus.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
@@ -659,6 +617,35 @@ Package Contents
       
       Compute the net current (A) fed to the DC-bus capacitor.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: connect(converter)
+
+      
+      Register a converter and get the connections of its DC terminals.
+
+      :param converter: Converter fed from the DC bus.
+      :type converter: Converter
+
+      :returns: Connections from the DC bus to the converter, see `Model`.
+      :rtype: dict[tuple[Subsystem, str], tuple[Subsystem, str]]
 
 
 
@@ -776,7 +763,7 @@ Package Contents
 
 .. py:class:: DiodeBridge(u_dc = None, u_th = 0.0)
 
-   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+   Bases: :py:obj:`motulator.common.model._base.Converter`
 
 
    
@@ -1061,10 +1048,10 @@ Package Contents
    :type subsystems: list[Subsystem]
    :param connections: Connections as `{(target, input_name): (source, output_name)}`.
    :type connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]]
-   :param dc_bus: DC bus feeding the converter, whose input `u_dc` is connected to the DC-bus
-                  voltage. The DC bus is added to the subsystems, and the converter is registered
-                  in it. The DC bus can be shared with other models, see `CompositeModel`.
-                  Defaults to None, in which case the converter has a constant DC-bus voltage.
+   :param dc_bus: DC bus feeding the converter. The DC bus is added to the subsystems, and the
+                  converter is connected to it, see `DCBus.connect`. The DC bus can be shared
+                  with other models, see `CompositeModel`. Defaults to None, in which case the
+                  converter has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
 
 
@@ -2046,7 +2033,7 @@ Package Contents
 
 .. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
 
-   Bases: :py:obj:`DiodeBridge`
+   Bases: :py:obj:`DiodeBridge`, :py:obj:`motulator.common.model._base.ControlledConverter`
 
 
    

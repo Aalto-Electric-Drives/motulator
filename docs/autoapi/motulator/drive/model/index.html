@@ -524,6 +524,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus"><code class="docutils literal notranslate"><span class="pre">DCBus</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.compute_dc_current"><code class="docutils literal notranslate"><span class="pre">DCBus.compute_dc_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.connect"><code class="docutils literal notranslate"><span class="pre">DCBus.connect()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.create_time_series"><code class="docutils literal notranslate"><span class="pre">DCBus.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.rhs"><code class="docutils literal notranslate"><span class="pre">DCBus.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.set_external_dc_current"><code class="docutils literal notranslate"><span class="pre">DCBus.set_external_dc_current()</span></code></a></li>
@@ -904,11 +905,13 @@ they must be valid attribute names (not starting with an underscore, and not
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
 <p>Capacitive DC bus feeding converters.</p>
 <p>The DC bus feeds the converters of the models it is given to, see <cite>Model</cite>. The
-models connect the DC-bus voltage to the input <cite>u_dc</cite> of their converters and
-register the converters in <cite>converters</cite>, whose DC currents the DC bus computes from
-their switching states and AC currents. The DC bus can be shared by the converters
-of several models, see <cite>CompositeModel</cite>. An external current, e.g., from a battery
-or a braking chopper, can also be fed to the DC bus.</p>
+model connects its converter to the DC bus through <cite>connect</cite>, which registers the
+converter in <cite>converters</cite> and gives the connections of its DC terminals, i.e., the
+DC-bus voltage to the input <cite>u_dc</cite> of the converter. The DC bus draws the DC
+currents of the registered converters, computed from their switching states and
+AC currents. The DC bus can be shared by the converters of several models, see
+<cite>CompositeModel</cite>. An external current, e.g., from a battery or a braking chopper,
+can also be fed to the DC bus.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -927,6 +930,23 @@ or a braking chopper, can also be fed to the DC bus.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.model.DCBus.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DCBus.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.DCBus.connect" title="Link to this definition">#</a></dt>
+<dd><p>Register a converter and get the connections of its DC terminals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>converter</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Converter" title="motulator.common.model.Converter"><em>Converter</em></a>) – Converter fed from the DC bus.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Connections from the DC bus to the converter, see <cite>Model</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem">Subsystem</a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>], <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem">Subsystem</a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2516,7 +2536,7 @@ Defaults to 0.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.ControlledConverter</span></code></p>
 <p>Three-phase voltage-source converter.</p>
 <p>The modulator converts the duty ratios of the control system into the gate states
 of the legs, i.e., the gate signals of the upper switches and the blanking signals,
@@ -2822,6 +2842,7 @@ see <cite>Modulator</cite>.</p></li>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus"><code class="docutils literal notranslate"><span class="pre">DCBus</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.compute_dc_current"><code class="docutils literal notranslate"><span class="pre">DCBus.compute_dc_current()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.connect"><code class="docutils literal notranslate"><span class="pre">DCBus.connect()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.create_time_series"><code class="docutils literal notranslate"><span class="pre">DCBus.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.rhs"><code class="docutils literal notranslate"><span class="pre">DCBus.rhs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.set_external_dc_current"><code class="docutils literal notranslate"><span class="pre">DCBus.set_external_dc_current()</span></code></a></li>

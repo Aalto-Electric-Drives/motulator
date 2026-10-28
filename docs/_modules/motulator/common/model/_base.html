@@ -466,6 +466,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">runtime_checkable</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -575,12 +576,6 @@
 
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">ConverterOutputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol for converter outputs."""</span>
-
-    <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Converter voltage</span>
-
-
 <div class="viewcode-block" id="Converter">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Converter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Converter</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
@@ -589,45 +584,48 @@
 
 <span class="sd">    In addition to the subsystem interface, a converter provides its internal DC</span>
 <span class="sd">    current, which a DC bus draws (see `DCBus`), and the states of its diodes. While</span>
-<span class="sd">    only the diodes conduct (`blocked` is True), the converter voltage is determined by</span>
-<span class="sd">    the AC port of the load `ac_load` and the states of the diodes, see `ACPort`. The</span>
-<span class="sd">    simulation then locates the transitions of the diode states as events, using the</span>
-<span class="sd">    margin of the states, and updates the states at the transitions. Since the voltage</span>
-<span class="sd">    varies within the integration interval, the model evaluates it at the solution</span>
-<span class="sd">    points and passes it to `extend_history`, which also saves the other signals of the</span>
-<span class="sd">    converter that are not states.</span>
+<span class="sd">    only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is</span>
+<span class="sd">    determined by the AC port of the load `ac_load` and the states of the diodes, see</span>
+<span class="sd">    `ACPort`. The simulation then locates the transitions of the diode states as</span>
+<span class="sd">    events, using the margin of the states, and updates the states at the transitions.</span>
+<span class="sd">    Since the voltage varies within the integration interval, the model evaluates it</span>
+<span class="sd">    at the solution points and passes it to `extend_history`, which also saves the</span>
+<span class="sd">    other signals of the converter that are not states.</span>
+
+<span class="sd">    The diodes and the DC bus are optional capabilities: by default, the gates are</span>
+<span class="sd">    never blocked, so there are no diode-state transitions, and the converter cannot</span>
+<span class="sd">    be fed from a DC bus. A converter subclassing this protocol implements only the</span>
+<span class="sd">    capabilities it has.</span>
 
 <span class="sd">    """</span>
 
-    <span class="n">ac_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># Load providing the AC port</span>
+    <span class="n">ac_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Load providing the AC port</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Margin of the diode states, zero at their transition."""</span>
-        <span class="o">...</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">out</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConverterOutputs</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Output variables."""</span>
-        <span class="o">...</span>
+        <span class="k">return</span> <span class="n">inf</span>  <span class="c1"># No transitions</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">blocked</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Only the diodes conduct."""</span>
-        <span class="o">...</span>
+        <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Converter.update_diodes">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Converter.update_diodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_diodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Update the diode states at a transition."""</span>
-        <span class="o">...</span></div>
+<span class="w">        </span><span class="sd">"""Update the diode states at a transition, nothing by default."""</span>
+        <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="Converter.compute_internal_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Converter.compute_internal_dc_current">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the internal DC current (A) from the inputs."""</span>
-        <span class="o">...</span></div>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must override compute_internal_dc_current to be "</span>
+            <span class="s2">"fed from a DC bus"</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Converter.extend_history">
@@ -637,12 +635,6 @@
         <span class="o">...</span></div>
 </div>
 
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">ControlledConverterInputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol for the inputs of controlled converters."""</span>
-
-    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># Gate enable, held constant over each integration interval</span>
 
 
 <div class="viewcode-block" id="ControlledConverter">
@@ -659,15 +651,11 @@
 <span class="sd">    instants, from which the converter resolves its switching state (e.g., from the</span>
 <span class="sd">    gate signals and the phase currents during the blanking). The format of the</span>
 <span class="sd">    command and the gate states is up to the converter and its modulator. The control</span>
-<span class="sd">    system can block the gates (`inp.enabled` is False), in which case only the</span>
-<span class="sd">    diodes conduct.</span>
+<span class="sd">    system can block the gates through `set_enable`, in which case only the diodes</span>
+<span class="sd">    conduct, and the input `inp.enabled` holds the gate enable, constant over each</span>
+<span class="sd">    integration interval. By default, blocking the gates is not supported.</span>
 
 <span class="sd">    """</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ControlledConverterInputs</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Input variables."""</span>
-        <span class="o">...</span>
 
 <div class="viewcode-block" id="ControlledConverter.modulate">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.modulate">[docs]</a>
@@ -686,8 +674,9 @@
 <div class="viewcode-block" id="ControlledConverter.set_enable">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.set_enable">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_enable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set the gate enable."""</span>
-        <span class="o">...</span></div>
+<span class="w">        </span><span class="sd">"""Set the gate enable, blocking the gates not supported by default."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"The converter does not support gate blocking"</span><span class="p">)</span></div>
 </div>
 
 
@@ -720,10 +709,10 @@
 <span class="sd">    connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]</span>
 <span class="sd">        Connections as `{(target, input_name): (source, output_name)}`.</span>
 <span class="sd">    dc_bus : DCBus, optional</span>
-<span class="sd">        DC bus feeding the converter, whose input `u_dc` is connected to the DC-bus</span>
-<span class="sd">        voltage. The DC bus is added to the subsystems, and the converter is registered</span>
-<span class="sd">        in it. The DC bus can be shared with other models, see `CompositeModel`.</span>
-<span class="sd">        Defaults to None, in which case the converter has a constant DC-bus voltage.</span>
+<span class="sd">        DC bus feeding the converter. The DC bus is added to the subsystems, and the</span>
+<span class="sd">        converter is connected to it, see `DCBus.connect`. The DC bus can be shared</span>
+<span class="sd">        with other models, see `CompositeModel`. Defaults to None, in which case the</span>
+<span class="sd">        converter has a constant DC-bus voltage.</span>
 
 <span class="sd">    """</span>
 
@@ -741,12 +730,10 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A DC bus requires a converter"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dc_bus</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The DC bus must not be included in the subsystems"</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">converter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dc_bus</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span>
-                <span class="n">dc_bus</span><span class="o">.</span><span class="n">converters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">converter</span><span class="p">)</span>
             <span class="c1"># The DC bus comes first, since the converter voltage depends directly on</span>
             <span class="c1"># the DC-bus voltage</span>
             <span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="n">dc_bus</span><span class="p">,</span> <span class="o">*</span><span class="n">subsystems</span><span class="p">]</span>
-            <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">connections</span><span class="p">,</span> <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">):</span> <span class="p">(</span><span class="n">dc_bus</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">)}</span>
+            <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">connections</span><span class="p">,</span> <span class="o">**</span><span class="n">dc_bus</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">converter</span><span class="p">)}</span>
         <span class="c1"># Group the connections by the source for passing the outputs to the inputs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
             <span class="n">s</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span>

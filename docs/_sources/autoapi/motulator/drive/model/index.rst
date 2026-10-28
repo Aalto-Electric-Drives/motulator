@@ -254,11 +254,13 @@ Package Contents
    Capacitive DC bus feeding converters.
 
    The DC bus feeds the converters of the models it is given to, see `Model`. The
-   models connect the DC-bus voltage to the input `u_dc` of their converters and
-   register the converters in `converters`, whose DC currents the DC bus computes from
-   their switching states and AC currents. The DC bus can be shared by the converters
-   of several models, see `CompositeModel`. An external current, e.g., from a battery
-   or a braking chopper, can also be fed to the DC bus.
+   model connects its converter to the DC bus through `connect`, which registers the
+   converter in `converters` and gives the connections of its DC terminals, i.e., the
+   DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
+   currents of the registered converters, computed from their switching states and
+   AC currents. The DC bus can be shared by the converters of several models, see
+   `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
+   can also be fed to the DC bus.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
@@ -287,6 +289,35 @@ Package Contents
       
       Compute the net current (A) fed to the DC-bus capacitor.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: connect(converter)
+
+      
+      Register a converter and get the connections of its DC terminals.
+
+      :param converter: Converter fed from the DC bus.
+      :type converter: Converter
+
+      :returns: Connections from the DC bus to the converter, see `Model`.
+      :rtype: dict[tuple[Subsystem, str], tuple[Subsystem, str]]
 
 
 
@@ -2852,7 +2883,7 @@ Package Contents
 
 .. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
 
-   Bases: :py:obj:`DiodeBridge`
+   Bases: :py:obj:`DiodeBridge`, :py:obj:`motulator.common.model._base.ControlledConverter`
 
 
    
