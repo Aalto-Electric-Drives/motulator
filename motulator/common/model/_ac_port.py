@@ -158,6 +158,32 @@ def diode_margin(
     return float(margin)
 
 
+def current_direction(
+    i_abc: np.ndarray, sign: Callable[[np.ndarray], np.ndarray] = np.sign
+) -> np.ndarray:
+    """
+    Directions of the phase currents, given by `sign`.
+
+    A current within the tolerance of the diode-state transitions has the direction
+    zero, so that a leg without current, e.g., a floating leg of a blocked converter,
+    has no direction.
+
+    Parameters
+    ----------
+    i_abc : ndarray, shape (3,)
+        Phase currents (A).
+    sign : Callable[[np.ndarray], np.ndarray], optional
+        Function of the phase currents giving their directions, defaults to `np.sign`.
+
+    Returns
+    -------
+    ndarray, shape (3,)
+        Directions of the currents.
+
+    """
+    return np.where(np.abs(i_abc) > _I_TOL, sign(i_abc), 0.0)
+
+
 def update_diodes(
     port: ACPort, u_dc: float, diodes: np.ndarray | None = None
 ) -> np.ndarray:
@@ -187,7 +213,7 @@ def update_diodes(
     """
     i_abc = complex2abc(port.i)
     if diodes is None:
-        diodes = np.where(np.abs(i_abc) > _I_TOL, np.sign(i_abc), 0.0)
+        diodes = current_direction(i_abc)
     else:
         diodes = np.where(diodes * i_abc <= 0, 0.0, diodes)
     # The current circulates between the legs conducting in opposite directions.

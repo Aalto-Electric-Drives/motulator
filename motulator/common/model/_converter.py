@@ -16,6 +16,7 @@ import numpy as np
 
 from motulator.common.model._ac_port import (
     ACPort,
+    current_direction,
     diode_margin,
     leg_voltages,
     update_diodes,
@@ -214,9 +215,10 @@ class VoltageSourceConverter(DiodeBridge):
     `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking
     interval. The threshold voltage of the conducting device, assumed equal for the
     switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the
-    current direction is also determined at the latest switching instant. The DC-bus
-    voltage is the input `u_dc`, which is constant unless a DC-bus model is connected
-    to it (see `DCBus` and `Model`).
+    current direction is also determined at the latest switching instant. A current
+    within the tolerance of the diode-state transitions has no direction, see
+    `current_direction`. The DC-bus voltage is the input `u_dc`, which is constant
+    unless a DC-bus model is connected to it (see `DCBus` and `Model`).
 
     When the gates are blocked (`inp.enabled` is False), all the switches are open, and
     the converter operates as a diode bridge, see `DiodeBridge`. The diode states are
@@ -308,7 +310,7 @@ class VoltageSourceConverter(DiodeBridge):
 
         """
         q_abc, b_abc = gates
-        s_abc = self.sign(complex2abc(self.inp.i_c_ab))
+        s_abc = current_direction(complex2abc(self.inp.i_c_ab), self.sign)
         self.inp.q_c_ab = abc2complex(q_abc + 0.5 * b_abc * (1 - s_abc))
         self.inp.s_c_ab = abc2complex(s_abc)
 
