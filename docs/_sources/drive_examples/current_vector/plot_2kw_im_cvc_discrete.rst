@@ -91,7 +91,7 @@ Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
 discrete-time design includes the delays, so the control system does not advance
 the angle of its voltage reference (`k_comp = 0`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-66
+.. GENERATED FROM PYTHON SOURCE LINES 38-65
 
 .. code-block:: Python
 
@@ -101,8 +101,7 @@ the angle of its voltage reference (`k_comp = 0`).
         mdl = model.Drive(
             model.InductionMachine(par),
             model.ExternalRotorSpeed(),
-            model.VoltageSourceConverter(u_dc=540),
-            pwm=True,
+            model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
         )
         mdl.mechanics.set_external_rotor_speed(lambda t: 0.5 * base.w_M)
         cfg = control.CurrentVectorControllerCfg(
@@ -130,11 +129,11 @@ the angle of its voltage reference (`k_comp = 0`).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 66-67
 
 Plot the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-87
+.. GENERATED FROM PYTHON SOURCE LINES 67-86
 
 .. code-block:: Python
 
@@ -169,7 +168,7 @@ Plot the current responses in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-90
+.. GENERATED FROM PYTHON SOURCE LINES 87-89
 
 At this bandwidth, the continuous-time design results in poorly damped oscillations,
 while the discrete-time design is well damped.
@@ -177,7 +176,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.368 seconds)
+   **Total running time of the script:** (0 minutes 2.438 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:

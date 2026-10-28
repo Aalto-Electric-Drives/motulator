@@ -472,13 +472,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate._ivp.ivp</span><span class="w"> </span><span class="kn">import</span> <span class="n">OdeResult</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ZOH</span><span class="p">,</span>
-    <span class="n">BlankingSignals</span><span class="p">,</span>
-    <span class="n">CarrierComparison</span><span class="p">,</span>
-    <span class="n">GateSignals</span><span class="p">,</span>
-    <span class="n">SwitchingTimes</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">GateStates</span><span class="p">,</span> <span class="n">SwitchingTimes</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DCBus</span>
@@ -648,8 +642,6 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">ControlledConverterInputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol for the inputs of controlled converters."""</span>
 
-    <span class="n">q_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Switching state, held constant over each integration interval</span>
-    <span class="n">s_c_ab</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># Current-direction vector at the latest switching instant</span>
     <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># Gate enable, held constant over each integration interval</span>
 
 
@@ -661,27 +653,33 @@
 <span class="sd">    Protocol defining the gate control of converters.</span>
 
 <span class="sd">    A controlled converter is a converter (see `Converter`) whose switches are driven by</span>
-<span class="sd">    a control system. It provides the number of legs, the dead time, and a method for</span>
-<span class="sd">    setting the switching state `inp.q_c_ab` and the current-direction vector</span>
-<span class="sd">    `inp.s_c_ab` based on the gate and blanking signals from the PWM model and the</span>
-<span class="sd">    phase currents. The format of these is up to the converter (e.g., complex space</span>
-<span class="sd">    vectors in a three-phase converter). The control system can block the gates</span>
-<span class="sd">    (`inp.enabled` is False), in which case only the diodes conduct.</span>
+<span class="sd">    a control system. Its modulator converts the command of the control system (e.g.,</span>
+<span class="sd">    the duty ratios) into the gate states and their durations within the sampling</span>
+<span class="sd">    period, see `Modulator`. The simulation sets the gate states at the switching</span>
+<span class="sd">    instants, from which the converter resolves its switching state (e.g., from the</span>
+<span class="sd">    gate signals and the phase currents during the blanking). The format of the</span>
+<span class="sd">    command and the gate states is up to the converter and its modulator. The control</span>
+<span class="sd">    system can block the gates (`inp.enabled` is False), in which case only the</span>
+<span class="sd">    diodes conduct.</span>
 
 <span class="sd">    """</span>
-
-    <span class="n">n_legs</span><span class="p">:</span> <span class="nb">int</span>  <span class="c1"># Number of legs</span>
-    <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Dead time (s)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ControlledConverterInputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Input variables."""</span>
         <span class="o">...</span>
 
-<div class="viewcode-block" id="ControlledConverter.set_gate_signals">
-<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.set_gate_signals">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_gate_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set the switching state based on the gate and blanking signals."""</span>
+<div class="viewcode-block" id="ControlledConverter.modulate">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.modulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Convert the command to the gate states and their durations."""</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="ControlledConverter.set_gates">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.set_gates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_gates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gates</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the switching state based on the gate states."""</span>
         <span class="o">...</span></div>
 
 
@@ -709,14 +707,9 @@
 
 <span class="sd">    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a</span>
 <span class="sd">    controlled one (see `ControlledConverter`), which is driven by a control system, see</span>
-<span class="sd">    `Simulation`. The controlled converter gets the switching state `q_c_ab` and the</span>
-<span class="sd">    current-direction vector `s_c_ab`, which are held constant over each integration</span>
-<span class="sd">    interval. The PWM model includes the dead time `converter.t_d`, and the</span>
-<span class="sd">    computational delay is sized according to the number of legs `converter.n_legs`.</span>
-<span class="sd">    The control systems of this package compensate for a computational delay of one</span>
-<span class="sd">    sampling period, i.e., `delay=1` with double update and `delay=2` with single</span>
-<span class="sd">    update. The control system can also block the gates of the converter, see</span>
-<span class="sd">    `ControlSystem.set_enable`.</span>
+<span class="sd">    `Simulation`. The modulator of the controlled converter includes the computational</span>
+<span class="sd">    delay and the PWM model, see `Modulator`. The control system can also block the</span>
+<span class="sd">    gates of the converter, see `ControlSystem.set_enable`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -731,19 +724,6 @@
 <span class="sd">        voltage. The DC bus is added to the subsystems, and the converter is registered</span>
 <span class="sd">        in it. The DC bus can be shared with other models, see `CompositeModel`.</span>
 <span class="sd">        Defaults to None, in which case the converter has a constant DC-bus voltage.</span>
-<span class="sd">    pwm : bool, optional</span>
-<span class="sd">        Enable the PWM model of a controlled converter, defaults to False.</span>
-<span class="sd">    delay : int, optional</span>
-<span class="sd">        Computational delay of a controlled converter in half carrier periods from the</span>
-<span class="sd">        sampling instant to the loading of the duty ratios, defaults to 0. With double</span>
-<span class="sd">        update, this equals the delay in sampling periods.</span>
-<span class="sd">    single_update : bool, optional</span>
-<span class="sd">        Sample and update the duty ratios of a controlled converter once per carrier</span>
-<span class="sd">        period, i.e., the sampling period of the control system equals the carrier</span>
-<span class="sd">        period, defaults to False (double update, the sampling period is half the</span>
-<span class="sd">        carrier period). With single update, `delay=2` loads the duty ratios at the next</span>
-<span class="sd">        sampling instant and `delay=1` at the carrier extremum between the sampling</span>
-<span class="sd">        instants.</span>
 
 <span class="sd">    """</span>
 
@@ -753,14 +733,9 @@
         <span class="n">subsystems</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">],</span>
         <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
         <span class="n">dc_bus</span><span class="p">:</span> <span class="s2">"DCBus | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">pwm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">converter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The converter must be included in the subsystems"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">pwm</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ControlledConverter</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"PWM requires a controlled converter"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dc_bus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A DC bus requires a converter"</span><span class="p">)</span>
@@ -789,15 +764,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">:</span> <span class="n">C</span> <span class="o">=</span> <span class="n">converter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Converter</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="n">converter</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus</span> <span class="o">=</span> <span class="n">dc_bus</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="o">=</span> <span class="n">single_update</span>
-        <span class="c1"># The converter driven by a control system, checked once, since the check of a</span>
-        <span class="c1"># runtime-checkable protocol is slow (see `modulate`)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_controlled</span><span class="p">:</span> <span class="n">ControlledConverter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">ControlledConverter</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_controlled</span> <span class="o">=</span> <span class="n">converter</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">converter</span><span class="o">.</span><span class="n">n_legs</span><span class="p">)</span>
-            <span class="n">t_d</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">t_d</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span> <span class="k">if</span> <span class="n">pwm</span> <span class="k">else</span> <span class="n">ZOH</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="n">t_d</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Time history</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
             <span class="n">subsystem</span><span class="o">.</span><span class="n">init_state_history</span><span class="p">()</span>
@@ -847,53 +813,6 @@
             <span class="k">if</span> <span class="n">derivatives</span> <span class="o">:=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">rhs</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
                 <span class="n">rhs_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">derivatives</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">rhs_list</span></div>
-
-
-<div class="viewcode-block" id="Model.modulate">
-<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.modulate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateSignals</span><span class="p">,</span> <span class="n">BlankingSignals</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Delay the duty ratios and convert them to gate signals.</span>
-
-<span class="sd">        The sampling period consists of one half carrier period with double update</span>
-<span class="sd">        and of two with single update. The duty ratios pass through the</span>
-<span class="sd">        computational delay once per half carrier period, and the PWM model is</span>
-<span class="sd">        called for each half carrier period. If the gates of the converter are</span>
-<span class="sd">        blocked (`converter.inp.enabled` is False), the duty ratios still pass</span>
-<span class="sd">        through the delay and the PWM model, but the gate signals are zero for the</span>
-<span class="sd">        whole sampling period.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        T_s : float</span>
-<span class="sd">            Sampling period (s).</span>
-<span class="sd">        d_abc : Sequence[float]</span>
-<span class="sd">            Duty ratios computed at this sampling instant.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        t_steps : SwitchingTimes, shape (N,)</span>
-<span class="sd">            Durations of the intervals (s), summing to `T_s`.</span>
-<span class="sd">        q_abc : GateSignals, shape (N, n_legs)</span>
-<span class="sd">            Gate signals of the upper switches in each interval.</span>
-<span class="sd">        b_abc : BlankingSignals, shape (N, n_legs)</span>
-<span class="sd">            Blanking signals in each interval.</span>
-
-<span class="sd">        """</span>
-        <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_controlled</span>
-        <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The model has no controlled converter"</span><span class="p">)</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="k">else</span> <span class="mi">1</span>  <span class="c1"># Half carrier periods per sampling period</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">d_abc</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">converter</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
-            <span class="n">off</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">converter</span><span class="o">.</span><span class="n">n_legs</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">T_s</span><span class="p">]),</span> <span class="n">off</span><span class="p">,</span> <span class="n">off</span>
-        <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
-        <span class="n">q_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
-        <span class="n">b_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">,</span> <span class="n">b_abc</span></div>
 
 
 <div class="viewcode-block" id="Model.save">
@@ -997,44 +916,6 @@
         <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">' has no attribute '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">'"</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span></div>
 
-
-
-<span class="c1"># %%</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Delay</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Computational delay modeled as a ring buffer.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    length : int, optional</span>
-<span class="sd">        Length of the buffer, i.e., the delay in calls, defaults to 1.</span>
-<span class="sd">    elem : int, optional</span>
-<span class="sd">        Number of elements in each sample, defaults to 3.</span>
-
-<span class="sd">    """</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">elem</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">elem</span> <span class="o">*</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">)]</span>  <span class="c1"># Creates zero lists</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Delay the input.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        u : array_like, shape (elem,)</span>
-<span class="sd">            Input array.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        array_like, shape (elem,)</span>
-<span class="sd">            Output array.</span>
-
-<span class="sd">        """</span>
-        <span class="c1"># Add the latest value to the end of the list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-        <span class="c1"># Pop the first element and return it</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 
                 </article>

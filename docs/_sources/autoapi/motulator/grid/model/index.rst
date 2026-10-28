@@ -32,6 +32,7 @@ Classes
 
 .. autoapisummary::
 
+   motulator.grid.model.CarrierComparison
    motulator.grid.model.CompositeModel
    motulator.grid.model.DCBus
    motulator.grid.model.DiodeBridge
@@ -44,10 +45,133 @@ Classes
    motulator.grid.model.ThreePhaseSource
    motulator.grid.model.ThreePhaseSourceWithSignalInjection
    motulator.grid.model.VoltageSourceConverter
+   motulator.grid.model.ZOH
 
 
 Package Contents
 ----------------
+
+.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12)
+
+   Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
+
+
+   
+   Carrier comparison of a voltage-source converter.
+
+   This computes the gate signals and their durations based on the duty ratios. Instead
+   of searching for zero crossings, the switching instants are explicitly computed in
+   the beginning of each half carrier period, allowing faster simulations. The dead
+   time delays the turn-on of the switches, i.e., each leg is blanked for `t_d` after
+   its switching instant.
+
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
+   :param delay: Computational delay in half carrier periods, defaults to one sampling period,
+                 see `Modulator`.
+   :type delay: int, optional
+   :param single_update: Sample and update the duty ratios once per carrier period, defaults to False,
+                         see `Modulator`.
+   :type single_update: bool, optional
+   :param N: Amount of the counter quantization levels, defaults to 2**12.
+   :type N: int, optional
+
+   .. rubric:: Examples
+
+   >>> from motulator.common.model import CarrierComparison
+   >>> carrier_cmp = CarrierComparison(delay=0)
+   >>> # First call gives rising edges
+   >>> t_steps, gates = carrier_cmp(1e-3, [.4, .2, .8])
+   >>> # Durations of the switching states
+   >>> t_steps
+   array([0.00019995, 0.00040015, 0.00019995, 0.00019995])
+   >>> # Gate signals of the upper switches
+   >>> gates[:, 0]
+   array([[0, 0, 0],
+          [0, 0, 1],
+          [1, 0, 1],
+          [1, 1, 1]])
+   >>> # Second call gives falling edges
+   >>> t_steps, gates = carrier_cmp(1e-3, [.4, .2, .8])
+   >>> t_steps
+   array([0.00019995, 0.00019995, 0.00040015, 0.00019995])
+   >>> gates[:, 0]
+   array([[1, 1, 1],
+          [1, 0, 1],
+          [0, 0, 1],
+          [0, 0, 0]])
+   >>> # Sum of the step times equals T_s
+   >>> float(np.sum(t_steps))
+   0.001
+   >>> # Dead time blanks each leg after its switching instant
+   >>> carrier_cmp = CarrierComparison(t_d=1e-4, delay=0)
+   >>> t_steps, gates = carrier_cmp(1e-3, [.5, .5, .5])
+   >>> np.round(t_steps / 1e-3, 3)  # In ms
+   array([0.5, 0.1, 0.4])
+   >>> gates[:, 0]  # Gate signals
+   array([[0, 0, 0],
+          [0, 0, 0],
+          [1, 1, 1]])
+   >>> gates[:, 1]  # Blanking signals
+   array([[0, 0, 0],
+          [1, 1, 1],
+          [0, 0, 0]])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: schedule(T_half, command)
+
+      
+      Compute the gate signals and their durations.
+
+      :param T_half: Half carrier period (s).
+      :type T_half: float
+      :param command: Duty ratios in the range [0, 1].
+      :type command: Sequence[float], shape (n_legs,)
+
+      :returns: * **t_steps** (*SwitchingTimes, shape (N,)*) -- Durations of the intervals (s).
+                * **gates** (*GateStates, shape (N, 2, n_legs)*) -- Gate signals of the upper switches and blanking signals in each interval.
+
+      .. rubric:: Notes
+
+      Simultaneous switching instants are merged, so the number of intervals varies.
+      Blanking continues across half carrier periods, including changes in their
+      length. A reversed command cancels a pending turn-on and starts a new blanking
+      interval. On the first call, the initial commanded state is assumed to
+      already conduct.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: CompositeModel(models)
 
@@ -58,9 +182,10 @@ Package Contents
    Composite of models sharing subsystems.
 
    The models are coupled through shared subsystem objects, e.g., a DC bus given to
-   the models of a grid converter and a drive. Each model keeps its converter, PWM
-   model, and computational delay, and the model of a controlled converter is driven
-   by its own control system in the simulation, see `Simulation`. The subsystems are
+   the models of a grid converter and a drive. Each model keeps its converter, whose
+   modulator includes the PWM model and the computational delay, and the model of a
+   controlled converter is driven by its own control system in the simulation, see
+   `Simulation`. The subsystems are
    evaluated in the order of the models, a shared subsystem at its first occurrence.
    The order is not resolved automatically: a shared subsystem whose outputs other
    subsystems depend on directly must come first in each model, as `Model` places the
@@ -533,7 +658,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, pwm = False, delay = 1, single_update = False)
+.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None)
 
    Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`C`\ ]
 
@@ -553,15 +678,6 @@ Package Contents
                   a drive), see `CompositeModel`. Defaults to None, in which case the converter
                   has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
-   :param pwm: Enable the PWM model of a voltage-source converter, defaults to False.
-   :type pwm: bool, optional
-   :param delay: Computational delay in half carrier periods (sampling periods with double
-                 update), defaults to 1. With single update, use 2 for a delay of one
-                 sampling period, see `Model`.
-   :type delay: int, optional
-   :param single_update: Sample and update the duty ratios once per carrier period instead of twice,
-                         defaults to False, see `Model`.
-   :type single_update: bool, optional
 
 
 
@@ -1437,7 +1553,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc = None, t_d = 0.0, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
+.. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
 
    Bases: :py:obj:`DiodeBridge`
 
@@ -1445,15 +1561,18 @@ Package Contents
    
    Three-phase voltage-source converter.
 
-   The switches are ideal, except for the dead time and the threshold voltage. When a
-   leg is blanked, i.e., neither of its switches conducts, the current direction
-   determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where
-   `i` is the phase current in the beginning of the blanking interval. The threshold
-   voltage of the conducting device, assumed equal for the switches and the diodes,
-   reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
-   determined at the latest switching instant. The DC-bus voltage is the input
-   `u_dc`, which is constant unless a DC-bus model is connected to it (see `DCBus`
-   and `Model`).
+   The modulator converts the duty ratios of the control system into the gate states
+   of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+   including the computational delay and the dead time, see `ZOH` and
+   `CarrierComparison`. The switches are ideal, except for the dead time and the
+   threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
+   the current direction determines which diode conducts. The leg state is then
+   `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking
+   interval. The threshold voltage of the conducting device, assumed equal for the
+   switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the
+   current direction is also determined at the latest switching instant. The DC-bus
+   voltage is the input `u_dc`, which is constant unless a DC-bus model is connected
+   to it (see `DCBus` and `Model`).
 
    When the gates are blocked (`inp.enabled` is False), all the switches are open, and
    the converter operates as a diode bridge, see `DiodeBridge`. The diode states are
@@ -1462,8 +1581,12 @@ Package Contents
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
                 be fed from a DC-bus model.
    :type u_dc: float, optional
-   :param t_d: Dead time (s), defaults to 0.
-   :type t_d: float, optional
+   :param modulator: Modulator converting the command of the control system into the gate states,
+                     see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle
+                     averaged model of the duty ratios without the dead time and with the
+                     computational delay of one sampling period. A modulator keeps its state, so
+                     each converter needs its own.
+   :type modulator: TwoLevelModulator, optional
    :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
    :type u_th: float, optional
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
@@ -1659,6 +1782,41 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: modulate(T_s, command)
+
+      
+      Convert the command to the gate states and their durations.
+
+      The command passes through the modulator also while the gates are blocked,
+      but the gate states are then zero for the whole sampling period.
+
+      :param T_s: Sampling period (s).
+      :type T_s: float
+      :param command: Command computed at this sampling instant, the duty ratios for `ZOH` and
+                      `CarrierComparison`.
+      :type command: Any
+
+      :returns: * **t_steps** (*SwitchingTimes, shape (N,)*) -- Durations of the intervals (s), summing to `T_s`.
+                * **gates** (*GateStates, shape (N, 2, 3)*) -- Gate signals of the upper switches and blanking signals in each interval.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: set_enable(enabled)
 
       
@@ -1683,11 +1841,13 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_gate_signals(q_abc, b_abc)
+   .. py:method:: set_gates(gates)
 
       
-      Set the switching state based on the gate and blanking signals.
+      Set the switching state based on the gate state of an interval.
 
+      :param gates: Gate signals of the upper switches and blanking signals.
+      :type gates: ndarray, shape (2, 3)
 
 
 
@@ -1712,6 +1872,78 @@ Package Contents
       
       Set output variables.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ZOH(t_d = 0.0, delay = None, single_update = False)
+
+   Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
+
+
+   
+   Zero-order hold of the duty ratios of a voltage-source converter.
+
+   The dead time reduces the gate signal duty ratios of both switches of a leg by
+   `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the
+   half carrier period `T_half`, unless the leg does not switch. Short pulses are
+   suppressed, and the blanking fraction is computed from the remaining on-times of
+   both switches. This is a switching-cycle averaged model, not a model of switching
+   transients.
+
+   :param t_d: Dead time (s), defaults to 0.
+   :type t_d: float, optional
+   :param delay: Computational delay in half carrier periods, defaults to one sampling period,
+                 see `Modulator`.
+   :type delay: int, optional
+   :param single_update: Sample and update the duty ratios once per carrier period, defaults to False,
+                         see `Modulator`.
+   :type single_update: bool, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: schedule(T_half, command)
+
+      
+      Compute the averaged gate states.
+
+      :param T_half: Half carrier period (s).
+      :type T_half: float
+      :param command: Duty ratios in the range [0, 1].
+      :type command: Sequence[float], shape (n_legs,)
+
+      :returns: * **t_steps** (*SwitchingTimes, shape (1,)*) -- Half carrier period (s).
+                * **gates** (*GateStates, shape (1, 2, n_legs)*) -- On-time fractions of the upper switches and blanking fractions.
 
 
 

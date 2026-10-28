@@ -485,6 +485,12 @@
     <span class="n">update_diodes</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Converter</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ZOH</span><span class="p">,</span>
+    <span class="n">GateStates</span><span class="p">,</span>
+    <span class="n">SwitchingTimes</span><span class="p">,</span>
+    <span class="n">TwoLevelModulator</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">abc2complex</span><span class="p">,</span>
@@ -689,15 +695,18 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Three-phase voltage-source converter.</span>
 
-<span class="sd">    The switches are ideal, except for the dead time and the threshold voltage. When a</span>
-<span class="sd">    leg is blanked, i.e., neither of its switches conducts, the current direction</span>
-<span class="sd">    determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where</span>
-<span class="sd">    `i` is the phase current in the beginning of the blanking interval. The threshold</span>
-<span class="sd">    voltage of the conducting device, assumed equal for the switches and the diodes,</span>
-<span class="sd">    reduces each phase voltage by `u_th*sign(i)`, where the current direction is also</span>
-<span class="sd">    determined at the latest switching instant. The DC-bus voltage is the input</span>
-<span class="sd">    `u_dc`, which is constant unless a DC-bus model is connected to it (see `DCBus`</span>
-<span class="sd">    and `Model`).</span>
+<span class="sd">    The modulator converts the duty ratios of the control system into the gate states</span>
+<span class="sd">    of the legs, i.e., the gate signals of the upper switches and the blanking signals,</span>
+<span class="sd">    including the computational delay and the dead time, see `ZOH` and</span>
+<span class="sd">    `CarrierComparison`. The switches are ideal, except for the dead time and the</span>
+<span class="sd">    threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,</span>
+<span class="sd">    the current direction determines which diode conducts. The leg state is then</span>
+<span class="sd">    `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking</span>
+<span class="sd">    interval. The threshold voltage of the conducting device, assumed equal for the</span>
+<span class="sd">    switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the</span>
+<span class="sd">    current direction is also determined at the latest switching instant. The DC-bus</span>
+<span class="sd">    voltage is the input `u_dc`, which is constant unless a DC-bus model is connected</span>
+<span class="sd">    to it (see `DCBus` and `Model`).</span>
 
 <span class="sd">    When the gates are blocked (`inp.enabled` is False), all the switches are open, and</span>
 <span class="sd">    the converter operates as a diode bridge, see `DiodeBridge`. The diode states are</span>
@@ -708,8 +717,12 @@
 <span class="sd">    u_dc : float, optional</span>
 <span class="sd">        Constant DC-bus voltage (V). Defaults to None, in which case the converter must</span>
 <span class="sd">        be fed from a DC-bus model.</span>
-<span class="sd">    t_d : float, optional</span>
-<span class="sd">        Dead time (s), defaults to 0.</span>
+<span class="sd">    modulator : TwoLevelModulator, optional</span>
+<span class="sd">        Modulator converting the command of the control system into the gate states,</span>
+<span class="sd">        see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle</span>
+<span class="sd">        averaged model of the duty ratios without the dead time and with the</span>
+<span class="sd">        computational delay of one sampling period. A modulator keeps its state, so</span>
+<span class="sd">        each converter needs its own.</span>
 <span class="sd">    u_th : float, optional</span>
 <span class="sd">        Threshold voltage (V) of the power devices, defaults to 0.</span>
 <span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
@@ -721,18 +734,16 @@
 
 <span class="sd">    """</span>
 
-    <span class="n">n_legs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
-
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">modulator</span><span class="p">:</span> <span class="n">TwoLevelModulator</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">u_th</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="n">sign</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">,</span>
         <span class="n">u_dc_sensor</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">u_th</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modulator</span> <span class="o">=</span> <span class="n">ZOH</span><span class="p">()</span> <span class="k">if</span> <span class="n">modulator</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">modulator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sign</span> <span class="o">=</span> <span class="n">sign</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_dc_sensor</span> <span class="o">=</span> <span class="n">u_dc_sensor</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">VoltageSourceConverterInputs</span> <span class="o">=</span> <span class="n">VoltageSourceConverterInputs</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">)</span>
@@ -751,10 +762,50 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">enabled</span></div>
 
 
-<div class="viewcode-block" id="VoltageSourceConverter.set_gate_signals">
-<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.set_gate_signals">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_gate_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b_abc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set the switching state based on the gate and blanking signals."""</span>
+<div class="viewcode-block" id="VoltageSourceConverter.modulate">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.modulate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Convert the command to the gate states and their durations.</span>
+
+<span class="sd">        The command passes through the modulator also while the gates are blocked,</span>
+<span class="sd">        but the gate states are then zero for the whole sampling period.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T_s : float</span>
+<span class="sd">            Sampling period (s).</span>
+<span class="sd">        command : Any</span>
+<span class="sd">            Command computed at this sampling instant, the duty ratios for `ZOH` and</span>
+<span class="sd">            `CarrierComparison`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        t_steps : SwitchingTimes, shape (N,)</span>
+<span class="sd">            Durations of the intervals (s), summing to `T_s`.</span>
+<span class="sd">        gates : GateStates, shape (N, 2, 3)</span>
+<span class="sd">            Gate signals of the upper switches and blanking signals in each interval.</span>
+
+<span class="sd">        """</span>
+        <span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulator</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">enabled</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">T_s</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">gates</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="VoltageSourceConverter.set_gates">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.set_gates">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_gates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gates</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Set the switching state based on the gate state of an interval.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gates : ndarray, shape (2, 3)</span>
+<span class="sd">            Gate signals of the upper switches and blanking signals.</span>
+
+<span class="sd">        """</span>
+        <span class="n">q_abc</span><span class="p">,</span> <span class="n">b_abc</span> <span class="o">=</span> <span class="n">gates</span>
         <span class="n">s_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">complex2abc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">q_abc</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">b_abc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s_abc</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">s_abc</span><span class="p">)</span></div>

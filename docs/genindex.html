@@ -486,6 +486,7 @@
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -558,7 +559,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison">CarrierComparison (class in motulator.common.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CarrierComparison">(class in motulator.drive.model)</a>
 </li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CarrierComparison">(class in motulator.grid.model)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SpeedFluxObserver.catch">catch() (motulator.drive.control.sm.SpeedFluxObserver method)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.clear_data">clear_data() (motulator.common.control.ControlSystem method)</a>
@@ -1009,8 +1016,16 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ThreePhaseSourceWithSignalInjection.generate_space_vector">(motulator.grid.model.ThreePhaseSourceWithSignalInjection method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_duty_ratios">get_duty_ratios() (motulator.common.control.ControlSystem method)</a>
+      <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_command">get_command() (motulator.common.control.ControlSystem method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem.get_command">(motulator.drive.control.im.DriveControlSystem method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DriveControlSystem.get_command">(motulator.drive.control.sm.DriveControlSystem method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem.get_command">(motulator.grid.control.GridConverterControlSystem method)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_enable">get_enable() (motulator.common.control.ControlSystem method)</a>
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_feedback">get_feedback() (motulator.common.control.ControlSystem method)</a>
@@ -1145,6 +1160,8 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Modulator.initial_command">initial_command() (motulator.common.model.Modulator method)</a>
+</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.inp">inp (motulator.common.model.ControlledConverter property)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.invert">invert() (motulator.drive.utils.MagneticModel method)</a>
@@ -1327,9 +1344,11 @@
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ModelTimeSeries">ModelTimeSeries (class in motulator.common.model)</a>
 </li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.modulate">modulate() (motulator.common.model.Model method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.modulate">modulate() (motulator.common.model.ControlledConverter method)</a>
 
       <ul>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.VoltageSourceConverter.modulate">(motulator.common.model.VoltageSourceConverter method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.DriveControlSystem.modulate">(motulator.drive.control.im.DriveControlSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.VectorControlSystem.modulate">(motulator.drive.control.im.VectorControlSystem method)</a>
@@ -1338,7 +1357,13 @@
 </li>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.VectorControlSystem.modulate">(motulator.drive.control.sm.VectorControlSystem method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.modulate">(motulator.drive.model.VoltageSourceConverter method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.modulate">(motulator.grid.model.VoltageSourceConverter method)</a>
+</li>
       </ul></li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Modulator">Modulator (class in motulator.common.model)</a>
+</li>
       <li>
     module
 
@@ -1766,6 +1791,22 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CompositeModel.save">(motulator.grid.model.CompositeModel method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison.schedule">schedule() (motulator.common.model.CarrierComparison method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Modulator.schedule">(motulator.common.model.Modulator method)</a>
+</li>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ZOH.schedule">(motulator.common.model.ZOH method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CarrierComparison.schedule">(motulator.drive.model.CarrierComparison method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ZOH.schedule">(motulator.drive.model.ZOH method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.CarrierComparison.schedule">(motulator.grid.model.CarrierComparison method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ZOH.schedule">(motulator.grid.model.ZOH method)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Sensor">Sensor (class in motulator.common.model)</a>
 
       <ul>
@@ -1826,14 +1867,14 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.set_external_rotor_speed">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.set_gate_signals">set_gate_signals() (motulator.common.model.ControlledConverter method)</a>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ControlledConverter.set_gates">set_gates() (motulator.common.model.ControlledConverter method)</a>
 
       <ul>
-        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.VoltageSourceConverter.set_gate_signals">(motulator.common.model.VoltageSourceConverter method)</a>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.VoltageSourceConverter.set_gates">(motulator.common.model.VoltageSourceConverter method)</a>
 </li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.set_gate_signals">(motulator.drive.model.VoltageSourceConverter method)</a>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.set_gates">(motulator.drive.model.VoltageSourceConverter method)</a>
 </li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.set_gate_signals">(motulator.grid.model.VoltageSourceConverter method)</a>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.set_gates">(motulator.grid.model.VoltageSourceConverter method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DCBus.set_outputs">set_outputs() (motulator.common.model.DCBus method)</a>
@@ -2034,6 +2075,8 @@
 </li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.TimeSeries">TimeSeries (class in motulator.common.control)</a>
 </li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.TwoLevelModulator">TwoLevelModulator (class in motulator.common.model)</a>
+</li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem">TwoMassMechanicalSystem (class in motulator.drive.model)</a>
 </li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.type">type (motulator.drive.utils.MagneticModel attribute)</a>
@@ -2202,6 +2245,20 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars.w_rb">(motulator.drive.model.InductionMachineInvGammaPars attribute)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.w_rb">(motulator.drive.model.InductionMachinePars attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ZOH">ZOH (class in motulator.common.model)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ZOH">(class in motulator.drive.model)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ZOH">(class in motulator.grid.model)</a>
 </li>
       </ul></li>
   </ul></td>

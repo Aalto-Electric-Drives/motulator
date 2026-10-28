@@ -80,29 +80,27 @@ Compute base values based on the nominal values of the machine and the grid conv
 Configure the system model. The two converters are fed from the same DC bus. The grid
 is weak: its inductance is 0.74 p.u.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-63
+.. GENERATED FROM PYTHON SOURCE LINES 41-61
 
 .. code-block:: Python
 
 
-    afe = grid_model.VoltageSourceConverter()
-    inv = drive_model.VoltageSourceConverter()
+    afe = grid_model.VoltageSourceConverter(modulator=grid_model.CarrierComparison())
+    inv = drive_model.VoltageSourceConverter(modulator=drive_model.CarrierComparison())
     dc_bus = DCBus(C_dc=470e-6, u_dc=650)
 
     ac_filter = grid_model.LFilter(
         L_f=0.15 * base_g.L, R_f=0.05 * base_g.Z, L_g=0.74 * base_g.L
     )
     ac_source = ThreePhaseSource(w_g=base_g.w, e_g=base_g.u)
-    grid_sys = grid_model.GridConverterSystem(
-        afe, ac_filter, ac_source, pwm=True, dc_bus=dc_bus
-    )
+    grid_sys = grid_model.GridConverterSystem(afe, ac_filter, ac_source, dc_bus=dc_bus)
 
     par = drive_model.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
     )
     machine = drive_model.SynchronousMachine(par)
     mechanics = drive_model.MechanicalSystem(J=0.015)
-    drive_sys = drive_model.Drive(machine, mechanics, inv, pwm=True, dc_bus=dc_bus)
+    drive_sys = drive_model.Drive(machine, mechanics, inv, dc_bus=dc_bus)
 
     mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 
@@ -113,14 +111,14 @@ is weak: its inductance is 0.74 p.u.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 Configure the control systems. The grid-side control runs at 10 kHz (5-kHz switching
 frequency) and the machine-side control at 8 kHz (4-kHz switching frequency). The
 gains of the dual-voltage-forming controller are given in per-unit values of the grid
 converter [#Mou2025]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-96
+.. GENERATED FROM PYTHON SOURCE LINES 66-94
 
 .. code-block:: Python
 
@@ -159,12 +157,12 @@ converter [#Mou2025]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-99
+.. GENERATED FROM PYTHON SOURCE LINES 95-97
 
 Set the references and the external load torque. The speed is reversed under load,
 after which the drive regenerates power to the grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 99-105
+.. GENERATED FROM PYTHON SOURCE LINES 97-103
 
 .. code-block:: Python
 
@@ -181,13 +179,13 @@ after which the drive regenerates power to the grid.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-109
+.. GENERATED FROM PYTHON SOURCE LINES 104-107
 
 Create the simulation object and simulate. The clocks of the two control systems are
 not synchronized: the machine-side control starts 40 µs after the grid-side control.
 The results of each model and its control system are available by the model names.
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-115
+.. GENERATED FROM PYTHON SOURCE LINES 107-113
 
 .. code-block:: Python
 
@@ -204,13 +202,13 @@ The results of each model and its control system are available by the model name
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-119
+.. GENERATED FROM PYTHON SOURCE LINES 114-117
 
 Plot the drive and grid-side results in per-unit values. The active power reference
 shown is the equivalent reference formed by the dual-voltage-forming controller from
 the estimated external power and the DC-bus energy error.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-124
+.. GENERATED FROM PYTHON SOURCE LINES 117-122
 
 .. code-block:: Python
 
@@ -243,7 +241,7 @@ the estimated external power and the DC-bus energy error.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 125-130
+.. GENERATED FROM PYTHON SOURCE LINES 123-128
 
 Plot the DC-bus voltage and the power balance: the estimated external power fed to the
 DC bus (the estimated disturbance power plus the grid power and the resistive losses
@@ -251,7 +249,7 @@ of the filter) follows the mechanical power plus the losses (mainly the stator
 resistive losses), and the power drawn from the grid follows it with the delay of the
 current dynamics in the weak grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 130-156
+.. GENERATED FROM PYTHON SOURCE LINES 128-154
 
 .. code-block:: Python
 
@@ -293,12 +291,12 @@ current dynamics in the weak grid.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 157-159
+.. GENERATED FROM PYTHON SOURCE LINES 155-157
 
 Plot the grid-side waveforms around the load torque step. The converter current
 increases within a few milliseconds, as the estimated external power is fed forward.
 
-.. GENERATED FROM PYTHON SOURCE LINES 159-164
+.. GENERATED FROM PYTHON SOURCE LINES 157-162
 
 .. code-block:: Python
 
@@ -319,7 +317,7 @@ increases within a few milliseconds, as the estimated external power is fed forw
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-170
+.. GENERATED FROM PYTHON SOURCE LINES 163-168
 
 .. rubric:: References
 
@@ -330,7 +328,7 @@ increases within a few milliseconds, as the estimated external power is fed forw
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 29.963 seconds)
+   **Total running time of the script:** (0 minutes 21.705 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_ipmsm_afe_dvf_cvc.py:

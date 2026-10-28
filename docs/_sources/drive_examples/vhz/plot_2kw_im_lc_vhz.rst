@@ -76,9 +76,9 @@ Create the system model, filter parameters correspond to [#Sal2006]_.
     machine = model.InductionMachine(par)
     k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
     mechanics = model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
-    converter = model.VoltageSourceConverter(u_dc=540)
+    converter = model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison())
     lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=0.1)
-    mdl = model.Drive(machine, mechanics, converter, lc_filter, pwm=True)
+    mdl = model.Drive(machine, mechanics, converter, lc_filter)
 
 
 
@@ -206,7 +206,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.976 seconds)
+   **Total running time of the script:** (0 minutes 3.631 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_lc_vhz.py:

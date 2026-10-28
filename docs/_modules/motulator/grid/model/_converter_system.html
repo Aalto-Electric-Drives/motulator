@@ -491,15 +491,6 @@
 <span class="sd">        DC bus feeding the converter, which can be shared with other models (e.g., with</span>
 <span class="sd">        a drive), see `CompositeModel`. Defaults to None, in which case the converter</span>
 <span class="sd">        has a constant DC-bus voltage.</span>
-<span class="sd">    pwm : bool, optional</span>
-<span class="sd">        Enable the PWM model of a voltage-source converter, defaults to False.</span>
-<span class="sd">    delay : int, optional</span>
-<span class="sd">        Computational delay in half carrier periods (sampling periods with double</span>
-<span class="sd">        update), defaults to 1. With single update, use 2 for a delay of one</span>
-<span class="sd">        sampling period, see `Model`.</span>
-<span class="sd">    single_update : bool, optional</span>
-<span class="sd">        Sample and update the duty ratios once per carrier period instead of twice,</span>
-<span class="sd">        defaults to False, see `Model`.</span>
 
 <span class="sd">    """</span>
 
@@ -509,9 +500,6 @@
         <span class="n">ac_filter</span><span class="p">:</span> <span class="n">LFilter</span> <span class="o">|</span> <span class="n">LCLFilter</span><span class="p">,</span>
         <span class="n">ac_source</span><span class="p">:</span> <span class="n">ThreePhaseSource</span><span class="p">,</span>
         <span class="n">dc_bus</span><span class="p">:</span> <span class="n">DCBus</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">pwm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_filter</span> <span class="o">=</span> <span class="n">ac_filter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_source</span> <span class="o">=</span> <span class="n">ac_source</span>
@@ -522,15 +510,7 @@
         <span class="p">}</span>
         <span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">]</span>
         <span class="n">converter</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="n">ac_filter</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">converter</span><span class="p">,</span>
-            <span class="n">subsystems</span><span class="p">,</span>
-            <span class="n">connections</span><span class="p">,</span>
-            <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">,</span>
-            <span class="n">pwm</span><span class="o">=</span><span class="n">pwm</span><span class="p">,</span>
-            <span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="p">,</span>
-            <span class="n">single_update</span><span class="o">=</span><span class="n">single_update</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">)</span></div>
 
 </pre></div>
 

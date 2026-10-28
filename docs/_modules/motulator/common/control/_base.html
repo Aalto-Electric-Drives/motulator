@@ -464,7 +464,7 @@
   <h1>Source code for motulator.common.control._base</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Base classes for controls."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleNamespace</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span>
@@ -479,7 +479,6 @@
 <span class="w">    </span><span class="sd">"""Protocol defining the interface for reference signals."""</span>
 
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Sampling period for next control cycle</span>
-    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Duty ratios for the next control cycle</span>
 
 
 <div class="viewcode-block" id="TimeSeries">
@@ -544,10 +543,11 @@
 <span class="sd">    be used with different models, measurements, feedback signals, and reference</span>
 <span class="sd">    signals. The class provides methods for saving, post-processing, and clearing data.</span>
 
-<span class="sd">    The gates of the converter can be blocked with `set_enable`. While the gates are</span>
-<span class="sd">    blocked, the control system runs its control loop with `compute_standby_output`</span>
-<span class="sd">    in place of `compute_output`, so that its observers keep running, and the model</span>
-<span class="sd">    holds the switches open.</span>
+<span class="sd">    The control loop returns the sampling period and the command to the converter,</span>
+<span class="sd">    see `get_command`. The gates of the converter can be blocked with `set_enable`.</span>
+<span class="sd">    While the gates are blocked, the control system runs its control loop with</span>
+<span class="sd">    `compute_standby_output` in place of `compute_output`, so that its observers keep</span>
+<span class="sd">    running, and the model holds the switches open.</span>
 
 <span class="sd">    """</span>
 
@@ -642,7 +642,7 @@
 
 <div class="viewcode-block" id="ControlSystem.run_control_loop">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.run_control_loop">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_control_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Mdl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_control_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Mdl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Run the default control loop, can be overridden."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_enable</span><span class="p">()</span>
         <span class="n">meas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_measurement</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
@@ -653,17 +653,24 @@
             <span class="n">ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_standby_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">=</span><span class="n">fbk</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_duty_ratios</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_command</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ControlSystem.get_duty_ratios">
-<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_duty_ratios">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">"""Extract duty ratios from the reference signals."""</span>
-        <span class="k">return</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span></div>
+<div class="viewcode-block" id="ControlSystem.get_command">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ControlSystem.get_command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">Ref</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Extract the sampling period and the converter command from the references.</span>
+
+<span class="sd">        The modulator of the converter converts the command into the gate states, see</span>
+<span class="sd">        `motulator.common.model.ControlledConverter`. The command of a voltage-source</span>
+<span class="sd">        converter consists of the duty ratios.</span>
+
+<span class="sd">        """</span>
+        <span class="o">...</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Mdl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Mdl</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Make the control system callable."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_control_loop</span><span class="p">(</span><span class="n">mdl</span><span class="p">)</span>
 

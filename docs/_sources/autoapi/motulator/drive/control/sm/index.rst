@@ -480,6 +480,30 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: get_command(ref)
+
+      
+      Extract the sampling period and the duty ratios from the references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: get_feedback(meas)
 
       

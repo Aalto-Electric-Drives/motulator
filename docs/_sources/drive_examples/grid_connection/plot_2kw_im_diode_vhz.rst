@@ -71,7 +71,7 @@ Compute base values based on the nominal values.
 Configure the system model. The diode bridge and the inverter share the DC bus, and
 their models are combined into a composite model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-52
+.. GENERATED FROM PYTHON SOURCE LINES 32-54
 
 .. code-block:: Python
 
@@ -90,8 +90,10 @@ their models are combined into a composite model.
     machine = drive_model.InductionMachine(par)
     k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
     mechanics = drive_model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
-    converter = drive_model.VoltageSourceConverter()
-    drive_sys = drive_model.Drive(machine, mechanics, converter, pwm=True, dc_bus=dc_bus)
+    converter = drive_model.VoltageSourceConverter(
+        modulator=drive_model.CarrierComparison()
+    )
+    drive_sys = drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
 
     mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 
@@ -102,11 +104,11 @@ their models are combined into a composite model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 55-56
 
 Configure the control system as open-loop V/Hz control.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-62
+.. GENERATED FROM PYTHON SOURCE LINES 56-64
 
 .. code-block:: Python
 
@@ -125,11 +127,11 @@ Configure the control system as open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 65-66
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-68
+.. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 .. code-block:: Python
 
@@ -144,12 +146,12 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-73
 
 Create the simulation object, with the control system of the drive by the model
 name, and simulate. Plot the drive results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-79
+.. GENERATED FROM PYTHON SOURCE LINES 73-81
 
 .. code-block:: Python
 
@@ -185,14 +187,14 @@ name, and simulate. Plot the drive results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-84
+.. GENERATED FROM PYTHON SOURCE LINES 82-86
 
 Plot the grid-side waveforms: the phase-a voltages of the grid and the diode bridge,
 the DC-bus voltage, the phase-a current, and the DC currents of the diode bridge and
 the inverter. The diode bridge conducts in pulses, as the DC-bus voltage is close to
 the peak of the line-to-line grid voltage.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-101
+.. GENERATED FROM PYTHON SOURCE LINES 86-103
 
 .. code-block:: Python
 
@@ -225,7 +227,7 @@ the peak of the line-to-line grid voltage.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-117
+.. GENERATED FROM PYTHON SOURCE LINES 104-119
 
 .. note::
    The DC link of this particular example is unstable at 1-p.u. speed at the rated
@@ -246,7 +248,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.145 seconds)
+   **Total running time of the script:** (0 minutes 15.402 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:

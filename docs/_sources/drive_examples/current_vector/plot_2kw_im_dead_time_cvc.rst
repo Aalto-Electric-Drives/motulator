@@ -98,13 +98,13 @@ parasitic capacitances at low currents.
 
 Configure the system model. The Γ-equivalent machine model with main-flux saturation
 is used. The parameters are based on the measured data of a 2.2-kW machine
-[#Qu2012]_. The dead time and the threshold voltage are parameters of the converter.
-The duty ratios are updated once per carrier period (single update), which is
-common in practice. The sampling period then equals the carrier period, i.e., the
-switching frequency is 8 kHz, and the computational delay of one sampling period
-is two half carrier periods.
+[#Qu2012]_. The dead time is a parameter of the modulator of the converter and the
+threshold voltage of the converter itself. The duty ratios are updated once per
+carrier period (single update), which is common in practice. The sampling period
+then equals the carrier period, i.e., the switching frequency is 8 kHz, and the
+computational delay of one sampling period (the default) is two half carrier periods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-69
+.. GENERATED FROM PYTHON SOURCE LINES 52-70
 
 .. code-block:: Python
 
@@ -117,10 +117,11 @@ is two half carrier periods.
     def create_model():
         machine = model.InductionMachine(par)
         mechanics = model.MechanicalSystem(J=0.015)
+        modulator = model.ZOH(t_d=t_d, single_update=True)
         converter = model.VoltageSourceConverter(
-            u_dc=540, t_d=t_d, u_th=u_th, sign=smooth_sign
+            u_dc=540, modulator=modulator, u_th=u_th, sign=smooth_sign
         )
-        mdl = model.Drive(machine, mechanics, converter, delay=2, single_update=True)
+        mdl = model.Drive(machine, mechanics, converter)
         mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
         return mdl
 
@@ -132,13 +133,13 @@ is two half carrier periods.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-73
+.. GENERATED FROM PYTHON SOURCE LINES 71-74
 
 Configure the control system. If the duty-ratio error is given, the PWM compensates
 for it, and the realized voltage fed to the observer includes it. The speed
 reference is reversed under the load torque, leading to the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-87
+.. GENERATED FROM PYTHON SOURCE LINES 74-88
 
 .. code-block:: Python
 
@@ -163,13 +164,13 @@ reference is reversed under the load torque, leading to the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 89-92
 
 Simulate without the compensation. The voltage error caused by the inverter
 nonlinearities corrupts the flux and speed estimates. After the speed reversal, the
 drive fails in the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 92-97
 
 .. code-block:: Python
 
@@ -190,13 +191,13 @@ drive fails in the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-101
 
 Simulate with the compensation, using the same duty-ratio error model as in the
 system model. The PWM of the control system is also configured for single update,
 so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-109
+.. GENERATED FROM PYTHON SOURCE LINES 101-110
 
 .. code-block:: Python
 
@@ -221,7 +222,7 @@ so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-119
+.. GENERATED FROM PYTHON SOURCE LINES 111-120
 
 .. rubric:: References
 
@@ -236,7 +237,7 @@ so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.982 seconds)
+   **Total running time of the script:** (0 minutes 17.849 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:

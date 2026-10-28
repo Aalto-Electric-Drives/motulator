@@ -538,7 +538,7 @@
 <li><p>Compute the reference signals <code class="docutils literal notranslate"><span class="pre">ref</span></code> based on the feedback signals <code class="docutils literal notranslate"><span class="pre">fbk</span></code>.</p></li>
 <li><p>Save the feedback signals <code class="docutils literal notranslate"><span class="pre">fbk</span></code> and the reference signals <code class="docutils literal notranslate"><span class="pre">ref</span></code> so they can be accessed after the simulation.</p></li>
 <li><p>Update the states of the control system for the next sampling instant.</p></li>
-<li><p>Return the sampling period <code class="docutils literal notranslate"><span class="pre">T_s</span></code> and the duty ratios <code class="docutils literal notranslate"><span class="pre">d_abc</span></code> for the carrier comparison.</p></li>
+<li><p>Return the sampling period <code class="docutils literal notranslate"><span class="pre">T_s</span></code> and the duty ratios <code class="docutils literal notranslate"><span class="pre">d_abc</span></code> for the modulator of the converter.</p></li>
 </ol>
 <p>Using this protocol is not compulsory, but it may simplify the implementation of new control systems.</p>
 </section>
@@ -579,14 +579,14 @@
 <a class="only-light reference internal image-reference" href="../../_images/discrete_control_system.svg"><img alt="Block diagram of the discrete control system (light mode)" class="only-light" src="../../_images/discrete_control_system.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram exemplifying the internal structure of a typical cascade control system. The object <code class="docutils literal notranslate"><span class="pre">ref</span></code> at the control system output should contain the sampling period <code class="docutils literal notranslate"><span class="pre">T_s</span></code> and the converter duty ratios <code class="docutils literal notranslate"><span class="pre">d_abc</span></code> for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).</span><a class="headerlink" href="#fig-discrete-control-system" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram exemplifying the internal structure of a typical cascade control system. The object <code class="docutils literal notranslate"><span class="pre">ref</span></code> at the control system output should contain the sampling period <code class="docutils literal notranslate"><span class="pre">T_s</span></code> and the converter duty ratios <code class="docutils literal notranslate"><span class="pre">d_abc</span></code> for the modulator of the converter. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).</span><a class="headerlink" href="#fig-discrete-control-system" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id2">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/discrete_control_system.svg"><img alt="Block diagram of the discrete control system (dark mode)" class="invert-colors-dark only-dark" src="../../_images/discrete_control_system.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram exemplifying the internal structure of a typical cascade control system. The object <code class="docutils literal notranslate"><span class="pre">ref</span></code> at the control system output should contain the sampling period <code class="docutils literal notranslate"><span class="pre">T_s</span></code> and the converter duty ratios <code class="docutils literal notranslate"><span class="pre">d_abc</span></code> for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 2:</em> Block diagram exemplifying the internal structure of a typical cascade control system. The object <code class="docutils literal notranslate"><span class="pre">ref</span></code> at the control system output should contain the sampling period <code class="docutils literal notranslate"><span class="pre">T_s</span></code> and the converter duty ratios <code class="docutils literal notranslate"><span class="pre">d_abc</span></code> for the modulator of the converter. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>

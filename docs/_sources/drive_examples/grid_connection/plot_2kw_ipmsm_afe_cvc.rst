@@ -77,29 +77,27 @@ Compute base values based on the nominal values of the machine and the grid conv
 
 Configure the system model. The two converters are fed from the same DC bus. The
 grid-side converter system and the drive are modeled separately, each with its own
-PWM, and combined into a composite model.
+modulator, and combined into a composite model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-60
+.. GENERATED FROM PYTHON SOURCE LINES 40-58
 
 .. code-block:: Python
 
 
-    afe = grid_model.VoltageSourceConverter()
-    inv = drive_model.VoltageSourceConverter()
+    afe = grid_model.VoltageSourceConverter(modulator=grid_model.CarrierComparison())
+    inv = drive_model.VoltageSourceConverter(modulator=drive_model.CarrierComparison())
     dc_bus = DCBus(C_dc=470e-6, u_dc=650)
 
     ac_filter = grid_model.LFilter(L_f=0.1 * base_g.L)
     ac_source = ThreePhaseSource(w_g=base_g.w, e_g=base_g.u)
-    grid_sys = grid_model.GridConverterSystem(
-        afe, ac_filter, ac_source, pwm=True, dc_bus=dc_bus
-    )
+    grid_sys = grid_model.GridConverterSystem(afe, ac_filter, ac_source, dc_bus=dc_bus)
 
     par = drive_model.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
     )
     machine = drive_model.SynchronousMachine(par)
     mechanics = drive_model.MechanicalSystem(J=0.015)
-    drive_sys = drive_model.Drive(machine, mechanics, inv, pwm=True, dc_bus=dc_bus)
+    drive_sys = drive_model.Drive(machine, mechanics, inv, dc_bus=dc_bus)
 
     mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 
@@ -110,12 +108,12 @@ PWM, and combined into a composite model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-63
+.. GENERATED FROM PYTHON SOURCE LINES 59-61
 
 Configure the control systems. The grid-side control runs at 10 kHz (5-kHz switching
 frequency) and the machine-side control at 8 kHz (4-kHz switching frequency).
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-82
+.. GENERATED FROM PYTHON SOURCE LINES 61-80
 
 .. code-block:: Python
 
@@ -145,12 +143,12 @@ frequency) and the machine-side control at 8 kHz (4-kHz switching frequency).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-85
+.. GENERATED FROM PYTHON SOURCE LINES 81-83
 
 Set the references and the external load torque. The speed is reversed under load,
 after which the drive regenerates power to the grid.
 
-.. GENERATED FROM PYTHON SOURCE LINES 85-91
+.. GENERATED FROM PYTHON SOURCE LINES 83-89
 
 .. code-block:: Python
 
@@ -167,13 +165,13 @@ after which the drive regenerates power to the grid.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-95
+.. GENERATED FROM PYTHON SOURCE LINES 90-93
 
 Create the simulation object and simulate. The clocks of the two control systems are
 not synchronized: the machine-side control starts 40 µs after the grid-side control.
 The results of each model and its control system are available by the model names.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-101
+.. GENERATED FROM PYTHON SOURCE LINES 93-99
 
 .. code-block:: Python
 
@@ -190,11 +188,11 @@ The results of each model and its control system are available by the model name
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 102-103
+.. GENERATED FROM PYTHON SOURCE LINES 100-101
 
 Plot the drive and grid-side results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 103-108
+.. GENERATED FROM PYTHON SOURCE LINES 101-106
 
 .. code-block:: Python
 
@@ -227,13 +225,13 @@ Plot the drive and grid-side results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 109-112
+.. GENERATED FROM PYTHON SOURCE LINES 107-110
 
 Plot the DC-bus voltage and the power balance: the power drawn from the grid (as
 estimated by the grid-side control) equals the mechanical power plus the losses
 (mainly the stator resistive losses), except during the DC-bus voltage transients.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-133
+.. GENERATED FROM PYTHON SOURCE LINES 110-131
 
 .. code-block:: Python
 
@@ -270,12 +268,12 @@ estimated by the grid-side control) equals the mechanical power plus the losses
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-136
+.. GENERATED FROM PYTHON SOURCE LINES 132-134
 
 Plot the switched phase-a voltages of the two converters over one millisecond. The
 switching periods differ, and the switching instants are not aligned.
 
-.. GENERATED FROM PYTHON SOURCE LINES 136-150
+.. GENERATED FROM PYTHON SOURCE LINES 134-148
 
 .. code-block:: Python
 
@@ -308,7 +306,7 @@ switching periods differ, and the switching instants are not aligned.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 28.711 seconds)
+   **Total running time of the script:** (0 minutes 20.783 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_ipmsm_afe_cvc.py:

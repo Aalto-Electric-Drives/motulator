@@ -524,7 +524,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.clear_data"><code class="docutils literal notranslate"><span class="pre">ControlSystem.clear_data()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_standby_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_duty_ratios"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_duty_ratios()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_command"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_command()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_enable"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_measurement()</span></code></a></li>
@@ -710,10 +710,11 @@ output is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
 <p>This class defines the interface for control systems. It is a generic class that can
 be used with different models, measurements, feedback signals, and reference
 signals. The class provides methods for saving, post-processing, and clearing data.</p>
-<p>The gates of the converter can be blocked with <cite>set_enable</cite>. While the gates are
-blocked, the control system runs its control loop with <cite>compute_standby_output</cite>
-in place of <cite>compute_output</cite>, so that its observers keep running, and the model
-holds the switches open.</p>
+<p>The control loop returns the sampling period and the command to the converter,
+see <cite>get_command</cite>. The gates of the converter can be blocked with <cite>set_enable</cite>.
+While the gates are blocked, the control system runs its control loop with
+<cite>compute_standby_output</cite> in place of <cite>compute_output</cite>, so that its observers keep
+running, and the model holds the switches open.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.clear_data">
 <span class="sig-name descname"><span class="pre">clear_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.clear_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.clear_data" title="Link to this definition">#</a></dt>
@@ -754,15 +755,18 @@ holds the switches open.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_duty_ratios">
-<span class="sig-name descname"><span class="pre">get_duty_ratios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_duty_ratios"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_duty_ratios" title="Link to this definition">#</a></dt>
-<dd><p>Extract duty ratios from the reference signals.</p>
+<dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_command">
+<span class="sig-name descname"><span class="pre">get_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_command" title="Link to this definition">#</a></dt>
+<dd><p>Extract the sampling period and the converter command from the references.</p>
+<p>The modulator of the converter converts the command into the gate states, see
+<cite>motulator.common.model.ControlledConverter</cite>. The command of a voltage-source
+converter consists of the duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ref</strong> (<em>References</em>)</p>
+<dd class="field-odd"><p><strong>ref</strong> (<em>Ref</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)">collections.abc.Sequence</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -826,7 +830,7 @@ holds the switches open.</p>
 <dd class="field-odd"><p><strong>mdl</strong> (<em>Mdl</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)">collections.abc.Sequence</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1392,7 +1396,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.clear_data"><code class="docutils literal notranslate"><span class="pre">ControlSystem.clear_data()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ControlSystem.compute_standby_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_duty_ratios"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_duty_ratios()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_command"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_command()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_enable"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_feedback"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_feedback()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ControlSystem.get_measurement"><code class="docutils literal notranslate"><span class="pre">ControlSystem.get_measurement()</span></code></a></li>

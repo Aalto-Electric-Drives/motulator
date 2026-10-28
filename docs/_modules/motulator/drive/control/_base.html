@@ -703,6 +703,13 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_inner_standby_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">),</span> <span class="n">fbk</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="DriveControlSystem.get_command">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.get_command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Extract the sampling period and the duty ratios from the references."""</span>
+        <span class="k">return</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span></div>
+
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the duty ratios and the limited voltage reference."""</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>

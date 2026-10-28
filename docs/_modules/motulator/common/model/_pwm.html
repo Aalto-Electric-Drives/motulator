@@ -463,18 +463,21 @@
                   
   <h1>Source code for motulator.common.model._pwm</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""</span>
-<span class="sd">Pulse-width modulation (PWM) implementations.</span>
+<span class="sd">Modulators of the converter models.</span>
 
-<span class="sd">The PWM models produce the gate signals of the converter legs. The gate signal `q` of a</span>
-<span class="sd">leg is the on-state of its upper switch. The blanking signal `b` is one when neither of</span>
-<span class="sd">the switches conducts due to the dead time, and the leg state is then resolved from the</span>
-<span class="sd">current direction by the converter model. In the averaged model, `q` and `b` are the</span>
-<span class="sd">fractions of the sampling period.</span>
+<span class="sd">A modulator converts the command of the control system into the gate states of the</span>
+<span class="sd">converter and their durations within the sampling period, including the computational</span>
+<span class="sd">delay. The command and the gate states are specific to the converter type. For a</span>
+<span class="sd">voltage-source converter, the command consists of the duty ratios of the legs. The</span>
+<span class="sd">gate state of a leg is the gate signal `q` of its upper switch and the blanking signal</span>
+<span class="sd">`b`, which is one when neither of the switches conducts due to the dead time. The</span>
+<span class="sd">converter then resolves the leg state from the current direction. In the averaged</span>
+<span class="sd">model, `q` and `b` are the fractions of the half carrier period.</span>
 
 <span class="sd">"""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -482,108 +485,297 @@
 
 <span class="c1"># %%</span>
 <span class="n">SwitchingTimes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-<span class="n">GateSignals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-<span class="n">BlankingSignals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="n">GateStates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">PWM</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol for PWM implementations."""</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Delay</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Computational delay modeled as a ring buffer.</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateSignals</span><span class="p">,</span> <span class="n">BlankingSignals</span><span class="p">]:</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    length : int, optional</span>
+<span class="sd">        Length of the buffer, i.e., the delay in calls, defaults to 1.</span>
+<span class="sd">    zeros : Callable[[Any], Any], optional</span>
+<span class="sd">        Function giving the initial content of the buffer from the first input,</span>
+<span class="sd">        defaults to `np.zeros_like`.</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">zeros</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zeros</span> <span class="o">=</span> <span class="n">zeros</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Filled at the first call</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Convert duty ratios to gate signals and their durations.</span>
+<span class="sd">        Delay the input.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        u : Any</span>
+<span class="sd">            Input.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Input `length` calls earlier, or zeros before that.</span>
+
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)]</span>
+        <span class="c1"># Add the latest value to the end of the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="c1"># Pop the first element and return it</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="Modulator">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Modulator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Modulator</span><span class="p">[</span><span class="n">Cmd</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Base class for modulators.</span>
+
+<span class="sd">    The sampling period consists of one half carrier period with double update and of</span>
+<span class="sd">    two with single update. The command passes through the computational delay once</span>
+<span class="sd">    per half carrier period, and the gate states of each half carrier period are</span>
+<span class="sd">    computed by `schedule`, which the subclasses implement. The type parameter `Cmd`</span>
+<span class="sd">    is the type of the command, e.g., the duty ratios of a voltage-source converter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    delay : int, optional</span>
+<span class="sd">        Computational delay in half carrier periods from the sampling instant to the</span>
+<span class="sd">        loading of the command. Defaults to None, i.e., one sampling period, which the</span>
+<span class="sd">        control systems of this package compensate for: 1 with double update and 2</span>
+<span class="sd">        with single update. With single update, `delay=1` loads the command at the</span>
+<span class="sd">        carrier extremum between the sampling instants.</span>
+<span class="sd">    single_update : bool, optional</span>
+<span class="sd">        Sample and update the command once per carrier period, i.e., the sampling</span>
+<span class="sd">        period of the control system equals the carrier period, defaults to False</span>
+<span class="sd">        (double update, the sampling period is half the carrier period).</span>
+
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">single_update</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_command</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="o">=</span> <span class="n">single_update</span>
+
+<div class="viewcode-block" id="Modulator.initial_command">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Modulator.initial_command">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initial_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Cmd</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Command assumed before the first command is loaded.</span>
+
+<span class="sd">        The computational delay starts with this command, zeros of the shape of the</span>
+<span class="sd">        command by default. A subclass whose command is not an array overrides this</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        command : Cmd</span>
+<span class="sd">            First command given to the modulator.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Any</span>
+<span class="sd">            Initial command.</span>
+
+<span class="sd">        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must override initial_command for its command"</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Cmd</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Delay the command and convert it to gate states.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        T_s : float</span>
-<span class="sd">            Half carrier period (s).</span>
-<span class="sd">        d_abc : Sequence[float]</span>
-<span class="sd">            Duty ratios in range [0, 1].</span>
+<span class="sd">            Sampling period (s).</span>
+<span class="sd">        command : Cmd</span>
+<span class="sd">            Command computed at this sampling instant.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        t_steps : SwitchingTimes, shape (N,)</span>
-<span class="sd">            Durations of the intervals.</span>
-<span class="sd">        q_abc : GateSignals, shape (N, 3)</span>
-<span class="sd">            Gate signals of the upper switches in each interval.</span>
-<span class="sd">        b_abc : BlankingSignals, shape (N, 3)</span>
-<span class="sd">            Blanking signals in each interval.</span>
+<span class="sd">            Durations of the intervals (s), summing to `T_s`.</span>
+<span class="sd">        gates : GateStates, shape (N, ...)</span>
+<span class="sd">            Gate states in each interval.</span>
 
 <span class="sd">        """</span>
-        <span class="o">...</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="k">else</span> <span class="mi">1</span>  <span class="c1"># Half carrier periods per sampling period</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">T_s</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">command</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
+        <span class="n">gates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span>
+
+<div class="viewcode-block" id="Modulator.schedule">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Modulator.schedule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_half</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Cmd</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Convert the command to the gate states of a half carrier period.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T_half : float</span>
+<span class="sd">            Half carrier period (s).</span>
+<span class="sd">        command : Cmd</span>
+<span class="sd">            Command, delayed by the computational delay.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        t_steps : SwitchingTimes, shape (N,)</span>
+<span class="sd">            Durations of the intervals (s), summing to `T_half`.</span>
+<span class="sd">        gates : GateStates, shape (N, ...)</span>
+<span class="sd">            Gate states in each interval.</span>
+
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
 
 
 <span class="c1"># %%</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ZOH</span><span class="p">(</span><span class="n">PWM</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoLevelModulator">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.TwoLevelModulator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TwoLevelModulator</span><span class="p">[</span><span class="n">Cmd</span><span class="p">](</span><span class="n">Modulator</span><span class="p">[</span><span class="n">Cmd</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Replace PWM with zero-order hold.</span>
+<span class="sd">    Base class for the modulators of two-level voltage-source converters.</span>
+
+<span class="sd">    The gate state of a leg consists of the gate signal of its upper switch and the</span>
+<span class="sd">    blanking signal, see `VoltageSourceConverter`. Hence, the gate states of the N</span>
+<span class="sd">    intervals form an array of shape (N, 2, n_legs), the gate signals in the first</span>
+<span class="sd">    row and the blanking signals in the second row of each interval. In the averaged</span>
+<span class="sd">    model, they are the on-time fractions of the upper switches and the blanking</span>
+<span class="sd">    fractions.</span>
+
+<span class="sd">    """</span></div>
+
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="ZOH">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.ZOH">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ZOH</span><span class="p">(</span><span class="n">TwoLevelModulator</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Zero-order hold of the duty ratios of a voltage-source converter.</span>
 
 <span class="sd">    The dead time reduces the gate signal duty ratios of both switches of a leg by</span>
-<span class="sd">    `t_d/(2*T_s)`, leaving the leg blanked for the fraction `t_d/T_s` of the half</span>
-<span class="sd">    carrier period `T_s`, unless the leg does not switch. Short pulses are</span>
+<span class="sd">    `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the</span>
+<span class="sd">    half carrier period `T_half`, unless the leg does not switch. Short pulses are</span>
 <span class="sd">    suppressed, and the blanking fraction is computed from the remaining on-times of</span>
-<span class="sd">    both switches.</span>
-<span class="sd">    This is a switching-cycle averaged model, not a model of switching transients.</span>
+<span class="sd">    both switches. This is a switching-cycle averaged model, not a model of switching</span>
+<span class="sd">    transients.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    t_d : float, optional</span>
 <span class="sd">        Dead time (s), defaults to 0.</span>
+<span class="sd">    delay : int, optional</span>
+<span class="sd">        Computational delay in half carrier periods, defaults to one sampling period,</span>
+<span class="sd">        see `Modulator`.</span>
+<span class="sd">    single_update : bool, optional</span>
+<span class="sd">        Sample and update the duty ratios once per carrier period, defaults to False,</span>
+<span class="sd">        see `Modulator`.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">single_update</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateSignals</span><span class="p">,</span> <span class="n">BlankingSignals</span><span class="p">]:</span>
-        <span class="n">q</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">averaged_gate_signals</span><span class="p">(</span><span class="n">d_abc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="n">T_s</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">T_s</span><span class="p">]),</span> <span class="n">q</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+<div class="viewcode-block" id="ZOH.schedule">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.ZOH.schedule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_half</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Compute the averaged gate states.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T_half : float</span>
+<span class="sd">            Half carrier period (s).</span>
+<span class="sd">        command : Sequence[float], shape (n_legs,)</span>
+<span class="sd">            Duty ratios in the range [0, 1].</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        t_steps : SwitchingTimes, shape (1,)</span>
+<span class="sd">            Half carrier period (s).</span>
+<span class="sd">        gates : GateStates, shape (1, 2, n_legs)</span>
+<span class="sd">            On-time fractions of the upper switches and blanking fractions.</span>
+
+<span class="sd">        """</span>
+        <span class="n">q</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">averaged_gate_signals</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="n">T_half</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">T_half</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="n">b</span><span class="p">])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span></div>
+</div>
+
 
 
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="CarrierComparison">
-<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">CarrierComparison</span><span class="p">(</span><span class="n">PWM</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.CarrierComparison">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CarrierComparison</span><span class="p">(</span><span class="n">TwoLevelModulator</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Carrier comparison.</span>
+<span class="sd">    Carrier comparison of a voltage-source converter.</span>
 
 <span class="sd">    This computes the gate signals and their durations based on the duty ratios. Instead</span>
 <span class="sd">    of searching for zero crossings, the switching instants are explicitly computed in</span>
-<span class="sd">    the beginning of each sampling period, allowing faster simulations. The dead time</span>
-<span class="sd">    delays the turn-on of the switches, i.e., each leg is blanked for `t_d` after its</span>
-<span class="sd">    switching instant.</span>
+<span class="sd">    the beginning of each half carrier period, allowing faster simulations. The dead</span>
+<span class="sd">    time delays the turn-on of the switches, i.e., each leg is blanked for `t_d` after</span>
+<span class="sd">    its switching instant.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    N : int, optional</span>
-<span class="sd">        Amount of the counter quantization levels, defaults to 2**12.</span>
 <span class="sd">    t_d : float, optional</span>
 <span class="sd">        Dead time (s), defaults to 0.</span>
+<span class="sd">    delay : int, optional</span>
+<span class="sd">        Computational delay in half carrier periods, defaults to one sampling period,</span>
+<span class="sd">        see `Modulator`.</span>
+<span class="sd">    single_update : bool, optional</span>
+<span class="sd">        Sample and update the duty ratios once per carrier period, defaults to False,</span>
+<span class="sd">        see `Modulator`.</span>
+<span class="sd">    N : int, optional</span>
+<span class="sd">        Amount of the counter quantization levels, defaults to 2**12.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from motulator.common.model import CarrierComparison</span>
-<span class="sd">    &gt;&gt;&gt; carrier_cmp = CarrierComparison()</span>
+<span class="sd">    &gt;&gt;&gt; carrier_cmp = CarrierComparison(delay=0)</span>
 <span class="sd">    &gt;&gt;&gt; # First call gives rising edges</span>
-<span class="sd">    &gt;&gt;&gt; t_steps, q_abc, _ = carrier_cmp(1e-3, [.4, .2, .8])</span>
+<span class="sd">    &gt;&gt;&gt; t_steps, gates = carrier_cmp(1e-3, [.4, .2, .8])</span>
 <span class="sd">    &gt;&gt;&gt; # Durations of the switching states</span>
 <span class="sd">    &gt;&gt;&gt; t_steps</span>
 <span class="sd">    array([0.00019995, 0.00040015, 0.00019995, 0.00019995])</span>
-<span class="sd">    &gt;&gt;&gt; # Switching states</span>
-<span class="sd">    &gt;&gt;&gt; q_abc</span>
+<span class="sd">    &gt;&gt;&gt; # Gate signals of the upper switches</span>
+<span class="sd">    &gt;&gt;&gt; gates[:, 0]</span>
 <span class="sd">    array([[0, 0, 0],</span>
 <span class="sd">           [0, 0, 1],</span>
 <span class="sd">           [1, 0, 1],</span>
 <span class="sd">           [1, 1, 1]])</span>
 <span class="sd">    &gt;&gt;&gt; # Second call gives falling edges</span>
-<span class="sd">    &gt;&gt;&gt; t_steps, q_abc, _ = carrier_cmp(1e-3, [.4, .2, .8])</span>
+<span class="sd">    &gt;&gt;&gt; t_steps, gates = carrier_cmp(1e-3, [.4, .2, .8])</span>
 <span class="sd">    &gt;&gt;&gt; t_steps</span>
 <span class="sd">    array([0.00019995, 0.00019995, 0.00040015, 0.00019995])</span>
-<span class="sd">    &gt;&gt;&gt; q_abc</span>
+<span class="sd">    &gt;&gt;&gt; gates[:, 0]</span>
 <span class="sd">    array([[1, 1, 1],</span>
 <span class="sd">           [1, 0, 1],</span>
 <span class="sd">           [0, 0, 1],</span>
@@ -592,82 +784,90 @@
 <span class="sd">    &gt;&gt;&gt; float(np.sum(t_steps))</span>
 <span class="sd">    0.001</span>
 <span class="sd">    &gt;&gt;&gt; # Dead time blanks each leg after its switching instant</span>
-<span class="sd">    &gt;&gt;&gt; carrier_cmp = CarrierComparison(t_d=1e-4)</span>
-<span class="sd">    &gt;&gt;&gt; t_steps, q_abc, b_abc = carrier_cmp(1e-3, [.5, .5, .5])</span>
+<span class="sd">    &gt;&gt;&gt; carrier_cmp = CarrierComparison(t_d=1e-4, delay=0)</span>
+<span class="sd">    &gt;&gt;&gt; t_steps, gates = carrier_cmp(1e-3, [.5, .5, .5])</span>
 <span class="sd">    &gt;&gt;&gt; np.round(t_steps / 1e-3, 3)  # In ms</span>
 <span class="sd">    array([0.5, 0.1, 0.4])</span>
-<span class="sd">    &gt;&gt;&gt; q_abc</span>
+<span class="sd">    &gt;&gt;&gt; gates[:, 0]  # Gate signals</span>
 <span class="sd">    array([[0, 0, 0],</span>
 <span class="sd">           [0, 0, 0],</span>
 <span class="sd">           [1, 1, 1]])</span>
-<span class="sd">    &gt;&gt;&gt; b_abc</span>
+<span class="sd">    &gt;&gt;&gt; gates[:, 1]  # Blanking signals</span>
 <span class="sd">    array([[0, 0, 0],</span>
 <span class="sd">           [1, 1, 1],</span>
 <span class="sd">           [0, 0, 0]])</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span> <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">single_update</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Stores the carrier direction</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_command</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gate_cmd</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Latched gate commands</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_dead_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateSignals</span><span class="p">,</span> <span class="n">BlankingSignals</span><span class="p">]:</span>
+<div class="viewcode-block" id="CarrierComparison.schedule">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.CarrierComparison.schedule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">schedule</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_half</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the gate signals and their durations.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        T_s : float</span>
+<span class="sd">        T_half : float</span>
 <span class="sd">            Half carrier period (s).</span>
-<span class="sd">        d_abc : Sequence[float], shape (3,)</span>
+<span class="sd">        command : Sequence[float], shape (n_legs,)</span>
 <span class="sd">            Duty ratios in the range [0, 1].</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        t_steps : SwitchingTimes, shape (N,)</span>
 <span class="sd">            Durations of the intervals (s).</span>
-<span class="sd">        q_abc : GateSignals, shape (N, 3)</span>
-<span class="sd">            Gate signals of the upper switches in each interval.</span>
-<span class="sd">        b_abc : BlankingSignals, shape (N, 3)</span>
-<span class="sd">            Blanking signals in each interval.</span>
+<span class="sd">        gates : GateStates, shape (N, 2, n_legs)</span>
+<span class="sd">            Gate signals of the upper switches and blanking signals in each interval.</span>
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
 <span class="sd">        Simultaneous switching instants are merged, so the number of intervals varies.</span>
-<span class="sd">        Blanking continues across sampling periods, including changes in `T_s`.</span>
-<span class="sd">        A reversed command cancels a pending turn-on and starts a new blanking</span>
+<span class="sd">        Blanking continues across half carrier periods, including changes in their</span>
+<span class="sd">        length. A reversed command cancels a pending turn-on and starts a new blanking</span>
 <span class="sd">        interval. On the first call, the initial commanded state is assumed to</span>
 <span class="sd">        already conduct.</span>
 
 <span class="sd">        """</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_abc</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="k">else</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">t_sw</span> <span class="o">=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">d</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="k">else</span> <span class="n">d</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">command</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
+        <span class="n">gate_cmd</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="k">else</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">t_sw</span> <span class="o">=</span> <span class="n">T_half</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">d</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="k">else</span> <span class="n">d</span><span class="p">)</span>
         <span class="n">t_sw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">),</span> <span class="n">t_sw</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
-        <span class="n">old_command</span> <span class="o">=</span> <span class="n">command</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_command</span>
-        <span class="n">t_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">command</span> <span class="o">!=</span> <span class="n">old_command</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_dead_time</span><span class="p">)</span>
+        <span class="n">old_cmd</span> <span class="o">=</span> <span class="n">gate_cmd</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gate_cmd</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gate_cmd</span>
+        <span class="n">t_on</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gate_cmd</span> <span class="o">!=</span> <span class="n">old_cmd</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_dead_time</span><span class="p">)</span>
 
         <span class="c1"># A command reversal cancels an earlier pending turn-on.</span>
         <span class="n">events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span> <span class="n">t_sw</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">t_on</span><span class="p">,</span> <span class="n">t_sw</span><span class="p">),</span> <span class="n">t_sw</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">))</span>
-        <span class="n">t_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">events</span> <span class="o">&lt;</span> <span class="n">T_s</span><span class="p">])</span>
-        <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t_n</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="n">T_s</span><span class="p">)</span>
+        <span class="n">t_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">events</span> <span class="o">&lt;</span> <span class="n">T_half</span><span class="p">])</span>
+        <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">t_n</span><span class="p">,</span> <span class="n">append</span><span class="o">=</span><span class="n">T_half</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">t_n</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
         <span class="n">switched</span> <span class="o">=</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="n">t_sw</span>
         <span class="n">b_abc</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">switched</span><span class="p">,</span> <span class="n">t_sw</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="n">t_on</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="n">q_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">switched</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">command</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b_abc</span><span class="p">)</span>
+        <span class="n">q_abc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">switched</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">gate_cmd</span><span class="p">,</span> <span class="n">gate_cmd</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b_abc</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t_sw</span> <span class="o">&lt;</span> <span class="n">T_s</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">command</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gate_cmd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t_sw</span> <span class="o">&lt;</span> <span class="n">T_half</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">gate_cmd</span><span class="p">,</span> <span class="n">gate_cmd</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remaining_dead_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t_sw</span> <span class="o">&lt;</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">t_sw</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="n">t_on</span><span class="p">)</span> <span class="o">-</span> <span class="n">T_s</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">t_sw</span> <span class="o">&lt;</span> <span class="n">T_half</span><span class="p">,</span> <span class="n">t_sw</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span><span class="p">,</span> <span class="n">t_on</span><span class="p">)</span> <span class="o">-</span> <span class="n">T_half</span><span class="p">,</span> <span class="mi">0</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span>
 
-        <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">q_abc</span><span class="p">,</span> <span class="n">b_abc</span></div>
+        <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">q_abc</span><span class="p">,</span> <span class="n">b_abc</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+</div>
 
 </pre></div>
 

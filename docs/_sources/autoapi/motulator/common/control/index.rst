@@ -201,10 +201,11 @@ Package Contents
    be used with different models, measurements, feedback signals, and reference
    signals. The class provides methods for saving, post-processing, and clearing data.
 
-   The gates of the converter can be blocked with `set_enable`. While the gates are
-   blocked, the control system runs its control loop with `compute_standby_output`
-   in place of `compute_output`, so that its observers keep running, and the model
-   holds the switches open.
+   The control loop returns the sampling period and the command to the converter,
+   see `get_command`. The gates of the converter can be blocked with `set_enable`.
+   While the gates are blocked, the control system runs its control loop with
+   `compute_standby_output` in place of `compute_output`, so that its observers keep
+   running, and the model holds the switches open.
 
 
 
@@ -297,11 +298,14 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_duty_ratios(ref)
+   .. py:method:: get_command(ref)
 
       
-      Extract duty ratios from the reference signals.
+      Extract the sampling period and the converter command from the references.
 
+      The modulator of the converter converts the command into the gate states, see
+      `motulator.common.model.ControlledConverter`. The command of a voltage-source
+      converter consists of the duty ratios.
 
 
 

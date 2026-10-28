@@ -514,6 +514,10 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CarrierComparison.schedule"><code class="docutils literal notranslate"><span class="pre">CarrierComparison.schedule()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CompositeModel"><code class="docutils literal notranslate"><span class="pre">CompositeModel</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CompositeModel.save"><code class="docutils literal notranslate"><span class="pre">CompositeModel.save()</span></code></a></li>
 </ul>
@@ -591,9 +595,14 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.init_state_history"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.modulate"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_gates"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gates()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ZOH"><code class="docutils literal notranslate"><span class="pre">ZOH</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ZOH.schedule"><code class="docutils literal notranslate"><span class="pre">ZOH.schedule()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -616,41 +625,47 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.CompositeModel" title="motulator.grid.model.CompositeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeModel</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.CarrierComparison" title="motulator.grid.model.CarrierComparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a></p></td>
+<td><p>Carrier comparison of a voltage-source converter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.CompositeModel" title="motulator.grid.model.CompositeModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompositeModel</span></code></a></p></td>
 <td><p>Composite of models sharing subsystems.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.DCBus" title="motulator.grid.model.DCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBus</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.DCBus" title="motulator.grid.model.DCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBus</span></code></a></p></td>
 <td><p>Capacitive DC bus feeding converters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.DiodeBridge" title="motulator.grid.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.DiodeBridge" title="motulator.grid.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a></p></td>
 <td><p>Three-phase six-pulse diode bridge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterSystem</span></code></a></p></td>
 <td><p>Continuous-time model for grid-converter systems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.LCLFilter" title="motulator.grid.model.LCLFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCLFilter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.LCLFilter" title="motulator.grid.model.LCLFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LCLFilter</span></code></a></p></td>
 <td><p>Model of an LCL filter and an inductive-resistive grid.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.LFilter" title="motulator.grid.model.LFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LFilter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.LFilter" title="motulator.grid.model.LFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LFilter</span></code></a></p></td>
 <td><p>Model of an L filter and an inductive-resistive grid.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.Sensor" title="motulator.grid.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.Sensor" title="motulator.grid.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
 <td><p>Sensor with a gain error, an offset, and additive Gaussian noise.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.Simulation" title="motulator.grid.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.Simulation" title="motulator.grid.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.SimulationResults" title="motulator.grid.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.SimulationResults" title="motulator.grid.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
 <td><p>Container for simulation results.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.ThreePhaseSource" title="motulator.grid.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.ThreePhaseSource" title="motulator.grid.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p></td>
 <td><p>Three-phase source model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection" title="motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.ThreePhaseSourceWithSignalInjection" title="motulator.grid.model.ThreePhaseSourceWithSignalInjection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSourceWithSignalInjection</span></code></a></p></td>
 <td><p>Three-phase source model with signal injection in synchronous coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.VoltageSourceConverter" title="motulator.grid.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.model.VoltageSourceConverter" title="motulator.grid.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
 <td><p>Three-phase voltage-source converter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.model.ZOH" title="motulator.grid.model.ZOH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZOH</span></code></a></p></td>
+<td><p>Zero-order hold of the duty ratios of a voltage-source converter.</p></td>
 </tr>
 </tbody>
 </table>
@@ -659,14 +674,110 @@
 <section id="package-contents">
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.model.CarrierComparison">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">CarrierComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2**12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.CarrierComparison" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code>[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>]]</p>
+<p>Carrier comparison of a voltage-source converter.</p>
+<p>This computes the gate signals and their durations based on the duty ratios. Instead
+of searching for zero crossings, the switching instants are explicitly computed in
+the beginning of each half carrier period, allowing faster simulations. The dead
+time delays the turn-on of the switches, i.e., each leg is blanked for <cite>t_d</cite> after
+its switching instant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay in half carrier periods, defaults to one sampling period,
+see <cite>Modulator</cite>.</p></li>
+<li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the duty ratios once per carrier period, defaults to False,
+see <cite>Modulator</cite>.</p></li>
+<li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels, defaults to 2**12.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">CarrierComparison</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">carrier_cmp</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># First call gives rising edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Durations of the switching states</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span>
+<span class="go">array([0.00019995, 0.00040015, 0.00019995, 0.00019995])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Gate signals of the upper switches</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="go">array([[0, 0, 0],</span>
+<span class="go">       [0, 0, 1],</span>
+<span class="go">       [1, 0, 1],</span>
+<span class="go">       [1, 1, 1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Second call gives falling edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.4</span><span class="p">,</span> <span class="mf">.2</span><span class="p">,</span> <span class="mf">.8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span>
+<span class="go">array([0.00019995, 0.00019995, 0.00040015, 0.00019995])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="go">array([[1, 1, 1],</span>
+<span class="go">       [1, 0, 1],</span>
+<span class="go">       [0, 0, 1],</span>
+<span class="go">       [0, 0, 0]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sum of the step times equals T_s</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">t_steps</span><span class="p">))</span>
+<span class="go">0.001</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Dead time blanks each leg after its switching instant</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">carrier_cmp</span> <span class="o">=</span> <span class="n">CarrierComparison</span><span class="p">(</span><span class="n">t_d</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span> <span class="o">=</span> <span class="n">carrier_cmp</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="p">[</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">t_steps</span> <span class="o">/</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># In ms</span>
+<span class="go">array([0.5, 0.1, 0.4])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gates</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># Gate signals</span>
+<span class="go">array([[0, 0, 0],</span>
+<span class="go">       [0, 0, 0],</span>
+<span class="go">       [1, 1, 1]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">gates</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Blanking signals</span>
+<span class="go">array([[0, 0, 0],</span>
+<span class="go">       [1, 1, 1],</span>
+<span class="go">       [0, 0, 0]])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.CarrierComparison.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_half</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.CarrierComparison.schedule" title="Link to this definition">#</a></dt>
+<dd><p>Compute the gate signals and their durations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_half</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Half carrier period (s).</p></li>
+<li><p><strong>command</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>shape</em><em> (</em><em>n_legs</em><em>,</em><em>)</em>) – Duty ratios in the range [0, 1].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_steps</strong> (<em>SwitchingTimes, shape (N,)</em>) – Durations of the intervals (s).</p></li>
+<li><p><strong>gates</strong> (<em>GateStates, shape (N, 2, n_legs)</em>) – Gate signals of the upper switches and blanking signals in each interval.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[SwitchingTimes, GateStates]</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Simultaneous switching instants are merged, so the number of intervals varies.
+Blanking continues across half carrier periods, including changes in their
+length. A reversed command cancels a pending turn-on and starts a new blanking
+interval. On the first call, the initial commanded state is assumed to
+already conduct.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.CompositeModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">CompositeModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_composite.html#CompositeModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.CompositeModel" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Model</span></code>[<a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 <p>Composite of models sharing subsystems.</p>
 <p>The models are coupled through shared subsystem objects, e.g., a DC bus given to
-the models of a grid converter and a drive. Each model keeps its converter, PWM
-model, and computational delay, and the model of a controlled converter is driven
-by its own control system in the simulation, see <cite>Simulation</cite>. The subsystems are
+the models of a grid converter and a drive. Each model keeps its converter, whose
+modulator includes the PWM model and the computational delay, and the model of a
+controlled converter is driven by its own control system in the simulation, see
+<cite>Simulation</cite>. The subsystems are
 evaluated in the order of the models, a shared subsystem at its first occurrence.
 The order is not resolved automatically: a shared subsystem whose outputs other
 subsystems depend on directly must come first in each model, as <cite>Model</cite> places the
@@ -930,7 +1041,7 @@ otherwise None.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.GridConverterSystem">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">GridConverterSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_converter_system.html#GridConverterSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.GridConverterSystem" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">GridConverterSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_converter_system.html#GridConverterSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.GridConverterSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Model</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">C</span></code>]</p>
 <p>Continuous-time model for grid-converter systems.</p>
 <p>The converter is connected to the grid through the AC filter.</p>
@@ -943,12 +1054,6 @@ otherwise None.</p></li>
 <li><p><strong>dc_bus</strong> (<a class="reference internal" href="#motulator.grid.model.DCBus" title="motulator.grid.model.DCBus"><em>DCBus</em></a><em>, </em><em>optional</em>) – DC bus feeding the converter, which can be shared with other models (e.g., with
 a drive), see <cite>CompositeModel</cite>. Defaults to None, in which case the converter
 has a constant DC-bus voltage.</p></li>
-<li><p><strong>pwm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Enable the PWM model of a voltage-source converter, defaults to False.</p></li>
-<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay in half carrier periods (sampling periods with double
-update), defaults to 1. With single update, use 2 for a delay of one
-sampling period, see <cite>Model</cite>.</p></li>
-<li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the duty ratios once per carrier period instead of twice,
-defaults to False, see <cite>Model</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1455,18 +1560,21 @@ output admittance measurement.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.grid.model.DiodeBridge" title="motulator.grid.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a></p>
 <p>Three-phase voltage-source converter.</p>
-<p>The switches are ideal, except for the dead time and the threshold voltage. When a
-leg is blanked, i.e., neither of its switches conducts, the current direction
-determines which diode conducts. The leg state is then <cite>(1 - sign(i))/2</cite>, where
-<cite>i</cite> is the phase current in the beginning of the blanking interval. The threshold
-voltage of the conducting device, assumed equal for the switches and the diodes,
-reduces each phase voltage by <cite>u_th*sign(i)</cite>, where the current direction is also
-determined at the latest switching instant. The DC-bus voltage is the input
-<cite>u_dc</cite>, which is constant unless a DC-bus model is connected to it (see <cite>DCBus</cite>
-and <cite>Model</cite>).</p>
+<p>The modulator converts the duty ratios of the control system into the gate states
+of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+including the computational delay and the dead time, see <cite>ZOH</cite> and
+<cite>CarrierComparison</cite>. The switches are ideal, except for the dead time and the
+threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
+the current direction determines which diode conducts. The leg state is then
+<cite>(1 - sign(i))/2</cite>, where <cite>i</cite> is the phase current in the beginning of the blanking
+interval. The threshold voltage of the conducting device, assumed equal for the
+switches and the diodes, reduces each phase voltage by <cite>u_th*sign(i)</cite>, where the
+current direction is also determined at the latest switching instant. The DC-bus
+voltage is the input <cite>u_dc</cite>, which is constant unless a DC-bus model is connected
+to it (see <cite>DCBus</cite> and <cite>Model</cite>).</p>
 <p>When the gates are blocked (<cite>inp.enabled</cite> is False), all the switches are open, and
 the converter operates as a diode bridge, see <cite>DiodeBridge</cite>. The diode states are
 latched from the current directions when the gates are blocked.</p>
@@ -1475,7 +1583,11 @@ latched from the current directions when the gates are blocked.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Constant DC-bus voltage (V). Defaults to None, in which case the converter must
 be fed from a DC-bus model.</p></li>
-<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>modulator</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><em>TwoLevelModulator</em></a><em>, </em><em>optional</em>) – Modulator converting the command of the control system into the gate states,
+see <cite>TwoLevelModulator</cite>. Defaults to <cite>ZOH()</cite>, i.e., the switching-cycle
+averaged model of the duty ratios without the dead time and with the
+computational delay of one sampling period. A modulator keeps its state, so
+each converter needs its own.</p></li>
 <li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the power devices, defaults to 0.</p></li>
 <li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Function of the phase currents (A) determining the leg states during blanking,
 defaults to <cite>np.sign</cite>. A smooth function, such as <cite>2/pi*arctan(i/i_d)</cite>, can be
@@ -1574,6 +1686,33 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter.modulate">
+<span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.modulate" title="Link to this definition">#</a></dt>
+<dd><p>Convert the command to the gate states and their durations.</p>
+<p>The command passes through the modulator also while the gates are blocked,
+but the gate states are then zero for the whole sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s).</p></li>
+<li><p><strong>command</strong> (<em>Any</em>) – Command computed at this sampling instant, the duty ratios for <cite>ZOH</cite> and
+<cite>CarrierComparison</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_steps</strong> (<em>SwitchingTimes, shape (N,)</em>) – Durations of the intervals (s), summing to <cite>T_s</cite>.</p></li>
+<li><p><strong>gates</strong> (<em>GateStates, shape (N, 2, 3)</em>) – Gate signals of the upper switches and blanking signals in each interval.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[motulator.common.model._pwm.SwitchingTimes, motulator.common.model._pwm.GateStates]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter.set_enable">
 <span class="sig-name descname"><span class="pre">set_enable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_enable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.set_enable" title="Link to this definition">#</a></dt>
 <dd><p>Set the gate enable.</p>
@@ -1588,15 +1727,12 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter.set_gate_signals">
-<span class="sig-name descname"><span class="pre">set_gate_signals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_abc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_gate_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.set_gate_signals" title="Link to this definition">#</a></dt>
-<dd><p>Set the switching state based on the gate and blanking signals.</p>
+<dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter.set_gates">
+<span class="sig-name descname"><span class="pre">set_gates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.set_gates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.set_gates" title="Link to this definition">#</a></dt>
+<dd><p>Set the switching state based on the gate state of an interval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>q_abc</strong> (<em>numpy.ndarray</em>)</p></li>
-<li><p><strong>b_abc</strong> (<em>numpy.ndarray</em>)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>gates</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>, </em><em>3</em><em>)</em>) – Gate signals of the upper switches and blanking signals.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1614,6 +1750,54 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.model.ZOH">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">ZOH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#ZOH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ZOH" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code>[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>]]</p>
+<p>Zero-order hold of the duty ratios of a voltage-source converter.</p>
+<p>The dead time reduces the gate signal duty ratios of both switches of a leg by
+<cite>t_d/(2*T_half)</cite>, leaving the leg blanked for the fraction <cite>t_d/T_half</cite> of the
+half carrier period <cite>T_half</cite>, unless the leg does not switch. Short pulses are
+suppressed, and the blanking fraction is computed from the remaining on-times of
+both switches. This is a switching-cycle averaged model, not a model of switching
+transients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay in half carrier periods, defaults to one sampling period,
+see <cite>Modulator</cite>.</p></li>
+<li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the duty ratios once per carrier period, defaults to False,
+see <cite>Modulator</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.ZOH.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_half</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#ZOH.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.ZOH.schedule" title="Link to this definition">#</a></dt>
+<dd><p>Compute the averaged gate states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T_half</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Half carrier period (s).</p></li>
+<li><p><strong>command</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>shape</em><em> (</em><em>n_legs</em><em>,</em><em>)</em>) – Duty ratios in the range [0, 1].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>t_steps</strong> (<em>SwitchingTimes, shape (1,)</em>) – Half carrier period (s).</p></li>
+<li><p><strong>gates</strong> (<em>GateStates, shape (1, 2, n_legs)</em>) – On-time fractions of the upper switches and blanking fractions.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[SwitchingTimes, GateStates]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1672,6 +1856,10 @@ used to model the effect of parasitic capacitances, for example.</p></li>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CarrierComparison.schedule"><code class="docutils literal notranslate"><span class="pre">CarrierComparison.schedule()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CompositeModel"><code class="docutils literal notranslate"><span class="pre">CompositeModel</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.CompositeModel.save"><code class="docutils literal notranslate"><span class="pre">CompositeModel.save()</span></code></a></li>
 </ul>
@@ -1749,9 +1937,14 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.init_state_history"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.modulate"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_gate_signals"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gate_signals()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_gates"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gates()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.VoltageSourceConverter.set_outputs"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_outputs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ZOH"><code class="docutils literal notranslate"><span class="pre">ZOH</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.ZOH.schedule"><code class="docutils literal notranslate"><span class="pre">ZOH.schedule()</span></code></a></li>
 </ul>
 </li>
 </ul>
