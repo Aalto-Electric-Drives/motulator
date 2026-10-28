@@ -31,11 +31,11 @@ def ipmsm_drive(pwm: bool, G_c: float = 0.0) -> model.Drive:
     par = model.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
     )
+    modulator = model.CarrierComparison() if pwm else None
     return model.Drive(
         model.SynchronousMachine(par),
         model.MechanicalSystem(J=0.015),
-        model.VoltageSourceConverter(u_dc=540),
-        pwm=pwm,
+        model.VoltageSourceConverter(u_dc=540, modulator=modulator),
     )
 
 
@@ -498,8 +498,7 @@ def test_discrete_current_control_dead_time() -> None:
             )
         ),
         model.ExternalRotorSpeed(),
-        model.VoltageSourceConverter(u_dc=540, t_d=t_d, u_th=u_th),
-        pwm=True,
+        model.VoltageSourceConverter(540, model.CarrierComparison(t_d=t_d), u_th=u_th),
     )
     mdl.mechanics.set_external_rotor_speed(w_M)
     cfg = im_control.CurrentVectorControllerCfg(

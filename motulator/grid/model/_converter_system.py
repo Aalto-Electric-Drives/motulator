@@ -25,15 +25,6 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         DC bus feeding the converter, which can be shared with other models (e.g., with
         a drive), see `CompositeModel`. Defaults to None, in which case the converter
         has a constant DC-bus voltage.
-    pwm : bool, optional
-        Enable the PWM model of a voltage-source converter, defaults to False.
-    delay : int, optional
-        Computational delay in half carrier periods (sampling periods with double
-        update), defaults to 1. With single update, use 2 for a delay of one
-        sampling period, see `Model`.
-    single_update : bool, optional
-        Sample and update the duty ratios once per carrier period instead of twice,
-        defaults to False, see `Model`.
 
     """
 
@@ -43,9 +34,6 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         ac_filter: LFilter | LCLFilter,
         ac_source: ThreePhaseSource,
         dc_bus: DCBus | None = None,
-        pwm: bool = False,
-        delay: int = 1,
-        single_update: bool = False,
     ) -> None:
         self.ac_filter = ac_filter
         self.ac_source = ac_source
@@ -56,12 +44,4 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         }
         subsystems = [converter, ac_filter, ac_source]
         converter.ac_load = ac_filter
-        super().__init__(
-            converter,
-            subsystems,
-            connections,
-            dc_bus=dc_bus,
-            pwm=pwm,
-            delay=delay,
-            single_update=single_update,
-        )
+        super().__init__(converter, subsystems, connections, dc_bus=dc_bus)

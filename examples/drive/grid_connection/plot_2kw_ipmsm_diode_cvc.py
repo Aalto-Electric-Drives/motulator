@@ -41,8 +41,10 @@ par = drive_model.SynchronousMachinePars(
 )
 machine = drive_model.SynchronousMachine(par)
 mechanics = drive_model.MechanicalSystem(J=0.015)
-converter = drive_model.VoltageSourceConverter()
-drive_sys = drive_model.Drive(machine, mechanics, converter, pwm=True, dc_bus=dc_bus)
+converter = drive_model.VoltageSourceConverter(
+    modulator=drive_model.CarrierComparison()
+)
+drive_sys = drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
 
 mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 

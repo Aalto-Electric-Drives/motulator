@@ -100,13 +100,6 @@ def test_control_systems_are_checked() -> None:
     )
     with pytest.raises(ValueError):
         Simulation(bridge, current_controller())
-    with pytest.raises(ValueError):  # PWM requires a controlled converter
-        grid_model.GridConverterSystem(
-            grid_model.DiodeBridge(u_dc=500),
-            grid_model.LFilter(L_f=1e-3),
-            grid(),
-            pwm=True,
-        )
 
 
 def test_diode_bridge_with_other_control_systems() -> None:

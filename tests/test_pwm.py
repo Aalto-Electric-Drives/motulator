@@ -6,9 +6,13 @@ import numpy as np
 import pytest
 
 from motulator.common.control import PWM, InverterNonlinearity
-from motulator.common.model import Model
-from motulator.common.model._converter import VoltageSourceConverter
-from motulator.common.model._pwm import ZOH, CarrierComparison
+from motulator.common.model import (
+    ZOH,
+    CarrierComparison,
+    TwoLevelModulator,
+    VoltageSourceConverter,
+)
+from motulator.common.model._pwm import GateStates, SwitchingTimes
 from motulator.common.utils import abc2complex, complex2abc
 
 
@@ -18,15 +22,15 @@ def test_average_voltage(pwm_cls: type[ZOH | CarrierComparison], t_d: float) -> 
     """The average switching state over a carrier period equals the duty ratios minus
     the dead-time error, which depends on the current direction."""
     T_s, d_abc, i_abc = 1e-4, [0.3, 0.55, 0.9], np.array([4, -1, -3])
-    converter = VoltageSourceConverter(u_dc=540, t_d=t_d)
+    converter = VoltageSourceConverter(u_dc=540)
     converter.inp.i_c_ab = abc2complex(i_abc)
-    pwm = pwm_cls(t_d=t_d)
+    pwm = pwm_cls(t_d=t_d, delay=0)
     q_avg = 0
     for _ in range(2):  # Rising and falling edges of the carrier
-        t_steps, q_abc, b_abc = pwm(T_s, d_abc)
+        t_steps, gates = pwm(T_s, d_abc)
         assert np.sum(t_steps) == pytest.approx(T_s)
-        for t_step, q, b in zip(t_steps, q_abc, b_abc, strict=True):
-            converter.set_gate_signals(q, b)
+        for t_step, g in zip(t_steps, gates, strict=True):
+            converter.set_gates(g)
             q_avg += t_step * converter.inp.q_c_ab / (2 * T_s)
     q_ref = abc2complex(np.array(d_abc) - np.sign(i_abc) * t_d / (2 * T_s))
     assert q_avg == pytest.approx(q_ref, abs=1e-3)
@@ -39,17 +43,17 @@ def test_carrier_average_near_limits(d_abc: list[float]) -> None:
     """Near the duty-ratio limits, the carrier comparison agrees on average with the
     ZOH and with the duty-ratio error used in the control system."""
     T_s, t_d, i_abc = 1e-4, 2e-6, np.array([4, -1, -3])
-    carrier = CarrierComparison(N=10000, t_d=t_d)
+    carrier = CarrierComparison(N=10000, t_d=t_d, delay=0)
     for _ in range(2):  # Reach the steady state
         carrier(T_s, d_abc)
     q_avg, b_avg = np.zeros(3), np.zeros(3)
     for _ in range(2):
-        t_steps, q_abc, b_abc = carrier(T_s, d_abc)
-        q_avg += t_steps @ q_abc / (2 * T_s)
-        b_avg += t_steps @ b_abc / (2 * T_s)
-    _, q_zoh, b_zoh = ZOH(t_d=t_d)(T_s, d_abc)
-    assert q_avg == pytest.approx(q_zoh[0])
-    assert b_avg == pytest.approx(b_zoh[0])
+        t_steps, gates = carrier(T_s, d_abc)
+        q_avg += t_steps @ gates[:, 0] / (2 * T_s)
+        b_avg += t_steps @ gates[:, 1] / (2 * T_s)
+    _, gates_zoh = ZOH(t_d=t_d, delay=0)(T_s, d_abc)
+    assert q_avg == pytest.approx(gates_zoh[0, 0])
+    assert b_avg == pytest.approx(gates_zoh[0, 1])
     d_real = q_avg + 0.5 * b_avg * (1 - np.sign(i_abc))
     d_err = InverterNonlinearity(t_d)(i_abc, np.array(d_abc), 540, T_s)
     assert np.array(d_abc) - d_err == pytest.approx(d_real)
@@ -57,12 +61,12 @@ def test_carrier_average_near_limits(d_abc: list[float]) -> None:
 
 def test_blanking_across_samples() -> None:
     """Blanking continues to the next sampling period, even if its length changes."""
-    pwm = CarrierComparison(N=10000, t_d=2e-6)
+    pwm = CarrierComparison(N=10000, t_d=2e-6, delay=0)
     pwm(1e-4, [0.5, 0.5, 0.5])
     pwm(1e-4, [0.995, 0.5, 0.5])  # Switching at 0.5 us before the end
-    t_steps, q_abc, b_abc = pwm(2e-5, [0.5, 0.5, 0.5])
+    t_steps, gates = pwm(2e-5, [0.5, 0.5, 0.5])
     assert t_steps[0] == pytest.approx(1.5e-6)
-    assert (q_abc[0, 0], b_abc[0, 0], b_abc[1, 0]) == (0, 1, 0)
+    assert (gates[0, 0, 0], gates[0, 1, 0], gates[1, 1, 0]) == (0, 1, 0)
     assert np.sum(t_steps) == pytest.approx(2e-5)
 
 
@@ -74,21 +78,66 @@ def test_single_update(pwm: bool, delay: int) -> None:
     the mean gate signal equals the mean of their duty ratios."""
     T_s, t_d = 2e-4, 2e-6
     d_abc = [[0.25, 0.5, 0.75], [0.5, 0.25, 0.875]]
-    converter = VoltageSourceConverter(u_dc=540, t_d=t_d)
-    mdl = Model(converter, [converter], {}, pwm=pwm, delay=delay, single_update=True)
-    mdl.modulate(T_s, d_abc[0])
-    t_steps, q_abc, b_abc = mdl.modulate(T_s, d_abc[1])
-    # The same PWM model called with the half carrier period and the delayed duty
+    cls = CarrierComparison if pwm else ZOH
+    modulator = cls(t_d=t_d, delay=delay, single_update=True)
+    modulator(T_s, d_abc[0])
+    t_steps, gates = modulator(T_s, d_abc[1])
+    # The same modulator called with the half carrier period and the delayed duty
     # ratios, which differ between the halves only with the delay of a half period
     d_halves = [d_abc[0], d_abc[2 - delay]]
-    ref = CarrierComparison(t_d=t_d) if pwm else ZOH(t_d=t_d)
+    ref = cls(t_d=t_d, delay=0)
     expected = [ref(T_s / 2, d) for d in d_halves]
     assert t_steps == pytest.approx(np.concatenate([e[0] for e in expected]))
-    assert np.array_equal(q_abc, np.vstack([e[1] for e in expected]))
-    assert np.array_equal(b_abc, np.vstack([e[2] for e in expected]))
+    assert np.array_equal(gates, np.concatenate([e[1] for e in expected]))
     # The blanking splits evenly between the switches of a leg
-    q_mean = t_steps @ (q_abc + b_abc / 2) / T_s
+    q_mean = t_steps @ (gates[:, 0] + gates[:, 1] / 2) / T_s
     assert q_mean == pytest.approx(np.mean(d_halves, axis=0))
+
+
+def test_blocked_gates() -> None:
+    """While the gates are blocked, the gate states are zero for the whole sampling
+    period, but the duty ratios pass through the computational delay."""
+    converter = VoltageSourceConverter(u_dc=540, modulator=ZOH(delay=1))
+    converter.set_enable(False)
+    t_steps, gates = converter.modulate(1e-4, [0.2, 0.5, 0.8])
+    assert t_steps == pytest.approx([1e-4])
+    assert gates.shape == (1, 2, 3) and not np.any(gates)
+    converter.set_enable(True)
+    _, gates = converter.modulate(1e-4, [0.5, 0.5, 0.5])
+    assert gates[0, 0] == pytest.approx([0.2, 0.5, 0.8])
+
+
+def test_modulator_with_other_command() -> None:
+    """A modulator subclass defines its command type, the initial command of the
+    computational delay, and the gate states, and it drives the converter."""
+
+    class EdgeModulator(TwoLevelModulator[list[list[float]]]):
+        """Switching instants of each phase as fractions of the half carrier period."""
+
+        def initial_command(self, command: list[list[float]]) -> list[list[float]]:
+            return [[] for _ in command]  # No switching
+
+        def schedule(
+            self, T_half: float, command: list[list[float]]
+        ) -> tuple[SwitchingTimes, GateStates]:
+            # Each phase switches at most once, turning its upper switch on
+            t_sw = np.array([T_half * t[0] if t else np.inf for t in command])
+            t_n = np.unique(np.concatenate(([0.0], t_sw[t_sw < T_half])))
+            q_abc = (t_n[:, np.newaxis] >= t_sw).astype(int)
+            gates = np.stack([q_abc, np.zeros_like(q_abc)], axis=1)
+            return np.diff(t_n, append=T_half), gates
+
+    converter = VoltageSourceConverter(u_dc=540, modulator=EdgeModulator(delay=1))
+    t_steps, gates = converter.modulate(1e-4, [[0.5], [], [0.25]])
+    assert t_steps == pytest.approx([1e-4]) and not np.any(gates)  # Initial command
+    t_steps, gates = converter.modulate(1e-4, [[], [], []])
+    assert t_steps == pytest.approx([0.25e-4, 0.25e-4, 0.5e-4])
+    assert np.array_equal(gates[:, 0], [[0, 0, 0], [0, 0, 1], [1, 0, 1]])
+    converter.set_gates(gates[-1])
+    assert converter.inp.q_c_ab == abc2complex([1, 0, 1])
+    # The default initial command is for array commands only
+    with pytest.raises(TypeError, match="initial_command"):
+        ZOH()(1e-4, [[0.5], [], [0.25]])  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize("u_refs", [(100, 100), (100, 356.4)], ids=["linear", "limit"])
@@ -101,14 +150,14 @@ def test_realized_voltage(
     also near the duty-ratio limits, where the error depends on the duty ratios."""
     T_s, t_d, u_th, u_dc, i_c_ab = 1e-4, 2e-6, 1.5, 540, 4 + 0j
     pwm = PWM(d_err=InverterNonlinearity(t_d, u_th), feedforward=feedforward)
-    converter = VoltageSourceConverter(u_dc, t_d=t_d, u_th=u_th)
+    converter = VoltageSourceConverter(u_dc, u_th=u_th)
     converter.inp.i_c_ab = i_c_ab
     realized = []
     for u_ref in u_refs:
         pwm.get_realized_voltage(i_c_ab, u_dc)
         d_abc = pwm(T_s, u_ref, u_dc, w=0)
-        _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, d_abc)
-        converter.set_gate_signals(q_abc[0], b_abc[0])
+        _, gates = ZOH(t_d=t_d, delay=0)(T_s, d_abc)
+        converter.set_gates(gates[0])
         converter.set_outputs(0)
         realized.append(converter.out.u_c_ab)
     expected = np.mean(realized) if average else realized[-1]
@@ -130,8 +179,8 @@ def test_realized_voltage_follows_dc_bus(average: bool) -> None:
     for u_ref in (100, 50 + 80j):
         pwm.get_realized_voltage(i_c_ab, 300)
         d_abc = pwm(T_s, u_ref, 300, w=0)
-        _, q_abc, b_abc = ZOH()(T_s, d_abc)
-        converter.set_gate_signals(q_abc[0], b_abc[0])
+        _, gates = ZOH(delay=0)(T_s, d_abc)
+        converter.set_gates(gates[0])
         realized.append(600 * converter.inp.q_c_ab)
     expected = np.mean(realized) if average else realized[-1]
     u_c_ab = pwm.get_realized_voltage(i_c_ab, 600, average=average)
@@ -166,7 +215,7 @@ def test_min_pulse(t_d: float) -> None:
     T_s, u_dc, d_min = 1e-4, 540, 0.04
     d_err = None if t_d == 0 else InverterNonlinearity(t_d)
     pwm = PWM(d_err=d_err, d_min=d_min)
-    converter = VoltageSourceConverter(u_dc, t_d=t_d)
+    converter = VoltageSourceConverter(u_dc)
     rng = np.random.default_rng(0)
     limited = 0
     for _ in range(500):
@@ -184,8 +233,8 @@ def test_min_pulse(t_d: float) -> None:
         if t_d == 0:  # Rounded to the nearest
             assert np.all(np.abs(d - d_ref) <= d_min / 2 + 1e-12)
             assert pwm.limited_voltage == pytest.approx(u_dc * abc2complex(d))
-        _, q_abc, b_abc = ZOH(t_d=t_d)(T_s, list(d))
-        converter.set_gate_signals(q_abc[0], b_abc[0])
+        _, gates = ZOH(t_d=t_d, delay=0)(T_s, list(d))
+        converter.set_gates(gates[0])
         u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=False)
         assert u_c_ab == pytest.approx(u_dc * converter.inp.q_c_ab)
     assert limited > 50  # The limits were reached

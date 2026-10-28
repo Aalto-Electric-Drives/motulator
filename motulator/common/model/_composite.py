@@ -15,9 +15,10 @@ class CompositeModel(Model[None]):
     Composite of models sharing subsystems.
 
     The models are coupled through shared subsystem objects, e.g., a DC bus given to
-    the models of a grid converter and a drive. Each model keeps its converter, PWM
-    model, and computational delay, and the model of a controlled converter is driven
-    by its own control system in the simulation, see `Simulation`. The subsystems are
+    the models of a grid converter and a drive. Each model keeps its converter, whose
+    modulator includes the PWM model and the computational delay, and the model of a
+    controlled converter is driven by its own control system in the simulation, see
+    `Simulation`. The subsystems are
     evaluated in the order of the models, a shared subsystem at its first occurrence.
     The order is not resolved automatically: a shared subsystem whose outputs other
     subsystems depend on directly must come first in each model, as `Model` places the

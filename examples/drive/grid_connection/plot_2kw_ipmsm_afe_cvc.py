@@ -36,24 +36,22 @@ base_g = grid_utils.BaseValues.from_nominal(nom_g)
 # %%
 # Configure the system model. The two converters are fed from the same DC bus. The
 # grid-side converter system and the drive are modeled separately, each with its own
-# PWM, and combined into a composite model.
+# modulator, and combined into a composite model.
 
-afe = grid_model.VoltageSourceConverter()
-inv = drive_model.VoltageSourceConverter()
+afe = grid_model.VoltageSourceConverter(modulator=grid_model.CarrierComparison())
+inv = drive_model.VoltageSourceConverter(modulator=drive_model.CarrierComparison())
 dc_bus = DCBus(C_dc=470e-6, u_dc=650)
 
 ac_filter = grid_model.LFilter(L_f=0.1 * base_g.L)
 ac_source = ThreePhaseSource(w_g=base_g.w, e_g=base_g.u)
-grid_sys = grid_model.GridConverterSystem(
-    afe, ac_filter, ac_source, pwm=True, dc_bus=dc_bus
-)
+grid_sys = grid_model.GridConverterSystem(afe, ac_filter, ac_source, dc_bus=dc_bus)
 
 par = drive_model.SynchronousMachinePars(
     n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
 )
 machine = drive_model.SynchronousMachine(par)
 mechanics = drive_model.MechanicalSystem(J=0.015)
-drive_sys = drive_model.Drive(machine, mechanics, inv, pwm=True, dc_bus=dc_bus)
+drive_sys = drive_model.Drive(machine, mechanics, inv, dc_bus=dc_bus)
 
 mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 

@@ -33,15 +33,6 @@ class Drive(Model[VoltageSourceConverter]):
         a grid converter system with a diode bridge or an active front end), see
         `CompositeModel`. Defaults to None, in which case the converter has a constant
         DC-bus voltage.
-    pwm : bool, optional
-        Enable PWM model, defaults to False.
-    delay : int, optional
-        Computational delay in half carrier periods (sampling periods with double
-        update), defaults to 1. With single update, use 2 for a delay of one
-        sampling period, see `Model`.
-    single_update : bool, optional
-        Sample and update the duty ratios once per carrier period instead of twice,
-        defaults to False, see `Model`.
 
     """
 
@@ -52,9 +43,6 @@ class Drive(Model[VoltageSourceConverter]):
         converter: VoltageSourceConverter,
         lc_filter: LCFilter | None = None,
         dc_bus: DCBus | None = None,
-        pwm: bool = False,
-        delay: int = 1,
-        single_update: bool = False,
     ) -> None:
         self.machine = machine
         self.mechanics = mechanics
@@ -81,15 +69,7 @@ class Drive(Model[VoltageSourceConverter]):
                 (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
             }
             converter.ac_load = lc_filter
-        super().__init__(
-            converter,
-            subsystems,
-            connections,
-            dc_bus=dc_bus,
-            pwm=pwm,
-            delay=delay,
-            single_update=single_update,
-        )
+        super().__init__(converter, subsystems, connections, dc_bus=dc_bus)
 
 
 # %%

@@ -44,8 +44,10 @@ par = drive_model.InductionMachineInvGammaPars(
 machine = drive_model.InductionMachine(par)
 k = 1.1 * nom.tau / base.w_M**2  # Quadratic load torque profile
 mechanics = drive_model.MechanicalSystem(J=0.015, B_L=lambda w_M: k * abs(w_M))
-converter = drive_model.VoltageSourceConverter()
-drive_sys = drive_model.Drive(machine, mechanics, converter, pwm=True, dc_bus=dc_bus)
+converter = drive_model.VoltageSourceConverter(
+    modulator=drive_model.CarrierComparison()
+)
+drive_sys = drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
 
 mdl = CompositeModel({"grid": grid_sys, "drive": drive_sys})
 

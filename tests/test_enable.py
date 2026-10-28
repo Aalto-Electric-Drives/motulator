@@ -33,7 +33,8 @@ def spinning_pmsm(
     w_M: float, u_dc: float | None, u_th: float = 0.0, pwm: bool = False
 ) -> drive_model.Drive:
     """2.2-kW IPMSM driven by an external shaft, with a constant or capacitive bus."""
-    converter = drive_model.VoltageSourceConverter(u_dc, u_th=u_th)
+    modulator = drive_model.CarrierComparison() if pwm else None
+    converter = drive_model.VoltageSourceConverter(u_dc, modulator, u_th=u_th)
     dc_bus = None
     if u_dc is None:
         dc_bus = drive_model.DCBus(C_dc=2e-3, u_dc=540)
@@ -41,7 +42,7 @@ def spinning_pmsm(
     mechanics.set_external_rotor_speed(w_M)
     par = sm_pars()
     machine = drive_model.SynchronousMachine(par)
-    return drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus, pwm=pwm)
+    return drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
 
 
 def pmsm_cvc(
@@ -168,7 +169,7 @@ def test_standby_feedforward_current() -> None:
     mdl = drive_model.Drive(
         drive_model.SynchronousMachine(sm_pars()),
         drive_model.MechanicalSystem(J=0.015),
-        drive_model.VoltageSourceConverter(u_dc=540, t_d=2e-6, sign=sign),
+        drive_model.VoltageSourceConverter(540, drive_model.ZOH(t_d=2e-6), sign=sign),
     )
     ctrl = pmsm_cvc(sensorless=False)
     d_err = sm_control.InverterNonlinearity(t_d=2e-6, sign=sign)

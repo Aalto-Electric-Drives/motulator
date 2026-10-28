@@ -225,6 +225,10 @@ class DriveControlSystem(ControlSystem):
         """Compute controller output while the gates are blocked."""
         return self._add_duty_ratios(self._compute_inner_standby_output(fbk), fbk)
 
+    def get_command(self, ref: References) -> tuple[float, Sequence[float]]:
+        """Extract the sampling period and the duty ratios from the references."""
+        return ref.T_s, ref.d_abc
+
     def _add_duty_ratios(self, ref: References, fbk: Feedbacks) -> References:
         """Compute the duty ratios and the limited voltage reference."""
         ref.d_abc = self.modulate(ref.T_s, ref.u_s, fbk)

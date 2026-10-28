@@ -9,7 +9,7 @@ A protocol for discrete-time control systems is available in {class}`motulator.c
 1. Compute the reference signals `ref` based on the feedback signals `fbk`.
 1. Save the feedback signals `fbk` and the reference signals `ref` so they can be accessed after the simulation.
 1. Update the states of the control system for the next sampling instant.
-1. Return the sampling period `T_s` and the duty ratios `d_abc` for the carrier comparison.
+1. Return the sampling period `T_s` and the duty ratios `d_abc` for the modulator of the converter.
 
 Using this protocol is not compulsory, but it may simplify the implementation of new control systems.
 
@@ -67,7 +67,7 @@ width: 100%
 align: center
 alt: Block diagram of the discrete control system (light mode)
 ---
-*Figure 2:* Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the control system output should contain the sampling period `T_s` and the converter duty ratios `d_abc` for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).
+*Figure 2:* Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the control system output should contain the sampling period `T_s` and the converter duty ratios `d_abc` for the modulator of the converter. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).
 ```
 
 ```{figure} ../figs/discrete_control_system.svg
@@ -77,7 +77,7 @@ width: 100%
 align: center
 alt: Block diagram of the discrete control system (dark mode)
 ---
-*Figure 2:* Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the control system output should contain the sampling period `T_s` and the converter duty ratios `d_abc` for the carrier comparison. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).
+*Figure 2:* Block diagram exemplifying the internal structure of a typical cascade control system. The object `ref` at the control system output should contain the sampling period `T_s` and the converter duty ratios `d_abc` for the modulator of the converter. The observer does not necessarily exist in all control systems (or it can be replaced with, e.g., a phase-locked loop).
 ```
 
 ## Accessing the Data

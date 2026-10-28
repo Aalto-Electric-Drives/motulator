@@ -1,6 +1,6 @@
 """Base classes for controls."""
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Protocol
@@ -15,7 +15,6 @@ class References(Protocol):
     """Protocol defining the interface for reference signals."""
 
     T_s: float  # Sampling period for next control cycle
-    d_abc: Sequence[float]  # Duty ratios for the next control cycle
 
 
 @dataclass
@@ -75,10 +74,11 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
     be used with different models, measurements, feedback signals, and reference
     signals. The class provides methods for saving, post-processing, and clearing data.
 
-    The gates of the converter can be blocked with `set_enable`. While the gates are
-    blocked, the control system runs its control loop with `compute_standby_output`
-    in place of `compute_output`, so that its observers keep running, and the model
-    holds the switches open.
+    The control loop returns the sampling period and the command to the converter,
+    see `get_command`. The gates of the converter can be blocked with `set_enable`.
+    While the gates are blocked, the control system runs its control loop with
+    `compute_standby_output` in place of `compute_output`, so that its observers keep
+    running, and the model holds the switches open.
 
     """
 
@@ -147,7 +147,7 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
             for key, value in vars(signals).items():
                 self._history[group_name].setdefault(key, []).append(value)
 
-    def run_control_loop(self, mdl: Mdl) -> tuple[float, Sequence[float]]:
+    def run_control_loop(self, mdl: Mdl) -> tuple[float, Any]:
         """Run the default control loop, can be overridden."""
         self.enabled = self.get_enable()
         meas = self.get_measurement(mdl)
@@ -158,13 +158,20 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
             ref = self.compute_standby_output(fbk)
         self.save(self.t, ref=ref, fbk=fbk)
         self.update(ref, fbk)
-        return self.get_duty_ratios(ref)
+        return self.get_command(ref)
 
-    def get_duty_ratios(self, ref: References) -> tuple[float, Sequence[float]]:
-        """Extract duty ratios from the reference signals."""
-        return ref.T_s, ref.d_abc
+    def get_command(self, ref: Ref) -> tuple[float, Any]:
+        """
+        Extract the sampling period and the converter command from the references.
 
-    def __call__(self, mdl: Mdl) -> tuple[float, Sequence[float]]:
+        The modulator of the converter converts the command into the gate states, see
+        `motulator.common.model.ControlledConverter`. The command of a voltage-source
+        converter consists of the duty ratios.
+
+        """
+        ...
+
+    def __call__(self, mdl: Mdl) -> tuple[float, Any]:
         """Make the control system callable."""
         return self.run_control_loop(mdl)
 
