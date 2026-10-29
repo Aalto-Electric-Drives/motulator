@@ -100,11 +100,9 @@ class MechanicalSystem(Subsystem):
         """Measure mechanical rotor speed (rad/s)."""
         return self.out.w_M
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "MechanicalSystemTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "MechanicalSystemTimeSeries":
         """Create time series from state list."""
-        return "mechanics", MechanicalSystemTimeSeries(t, self)
+        return MechanicalSystemTimeSeries(t, self)
 
 
 @dataclass
@@ -250,11 +248,9 @@ class TwoMassMechanicalSystem(Subsystem):
         """Measure the load angle."""
         return wrap(self.out.theta_M - self.state.theta_ML.real)
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "TwoMassMechanicalSystemTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "TwoMassMechanicalSystemTimeSeries":
         """Create time series from state list."""
-        return "mechanics", TwoMassMechanicalSystemTimeSeries(t, self)
+        return TwoMassMechanicalSystemTimeSeries(t, self)
 
 
 @dataclass
@@ -355,11 +351,9 @@ class ExternalRotorSpeed(Subsystem):
         """Measure mechanical rotor speed (rad/s)."""
         return self.out.w_M
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "ExternalRotorSpeedTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "ExternalRotorSpeedTimeSeries":
         """Create time series from state list."""
-        return "mechanics", ExternalRotorSpeedTimeSeries(t, self)
+        return ExternalRotorSpeedTimeSeries(t, self)
 
 
 @dataclass
