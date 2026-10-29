@@ -233,16 +233,18 @@ class Model[C: Converter | None]:
             # the DC-bus voltage
             subsystems = [dc_bus, *subsystems]
             connections = {**connections, **dc_bus.connect(converter)}
+        if len(set(subsystems)) < len(subsystems):
+            raise ValueError("The subsystems must be distinct")
         # Group the connections by the source for passing the outputs to the inputs
         self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
             s: [] for s in subsystems
         }
         for (target, inp), (src, out) in connections.items():
+            name = f"{type(src).__name__}.{out} -> {type(target).__name__}.{inp}"
+            if src not in self._outgoing or target not in self._outgoing:
+                raise ValueError(f"Connection {name} to a subsystem not in the model")
             if not (hasattr(target.inp, inp) and hasattr(src.out, out)):
-                raise ValueError(
-                    f"Invalid connection {type(src).__name__}.{out} -> "
-                    f"{type(target).__name__}.{inp}"
-                )
+                raise ValueError(f"Invalid connection {name}")
             self._outgoing[src].append((target, inp, out))
         self.t0: float = 0.0
         self.subsystems = subsystems
@@ -360,6 +362,8 @@ class ModelTimeSeries:
         ts = {}
         for subsystem in mdl.subsystems:
             name, ts[subsystem] = subsystem.create_time_series(self.t)
+            if name in vars(self):
+                raise ValueError(f"Duplicate time-series name {name!r}")
             setattr(self, name, ts[subsystem])
         # Outputs in the evaluation order of the simulation, passed to the inputs
         # immediately, see `Model.set_outputs`
