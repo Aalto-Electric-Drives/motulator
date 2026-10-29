@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
-from motulator.common.model._ac_port import ACPort
+from motulator.common.model._ac_port import ACPort, DCPort
 from motulator.common.model._pwm import GateStates, SwitchingTimes
 
 if TYPE_CHECKING:
@@ -70,6 +70,10 @@ class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemSta
         """Compute the AC port for a blocked converter, see `ACPort`."""
         return None  # Not available by default
 
+    def compute_dc_port(self) -> DCPort | None:
+        """Compute the DC port for a current-fed converter, see `DCPort`."""
+        return None  # Not available by default
+
     def init_state_history(self) -> None:
         """Initialize the state history with an empty list for each state field."""
         states = vars(self.state) if self.state is not None else {}
@@ -96,11 +100,15 @@ class Converter(Subsystem, Protocol):
     current, which a DC bus draws (see `DCBus`), and the states of its diodes. While
     only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is
     determined by the AC port of the load `ac_load` and the states of the diodes, see
-    `ACPort`. The simulation then locates the transitions of the diode states as
-    events, using the margin of the states, and updates the states at the transitions.
-    Since the voltage varies within the integration interval, the model evaluates it
-    at the solution points and passes it to `extend_history`, which also saves the
-    other signals of the converter that are not states.
+    `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also
+    solves its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and
+    the model evaluates the DC load after the converter. The simulation locates the
+    transitions of the diode states as events, using the margin of the states, and
+    updates the states at the transitions.
+    Since the voltage varies within the integration interval, the model evaluates the
+    signals given by `sample` (the voltage by default) at the solution points and
+    passes them to `extend_history`, which also saves the other signals of the
+    converter that are not states.
 
     The diodes and the DC bus are optional capabilities: by default, the gates are
     never blocked, so there are no diode-state transitions, and the converter cannot
@@ -110,6 +118,7 @@ class Converter(Subsystem, Protocol):
     """
 
     ac_load: Subsystem | None = None  # Load providing the AC port
+    dc_load: Subsystem | None = None  # Load providing the DC port, if current-fed
 
     @property
     def margin(self) -> float:
@@ -132,8 +141,12 @@ class Converter(Subsystem, Protocol):
             "fed from a DC bus"
         )
 
-    def extend_history(self, n: int, u_c_ab: Sequence[Any] | None) -> None:
-        """Extend the history over `n` solution points, `u_c_ab` if blocked."""
+    def sample(self) -> Any:
+        """Signals evaluated at the solution points while blocked, the voltage."""
+        return self.out.u_c_ab
+
+    def extend_history(self, n: int, samples: Sequence[Any] | None, /) -> None:
+        """Extend the history over `n` solution points, the `samples` if blocked."""
         ...
 
 
@@ -257,10 +270,12 @@ class Model[C: Converter | None]:
 
     def set_outputs(self, t: float) -> None:
         """Compute the outputs and pass them to the connected inputs."""
-        # The voltage of a blocked converter depends on the outputs of its load
+        # The voltage of a blocked converter depends on the outputs of its AC load, and
+        # the outputs of its DC load (if current-fed) depend on its DC current
         order = self.subsystems
         if blocked := [c for c in self.converters if c.blocked]:
-            order = [s for s in self.subsystems if s not in blocked] + blocked
+            last = blocked + [c.dc_load for c in blocked if c.dc_load is not None]
+            order = [s for s in self.subsystems if s not in last] + last
         for subsystem in order:
             subsystem.set_outputs(t)
             for target, inp, out in self._outgoing[subsystem]:
@@ -283,13 +298,13 @@ class Model[C: Converter | None]:
         for subsystem in self.subsystems:
             index = subsystem.extend_state_history(sol.y, index)
         # The voltage of a blocked converter varies within the integration interval,
-        # so it is evaluated at the solution points
-        u_c_ab: dict[Converter, Sequence[Any]] = {}
+        # so its samples are evaluated at the solution points
+        samples: dict[Converter, Sequence[Any]] = {}
         if blocked := [c for c in self.converters if c.blocked]:
-            values = self._evaluate(sol, lambda: [c.out.u_c_ab for c in blocked])
-            u_c_ab = dict(zip(blocked, zip(*values, strict=True), strict=True))
+            values = self._evaluate(sol, lambda: [c.sample() for c in blocked])
+            samples = dict(zip(blocked, zip(*values, strict=True), strict=True))
         for converter in self.converters:
-            converter.extend_history(len(sol.t), u_c_ab.get(converter))
+            converter.extend_history(len(sol.t), samples.get(converter))
 
     def _evaluate[T](self, sol: OdeResult, fcn: Callable[[], T]) -> list[T]:
         """Evaluate `fcn` at the solution points, restoring the final state after."""

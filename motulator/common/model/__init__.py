@@ -1,6 +1,13 @@
 """Model package."""
 
-from motulator.common.model._ac_port import ACPort
+from motulator.common.model._ac_port import (
+    ACPort,
+    DCPort,
+    dc_voltage,
+    diode_margin,
+    leg_voltages,
+    update_diodes,
+)
 from motulator.common.model._ac_source import ThreePhaseSource
 from motulator.common.model._base import (
     ControlledConverter,
@@ -29,6 +36,7 @@ __all__ = [
     "ControlledConverter",
     "Converter",
     "DCBus",
+    "DCPort",
     "DiodeBridge",
     "Model",
     "ModelTimeSeries",
@@ -43,4 +51,8 @@ __all__ = [
     "TwoLevelModulator",
     "VoltageSourceConverter",
     "ZOH",
+    "dc_voltage",
+    "diode_margin",
+    "leg_voltages",
+    "update_diodes",
 ]
