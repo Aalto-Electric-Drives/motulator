@@ -441,10 +441,15 @@ Package Contents
    current between the legs follows from the inductance of the load, e.g., an AC
    filter and the grid. The threshold voltage of the diodes is included in the diode
    drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
-   model is connected to it (see `DCBus` and `Model`).
+   model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge
+   feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives
+   the relation between the DC current and the voltage, see `DCPort`. The bridge then
+   solves its DC voltage together with the leg voltages, and the DC current is its
+   output `i_dc`. The devices of the legs can be gated through `gated`, which models
+   thyristors: a floating leg is clamped to a rail only by a gated device.
 
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
-                fed from a DC-bus model.
+                fed from a DC-bus model or feed a DC load.
    :type u_dc: float, optional
    :param u_th: Threshold voltage (V) of the diodes, defaults to 0.
    :type u_th: float, optional
@@ -539,16 +544,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: extend_history(n, u_c_ab)
+   .. py:method:: extend_history(n, samples)
 
       
       Extend the history over the solution points of an integration interval.
 
       :param n: Number of solution points.
       :type n: int
-      :param u_c_ab: Voltages (V) evaluated at the solution points if only the diodes conduct,
-                     otherwise None.
-      :type u_c_ab: Sequence[complex] | None
+      :param samples: Voltages (V) evaluated at the solution points if only the diodes conduct,
+                      otherwise None. For a current-fed bridge, each sample consists of the
+                      converter voltage, the DC voltage, and the DC current, see `sample`.
+      :type samples: Sequence[Any] | None
 
 
 
@@ -571,7 +577,7 @@ Package Contents
    .. py:method:: init_state_history()
 
       
-      Initialize the history of the voltage, which is evaluated by the model.
+      Initialize the history of the voltages, which are evaluated by the model.
 
 
 
@@ -641,6 +647,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: sample()
+
+      
+      Voltage, and the DC voltage and current of a current-fed bridge.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: set_outputs(t)
 
       
@@ -689,7 +719,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None)
+.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, dc_load = None)
 
    Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`C`\ ]
 
@@ -709,6 +739,11 @@ Package Contents
                   a drive), see `CompositeModel`. Defaults to None, in which case the converter
                   has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
+   :param dc_load: Load connected to the DC bus, e.g., a battery or an electrolyzer. Its input
+                   `u_dc` is the DC-bus voltage and its output `i_dc` the current fed to the DC
+                   bus (negative when drawn), which replaces the external current of the DC bus.
+                   Defaults to None.
+   :type dc_load: Subsystem, optional
 
 
 
@@ -1742,7 +1777,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: extend_history(n, u_c_ab)
+   .. py:method:: extend_history(n, samples)
 
       
       Extend the history, the switching state held constant, see `DiodeBridge`.

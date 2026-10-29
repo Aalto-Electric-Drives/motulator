@@ -472,7 +472,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate._ivp.ivp</span><span class="w"> </span><span class="kn">import</span> <span class="n">OdeResult</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span><span class="p">,</span> <span class="n">DCPort</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">GateStates</span><span class="p">,</span> <span class="n">SwitchingTimes</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
@@ -548,6 +548,13 @@
         <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Not available by default</span></div>
 
 
+<div class="viewcode-block" id="Subsystem.compute_dc_port">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.compute_dc_port">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_dc_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DCPort</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the DC port for a current-fed converter, see `DCPort`."""</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># Not available by default</span></div>
+
+
 <div class="viewcode-block" id="Subsystem.init_state_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.init_state_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_state_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -586,11 +593,15 @@
 <span class="sd">    current, which a DC bus draws (see `DCBus`), and the states of its diodes. While</span>
 <span class="sd">    only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is</span>
 <span class="sd">    determined by the AC port of the load `ac_load` and the states of the diodes, see</span>
-<span class="sd">    `ACPort`. The simulation then locates the transitions of the diode states as</span>
-<span class="sd">    events, using the margin of the states, and updates the states at the transitions.</span>
-<span class="sd">    Since the voltage varies within the integration interval, the model evaluates it</span>
-<span class="sd">    at the solution points and passes it to `extend_history`, which also saves the</span>
-<span class="sd">    other signals of the converter that are not states.</span>
+<span class="sd">    `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also</span>
+<span class="sd">    solves its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and</span>
+<span class="sd">    the model evaluates the DC load after the converter. The simulation locates the</span>
+<span class="sd">    transitions of the diode states as events, using the margin of the states, and</span>
+<span class="sd">    updates the states at the transitions.</span>
+<span class="sd">    Since the voltage varies within the integration interval, the model evaluates the</span>
+<span class="sd">    signals given by `sample` (the voltage by default) at the solution points and</span>
+<span class="sd">    passes them to `extend_history`, which also saves the other signals of the</span>
+<span class="sd">    converter that are not states.</span>
 
 <span class="sd">    The diodes and the DC bus are optional capabilities: by default, the gates are</span>
 <span class="sd">    never blocked, so there are no diode-state transitions, and the converter cannot</span>
@@ -600,6 +611,7 @@
 <span class="sd">    """</span>
 
     <span class="n">ac_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Load providing the AC port</span>
+    <span class="n">dc_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Load providing the DC port, if current-fed</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -628,10 +640,17 @@
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Converter.sample">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Converter.sample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Signals evaluated at the solution points while blocked, the voltage."""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span></div>
+
+
 <div class="viewcode-block" id="Converter.extend_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Converter.extend_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extend_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Extend the history over `n` solution points, `u_c_ab` if blocked."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Extend the history over `n` solution points, the `samples` if blocked."""</span>
         <span class="o">...</span></div>
 </div>
 
@@ -779,10 +798,12 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the outputs and pass them to the connected inputs."""</span>
-        <span class="c1"># The voltage of a blocked converter depends on the outputs of its load</span>
+        <span class="c1"># The voltage of a blocked converter depends on the outputs of its AC load, and</span>
+        <span class="c1"># the outputs of its DC load (if current-fed) depend on its DC current</span>
         <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span>
         <span class="k">if</span> <span class="n">blocked</span> <span class="o">:=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">blocked</span><span class="p">]:</span>
-            <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">]</span> <span class="o">+</span> <span class="n">blocked</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">blocked</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">dc_load</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">blocked</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">last</span><span class="p">]</span> <span class="o">+</span> <span class="n">last</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
             <span class="n">subsystem</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]:</span>
@@ -811,13 +832,13 @@
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">extend_state_history</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="c1"># The voltage of a blocked converter varies within the integration interval,</span>
-        <span class="c1"># so it is evaluated at the solution points</span>
-        <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Converter</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># so its samples are evaluated at the solution points</span>
+        <span class="n">samples</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Converter</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">blocked</span> <span class="o">:=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">blocked</span><span class="p">]:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">])</span>
-            <span class="n">u_c_ab</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">blocked</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">])</span>
+            <span class="n">samples</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">blocked</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">converter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span>
-            <span class="n">converter</span><span class="o">.</span><span class="n">extend_history</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="n">u_c_ab</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">converter</span><span class="p">))</span></div>
+            <span class="n">converter</span><span class="o">.</span><span class="n">extend_history</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="n">samples</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">converter</span><span class="p">))</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">:</span> <span class="n">OdeResult</span><span class="p">,</span> <span class="n">fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>

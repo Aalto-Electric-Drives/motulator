@@ -477,13 +477,16 @@
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="Feedbacks">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.Feedbacks">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Feedbacks</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol defining the required fields for feedback signals."""</span>
 
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular speed of the coordinate system (rad/s), not post-processed</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular position of the coordinate system (rad)</span>
     <span class="n">u_c</span><span class="p">:</span> <span class="nb">complex</span>  <span class="c1"># Converter voltage (controller coordinates) for the control laws</span>
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage (V)</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage (V)</span></div>
+
 
 
 <span class="nd">@dataclass</span>
@@ -496,13 +499,16 @@
     <span class="n">v_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 
+<div class="viewcode-block" id="Measurements">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.Measurements">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Measurements</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Measured signals."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="n">u_g_ab</span><span class="p">:</span> <span class="nb">complex</span>
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span></div>
+
 
 
 <span class="c1"># %%</span>

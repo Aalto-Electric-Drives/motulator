@@ -539,6 +539,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingControllerCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingOutputs"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingOutputs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.Feedbacks"><code class="docutils literal notranslate"><span class="pre">Feedbacks</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_standby_output()</span></code></a></li>
@@ -554,6 +555,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.Measurements"><code class="docutils literal notranslate"><span class="pre">Measurements</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.compute_standby_output()</span></code></a></li>
@@ -588,6 +590,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControllerCfg"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.References"><code class="docutils literal notranslate"><span class="pre">References</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.compute_standby_output()</span></code></a></li>
@@ -641,11 +644,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DualVoltageFormingOutputs</span></code></a></p></td>
 <td><p>Feedback signals for the control system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Feedbacks</span></code></a></p></td>
+<td><p>Protocol defining the required fields for feedback signals.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.GridConverterControlSystem" title="motulator.grid.control.GridConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a></p></td>
 <td><p>Grid converter control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.InverterNonlinearity" title="motulator.grid.control.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.InverterNonlinearity" title="motulator.grid.control.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
 <td><p>Duty-ratio error due to the dead time and the threshold voltages.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Measurements</span></code></a></p></td>
+<td><p>Measured signals.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.ObserverBasedGridFormingController" title="motulator.grid.control.ObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a></p></td>
 <td><p>Disturbance-observer-based grid-forming controller.</p></td>
@@ -671,10 +680,13 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.PowerSynchronizationControllerCfg" title="motulator.grid.control.PowerSynchronizationControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></p></td>
 <td><p>Configuration for the reference-feedforward power-synchronization controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References"><code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code></a></p></td>
+<td><p>Reference signals of the grid converter controllers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingController" title="motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller configuration.</p></td>
 </tr>
 </tbody>
@@ -1037,6 +1049,13 @@ defaults to 2*pi*7.5.</p></li>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.Feedbacks">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">Feedbacks</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#Feedbacks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.Feedbacks" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol defining the required fields for feedback signals.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus_voltage_ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._base.ControlSystem</span></code></p>
@@ -1082,7 +1101,7 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <dd><p>Compute controller outputs based on feedback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
+<dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>motulator.grid.control._common.References</p>
@@ -1096,7 +1115,7 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <dd><p>Compute controller output while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
+<dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>motulator.grid.control._common.References</p>
@@ -1124,10 +1143,10 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <dd><p>Get feedback signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>meas</strong> (<em>Measurements</em>)</p>
+<dd class="field-odd"><p><strong>meas</strong> (<a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><em>Measurements</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Feedbacks</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks">Feedbacks</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1141,7 +1160,7 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <dd class="field-odd"><p><strong>mdl</strong> (<a class="reference internal" href="../model/index.html#motulator.grid.model.GridConverterSystem" title="motulator.grid.model.GridConverterSystem"><em>motulator.grid.model.GridConverterSystem</em></a><em>[</em><a class="reference internal" href="../model/index.html#motulator.grid.model.VoltageSourceConverter" title="motulator.grid.model.VoltageSourceConverter"><em>motulator.grid.model.VoltageSourceConverter</em></a><em>]</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Measurements</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements">Measurements</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1221,7 +1240,7 @@ synchronous frame current regulator of PWM AC drives,” IEEE Trans. Ind. Appl.,
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1259,6 +1278,12 @@ be used, matching the converter model.</p></li>
 <p>This switching-cycle averaged model assumes constant duty ratios and currents
 over a carrier period. It does not include transients due to changes in the
 switching commands.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.Measurements">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">Measurements</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#Measurements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.Measurements" title="Link to this definition">#</a></dt>
+<dd><p>Measured signals.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1731,7 +1756,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1746,7 +1771,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dd><p>Compute references while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>Feedbacks</em>)</p>
+<dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>motulator.grid.control._common.References</p>
@@ -1766,7 +1791,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Feedbacks</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks">Feedbacks</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1793,7 +1818,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>Feedbacks</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1821,6 +1846,12 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.References">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">References</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#References"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.References" title="Link to this definition">#</a></dt>
+<dd><p>Reference signals of the grid converter controllers.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -2045,6 +2076,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingControllerCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.DualVoltageFormingOutputs"><code class="docutils literal notranslate"><span class="pre">DualVoltageFormingOutputs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.Feedbacks"><code class="docutils literal notranslate"><span class="pre">Feedbacks</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.GridConverterControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">GridConverterControlSystem.compute_standby_output()</span></code></a></li>
@@ -2060,6 +2092,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.Measurements"><code class="docutils literal notranslate"><span class="pre">Measurements</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.ObserverBasedGridFormingController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">ObserverBasedGridFormingController.compute_standby_output()</span></code></a></li>
@@ -2094,6 +2127,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.PowerSynchronizationControllerCfg"><code class="docutils literal notranslate"><span class="pre">PowerSynchronizationControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.References"><code class="docutils literal notranslate"><span class="pre">References</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_output"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingController.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingController.compute_standby_output()</span></code></a></li>

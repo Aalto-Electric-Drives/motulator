@@ -539,6 +539,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.init_state_history"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.margin"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.margin</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.rhs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.sample"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.set_outputs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.update_diodes"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.update_diodes()</span></code></a></li>
 </ul>
@@ -930,12 +931,17 @@ simulation locates as events, see <cite>Simulation</cite>. Hence, the commutatio
 current between the legs follows from the inductance of the load, e.g., an AC
 filter and the grid. The threshold voltage of the diodes is included in the diode
 drops. The DC-bus voltage is the input <cite>u_dc</cite>, which is constant unless a DC-bus
-model is connected to it (see <cite>DCBus</cite> and <cite>Model</cite>).</p>
+model is connected to it (see <cite>DCBus</cite> and <cite>Model</cite>). Alternatively, the bridge
+feeds a DC load <cite>dc_load</cite> (e.g., an EMF through a DC choke), whose DC port gives
+the relation between the DC current and the voltage, see <cite>DCPort</cite>. The bridge then
+solves its DC voltage together with the leg voltages, and the DC current is its
+output <cite>i_dc</cite>. The devices of the legs can be gated through <cite>gated</cite>, which models
+thyristors: a floating leg is clamped to a rail only by a gated device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
-fed from a DC-bus model.</p></li>
+fed from a DC-bus model or feed a DC load.</p></li>
 <li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the diodes, defaults to 0.</p></li>
 </ul>
 </dd>
@@ -981,14 +987,15 @@ fed from a DC-bus model.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.DiodeBridge.extend_history">
-<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.DiodeBridge.extend_history" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.DiodeBridge.extend_history" title="Link to this definition">#</a></dt>
 <dd><p>Extend the history over the solution points of an integration interval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of solution points.</p></li>
-<li><p><strong>u_c_ab</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em>) – Voltages (V) evaluated at the solution points if only the diodes conduct,
-otherwise None.</p></li>
+<li><p><strong>samples</strong> (<em>Sequence</em><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Voltages (V) evaluated at the solution points if only the diodes conduct,
+otherwise None. For a current-fed bridge, each sample consists of the
+converter voltage, the DC voltage, and the DC current, see <cite>sample</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1000,7 +1007,7 @@ otherwise None.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.DiodeBridge.init_state_history">
 <span class="sig-name descname"><span class="pre">init_state_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.init_state_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.DiodeBridge.init_state_history" title="Link to this definition">#</a></dt>
-<dd><p>Initialize the history of the voltage, which is evaluated by the model.</p>
+<dd><p>Initialize the history of the voltages, which are evaluated by the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -1034,6 +1041,17 @@ otherwise None.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.grid.model.DiodeBridge.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.DiodeBridge.sample" title="Link to this definition">#</a></dt>
+<dd><p>Voltage, and the DC voltage and current of a current-fed bridge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.DiodeBridge.set_outputs">
 <span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.DiodeBridge.set_outputs" title="Link to this definition">#</a></dt>
 <dd><p>Set output variables.</p>
@@ -1062,7 +1080,7 @@ otherwise None.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.model.GridConverterSystem">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">GridConverterSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_converter_system.html#GridConverterSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.GridConverterSystem" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.model.</span></span><span class="sig-name descname"><span class="pre">GridConverterSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ac_source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_load</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/model/_converter_system.html#GridConverterSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.GridConverterSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Model</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">C</span></code>]</p>
 <p>Continuous-time model for grid-converter systems.</p>
 <p>The converter is connected to the grid through the AC filter.</p>
@@ -1075,6 +1093,10 @@ otherwise None.</p></li>
 <li><p><strong>dc_bus</strong> (<a class="reference internal" href="#motulator.grid.model.DCBus" title="motulator.grid.model.DCBus"><em>DCBus</em></a><em>, </em><em>optional</em>) – DC bus feeding the converter, which can be shared with other models (e.g., with
 a drive), see <cite>CompositeModel</cite>. Defaults to None, in which case the converter
 has a constant DC-bus voltage.</p></li>
+<li><p><strong>dc_load</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><em>optional</em>) – Load connected to the DC bus, e.g., a battery or an electrolyzer. Its input
+<cite>u_dc</cite> is the DC-bus voltage and its output <cite>i_dc</cite> the current fed to the DC
+bus (negative when drawn), which replaces the external current of the DC bus.
+Defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1676,13 +1698,13 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.grid.model.VoltageSourceConverter.extend_history">
-<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.extend_history" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.model.VoltageSourceConverter.extend_history" title="Link to this definition">#</a></dt>
 <dd><p>Extend the history, the switching state held constant, see <cite>DiodeBridge</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
-<li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>collections.abc.Sequence</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>collections.abc.Sequence</em></a><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1920,6 +1942,7 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.init_state_history"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.margin"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.margin</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.rhs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.sample"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.set_outputs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.model.DiodeBridge.update_diodes"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.update_diodes()</span></code></a></li>
 </ul>

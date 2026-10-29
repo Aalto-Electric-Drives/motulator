@@ -3015,7 +3015,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: extend_history(n, u_c_ab)
+   .. py:method:: extend_history(n, samples)
 
       
       Extend the history, the switching state held constant, see `DiodeBridge`.

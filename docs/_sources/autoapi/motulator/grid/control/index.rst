@@ -40,8 +40,10 @@ Classes
    motulator.grid.control.DualVoltageFormingController
    motulator.grid.control.DualVoltageFormingControllerCfg
    motulator.grid.control.DualVoltageFormingOutputs
+   motulator.grid.control.Feedbacks
    motulator.grid.control.GridConverterControlSystem
    motulator.grid.control.InverterNonlinearity
+   motulator.grid.control.Measurements
    motulator.grid.control.ObserverBasedGridFormingController
    motulator.grid.control.ObserverBasedGridFormingControllerCfg
    motulator.grid.control.ObserverOutputs
@@ -50,6 +52,7 @@ Classes
    motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
    motulator.grid.control.PowerSynchronizationControllerCfg
+   motulator.grid.control.References
    motulator.grid.control.SequenceObserverBasedGridFormingController
    motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg
 
@@ -632,6 +635,32 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+.. py:class:: Feedbacks
+
+   Bases: :py:obj:`Protocol`
+
+
+   
+   Protocol defining the required fields for feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None, pwm = None)
 
    Bases: :py:obj:`motulator.common.control._base.ControlSystem`
@@ -989,6 +1018,29 @@ Package Contents
    This switching-cycle averaged model assumes constant duty ratios and currents
    over a carrier period. It does not include transients due to changes in the
    switching commands.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: Measurements
+
+   
+   Measured signals.
+
 
 
 
@@ -1835,6 +1887,29 @@ Package Contents
    :type w_b: float, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: References
+
+   
+   Reference signals of the grid converter controllers.
+
 
 
 

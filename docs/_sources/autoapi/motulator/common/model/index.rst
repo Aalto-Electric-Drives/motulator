@@ -39,6 +39,7 @@ Classes
    motulator.common.model.ControlledConverter
    motulator.common.model.Converter
    motulator.common.model.DCBus
+   motulator.common.model.DCPort
    motulator.common.model.DiodeBridge
    motulator.common.model.Model
    motulator.common.model.ModelTimeSeries
@@ -53,6 +54,17 @@ Classes
    motulator.common.model.TwoLevelModulator
    motulator.common.model.VoltageSourceConverter
    motulator.common.model.ZOH
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   motulator.common.model.dc_voltage
+   motulator.common.model.diode_margin
+   motulator.common.model.leg_voltages
+   motulator.common.model.update_diodes
 
 
 Package Contents
@@ -423,11 +435,15 @@ Package Contents
    current, which a DC bus draws (see `DCBus`), and the states of its diodes. While
    only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is
    determined by the AC port of the load `ac_load` and the states of the diodes, see
-   `ACPort`. The simulation then locates the transitions of the diode states as
-   events, using the margin of the states, and updates the states at the transitions.
-   Since the voltage varies within the integration interval, the model evaluates it
-   at the solution points and passes it to `extend_history`, which also saves the
-   other signals of the converter that are not states.
+   `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also
+   solves its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and
+   the model evaluates the DC load after the converter. The simulation locates the
+   transitions of the diode states as events, using the margin of the states, and
+   updates the states at the transitions.
+   Since the voltage varies within the integration interval, the model evaluates the
+   signals given by `sample` (the voltage by default) at the solution points and
+   passes them to `extend_history`, which also saves the other signals of the
+   converter that are not states.
 
    The diodes and the DC bus are optional capabilities: by default, the gates are
    never blocked, so there are no diode-state transitions, and the converter cannot
@@ -500,10 +516,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: extend_history(n, u_c_ab)
+   .. py:method:: extend_history(n, samples, /)
 
       
-      Extend the history over `n` solution points, `u_c_ab` if blocked.
+      Extend the history over `n` solution points, the `samples` if blocked.
 
 
 
@@ -529,6 +545,30 @@ Package Contents
 
       
       Margin of the diode states, zero at their transition.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: sample()
+
+      
+      Signals evaluated at the solution points while blocked, the voltage.
 
 
 
@@ -761,6 +801,40 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: DCPort
+
+   
+   Relation between the DC current and the terminal voltage of a current-fed load.
+
+   The terminal voltage of the load is ``u = e + R*i + L*di/dt``, where `i` is the
+   current fed by the converter. A current-fed converter (e.g., a diode bridge with
+   a DC choke) uses the port to solve its DC voltage, see `dc_voltage`.
+
+   :param e: Voltage (V) at zero current and zero current derivative, e.g., the EMF of the
+             load.
+   :type e: float
+   :param R: Series resistance (Ω).
+   :type R: float
+   :param L: Series inductance (H), e.g., the DC choke.
+   :type L: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: DiodeBridge(u_dc = None, u_th = 0.0)
 
    Bases: :py:obj:`motulator.common.model._base.Converter`
@@ -777,10 +851,15 @@ Package Contents
    current between the legs follows from the inductance of the load, e.g., an AC
    filter and the grid. The threshold voltage of the diodes is included in the diode
    drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
-   model is connected to it (see `DCBus` and `Model`).
+   model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge
+   feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives
+   the relation between the DC current and the voltage, see `DCPort`. The bridge then
+   solves its DC voltage together with the leg voltages, and the DC current is its
+   output `i_dc`. The devices of the legs can be gated through `gated`, which models
+   thyristors: a floating leg is clamped to a rail only by a gated device.
 
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
-                fed from a DC-bus model.
+                fed from a DC-bus model or feed a DC load.
    :type u_dc: float, optional
    :param u_th: Threshold voltage (V) of the diodes, defaults to 0.
    :type u_th: float, optional
@@ -875,16 +954,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: extend_history(n, u_c_ab)
+   .. py:method:: extend_history(n, samples)
 
       
       Extend the history over the solution points of an integration interval.
 
       :param n: Number of solution points.
       :type n: int
-      :param u_c_ab: Voltages (V) evaluated at the solution points if only the diodes conduct,
-                     otherwise None.
-      :type u_c_ab: Sequence[complex] | None
+      :param samples: Voltages (V) evaluated at the solution points if only the diodes conduct,
+                      otherwise None. For a current-fed bridge, each sample consists of the
+                      converter voltage, the DC voltage, and the DC current, see `sample`.
+      :type samples: Sequence[Any] | None
 
 
 
@@ -907,7 +987,7 @@ Package Contents
    .. py:method:: init_state_history()
 
       
-      Initialize the history of the voltage, which is evaluated by the model.
+      Initialize the history of the voltages, which are evaluated by the model.
 
 
 
@@ -957,6 +1037,30 @@ Package Contents
 
       
       Default empty implementation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: sample()
+
+      
+      Voltage, and the DC voltage and current of a current-fed bridge.
 
 
 
@@ -1613,6 +1717,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: compute_dc_port()
+
+      
+      Compute the DC port for a current-fed converter, see `DCPort`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: create_time_series(t)
 
       
@@ -2165,7 +2293,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: extend_history(n, u_c_ab)
+   .. py:method:: extend_history(n, samples)
 
       
       Extend the history, the switching state held constant, see `DiodeBridge`.
@@ -2441,4 +2569,163 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:function:: dc_voltage(port, dc, diodes)
+
+   
+   Solve the voltage between the rails of a current-fed bridge.
+
+   The DC current of the bridge is the current of the legs clamped to the positive
+   rail (equally, the negative of the current of the legs clamped to the negative
+   rail). Its derivative follows from the AC port and the leg voltages, which depend
+   on the rail voltage, see `leg_voltages`. The rail voltage satisfying the DC port
+   ``u_dc = e + R*i_dc + L*di_dc/dt`` is solved from this linear relation.
+
+   :param port: Relation between the terminal current and voltage of the AC-side load.
+   :type port: ACPort
+   :param dc: Relation between the DC current and the voltage of the DC-side load.
+   :type dc: DCPort
+   :param diodes: Diode states of the legs, see `leg_voltages`.
+   :type diodes: ndarray, shape (3,)
+
+   :returns: Voltage (V) between the rails.
+   :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: diode_margin(port, u_dc, diodes, u_abc, gated = None)
+
+   
+   Compute the margin of the diode states.
+
+   The margin is positive while the diode states are valid, and it reaches zero
+   when the current of a conducting leg reverses or the voltage of a floating leg
+   reaches a rail through a gated device, i.e., at a transition of the diode states.
+
+   :param port: Relation between the terminal current and voltage of the load.
+   :type port: ACPort
+   :param u_dc: Voltage (V) between the rails.
+   :type u_dc: float
+   :param diodes: Diode states of the legs, see `leg_voltages`.
+   :type diodes: ndarray, shape (3,)
+   :param u_abc: Leg voltages (V).
+   :type u_abc: ndarray, shape (3,)
+   :param gated: Gate signals of the upper and lower devices of the legs, see `update_diodes`.
+                 Defaults to None, i.e., all the devices are gated.
+   :type gated: ndarray, shape (2, 3), optional
+
+   :returns: Margin (A or V).
+   :rtype: float
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: leg_voltages(port, u_dc, diodes)
+
+   
+   Compute the leg voltages of a converter with blocked gates.
+
+   The diode state of each leg is 1 if its lower diode conducts (the leg is clamped
+   to the negative rail), -1 if its upper diode conducts (positive rail), and 0 if
+   the leg floats. The voltage of a floating leg keeps its current at zero, i.e., it
+   drives the residual current to zero.
+
+   :param port: Relation between the terminal current and voltage of the load.
+   :type port: ACPort
+   :param u_dc: Voltage (V) between the rails.
+   :type u_dc: float
+   :param diodes: Diode states of the legs.
+   :type diodes: ndarray, shape (3,)
+
+   :returns: Leg voltages (V) with respect to the negative rail.
+   :rtype: ndarray, shape (3,)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:function:: update_diodes(port, dc, diodes = None, gated = None)
+
+   
+   Update the diode states at a transition or latch them when the gates are blocked.
+
+   A conducting leg whose current has reversed starts to float, and a floating leg
+   whose voltage is outside the rails is clamped to the rail by its diode. When the
+   gates are blocked, the legs carrying current conduct in the direction of the
+   current, and the other legs float. A device with a gate signal (e.g., a thyristor)
+   clamps the leg only if it is gated, and it conducts until its current reverses.
+
+   :param port: Relation between the terminal current and voltage of the load.
+   :type port: ACPort
+   :param dc: Voltage (V) between the rails, or the DC port of a current-fed bridge, from
+              which the voltage is solved, see `dc_voltage`.
+   :type dc: float | DCPort
+   :param diodes: Diode states of the legs, see `leg_voltages`. Defaults to None, which latches
+                  the states from the directions of the currents.
+   :type diodes: ndarray, shape (3,), optional
+   :param gated: Gate signals of the upper and lower devices of the legs. Defaults to None,
+                 i.e., all the devices are gated (diodes).
+   :type gated: ndarray, shape (2, 3), optional
+
+   :returns: Updated diode states.
+   :rtype: ndarray, shape (3,)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 

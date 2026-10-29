@@ -480,7 +480,9 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ACPort</span><span class="p">,</span>
+    <span class="n">DCPort</span><span class="p">,</span>
     <span class="n">current_direction</span><span class="p">,</span>
+    <span class="n">dc_voltage</span><span class="p">,</span>
     <span class="n">diode_margin</span><span class="p">,</span>
     <span class="n">leg_voltages</span><span class="p">,</span>
     <span class="n">update_diodes</span><span class="p">,</span>
@@ -522,6 +524,7 @@
 
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">i_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC current (A) fed to the DC load of a current-fed bridge</span>
 
 
 <div class="viewcode-block" id="DiodeBridge">
@@ -538,13 +541,18 @@
 <span class="sd">    current between the legs follows from the inductance of the load, e.g., an AC</span>
 <span class="sd">    filter and the grid. The threshold voltage of the diodes is included in the diode</span>
 <span class="sd">    drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus</span>
-<span class="sd">    model is connected to it (see `DCBus` and `Model`).</span>
+<span class="sd">    model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge</span>
+<span class="sd">    feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives</span>
+<span class="sd">    the relation between the DC current and the voltage, see `DCPort`. The bridge then</span>
+<span class="sd">    solves its DC voltage together with the leg voltages, and the DC current is its</span>
+<span class="sd">    output `i_dc`. The devices of the legs can be gated through `gated`, which models</span>
+<span class="sd">    thyristors: a floating leg is clamped to a rail only by a gated device.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    u_dc : float, optional</span>
 <span class="sd">        Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be</span>
-<span class="sd">        fed from a DC-bus model.</span>
+<span class="sd">        fed from a DC-bus model or feed a DC load.</span>
 <span class="sd">    u_th : float, optional</span>
 <span class="sd">        Threshold voltage (V) of the diodes, defaults to 0.</span>
 
@@ -558,6 +566,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="n">u_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u_dc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set by the model</span>
+        <span class="c1"># DC load of a current-fed bridge, set by the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span><span class="p">:</span> <span class="n">Subsystem</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Gate signals of the devices, shape (2, 3), None for diodes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gated</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># Diode states of the legs, latched from the current directions at the first</span>
         <span class="c1"># evaluation, see `update_diodes`</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -570,7 +582,7 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">margin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Margin of the diode states at the latest evaluation, see `diode_margin`."""</span>
-        <span class="k">return</span> <span class="n">diode_margin</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_latest</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">diode_margin</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_latest</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gated</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_ac_port</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ACPort</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get the AC port of the load."""</span>
@@ -579,16 +591,21 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The diodes require a load with an AC port"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">port</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_rail_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Voltage (V) between the rails, including the drops of the diodes."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_dc_side</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">DCPort</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Voltage (V) between the rails or the DC port, including the diode drops."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span>
+        <span class="n">dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span><span class="o">.</span><span class="n">compute_dc_port</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">dc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The current-fed bridge requires a load with a DC port"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DCPort</span><span class="p">(</span><span class="n">dc</span><span class="o">.</span><span class="n">e</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span><span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">R</span><span class="p">,</span> <span class="n">dc</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DiodeBridge.update_diodes">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.update_diodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_diodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Update the diode states at a transition, see `update_diodes`."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="o">=</span> <span class="n">update_diodes</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rail_voltage</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dc_side</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gated</span>
         <span class="p">)</span></div>
 
 
@@ -612,12 +629,17 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set output variables."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_dc_voltage</span><span class="p">()</span>
-        <span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rail_voltage</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_dc_voltage</span><span class="p">()</span>
+        <span class="n">port</span><span class="p">,</span> <span class="n">dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ac_port</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dc_side</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="o">=</span> <span class="n">update_diodes</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span> <span class="o">=</span> <span class="n">update_diodes</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gated</span><span class="p">)</span>
+        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">dc_voltage</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dc</span><span class="p">,</span> <span class="n">DCPort</span><span class="p">)</span> <span class="k">else</span> <span class="n">dc</span>
         <span class="n">u_abc</span> <span class="o">=</span> <span class="n">leg_voltages</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">u_abc</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
         <span class="c1"># The margin is computed on demand, only for locating the transitions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_latest</span> <span class="o">=</span> <span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">,</span> <span class="n">u_abc</span><span class="p">)</span></div>
 
@@ -632,14 +654,23 @@
 <div class="viewcode-block" id="DiodeBridge.init_state_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.init_state_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_state_history</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Initialize the history of the voltage, which is evaluated by the model."""</span>
+<span class="w">        </span><span class="sd">"""Initialize the history of the voltages, which are evaluated by the model."""</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">init_state_history</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_c_ab"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"u_c_ab"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"u_dc"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"i_dc"</span><span class="p">:</span> <span class="p">[]}</span></div>
+
+
+<div class="viewcode-block" id="DiodeBridge.sample">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.sample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Voltage, and the DC voltage and current of a current-fed bridge."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_dc</span></div>
 
 
 <div class="viewcode-block" id="DiodeBridge.extend_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.extend_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extend_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Extend the history over the solution points of an integration interval.</span>
 
@@ -647,12 +678,21 @@
 <span class="sd">        ----------</span>
 <span class="sd">        n : int</span>
 <span class="sd">            Number of solution points.</span>
-<span class="sd">        u_c_ab : Sequence[complex] | None</span>
+<span class="sd">        samples : Sequence[Any] | None</span>
 <span class="sd">            Voltages (V) evaluated at the solution points if only the diodes conduct,</span>
-<span class="sd">            otherwise None.</span>
+<span class="sd">            otherwise None. For a current-fed bridge, each sample consists of the</span>
+<span class="sd">            converter voltage, the DC voltage, and the DC current, see `sample`.</span>
 
 <span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_c_ab"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span> <span class="k">if</span> <span class="n">u_c_ab</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u_c_ab</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">samples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_c_ab"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_c_ab"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">u_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">i_dc</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">samples</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_c_ab"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">u_c_ab</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_dc"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">u_dc</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"i_dc"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">i_dc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DiodeBridge.create_time_series">
@@ -673,11 +713,17 @@
     <span class="n">u_dc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
+    <span class="n">i_dc</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">i_dc_int</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Constant DC-bus voltage, replaced by the DC-bus time series if connected</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="c1"># Constant DC-bus voltage, replaced by the DC-bus time series if connected,</span>
+        <span class="c1"># or the DC voltage of a current-fed bridge</span>
+        <span class="k">if</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_dc"</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_dc"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"i_dc"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"u_c_ab"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -866,9 +912,9 @@
 
 <div class="viewcode-block" id="VoltageSourceConverter.extend_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.extend_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extend_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">samples</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Extend the history, the switching state held constant, see `DiodeBridge`."""</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extend_history</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">extend_history</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
         <span class="n">inp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"q_c_ab"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">inp</span><span class="o">.</span><span class="n">q_c_ab</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"s_c_ab"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">inp</span><span class="o">.</span><span class="n">s_c_ab</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>

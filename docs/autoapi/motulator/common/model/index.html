@@ -513,6 +513,7 @@
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ACPort"><code class="docutils literal notranslate"><span class="pre">ACPort</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a><ul class="nav section-nav flex-column">
@@ -535,6 +536,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">Converter.compute_internal_dc_current()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.extend_history"><code class="docutils literal notranslate"><span class="pre">Converter.extend_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.margin"><code class="docutils literal notranslate"><span class="pre">Converter.margin</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.sample"><code class="docutils literal notranslate"><span class="pre">Converter.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.update_diodes"><code class="docutils literal notranslate"><span class="pre">Converter.update_diodes()</span></code></a></li>
 </ul>
 </li>
@@ -547,6 +549,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DCBus.set_outputs"><code class="docutils literal notranslate"><span class="pre">DCBus.set_outputs()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DCPort"><code class="docutils literal notranslate"><span class="pre">DCPort</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge"><code class="docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.blocked"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.blocked</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.compute_internal_dc_current()</span></code></a></li>
@@ -555,6 +558,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.init_state_history"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.margin"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.margin</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.rhs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.sample"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.set_outputs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.update_diodes"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.update_diodes()</span></code></a></li>
 </ul>
@@ -590,6 +594,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem"><code class="docutils literal notranslate"><span class="pre">Subsystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">Subsystem.compute_ac_port()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.compute_dc_port"><code class="docutils literal notranslate"><span class="pre">Subsystem.compute_dc_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">Subsystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.extend_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.extend_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.init_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.init_state_history()</span></code></a></li>
@@ -630,6 +635,10 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ZOH.schedule"><code class="docutils literal notranslate"><span class="pre">ZOH.schedule()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.dc_voltage"><code class="docutils literal notranslate"><span class="pre">dc_voltage()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.diode_margin"><code class="docutils literal notranslate"><span class="pre">diode_margin()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.leg_voltages"><code class="docutils literal notranslate"><span class="pre">leg_voltages()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.update_diodes"><code class="docutils literal notranslate"><span class="pre">update_diodes()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -671,47 +680,70 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCBus</span></code></a></p></td>
 <td><p>Capacitive DC bus feeding converters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.DCPort" title="motulator.common.model.DCPort"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DCPort</span></code></a></p></td>
+<td><p>Relation between the DC current and the terminal voltage of a current-fed load.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a></p></td>
 <td><p>Three-phase six-pulse diode bridge.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code></a></p></td>
 <td><p>Base class for continuous-time system models.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.ModelTimeSeries" title="motulator.common.model.ModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.ModelTimeSeries" title="motulator.common.model.ModelTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></p></td>
 <td><p>Time series of the simulation results.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Modulator" title="motulator.common.model.Modulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Modulator</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Modulator" title="motulator.common.model.Modulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Modulator</span></code></a></p></td>
 <td><p>Base class for modulators.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
 <td><p>Sensor with a gain error, an offset, and additive Gaussian noise.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
 <td><p>Container for simulation results.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.SolverCfg" title="motulator.common.model.SolverCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SolverCfg" title="motulator.common.model.SolverCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverCfg</span></code></a></p></td>
 <td><p>Solver configuration parameters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Subsystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Subsystem</span></code></a></p></td>
 <td><p>Protocol defining the interface for all subsystems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsystemTimeSeries</span></code></a></p></td>
 <td><p>Base class for subsystem time series.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.ThreePhaseSource" title="motulator.common.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.ThreePhaseSource" title="motulator.common.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p></td>
 <td><p>Three-phase source model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code></a></p></td>
 <td><p>Base class for the modulators of two-level voltage-source converters.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.VoltageSourceConverter" title="motulator.common.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.VoltageSourceConverter" title="motulator.common.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
 <td><p>Three-phase voltage-source converter.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.ZOH" title="motulator.common.model.ZOH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZOH</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.ZOH" title="motulator.common.model.ZOH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZOH</span></code></a></p></td>
 <td><p>Zero-order hold of the duty ratios of a voltage-source converter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.dc_voltage" title="motulator.common.model.dc_voltage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dc_voltage</span></code></a>(port, dc, diodes)</p></td>
+<td><p>Solve the voltage between the rails of a current-fed bridge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.diode_margin" title="motulator.common.model.diode_margin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">diode_margin</span></code></a>(port, u_dc, diodes, u_abc[, gated])</p></td>
+<td><p>Compute the margin of the diode states.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.leg_voltages" title="motulator.common.model.leg_voltages"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leg_voltages</span></code></a>(port, u_dc, diodes)</p></td>
+<td><p>Compute the leg voltages of a converter with blocked gates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.update_diodes" title="motulator.common.model.update_diodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_diodes</span></code></a>(port, dc[, diodes, gated])</p></td>
+<td><p>Update the diode states at a transition or latch them when the gates are blocked.</p></td>
 </tr>
 </tbody>
 </table>
@@ -949,11 +981,15 @@ gates is not supported.</p>
 current, which a DC bus draws (see <cite>DCBus</cite>), and the states of its diodes. While
 only the diodes conduct (<cite>blocked</cite> is True), the converter voltage <cite>out.u_c_ab</cite> is
 determined by the AC port of the load <cite>ac_load</cite> and the states of the diodes, see
-<cite>ACPort</cite>. The simulation then locates the transitions of the diode states as
-events, using the margin of the states, and updates the states at the transitions.
-Since the voltage varies within the integration interval, the model evaluates it
-at the solution points and passes it to <cite>extend_history</cite>, which also saves the
-other signals of the converter that are not states.</p>
+<cite>ACPort</cite>. A current-fed converter (e.g., a diode bridge with a DC choke) also
+solves its DC voltage from the DC port of its DC load <cite>dc_load</cite>, see <cite>DCPort</cite>, and
+the model evaluates the DC load after the converter. The simulation locates the
+transitions of the diode states as events, using the margin of the states, and
+updates the states at the transitions.
+Since the voltage varies within the integration interval, the model evaluates the
+signals given by <cite>sample</cite> (the voltage by default) at the solution points and
+passes them to <cite>extend_history</cite>, which also saves the other signals of the
+converter that are not states.</p>
 <p>The diodes and the DC bus are optional capabilities: by default, the gates are
 never blocked, so there are no diode-state transitions, and the converter cannot
 be fed from a DC bus. A converter subclassing this protocol implements only the
@@ -985,13 +1021,13 @@ capabilities it has.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Converter.extend_history">
-<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Converter.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Converter.extend_history" title="Link to this definition">#</a></dt>
-<dd><p>Extend the history over <cite>n</cite> solution points, <cite>u_c_ab</cite> if blocked.</p>
+<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Converter.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Converter.extend_history" title="Link to this definition">#</a></dt>
+<dd><p>Extend the history over <cite>n</cite> solution points, the <cite>samples</cite> if blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
-<li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>collections.abc.Sequence</em></a><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>collections.abc.Sequence</em></a><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1007,6 +1043,17 @@ capabilities it has.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Converter.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Converter.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Converter.sample" title="Link to this definition">#</a></dt>
+<dd><p>Signals evaluated at the solution points while blocked, the voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1135,6 +1182,25 @@ can also be fed to the DC bus.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.model.DCPort">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">DCPort</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_port.html#DCPort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DCPort" title="Link to this definition">#</a></dt>
+<dd><p>Relation between the DC current and the terminal voltage of a current-fed load.</p>
+<p>The terminal voltage of the load is <code class="docutils literal notranslate"><span class="pre">u</span> <span class="pre">=</span> <span class="pre">e</span> <span class="pre">+</span> <span class="pre">R*i</span> <span class="pre">+</span> <span class="pre">L*di/dt</span></code>, where <cite>i</cite> is the
+current fed by the converter. A current-fed converter (e.g., a diode bridge with
+a DC choke) uses the port to solve its DC voltage, see <cite>dc_voltage</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>e</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Voltage (V) at zero current and zero current derivative, e.g., the EMF of the
+load.</p></li>
+<li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Series resistance (Ω).</p></li>
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Series inductance (H), e.g., the DC choke.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.DiodeBridge">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">DiodeBridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DiodeBridge" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Converter</span></code></p>
@@ -1147,12 +1213,17 @@ simulation locates as events, see <cite>Simulation</cite>. Hence, the commutatio
 current between the legs follows from the inductance of the load, e.g., an AC
 filter and the grid. The threshold voltage of the diodes is included in the diode
 drops. The DC-bus voltage is the input <cite>u_dc</cite>, which is constant unless a DC-bus
-model is connected to it (see <cite>DCBus</cite> and <cite>Model</cite>).</p>
+model is connected to it (see <cite>DCBus</cite> and <cite>Model</cite>). Alternatively, the bridge
+feeds a DC load <cite>dc_load</cite> (e.g., an EMF through a DC choke), whose DC port gives
+the relation between the DC current and the voltage, see <cite>DCPort</cite>. The bridge then
+solves its DC voltage together with the leg voltages, and the DC current is its
+output <cite>i_dc</cite>. The devices of the legs can be gated through <cite>gated</cite>, which models
+thyristors: a floating leg is clamped to a rail only by a gated device.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
-fed from a DC-bus model.</p></li>
+fed from a DC-bus model or feed a DC load.</p></li>
 <li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the diodes, defaults to 0.</p></li>
 </ul>
 </dd>
@@ -1198,14 +1269,15 @@ fed from a DC-bus model.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.DiodeBridge.extend_history">
-<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DiodeBridge.extend_history" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DiodeBridge.extend_history" title="Link to this definition">#</a></dt>
 <dd><p>Extend the history over the solution points of an integration interval.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of solution points.</p></li>
-<li><p><strong>u_c_ab</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em>) – Voltages (V) evaluated at the solution points if only the diodes conduct,
-otherwise None.</p></li>
+<li><p><strong>samples</strong> (<em>Sequence</em><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em>) – Voltages (V) evaluated at the solution points if only the diodes conduct,
+otherwise None. For a current-fed bridge, each sample consists of the
+converter voltage, the DC voltage, and the DC current, see <cite>sample</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1217,7 +1289,7 @@ otherwise None.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.DiodeBridge.init_state_history">
 <span class="sig-name descname"><span class="pre">init_state_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.init_state_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DiodeBridge.init_state_history" title="Link to this definition">#</a></dt>
-<dd><p>Initialize the history of the voltage, which is evaluated by the model.</p>
+<dd><p>Initialize the history of the voltages, which are evaluated by the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
@@ -1246,6 +1318,17 @@ otherwise None.</p></li>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.DiodeBridge.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DiodeBridge.sample" title="Link to this definition">#</a></dt>
+<dd><p>Voltage, and the DC voltage and current of a current-fed bridge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1637,6 +1720,17 @@ well, under other keys, as a converter does (see <cite>Converter</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Subsystem.compute_dc_port">
+<span class="sig-name descname"><span class="pre">compute_dc_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.compute_dc_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.compute_dc_port" title="Link to this definition">#</a></dt>
+<dd><p>Compute the DC port for a current-fed converter, see <cite>DCPort</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>motulator.common.model._ac_port.DCPort | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Subsystem.create_time_series">
 <span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.create_time_series" title="Link to this definition">#</a></dt>
 <dd><p>Create time-series representation of this subsystem.</p>
@@ -1964,13 +2058,13 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.extend_history">
-<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_c_ab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.extend_history" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">extend_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">samples</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.extend_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.extend_history" title="Link to this definition">#</a></dt>
 <dd><p>Extend the history, the switching state held constant, see <cite>DiodeBridge</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>)</p></li>
-<li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>collections.abc.Sequence</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><em>collections.abc.Sequence</em></a><em>[</em><em>Any</em><em>] </em><em>| </em><em>None</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2131,6 +2225,114 @@ see <cite>Modulator</cite>.</p></li>
 
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.model.dc_voltage">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">dc_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_port.html#dc_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.dc_voltage" title="Link to this definition">#</a></dt>
+<dd><p>Solve the voltage between the rails of a current-fed bridge.</p>
+<p>The DC current of the bridge is the current of the legs clamped to the positive
+rail (equally, the negative of the current of the legs clamped to the negative
+rail). Its derivative follows from the AC port and the leg voltages, which depend
+on the rail voltage, see <cite>leg_voltages</cite>. The rail voltage satisfying the DC port
+<code class="docutils literal notranslate"><span class="pre">u_dc</span> <span class="pre">=</span> <span class="pre">e</span> <span class="pre">+</span> <span class="pre">R*i_dc</span> <span class="pre">+</span> <span class="pre">L*di_dc/dt</span></code> is solved from this linear relation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> (<a class="reference internal" href="#motulator.common.model.ACPort" title="motulator.common.model.ACPort"><em>ACPort</em></a>) – Relation between the terminal current and voltage of the AC-side load.</p></li>
+<li><p><strong>dc</strong> (<a class="reference internal" href="#motulator.common.model.DCPort" title="motulator.common.model.DCPort"><em>DCPort</em></a>) – Relation between the DC current and the voltage of the DC-side load.</p></li>
+<li><p><strong>diodes</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Diode states of the legs, see <cite>leg_voltages</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Voltage (V) between the rails.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.model.diode_margin">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">diode_margin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_abc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_port.html#diode_margin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.diode_margin" title="Link to this definition">#</a></dt>
+<dd><p>Compute the margin of the diode states.</p>
+<p>The margin is positive while the diode states are valid, and it reaches zero
+when the current of a conducting leg reverses or the voltage of a floating leg
+reaches a rail through a gated device, i.e., at a transition of the diode states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> (<a class="reference internal" href="#motulator.common.model.ACPort" title="motulator.common.model.ACPort"><em>ACPort</em></a>) – Relation between the terminal current and voltage of the load.</p></li>
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Voltage (V) between the rails.</p></li>
+<li><p><strong>diodes</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Diode states of the legs, see <cite>leg_voltages</cite>.</p></li>
+<li><p><strong>u_abc</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Leg voltages (V).</p></li>
+<li><p><strong>gated</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>, </em><em>3</em><em>)</em><em>, </em><em>optional</em>) – Gate signals of the upper and lower devices of the legs, see <cite>update_diodes</cite>.
+Defaults to None, i.e., all the devices are gated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Margin (A or V).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.model.leg_voltages">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">leg_voltages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_port.html#leg_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.leg_voltages" title="Link to this definition">#</a></dt>
+<dd><p>Compute the leg voltages of a converter with blocked gates.</p>
+<p>The diode state of each leg is 1 if its lower diode conducts (the leg is clamped
+to the negative rail), -1 if its upper diode conducts (positive rail), and 0 if
+the leg floats. The voltage of a floating leg keeps its current at zero, i.e., it
+drives the residual current to zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> (<a class="reference internal" href="#motulator.common.model.ACPort" title="motulator.common.model.ACPort"><em>ACPort</em></a>) – Relation between the terminal current and voltage of the load.</p></li>
+<li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Voltage (V) between the rails.</p></li>
+<li><p><strong>diodes</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em>) – Diode states of the legs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Leg voltages (V) with respect to the negative rail.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="motulator.common.model.update_diodes">
+<span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">update_diodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diodes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_port.html#update_diodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.update_diodes" title="Link to this definition">#</a></dt>
+<dd><p>Update the diode states at a transition or latch them when the gates are blocked.</p>
+<p>A conducting leg whose current has reversed starts to float, and a floating leg
+whose voltage is outside the rails is clamped to the rail by its diode. When the
+gates are blocked, the legs carrying current conduct in the direction of the
+current, and the other legs float. A device with a gate signal (e.g., a thyristor)
+clamps the leg only if it is gated, and it conducts until its current reverses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>port</strong> (<a class="reference internal" href="#motulator.common.model.ACPort" title="motulator.common.model.ACPort"><em>ACPort</em></a>) – Relation between the terminal current and voltage of the load.</p></li>
+<li><p><strong>dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference internal" href="#motulator.common.model.DCPort" title="motulator.common.model.DCPort"><em>DCPort</em></a>) – Voltage (V) between the rails, or the DC port of a current-fed bridge, from
+which the voltage is solved, see <cite>dc_voltage</cite>.</p></li>
+<li><p><strong>diodes</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>3</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Diode states of the legs, see <cite>leg_voltages</cite>. Defaults to None, which latches
+the states from the directions of the currents.</p></li>
+<li><p><strong>gated</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>2</em><em>, </em><em>3</em><em>)</em><em>, </em><em>optional</em>) – Gate signals of the upper and lower devices of the legs. Defaults to None,
+i.e., all the devices are gated (diodes).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated diode states.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (3,)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
@@ -2182,6 +2384,7 @@ see <cite>Modulator</cite>.</p></li>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#functions">Functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ACPort"><code class="docutils literal notranslate"><span class="pre">ACPort</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.CarrierComparison"><code class="docutils literal notranslate"><span class="pre">CarrierComparison</span></code></a><ul class="nav section-nav flex-column">
@@ -2204,6 +2407,7 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">Converter.compute_internal_dc_current()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.extend_history"><code class="docutils literal notranslate"><span class="pre">Converter.extend_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.margin"><code class="docutils literal notranslate"><span class="pre">Converter.margin</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.sample"><code class="docutils literal notranslate"><span class="pre">Converter.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Converter.update_diodes"><code class="docutils literal notranslate"><span class="pre">Converter.update_diodes()</span></code></a></li>
 </ul>
 </li>
@@ -2216,6 +2420,7 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DCBus.set_outputs"><code class="docutils literal notranslate"><span class="pre">DCBus.set_outputs()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DCPort"><code class="docutils literal notranslate"><span class="pre">DCPort</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge"><code class="docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.blocked"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.blocked</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.compute_internal_dc_current"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.compute_internal_dc_current()</span></code></a></li>
@@ -2224,6 +2429,7 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.init_state_history"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.init_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.margin"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.margin</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.rhs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.sample"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.set_outputs"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.DiodeBridge.update_diodes"><code class="docutils literal notranslate"><span class="pre">DiodeBridge.update_diodes()</span></code></a></li>
 </ul>
@@ -2259,6 +2465,7 @@ see <cite>Modulator</cite>.</p></li>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem"><code class="docutils literal notranslate"><span class="pre">Subsystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">Subsystem.compute_ac_port()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.compute_dc_port"><code class="docutils literal notranslate"><span class="pre">Subsystem.compute_dc_port()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">Subsystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.extend_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.extend_state_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Subsystem.init_state_history"><code class="docutils literal notranslate"><span class="pre">Subsystem.init_state_history()</span></code></a></li>
@@ -2299,6 +2506,10 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ZOH.schedule"><code class="docutils literal notranslate"><span class="pre">ZOH.schedule()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.dc_voltage"><code class="docutils literal notranslate"><span class="pre">dc_voltage()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.diode_margin"><code class="docutils literal notranslate"><span class="pre">diode_margin()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.leg_voltages"><code class="docutils literal notranslate"><span class="pre">leg_voltages()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.update_diodes"><code class="docutils literal notranslate"><span class="pre">update_diodes()</span></code></a></li>
 </ul>
 </li>
 </ul>
