@@ -94,13 +94,17 @@ def test_load_torque_in_results(two_mass: bool, connected: bool) -> None:
 
 def test_shared_subsystem_under_different_names() -> None:
     """A subsystem shared by the models of a composite is integrated once, and its
-    results are available under its name in each model."""
+    results, computed with the complete wiring, are the same under its name in each
+    model."""
     mech = mechanics(two_mass=False)
     mdl = CompositeModel({"a": loaded(mech), "b": Model(None, {"rotor": mech}, {})})
     assert len(mdl.get_initial_values()) == 2
     res = Simulation(mdl, show_progress=False).simulate(0.05)
-    np.testing.assert_array_equal(res.mdl.b.rotor.w_M, res.mdl.a.mechanics.w_M)
-    assert res.mdl.b.rotor.w_M[-1] < res.mdl.b.rotor.w_M[0]  # Loaded through a
+    assert res.mdl.b.rotor is res.mdl.a.mechanics
+    ts = res.mdl.b.rotor
+    assert ts.tau_L == pytest.approx(K * res.mdl.t)  # Connected in model a only
+    assert ts.tau_L_tot == pytest.approx(B_L * ts.w_M + K * res.mdl.t)
+    assert ts.w_M[-1] < ts.w_M[0]  # Loaded through a
 
 
 def test_wiring_is_checked() -> None:

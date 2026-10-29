@@ -77,7 +77,9 @@ class CompositeModelTimeSeries:
     Time series of the simulation results of a composite model.
 
     The time series of each model is stored as an attribute by the model name (e.g.,
-    `drive`), see `ModelTimeSeries`.
+    `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of
+    the composite, so a subsystem shared by the models has the same time series in
+    each of them.
 
     """
 
@@ -86,8 +88,9 @@ class CompositeModelTimeSeries:
 
     def __post_init__(self, mdl: CompositeModel) -> None:
         self.t = np.array(mdl._t)
+        ts = mdl.time_series(self.t)
         for name, sub_mdl in mdl.models.items():
-            setattr(self, name, ModelTimeSeries(sub_mdl))
+            setattr(self, name, ModelTimeSeries(sub_mdl, ts))
 
     def __getattr__(self, name: str) -> Any:
         """Support type checking for dynamic attributes."""

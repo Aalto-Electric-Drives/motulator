@@ -322,6 +322,20 @@ class Model[C: Converter | None]:
         for converter in self.converters:
             converter.extend_history(len(sol.t), samples.get(converter))
 
+    def time_series(self, t: np.ndarray) -> dict[Subsystem, "SubsystemTimeSeries"]:
+        """Compute the time series of the subsystems, connected as in the model."""
+        ts = {s: s.create_time_series(t) for s in self.subsystems.values()}
+        # Outputs in the evaluation order of the simulation, passed to the inputs
+        # immediately, see `set_outputs`
+        for subsystem in self.subsystems.values():
+            ts[subsystem].set_outputs(t, subsystem)
+            for target, inp, out in self._outgoing[subsystem]:
+                setattr(ts[target], inp, np.array(getattr(ts[subsystem], out)))
+        # Signals derived from the inputs, which are all available now
+        for subsystem in self.subsystems.values():
+            ts[subsystem].compute_derived_signals(t, subsystem)
+        return ts
+
     def _evaluate[T](self, sol: OdeResult, fcn: Callable[[], T]) -> list[T]:
         """Evaluate `fcn` at the solution points, restoring the final state after."""
         state = self.get_initial_values()
@@ -367,25 +381,29 @@ class ModelTimeSeries:
     subsystem inputs, which are used for plotting and for computing the signals that
     depend directly on the inputs.
 
+    Parameters
+    ----------
+    mdl : Model
+        Model whose subsystems the time series cover.
+    ts : dict[Subsystem, SubsystemTimeSeries], optional
+        Time series of the subsystems, computed with the wiring of a composite model
+        (see `CompositeModelTimeSeries`). Defaults to None, in which case they are
+        computed from the model, see `Model.time_series`.
+
     """
 
     mdl: InitVar[Model]
+    ts: InitVar[dict[Subsystem, SubsystemTimeSeries] | None] = None
     t: np.ndarray = field(default_factory=lambda: np.array([]), init=False)
 
-    def __post_init__(self, mdl: Model) -> None:
+    def __post_init__(
+        self, mdl: Model, ts: dict[Subsystem, SubsystemTimeSeries] | None
+    ) -> None:
         self.t = np.array(mdl._t)
-        ts = {s: s.create_time_series(self.t) for s in mdl.subsystems.values()}
+        if ts is None:
+            ts = mdl.time_series(self.t)
         for name, subsystem in mdl.subsystems.items():
             setattr(self, name, ts[subsystem])
-        # Outputs in the evaluation order of the simulation, passed to the inputs
-        # immediately, see `Model.set_outputs`
-        for subsystem in mdl.subsystems.values():
-            ts[subsystem].set_outputs(self.t, subsystem)
-            for target, inp, out in mdl._outgoing[subsystem]:
-                setattr(ts[target], inp, np.array(getattr(ts[subsystem], out)))
-        # Signals derived from the inputs, which are all available now
-        for subsystem in mdl.subsystems.values():
-            ts[subsystem].compute_derived_signals(self.t, subsystem)
 
     def __getattr__(self, name: str) -> Any:
         """Support type checking for dynamic attributes."""
