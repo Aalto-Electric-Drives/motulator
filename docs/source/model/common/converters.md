@@ -86,6 +86,8 @@ The switching state `q_c_ab` is zero while the gates are blocked, and the conver
 
 A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class, see [Figure 3](fig:diode_bridge). The model can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
 
+The bridge can also feed a DC load through a DC choke instead of a DC bus. The load then provides its DC port, i.e., the relation $u = e + Ri + L\,\mathrm{d}i/\mathrm{d}t$ between the DC current and the voltage, see {class}`motulator.common.model.DCPort`, and the bridge solves its DC voltage together with the leg voltages. Furthermore, the devices of the legs can be gated, which models thyristors: a floating leg is clamped to a rail only by a gated device, and a conducting device turns off when its current reverses. These capabilities are used by packages extending *motulator*, see {doc}`/related_packages`.
+
 ```{figure} ../figs/diode_bridge.svg
 ---
 name: fig:diode_bridge
