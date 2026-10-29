@@ -208,9 +208,9 @@ class DiodeBridge(Converter):
             self._history["u_dc"].extend(u_dc)
             self._history["i_dc"].extend(i_dc)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "DiodeBridgeTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "DiodeBridgeTimeSeries":
         """Create time series."""
-        return "converter", DiodeBridgeTimeSeries(t, self)
+        return DiodeBridgeTimeSeries(t, self)
 
 
 @dataclass
@@ -401,11 +401,9 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
         self._history["s_c_ab"].extend([inp.s_c_ab] * n)
         self._history["enabled"].extend([inp.enabled] * n)
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "VoltageSourceConverterTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "VoltageSourceConverterTimeSeries":
         """Create time series."""
-        return "converter", VoltageSourceConverterTimeSeries(t, self)
+        return VoltageSourceConverterTimeSeries(t, self)
 
 
 @dataclass
@@ -518,9 +516,9 @@ class DCBus(Subsystem):
         """Compute state derivatives."""
         return [self.compute_dc_current(t) / self.C_dc]
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "DCBusTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "DCBusTimeSeries":
         """Create time series from state list."""
-        return "dc_bus", DCBusTimeSeries(t, self)
+        return DCBusTimeSeries(t, self)
 
 
 @dataclass

@@ -16,38 +16,27 @@ if TYPE_CHECKING:
 
 
 # %%
-class SubsystemInputs(Protocol):
-    """Protocol for subsystem inputs."""
-
-
-class SubsystemOutputs(Protocol):
-    """Protocol for subsystem outputs."""
-
-
-class SubsystemStates(Protocol):
-    """Protocol for subsystem states."""
-
-
-class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemStates](
-    Protocol
-):
+class Subsystem(Protocol):
     """
     Protocol defining the interface for all subsystems.
 
-    This class defines the interface for all subsystems. It is a generic class that can
-    be used with different input, output, and state types. The class provides methods
+    A subsystem has the inputs `inp`, the outputs `out`, and the states `state`,
+    typically dataclasses, whose attributes the model reads by name: the connections
+    pass the outputs to the inputs (see `Model`), and the states are gathered into the
+    state vector of the solver in their declaration order. The class provides methods
     for setting states, outputs, and computing state derivatives. It also provides
-    methods for extending the state history and creating time-series representations
-    of the subsystem. The state history is a dict of lists, keyed by the names of the
-    state fields. The model initializes it by `init_state_history` and extends it by
-    `extend_state_history`. A subclass can keep its other signals in the history as
-    well, under other keys, as a converter does (see `Converter`).
+    methods for extending the state history and creating the time-series
+    representation of the subsystem, which the model names in the results (see
+    `ModelTimeSeries`). The state history is a dict of lists, keyed by the names of
+    the state fields. The model initializes it by `init_state_history` and extends it
+    by `extend_state_history`. A subclass can keep its other signals in the history
+    as well, under other keys, as a converter does (see `Converter`).
 
     """
 
-    inp: Inp  # None if the subsystem has no inputs
-    out: Out
-    state: State | None
+    inp: Any  # None if the subsystem has no inputs
+    out: Any
+    state: Any  # None if the subsystem has no states
     _history: dict[str, list[complex]]
 
     def set_states(self, state_list: list[complex], index: int) -> int:
@@ -87,7 +76,7 @@ class Subsystem[Inp: SubsystemInputs, Out: SubsystemOutputs, State: SubsystemSta
             index += 1
         return index
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "SubsystemTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "SubsystemTimeSeries":
         """Create time-series representation of this subsystem."""
         ...
 
@@ -183,15 +172,26 @@ class ControlledConverter(Protocol):
 
 
 # %%
+Wiring = dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+
+
+def check_name(name: str) -> None:
+    """Check that `name` is a valid attribute name of the results, see `Model`."""
+    if not name.isidentifier() or name.startswith("_") or name == "t":
+        raise ValueError(f"Invalid name {name!r}")
+
+
 class Model[C: Converter | None]:
     """
     Base class for continuous-time system models.
 
-    A model consists of subsystems and connections between them. The outputs are
-    computed in the order of the `subsystems` list and passed to the connected inputs
+    A model consists of named subsystems and connections between them. The outputs are
+    computed in the order of the subsystems and passed to the connected inputs
     immediately. Hence, a subsystem whose outputs depend directly on its inputs must
     come after the subsystems providing these inputs. The voltage of a blocked
-    converter depends on its load, so it is computed after the other subsystems.
+    converter depends on its load, so it is computed after the other subsystems. The
+    names of the subsystems name their time series in the results, see
+    `ModelTimeSeries`.
 
     A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
     controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -203,63 +203,77 @@ class Model[C: Converter | None]:
     ----------
     converter : Converter | None
         Converter, or None if the model has no converter.
-    subsystems : list[Subsystem]
-        All subsystems, including the converter.
-    connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]
-        Connections as `{(target, input_name): (source, output_name)}`.
+    subsystems : dict[str, Subsystem]
+        All subsystems by name, including the converter. The names must be valid
+        attribute names (not starting with an underscore, and not `t`).
+    connections : dict[tuple[str, str], tuple[str, str]]
+        Connections as `{(target, input_name): (source, output_name)}`, where `target`
+        and `source` are the names of the subsystems.
     dc_bus : DCBus, optional
-        DC bus feeding the converter. The DC bus is added to the subsystems, and the
-        converter is connected to it, see `DCBus.connect`. The DC bus can be shared
-        with other models, see `CompositeModel`. Defaults to None, in which case the
-        converter has a constant DC-bus voltage.
+        DC bus feeding the converter. The DC bus is added to the subsystems under the
+        name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The
+        DC bus can be shared with other models, see `CompositeModel`. Defaults to None,
+        in which case the converter has a constant DC-bus voltage.
 
     """
 
     def __init__(
         self,
         converter: C,
-        subsystems: list[Subsystem],
-        connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]],
+        subsystems: dict[str, Subsystem],
+        connections: dict[tuple[str, str], tuple[str, str]],
         dc_bus: "DCBus | None" = None,
     ) -> None:
-        if converter is not None and converter not in subsystems:
-            raise ValueError("The converter must be included in the subsystems")
         if dc_bus is not None:
             if converter is None:
                 raise ValueError("A DC bus requires a converter")
-            if dc_bus in subsystems:
+            if "dc_bus" in subsystems or dc_bus in subsystems.values():
                 raise ValueError("The DC bus must not be included in the subsystems")
             # The DC bus comes first, since the converter voltage depends directly on
             # the DC-bus voltage
-            subsystems = [dc_bus, *subsystems]
-            connections = {**connections, **dc_bus.connect(converter)}
-        if len(set(subsystems)) < len(subsystems):
+            subsystems = {"dc_bus": dc_bus, **subsystems}
+        for name in subsystems:
+            check_name(name)
+        if len({id(s) for s in subsystems.values()}) < len(subsystems):
             raise ValueError("The subsystems must be distinct")
-        # Group the connections by the source for passing the outputs to the inputs
-        self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
-            s: [] for s in subsystems
-        }
+        if converter is not None and converter not in subsystems.values():
+            raise ValueError("The converter must be included in the subsystems")
+        wiring: Wiring = {}
         for (target, inp), (src, out) in connections.items():
-            name = f"{type(src).__name__}.{out} -> {type(target).__name__}.{inp}"
-            if src not in self._outgoing or target not in self._outgoing:
-                raise ValueError(f"Connection {name} to a subsystem not in the model")
-            if not (hasattr(target.inp, inp) and hasattr(src.out, out)):
-                raise ValueError(f"Invalid connection {name}")
-            self._outgoing[src].append((target, inp, out))
-        self.t0: float = 0.0
-        self.subsystems = subsystems
-        self.connections = connections
+            if target not in subsystems or src not in subsystems:
+                raise ValueError(
+                    f"Connection {src}.{out} -> {target}.{inp} to an unknown subsystem"
+                )
+            wiring[subsystems[target], inp] = (subsystems[src], out)
+        if dc_bus is not None and converter is not None:
+            wiring |= dc_bus.connect(converter)
         self.converter: C = converter
         self.converters: list[Converter] = [] if converter is None else [converter]
         self.dc_bus = dc_bus
+        self._wire(subsystems, wiring)
+
+    def _wire(self, subsystems: dict[str, Subsystem], wiring: Wiring) -> None:
+        """Set the subsystems and group the connections by the source."""
+        self.subsystems = subsystems
+        self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
+            s: [] for s in subsystems.values()
+        }
+        for (target, inp), (src, out) in wiring.items():
+            if not (hasattr(target.inp, inp) and hasattr(src.out, out)):
+                raise ValueError(
+                    f"Invalid connection {type(src).__name__}.{out} -> "
+                    f"{type(target).__name__}.{inp}"
+                )
+            self._outgoing[src].append((target, inp, out))
+        self.t0: float = 0.0
         self._t: list[float] = []  # Time history
-        for subsystem in subsystems:
+        for subsystem in subsystems.values():
             subsystem.init_state_history()
 
     def get_initial_values(self) -> list[complex]:
         """Get initial values of all subsystems before the solver."""
         state0: list[complex] = []
-        for subsystem in self.subsystems:
+        for subsystem in self.subsystems.values():
             if subsystem.state is not None:
                 state0.extend(vars(subsystem.state).values())
         return state0
@@ -267,17 +281,17 @@ class Model[C: Converter | None]:
     def set_states(self, state_list: list[complex]) -> None:
         """Set states in all subsystems."""
         index = 0
-        for subsystem in self.subsystems:
+        for subsystem in self.subsystems.values():
             index = subsystem.set_states(state_list, index)
 
     def set_outputs(self, t: float) -> None:
         """Compute the outputs and pass them to the connected inputs."""
         # The voltage of a blocked converter depends on the outputs of its AC load, and
         # the outputs of its DC load (if current-fed) depend on its DC current
-        order = self.subsystems
+        order = list(self.subsystems.values())
         if blocked := [c for c in self.converters if c.blocked]:
             last = blocked + [c.dc_load for c in blocked if c.dc_load is not None]
-            order = [s for s in self.subsystems if s not in last] + last
+            order = [s for s in order if s not in last] + last
         for subsystem in order:
             subsystem.set_outputs(t)
             for target, inp, out in self._outgoing[subsystem]:
@@ -288,7 +302,7 @@ class Model[C: Converter | None]:
         self.set_states(state_list)
         self.set_outputs(t)
         rhs_list: list[complex] = []
-        for subsystem in self.subsystems:
+        for subsystem in self.subsystems.values():
             if derivatives := subsystem.rhs(t):
                 rhs_list.extend(derivatives)
         return rhs_list
@@ -297,7 +311,7 @@ class Model[C: Converter | None]:
         """Save the solution and the signals of the converters."""
         self._t.extend(sol.t)
         index = 0
-        for subsystem in self.subsystems:
+        for subsystem in self.subsystems.values():
             index = subsystem.extend_state_history(sol.y, index)
         # The voltage of a blocked converter varies within the integration interval,
         # so its samples are evaluated at the solution points
@@ -348,9 +362,10 @@ class ModelTimeSeries:
     """
     Time series of the simulation results.
 
-    The time series of each subsystem is stored as an attribute (e.g., `machine`). It
-    also contains the time series of the subsystem inputs, which are used for plotting
-    and for computing the signals that depend directly on the inputs.
+    The time series of each subsystem is stored as an attribute by the name of the
+    subsystem in the model (e.g., `machine`). It also contains the time series of the
+    subsystem inputs, which are used for plotting and for computing the signals that
+    depend directly on the inputs.
 
     """
 
@@ -359,20 +374,17 @@ class ModelTimeSeries:
 
     def __post_init__(self, mdl: Model) -> None:
         self.t = np.array(mdl._t)
-        ts = {}
-        for subsystem in mdl.subsystems:
-            name, ts[subsystem] = subsystem.create_time_series(self.t)
-            if name in vars(self):
-                raise ValueError(f"Duplicate time-series name {name!r}")
+        ts = {s: s.create_time_series(self.t) for s in mdl.subsystems.values()}
+        for name, subsystem in mdl.subsystems.items():
             setattr(self, name, ts[subsystem])
         # Outputs in the evaluation order of the simulation, passed to the inputs
         # immediately, see `Model.set_outputs`
-        for subsystem in mdl.subsystems:
+        for subsystem in mdl.subsystems.values():
             ts[subsystem].set_outputs(self.t, subsystem)
             for target, inp, out in mdl._outgoing[subsystem]:
                 setattr(ts[target], inp, np.array(getattr(ts[subsystem], out)))
         # Signals derived from the inputs, which are all available now
-        for subsystem in mdl.subsystems:
+        for subsystem in mdl.subsystems.values():
             ts[subsystem].compute_derived_signals(self.t, subsystem)
 
     def __getattr__(self, name: str) -> Any:

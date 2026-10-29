@@ -131,8 +131,8 @@ class EMFLoad(Subsystem):
     def compute_dc_port(self) -> DCPort:
         return DCPort(self.e, self.R, self.L)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, SubsystemTimeSeries]:
-        return "load", EMFLoadTimeSeries(t)
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
+        return EMFLoadTimeSeries(t)
 
 
 @dataclass
@@ -150,15 +150,19 @@ class CurrentFedRectifier(Model[DiodeBridge]):
     def __init__(self, converter: DiodeBridge, L_f: float, load: EMFLoad) -> None:
         ac_filter, ac_source = grid_model.LFilter(L_f=L_f), grid()
         connections = {
-            (converter, "i_c_ab"): (ac_filter, "i_c_ab"),
-            (ac_filter, "u_c_ab"): (converter, "u_c_ab"),
-            (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
-            (load, "i_dc"): (converter, "i_dc"),
+            ("converter", "i_c_ab"): ("ac_filter", "i_c_ab"),
+            ("ac_filter", "u_c_ab"): ("converter", "u_c_ab"),
+            ("ac_filter", "e_g_ab"): ("ac_source", "e_g_ab"),
+            ("load", "i_dc"): ("converter", "i_dc"),
         }
         converter.ac_load, converter.dc_load = ac_filter, load
-        super().__init__(
-            converter, [converter, ac_filter, ac_source, load], connections
-        )
+        subsystems = {
+            "converter": converter,
+            "ac_filter": ac_filter,
+            "ac_source": ac_source,
+            "load": load,
+        }
+        super().__init__(converter, subsystems, connections)
 
 
 def test_current_fed_diode_bridge() -> None:

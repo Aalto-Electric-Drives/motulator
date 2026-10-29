@@ -26,10 +26,10 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         a drive), see `CompositeModel`. Defaults to None, in which case the converter
         has a constant DC-bus voltage.
     dc_load : Subsystem, optional
-        Load connected to the DC bus, e.g., a battery or an electrolyzer. Its input
-        `u_dc` is the DC-bus voltage and its output `i_dc` the current fed to the DC
-        bus (negative when drawn), which replaces the external current of the DC bus.
-        Defaults to None.
+        Load connected to the DC bus, e.g., a battery or an electrolyzer, named
+        `dc_load` in the results. Its input `u_dc` is the DC-bus voltage and its output
+        `i_dc` the current fed to the DC bus (negative when drawn), which replaces the
+        external current of the DC bus. Defaults to None.
 
     """
 
@@ -45,18 +45,22 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         self.ac_source = ac_source
         self.dc_load = dc_load
         connections = {
-            (converter, "i_c_ab"): (ac_filter, "i_c_ab"),
-            (ac_filter, "u_c_ab"): (converter, "u_c_ab"),
-            (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
+            ("converter", "i_c_ab"): ("ac_filter", "i_c_ab"),
+            ("ac_filter", "u_c_ab"): ("converter", "u_c_ab"),
+            ("ac_filter", "e_g_ab"): ("ac_source", "e_g_ab"),
         }
-        subsystems = [converter, ac_filter, ac_source]
+        subsystems: dict[str, Subsystem] = {
+            "converter": converter,
+            "ac_filter": ac_filter,
+            "ac_source": ac_source,
+        }
         if dc_load is not None:
             if dc_bus is None:
                 raise ValueError("A DC load requires a DC bus")
-            subsystems.append(dc_load)
+            subsystems["dc_load"] = dc_load
             connections |= {
-                (dc_load, "u_dc"): (dc_bus, "u_dc"),
-                (dc_bus, "i_dc"): (dc_load, "i_dc"),
+                ("dc_load", "u_dc"): ("dc_bus", "u_dc"),
+                ("dc_bus", "i_dc"): ("dc_load", "i_dc"),
             }
         converter.ac_load = ac_filter
         super().__init__(converter, subsystems, connections, dc_bus=dc_bus)

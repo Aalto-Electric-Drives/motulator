@@ -129,9 +129,9 @@ class LFilter(Subsystem):
         u_g_line = complex2line(self.pcc_voltage(self.state, self.inp))
         return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "LFilterTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "LFilterTimeSeries":
         """Create time series from state list."""
-        return "ac_filter", LFilterTimeSeries(t, self)
+        return LFilterTimeSeries(t, self)
 
 
 @dataclass
@@ -300,9 +300,9 @@ class LCLFilter(Subsystem):
         """Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""
         return complex2line(self.state.u_f_ab)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "LCLFilterTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "LCLFilterTimeSeries":
         """Create time series from state list."""
-        return "ac_filter", LCLFilterTimeSeries(t, self)
+        return LCLFilterTimeSeries(t, self)
 
 
 @dataclass

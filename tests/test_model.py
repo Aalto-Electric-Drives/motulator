@@ -1,9 +1,9 @@
 """
 Tests for the model base class with custom subsystems.
 
-The model checks its wiring at construction, the post-processing rejects conflicting
-result names, and the signals derived from the connected inputs are computed from the
-time series of the inputs.
+The model checks its wiring at construction, the names of the subsystems name their
+results, and the signals derived from the connected inputs are computed from the time
+series of the inputs.
 
 """
 
@@ -12,7 +12,13 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 
-from motulator.common.model import Model, Simulation, Subsystem, SubsystemTimeSeries
+from motulator.common.model import (
+    CompositeModel,
+    Model,
+    Simulation,
+    Subsystem,
+    SubsystemTimeSeries,
+)
 from motulator.drive.model import MechanicalSystem, TwoMassMechanicalSystem
 
 K = 10.0  # Slope of the ramp load torque (Nm/s)
@@ -44,8 +50,8 @@ class _RampTorque(Subsystem):
     def rhs(self, t: float) -> list[complex]:
         return []
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, _TimeSeries]:
-        return "load", _TimeSeries(t, K * t)
+    def create_time_series(self, t: np.ndarray) -> _TimeSeries:
+        return _TimeSeries(t, K * t)
 
 
 def mechanics(two_mass: bool) -> MechanicalSystem | TwoMassMechanicalSystem:
@@ -59,6 +65,13 @@ def mechanics(two_mass: bool) -> MechanicalSystem | TwoMassMechanicalSystem:
     return mech
 
 
+def loaded(mech: Subsystem) -> Model:
+    """Mechanical system loaded by the ramp torque."""
+    load = _RampTorque()
+    connections = {("mechanics", "tau_L"): ("load", "tau_L")}
+    return Model(None, {"load": load, "mechanics": mech}, connections)
+
+
 @pytest.mark.parametrize("two_mass", [False, True])
 @pytest.mark.parametrize("connected", [False, True])
 def test_load_torque_in_results(two_mass: bool, connected: bool) -> None:
@@ -67,11 +80,10 @@ def test_load_torque_in_results(two_mass: bool, connected: bool) -> None:
     of time."""
     mech = mechanics(two_mass)
     if connected:
-        load = _RampTorque()
-        mdl = Model(None, [load, mech], {(mech, "tau_L"): (load, "tau_L")})
+        mdl = loaded(mech)
     else:
         mech.set_external_load_torque(lambda t: K * t)
-        mdl = Model(None, [mech], {})
+        mdl = Model(None, {"mechanics": mech}, {})
     res = Simulation(mdl, show_progress=False).simulate(0.05)
     ts = res.mdl.mechanics
     w = ts.w_L if two_mass else ts.w_M
@@ -80,22 +92,27 @@ def test_load_torque_in_results(two_mass: bool, connected: bool) -> None:
     assert ts.w_M[-1] < ts.w_M[0]  # Decelerates under the load
 
 
-def test_duplicate_result_names_are_rejected() -> None:
-    """Two subsystems with the same time-series name cannot share the results."""
-    mdl = Model(None, [MechanicalSystem(J=1.0), MechanicalSystem(J=1.0)], {})
-    with pytest.raises(ValueError, match="mechanics"):
-        Simulation(mdl, show_progress=False).simulate(1e-4)
+def test_shared_subsystem_under_different_names() -> None:
+    """A subsystem shared by the models of a composite is integrated once, and its
+    results are available under its name in each model."""
+    mech = mechanics(two_mass=False)
+    mdl = CompositeModel({"a": loaded(mech), "b": Model(None, {"rotor": mech}, {})})
+    assert len(mdl.get_initial_values()) == 2
+    res = Simulation(mdl, show_progress=False).simulate(0.05)
+    np.testing.assert_array_equal(res.mdl.b.rotor.w_M, res.mdl.a.mechanics.w_M)
+    assert res.mdl.b.rotor.w_M[-1] < res.mdl.b.rotor.w_M[0]  # Loaded through a
 
 
 def test_wiring_is_checked() -> None:
-    """The subsystems must be distinct, and the connections must refer to the
-    subsystems of the model and to their existing signals."""
+    """The names must be valid and the subsystems distinct, and the connections must
+    refer to the subsystems of the model and to their existing signals."""
     load, mech = _RampTorque(), MechanicalSystem(J=1.0)
-    with pytest.raises(ValueError):  # Duplicate subsystem
-        Model(None, [load, mech, mech], {})
-    with pytest.raises(ValueError):  # Target not in the model
-        Model(None, [load], {(mech, "tau_L"): (load, "tau_L")})
-    with pytest.raises(ValueError):  # Source not in the model
-        Model(None, [mech], {(mech, "tau_L"): (load, "tau_L")})
+    for name in ("t", "_mech", "1", "a.b"):
+        with pytest.raises(ValueError):  # Invalid name
+            Model(None, {name: mech}, {})
+    with pytest.raises(ValueError):  # The same subsystem under two names
+        Model(None, {"a": mech, "b": mech}, {})
+    with pytest.raises(ValueError):  # Unknown subsystem
+        Model(None, {"load": load}, {("mechanics", "tau_L"): ("load", "tau_L")})
     with pytest.raises(ValueError):  # Nonexistent input
-        Model(None, [load, mech], {(mech, "tau"): (load, "tau_L")})
+        Model(None, {"load": load, "mech": mech}, {("mech", "tau"): ("load", "tau_L")})

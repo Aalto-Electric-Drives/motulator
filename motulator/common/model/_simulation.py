@@ -170,7 +170,7 @@ class Simulation:
             raise ValueError("t_start must be given for the control systems")
         # A DC bus computes the currents of all its converters, so their models must be
         # simulated too
-        for dc_bus in mdl.subsystems:
+        for dc_bus in mdl.subsystems.values():
             if isinstance(dc_bus, DCBus) and not all(
                 c in mdl.converters for c in dc_bus.converters
             ):
