@@ -59,8 +59,6 @@ class Drive(Model[VoltageSourceConverter]):
             }
             converter.ac_load = machine
         else:
-            # The machine comes after the filter, since its current can depend directly
-            # on the filter voltage
             subsystems["lc_filter"] = lc_filter
             connections |= {
                 ("converter", "i_c_ab"): ("lc_filter", "i_c_ab"),
@@ -109,8 +107,6 @@ class GridConnectedMachine(Model[None]):
             ("machine", "w_M"): ("mechanics", "w_M"),
             ("mechanics", "tau_M"): ("machine", "tau_M"),
         }
-        # The source comes first, since the stator current can depend directly on the
-        # voltage
         subsystems: dict[str, Subsystem] = {
             "ac_source": ac_source,
             "machine": machine,
