@@ -185,11 +185,9 @@ Package Contents
    the models of a grid converter and a drive. Each model keeps its converter, whose
    modulator includes the PWM model and the computational delay, and the model of a
    controlled converter is driven by its own control system in the simulation, see
-   `Simulation`. The subsystems are
-   evaluated in the order of the models, a shared subsystem at its first occurrence.
-   The order is not resolved automatically: a shared subsystem whose outputs other
-   subsystems depend on directly must come first in each model, as `Model` places the
-   DC bus.
+   `Simulation`. A shared subsystem is evaluated once, whatever its names in the
+   models (the composite names the subsystems `model.subsystem` after their first
+   occurrence), in the order derived from the direct dependencies, see `Model`.
 
    :param models: Models by name. The names are used for the control systems and the results, so
                   they must be valid attribute names (not starting with an underscore, and not
@@ -739,10 +737,10 @@ Package Contents
                   a drive), see `CompositeModel`. Defaults to None, in which case the converter
                   has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
-   :param dc_load: Load connected to the DC bus, e.g., a battery or an electrolyzer. Its input
-                   `u_dc` is the DC-bus voltage and its output `i_dc` the current fed to the DC
-                   bus (negative when drawn), which replaces the external current of the DC bus.
-                   Defaults to None.
+   :param dc_load: Load connected to the DC bus, e.g., a battery or an electrolyzer, named
+                   `dc_load` in the results. Its input `u_dc` is the DC-bus voltage and its output
+                   `i_dc` the current fed to the DC bus (negative when drawn), which replaces the
+                   external current of the DC bus. Defaults to None.
    :type dc_load: Subsystem, optional
 
 

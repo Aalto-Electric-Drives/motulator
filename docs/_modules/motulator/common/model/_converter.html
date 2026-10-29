@@ -558,6 +558,9 @@
 
 <span class="sd">    """</span>
 
+    <span class="c1"># The converter voltage depends directly on the DC-bus voltage</span>
+    <span class="n">feedthrough</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"u_dc"</span><span class="p">})</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">u_th</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span> <span class="o">=</span> <span class="n">u_th</span>
         <span class="c1"># The inputs are extended by `VoltageSourceConverter`, so their type is not</span>
@@ -609,11 +612,16 @@
         <span class="p">)</span></div>
 
 
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_rectified_current</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Current (A) rectified by the diodes from the AC current."""</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">complex2abc</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
 <div class="viewcode-block" id="DiodeBridge.compute_internal_dc_current">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.compute_internal_dc_current">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the internal DC current (A), rectified by the diodes."""</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">complex2abc</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">_rectified_current</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_dc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -638,8 +646,10 @@
         <span class="n">u_abc</span> <span class="o">=</span> <span class="n">leg_voltages</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">u_abc</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># The DC current is computed from the current of the port, which comes</span>
+            <span class="c1"># from the states of the load, independently of the evaluation order</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">u_dc</span> <span class="o">=</span> <span class="n">u_dc</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_th</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rectified_current</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
         <span class="c1"># The margin is computed on demand, only for locating the transitions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_latest</span> <span class="o">=</span> <span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diodes</span><span class="p">,</span> <span class="n">u_abc</span><span class="p">)</span></div>
 
@@ -697,9 +707,9 @@
 
 <div class="viewcode-block" id="DiodeBridge.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DiodeBridge.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"DiodeBridgeTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"DiodeBridgeTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series."""</span>
-        <span class="k">return</span> <span class="s2">"converter"</span><span class="p">,</span> <span class="n">DiodeBridgeTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">DiodeBridgeTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -923,11 +933,9 @@
 
 <div class="viewcode-block" id="VoltageSourceConverter.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.VoltageSourceConverter.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"VoltageSourceConverterTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"VoltageSourceConverterTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series."""</span>
-        <span class="k">return</span> <span class="s2">"converter"</span><span class="p">,</span> <span class="n">VoltageSourceConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">VoltageSourceConverterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -1061,9 +1069,9 @@
 
 <div class="viewcode-block" id="DCBus.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DCBus.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"DCBusTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"DCBusTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
-        <span class="k">return</span> <span class="s2">"dc_bus"</span><span class="p">,</span> <span class="n">DCBusTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">DCBusTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 

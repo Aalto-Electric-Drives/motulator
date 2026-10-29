@@ -480,40 +480,32 @@
 
 
 <span class="c1"># %%</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SubsystemInputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol for subsystem inputs."""</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SubsystemOutputs</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol for subsystem outputs."""</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SubsystemStates</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""Protocol for subsystem states."""</span>
-
-
 <div class="viewcode-block" id="Subsystem">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Subsystem</span><span class="p">[</span><span class="n">Inp</span><span class="p">:</span> <span class="n">SubsystemInputs</span><span class="p">,</span> <span class="n">Out</span><span class="p">:</span> <span class="n">SubsystemOutputs</span><span class="p">,</span> <span class="n">State</span><span class="p">:</span> <span class="n">SubsystemStates</span><span class="p">](</span>
-    <span class="n">Protocol</span>
-<span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Subsystem</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Protocol defining the interface for all subsystems.</span>
 
-<span class="sd">    This class defines the interface for all subsystems. It is a generic class that can</span>
-<span class="sd">    be used with different input, output, and state types. The class provides methods</span>
+<span class="sd">    A subsystem has the inputs `inp`, the outputs `out`, and the states `state`,</span>
+<span class="sd">    typically dataclasses, whose attributes the model reads by name: the connections</span>
+<span class="sd">    pass the outputs to the inputs (see `Model`), and the states are gathered into the</span>
+<span class="sd">    state vector of the solver in their declaration order. The class provides methods</span>
 <span class="sd">    for setting states, outputs, and computing state derivatives. It also provides</span>
-<span class="sd">    methods for extending the state history and creating time-series representations</span>
-<span class="sd">    of the subsystem. The state history is a dict of lists, keyed by the names of the</span>
-<span class="sd">    state fields. The model initializes it by `init_state_history` and extends it by</span>
-<span class="sd">    `extend_state_history`. A subclass can keep its other signals in the history as</span>
-<span class="sd">    well, under other keys, as a converter does (see `Converter`).</span>
+<span class="sd">    methods for extending the state history and creating the time-series</span>
+<span class="sd">    representation of the subsystem, which the model names in the results (see</span>
+<span class="sd">    `ModelTimeSeries`). A subsystem whose outputs depend directly on some of its</span>
+<span class="sd">    inputs lists these inputs in `feedthrough`, from which the model derives the</span>
+<span class="sd">    evaluation order of the outputs. The state history is a dict of lists, keyed by</span>
+<span class="sd">    the names of the state fields. The model initializes it by `init_state_history`</span>
+<span class="sd">    and extends it by `extend_state_history`. A subclass can keep its other signals</span>
+<span class="sd">    in the history as well, under other keys, as a converter does (see `Converter`).</span>
 
 <span class="sd">    """</span>
 
-    <span class="n">inp</span><span class="p">:</span> <span class="n">Inp</span>  <span class="c1"># None if the subsystem has no inputs</span>
-    <span class="n">out</span><span class="p">:</span> <span class="n">Out</span>
-    <span class="n">state</span><span class="p">:</span> <span class="n">State</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># None if the subsystem has no inputs</span>
+    <span class="n">out</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># None if the subsystem has no states</span>
+    <span class="n">feedthrough</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>  <span class="c1"># Inputs the outputs depend on directly</span>
     <span class="n">_history</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]]</span>
 
 <div class="viewcode-block" id="Subsystem.set_states">
@@ -576,7 +568,7 @@
 
 <div class="viewcode-block" id="Subsystem.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"SubsystemTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SubsystemTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time-series representation of this subsystem."""</span>
         <span class="o">...</span></div>
 </div>
@@ -701,17 +693,30 @@
 
 
 <span class="c1"># %%</span>
+<span class="n">Wiring</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Check that `name` is a valid attribute name of the results, see `Model`."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"t"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid name </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="Model">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">[</span><span class="n">C</span><span class="p">:</span> <span class="n">Converter</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for continuous-time system models.</span>
 
-<span class="sd">    A model consists of subsystems and connections between them. The outputs are</span>
-<span class="sd">    computed in the order of the `subsystems` list and passed to the connected inputs</span>
-<span class="sd">    immediately. Hence, a subsystem whose outputs depend directly on its inputs must</span>
-<span class="sd">    come after the subsystems providing these inputs. The voltage of a blocked</span>
-<span class="sd">    converter depends on its load, so it is computed after the other subsystems.</span>
+<span class="sd">    A model consists of named subsystems and connections between them. The outputs are</span>
+<span class="sd">    computed in an order that respects the direct dependencies of the subsystems (see</span>
+<span class="sd">    `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that</span>
+<span class="sd">    the outputs are consistent with the inputs of the same evaluation. The order</span>
+<span class="sd">    follows the order of the subsystems where the dependencies allow, and a loop of</span>
+<span class="sd">    direct dependencies is rejected. The voltage of a blocked converter depends on</span>
+<span class="sd">    the port of its load, which depends on the inputs of the load, so the converter is</span>
+<span class="sd">    evaluated after the sources of these inputs. The names of the subsystems name</span>
+<span class="sd">    their time series in the results, see `ModelTimeSeries`.</span>
 
 <span class="sd">    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a</span>
 <span class="sd">    controlled one (see `ControlledConverter`), which is driven by a control system, see</span>
@@ -723,41 +728,60 @@
 <span class="sd">    ----------</span>
 <span class="sd">    converter : Converter | None</span>
 <span class="sd">        Converter, or None if the model has no converter.</span>
-<span class="sd">    subsystems : list[Subsystem]</span>
-<span class="sd">        All subsystems, including the converter.</span>
-<span class="sd">    connections : dict[tuple[Subsystem, str], tuple[Subsystem, str]]</span>
-<span class="sd">        Connections as `{(target, input_name): (source, output_name)}`.</span>
+<span class="sd">    subsystems : dict[str, Subsystem]</span>
+<span class="sd">        All subsystems by name, including the converter. The names must be valid</span>
+<span class="sd">        attribute names (not starting with an underscore, and not `t`).</span>
+<span class="sd">    connections : dict[tuple[str, str], tuple[str, str]]</span>
+<span class="sd">        Connections as `{(target, input_name): (source, output_name)}`, where `target`</span>
+<span class="sd">        and `source` are the names of the subsystems.</span>
 <span class="sd">    dc_bus : DCBus, optional</span>
-<span class="sd">        DC bus feeding the converter. The DC bus is added to the subsystems, and the</span>
-<span class="sd">        converter is connected to it, see `DCBus.connect`. The DC bus can be shared</span>
-<span class="sd">        with other models, see `CompositeModel`. Defaults to None, in which case the</span>
-<span class="sd">        converter has a constant DC-bus voltage.</span>
+<span class="sd">        DC bus feeding the converter. The DC bus is added to the subsystems under the</span>
+<span class="sd">        name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The</span>
+<span class="sd">        DC bus can be shared with other models, see `CompositeModel`. Defaults to None,</span>
+<span class="sd">        in which case the converter has a constant DC-bus voltage.</span>
 
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">converter</span><span class="p">:</span> <span class="n">C</span><span class="p">,</span>
-        <span class="n">subsystems</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">],</span>
-        <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
+        <span class="n">subsystems</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">],</span>
+        <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span>
         <span class="n">dc_bus</span><span class="p">:</span> <span class="s2">"DCBus | None"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">converter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The converter must be included in the subsystems"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dc_bus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A DC bus requires a converter"</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">dc_bus</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">"dc_bus"</span> <span class="ow">in</span> <span class="n">subsystems</span> <span class="ow">or</span> <span class="n">dc_bus</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The DC bus must not be included in the subsystems"</span><span class="p">)</span>
-            <span class="c1"># The DC bus comes first, since the converter voltage depends directly on</span>
-            <span class="c1"># the DC-bus voltage</span>
-            <span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="n">dc_bus</span><span class="p">,</span> <span class="o">*</span><span class="n">subsystems</span><span class="p">]</span>
-            <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">connections</span><span class="p">,</span> <span class="o">**</span><span class="n">dc_bus</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">converter</span><span class="p">)}</span>
-        <span class="c1"># Group the connections by the source for passing the outputs to the inputs</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">s</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span>
-        <span class="p">}</span>
+            <span class="n">subsystems</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"dc_bus"</span><span class="p">:</span> <span class="n">dc_bus</span><span class="p">,</span> <span class="o">**</span><span class="n">subsystems</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
+            <span class="n">check_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">({</span><span class="nb">id</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">()})</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsystems</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The subsystems must be distinct"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">converter</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The converter must be included in the subsystems"</span><span class="p">)</span>
+        <span class="n">wiring</span><span class="p">:</span> <span class="n">Wiring</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">),</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">target</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subsystems</span> <span class="ow">or</span> <span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Connection </span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">inp</span><span class="si">}</span><span class="s2"> to an unknown subsystem"</span>
+                <span class="p">)</span>
+            <span class="n">wiring</span><span class="p">[</span><span class="n">subsystems</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">inp</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">subsystems</span><span class="p">[</span><span class="n">src</span><span class="p">],</span> <span class="n">out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dc_bus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">converter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">wiring</span> <span class="o">|=</span> <span class="n">dc_bus</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">converter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">:</span> <span class="n">C</span> <span class="o">=</span> <span class="n">converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Converter</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="n">converter</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus</span> <span class="o">=</span> <span class="n">dc_bus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wire</span><span class="p">(</span><span class="n">subsystems</span><span class="p">,</span> <span class="n">wiring</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_wire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">],</span> <span class="n">wiring</span><span class="p">:</span> <span class="n">Wiring</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set the subsystems and group the connections by the source."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="n">subsystems</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">s</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">),</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span> <span class="ow">in</span> <span class="n">wiring</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="n">inp</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">)):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"Invalid connection </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s2"> -&gt; "</span>
@@ -765,21 +789,51 @@
                 <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">src</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="o">=</span> <span class="n">subsystems</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="n">connections</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converter</span><span class="p">:</span> <span class="n">C</span> <span class="o">=</span> <span class="n">converter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Converter</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">converter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="n">converter</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dc_bus</span> <span class="o">=</span> <span class="n">dc_bus</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Time history</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">subsystem</span><span class="o">.</span><span class="n">init_state_history</span><span class="p">()</span>
+        <span class="c1"># Evaluation orders of the outputs by the blocked converters, see `_order`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_order</span><span class="p">((</span><span class="kc">False</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_order</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocked</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Evaluation order of the outputs, given which converters are blocked."""</span>
+        <span class="k">if</span> <span class="n">blocked</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">:</span>
+            <span class="n">converters</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">,</span> <span class="n">blocked</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">[</span><span class="n">blocked</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sort</span><span class="p">(</span><span class="n">converters</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_orders</span><span class="p">[</span><span class="n">blocked</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocked</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Converter</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Sort the subsystems by their direct dependencies, keeping their order</span>
+<span class="sd">        otherwise."""</span>
+        <span class="n">subsystems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="c1"># Subsystems whose outputs each subsystem depends on directly</span>
+        <span class="n">deps</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">target</span><span class="o">.</span><span class="n">feedthrough</span><span class="p">:</span>
+                    <span class="n">deps</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+        <span class="c1"># The voltage of a blocked converter depends on the ports of its loads, which</span>
+        <span class="c1"># depend on the inputs of the loads</span>
+        <span class="k">for</span> <span class="n">converter</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">:</span>
+            <span class="n">loads</span> <span class="o">=</span> <span class="p">[</span><span class="n">converter</span><span class="o">.</span><span class="n">ac_load</span><span class="p">,</span> <span class="n">converter</span><span class="o">.</span><span class="n">dc_load</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">src</span><span class="p">,</span> <span class="n">targets</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">converter</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">t</span> <span class="ow">in</span> <span class="n">loads</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">):</span>
+                    <span class="n">deps</span><span class="p">[</span><span class="n">converter</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+        <span class="n">order</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsystems</span><span class="p">):</span>
+            <span class="n">ready</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">order</span> <span class="ow">and</span> <span class="n">deps</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">set</span><span class="p">(</span><span class="n">order</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">ready</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Loop in the direct dependencies of the subsystems"</span><span class="p">)</span>
+            <span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ready</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">order</span>
 
 <div class="viewcode-block" id="Model.get_initial_values">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.get_initial_values">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get initial values of all subsystems before the solver."""</span>
         <span class="n">state0</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">state0</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">state0</span></div>
@@ -790,7 +844,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set states in all subsystems."""</span>
         <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span></div>
 
 
@@ -798,13 +852,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the outputs and pass them to the connected inputs."""</span>
-        <span class="c1"># The voltage of a blocked converter depends on the outputs of its AC load, and</span>
-        <span class="c1"># the outputs of its DC load (if current-fed) depend on its DC current</span>
-        <span class="n">order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span>
-        <span class="k">if</span> <span class="n">blocked</span> <span class="o">:=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">blocked</span><span class="p">]:</span>
-            <span class="n">last</span> <span class="o">=</span> <span class="n">blocked</span> <span class="o">+</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">dc_load</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">blocked</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">dc_load</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
-            <span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">last</span><span class="p">]</span> <span class="o">+</span> <span class="n">last</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">blocked</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">)):</span>
             <span class="n">subsystem</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]:</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="n">out</span><span class="p">))</span></div>
@@ -817,7 +865,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
         <span class="n">rhs_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">derivatives</span> <span class="o">:=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">rhs</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
                 <span class="n">rhs_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">derivatives</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">rhs_list</span></div>
@@ -829,7 +877,7 @@
 <span class="w">        </span><span class="sd">"""Save the solution and the signals of the converters."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_t</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
         <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">extend_state_history</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
         <span class="c1"># The voltage of a blocked converter varies within the integration interval,</span>
         <span class="c1"># so its samples are evaluated at the solution points</span>
@@ -839,6 +887,24 @@
             <span class="n">samples</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">blocked</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">converter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span>
             <span class="n">converter</span><span class="o">.</span><span class="n">extend_history</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="n">samples</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">converter</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Model.time_series">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.time_series">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="s2">"SubsystemTimeSeries"</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Compute the time series of the subsystems, connected as in the model."""</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">create_time_series</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+        <span class="c1"># Outputs in the evaluation order of the simulation (the voltage of a blocked</span>
+        <span class="c1"># converter is in its history), passed to the inputs immediately, see</span>
+        <span class="c1"># `set_outputs`</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order</span><span class="p">((</span><span class="kc">False</span><span class="p">,)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">)):</span>
+            <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">inp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">],</span> <span class="n">out</span><span class="p">)))</span>
+        <span class="c1"># Signals derived from the inputs, which are all available now</span>
+        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span><span class="o">.</span><span class="n">compute_derived_signals</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ts</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">:</span> <span class="n">OdeResult</span><span class="p">,</span> <span class="n">fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
@@ -893,30 +959,34 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Time series of the simulation results.</span>
 
-<span class="sd">    The time series of each subsystem is stored as an attribute (e.g., `machine`). It</span>
-<span class="sd">    also contains the time series of the subsystem inputs, which are used for plotting</span>
-<span class="sd">    and for computing the signals that depend directly on the inputs.</span>
+<span class="sd">    The time series of each subsystem is stored as an attribute by the name of the</span>
+<span class="sd">    subsystem in the model (e.g., `machine`). It also contains the time series of the</span>
+<span class="sd">    subsystem inputs, which are used for plotting and for computing the signals that</span>
+<span class="sd">    depend directly on the inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mdl : Model</span>
+<span class="sd">        Model whose subsystems the time series cover.</span>
+<span class="sd">    ts : dict[Subsystem, SubsystemTimeSeries], optional</span>
+<span class="sd">        Time series of the subsystems, computed with the wiring of a composite model</span>
+<span class="sd">        (see `CompositeModelTimeSeries`). Defaults to None, in which case they are</span>
+<span class="sd">        computed from the model, see `Model.time_series`.</span>
 
 <span class="sd">    """</span>
 
     <span class="n">mdl</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">Model</span><span class="p">]</span>
+    <span class="n">ts</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
-        <span class="n">ts</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ts</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">time_series</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">])</span>
-        <span class="c1"># Outputs in the evaluation order of the simulation, passed to the inputs</span>
-        <span class="c1"># immediately, see `Model.set_outputs`</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
-            <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">target</span><span class="p">,</span> <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">_outgoing</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="n">target</span><span class="p">],</span> <span class="n">inp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">],</span> <span class="n">out</span><span class="p">)))</span>
-        <span class="c1"># Signals derived from the inputs, which are all available now</span>
-        <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
-            <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span><span class="o">.</span><span class="n">compute_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Support type checking for dynamic attributes."""</span>

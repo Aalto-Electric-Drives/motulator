@@ -615,9 +615,9 @@
 
 <div class="viewcode-block" id="LFilter.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"LFilterTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"LFilterTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
-        <span class="k">return</span> <span class="s2">"ac_filter"</span><span class="p">,</span> <span class="n">LFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">LFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -816,9 +816,9 @@
 
 <div class="viewcode-block" id="LCLFilter.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"LCLFilterTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"LCLFilterTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
-        <span class="k">return</span> <span class="s2">"ac_filter"</span><span class="p">,</span> <span class="n">LCLFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">LCLFilterTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 

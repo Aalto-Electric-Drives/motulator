@@ -569,6 +569,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_outputs"><code class="docutils literal notranslate"><span class="pre">Model.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_states"><code class="docutils literal notranslate"><span class="pre">Model.set_states()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.time_series"><code class="docutils literal notranslate"><span class="pre">Model.time_series()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></li>
@@ -874,11 +875,9 @@ already conduct.</p>
 the models of a grid converter and a drive. Each model keeps its converter, whose
 modulator includes the PWM model and the computational delay, and the model of a
 controlled converter is driven by its own control system in the simulation, see
-<cite>Simulation</cite>. The subsystems are
-evaluated in the order of the models, a shared subsystem at its first occurrence.
-The order is not resolved automatically: a shared subsystem whose outputs other
-subsystems depend on directly must come first in each model, as <cite>Model</cite> places the
-DC bus.</p>
+<cite>Simulation</cite>. A shared subsystem is evaluated once, whatever its names in the
+models (the composite names the subsystems <cite>model.subsystem</cite> after their first
+occurrence), in the order derived from the direct dependencies, see <cite>Model</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>models</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a><em>]</em>) – Models by name. The names are used for the control systems and the results, so
@@ -907,7 +906,9 @@ they must be valid attribute names (not starting with an underscore, and not
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CompositeModelTimeSeries</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_composite.html#CompositeModelTimeSeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CompositeModelTimeSeries" title="Link to this definition">#</a></dt>
 <dd><p>Time series of the simulation results of a composite model.</p>
 <p>The time series of each model is stored as an attribute by the model name (e.g.,
-<cite>drive</cite>), see <cite>ModelTimeSeries</cite>.</p>
+<cite>drive</cite>), see <cite>ModelTimeSeries</cite>. The time series are computed with the wiring of
+the composite, so a subsystem shared by the models has the same time series in
+each of them.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1132,7 +1133,7 @@ can also be fed to the DC bus.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, DCBusTimeSeries]</p>
+<dd class="field-even"><p>DCBusTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1262,7 +1263,7 @@ fed from a DC-bus model or feed a DC load.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, DiodeBridgeTimeSeries]</p>
+<dd class="field-even"><p>DiodeBridgeTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1364,11 +1365,15 @@ converter voltage, the DC voltage, and the DC current, see <cite>sample</cite>.<
 <dt class="sig sig-object py" id="motulator.common.model.Model">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsystems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model" title="Link to this definition">#</a></dt>
 <dd><p>Base class for continuous-time system models.</p>
-<p>A model consists of subsystems and connections between them. The outputs are
-computed in the order of the <cite>subsystems</cite> list and passed to the connected inputs
-immediately. Hence, a subsystem whose outputs depend directly on its inputs must
-come after the subsystems providing these inputs. The voltage of a blocked
-converter depends on its load, so it is computed after the other subsystems.</p>
+<p>A model consists of named subsystems and connections between them. The outputs are
+computed in an order that respects the direct dependencies of the subsystems (see
+<cite>Subsystem.feedthrough</cite>) and passed to the connected inputs immediately, so that
+the outputs are consistent with the inputs of the same evaluation. The order
+follows the order of the subsystems where the dependencies allow, and a loop of
+direct dependencies is rejected. The voltage of a blocked converter depends on
+the port of its load, which depends on the inputs of the load, so the converter is
+evaluated after the sources of these inputs. The names of the subsystems name
+their time series in the results, see <cite>ModelTimeSeries</cite>.</p>
 <p>A model can have a converter, either a passive one (e.g., <cite>DiodeBridge</cite>) or a
 controlled one (see <cite>ControlledConverter</cite>), which is driven by a control system, see
 <cite>Simulation</cite>. The modulator of the controlled converter includes the computational
@@ -1378,12 +1383,14 @@ gates of the converter, see <cite>ControlSystem.set_enable</cite>.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>converter</strong> (<a class="reference internal" href="#motulator.common.model.Converter" title="motulator.common.model.Converter"><em>Converter</em></a><em> | </em><em>None</em>) – Converter, or None if the model has no converter.</p></li>
-<li><p><strong>subsystems</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>]</em>) – All subsystems, including the converter.</p></li>
-<li><p><strong>connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>]</em>) – Connections as <cite>{(target, input_name): (source, output_name)}</cite>.</p></li>
-<li><p><strong>dc_bus</strong> (<a class="reference internal" href="#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><em>DCBus</em></a><em>, </em><em>optional</em>) – DC bus feeding the converter. The DC bus is added to the subsystems, and the
-converter is connected to it, see <cite>DCBus.connect</cite>. The DC bus can be shared
-with other models, see <cite>CompositeModel</cite>. Defaults to None, in which case the
-converter has a constant DC-bus voltage.</p></li>
+<li><p><strong>subsystems</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>]</em>) – All subsystems by name, including the converter. The names must be valid
+attribute names (not starting with an underscore, and not <cite>t</cite>).</p></li>
+<li><p><strong>connections</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>]</em><em>]</em>) – Connections as <cite>{(target, input_name): (source, output_name)}</cite>, where <cite>target</cite>
+and <cite>source</cite> are the names of the subsystems.</p></li>
+<li><p><strong>dc_bus</strong> (<a class="reference internal" href="#motulator.common.model.DCBus" title="motulator.common.model.DCBus"><em>DCBus</em></a><em>, </em><em>optional</em>) – DC bus feeding the converter. The DC bus is added to the subsystems under the
+name <cite>dc_bus</cite>, and the converter is connected to it, see <cite>DCBus.connect</cite>. The
+DC bus can be shared with other models, see <cite>CompositeModel</cite>. Defaults to None,
+in which case the converter has a constant DC-bus voltage.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1457,15 +1464,40 @@ converter has a constant DC-bus voltage.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Model.time_series">
+<span class="sig-name descname"><span class="pre">time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Model.time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Model.time_series" title="Link to this definition">#</a></dt>
+<dd><p>Compute the time series of the subsystems, connected as in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)">dict</a>[<a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem">Subsystem</a>, <a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries">SubsystemTimeSeries</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.ModelTimeSeries">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">ModelTimeSeries</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#ModelTimeSeries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ModelTimeSeries" title="Link to this definition">#</a></dt>
 <dd><p>Time series of the simulation results.</p>
-<p>The time series of each subsystem is stored as an attribute (e.g., <cite>machine</cite>). It
-also contains the time series of the subsystem inputs, which are used for plotting
-and for computing the signals that depend directly on the inputs.</p>
+<p>The time series of each subsystem is stored as an attribute by the name of the
+subsystem in the model (e.g., <cite>machine</cite>). It also contains the time series of the
+subsystem inputs, which are used for plotting and for computing the signals that
+depend directly on the inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mdl</strong> (<a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a>) – Model whose subsystems the time series cover.</p></li>
+<li><p><strong>ts</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries"><em>SubsystemTimeSeries</em></a><em>]</em><em>, </em><em>optional</em>) – Time series of the subsystems, computed with the wiring of a composite model
+(see <cite>CompositeModelTimeSeries</cite>). Defaults to None, in which case they are
+computed from the model, see <cite>Model.time_series</cite>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
@@ -1700,14 +1732,19 @@ intervals.</p></li>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Subsystem</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Protocol defining the interface for all subsystems.</p>
-<p>This class defines the interface for all subsystems. It is a generic class that can
-be used with different input, output, and state types. The class provides methods
+<p>A subsystem has the inputs <cite>inp</cite>, the outputs <cite>out</cite>, and the states <cite>state</cite>,
+typically dataclasses, whose attributes the model reads by name: the connections
+pass the outputs to the inputs (see <cite>Model</cite>), and the states are gathered into the
+state vector of the solver in their declaration order. The class provides methods
 for setting states, outputs, and computing state derivatives. It also provides
-methods for extending the state history and creating time-series representations
-of the subsystem. The state history is a dict of lists, keyed by the names of the
-state fields. The model initializes it by <cite>init_state_history</cite> and extends it by
-<cite>extend_state_history</cite>. A subclass can keep its other signals in the history as
-well, under other keys, as a converter does (see <cite>Converter</cite>).</p>
+methods for extending the state history and creating the time-series
+representation of the subsystem, which the model names in the results (see
+<cite>ModelTimeSeries</cite>). A subsystem whose outputs depend directly on some of its
+inputs lists these inputs in <cite>feedthrough</cite>, from which the model derives the
+evaluation order of the outputs. The state history is a dict of lists, keyed by
+the names of the state fields. The model initializes it by <cite>init_state_history</cite>
+and extends it by <cite>extend_state_history</cite>. A subclass can keep its other signals
+in the history as well, under other keys, as a converter does (see <cite>Converter</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.model.Subsystem.compute_ac_port">
 <span class="sig-name descname"><span class="pre">compute_ac_port</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_base.html#Subsystem.compute_ac_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Subsystem.compute_ac_port" title="Link to this definition">#</a></dt>
@@ -1739,7 +1776,7 @@ well, under other keys, as a converter does (see <cite>Converter</cite>).</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, <a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries">SubsystemTimeSeries</a>]</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.common.model.SubsystemTimeSeries" title="motulator.common.model.SubsystemTimeSeries">SubsystemTimeSeries</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1894,7 +1931,7 @@ to represent, e.g., a current source as well.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, ThreePhaseSourceTimeSeries]</p>
+<dd class="field-even"><p>ThreePhaseSourceTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2051,7 +2088,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, VoltageSourceConverterTimeSeries]</p>
+<dd class="field-even"><p>VoltageSourceConverterTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2440,6 +2477,7 @@ i.e., all the devices are gated (diodes).</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.save"><code class="docutils literal notranslate"><span class="pre">Model.save()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_outputs"><code class="docutils literal notranslate"><span class="pre">Model.set_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.set_states"><code class="docutils literal notranslate"><span class="pre">Model.set_states()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Model.time_series"><code class="docutils literal notranslate"><span class="pre">Model.time_series()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.ModelTimeSeries"><code class="docutils literal notranslate"><span class="pre">ModelTimeSeries</span></code></a></li>

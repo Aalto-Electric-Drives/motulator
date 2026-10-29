@@ -871,11 +871,9 @@ already conduct.</p>
 the models of a grid converter and a drive. Each model keeps its converter, whose
 modulator includes the PWM model and the computational delay, and the model of a
 controlled converter is driven by its own control system in the simulation, see
-<cite>Simulation</cite>. The subsystems are
-evaluated in the order of the models, a shared subsystem at its first occurrence.
-The order is not resolved automatically: a shared subsystem whose outputs other
-subsystems depend on directly must come first in each model, as <cite>Model</cite> places the
-DC bus.</p>
+<cite>Simulation</cite>. A shared subsystem is evaluated once, whatever its names in the
+models (the composite names the subsystems <cite>model.subsystem</cite> after their first
+occurrence), in the order derived from the direct dependencies, see <cite>Model</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>models</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a><em>]</em>) – Models by name. The names are used for the control systems and the results, so
@@ -960,7 +958,7 @@ can also be fed to the DC bus.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, DCBusTimeSeries]</p>
+<dd class="field-even"><p>DCBusTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1047,7 +1045,7 @@ determined by an external function rather than by torque dynamics.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, ExternalRotorSpeedTimeSeries]</p>
+<dd class="field-even"><p>ExternalRotorSpeedTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1246,7 +1244,7 @@ drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="htt
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, InductionMachineTimeSeries]</p>
+<dd class="field-even"><p>InductionMachineTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1582,7 +1580,7 @@ defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, LCFilterTimeSeries]</p>
+<dd class="field-even"><p>LCFilterTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1657,17 +1655,17 @@ Defaults to 0.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.compute_total_load_torque">
-<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Total load torque (Nm).</p>
+<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
+<dd><p>Total load torque (Nm), including the friction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>w_M</strong> (<em>Any</em>)</p></li>
+<li><p><strong>tau_L</strong> (<em>Any</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+<dd class="field-even"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1681,7 +1679,7 @@ Defaults to 0.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, MechanicalSystemTimeSeries]</p>
+<dd class="field-even"><p>MechanicalSystemTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2116,7 +2114,7 @@ magnetic circuit, i.e., the core-loss current is excluded from the torque.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, SynchronousMachineTimeSeries]</p>
+<dd class="field-even"><p>SynchronousMachineTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2286,7 +2284,7 @@ to represent, e.g., a current source as well.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, ThreePhaseSourceTimeSeries]</p>
+<dd class="field-even"><p>ThreePhaseSourceTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2388,17 +2386,17 @@ Defaults to 0.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque">
-<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Total load torque (Nm).</p>
+<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
+<dd><p>Total load torque (Nm), including the friction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>w_L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>w_L</strong> (<em>Any</em>)</p></li>
+<li><p><strong>tau_L</strong> (<em>Any</em>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
+<dd class="field-even"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2412,7 +2410,7 @@ Defaults to 0.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, TwoMassMechanicalSystemTimeSeries]</p>
+<dd class="field-even"><p>TwoMassMechanicalSystemTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2606,7 +2604,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, VoltageSourceConverterTimeSeries]</p>
+<dd class="field-even"><p>VoltageSourceConverterTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>

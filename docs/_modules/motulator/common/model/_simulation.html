@@ -642,7 +642,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"t_start must be given for the control systems"</span><span class="p">)</span>
         <span class="c1"># A DC bus computes the currents of all its converters, so their models must be</span>
         <span class="c1"># simulated too</span>
-        <span class="k">for</span> <span class="n">dc_bus</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dc_bus</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dc_bus</span><span class="p">,</span> <span class="n">DCBus</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
                 <span class="n">c</span> <span class="ow">in</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converters</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">dc_bus</span><span class="o">.</span><span class="n">converters</span>
             <span class="p">):</span>

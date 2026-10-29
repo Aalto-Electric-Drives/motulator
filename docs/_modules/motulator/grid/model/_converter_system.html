@@ -492,10 +492,10 @@
 <span class="sd">        a drive), see `CompositeModel`. Defaults to None, in which case the converter</span>
 <span class="sd">        has a constant DC-bus voltage.</span>
 <span class="sd">    dc_load : Subsystem, optional</span>
-<span class="sd">        Load connected to the DC bus, e.g., a battery or an electrolyzer. Its input</span>
-<span class="sd">        `u_dc` is the DC-bus voltage and its output `i_dc` the current fed to the DC</span>
-<span class="sd">        bus (negative when drawn), which replaces the external current of the DC bus.</span>
-<span class="sd">        Defaults to None.</span>
+<span class="sd">        Load connected to the DC bus, e.g., a battery or an electrolyzer, named</span>
+<span class="sd">        `dc_load` in the results. Its input `u_dc` is the DC-bus voltage and its output</span>
+<span class="sd">        `i_dc` the current fed to the DC bus (negative when drawn), which replaces the</span>
+<span class="sd">        external current of the DC bus. Defaults to None.</span>
 
 <span class="sd">    """</span>
 
@@ -511,18 +511,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_source</span> <span class="o">=</span> <span class="n">ac_source</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dc_load</span> <span class="o">=</span> <span class="n">dc_load</span>
         <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
-            <span class="p">(</span><span class="n">ac_filter</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">):</span> <span class="p">(</span><span class="n">ac_source</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"converter"</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"ac_filter"</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"ac_filter"</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"converter"</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"ac_filter"</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"ac_source"</span><span class="p">,</span> <span class="s2">"e_g_ab"</span><span class="p">),</span>
         <span class="p">}</span>
-        <span class="n">subsystems</span> <span class="o">=</span> <span class="p">[</span><span class="n">converter</span><span class="p">,</span> <span class="n">ac_filter</span><span class="p">,</span> <span class="n">ac_source</span><span class="p">]</span>
+        <span class="n">subsystems</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"converter"</span><span class="p">:</span> <span class="n">converter</span><span class="p">,</span>
+            <span class="s2">"ac_filter"</span><span class="p">:</span> <span class="n">ac_filter</span><span class="p">,</span>
+            <span class="s2">"ac_source"</span><span class="p">:</span> <span class="n">ac_source</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="k">if</span> <span class="n">dc_load</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">dc_bus</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"A DC load requires a DC bus"</span><span class="p">)</span>
-            <span class="n">subsystems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dc_load</span><span class="p">)</span>
+            <span class="n">subsystems</span><span class="p">[</span><span class="s2">"dc_load"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dc_load</span>
             <span class="n">connections</span> <span class="o">|=</span> <span class="p">{</span>
-                <span class="p">(</span><span class="n">dc_load</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">):</span> <span class="p">(</span><span class="n">dc_bus</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">),</span>
-                <span class="p">(</span><span class="n">dc_bus</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">):</span> <span class="p">(</span><span class="n">dc_load</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"dc_load"</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"dc_bus"</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"dc_bus"</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"dc_load"</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="n">converter</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="n">ac_filter</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">)</span></div>

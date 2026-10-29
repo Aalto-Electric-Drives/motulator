@@ -554,6 +554,9 @@
 
 <span class="sd">    """</span>
 
+    <span class="c1"># The stator current depends directly on the voltage through the core losses</span>
+    <span class="n">feedthrough</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"u_s_ab"</span><span class="p">})</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">InductionMachinePars</span> <span class="o">|</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
@@ -634,11 +637,9 @@
 
 <div class="viewcode-block" id="InductionMachine.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"InductionMachineTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InductionMachineTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
-        <span class="k">return</span> <span class="s2">"machine"</span><span class="p">,</span> <span class="n">InductionMachineTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">InductionMachineTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 
@@ -749,6 +750,9 @@
 
 <span class="sd">    """</span>
 
+    <span class="c1"># The stator current depends directly on the voltage through the core losses</span>
+    <span class="n">feedthrough</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"u_s_ab"</span><span class="p">})</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span>
@@ -853,11 +857,9 @@
 
 <div class="viewcode-block" id="SynchronousMachine.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">"SynchronousMachineTimeSeries"</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SynchronousMachineTimeSeries"</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
-        <span class="k">return</span> <span class="s2">"machine"</span><span class="p">,</span> <span class="n">SynchronousMachineTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">SynchronousMachineTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 

@@ -193,11 +193,9 @@ Package Contents
    the models of a grid converter and a drive. Each model keeps its converter, whose
    modulator includes the PWM model and the computational delay, and the model of a
    controlled converter is driven by its own control system in the simulation, see
-   `Simulation`. The subsystems are
-   evaluated in the order of the models, a shared subsystem at its first occurrence.
-   The order is not resolved automatically: a shared subsystem whose outputs other
-   subsystems depend on directly must come first in each model, as `Model` places the
-   DC bus.
+   `Simulation`. A shared subsystem is evaluated once, whatever its names in the
+   models (the composite names the subsystems `model.subsystem` after their first
+   occurrence), in the order derived from the direct dependencies, see `Model`.
 
    :param models: Models by name. The names are used for the control systems and the results, so
                   they must be valid attribute names (not starting with an underscore, and not
@@ -1406,10 +1404,10 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_total_load_torque(t, w_M)
+   .. py:method:: compute_total_load_torque(w_M, tau_L)
 
       
-      Total load torque (Nm).
+      Total load torque (Nm), including the friction.
 
 
 
@@ -2615,10 +2613,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_total_load_torque(t, w_L)
+   .. py:method:: compute_total_load_torque(w_L, tau_L)
 
       
-      Total load torque (Nm).
+      Total load torque (Nm), including the friction.
 
 
 

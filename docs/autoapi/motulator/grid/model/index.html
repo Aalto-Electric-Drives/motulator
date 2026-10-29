@@ -780,11 +780,9 @@ already conduct.</p>
 the models of a grid converter and a drive. Each model keeps its converter, whose
 modulator includes the PWM model and the computational delay, and the model of a
 controlled converter is driven by its own control system in the simulation, see
-<cite>Simulation</cite>. The subsystems are
-evaluated in the order of the models, a shared subsystem at its first occurrence.
-The order is not resolved automatically: a shared subsystem whose outputs other
-subsystems depend on directly must come first in each model, as <cite>Model</cite> places the
-DC bus.</p>
+<cite>Simulation</cite>. A shared subsystem is evaluated once, whatever its names in the
+models (the composite names the subsystems <cite>model.subsystem</cite> after their first
+occurrence), in the order derived from the direct dependencies, see <cite>Model</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>models</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a><em>]</em>) – Models by name. The names are used for the control systems and the results, so
@@ -869,7 +867,7 @@ can also be fed to the DC bus.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, DCBusTimeSeries]</p>
+<dd class="field-even"><p>DCBusTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -980,7 +978,7 @@ fed from a DC-bus model or feed a DC load.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, DiodeBridgeTimeSeries]</p>
+<dd class="field-even"><p>DiodeBridgeTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1093,10 +1091,10 @@ converter voltage, the DC voltage, and the DC current, see <cite>sample</cite>.<
 <li><p><strong>dc_bus</strong> (<a class="reference internal" href="#motulator.grid.model.DCBus" title="motulator.grid.model.DCBus"><em>DCBus</em></a><em>, </em><em>optional</em>) – DC bus feeding the converter, which can be shared with other models (e.g., with
 a drive), see <cite>CompositeModel</cite>. Defaults to None, in which case the converter
 has a constant DC-bus voltage.</p></li>
-<li><p><strong>dc_load</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><em>optional</em>) – Load connected to the DC bus, e.g., a battery or an electrolyzer. Its input
-<cite>u_dc</cite> is the DC-bus voltage and its output <cite>i_dc</cite> the current fed to the DC
-bus (negative when drawn), which replaces the external current of the DC bus.
-Defaults to None.</p></li>
+<li><p><strong>dc_load</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><em>Subsystem</em></a><em>, </em><em>optional</em>) – Load connected to the DC bus, e.g., a battery or an electrolyzer, named
+<cite>dc_load</cite> in the results. Its input <cite>u_dc</cite> is the DC-bus voltage and its output
+<cite>i_dc</cite> the current fed to the DC bus (negative when drawn), which replaces the
+external current of the DC bus. Defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1147,7 +1145,7 @@ measurement.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, LCLFilterTimeSeries]</p>
+<dd class="field-even"><p>LCLFilterTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1286,7 +1284,7 @@ measurement.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, LFilterTimeSeries]</p>
+<dd class="field-even"><p>LFilterTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1517,7 +1515,7 @@ to represent, e.g., a current source as well.</p>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, ThreePhaseSourceTimeSeries]</p>
+<dd class="field-even"><p>ThreePhaseSourceTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1691,7 +1689,7 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, VoltageSourceConverterTimeSeries]</p>
+<dd class="field-even"><p>VoltageSourceConverterTimeSeries</p>
 </dd>
 </dl>
 </dd></dl>

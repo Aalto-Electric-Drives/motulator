@@ -238,11 +238,9 @@ Package Contents
    the models of a grid converter and a drive. Each model keeps its converter, whose
    modulator includes the PWM model and the computational delay, and the model of a
    controlled converter is driven by its own control system in the simulation, see
-   `Simulation`. The subsystems are
-   evaluated in the order of the models, a shared subsystem at its first occurrence.
-   The order is not resolved automatically: a shared subsystem whose outputs other
-   subsystems depend on directly must come first in each model, as `Model` places the
-   DC bus.
+   `Simulation`. A shared subsystem is evaluated once, whatever its names in the
+   models (the composite names the subsystems `model.subsystem` after their first
+   occurrence), in the order derived from the direct dependencies, see `Model`.
 
    :param models: Models by name. The names are used for the control systems and the results, so
                   they must be valid attribute names (not starting with an underscore, and not
@@ -296,7 +294,9 @@ Package Contents
    Time series of the simulation results of a composite model.
 
    The time series of each model is stored as an attribute by the model name (e.g.,
-   `drive`), see `ModelTimeSeries`.
+   `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of
+   the composite, so a subsystem shared by the models has the same time series in
+   each of them.
 
 
 
@@ -1134,11 +1134,15 @@ Package Contents
    
    Base class for continuous-time system models.
 
-   A model consists of subsystems and connections between them. The outputs are
-   computed in the order of the `subsystems` list and passed to the connected inputs
-   immediately. Hence, a subsystem whose outputs depend directly on its inputs must
-   come after the subsystems providing these inputs. The voltage of a blocked
-   converter depends on its load, so it is computed after the other subsystems.
+   A model consists of named subsystems and connections between them. The outputs are
+   computed in an order that respects the direct dependencies of the subsystems (see
+   `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that
+   the outputs are consistent with the inputs of the same evaluation. The order
+   follows the order of the subsystems where the dependencies allow, and a loop of
+   direct dependencies is rejected. The voltage of a blocked converter depends on
+   the port of its load, which depends on the inputs of the load, so the converter is
+   evaluated after the sources of these inputs. The names of the subsystems name
+   their time series in the results, see `ModelTimeSeries`.
 
    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
    controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -1148,14 +1152,16 @@ Package Contents
 
    :param converter: Converter, or None if the model has no converter.
    :type converter: Converter | None
-   :param subsystems: All subsystems, including the converter.
-   :type subsystems: list[Subsystem]
-   :param connections: Connections as `{(target, input_name): (source, output_name)}`.
-   :type connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]]
-   :param dc_bus: DC bus feeding the converter. The DC bus is added to the subsystems, and the
-                  converter is connected to it, see `DCBus.connect`. The DC bus can be shared
-                  with other models, see `CompositeModel`. Defaults to None, in which case the
-                  converter has a constant DC-bus voltage.
+   :param subsystems: All subsystems by name, including the converter. The names must be valid
+                      attribute names (not starting with an underscore, and not `t`).
+   :type subsystems: dict[str, Subsystem]
+   :param connections: Connections as `{(target, input_name): (source, output_name)}`, where `target`
+                       and `source` are the names of the subsystems.
+   :type connections: dict[tuple[str, str], tuple[str, str]]
+   :param dc_bus: DC bus feeding the converter. The DC bus is added to the subsystems under the
+                  name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The
+                  DC bus can be shared with other models, see `CompositeModel`. Defaults to None,
+                  in which case the converter has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
 
 
@@ -1295,14 +1301,46 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: time_series(t)
+
+      
+      Compute the time series of the subsystems, connected as in the model.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: ModelTimeSeries
 
    
    Time series of the simulation results.
 
-   The time series of each subsystem is stored as an attribute (e.g., `machine`). It
-   also contains the time series of the subsystem inputs, which are used for plotting
-   and for computing the signals that depend directly on the inputs.
+   The time series of each subsystem is stored as an attribute by the name of the
+   subsystem in the model (e.g., `machine`). It also contains the time series of the
+   subsystem inputs, which are used for plotting and for computing the signals that
+   depend directly on the inputs.
+
+   :param mdl: Model whose subsystems the time series cover.
+   :type mdl: Model
+   :param ts: Time series of the subsystems, computed with the wiring of a composite model
+              (see `CompositeModelTimeSeries`). Defaults to None, in which case they are
+              computed from the model, see `Model.time_series`.
+   :type ts: dict[Subsystem, SubsystemTimeSeries], optional
 
 
 
@@ -1667,14 +1705,19 @@ Package Contents
    
    Protocol defining the interface for all subsystems.
 
-   This class defines the interface for all subsystems. It is a generic class that can
-   be used with different input, output, and state types. The class provides methods
+   A subsystem has the inputs `inp`, the outputs `out`, and the states `state`,
+   typically dataclasses, whose attributes the model reads by name: the connections
+   pass the outputs to the inputs (see `Model`), and the states are gathered into the
+   state vector of the solver in their declaration order. The class provides methods
    for setting states, outputs, and computing state derivatives. It also provides
-   methods for extending the state history and creating time-series representations
-   of the subsystem. The state history is a dict of lists, keyed by the names of the
-   state fields. The model initializes it by `init_state_history` and extends it by
-   `extend_state_history`. A subclass can keep its other signals in the history as
-   well, under other keys, as a converter does (see `Converter`).
+   methods for extending the state history and creating the time-series
+   representation of the subsystem, which the model names in the results (see
+   `ModelTimeSeries`). A subsystem whose outputs depend directly on some of its
+   inputs lists these inputs in `feedthrough`, from which the model derives the
+   evaluation order of the outputs. The state history is a dict of lists, keyed by
+   the names of the state fields. The model initializes it by `init_state_history`
+   and extends it by `extend_state_history`. A subclass can keep its other signals
+   in the history as well, under other keys, as a converter does (see `Converter`).
 
 
 
