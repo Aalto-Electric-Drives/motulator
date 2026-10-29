@@ -2,12 +2,15 @@
 Tests for the model base class with custom subsystems.
 
 The model checks its wiring at construction, the names of the subsystems name their
-results, and the signals derived from the connected inputs are computed from the time
-series of the inputs.
+results, the evaluation order of the outputs follows the declared direct dependencies,
+and the signals derived from the connected inputs are computed from the time series of
+the inputs.
 
 """
 
 from dataclasses import dataclass
+from math import pi
+from typing import Any
 
 import numpy as np
 import pytest
@@ -18,8 +21,14 @@ from motulator.common.model import (
     Simulation,
     Subsystem,
     SubsystemTimeSeries,
+    ThreePhaseSource,
 )
-from motulator.drive.model import MechanicalSystem, TwoMassMechanicalSystem
+from motulator.drive.model import (
+    MechanicalSystem,
+    SynchronousMachine,
+    SynchronousMachinePars,
+    TwoMassMechanicalSystem,
+)
 
 K = 10.0  # Slope of the ramp load torque (Nm/s)
 B_L = 0.1  # Friction coefficient (Nm/(rad/s))
@@ -120,3 +129,65 @@ def test_wiring_is_checked() -> None:
         Model(None, {"load": load}, {("mechanics", "tau_L"): ("load", "tau_L")})
     with pytest.raises(ValueError):  # Nonexistent input
         Model(None, {"load": load, "mech": mech}, {("mech", "tau"): ("load", "tau_L")})
+
+
+@dataclass
+class _Signal:
+    x: float = 0.0
+
+
+class _Gain(Subsystem):
+    """Output equal to the input, i.e., a direct dependency."""
+
+    feedthrough = frozenset({"x"})
+
+    def __init__(self) -> None:
+        self.inp = _Signal()
+        self.out = _Signal()
+        self.state = None
+
+    def set_outputs(self, t: float) -> None:
+        self.out.x = self.inp.x
+
+    def rhs(self, t: float) -> list[complex]:
+        return []
+
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
+        raise NotImplementedError
+
+
+def test_direct_dependencies_order_the_evaluation() -> None:
+    """A subsystem is evaluated after the sources of the inputs its outputs depend on
+    directly, wherever it is listed, and a loop of direct dependencies is rejected."""
+    a, b = _Gain(), _Gain()
+    mdl = Model(None, {"b": b, "a": a}, {("b", "x"): ("a", "x")})
+    a.inp.x = 1.0
+    mdl.set_outputs(0.0)
+    assert b.out.x == 1.0
+    with pytest.raises(ValueError):  # Loop
+        Model(None, {"a": a, "b": b}, {("a", "x"): ("b", "x"), ("b", "x"): ("a", "x")})
+
+
+@pytest.mark.parametrize("G_c", [0.0, 0.01])
+def test_listing_order_does_not_affect_results(G_c: float) -> None:
+    """A machine listed before the voltage source, which its current depends on
+    directly, gives the same results as listed after it, in the simulation and in the
+    post-processing."""
+
+    def simulate(machine_first: bool) -> Any:
+        par = SynchronousMachinePars(
+            n_p=2, R_s=1.0, L_d=0.01, L_q=0.02, psi_f=0.1, G_c=G_c
+        )
+        machine = SynchronousMachine(par)
+        ac_source = ThreePhaseSource(w_g=2 * pi * 50, e_g=100.0)
+        subsystems = {"machine": machine, "ac_source": ac_source}
+        if not machine_first:
+            subsystems = dict(reversed(subsystems.items()))
+        connections = {("machine", "u_s_ab"): ("ac_source", "e_g_ab")}
+        mdl = Model(None, subsystems, connections)
+        return Simulation(mdl, show_progress=False).simulate(5e-3)
+
+    res, res_first = simulate(False), simulate(True)
+    np.testing.assert_array_equal(res_first.mdl.t, res.mdl.t)
+    np.testing.assert_array_equal(res_first.mdl.machine.i_s_ab, res.mdl.machine.i_s_ab)
+    np.testing.assert_array_equal(res_first.mdl.machine.u_s_ab, res.mdl.machine.u_s_ab)

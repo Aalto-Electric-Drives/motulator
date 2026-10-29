@@ -92,6 +92,9 @@ class DiodeBridge(Converter):
 
     """
 
+    # The converter voltage depends directly on the DC-bus voltage
+    feedthrough = frozenset({"u_dc"})
+
     def __init__(self, u_dc: float | None = None, u_th: float = 0.0) -> None:
         self.u_th = u_th
         # The inputs are extended by `VoltageSourceConverter`, so their type is not
@@ -140,9 +143,14 @@ class DiodeBridge(Converter):
             self._ac_port(), self._dc_side(), self._diodes, self.gated
         )
 
+    @staticmethod
+    def _rectified_current(i_c_ab: Any) -> Any:
+        """Current (A) rectified by the diodes from the AC current."""
+        return 0.5 * np.sum(np.abs(complex2abc(i_c_ab)), axis=0)
+
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A), rectified by the diodes."""
-        return -0.5 * np.sum(np.abs(complex2abc(inp.i_c_ab)), axis=0)
+        return -self._rectified_current(inp.i_c_ab)
 
     def _set_dc_voltage(self) -> None:
         """Set the DC-bus voltage from the input."""
@@ -164,8 +172,10 @@ class DiodeBridge(Converter):
         u_abc = leg_voltages(port, u_dc, self._diodes)
         self.out.u_c_ab = abc2complex(u_abc)
         if self.dc_load is not None:
+            # The DC current is computed from the current of the port, which comes
+            # from the states of the load, independently of the evaluation order
             self.out.u_dc = u_dc - 2 * self.u_th
-            self.out.i_dc = -self.compute_internal_dc_current(self.inp)
+            self.out.i_dc = self._rectified_current(port.i)
         # The margin is computed on demand, only for locating the transitions
         self._latest = (port, u_dc, self._diodes, u_abc)
 

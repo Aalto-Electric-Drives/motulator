@@ -27,16 +27,19 @@ class Subsystem(Protocol):
     for setting states, outputs, and computing state derivatives. It also provides
     methods for extending the state history and creating the time-series
     representation of the subsystem, which the model names in the results (see
-    `ModelTimeSeries`). The state history is a dict of lists, keyed by the names of
-    the state fields. The model initializes it by `init_state_history` and extends it
-    by `extend_state_history`. A subclass can keep its other signals in the history
-    as well, under other keys, as a converter does (see `Converter`).
+    `ModelTimeSeries`). A subsystem whose outputs depend directly on some of its
+    inputs lists these inputs in `feedthrough`, from which the model derives the
+    evaluation order of the outputs. The state history is a dict of lists, keyed by
+    the names of the state fields. The model initializes it by `init_state_history`
+    and extends it by `extend_state_history`. A subclass can keep its other signals
+    in the history as well, under other keys, as a converter does (see `Converter`).
 
     """
 
     inp: Any  # None if the subsystem has no inputs
     out: Any
     state: Any  # None if the subsystem has no states
+    feedthrough: frozenset[str] = frozenset()  # Inputs the outputs depend on directly
     _history: dict[str, list[complex]]
 
     def set_states(self, state_list: list[complex], index: int) -> int:
@@ -186,12 +189,14 @@ class Model[C: Converter | None]:
     Base class for continuous-time system models.
 
     A model consists of named subsystems and connections between them. The outputs are
-    computed in the order of the subsystems and passed to the connected inputs
-    immediately. Hence, a subsystem whose outputs depend directly on its inputs must
-    come after the subsystems providing these inputs. The voltage of a blocked
-    converter depends on its load, so it is computed after the other subsystems. The
-    names of the subsystems name their time series in the results, see
-    `ModelTimeSeries`.
+    computed in an order that respects the direct dependencies of the subsystems (see
+    `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that
+    the outputs are consistent with the inputs of the same evaluation. The order
+    follows the order of the subsystems where the dependencies allow, and a loop of
+    direct dependencies is rejected. The voltage of a blocked converter depends on
+    the port of its load, which depends on the inputs of the load, so the converter is
+    evaluated after the sources of these inputs. The names of the subsystems name
+    their time series in the results, see `ModelTimeSeries`.
 
     A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
     controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -229,8 +234,6 @@ class Model[C: Converter | None]:
                 raise ValueError("A DC bus requires a converter")
             if "dc_bus" in subsystems or dc_bus in subsystems.values():
                 raise ValueError("The DC bus must not be included in the subsystems")
-            # The DC bus comes first, since the converter voltage depends directly on
-            # the DC-bus voltage
             subsystems = {"dc_bus": dc_bus, **subsystems}
         for name in subsystems:
             check_name(name)
@@ -269,6 +272,41 @@ class Model[C: Converter | None]:
         self._t: list[float] = []  # Time history
         for subsystem in subsystems.values():
             subsystem.init_state_history()
+        # Evaluation orders of the outputs by the blocked converters, see `_order`
+        self._orders: dict[tuple[bool, ...], list[Subsystem]] = {}
+        self._order((False,) * len(self.converters))
+
+    def _order(self, blocked: tuple[bool, ...]) -> list[Subsystem]:
+        """Evaluation order of the outputs, given which converters are blocked."""
+        if blocked not in self._orders:
+            converters = [c for c, b in zip(self.converters, blocked, strict=True) if b]
+            self._orders[blocked] = self._sort(converters)
+        return self._orders[blocked]
+
+    def _sort(self, blocked: list[Converter]) -> list[Subsystem]:
+        """Sort the subsystems by their direct dependencies, keeping their order
+        otherwise."""
+        subsystems = list(self.subsystems.values())
+        # Subsystems whose outputs each subsystem depends on directly
+        deps: dict[Subsystem, set[Subsystem]] = {s: set() for s in subsystems}
+        for src, targets in self._outgoing.items():
+            for target, inp, _ in targets:
+                if inp in target.feedthrough:
+                    deps[target].add(src)
+        # The voltage of a blocked converter depends on the ports of its loads, which
+        # depend on the inputs of the loads
+        for converter in blocked:
+            loads = [converter.ac_load, converter.dc_load]
+            for src, targets in self._outgoing.items():
+                if src is not converter and any(t in loads for t, _, _ in targets):
+                    deps[converter].add(src)
+        order: list[Subsystem] = []
+        while len(order) < len(subsystems):
+            ready = [s for s in subsystems if s not in order and deps[s] <= set(order)]
+            if not ready:
+                raise ValueError("Loop in the direct dependencies of the subsystems")
+            order.append(ready[0])
+        return order
 
     def get_initial_values(self) -> list[complex]:
         """Get initial values of all subsystems before the solver."""
@@ -286,13 +324,7 @@ class Model[C: Converter | None]:
 
     def set_outputs(self, t: float) -> None:
         """Compute the outputs and pass them to the connected inputs."""
-        # The voltage of a blocked converter depends on the outputs of its AC load, and
-        # the outputs of its DC load (if current-fed) depend on its DC current
-        order = list(self.subsystems.values())
-        if blocked := [c for c in self.converters if c.blocked]:
-            last = blocked + [c.dc_load for c in blocked if c.dc_load is not None]
-            order = [s for s in order if s not in last] + last
-        for subsystem in order:
+        for subsystem in self._order(tuple(c.blocked for c in self.converters)):
             subsystem.set_outputs(t)
             for target, inp, out in self._outgoing[subsystem]:
                 setattr(target.inp, inp, getattr(subsystem.out, out))
@@ -325,9 +357,10 @@ class Model[C: Converter | None]:
     def time_series(self, t: np.ndarray) -> dict[Subsystem, "SubsystemTimeSeries"]:
         """Compute the time series of the subsystems, connected as in the model."""
         ts = {s: s.create_time_series(t) for s in self.subsystems.values()}
-        # Outputs in the evaluation order of the simulation, passed to the inputs
-        # immediately, see `set_outputs`
-        for subsystem in self.subsystems.values():
+        # Outputs in the evaluation order of the simulation (the voltage of a blocked
+        # converter is in its history), passed to the inputs immediately, see
+        # `set_outputs`
+        for subsystem in self._order((False,) * len(self.converters)):
             ts[subsystem].set_outputs(t, subsystem)
             for target, inp, out in self._outgoing[subsystem]:
                 setattr(ts[target], inp, np.array(getattr(ts[subsystem], out)))

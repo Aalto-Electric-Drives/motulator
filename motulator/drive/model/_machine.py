@@ -88,6 +88,9 @@ class InductionMachine(Subsystem):
 
     """
 
+    # The stator current depends directly on the voltage through the core losses
+    feedthrough = frozenset({"u_s_ab"})
+
     def __init__(
         self,
         par: InductionMachinePars | InductionMachineInvGammaPars,
@@ -259,6 +262,9 @@ class SynchronousMachine(Subsystem):
     magnetic circuit, i.e., the core-loss current is excluded from the torque.
 
     """
+
+    # The stator current depends directly on the voltage through the core losses
+    feedthrough = frozenset({"u_s_ab"})
 
     def __init__(
         self,

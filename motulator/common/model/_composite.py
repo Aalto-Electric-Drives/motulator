@@ -24,11 +24,9 @@ class CompositeModel(Model[None]):
     the models of a grid converter and a drive. Each model keeps its converter, whose
     modulator includes the PWM model and the computational delay, and the model of a
     controlled converter is driven by its own control system in the simulation, see
-    `Simulation`. The subsystems are evaluated in the order of the models, a shared
-    subsystem once, at its first occurrence, whatever its names in the models (the
-    composite names them `model.subsystem` after their first occurrence). The order is
-    not resolved automatically: a shared subsystem whose outputs other subsystems
-    depend on directly must come first in each model, as `Model` places the DC bus.
+    `Simulation`. A shared subsystem is evaluated once, whatever its names in the
+    models (the composite names the subsystems `model.subsystem` after their first
+    occurrence), in the order derived from the direct dependencies, see `Model`.
 
     Parameters
     ----------

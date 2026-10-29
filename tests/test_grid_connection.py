@@ -10,8 +10,10 @@ to block the conduction.
 
 """
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from math import pi, sqrt
+from typing import Any
 
 import numpy as np
 import pytest
@@ -116,6 +118,9 @@ class EMFLoadOutputs:
 class EMFLoad(Subsystem):
     """EMF in series with a resistance and an inductance, fed from a bridge."""
 
+    # The output voltage depends directly on the current
+    feedthrough = frozenset({"i_dc"})
+
     def __init__(self, e: float, R: float, L: float) -> None:
         self.e, self.R, self.L = e, R, L
         self.inp: EMFLoadInputs = EMFLoadInputs()
@@ -137,17 +142,35 @@ class EMFLoad(Subsystem):
 
 @dataclass
 class EMFLoadTimeSeries(SubsystemTimeSeries):
-    """Time series of the inputs."""
+    """Time series of the input current and the output voltage."""
 
     t: np.ndarray
     i_dc: np.ndarray = field(default_factory=lambda: np.array([]))
     u_o: np.ndarray = field(default_factory=lambda: np.array([]))
 
+    def set_outputs(self, t: np.ndarray, subsystem: EMFLoad) -> None:
+        self.u_o = subsystem.e + subsystem.R * self.i_dc
+
+
+# Listing orders of the subsystems of the current-fed rectifier: the natural one, the
+# reversed one, and the converter listed before the filter whose current it rectifies
+ORDERS = [
+    ("converter", "ac_filter", "ac_source", "load"),
+    ("load", "ac_source", "ac_filter", "converter"),
+    ("ac_source", "converter", "ac_filter", "load"),
+]
+
 
 class CurrentFedRectifier(Model[DiodeBridge]):
     """Diode bridge feeding an EMF load through a DC choke."""
 
-    def __init__(self, converter: DiodeBridge, L_f: float, load: EMFLoad) -> None:
+    def __init__(
+        self,
+        converter: DiodeBridge,
+        L_f: float,
+        load: EMFLoad,
+        order: Sequence[str] = ORDERS[0],
+    ) -> None:
         ac_filter, ac_source = grid_model.LFilter(L_f=L_f), grid()
         connections = {
             ("converter", "i_c_ab"): ("ac_filter", "i_c_ab"),
@@ -162,7 +185,36 @@ class CurrentFedRectifier(Model[DiodeBridge]):
             "ac_source": ac_source,
             "load": load,
         }
-        super().__init__(converter, subsystems, connections)
+        super().__init__(converter, {k: subsystems[k] for k in order}, connections)
+
+
+@pytest.mark.parametrize("order", ORDERS[1:])
+def test_listing_order_of_current_fed_rectifier(order: Sequence[str]) -> None:
+    """The results do not depend on the listing order of the blocked converter, the
+    load depending directly on its DC current, and the sources of the inputs of its
+    loads, in the simulation and in the post-processing."""
+    e, R = 400.0, 2.0
+
+    def simulate(order: Sequence[str]) -> Any:
+        load = EMFLoad(e, R, 50e-3)
+        mdl = CurrentFedRectifier(DiodeBridge(), 1e-3, load, order)
+        mdl.subsystems["ac_filter"].state.i_c_ab = 10 + 0j
+        # The outputs depend on the states only, not on the previous evaluation
+        mdl.set_outputs(0.0)
+        outputs = (mdl.converter.out.i_dc, load.out.u_o)
+        mdl.set_outputs(0.0)
+        assert (mdl.converter.out.i_dc, load.out.u_o) == outputs
+        return Simulation(mdl, show_progress=False).simulate(t_stop=0.02)
+
+    res, res_order = simulate(ORDERS[0]), simulate(order)
+    assert res_order.mdl.load.u_o.shape == res_order.mdl.t.shape
+    assert res_order.mdl.load.u_o == pytest.approx(e + R * res_order.mdl.load.i_dc)
+    np.testing.assert_array_equal(res_order.mdl.t, res.mdl.t)
+    np.testing.assert_array_equal(res_order.mdl.load.u_o, res.mdl.load.u_o)
+    np.testing.assert_array_equal(res_order.mdl.converter.i_dc, res.mdl.converter.i_dc)
+    np.testing.assert_array_equal(
+        res_order.mdl.converter.u_c_ab, res.mdl.converter.u_c_ab
+    )
 
 
 def test_current_fed_diode_bridge() -> None:
