@@ -513,7 +513,7 @@ class DCBus(Subsystem):
         """Set external DC current (A), constant or a function of time."""
         self.inp.i_dc = i_dc
 
-    def compute_dc_current(self, t: float) -> float:
+    def _compute_dc_current(self, t: float) -> float:
         """Compute the net current (A) fed to the DC-bus capacitor."""
         i_dc = 0.0 if self.inp.i_dc is None else get_value(self.inp.i_dc, t)
         return i_dc - sum(c.compute_internal_dc_current(c.inp) for c in self.converters)
@@ -524,7 +524,7 @@ class DCBus(Subsystem):
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
-        return [self.compute_dc_current(t) / self.C_dc]
+        return [self._compute_dc_current(t) / self.C_dc]
 
     def create_time_series(self, t: np.ndarray) -> "DCBusTimeSeries":
         """Create time series from state list."""

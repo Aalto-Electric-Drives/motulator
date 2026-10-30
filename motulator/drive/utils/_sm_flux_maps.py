@@ -151,7 +151,7 @@ class MagneticModel:
         """Return True if this is a current map (psi_s → i_s)."""
         return self.type == "current_map"
 
-    def get_input_output(self) -> tuple[np.ndarray, np.ndarray]:
+    def _get_input_output(self) -> tuple[np.ndarray, np.ndarray]:
         """Get input and output arrays based on map type."""
         if self.is_flux_map():
             return self.i_s_dq, self.psi_s_dq
@@ -193,7 +193,7 @@ class MagneticModel:
             return d_grid + 1j * q_grid
 
         # Get input/output arrays based on map type
-        inp, out = self.get_input_output()
+        inp, out = self._get_input_output()
         new_type = self.type
 
         # Set default num value based on input data if not provided

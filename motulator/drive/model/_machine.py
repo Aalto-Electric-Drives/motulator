@@ -102,12 +102,12 @@ class InductionMachine(Subsystem):
         self.i_s_sensor = i_s_sensor
         self.inp: InductionMachineInputs = InductionMachineInputs()
         self.state: InductionMachineStates = InductionMachineStates()
-        i_s_ab, i_r_ab, tau_M = self.compute_outputs(self.state, self.inp)
+        i_s_ab, i_r_ab, tau_M = self._compute_outputs(self.state, self.inp)
         self.out: InductionMachineOutputs = InductionMachineOutputs(
             i_s_ab=i_s_ab, i_r_ab=i_r_ab, tau_M=tau_M
         )
 
-    def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
+    def _compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
         par = self.par
         L_s = get_value(par.L_s, abs(state.psi_s_ab))
@@ -120,7 +120,7 @@ class InductionMachine(Subsystem):
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
-        self.out.i_s_ab, self.out.i_r_ab, self.out.tau_M = self.compute_outputs(
+        self.out.i_s_ab, self.out.i_r_ab, self.out.tau_M = self._compute_outputs(
             self.state, self.inp
         )
 
@@ -136,7 +136,7 @@ class InductionMachine(Subsystem):
         state, inp, par = self.state, self.inp, self.par
         if par.G_c:
             raise NotImplementedError("Gate blocking is not supported with core losses")
-        i_s_ab, i_r_ab, _ = self.compute_outputs(state, inp)
+        i_s_ab, i_r_ab, _ = self._compute_outputs(state, inp)
 
         def current(psi_s_ab: complex) -> complex:
             """Stator current as a function of the stator flux."""
@@ -190,7 +190,7 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
 
     def set_outputs(self, t: np.ndarray, subsystem: InductionMachine) -> None:
         """Compute the outputs, which depend on the voltage due to core losses."""
-        self.i_s_ab, self.i_r_ab, self.tau_M = subsystem.compute_outputs(self, self)
+        self.i_s_ab, self.i_r_ab, self.tau_M = subsystem._compute_outputs(self, self)
 
     def compute_derived_signals(
         self, t: np.ndarray, subsystem: InductionMachine
@@ -277,12 +277,12 @@ class SynchronousMachine(Subsystem):
         self.i_s_sensor = i_s_sensor
         self.inp: SynchronousMachineInputs = SynchronousMachineInputs()
         self.state: SynchronousMachineStates = SynchronousMachineStates(par)
-        i_s_dq, i_s_ab, tau_M = self.compute_outputs(self.state, self.inp)
+        i_s_dq, i_s_ab, tau_M = self._compute_outputs(self.state, self.inp)
         self.out: SynchronousMachineOutputs = SynchronousMachineOutputs(
             i_s_ab=i_s_ab, i_s_dq=i_s_dq, tau_M=tau_M
         )
 
-    def compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
+    def _compute_outputs(self, state: Any, inp: Any) -> tuple[Any, Any, Any]:
         """Compute output variables."""
         par = self.par
         exp_j_theta_m = np.exp(1j * state.theta_m.real)
@@ -305,7 +305,7 @@ class SynchronousMachine(Subsystem):
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
-        self.out.i_s_dq, self.out.i_s_ab, self.out.tau_M = self.compute_outputs(
+        self.out.i_s_dq, self.out.i_s_ab, self.out.tau_M = self._compute_outputs(
             self.state, self.inp
         )
 
@@ -386,7 +386,7 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
 
     def set_outputs(self, t: np.ndarray, subsystem: SynchronousMachine) -> None:
         """Compute the outputs, which depend on the voltage due to core losses."""
-        i_s_dq, i_s_ab, tau_M = subsystem.compute_outputs(self, self)
+        i_s_dq, i_s_ab, tau_M = subsystem._compute_outputs(self, self)
         self.i_s_dq = np.asarray(i_s_dq)
         self.i_s_ab = np.asarray(i_s_ab)
         self.tau_M = np.asarray(tau_M)

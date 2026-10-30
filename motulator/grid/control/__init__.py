@@ -32,6 +32,7 @@ from motulator.grid.control._gfm_psc import (
 from motulator.grid.control._gfm_sequence_observer import (
     SequenceObserverBasedGridFormingController,
     SequenceObserverBasedGridFormingControllerCfg,
+    SequenceObserverOutputs,
 )
 
 __all__ = [
@@ -58,4 +59,5 @@ __all__ = [
     "References",
     "SequenceObserverBasedGridFormingController",
     "SequenceObserverBasedGridFormingControllerCfg",
+    "SequenceObserverOutputs",
 ]
