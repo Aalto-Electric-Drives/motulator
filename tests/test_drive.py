@@ -26,23 +26,23 @@ T_STOP = 0.6
 T_LOAD = 0.3
 
 
-def ipmsm_drive(pwm: bool) -> model.Drive:
+def ipmsm_drive(pwm: bool, G_c: float = 0.0) -> model.Drive:
     """2.2-kW IPMSM drive."""
     par = model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
     )
+    modulator = model.CarrierComparison() if pwm else None
     return model.Drive(
         model.SynchronousMachine(par),
         model.MechanicalSystem(J=0.015),
-        model.VoltageSourceConverter(u_dc=540),
-        pwm=pwm,
+        model.VoltageSourceConverter(u_dc=540, modulator=modulator),
     )
 
 
-def im_drive() -> model.Drive:
+def im_drive(G_c: float = 0.0) -> model.Drive:
     """2.2-kW induction machine drive."""
     par = model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224, G_c=G_c
     )
     return model.Drive(
         model.InductionMachine(par),
@@ -230,6 +230,31 @@ def test_observer_based_vhz() -> None:
     assert np.mean(res.mdl.machine.w_M[end]) == pytest.approx(w_M_ref, rel=0.05)
     assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
     assert_controller_coordinates(res)
+
+
+@pytest.mark.parametrize("machine", ["im", "ipmsm"])
+def test_core_losses(machine: str) -> None:
+    """With core losses, the post-processed stator current satisfies the stator voltage
+    equation integrated by the solver."""
+    G_c = 1 / 400  # Core-loss conductance (S)
+    if machine == "im":
+        mdl, ctrl = im_drive(G_c), im_fvc()
+    else:
+        mdl, ctrl = ipmsm_drive(False, G_c), ipmsm_fvc(True)
+    ctrl.set_speed_ref(lambda t: (t > 0.05) * 50.0)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.15) * 7.0)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
+
+    # Stator voltage equation in stationary coordinates, integrated with the
+    # trapezoidal rule. Without the core-loss current, the error would be about 0.01 Vs.
+    ts = res.mdl
+    e = ts.machine.u_s_ab - mdl.machine.par.R_s * ts.machine.i_s_ab
+    psi_s_ab = ts.machine.psi_s_ab[0] + np.cumsum(
+        0.5 * (e[1:] + e[:-1]) * np.diff(ts.t)
+    )
+    assert ts.machine.psi_s_ab[1:] == pytest.approx(psi_s_ab, abs=1e-3)
+    # The DC current is computed from the corrected stator current
+    assert ts.converter.i_c_ab == pytest.approx(ts.machine.i_s_ab)
 
 
 def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
@@ -473,8 +498,7 @@ def test_discrete_current_control_dead_time() -> None:
             )
         ),
         model.ExternalRotorSpeed(),
-        model.VoltageSourceConverter(u_dc=540, t_d=t_d, u_th=u_th),
-        pwm=True,
+        model.VoltageSourceConverter(540, model.CarrierComparison(t_d=t_d), u_th=u_th),
     )
     mdl.mechanics.set_external_rotor_speed(w_M)
     cfg = im_control.CurrentVectorControllerCfg(

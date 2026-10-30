@@ -267,7 +267,8 @@ def plot_grid_waveforms(
     The phase angles are the grid voltage angle and the angle `fbk.theta_c` of the
     coordinates of the post-processed controller signals. For the observer-based
     grid-forming controllers, these coordinates are aligned with the estimated
-    quasi-static converter voltage `v_c` (or its positive-sequence component).
+    quasi-static converter voltage `v_c` (or its positive-sequence component). Without
+    a control system, e.g., for a diode bridge, the phase angles are not plotted.
 
     Parameters
     ----------
@@ -310,26 +311,28 @@ def plot_grid_waveforms(
     if t_lims is None:
         t_lims = (0, res.mdl.t[-1])
 
-    # Create figure
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(width, height), sharex=True)
-    axes = [ax1, ax2, ax3]
+    # Create figure, without the phase angles if there is no control system
+    n_axes = 2 if res.ctrl is None else 3
+    height *= n_axes / 3
+    fig, axes = plt.subplots(n_axes, 1, figsize=(width, height), sharex=True)
 
     # Plot subplots
-    _plot_three_phase_voltages(ax1, res.mdl, base, plot_pcc_voltage)
-    _plot_three_phase_currents(ax2, res.mdl, base)
-    _plot_phase_angles(ax3, res.mdl, res.ctrl)
+    _plot_three_phase_voltages(axes[0], res.mdl, base, plot_pcc_voltage)
+    _plot_three_phase_currents(axes[1], res.mdl, base)
+    if res.ctrl is not None:
+        _plot_phase_angles(axes[2], res.mdl, res.ctrl)
+        axes[2].set_ylabel("Angle (deg)")
 
     # Configure all axes
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
 
     # Add axis labels
     if pu_vals:
-        ax1.set_ylabel("Voltage (p.u.)")
-        ax2.set_ylabel("Current (p.u.)")
+        axes[0].set_ylabel("Voltage (p.u.)")
+        axes[1].set_ylabel("Current (p.u.)")
     else:
-        ax1.set_ylabel("Voltage (V)")
-        ax2.set_ylabel("Current (A)")
-    ax3.set_ylabel("Angle (deg)")
+        axes[0].set_ylabel("Voltage (V)")
+        axes[1].set_ylabel("Current (A)")
     fig.align_ylabels()
     axes[-1].set_xlabel("Time (s)")
 

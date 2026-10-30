@@ -154,8 +154,8 @@ class LFilterTimeSeries(SubsystemTimeSeries):
         self.i_c_ab = np.array(subsystem._history["i_c_ab"])
         self.i_g_ab = self.i_c_ab
 
-    def compute_input_derived_signals(self, t: np.ndarray, subsystem: LFilter) -> None:
-        """Compute direct feedthrough time series."""
+    def compute_derived_signals(self, t: np.ndarray, subsystem: LFilter) -> None:
+        """Compute the PCC voltage."""
         self.u_g_ab = subsystem.pcc_voltage(self, self)
 
 
@@ -327,8 +327,6 @@ class LCLFilterTimeSeries(SubsystemTimeSeries):
         self.i_g_ab = np.array(subsystem._history["i_g_ab"])
         self.u_f_ab = np.array(subsystem._history["u_f_ab"])
 
-    def compute_input_derived_signals(
-        self, t: np.ndarray, subsystem: LCLFilter
-    ) -> None:
-        """Process input time series."""
+    def compute_derived_signals(self, t: np.ndarray, subsystem: LCLFilter) -> None:
+        """Compute the PCC voltage."""
         self.u_g_ab = subsystem.pcc_voltage(self, self)

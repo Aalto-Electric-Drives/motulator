@@ -6,36 +6,38 @@ from typing import Any
 import numpy as np
 from scipy.integrate._ivp.ivp import OdeResult
 
-from motulator.common.model._base import Model, ModelTimeSeries, Subsystem, System
-from motulator.common.model._converter import DCBus
+from motulator.common.model._base import Model, ModelTimeSeries, Subsystem
 
 
 # %%
-class CompositeModel(System):
+class CompositeModel(Model[None]):
     """
     Composite of models sharing subsystems.
 
     The models are coupled through shared subsystem objects, e.g., a DC bus given to
-    the models of a grid converter and a drive. Each model keeps its converter, PWM
-    model, and computational delay, and it is driven by its own control system in the
-    simulation, see `Simulation`. The subsystems are evaluated in the order of the
-    models, a shared subsystem at its first occurrence. The order is not resolved
-    automatically: a shared subsystem whose outputs other subsystems depend on
-    directly must come first in each model, as `Model` places the DC bus.
+    the models of a grid converter and a drive. Each model keeps its converter, whose
+    modulator includes the PWM model and the computational delay, and the model of a
+    controlled converter is driven by its own control system in the simulation, see
+    `Simulation`. The subsystems are
+    evaluated in the order of the models, a shared subsystem at its first occurrence.
+    The order is not resolved automatically: a shared subsystem whose outputs other
+    subsystems depend on directly must come first in each model, as `Model` places the
+    DC bus.
 
     Parameters
     ----------
     models : dict[str, Model]
-        Models by name, each with its own converter. The names are used for the
-        control systems and the results, so they must be valid attribute names (not
-        starting with an underscore, and not `t`).
+        Models by name. The names are used for the control systems and the results, so
+        they must be valid attribute names (not starting with an underscore, and not
+        `t`).
 
     """
 
     def __init__(self, models: dict[str, Model]) -> None:
         subsystems: list[Subsystem] = []
         connections: dict[tuple[Subsystem, str], tuple[Subsystem, str]] = {}
-        if len({id(mdl.converter) for mdl in models.values()}) < len(models):
+        converters = [m.converter for m in models.values() if m.converter is not None]
+        if len({id(c) for c in converters}) < len(converters):
             raise ValueError("The models must have distinct converters")
         for name, mdl in models.items():
             if not name.isidentifier() or name.startswith("_") or name == "t":
@@ -47,25 +49,15 @@ class CompositeModel(System):
                         f"Conflicting connections to {type(key[0]).__name__}.{key[1]}"
                     )
                 connections[key] = value
-        # Each converter fed from a DC bus must get its voltage
-        for dc_bus in subsystems:
-            if isinstance(dc_bus, DCBus):
-                for converter in dc_bus.converters:
-                    if connections.get((converter, "u_dc")) != (dc_bus, "u_dc"):
-                        raise ValueError(
-                            "The DC bus must be given to the model of each converter"
-                        )
-        super().__init__(subsystems, connections)
+        super().__init__(None, subsystems, connections)
         self.models = models
-        self.converters = [mdl.converter for mdl in models.values()]
+        self.converters = converters
 
     def save(self, sol: OdeResult) -> None:
-        """Save the solution and the switching states of the models."""
+        """Save the solution and the time histories of the models."""
         super().save(sol)
         for mdl in self.models.values():
-            mdl.t0 = self.t0
-            mdl._history.t.extend(sol.t)
-            mdl._save_converter_history(sol, self)
+            mdl._t.extend(sol.t)
 
 
 # %%
@@ -83,7 +75,7 @@ class CompositeModelTimeSeries:
     t: np.ndarray = field(default_factory=lambda: np.array([]), init=False)
 
     def __post_init__(self, mdl: CompositeModel) -> None:
-        self.t = np.array(mdl._history.t)
+        self.t = np.array(mdl._t)
         for name, sub_mdl in mdl.models.items():
             setattr(self, name, ModelTimeSeries(sub_mdl))
 

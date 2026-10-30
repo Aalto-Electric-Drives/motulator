@@ -1,5 +1,6 @@
-"""Continuous-time model for electric machine drives."""
+"""Continuous-time models for electric machine drives and grid-connected machines."""
 
+from motulator.common.model._ac_source import ThreePhaseSource
 from motulator.common.model._base import Model
 from motulator.common.model._converter import DCBus, VoltageSourceConverter
 from motulator.drive.model._lc_filter import LCFilter
@@ -28,19 +29,10 @@ class Drive(Model[VoltageSourceConverter]):
         LC filter model. If not given, a direct connection between the converter and
         machine is used.
     dc_bus : DCBus, optional
-        DC bus feeding the converter, e.g., `DiodeBridgeDCBus` for a diode front end,
-        or a DC bus shared with other models (e.g., with a grid converter system), see
+        DC bus feeding the converter, which can be shared with other models (e.g., with
+        a grid converter system with a diode bridge or an active front end), see
         `CompositeModel`. Defaults to None, in which case the converter has a constant
         DC-bus voltage.
-    pwm : bool, optional
-        Enable PWM model, defaults to False.
-    delay : int, optional
-        Computational delay in half carrier periods (sampling periods with double
-        update), defaults to 1. With single update, use 2 for a delay of one
-        sampling period, see `Model`.
-    single_update : bool, optional
-        Sample and update the duty ratios once per carrier period instead of twice,
-        defaults to False, see `Model`.
 
     """
 
@@ -51,9 +43,6 @@ class Drive(Model[VoltageSourceConverter]):
         converter: VoltageSourceConverter,
         lc_filter: LCFilter | None = None,
         dc_bus: DCBus | None = None,
-        pwm: bool = False,
-        delay: int = 1,
-        single_update: bool = False,
     ) -> None:
         self.machine = machine
         self.mechanics = mechanics
@@ -80,12 +69,45 @@ class Drive(Model[VoltageSourceConverter]):
                 (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
             }
             converter.ac_load = lc_filter
-        super().__init__(
-            converter,
-            subsystems,
-            connections,
-            dc_bus=dc_bus,
-            pwm=pwm,
-            delay=delay,
-            single_update=single_update,
-        )
+        super().__init__(converter, subsystems, connections, dc_bus=dc_bus)
+
+
+# %%
+class GridConnectedMachine(Model[None]):
+    """
+    Continuous-time system model for a machine connected directly to the grid.
+
+    The stator terminals of the machine are connected to a three-phase voltage source,
+    e.g., to model the direct-on-line start of an induction machine. A series grid
+    impedance can be lumped into the machine parameters, e.g., into the stator
+    resistance and the leakage inductance of the inverse-Γ model of an induction
+    machine.
+
+    Parameters
+    ----------
+    machine : InductionMachine | SynchronousMachine
+        Electric machine model.
+    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
+        Mechanical system model.
+    ac_source : ThreePhaseSource
+        Three-phase voltage source.
+
+    """
+
+    def __init__(
+        self,
+        machine: InductionMachine | SynchronousMachine,
+        mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
+        ac_source: ThreePhaseSource,
+    ) -> None:
+        self.machine = machine
+        self.mechanics = mechanics
+        self.ac_source = ac_source
+        connections = {
+            (machine, "u_s_ab"): (ac_source, "e_g_ab"),
+            (machine, "w_M"): (mechanics, "w_M"),
+            (mechanics, "tau_M"): (machine, "tau_M"),
+        }
+        # The source comes first, since the stator current can depend directly on the
+        # voltage
+        super().__init__(None, [ac_source, machine, mechanics], connections)

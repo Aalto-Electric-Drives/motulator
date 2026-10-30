@@ -1,27 +1,38 @@
 """
 Continuous-time models for converters and DC buses.
 
-A three-phase voltage-source converter is modeled, along with a capacitive DC bus that
-can be shared by several converters and a DC bus fed from a six-pulse diode bridge
-rectifier supplied from a stiff grid. Complex space vectors are used also for duty
-ratios and switching states, wherever applicable.
+A three-phase six-pulse diode bridge and a three-phase voltage-source converter are
+modeled, along with a capacitive DC bus that can be shared by several converters.
+Complex space vectors are used also for duty ratios and switching states, wherever
+applicable.
 
 """
 
 from collections.abc import Callable, Sequence
 from dataclasses import InitVar, dataclass, field
-from math import sqrt
 from typing import Any
 
 import numpy as np
 
 from motulator.common.model._ac_port import (
     ACPort,
+    current_direction,
     diode_margin,
     leg_voltages,
     update_diodes,
 )
-from motulator.common.model._base import Subsystem, SubsystemTimeSeries
+from motulator.common.model._base import (
+    ControlledConverter,
+    Converter,
+    Subsystem,
+    SubsystemTimeSeries,
+)
+from motulator.common.model._pwm import (
+    ZOH,
+    GateStates,
+    SwitchingTimes,
+    TwoLevelModulator,
+)
 from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import (
     abc2complex,
@@ -34,14 +45,11 @@ from motulator.common.utils._utils import (
 
 # %%
 @dataclass
-class Inputs:
+class DiodeBridgeInputs:
     """Input variables."""
 
-    q_c_ab: complex = 0j  # Switching state
-    s_c_ab: complex = 0j  # Current-direction vector at the latest switching instant
-    enabled: bool = True  # Gate enable
     i_c_ab: complex = 0j
-    u_dc: float | None = None  # DC-bus voltage (V) from a DC-bus model, if connected
+    u_dc: float | None = None  # DC-bus voltage (V), constant without a DC bus
 
 
 @dataclass
@@ -52,79 +60,57 @@ class Outputs:
     u_dc: float
 
 
-class VoltageSourceConverter(Subsystem):
+class DiodeBridge(Converter):
     """
-    Three-phase voltage-source converter.
+    Three-phase six-pulse diode bridge.
 
-    The switches are ideal, except for the dead time and the threshold voltage. When a
-    leg is blanked, i.e., neither of its switches conducts, the current direction
-    determines which diode conducts. The leg state is then `(1 - sign(i))/2`, where
-    `i` is the phase current in the beginning of the blanking interval. The threshold
-    voltage of the conducting device, assumed equal for the switches and the diodes,
-    reduces each phase voltage by `u_th*sign(i)`, where the current direction is also
-    determined at the latest switching instant. The DC-bus voltage is either constant
-    or given by a DC-bus model connected to the input `u_dc` (see `DCBus` and
-    `Model`).
-
-    When the gates are blocked (`inp.enabled` is False), all the switches are open, and
-    the antiparallel diodes conduct according to the currents: a leg carrying current
-    is clamped to a rail, and a leg without current floats at the voltage keeping its
-    current at zero. The diode states are updated at their transitions, which the
-    simulation locates as events, see `Simulation`. The voltage is computed from the
-    AC port of the load `ac_load`, see `ACPort`, and the threshold voltage is included
-    in the diode drops.
+    The diodes conduct according to the currents of the load `ac_load`: a leg carrying
+    current is clamped to a rail, and a leg without current floats at the voltage
+    keeping its current at zero. The voltage is computed from the AC port of the load,
+    see `ACPort`. The diode states are updated at their transitions, which the
+    simulation locates as events, see `Simulation`. Hence, the commutation of the
+    current between the legs follows from the inductance of the load, e.g., an AC
+    filter and the grid. The threshold voltage of the diodes is included in the diode
+    drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
+    model is connected to it (see `DCBus` and `Model`).
 
     Parameters
     ----------
     u_dc : float, optional
-        Constant DC-bus voltage (V). Defaults to None, in which case the converter must
-        be fed from a DC-bus model.
-    t_d : float, optional
-        Dead time (s), defaults to 0.
+        Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
+        fed from a DC-bus model.
     u_th : float, optional
-        Threshold voltage (V) of the power devices, defaults to 0.
-    sign : Callable[[np.ndarray], np.ndarray], optional
-        Function of the phase currents (A) determining the leg states during blanking,
-        defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
-        used to model the effect of parasitic capacitances, for example.
-    u_dc_sensor : Sensor, optional
-        DC-bus voltage sensor, defaults to an ideal measurement.
+        Threshold voltage (V) of the diodes, defaults to 0.
 
     """
 
-    n_legs: int = 3
-
-    def __init__(
-        self,
-        u_dc: float | None = None,
-        t_d: float = 0.0,
-        u_th: float = 0.0,
-        sign: Callable[[np.ndarray], np.ndarray] = np.sign,
-        u_dc_sensor: Sensor | None = None,
-    ) -> None:
-        self.u_dc = u_dc
-        self.t_d = t_d
+    def __init__(self, u_dc: float | None = None, u_th: float = 0.0) -> None:
         self.u_th = u_th
-        self.sign = sign
-        self.u_dc_sensor = u_dc_sensor
-        self.inp: Inputs = Inputs()
+        # The inputs are extended by `VoltageSourceConverter`, so their type is not
+        # declared here
+        self.inp = DiodeBridgeInputs(u_dc=u_dc)
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc)
         self.state = None
-        self.ac_load: Subsystem | None = None  # Set by the model
-        self._diodes = np.zeros(3)  # Diode states of the legs with blocked gates
-        self.margin = np.inf  # Margin of the diode states, see `diode_margin`
+        self.ac_load = None  # Set by the model
+        # Diode states of the legs, latched from the current directions at the first
+        # evaluation, see `update_diodes`
+        self._diodes: np.ndarray | None = None
 
-    def set_enable(self, enabled: bool) -> None:
-        """Set the gate enable, latching the diode states when the gates are blocked."""
-        if not enabled and self.inp.enabled:
-            self._diodes = update_diodes(self._ac_port(), self._rail_voltage())
-        self.inp.enabled = enabled
+    @property
+    def blocked(self) -> bool:
+        """Only the diodes conduct, as the bridge has no switches."""
+        return True
+
+    @property
+    def margin(self) -> float:
+        """Margin of the diode states at the latest evaluation, see `diode_margin`."""
+        return diode_margin(*self._latest)
 
     def _ac_port(self) -> ACPort:
         """Get the AC port of the load."""
         port = None if self.ac_load is None else self.ac_load.compute_ac_port()
         if port is None:
-            raise ValueError("Gate blocking requires a load with an AC port")
+            raise ValueError("The diodes require a load with an AC port")
         return port
 
     def _rail_voltage(self) -> float:
@@ -137,9 +123,199 @@ class VoltageSourceConverter(Subsystem):
             self._ac_port(), self._rail_voltage(), self._diodes
         )
 
-    def set_gate_signals(self, q_abc: np.ndarray, b_abc: np.ndarray) -> None:
-        """Set the switching state based on the gate and blanking signals."""
-        s_abc = self.sign(complex2abc(self.inp.i_c_ab))
+    def compute_internal_dc_current(self, inp: Any) -> Any:
+        """Compute the internal DC current (A), rectified by the diodes."""
+        return -0.5 * np.sum(np.abs(complex2abc(inp.i_c_ab)), axis=0)
+
+    def _set_dc_voltage(self) -> None:
+        """Set the DC-bus voltage from the input."""
+        if self.inp.u_dc is None:
+            raise ValueError(
+                "The DC-bus voltage must be given, unless the converter is fed from a "
+                "DC-bus model"
+            )
+        self.out.u_dc = self.inp.u_dc
+
+    def set_outputs(self, t: float) -> None:
+        """Set output variables."""
+        self._set_dc_voltage()
+        port, u_dc = self._ac_port(), self._rail_voltage()
+        if self._diodes is None:
+            self._diodes = update_diodes(port, u_dc)
+        u_abc = leg_voltages(port, u_dc, self._diodes)
+        self.out.u_c_ab = abc2complex(u_abc)
+        # The margin is computed on demand, only for locating the transitions
+        self._latest = (port, u_dc, self._diodes, u_abc)
+
+    def rhs(self, t: float) -> list[complex]:
+        """Default empty implementation."""
+        return []
+
+    def init_state_history(self) -> None:
+        """Initialize the history of the voltage, which is evaluated by the model."""
+        super().init_state_history()
+        self._history["u_c_ab"] = []
+
+    def extend_history(self, n: int, u_c_ab: Sequence[complex] | None) -> None:
+        """
+        Extend the history over the solution points of an integration interval.
+
+        Parameters
+        ----------
+        n : int
+            Number of solution points.
+        u_c_ab : Sequence[complex] | None
+            Voltages (V) evaluated at the solution points if only the diodes conduct,
+            otherwise None.
+
+        """
+        self._history["u_c_ab"].extend([np.nan] * n if u_c_ab is None else u_c_ab)
+
+    def create_time_series(self, t: np.ndarray) -> tuple[str, "DiodeBridgeTimeSeries"]:
+        """Create time series."""
+        return "converter", DiodeBridgeTimeSeries(t, self)
+
+
+@dataclass
+class DiodeBridgeTimeSeries[T: DiodeBridge](SubsystemTimeSeries):
+    """Continuous time series."""
+
+    t: InitVar[np.ndarray]
+    subsystem: InitVar[T]
+    u_dc: np.ndarray = field(default_factory=empty_array)
+    i_c_ab: np.ndarray = field(default_factory=empty_array)
+    u_c_ab: np.ndarray = field(default_factory=empty_array)
+    i_dc_int: np.ndarray = field(default_factory=empty_array)
+
+    def __post_init__(self, t: np.ndarray, subsystem: T) -> None:
+        # Constant DC-bus voltage, replaced by the DC-bus time series if connected
+        self.u_dc = np.full(np.size(t), subsystem.inp.u_dc, dtype=float)
+        self.u_c_ab = np.array(subsystem._history["u_c_ab"], dtype=complex)
+
+    def compute_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
+        """Compute the internal DC current."""
+        self.i_dc_int = subsystem.compute_internal_dc_current(self)
+
+
+# %%
+@dataclass
+class VoltageSourceConverterInputs(DiodeBridgeInputs):
+    """Input variables."""
+
+    q_c_ab: complex = 0j  # Switching state
+    s_c_ab: complex = 0j  # Current-direction vector at the latest switching instant
+    enabled: bool = True  # Gate enable
+
+
+class VoltageSourceConverter(DiodeBridge, ControlledConverter):
+    """
+    Three-phase voltage-source converter.
+
+    The modulator converts the duty ratios of the control system into the gate states
+    of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+    including the computational delay and the dead time, see `ZOH` and
+    `CarrierComparison`. The switches are ideal, except for the dead time and the
+    threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
+    the current direction determines which diode conducts. The leg state is then
+    `(1 - sign(i))/2`, where `i` is the phase current in the beginning of the blanking
+    interval. The threshold voltage of the conducting device, assumed equal for the
+    switches and the diodes, reduces each phase voltage by `u_th*sign(i)`, where the
+    current direction is also determined at the latest switching instant. A current
+    within the tolerance of the diode-state transitions has no direction, see
+    `current_direction`. The DC-bus voltage is the input `u_dc`, which is constant
+    unless a DC-bus model is connected to it (see `DCBus` and `Model`).
+
+    When the gates are blocked (`inp.enabled` is False), all the switches are open, and
+    the converter operates as a diode bridge, see `DiodeBridge`. The diode states are
+    latched from the current directions when the gates are blocked.
+
+    Parameters
+    ----------
+    u_dc : float, optional
+        Constant DC-bus voltage (V). Defaults to None, in which case the converter must
+        be fed from a DC-bus model.
+    modulator : TwoLevelModulator, optional
+        Modulator converting the command of the control system into the gate states,
+        see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle
+        averaged model of the duty ratios without the dead time and with the
+        computational delay of one sampling period. A modulator keeps its state, so
+        each converter needs its own.
+    u_th : float, optional
+        Threshold voltage (V) of the power devices, defaults to 0.
+    sign : Callable[[np.ndarray], np.ndarray], optional
+        Function of the phase currents (A) determining the leg states during blanking,
+        defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
+        used to model the effect of parasitic capacitances, for example.
+    u_dc_sensor : Sensor, optional
+        DC-bus voltage sensor, defaults to an ideal measurement.
+
+    """
+
+    def __init__(
+        self,
+        u_dc: float | None = None,
+        modulator: TwoLevelModulator[Any] | None = None,
+        u_th: float = 0.0,
+        sign: Callable[[np.ndarray], np.ndarray] = np.sign,
+        u_dc_sensor: Sensor | None = None,
+    ) -> None:
+        super().__init__(u_dc, u_th)
+        self.modulator = ZOH() if modulator is None else modulator
+        self.sign = sign
+        self.u_dc_sensor = u_dc_sensor
+        self.inp: VoltageSourceConverterInputs = VoltageSourceConverterInputs(u_dc=u_dc)
+
+    @property
+    def blocked(self) -> bool:
+        """Only the diodes conduct while the gates are blocked."""
+        return not self.inp.enabled
+
+    def set_enable(self, enabled: bool) -> None:
+        """Set the gate enable."""
+        if enabled:
+            self._diodes = None  # Latched again when the gates are blocked
+        self.inp.enabled = enabled
+
+    def modulate(self, T_s: float, command: Any) -> tuple[SwitchingTimes, GateStates]:
+        """
+        Convert the command to the gate states and their durations.
+
+        The command passes through the modulator also while the gates are blocked,
+        but the gate states are then zero for the whole sampling period.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+        command : Any
+            Command computed at this sampling instant, the duty ratios for `ZOH` and
+            `CarrierComparison`.
+
+        Returns
+        -------
+        t_steps : SwitchingTimes, shape (N,)
+            Durations of the intervals (s), summing to `T_s`.
+        gates : GateStates, shape (N, 2, 3)
+            Gate signals of the upper switches and blanking signals in each interval.
+
+        """
+        t_steps, gates = self.modulator(T_s, command)
+        if self.inp.enabled:
+            return t_steps, gates
+        return np.array([T_s]), np.zeros_like(gates[:1])
+
+    def set_gates(self, gates: np.ndarray) -> None:
+        """
+        Set the switching state based on the gate state of an interval.
+
+        Parameters
+        ----------
+        gates : ndarray, shape (2, 3)
+            Gate signals of the upper switches and blanking signals.
+
+        """
+        q_abc, b_abc = gates
+        s_abc = current_direction(complex2abc(self.inp.i_c_ab), self.sign)
         self.inp.q_c_ab = abc2complex(q_abc + 0.5 * b_abc * (1 - s_abc))
         self.inp.s_c_ab = abc2complex(s_abc)
 
@@ -148,28 +324,16 @@ class VoltageSourceConverter(Subsystem):
         i_dc = 1.5 * (inp.q_c_ab * inp.i_c_ab.conjugate()).real
         if inp.enabled is True:  # A single state, in the simulation
             return i_dc
-        # With blocked gates, the diodes rectify the phase currents
-        i_dc_diodes = -0.5 * np.sum(np.abs(complex2abc(inp.i_c_ab)), axis=0)
-        return np.where(inp.enabled, i_dc, i_dc_diodes)
+        return np.where(inp.enabled, i_dc, super().compute_internal_dc_current(inp))
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
-        if self.inp.u_dc is not None:
-            self.out.u_dc = self.inp.u_dc
-        elif self.u_dc is None:
-            raise ValueError(
-                "The DC-bus voltage must be given, unless the converter is fed from a "
-                "DC-bus model"
-            )
-        if self.inp.enabled:
-            self.out.u_c_ab = (
-                self.inp.q_c_ab * self.out.u_dc - self.u_th * self.inp.s_c_ab
-            )
+        if self.blocked:
+            super().set_outputs(t)
         else:
-            port, u_dc = self._ac_port(), self._rail_voltage()
-            u_abc = leg_voltages(port, u_dc, self._diodes)
-            self.out.u_c_ab = abc2complex(u_abc)
-            self.margin = diode_margin(port, u_dc, self._diodes, u_abc)
+            self._set_dc_voltage()
+            inp = self.inp
+            self.out.u_c_ab = inp.q_c_ab * self.out.u_dc - self.u_th * inp.s_c_ab
 
     def meas_dc_voltage(self) -> float:
         """Measure converter DC-bus voltage (V)."""
@@ -181,9 +345,18 @@ class VoltageSourceConverter(Subsystem):
         """Measure the converter line-to-line voltages u_ab and u_bc (V)."""
         return complex2line(self.out.u_c_ab)
 
-    def rhs(self, t: float) -> list[complex]:
-        """Default empty implementation."""
-        return []
+    def init_state_history(self) -> None:
+        """Initialize the history of the switching state and the voltage."""
+        super().init_state_history()
+        self._history |= {"q_c_ab": [], "s_c_ab": [], "enabled": []}
+
+    def extend_history(self, n: int, u_c_ab: Sequence[complex] | None) -> None:
+        """Extend the history, the switching state held constant, see `DiodeBridge`."""
+        super().extend_history(n, u_c_ab)
+        inp = self.inp
+        self._history["q_c_ab"].extend([inp.q_c_ab] * n)
+        self._history["s_c_ab"].extend([inp.s_c_ab] * n)
+        self._history["enabled"].extend([inp.enabled] * n)
 
     def create_time_series(
         self, t: np.ndarray
@@ -193,33 +366,24 @@ class VoltageSourceConverter(Subsystem):
 
 
 @dataclass
-class VoltageSourceConverterTimeSeries[T: VoltageSourceConverter]:
+class VoltageSourceConverterTimeSeries(DiodeBridgeTimeSeries[VoltageSourceConverter]):
     """Continuous time series."""
 
-    t: InitVar[np.ndarray]
-    subsystem: InitVar[T]
-    u_dc: np.ndarray = field(default_factory=empty_array)
+    subsystem: InitVar[VoltageSourceConverter]
     q_c_ab: np.ndarray = field(default_factory=empty_array)
     s_c_ab: np.ndarray = field(default_factory=empty_array)
     enabled: np.ndarray = field(default_factory=empty_array)
-    i_c_ab: np.ndarray = field(default_factory=empty_array)
-    u_c_ab: np.ndarray = field(default_factory=empty_array)
-    i_dc_int: np.ndarray = field(default_factory=empty_array)
 
-    def __post_init__(self, t: np.ndarray, subsystem: T) -> None:
-        # Constant DC-bus voltage, replaced by the DC-bus model time series if connected
-        u_dc = np.nan if subsystem.u_dc is None else subsystem.u_dc
-        self.u_dc = np.full(np.size(t), u_dc)
+    def __post_init__(self, t: np.ndarray, subsystem: VoltageSourceConverter) -> None:
+        super().__post_init__(t, subsystem)
+        self.q_c_ab = np.array(subsystem._history["q_c_ab"])
+        self.s_c_ab = np.array(subsystem._history["s_c_ab"])
+        self.enabled = np.array(subsystem._history["enabled"])
 
-    def compute_zoh_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
-        """Compute zero-order hold derived signals."""
-        # The voltage with blocked gates is saved by the model
+    def set_outputs(self, t: np.ndarray, subsystem: VoltageSourceConverter) -> None:
+        """Compute the voltage, which is saved by the model with blocked gates."""
         u_c_ab = self.q_c_ab * self.u_dc - subsystem.u_th * self.s_c_ab
         self.u_c_ab = np.where(self.enabled, u_c_ab, self.u_c_ab)
-
-    def compute_input_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
-        """Process input time series."""
-        self.i_dc_int = subsystem.compute_internal_dc_current(self)
 
 
 # %%
@@ -248,11 +412,14 @@ class DCBus(Subsystem):
     """
     Capacitive DC bus feeding converters.
 
-    The DC bus feeds the given converters, whose DC currents are computed from their
-    switching states and AC currents. The DC-bus voltage is connected to the input
-    `u_dc` of each converter by the model (see `Model`). The DC bus can be shared by
-    the converters of several models (see `CompositeModel`). An external current,
-    e.g., from a battery or a braking chopper, can also be fed to the DC bus.
+    The DC bus feeds the converters of the models it is given to, see `Model`. The
+    model connects its converter to the DC bus through `connect`, which registers the
+    converter in `converters` and gives the connections of its DC terminals, i.e., the
+    DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
+    currents of the registered converters, computed from their switching states and
+    AC currents. The DC bus can be shared by the converters of several models, see
+    `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
+    can also be fed to the DC bus.
 
     Parameters
     ----------
@@ -260,21 +427,36 @@ class DCBus(Subsystem):
         DC-bus capacitance (F).
     u_dc : float
         Initial DC-bus voltage (V).
-    converters : Sequence[VoltageSourceConverter]
-        Converters fed from the DC bus.
 
     """
 
-    def __init__(
-        self, C_dc: float, u_dc: float, converters: Sequence[VoltageSourceConverter]
-    ) -> None:
-        if len({id(c) for c in converters}) < len(converters):
-            raise ValueError("The converters must be distinct")
+    def __init__(self, C_dc: float, u_dc: float) -> None:
         self.C_dc = C_dc
-        self.converters = list(converters)
+        self.converters: list[Converter] = []  # Registered by the models
         self.inp: DCBusInputs = DCBusInputs()
         self.out: DCBusOutputs = DCBusOutputs(u_dc)
         self.state: DCBusStates = DCBusStates(u_dc)
+
+    def connect(
+        self, converter: Converter
+    ) -> dict[tuple[Subsystem, str], tuple[Subsystem, str]]:
+        """
+        Register a converter and get the connections of its DC terminals.
+
+        Parameters
+        ----------
+        converter : Converter
+            Converter fed from the DC bus.
+
+        Returns
+        -------
+        dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+            Connections from the DC bus to the converter, see `Model`.
+
+        """
+        if converter not in self.converters:
+            self.converters.append(converter)
+        return {(converter, "u_dc"): (self, "u_dc")}
 
     def set_external_dc_current(self, i_dc: float | Callable[[float], float]) -> None:
         """Set external DC current (A), constant or a function of time."""
@@ -299,119 +481,12 @@ class DCBus(Subsystem):
 
 
 @dataclass
-class DCBusTimeSeries[T: DCBus](SubsystemTimeSeries):
+class DCBusTimeSeries(SubsystemTimeSeries):
     """Continuous time series."""
 
     t: InitVar[np.ndarray]
-    subsystem: InitVar[T]
+    subsystem: InitVar[DCBus]
     u_dc: np.ndarray = field(default_factory=empty_array)
 
-    def __post_init__(self, t: np.ndarray, subsystem: T) -> None:
+    def __post_init__(self, t: np.ndarray, subsystem: DCBus) -> None:
         self.u_dc = np.real(np.array(subsystem._history["u_dc"]))
-
-
-# %%
-@dataclass
-class DiodeBridgeDCBusStates(DCBusStates):
-    """State variables."""
-
-    i_L: complex = 0j  # Imaginary part is always zero
-    exp_j_theta_g: complex = complex(1)
-
-
-class DiodeBridgeDCBus(DCBus):
-    """
-    DC bus fed from a six-pulse diode bridge.
-
-    A three-phase diode bridge rectifier with a DC-bus inductor is modeled, supplied
-    from a stiff grid, i.e., the grid inductance is zero. The DC bus feeds the given
-    converters, see `DCBus`.
-
-    Parameters
-    ----------
-    C_dc : float
-        DC-bus capacitance (F).
-    L_dc : float
-        DC-bus inductance (H).
-    U_g : float
-        Grid voltage (V, line-line, rms).
-    f_g : float
-        Grid frequency (Hz).
-    converters : Sequence[VoltageSourceConverter]
-        Converters fed from the DC bus.
-
-    """
-
-    def __init__(
-        self,
-        C_dc: float,
-        L_dc: float,
-        U_g: float,
-        f_g: float,
-        converters: Sequence[VoltageSourceConverter],
-    ) -> None:
-        u_dc = sqrt(2) * U_g
-        super().__init__(C_dc, u_dc, converters)
-        self.L_dc = L_dc
-        self.w_g = 2 * np.pi * f_g
-        self.u_g = sqrt(2 / 3) * U_g
-        self.state = DiodeBridgeDCBusStates(u_dc)
-
-    def compute_voltages(self, state: Any) -> tuple[Any, Any]:
-        """Compute grid and rectified voltages."""
-        # Grid voltage
-        u_g_ab = self.u_g * state.exp_j_theta_g
-        u_g_abc = complex2abc(u_g_ab)
-        # Output voltage of the diode bridge
-        u_di = np.ptp(u_g_abc, axis=0)
-        return u_g_ab, u_di
-
-    def compute_derivatives(self, t: float, state: Any) -> list[complex]:
-        """Compute the state derivatives."""
-        _, u_di = self.compute_voltages(state)
-        d_u_dc = (state.i_L.real + self.compute_dc_current(t)) / self.C_dc
-        d_i_L = (u_di - state.u_dc.real) / self.L_dc
-        d_exp_j_theta_g = 1j * self.w_g * state.exp_j_theta_g
-        # Inductor current cannot be negative due to the diode bridge
-        if state.i_L.real < 0 and d_i_L < 0:
-            d_i_L = 0
-        return [d_u_dc, d_i_L, d_exp_j_theta_g]
-
-    def rhs(self, t: float) -> list[complex]:
-        """Compute state derivatives."""
-        return self.compute_derivatives(t, self.state)
-
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "DiodeBridgeDCBusTimeSeries"]:
-        """Create time series from state list."""
-        return "dc_bus", DiodeBridgeDCBusTimeSeries(t, self)
-
-
-@dataclass
-class DiodeBridgeDCBusTimeSeries(DCBusTimeSeries[DiodeBridgeDCBus]):
-    """Continuous time series."""
-
-    subsystem: InitVar[DiodeBridgeDCBus]
-    # State variables
-    i_L: np.ndarray = field(default_factory=empty_array)
-    exp_j_theta_g: np.ndarray = field(default_factory=empty_array)
-    # Derived signals
-    u_g_ab: np.ndarray = field(default_factory=empty_array)
-    u_di: np.ndarray = field(default_factory=empty_array)
-    u_g_abc: np.ndarray = field(default_factory=empty_array)
-    q_g_abc: np.ndarray = field(default_factory=empty_array)
-    i_g_ab: np.ndarray = field(default_factory=empty_array)
-
-    def __post_init__(self, t: np.ndarray, subsystem: DiodeBridgeDCBus) -> None:
-        super().__post_init__(t, subsystem)
-        self.i_L = np.real(np.array(subsystem._history["i_L"]))
-        self.exp_j_theta_g = np.array(subsystem._history["exp_j_theta_g"])
-        self.u_g_ab, self.u_di = subsystem.compute_voltages(self)
-        self.u_g_abc = complex2abc(self.u_g_ab)
-        # Diode bridge switching states (-1, 0, 1)
-        self.q_g_abc = (self.u_g_abc.max(axis=0) == self.u_g_abc).astype(int) - (
-            self.u_g_abc.min(axis=0) == self.u_g_abc
-        ).astype(int)
-        # Grid current space vector
-        self.i_g_ab = abc2complex(self.q_g_abc) * self.i_L

@@ -182,23 +182,20 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
         """Compute output time series from the states."""
         self.psi_s_ab = np.array(subsystem._history["psi_s_ab"])
         self.psi_r_ab = np.array(subsystem._history["psi_r_ab"])
-        # Provisional stator current, since u_s_ab needed for the core-loss current is
-        # not yet available; corrected in compute_input_derived_signals
-        self.i_s_ab, self.i_r_ab, self.tau_M = subsystem.compute_outputs(
-            self, InductionMachineInputs()
-        )
         L_s = get_value(subsystem.par.L_s, np.abs(self.psi_s_ab))
         # Inverse-Γ quantities
         gamma = L_s / (L_s + subsystem.par.L_ell)
         self.psi_R_ab = gamma * self.psi_r_ab
 
-    def compute_input_derived_signals(
+    def set_outputs(self, t: np.ndarray, subsystem: InductionMachine) -> None:
+        """Compute the outputs, which depend on the voltage due to core losses."""
+        self.i_s_ab, self.i_r_ab, self.tau_M = subsystem.compute_outputs(self, self)
+
+    def compute_derived_signals(
         self, t: np.ndarray, subsystem: InductionMachine
     ) -> None:
-        """Compute signals derived from inputs."""
-        self.w_m = subsystem.par.n_p * self.w_M  # Electrical rotor speed
-        if subsystem.par.G_c:
-            self.i_s_ab, _, _ = subsystem.compute_outputs(self, self)
+        """Compute the electrical rotor speed."""
+        self.w_m = subsystem.par.n_p * self.w_M
 
 
 # %%
@@ -384,19 +381,16 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
         self.exp_j_theta_m = np.exp(1j * theta_m)
         self.theta_m = np.angle(self.exp_j_theta_m)
         self.psi_s_ab = self.exp_j_theta_m * self.psi_s_dq
-        # Provisional stator current, since u_s_ab needed for the core-loss current is
-        # not yet available; corrected in compute_input_derived_signals
-        i_s_dq, i_s_ab, tau_M = subsystem.compute_outputs(
-            self, SynchronousMachineInputs()
-        )
+
+    def set_outputs(self, t: np.ndarray, subsystem: SynchronousMachine) -> None:
+        """Compute the outputs, which depend on the voltage due to core losses."""
+        i_s_dq, i_s_ab, tau_M = subsystem.compute_outputs(self, self)
         self.i_s_dq = np.asarray(i_s_dq)
         self.i_s_ab = np.asarray(i_s_ab)
         self.tau_M = np.asarray(tau_M)
 
-    def compute_input_derived_signals(
+    def compute_derived_signals(
         self, t: np.ndarray, subsystem: SynchronousMachine
     ) -> None:
-        """Compute signals derived from inputs."""
-        self.w_m = subsystem.par.n_p * self.w_M  # Electrical rotor speed
-        if subsystem.par.G_c:
-            self.i_s_dq, self.i_s_ab, _ = subsystem.compute_outputs(self, self)
+        """Compute the electrical rotor speed."""
+        self.w_m = subsystem.par.n_p * self.w_M

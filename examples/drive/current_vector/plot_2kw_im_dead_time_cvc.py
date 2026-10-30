@@ -44,11 +44,11 @@ def smooth_sign(i):
 # %%
 # Configure the system model. The Γ-equivalent machine model with main-flux saturation
 # is used. The parameters are based on the measured data of a 2.2-kW machine
-# [#Qu2012]_. The dead time and the threshold voltage are parameters of the converter.
-# The duty ratios are updated once per carrier period (single update), which is
-# common in practice. The sampling period then equals the carrier period, i.e., the
-# switching frequency is 8 kHz, and the computational delay of one sampling period
-# is two half carrier periods.
+# [#Qu2012]_. The dead time is a parameter of the modulator of the converter and the
+# threshold voltage of the converter itself. The duty ratios are updated once per
+# carrier period (single update), which is common in practice. The sampling period
+# then equals the carrier period, i.e., the switching frequency is 8 kHz, and the
+# computational delay of one sampling period (the default) is two half carrier periods.
 
 par = model.InductionMachinePars(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=lambda psi: 0.34 / (1 + (0.84 * psi) ** 7)
@@ -58,10 +58,11 @@ par = model.InductionMachinePars(
 def create_model():
     machine = model.InductionMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
+    modulator = model.ZOH(t_d=t_d, single_update=True)
     converter = model.VoltageSourceConverter(
-        u_dc=540, t_d=t_d, u_th=u_th, sign=smooth_sign
+        u_dc=540, modulator=modulator, u_th=u_th, sign=smooth_sign
     )
-    mdl = model.Drive(machine, mechanics, converter, delay=2, single_update=True)
+    mdl = model.Drive(machine, mechanics, converter)
     mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
     return mdl
 

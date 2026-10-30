@@ -8,7 +8,7 @@ from math import inf, pi
 
 import numpy as np
 
-from motulator.common.control._base import TimeSeries
+from motulator.common.control._base import TimeSeries, rotate_coordinates
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
@@ -345,28 +345,8 @@ def compute_feedback(
 
 
 def to_rotor_flux_coordinates(ts: TimeSeries) -> None:
-    """
-    Transform the controller time series to estimated rotor flux coordinates.
-
-    All complex signals of the feedback and reference groups are rotated, and the angle
-    `fbk.theta_c` is updated to the angle of the new coordinates. Hence, the stationary
-    signals are still obtained as, e.g., `exp(1j*fbk.theta_c)*fbk.i_s`, and the other
-    signal groups in the controller coordinates can be rotated by the change of
-    `fbk.theta_c`. The angular speed `fbk.w_c` is not changed.
-
-    """
-    theta = np.angle(ts.fbk.psi_R)
-    T = np.exp(-1j * theta)
-    ts.ref.u_s = T * ts.ref.u_s
-    ts.ref.u_s_lim = T * ts.ref.u_s_lim
-    ts.ref.i_s = T * ts.ref.i_s
-    ts.fbk.u_s = T * ts.fbk.u_s
-    ts.fbk.u_s_zoh = T * ts.fbk.u_s_zoh
-    ts.fbk.i_s = T * ts.fbk.i_s
-    ts.fbk.psi_s = T * ts.fbk.psi_s
-    ts.fbk.psi_R = T * ts.fbk.psi_R
-    ts.fbk.e_o = T * ts.fbk.e_o
-    ts.fbk.theta_c = wrap(ts.fbk.theta_c + theta)
+    """Transform the controller time series to estimated rotor flux coordinates."""
+    rotate_coordinates(ts, np.angle(ts.fbk.psi_R))
 
 
 # %%

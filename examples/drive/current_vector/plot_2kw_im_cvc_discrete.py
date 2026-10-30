@@ -41,8 +41,7 @@ def simulate(discrete: bool):
     mdl = model.Drive(
         model.InductionMachine(par),
         model.ExternalRotorSpeed(),
-        model.VoltageSourceConverter(u_dc=540),
-        pwm=True,
+        model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
     )
     mdl.mechanics.set_external_rotor_speed(lambda t: 0.5 * base.w_M)
     cfg = control.CurrentVectorControllerCfg(
