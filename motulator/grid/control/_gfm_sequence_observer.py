@@ -101,12 +101,11 @@ class SequenceObserver:
     using the realized converter voltage of the ongoing sampling period.
 
     The observer gains place the poles of the estimation-error dynamics based on the
-    damping ratio `zeta_o` and the natural frequency `omega_o`. In stationary
+    damping ratio `zeta_o` and the natural frequency `omega_o`. In synchronous
     coordinates, the continuous-time poles are
-    `p = omega_o*(-zeta_o ± sqrt(zeta_o**2 - 1))`, i.e., a complex pair for
-    `zeta_o < 1` and real poles otherwise. In synchronous coordinates, they are
-    shifted by `-1j*w_nom`, and the poles of the discrete-time observer are
-    `exp((p - 1j*w_nom)*T_s)`.
+    `s = omega_o*(-zeta_o ± sqrt(zeta_o**2 - 1)) - 1j*w_nom`, i.e., the stationary
+    poles form a complex pair for `zeta_o < 1` and are real otherwise. The poles of
+    the discrete-time observer are `exp(s*T_s)`.
 
     The converter current is separated into its quasi-static sequence components using
     a complex first-order filter. Its discrete-time coefficients are selected such
@@ -146,12 +145,12 @@ class SequenceObserver:
         self.gamma_c = T_s * self.phi / L
         self.gamma_p = (self.phi - 1) / (1j * w_nom * L)
         self.gamma_n = self.phi * self.gamma_p
-        # Observer poles in stationary coordinates, mapped to discrete time in
-        # synchronous coordinates
+        # Continuous-time observer poles in synchronous coordinates
         d = omega_o * csqrt(zeta_o**2 - 1)
-        p_1, p_2 = -zeta_o * omega_o + d, -zeta_o * omega_o - d
-        z_1 = exp((p_1 - 1j * w_nom) * T_s)
-        z_2 = exp((p_2 - 1j * w_nom) * T_s)
+        s_1 = -zeta_o * omega_o + d - 1j * w_nom
+        s_2 = -zeta_o * omega_o - d - 1j * w_nom
+        # Corresponding discrete-time poles
+        z_1, z_2 = exp(s_1 * T_s), exp(s_2 * T_s)
         # Observer gains
         self.k_p = (1 - z_1) * (1 - z_2) / ((1 - self.phi_n) * self.gamma_p)
         self.k_n = (
