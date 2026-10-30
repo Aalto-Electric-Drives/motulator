@@ -41,8 +41,8 @@ def test_average_voltage(pwm_cls: type[ZOH | CarrierComparison], t_d: float) -> 
     "d_abc", [[0.005, 0.5, 0.995], [0, 0.995, 1]], ids=["short_pulses", "clamped"]
 )
 def test_carrier_average_near_limits(d_abc: list[float]) -> None:
-    """Near the duty-ratio limits, the carrier comparison agrees on average with the
-    ZOH and with the duty-ratio error used in the control system."""
+    """Near the duty-ratio limits, the carrier comparison agrees on average with the ZOH
+    and with the duty-ratio error used in the control system."""
     T_s, t_d, i_abc = 1e-4, 2e-6, np.array([4, -1, -3])
     carrier = CarrierComparison(N=10000, t_d=t_d, delay=0)
     for _ in range(2):  # Reach the steady state
@@ -75,8 +75,8 @@ def test_blanking_across_samples() -> None:
 @pytest.mark.parametrize("delay", [1, 2], ids=["half_period", "full_period"])
 def test_single_update(pwm: bool, delay: int) -> None:
     """With single update, the sampling period consists of two half carrier periods,
-    whose duty ratios are delayed by the given number of half carrier periods, and
-    the mean gate signal equals the mean of their duty ratios."""
+    whose duty ratios are delayed by the given number of half carrier periods, and the
+    mean gate signal equals the mean of their duty ratios."""
     T_s, t_d = 2e-4, 2e-6
     d_abc = [[0.25, 0.5, 0.75], [0.5, 0.25, 0.875]]
     cls = CarrierComparison if pwm else ZOH
@@ -148,9 +148,9 @@ def test_modulator_with_other_command() -> None:
 def test_realized_voltage(
     method: Method, u_refs: tuple[float, float], feedforward: bool, average: bool
 ) -> None:
-    """The realized voltage of the control system equals that of the system model,
-    also near the duty-ratio limits, where the error depends on the duty ratios. In
-    DPWM, the feedforward compensates for the error of the clamped leg."""
+    """The realized voltage of the control system equals that of the system model, also
+    near the duty-ratio limits, where the error depends on the duty ratios. In DPWM, the
+    feedforward compensates for the error of the clamped leg."""
     T_s, t_d, u_th, u_dc, i_c_ab = 1e-4, 2e-6, 1.5, 540, 4 + 0j
     d_err = InverterNonlinearity(t_d, u_th)
     pwm = PWM(method=method, d_err=d_err, feedforward=feedforward)
@@ -215,9 +215,8 @@ def test_feedforward_current_prediction() -> None:
 @pytest.mark.parametrize("t_d", [0, 2e-6], ids=["no_d_err", "dead_time"])
 def test_min_pulse(method: Method, t_d: float) -> None:
     """The duty ratios of the switching legs are in [d_min, 1 - d_min], those of the
-    clamped legs are 0 or 1, the limited voltage reference includes the minimum
-    pulses, and the realized voltage equals that of the system model, also in
-    overmodulation."""
+    clamped legs are 0 or 1, the limited voltage reference includes the minimum pulses,
+    and the realized voltage equals that of the system model, also in overmodulation."""
     T_s, u_dc, d_min = 1e-4, 540, 0.04
     d_err = None if t_d == 0 else InverterNonlinearity(t_d)
     pwm = PWM(method=method, d_err=d_err, d_min=d_min)

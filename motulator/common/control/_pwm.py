@@ -27,13 +27,13 @@ class InverterNonlinearity:
 
     The dead time blanks a leg for `t_d` after each switching instant, and the current
     direction determines the leg state during the blanking. Away from the duty-ratio
-    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the
-    half carrier period. Pulses shorter than the dead time are suppressed, and clamped
-    legs have no dead-time error. The threshold voltage `u_th` of the power devices,
-    assumed equal for the switches and the diodes, causes the voltage drop
-    `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`,
-    also in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model
-    is consistent with `motulator.common.model.VoltageSourceConverter`.
+    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the half
+    carrier period. Pulses shorter than the dead time are suppressed, and clamped legs
+    have no dead-time error. The threshold voltage `u_th` of the power devices, assumed
+    equal for the switches and the diodes, causes the voltage drop `sign(i)*u_th` in
+    each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also in the clamped
+    legs. The realized duty ratios are `d_abc - d_err`. This model is consistent with
+    `motulator.common.model.VoltageSourceConverter`.
 
     Parameters
     ----------
@@ -42,14 +42,14 @@ class InverterNonlinearity:
     u_th : float, optional
         Threshold voltage (V) of the power devices, defaults to 0.
     sign : Callable[[np.ndarray], np.ndarray], optional
-        Current-direction function, defaults to `np.sign`. A smooth approximation may
-        be used, matching the converter model.
+        Current-direction function, defaults to `np.sign`. A smooth approximation may be
+        used, matching the converter model.
 
     Notes
     -----
-    This switching-cycle averaged model assumes constant duty ratios and currents
-    over a carrier period. It does not include transients due to changes in the
-    switching commands.
+    This switching-cycle averaged model assumes constant duty ratios and currents over a
+    carrier period. It does not include transients due to changes in the switching
+    commands.
 
     """
 
@@ -96,47 +96,34 @@ class PWM:
     """
     Duty ratios and realized voltage for three-phase carrier-based PWM.
 
-    This computes the duty ratios corresponding to standard space-vector PWM and
-    overmodulation [#Hav1999]_. The realized voltage is reconstructed from the duty
-    ratios and the measured DC-bus voltage, taking into account the computational delay
-    of one sampling period. The angle of the voltage reference is not advanced here:
-    the control systems compensate for the delays, if needed by the controller.
+    This computes the duty ratios for space-vector PWM or discontinuous PWM (DPWM)
+    [#Hav1999]_, including the overmodulation [#Hav1999b]_. The realized voltage is
+    reconstructed from the duty ratios and the measured DC-bus voltage, taking into
+    account the computational delay of one sampling period.
 
-    Optionally, a discontinuous PWM (DPWM) method clamps one leg at a time to the
-    positive or negative DC rail, so that each leg stops switching for 120° of the
-    fundamental period in the linear modulation range [#Hav1999b]_. The average
-    switching frequency is then 2/3 of the carrier frequency. The switching losses are
-    minimized if the clamped leg conducts the largest current: DPWM1 suits a current in
-    phase with the voltage, DPWM2 a current lagging by about 30°, DPWM0 a current
-    leading by about 30°, and DPWM3 a nearly reactive current [#Hav1998]_. At the same
-    average switching frequency, the current ripple of DPWM is lower than that of
-    space-vector PWM in the high modulation range and higher in the low modulation
-    range. The leg is clamped after the overmodulation, i.e., the voltage is the same
-    for all the methods.
+    In DPWM, one leg at a time is clamped to the positive or negative DC rail, so that
+    each leg stops switching for 120° of the fundamental period in the linear modulation
+    range, and the average switching frequency is 2/3 of the carrier frequency. The leg
+    is clamped after the overmodulation, so the voltage is the same as in space-vector
+    PWM. The switching losses are minimized if the clamped leg conducts the largest
+    current: DPWM1 suits a current in phase with the voltage, DPWM2 a current lagging by
+    about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly reactive
+    current. At the same average switching frequency, DPWM gives a lower current ripple
+    than space-vector PWM only in the high modulation range [#Hav1998]_.
 
-    Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
-    dead time and the threshold voltages of the power devices) is modeled as a function
-    of the phase currents, duty ratios, DC-bus voltage, and half carrier period. The
-    realized voltage is corrected for this error using the measured currents, which
-    correspond to the same instant as the realized voltage, and the duty ratios of the
-    corresponding sampling periods.
-    Furthermore, the error can be compensated for by feedforward, in which case the
-    currents are predicted to the middle of the sampling period in which the duty ratios
-    are applied, assuming that they rotate at the angular speed of the synchronous
-    coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
-    duty-dependent error. In DPWM, the error of the clamped leg is compensated for by
-    shifting the other legs.
+    Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such
+    as the dead time and the threshold voltages of the power devices, is taken into
+    account. The realized voltage is corrected for the error using the measured
+    currents. By default, the error is also compensated for by feedforward using the
+    predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
+    compensated for by shifting the other legs.
 
-    Optionally, the pulses are limited to a minimum width, e.g., due to the gate
-    drivers [#Wel2006]_: the duty ratio of a switching leg is in the range
-    `[d_min, 1 - d_min]`, while the duty ratios 0 and 1 (a leg not switching) are not
-    limited. A duty ratio in the range `(0, d_min)` is rounded to 0 (the pulse is
-    dropped) or to `d_min`, and in the range `(1 - d_min, 1)` to `1 - d_min` or 1,
-    whichever gives the realized duty ratio nearer to the duty ratio of the voltage
-    reference. If the duty-ratio error is compensated for, the realized duty ratios are
-    those given by `d_err`, so that the compensation also accounts for the minimum
-    pulses. The limited voltage reference and the realized voltage are computed from
-    the limited duty ratios.
+    Optionally, the duty ratio of a switching leg is limited to the range
+    `[d_min, 1 - d_min]`, e.g., due to the gate drivers [#Wel2006]_. A duty ratio in the
+    range `(0, d_min)` is rounded to 0 or `d_min`, and in the range `(1 - d_min, 1)` to
+    `1 - d_min` or 1, whichever gives the realized duty ratio nearer to that of the
+    voltage reference. The limited voltage reference and the realized voltage include
+    the minimum pulses.
 
     Parameters
     ----------
@@ -144,8 +131,8 @@ class PWM:
         PWM method, defaults to "SVPWM". Valid options are:
 
         - "SVPWM": space-vector PWM
-        - "DPWM0": clamping in the 60° segments preceding the peaks of the phase
-          voltage reference
+        - "DPWM0": clamping in the 60° segments preceding the peaks of the phase voltage
+          reference
         - "DPWM1": clamping in the 60° segments centered at the peaks
         - "DPWM2": clamping in the 60° segments following the peaks
         - "DPWM3": clamping in the 30° segments from 30° to 60° on both sides of the
@@ -168,32 +155,31 @@ class PWM:
         1.5, which corresponds to the middle of the sampling period in which the duty
         ratios are applied after the computational delay of one sampling period.
     d_min : float, optional
-        Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0
-        (no limit). The duty ratio applies to a half carrier period, so the shortest
-        pulse is `d_min` times the half carrier period when a leg starts or stops
-        switching and about twice that otherwise.
+        Minimum duty ratio of a switching leg, in the range [0, 0.5), defaults to 0 (no
+        limit). The duty ratio applies to a half carrier period, so the shortest pulse
+        is `d_min` times the half carrier period when a leg starts or stops switching
+        and about twice that otherwise.
     single_update : bool, optional
         Duty ratios are updated once per carrier period, i.e., the half carrier period
-        is `T_s/2`, defaults to False (twice per carrier period, the half carrier
-        period is `T_s`). Must match the system model.
+        is `T_s/2`, defaults to False (twice per carrier period, the half carrier period
+        is `T_s`). Must match the system model.
 
     References
     ----------
-    .. [#Hav1999] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
-       triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
-       https://doi.org/10.1109/28.777199
-
-    .. [#Hav1999b] Hava, Kerkman, Lipo, "Simple analytical and graphical methods for
+    .. [#Hav1999] Hava, Kerkman, Lipo, "Simple analytical and graphical methods for
        carrier-based PWM-VSI drives," IEEE Trans. Power Electron., 1999,
        https://doi.org/10.1109/63.737592
 
-    .. [#Hav1998] Hava, Kerkman, Lipo, "A high-performance generalized discontinuous
-       PWM algorithm," IEEE Trans. Ind. Appl., 1998,
-       https://doi.org/10.1109/28.720446
+    .. [#Hav1999b] Hava, Sul, Kerkman, Lipo, "Dynamic overmodulation characteristics of
+       triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
+       https://doi.org/10.1109/28.777199
+
+    .. [#Hav1998] Hava, Kerkman, Lipo, "A high-performance generalized discontinuous PWM
+       algorithm," IEEE Trans. Ind. Appl., 1998, https://doi.org/10.1109/28.720446
 
     .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
-       minimum pulse-width limitations in two-level PWM voltage source inverters,"
-       Proc. IEEE IAS Annu. Meeting, 2006, https://doi.org/10.1109/IAS.2006.256630
+       minimum pulse-width limitations in two-level PWM voltage source inverters," Proc.
+       IEEE IAS Annu. Meeting, 2006, https://doi.org/10.1109/IAS.2006.256630
 
     """
 
@@ -282,25 +268,7 @@ class PWM:
         return u_c_ref_ab
 
     def _duty_ratios(self, u_c_ref_ab: complex, u_dc: float) -> list[float]:
-        """
-        Compute the duty ratios for three-phase carrier-based PWM.
-
-        The angle of the reference is modified before this in six-step overmodulation,
-        see `compute_output`.
-
-        Parameters
-        ----------
-        u_c_ref_ab : complex
-            Converter voltage reference (V) in stationary coordinates.
-        u_dc : float
-            DC-bus voltage (V).
-
-        Returns
-        -------
-        d_abc : list[float]
-            Duty ratios.
-
-        """
+        """Compute the duty ratios of the voltage reference."""
         # Phase voltages without the zero-sequence voltage
         u_abc = complex2abc(u_c_ref_ab)
 
@@ -322,28 +290,10 @@ class PWM:
 
     def _clamp(self, u_c_ref_ab: complex, d_abc: np.ndarray) -> np.ndarray:
         """
-        Clamp a leg to the DC rail in discontinuous PWM.
+        Clamp a leg to the DC rail in DPWM by shifting the duty ratios equally.
 
-        The duty ratios are shifted equally, which does not change the voltage, so that
-        the duty ratio of the phase with the largest voltage reference becomes one or
-        that of the phase with the smallest zero. The rail is selected by the magnitude
-        tests of [#Hav1999b]_ for the phase voltage references: the phase with the
-        maximum magnitude in DPWM1, the one with the maximum magnitude after a phase lag
-        of 30° in DPWM2 and a phase lead of 30° in DPWM0, and the one with the
-        intermediate magnitude in DPWM3 is clamped to the rail of its sign.
-
-        Parameters
-        ----------
-        u_c_ref_ab : complex
-            Converter voltage reference (V) in stationary coordinates.
-        d_abc : ndarray, shape (3,)
-            Duty ratios.
-
-        Returns
-        -------
-        ndarray, shape (3,)
-            Shifted duty ratios, unchanged in space-vector PWM. They are not clipped to
-            the range [0, 1].
+        The leg is selected by the magnitude tests of the phase voltage references. The
+        shifted duty ratios are not clipped, and they are unchanged in space-vector PWM.
 
         """
         if self.method == "SVPWM":
@@ -389,8 +339,9 @@ class PWM:
         u_dc : float
             DC-bus voltage (V).
         w : float
-            Angular speed of the synchronous coordinates (rad/s), used for predicting
-            the currents in the feedforward compensation of `d_err`.
+            Angular speed (rad/s) of the synchronous coordinates, at which the currents
+            are assumed to rotate in their prediction for the feedforward compensation
+            of `d_err`.
 
         Returns
         -------
@@ -448,30 +399,10 @@ class PWM:
         """
         Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`.
 
-        A duty ratio in the range `(0, d_min)` is replaced by 0 or `d_min`, and in the
-        range `(1 - d_min, 1)` by `1 - d_min` or 1, whichever gives the realized duty
-        ratio nearer to the reference (if equally near, the leg switches). The duty
-        ratios 0 and 1 are not changed.
-
-        Parameters
-        ----------
-        d_abc : list[float]
-            Duty ratios, including the compensation of the duty-ratio error.
-        d_ref : ndarray, shape (3,)
-            Duty ratios of the voltage reference, i.e., the realized duty ratios aimed
-            at.
-        d_err : Callable[[np.ndarray], np.ndarray], optional
-            Duty-ratio error as a function of the duty ratios, if it is compensated
-            for, in which case the realized duty ratios are `d_abc - d_err(d_abc)`.
-            Defaults to None, in which case the realized duty ratios are `d_abc`.
-
-        Returns
-        -------
-        d_abc : list[float]
-            Limited duty ratios.
-        d_realized : ndarray, shape (3,)
-            Realized duty ratios: `d_ref` for the legs whose duty ratios were not
-            changed and the realized duty ratios of the limited legs.
+        Returns the limited duty ratios and the realized duty ratios, which are `d_ref`
+        for the unchanged legs. If the error is compensated for, the realized duty
+        ratios of the limited legs are `d_abc - d_err(d_abc)` with the bound error
+        `d_err`.
 
         """
         d = np.array(d_abc, dtype=float)
@@ -506,8 +437,6 @@ class PWM:
         voltage is reconstructed from the duty ratios of the previous and the ongoing
         sampling periods and the measured DC-bus voltage, i.e., the variations of the
         DC-bus voltage and of the currents within the periods are not known. The
-        duty-ratio error is evaluated with the half carrier period of the previous
-        sampling period, which is assumed to equal that of the ongoing period. The
         measured currents are also stored for the feedforward compensation of the next
         duty ratios.
 
@@ -519,8 +448,8 @@ class PWM:
             Measured DC-bus voltage (V).
         average : bool, optional
             If True, the average voltage of the previous and the ongoing sampling
-            periods is returned. If False, the voltage of the ongoing sampling period
-            is returned. Defaults to True.
+            periods is returned. If False, the voltage of the ongoing sampling period is
+            returned. Defaults to True.
 
         Returns
         -------
