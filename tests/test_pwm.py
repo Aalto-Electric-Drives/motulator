@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from motulator.common.control import PWM, InverterNonlinearity
+from motulator.common.control._pwm import Method
 from motulator.common.model import (
     ZOH,
     CarrierComparison,
@@ -140,19 +141,22 @@ def test_modulator_with_other_command() -> None:
         ZOH()(1e-4, [[0.5], [], [0.25]])  # type: ignore[arg-type]
 
 
+@pytest.mark.parametrize("method", ["SVPWM", "DPWM1"])
 @pytest.mark.parametrize("u_refs", [(100, 100), (100, 356.4)], ids=["linear", "limit"])
 @pytest.mark.parametrize("feedforward", [True, False], ids=["ff", "no_ff"])
 @pytest.mark.parametrize("average", [True, False], ids=["average", "ongoing"])
 def test_realized_voltage(
-    u_refs: tuple[float, float], feedforward: bool, average: bool
+    method: Method, u_refs: tuple[float, float], feedforward: bool, average: bool
 ) -> None:
     """The realized voltage of the control system equals that of the system model,
-    also near the duty-ratio limits, where the error depends on the duty ratios."""
+    also near the duty-ratio limits, where the error depends on the duty ratios. In
+    DPWM, the feedforward compensates for the error of the clamped leg."""
     T_s, t_d, u_th, u_dc, i_c_ab = 1e-4, 2e-6, 1.5, 540, 4 + 0j
-    pwm = PWM(d_err=InverterNonlinearity(t_d, u_th), feedforward=feedforward)
+    d_err = InverterNonlinearity(t_d, u_th)
+    pwm = PWM(method=method, d_err=d_err, feedforward=feedforward)
     converter = VoltageSourceConverter(u_dc, u_th=u_th)
     converter.inp.i_c_ab = i_c_ab
-    realized = []
+    realized, d_abc = [], []
     for u_ref in u_refs:
         pwm.get_realized_voltage(i_c_ab, u_dc)
         d_abc = pwm(T_s, u_ref, u_dc, w=0)
@@ -165,6 +169,7 @@ def test_realized_voltage(
     assert u_c_ab == pytest.approx(expected)
     if feedforward and u_refs[0] == u_refs[1]:
         assert expected == pytest.approx(u_refs[0])
+        assert d_abc[0] == 1 if method == "DPWM1" else d_abc[0] < 1
 
 
 @pytest.mark.parametrize("average", [True, False], ids=["average", "ongoing"])
@@ -206,15 +211,16 @@ def test_feedforward_current_prediction() -> None:
     assert currents[-1] == pytest.approx(expected)
 
 
+@pytest.mark.parametrize("method", ["SVPWM", "DPWM1"])
 @pytest.mark.parametrize("t_d", [0, 2e-6], ids=["no_d_err", "dead_time"])
-def test_min_pulse(t_d: float) -> None:
+def test_min_pulse(method: Method, t_d: float) -> None:
     """The duty ratios of the switching legs are in [d_min, 1 - d_min], those of the
     clamped legs are 0 or 1, the limited voltage reference includes the minimum
     pulses, and the realized voltage equals that of the system model, also in
     overmodulation."""
     T_s, u_dc, d_min = 1e-4, 540, 0.04
     d_err = None if t_d == 0 else InverterNonlinearity(t_d)
-    pwm = PWM(d_err=d_err, d_min=d_min)
+    pwm = PWM(method=method, d_err=d_err, d_min=d_min)
     converter = VoltageSourceConverter(u_dc)
     rng = np.random.default_rng(0)
     limited = 0
@@ -238,6 +244,27 @@ def test_min_pulse(t_d: float) -> None:
         u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=False)
         assert u_c_ab == pytest.approx(u_dc * converter.inp.q_c_ab)
     assert limited > 50  # The limits were reached
+
+
+@pytest.mark.parametrize("method", ["SVPWM", "DPWM2"])
+def test_min_pulse_threshold_voltage(method: Method) -> None:
+    """With the compensation of the threshold voltages, the limited voltage reference
+    equals the realized voltage, also in DPWM, in which the compensation shifts the
+    realized duty ratios, and the minimum pulse is selected by the realized voltage."""
+    T_s, u_dc, u_th, d_min = 1e-4, 540, 1.5, 0.04
+    pwm = PWM(method=method, d_err=InverterNonlinearity(u_th=u_th), d_min=d_min)
+    converter = VoltageSourceConverter(u_dc, u_th=u_th)
+    converter.inp.i_c_ab = i_c_ab = 10 * np.exp(1j * np.pi / 4)
+    # In DPWM2, phase a is clamped to the positive rail and phase b is near it
+    u_ref = u_dc * abc2complex([1, 0.978, 0.45])
+    pwm.get_realized_voltage(i_c_ab, u_dc)
+    d_abc = pwm(T_s, u_ref, u_dc, w=0)
+    _, gates = ZOH(delay=0)(T_s, d_abc)
+    converter.set_gates(gates[0])
+    converter.set_outputs(0)
+    assert pwm.limited_voltage == pytest.approx(converter.out.u_c_ab)
+    if method == "DPWM2":
+        assert d_abc[:2] == [1, 1 - d_min]  # Nearer to the reference than 1
 
 
 def test_min_pulse_dead_time() -> None:
@@ -280,8 +307,51 @@ def test_min_pulse_dead_time() -> None:
 
 
 def test_invalid_configuration() -> None:
-    """The minimum duty ratio must be in [0, 0.5), and the overmodulation valid."""
+    """The minimum duty ratio must be in [0, 0.5), and the methods valid."""
     with pytest.raises(ValueError, match="d_min"):
         PWM(d_min=0.5)
     with pytest.raises(ValueError, match="overmodulation"):
         PWM(overmodulation="mpe")  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="PWM method"):
+        PWM(method="DPWM")  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize(
+    ("method", "segments"),
+    [
+        ("DPWM0", [(-60, 0)]),
+        ("DPWM1", [(-30, 30)]),
+        ("DPWM2", [(0, 60)]),
+        ("DPWM3", [(-60, -30), (30, 60)]),
+    ],
+)
+@pytest.mark.parametrize(
+    "u_ref", [4, 200, 400], ids=["low", "linear", "overmodulation"]
+)
+def test_discontinuous_pwm(
+    method: Method, segments: list[tuple[float, float]], u_ref: float
+) -> None:
+    """In DPWM, the voltage equals that of space-vector PWM, and in the linear range,
+    one leg at a time is clamped: to the positive rail in the segments around the
+    positive peak of its voltage reference and to the negative rail in the segments
+    around the negative peak. The feedforward compensation keeps the leg clamped, also
+    if the duty-ratio error changes the order of the duty ratios."""
+    T_s, u_dc = 1e-4, 540
+    svpwm, dpwm = PWM(), PWM(method=method)
+    ff = PWM(method=method, d_err=InverterNonlinearity(t_d=2e-6, u_th=1.5))
+    for theta in np.arange(0.5, 360, 1):
+        u_c_ref_ab = u_ref * np.exp(1j * np.deg2rad(theta))
+        d_sv = np.array(svpwm.duty_ratios(u_c_ref_ab, u_dc))
+        d = np.array(dpwm.duty_ratios(u_c_ref_ab, u_dc))
+        assert abc2complex(d) == pytest.approx(abc2complex(d_sv))
+        if u_ref < u_dc / np.sqrt(3):
+            # Angles (deg) from the positive and negative peaks of phase a
+            angles = ((theta + 180) % 360 - 180, theta - 180)
+            for rail, angle in zip((1, 0), angles, strict=True):
+                assert (d[0] == rail) == any(a < angle < b for a, b in segments)
+            clamped = (d == 0) | (d == 1)
+            assert np.sum(clamped) == 1
+            # Current lagging the voltage by 30°
+            ff.get_realized_voltage(10 * np.exp(1j * np.deg2rad(theta - 30)), u_dc)
+            d_ff = np.array(ff(T_s, u_c_ref_ab, u_dc, w=0))
+            assert np.array_equal(d_ff[clamped], d[clamped])

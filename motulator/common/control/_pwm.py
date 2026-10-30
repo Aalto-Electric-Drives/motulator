@@ -1,8 +1,8 @@
 """
 Pulse-width modulation (PWM) for three-phase converters.
 
-This module contains implementations of space-vector PWM with different overmodulation
-strategies.
+This module contains implementations of space-vector PWM and discontinuous PWM with
+different overmodulation strategies.
 
 """
 
@@ -18,6 +18,7 @@ from motulator.common.utils._dead_time import averaged_gate_signals
 
 # %%
 DutyRatioError = Callable[[np.ndarray, np.ndarray, float, float], np.ndarray]
+Method = Literal["SVPWM", "DPWM0", "DPWM1", "DPWM2", "DPWM3"]
 
 
 class InverterNonlinearity:
@@ -93,13 +94,25 @@ class InverterNonlinearity:
 # %%
 class PWM:
     """
-    Duty ratios and realized voltage for three-phase space-vector PWM.
+    Duty ratios and realized voltage for three-phase carrier-based PWM.
 
     This computes the duty ratios corresponding to standard space-vector PWM and
     overmodulation [#Hav1999]_. The realized voltage is reconstructed from the duty
     ratios and the measured DC-bus voltage, taking into account the computational delay
     of one sampling period. The angle of the voltage reference is not advanced here:
     the control systems compensate for the delays, if needed by the controller.
+
+    Optionally, a discontinuous PWM (DPWM) method clamps one leg at a time to the
+    positive or negative DC rail, so that each leg stops switching for 120° of the
+    fundamental period in the linear modulation range [#Hav1999b]_. The average
+    switching frequency is then 2/3 of the carrier frequency. The switching losses are
+    minimized if the clamped leg conducts the largest current: DPWM1 suits a current in
+    phase with the voltage, DPWM2 a current lagging by about 30°, DPWM0 a current
+    leading by about 30°, and DPWM3 a nearly reactive current [#Hav1998]_. At the same
+    average switching frequency, the current ripple of DPWM is lower than that of
+    space-vector PWM in the high modulation range and higher in the low modulation
+    range. The leg is clamped after the overmodulation, i.e., the voltage is the same
+    for all the methods.
 
     Optionally, the duty-ratio error caused by the inverter nonlinearities (such as the
     dead time and the threshold voltages of the power devices) is modeled as a function
@@ -111,7 +124,8 @@ class PWM:
     currents are predicted to the middle of the sampling period in which the duty ratios
     are applied, assuming that they rotate at the angular speed of the synchronous
     coordinates. Near the duty-ratio limits, the feedforward may not fully cancel a
-    duty-dependent error.
+    duty-dependent error. In DPWM, the error of the clamped leg is compensated for by
+    shifting the other legs.
 
     Optionally, the pulses are limited to a minimum width, e.g., due to the gate
     drivers [#Wel2006]_: the duty ratio of a switching leg is in the range
@@ -126,8 +140,19 @@ class PWM:
 
     Parameters
     ----------
+    method : Literal["SVPWM", "DPWM0", "DPWM1", "DPWM2", "DPWM3"], optional
+        PWM method, defaults to "SVPWM". Valid options are:
+
+        - "SVPWM": space-vector PWM
+        - "DPWM0": clamping in the 60° segments preceding the peaks of the phase
+          voltage reference
+        - "DPWM1": clamping in the 60° segments centered at the peaks
+        - "DPWM2": clamping in the 60° segments following the peaks
+        - "DPWM3": clamping in the 30° segments from 30° to 60° on both sides of the
+          peaks
     overmodulation : Literal["MPE", "MME", "six_step"], optional
         Overmodulation method, defaults to "MPE". Valid options are:
+
         - "MPE": minimum phase error
         - "MME": minimum magnitude error
         - "six_step": six-step operation
@@ -158,6 +183,14 @@ class PWM:
        triangle intersection PWM methods," IEEE Trans. Ind. Appl., 1999,
        https://doi.org/10.1109/28.777199
 
+    .. [#Hav1999b] Hava, Kerkman, Lipo, "Simple analytical and graphical methods for
+       carrier-based PWM-VSI drives," IEEE Trans. Power Electron., 1999,
+       https://doi.org/10.1109/63.737592
+
+    .. [#Hav1998] Hava, Kerkman, Lipo, "A high-performance generalized discontinuous
+       PWM algorithm," IEEE Trans. Ind. Appl., 1998,
+       https://doi.org/10.1109/28.720446
+
     .. [#Wel2006] Welchko, Schulz, Hiti, "Effects and compensation of dead-time and
        minimum pulse-width limitations in two-level PWM voltage source inverters,"
        Proc. IEEE IAS Annu. Meeting, 2006, https://doi.org/10.1109/IAS.2006.256630
@@ -166,6 +199,7 @@ class PWM:
 
     def __init__(
         self,
+        method: Method = "SVPWM",
         overmodulation: Literal["MPE", "MME", "six_step"] = "MPE",
         d_err: DutyRatioError | None = None,
         feedforward: bool = True,
@@ -175,8 +209,11 @@ class PWM:
     ) -> None:
         if not 0 <= d_min < 0.5:
             raise ValueError("d_min must be in the range [0, 0.5)")
+        if method not in ("SVPWM", "DPWM0", "DPWM1", "DPWM2", "DPWM3"):
+            raise ValueError(f"Invalid PWM method: {method}")
         if overmodulation not in ("MPE", "MME", "six_step"):
             raise ValueError(f"Invalid overmodulation method: {overmodulation}")
+        self.method = method
         self.k_pred = k_pred
         self.overmodulation = overmodulation
         self.d_err = d_err
@@ -246,7 +283,7 @@ class PWM:
 
     def duty_ratios(self, u_c_ref_ab: complex, u_dc: float) -> list[float]:
         """
-        Compute the duty ratios for three-phase space-vector PWM.
+        Compute the duty ratios for three-phase carrier-based PWM.
 
         Parameters
         ----------
@@ -277,7 +314,50 @@ class PWM:
         d_abc = u_abc / u_dc + 0.5
 
         # MME overmodulation (does nothing if MPE already used)
-        d_abc = [max(min(d, 1.0), 0.0) for d in d_abc]
+        d_abc = np.clip(d_abc, 0, 1)
+        return list(self.clamp(u_c_ref_ab, d_abc))
+
+    def clamp(self, u_c_ref_ab: complex, d_abc: np.ndarray) -> np.ndarray:
+        """
+        Clamp a leg to the DC rail in discontinuous PWM.
+
+        The duty ratios are shifted equally, which does not change the voltage, so that
+        the duty ratio of the phase with the largest voltage reference becomes one or
+        that of the phase with the smallest zero. The rail is selected by the magnitude
+        tests of [#Hav1999b]_ for the phase voltage references: the phase with the
+        maximum magnitude in DPWM1, the one with the maximum magnitude after a phase lag
+        of 30° in DPWM2 and a phase lead of 30° in DPWM0, and the one with the
+        intermediate magnitude in DPWM3 is clamped to the rail of its sign.
+
+        Parameters
+        ----------
+        u_c_ref_ab : complex
+            Converter voltage reference (V) in stationary coordinates.
+        d_abc : ndarray, shape (3,)
+            Duty ratios.
+
+        Returns
+        -------
+        ndarray, shape (3,)
+            Shifted duty ratios, unchanged in space-vector PWM. They are not clipped to
+            the range [0, 1].
+
+        """
+        if self.method == "SVPWM":
+            return d_abc
+        u_abc = complex2abc(u_c_ref_ab)
+        if self.method == "DPWM3":
+            positive = max(u_abc) < -min(u_abc)
+        else:
+            psi = {"DPWM0": 0, "DPWM1": pi / 6, "DPWM2": pi / 3}[self.method]
+            u_x = complex2abc(exp(-1j * (psi - pi / 6)) * u_c_ref_ab)
+            positive = max(u_x) > -min(u_x)
+        # The leg is selected by the reference, since the compensation of the duty-ratio
+        # error may change the order of the duty ratios
+        k = int(np.argmax(u_abc) if positive else np.argmin(u_abc))
+        rail = 1.0 if positive else 0.0
+        d_abc = d_abc + rail - d_abc[k]
+        d_abc[k] = rail  # Exactly, since the leg must not switch
         return d_abc
 
     def _half_period(self, T_s: float) -> float:
@@ -337,7 +417,13 @@ class PWM:
         if self.d_err is not None and self.feedforward:
             i_c_abc = complex2abc(exp(1j * self.k_pred * T_s * w) * self._i_c_ab)
             d_err = self._bind(self.d_err, i_c_abc, u_dc, self._half_period(T_s))
-            d_abc = list(np.clip(d_ref + d_err(d_ref), 0, 1))
+            err = d_err(d_ref)
+            d_comp = self.clamp(u_c_ref_ab, d_ref + err)
+            if self.method != "SVPWM":
+                # The error of the clamped leg is compensated for by the other legs,
+                # which shifts the realized duty ratios aimed at
+                d_ref = d_comp - err
+            d_abc = list(np.clip(d_comp, 0, 1))
 
         # Minimum pulses and the duty ratios realized with them
         d_realized = d_ref

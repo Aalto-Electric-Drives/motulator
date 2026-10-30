@@ -152,7 +152,7 @@ label: carrier_comparison
 where $\qcs$ is the switching-state space vector.
 
 ```{note}
-The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM (see {class}`motulator.common.control.PWM`) and discontinuous PWM {cite}`Hol1994,Hav1999`.
+The carrier comparison is compatible with all standard pulse-width modulation (PWM) methods, such as space-vector PWM and discontinuous PWM {cite}`Hol1994,Hav1999` (see {class}`motulator.common.control.PWM`).
 ```
 
 ## Switching-Cycle Averaging
