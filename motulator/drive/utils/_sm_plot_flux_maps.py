@@ -193,8 +193,8 @@ def plot_map(
     component : {"d", "q"}
         Which component to plot: "d" for d-axis, "q" for q-axis.
     base : BaseValues, optional
-        Base values for scaling the maps. If not given, the maps are plotted
-        in SI units.
+        Base values for scaling the maps. If not given, the maps are plotted in SI
+        units.
     lims : dict[str, tuple[float, float]], optional
         Axis limits. Keys should be 'x', 'y', 'z'.
     ticks : dict[str, ArrayLike], optional
@@ -336,8 +336,8 @@ def plot_flux_vs_current(
     data : MagneticModel
         Flux map data. The current array should be a rectilinear grid.
     base : BaseValues, optional
-        Base values for scaling the maps. If not given, the maps are plotted
-        in SI units.
+        Base values for scaling the maps. If not given, the maps are plotted in SI
+        units.
     x_lims : tuple[float, float], optional
         x-axis limits. If None, uses automatic scaling.
     x_ticks : ArrayLike, optional

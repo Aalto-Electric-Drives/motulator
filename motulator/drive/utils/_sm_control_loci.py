@@ -83,7 +83,7 @@ class ControlLoci:
     ----------
     .. [#Mor1994] Morimoto, Sanada, Takeda, "Wide-speed operation of interior permanent
        magnet synchronous motors with high-performance current regulator," IEEE Trans.
-       Ind. Appl., https://doi.org/10.1109/28.297908
+       Ind. Appl., 1994, https://doi.org/10.1109/28.297908
 
     .. [#Var2022] Varatharajan, Pellegrino, Armando, "Direct flux vector control of
        synchronous motor drives: Accurate decoupled control with online adaptive maximum
@@ -225,8 +225,8 @@ class ControlLoci:
             Current limit (A).
         gamma_range : tuple, optional
             Range of the current angle (electrical rad), defaults to (pi, pi/2) for PM
-            machines and (pi/2, 0) for machines without PMs. If the first element is
-            NaN (no MTPV), the range starts from pi or pi/2, respectively.
+            machines and (pi/2, 0) for machines without PMs. If the first element is NaN
+            (no MTPV), the range starts from pi or pi/2, respectively.
         num : int, optional
             Number of points.
 

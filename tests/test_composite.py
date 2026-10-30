@@ -271,8 +271,8 @@ def test_sampling_period_changes_during_run() -> None:
 
 @pytest.mark.parametrize("passive", [True, False])
 def test_constant_dc_bus_voltage(passive: bool) -> None:
-    """Without a DC bus, the DC-bus voltage of a converter is the constant given to
-    it, which can be zero but must be given."""
+    """Without a DC bus, the DC-bus voltage of a converter is the constant given to it,
+    which can be zero but must be given."""
 
     def system(u_dc: float | None) -> grid_model.GridConverterSystem:
         converter = (

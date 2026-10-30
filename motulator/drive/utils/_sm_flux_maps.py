@@ -99,9 +99,9 @@ class MagneticModel:
     psi_s_dq : np.ndarray
         Complex array of stator flux linkage (Vs).
     lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional
-        Function that evaluates the map at arbitrary points. Takes complex inputs
-        (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;
-        for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
+        Function that evaluates the map at arbitrary points. Takes complex inputs (d +
+        j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq; for
+        current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
         function, which extrapolates outside the map range, is created from the data.
     tau_M : np.ndarray, optional
         Array of electromagnetic torque (Nm).
@@ -299,9 +299,8 @@ class SaturationModelBase:
         Parameters
         ----------
         map_fcn : Callable, optional
-            Callable implementing either a current map (psi_s -> i_s) or a flux map
-            (i_s -> psi_s). If not provided, subclasses are expected to override
-            `__call__`.
+            Callable implementing either a current map (psi_s -> i_s) or a flux map (i_s
+            -> psi_s). If not provided, subclasses are expected to override `__call__`.
         map_type : {"current_map", "flux_map"}, optional
             Declares what the model represents, defaults to "current_map".
 

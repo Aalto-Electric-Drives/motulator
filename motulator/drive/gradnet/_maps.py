@@ -3,8 +3,8 @@ Trained GradNets as numpy functions and the magnetic maps based on them.
 
 A trained network is evaluated in double precision with numpy, so the maps need no
 PyTorch. The function `GradNetFunction` holds the parameters of the network, and it is
-saved to and loaded from an npz file. The networks are trained with the related
-package motulator-gradnet.
+saved to and loaded from an npz file. The networks are trained with the related package
+motulator-gradnet.
 
 """
 
@@ -92,10 +92,10 @@ class GradNetFunction:
     """
     Trained GradNet as a numpy function in double precision.
 
-    The function maps the per-unit input, shape (..., in_dim), to the per-unit output
-    of the same shape, which is the gradient of the scalar state function of the
-    network. It is created from a trained model by the related package
-    motulator-gradnet, saved to an npz file by `save`, and loaded by `load_gradnet`.
+    The function maps the per-unit input, shape (..., in_dim), to the per-unit output of
+    the same shape, which is the gradient of the scalar state function of the network.
+    It is created from a trained model by the related package motulator-gradnet, saved
+    to an npz file by `save`, and loaded by `load_gradnet`.
 
     Parameters
     ----------
@@ -157,8 +157,8 @@ class GradNetFunction:
         y : ndarray, shape (..., in_dim)
             Per-unit output.
         jac : ndarray, shape (..., in_dim, in_dim) | None
-            Jacobian matrix of the output with respect to the input (the Hessian of
-            the underlying scalar state function), if requested.
+            Jacobian matrix of the output with respect to the input (the Hessian of the
+            underlying scalar state function), if requested.
 
         """
         y = self._mu * x + self.bias
@@ -270,8 +270,8 @@ class FluxMap(CurrentMap):
     """
     Callable wrapper for GradNet flux-linkage map models.
 
-    The map returns the stator flux linkage (Vs) at the given stator current (A). It
-    is symmetrized about the d-axis to ensure physical consistency.
+    The map returns the stator flux linkage (Vs) at the given stator current (A). It is
+    symmetrized about the d-axis to ensure physical consistency.
 
     Parameters
     ----------

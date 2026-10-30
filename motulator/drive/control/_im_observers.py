@@ -60,9 +60,8 @@ class FluxObserver:
     providing the saturation model via `InductionMachinePars`.
 
     The flux estimate is corrected and predicted using a hold-equivalent discrete-time
-    model, and the estimation error is the difference between the rotor flux
-    predictions of the current model and the voltage model, cf. [#Bot1993]_,
-    [#Hin2018]_.
+    model, and the estimation error is the difference between the rotor flux predictions
+    of the current model and the voltage model, cf. [#Bot1993]_, [#Hin2018]_.
 
     Parameters
     ----------
@@ -121,10 +120,10 @@ class FluxObserver:
         Parameters
         ----------
         u_s_ab : complex | None
-            Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one. If
-            None (unknown voltage, e.g., with blocked gates), the flux estimate
-            follows the current model alone.
+            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+            period, i.e., from this sampling instant to the next one. If None (unknown
+            voltage, e.g., with blocked gates), the flux estimate follows the current
+            model alone.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -397,9 +396,9 @@ def create_speed_flux_observer(
     par : InductionMachineInvGammaPars | InductionMachinePars
         Machine model parameters.
     alpha_o : float | None
-        Speed estimation poles (rad/s). If None, defaults to 2*pi*60 if `sensorless`
-        is True, otherwise 2*pi*400. If `J` is given, the default is halved, which
-        keeps the speed estimation gain approximately the same.
+        Speed estimation poles (rad/s). If None, defaults to 2*pi*60 if `sensorless` is
+        True, otherwise 2*pi*400. If `J` is given, the default is halved, which keeps
+        the speed estimation gain approximately the same.
     T_s : float
         Sampling period (s), see :class:`SpeedFluxObserver`.
     k_o : Callable[[float], complex], optional

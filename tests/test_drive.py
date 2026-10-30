@@ -261,9 +261,9 @@ def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
     """
     Speed-estimation gain k_w of the observer created by the configuration.
 
-    The sampling period is short, so the gains equal those of the continuous-time
-    design (the poles are matched to the sampling period). The configuration is
-    modified by `replace()`, so the defaults must not be resolved at its creation.
+    The sampling period is short, so the gains equal those of the continuous-time design
+    (the poles are matched to the sampling period). The configuration is modified by
+    `replace()`, so the defaults must not be resolved at its creation.
     """
     kwargs["T_s"] = 1e-7
     if machine == "sm":
@@ -488,8 +488,8 @@ def test_discrete_current_control_angle_estimate() -> None:
 
 
 def test_discrete_current_control_dead_time() -> None:
-    """The feedforward compensation of the dead time and the threshold voltage causes
-    no steady-state error."""
+    """The feedforward compensation of the dead time and the threshold voltage causes no
+    steady-state error."""
     T_s, t_d, u_th, w_M = 200e-6, 4e-6, 1.5, 75.0
     mdl = model.Drive(
         model.InductionMachine(

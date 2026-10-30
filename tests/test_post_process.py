@@ -145,8 +145,8 @@ class _SubsystemWithSignal(Subsystem):
 
 
 def test_state_history_extended_by_states_only() -> None:
-    """The state history is extended by the states, whose number gives the index of
-    the next subsystem, even if the history holds other signals as well."""
+    """The state history is extended by the states, whose number gives the index of the
+    next subsystem, even if the history holds other signals as well."""
     subsystem = _SubsystemWithSignal()
     subsystem.init_state_history()
     sol_y = [[1.0, 2.0], [3.0, 4.0]]  # Two states of a model, two solution points

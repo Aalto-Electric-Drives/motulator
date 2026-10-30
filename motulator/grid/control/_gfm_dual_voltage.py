@@ -28,13 +28,13 @@ class DisturbancePowerObserver:
     Disturbance-power observer.
 
     This observer estimates the disturbance power, i.e., the external power fed to the
-    DC bus minus the grid power and the resistive losses, from the energy balance of
-    the DC-bus capacitor and the inductor [#Mou2025]_. The estimate is `p_dis = x +
-    alpha_o_dc*(W_dc + 0.75*L*|i_c|**2)`, where the auxiliary state `x` is updated by
-    `dx/dt = -(1.5/L)*Re{u_g*conj(e_c)} - alpha_o_dc*p_dis` and `e_c` is the realized
-    feedback correction, i.e., the realized converter voltage minus the quasi-static
-    converter voltage. The derivatives of the energies are thus integrated directly. On
-    the first call, the disturbance power is assumed to be zero.
+    DC bus minus the grid power and the resistive losses, from the energy balance of the
+    DC-bus capacitor and the inductor [#Mou2025]_. The estimate is
+    `p_dis = x + alpha_o_dc*(W_dc + 0.75*L*|i_c|**2)`, where the auxiliary state `x` is
+    updated by `dx/dt = -(1.5/L)*Re{u_g*conj(e_c)} - alpha_o_dc*p_dis` and `e_c` is the
+    realized feedback correction, i.e., the realized converter voltage minus the
+    quasi-static converter voltage. The derivatives of the energies are thus integrated
+    directly. On the first call, the disturbance power is assumed to be zero.
 
     Parameters
     ----------
@@ -82,11 +82,11 @@ class DualVoltageFormingControllerCfg:
     R : float, optional
         Total series resistance estimate (Ω), defaults to 0.
     k_d : float | None, optional
-        DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the
-        base power `1.5*u_nom*i_max`.
+        DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the base
+        power `1.5*u_nom*i_max`.
     alpha_dc : float, optional
-        Approximate closed-loop bandwidth of the DC-bus energy control (rad/s),
-        defaults to 2*pi*7.5.
+        Approximate closed-loop bandwidth of the DC-bus energy control (rad/s), defaults
+        to 2*pi*7.5.
     alpha_o : float, optional
         Observer bandwidth of the quasi-static converter voltage (rad/s), defaults to
         2*pi*100.
@@ -129,12 +129,12 @@ class DualVoltageFormingController:
     magnitude [#Mou2025]_, extending the disturbance-observer-based grid-forming control
     [#Nur2024b]_. The disturbance observer estimates the quasi-static converter voltage
     as in `ObserverBasedGridFormingController`, and a second observer estimates the
-    disturbance power, i.e., the external power fed to the DC bus minus the grid
-    power and the resistive losses, from the energy balance of the DC-bus capacitor
-    and the inductor. The control law feeds the estimated disturbance power forward and
-    corrects the DC-bus energy error, which controls the active power without a
-    cascaded DC-bus voltage controller. The disturbance observers provide the integral
-    action and the synchronization. Transparent current control is also implemented.
+    disturbance power, i.e., the external power fed to the DC bus minus the grid power
+    and the resistive losses, from the energy balance of the DC-bus capacitor and the
+    inductor. The control law feeds the estimated disturbance power forward and corrects
+    the DC-bus energy error, which controls the active power without a cascaded DC-bus
+    voltage controller. The disturbance observers provide the integral action and the
+    synchronization. Transparent current control is also implemented.
 
     Parameters
     ----------
@@ -144,9 +144,9 @@ class DualVoltageFormingController:
     Notes
     -----
     The control law equals the grid-forming mode of `ObserverBasedGridFormingController`
-    with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power
-    reference `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g`
-    is the estimated external power fed to the DC bus, excluding the resistive losses
+    with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power reference
+    `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g` is the
+    estimated external power fed to the DC bus, excluding the resistive losses
     `1.5*R*|i_c|**2`. This equivalent reference is logged in `ref.p_g`.
 
     References

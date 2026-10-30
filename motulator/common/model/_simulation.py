@@ -41,11 +41,10 @@ class SolverCfg:
     ----------
     max_step : float, optional
         Maximum step size (s) for the integrator. Defaults to None, i.e., 1e-4 s while
-        the gates of a converter are blocked, so that the solver locates the
-        transitions of the diodes driven by the AC voltages, and without control
-        systems, so that the solver resolves the waveforms. Otherwise, the step size is
-        not limited, since the sampling and switching instants limit the integration
-        intervals.
+        the gates of a converter are blocked, so that the solver locates the transitions
+        of the diodes driven by the AC voltages, and without control systems, so that
+        the solver resolves the waveforms. Otherwise, the step size is not limited,
+        since the sampling and switching instants limit the integration intervals.
     method : str, optional
         Integration method, defaults to "RK45".
     rtol : float, optional
@@ -87,8 +86,8 @@ class SimulationResults:
         system. For a composite model, the results of each control system are an
         attribute by the model name (None for a model without a control system).
     success : bool
-        False if the simulation stopped before the stop time due to a numerical
-        failure, in which case the results cover the time until the failure.
+        False if the simulation stopped before the stop time due to a numerical failure,
+        in which case the results cover the time until the failure.
 
     """
 
@@ -101,11 +100,11 @@ class Simulation:
     """
     Simulation environment.
 
-    Each control system is called at its own sampling instants, which gives the
-    sampling period of its next control cycle. The control systems of a composite
-    model can have different sampling periods, and their sampling instants need not
-    coincide. The switching states of the converters are held constant between the
-    sampling and switching instants of all the converters.
+    Each control system is called at its own sampling instants, which gives the sampling
+    period of its next control cycle. The control systems of a composite model can have
+    different sampling periods, and their sampling instants need not coincide. The
+    switching states of the converters are held constant between the sampling and
+    switching instants of all the converters.
 
     Parameters
     ----------
@@ -113,18 +112,18 @@ class Simulation:
         Continuous-time system model.
     ctrl : ControlSystem | Mapping[str, ControlSystem], optional
         Discrete-time control system of a model with a controlled converter. For a
-        composite model, the control systems of the models with controlled converters
-        by the model names. Defaults to None, i.e., no control systems.
+        composite model, the control systems of the models with controlled converters by
+        the model names. Defaults to None, i.e., no control systems.
     show_progress : bool, optional
         Show progress during simulation, defaults to True.
     cfg : SolverCfg, optional
         Solver configuration parameters.
     t_start : float | Mapping[str, float], optional
-        First sampling instant (s) of the control system or, for a composite model,
-        of the control systems by the model names. The time `ctrl.t` of the control
-        system is set to this value. Defaults to the initial time of the model, as do
-        the control systems not included in the mapping, in which case `ctrl.t` is
-        not changed.
+        First sampling instant (s) of the control system or, for a composite model, of
+        the control systems by the model names. The time `ctrl.t` of the control system
+        is set to this value. Defaults to the initial time of the model, as do the
+        control systems not included in the mapping, in which case `ctrl.t` is not
+        changed.
 
     """
 
@@ -193,9 +192,8 @@ class Simulation:
         """
         Solve continuous-time system model and call control system.
 
-        The simulation runs until the first sampling instant after `t_stop`, or
-        until `t_stop` without control systems. A subsequent call continues the
-        simulation.
+        The simulation runs until the first sampling instant after `t_stop`, or until
+        `t_stop` without control systems. A subsequent call continues the simulation.
 
         Parameters
         ----------
@@ -205,8 +203,8 @@ class Simulation:
             Number of evenly spaced data points to be returned by the solver for each
             integration interval, i.e., for each interval between the sampling and
             switching instants, or for the whole simulation without control systems.
-            Defaults to 0, in which case the number and spacing of points is selected
-            by the solver.
+            Defaults to 0, in which case the number and spacing of points is selected by
+            the solver.
 
         """
         progress_bar = None

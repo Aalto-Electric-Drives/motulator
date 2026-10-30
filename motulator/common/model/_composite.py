@@ -20,13 +20,13 @@ class CompositeModel(Model[None]):
     """
     Composite of models sharing subsystems.
 
-    The models are coupled through shared subsystem objects, e.g., a DC bus given to
-    the models of a grid converter and a drive. Each model keeps its converter, whose
+    The models are coupled through shared subsystem objects, e.g., a DC bus given to the
+    models of a grid converter and a drive. Each model keeps its converter, whose
     modulator includes the PWM model and the computational delay, and the model of a
     controlled converter is driven by its own control system in the simulation, see
-    `Simulation`. A shared subsystem is evaluated once, whatever its names in the
-    models (the composite names the subsystems `model.subsystem` after their first
-    occurrence), in the order derived from the direct dependencies, see `Model`.
+    `Simulation`. A shared subsystem is evaluated once, whatever its names in the models
+    (the composite names the subsystems `model.subsystem` after their first occurrence),
+    in the order derived from the direct dependencies, see `Model`.
 
     Parameters
     ----------
@@ -75,9 +75,9 @@ class CompositeModelTimeSeries:
     Time series of the simulation results of a composite model.
 
     The time series of each model is stored as an attribute by the model name (e.g.,
-    `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of
-    the composite, so a subsystem shared by the models has the same time series in
-    each of them.
+    `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of the
+    composite, so a subsystem shared by the models has the same time series in each of
+    them.
 
     """
 

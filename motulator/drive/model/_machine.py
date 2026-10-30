@@ -83,8 +83,8 @@ class InductionMachine(Subsystem):
 
     References
     ----------
-    .. [#Sle1989] Slemon, "Modelling of induction machines for electric
-       drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
+    .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," IEEE
+       Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
 
     """
 
@@ -241,9 +241,9 @@ class SynchronousMachine(Subsystem):
     simplest implementation. The interfaces are in stator coordinates. The magnetic
     saturation can be modeled by providing a nonlinear current map, either as
     `i_s_dq_fcn` in `SaturatedSynchronousMachinePars` or, including spatial harmonics,
-    as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`.
-    Optionally, eddy-current core losses can be modeled by means of a constant core-loss
-    conductance `G_c`, connected in parallel with the magnetizing branch.
+    as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`. Optionally,
+    eddy-current core losses can be modeled by means of a constant core-loss conductance
+    `G_c`, connected in parallel with the magnetizing branch.
 
     Parameters
     ----------

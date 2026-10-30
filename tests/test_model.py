@@ -85,8 +85,8 @@ def loaded(mech: Subsystem) -> Model:
 @pytest.mark.parametrize("connected", [False, True])
 def test_load_torque_in_results(two_mass: bool, connected: bool) -> None:
     """The total load torque in the results consists of the friction and the load
-    torque, which is either connected from another subsystem or an external function
-    of time."""
+    torque, which is either connected from another subsystem or an external function of
+    time."""
     mech = mechanics(two_mass)
     if connected:
         mdl = loaded(mech)

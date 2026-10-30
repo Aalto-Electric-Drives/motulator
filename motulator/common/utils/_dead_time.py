@@ -13,8 +13,8 @@ def averaged_gate_signals(
 
     The dead time `t_d` reduces the on-time fractions of both switches of a leg by
     `t_d/(2*T_half)` per half carrier period `T_half`, unless the leg does not switch.
-    Short pulses are suppressed, and the blanking fraction is the remaining fraction
-    in which neither switch conducts.
+    Short pulses are suppressed, and the blanking fraction is the remaining fraction in
+    which neither switch conducts.
 
     """
     d = np.asarray(d_abc, dtype=float)

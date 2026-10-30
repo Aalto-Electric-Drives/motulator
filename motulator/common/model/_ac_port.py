@@ -55,8 +55,8 @@ class DCPort:
     Relation between the DC current and the terminal voltage of a current-fed load.
 
     The terminal voltage of the load is ``u = e + R*i + L*di/dt``, where `i` is the
-    current fed by the converter. A current-fed converter (e.g., a diode bridge with
-    a DC choke) uses the port to solve its DC voltage, see `dc_voltage`.
+    current fed by the converter. A current-fed converter (e.g., a diode bridge with a
+    DC choke) uses the port to solve its DC voltage, see `dc_voltage`.
 
     Parameters
     ----------
@@ -104,10 +104,10 @@ def leg_voltages(port: ACPort, u_dc: float, diodes: np.ndarray) -> np.ndarray:
     """
     Compute the leg voltages of a converter with blocked gates.
 
-    The diode state of each leg is 1 if its lower diode conducts (the leg is clamped
-    to the negative rail), -1 if its upper diode conducts (positive rail), and 0 if
-    the leg floats. The voltage of a floating leg keeps its current at zero, i.e., it
-    drives the residual current to zero.
+    The diode state of each leg is 1 if its lower diode conducts (the leg is clamped to
+    the negative rail), -1 if its upper diode conducts (positive rail), and 0 if the leg
+    floats. The voltage of a floating leg keeps its current at zero, i.e., it drives the
+    residual current to zero.
 
     Parameters
     ----------
@@ -150,11 +150,11 @@ def dc_voltage(port: ACPort, dc: DCPort, diodes: np.ndarray) -> float:
     """
     Solve the voltage between the rails of a current-fed bridge.
 
-    The DC current of the bridge is the current of the legs clamped to the positive
-    rail (equally, the negative of the current of the legs clamped to the negative
-    rail). Its derivative follows from the AC port and the leg voltages, which depend
-    on the rail voltage, see `leg_voltages`. The rail voltage satisfying the DC port
-    ``u_dc = e + R*i_dc + L*di_dc/dt`` is solved from this linear relation.
+    The DC current of the bridge is the current of the legs clamped to the positive rail
+    (equally, the negative of the current of the legs clamped to the negative rail). Its
+    derivative follows from the AC port and the leg voltages, which depend on the rail
+    voltage, see `leg_voltages`. The rail voltage satisfying the DC port ``u_dc = e +
+    R*i_dc + L*di_dc/dt`` is solved from this linear relation.
 
     Parameters
     ----------
@@ -201,9 +201,9 @@ def diode_margin(
     """
     Compute the margin of the diode states.
 
-    The margin is positive while the diode states are valid, and it reaches zero
-    when the current of a conducting leg reverses or the voltage of a floating leg
-    reaches a rail through a gated device, i.e., at a transition of the diode states.
+    The margin is positive while the diode states are valid, and it reaches zero when
+    the current of a conducting leg reverses or the voltage of a floating leg reaches a
+    rail through a gated device, i.e., at a transition of the diode states.
 
     Parameters
     ----------
@@ -291,8 +291,8 @@ def update_diodes(
         Diode states of the legs, see `leg_voltages`. Defaults to None, which latches
         the states from the directions of the currents.
     gated : ndarray, shape (2, 3), optional
-        Gate signals of the upper and lower devices of the legs. Defaults to None,
-        i.e., all the devices are gated (diodes).
+        Gate signals of the upper and lower devices of the legs. Defaults to None, i.e.,
+        all the devices are gated (diodes).
 
     Returns
     -------

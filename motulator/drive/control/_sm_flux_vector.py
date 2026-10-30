@@ -260,15 +260,15 @@ class ObserverBasedVHzControllerCfg:
         Angle estimation pole (rad/s), defaults to 2*pi*200.
     k_o : Callable[[float], float] | None, optional
         Observer gain as a function of the electrical rotor angular speed. If None,
-        defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)``
-        (incremental inductances at zero current).
+        defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` (incremental
+        inductances at zero current).
     k_u : float, optional
         Voltage utilization factor, defaults to 0.9.
     k_mtpv : float, optional
         MTPV margin, defaults to 0.9.
     psi_s_min : float | None, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
-        positive for machines without PMs.
+        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be positive
+        for machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     T_s : float, optional

@@ -97,13 +97,12 @@ class SequenceObserver:
     rotating at the nominal grid angular frequency. At each sampling instant, the
     estimates are corrected using the prediction error of the measured current, after
     which the current and the estimates are predicted for the next sampling instant,
-    using the realized converter voltage of the ongoing sampling period.
-    The observer gains place the poles of the estimation-error dynamics at
-    `exp(p*alpha_o*T_s)`.
+    using the realized converter voltage of the ongoing sampling period. The observer
+    gains place the poles of the estimation-error dynamics at `exp(p*alpha_o*T_s)`.
 
-    The converter current is separated into its quasi-static sequence components using
-    a complex first-order filter. Its discrete-time coefficients are selected such
-    that the separation is exact for both sequences in the periodic steady state.
+    The converter current is separated into its quasi-static sequence components using a
+    complex first-order filter. Its discrete-time coefficients are selected such that
+    the separation is exact for both sequences in the periodic steady state.
 
     Parameters
     ----------
@@ -230,9 +229,8 @@ class SequenceObserverBasedGridFormingControllerCfg:
     w_nom : float, optional
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     p : tuple[complex, complex], optional
-        Continuous-time observer poles, normalized by `alpha_o`, defaults to
-        (-1 - 1j, -0.58 - 1j). The poles of the discrete-time observer are
-        `exp(p*alpha_o*T_s)`.
+        Continuous-time observer poles, normalized by `alpha_o`, defaults to (-1 - 1j,
+        -0.58 - 1j). The poles of the discrete-time observer are `exp(p*alpha_o*T_s)`.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 
@@ -263,9 +261,9 @@ class SequenceObserverBasedGridFormingController:
     and converter-voltage magnitude are controlled, while the negative-sequence
     converter voltage is suppressed. The disturbance observer estimates the positive-
     and negative-sequence grid voltages. The active-power reference is limited to a
-    realizable level, prioritizing the reactive and negative-sequence currents, and
-    the sequence current references are limited such that the peak phase current does
-    not exceed `i_max`.
+    realizable level, prioritizing the reactive and negative-sequence currents, and the
+    sequence current references are limited such that the peak phase current does not
+    exceed `i_max`.
 
     Parameters
     ----------
@@ -276,11 +274,11 @@ class SequenceObserverBasedGridFormingController:
     -----
     The control system operates in synchronous coordinates rotating at the nominal grid
     angular frequency. The controller compensates for the computational delay of one
-    sampling period and the zero-order-hold delay of half a sampling period itself:
-    the angle of the positive-sequence voltage reference is advanced by
-    `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite
-    direction, is retarded by the same angle. Therefore, the control system does not
-    advance the angle of the voltage reference (`k_comp = 0`).
+    sampling period and the zero-order-hold delay of half a sampling period itself: the
+    angle of the positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and
+    that of the negative sequence, which rotates in the opposite direction, is retarded
+    by the same angle. Therefore, the control system does not advance the angle of the
+    voltage reference (`k_comp = 0`).
 
     References
     ----------

@@ -178,8 +178,8 @@ class ComplexPIController:
         """
         Preset the integral state to the steady state of the output.
 
-        In the steady state, the reference and feedback signals are zero, and the
-        output is `u`, e.g., the back-EMF of a machine at zero current.
+        In the steady state, the reference and feedback signals are zero, and the output
+        is `u`, e.g., the back-EMF of a machine at zero current.
 
         Parameters
         ----------
@@ -293,11 +293,11 @@ class DiscreteComplexController:
         """
         Preset the integral state to the steady state of the output.
 
-        In the steady state, the reference and feedback signals are zero, and the
-        output is `u`, e.g., the back-EMF of a machine at zero current. The limited
-        output of the previous sampling period is kept, since it has been realized.
-        Hence, the next output equals `u` only if the previous one did, and otherwise
-        it also compensates for their difference.
+        In the steady state, the reference and feedback signals are zero, and the output
+        is `u`, e.g., the back-EMF of a machine at zero current. The limited output of
+        the previous sampling period is kept, since it has been realized. Hence, the
+        next output equals `u` only if the previous one did, and otherwise it also
+        compensates for their difference.
 
         Parameters
         ----------

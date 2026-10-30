@@ -5,8 +5,8 @@ The tests check the direct-on-line start of an induction machine against its
 steady-state equivalent circuit and the commutation of a diode bridge against the
 classical overlap formula, with loose tolerances, and that a diode bridge in a composite
 model is simulated as if alone. A current-fed diode bridge, feeding an EMF through a DC
-choke, is checked against the same formula, and the gating of its devices is checked
-to block the conduction.
+choke, is checked against the same formula, and the gating of its devices is checked to
+block the conduction.
 
 """
 
@@ -190,9 +190,9 @@ class CurrentFedRectifier(Model[DiodeBridge]):
 
 @pytest.mark.parametrize("order", ORDERS[1:])
 def test_listing_order_of_current_fed_rectifier(order: Sequence[str]) -> None:
-    """The results do not depend on the listing order of the blocked converter, the
-    load depending directly on its DC current, and the sources of the inputs of its
-    loads, in the simulation and in the post-processing."""
+    """The results do not depend on the listing order of the blocked converter, the load
+    depending directly on its DC current, and the sources of the inputs of its loads, in
+    the simulation and in the post-processing."""
     e, R = 400.0, 2.0
 
     def simulate(order: Sequence[str]) -> Any:

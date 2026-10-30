@@ -73,8 +73,8 @@ class VectorController[Ref, Fbk](Protocol):
         """
         Post-process controller outputs.
 
-        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
-        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated to
+        the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
         i.e., it remains that of the controller coordinates, which equals that of the
         new coordinates in steady state.
 
@@ -110,8 +110,8 @@ class VHzController[Ref, Fbk](Protocol):
         """
         Post-process controller outputs.
 
-        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
-        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated to
+        the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
         i.e., it remains that of the controller coordinates, which equals that of the
         new coordinates in steady state.
 
@@ -136,8 +136,8 @@ class DriveControlSystem(ControlSystem):
     where `k_comp` is given by the inner controller. The value 1.5 compensates for the
     computational delay of one sampling period and the delay of half a sampling period
     caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
-    angle is not advanced, which is used if the controller takes the delays into
-    account itself, e.g., in a direct discrete-time design.
+    angle is not advanced, which is used if the controller takes the delays into account
+    itself, e.g., in a direct discrete-time design.
 
     While the gates are blocked (see `set_enable`), the control system is in standby:
     the observers run on their open-circuit model, since the converter voltage is
@@ -260,10 +260,10 @@ class VectorControlSystem(DriveControlSystem):
     and flux-vector control).
 
     A sensorless drive stays in standby with the zero voltage vector also at the first
-    sampling instant after the release of the gates. Due to the computational delay,
-    the first two sampling periods are then zero-voltage periods, and the observer of
-    a synchronous machine catches the rotating machine from the current response to
-    the first one (a flying start).
+    sampling instant after the release of the gates. Due to the computational delay, the
+    first two sampling periods are then zero-voltage periods, and the observer of a
+    synchronous machine catches the rotating machine from the current response to the
+    first one (a flying start).
 
     Parameters
     ----------
