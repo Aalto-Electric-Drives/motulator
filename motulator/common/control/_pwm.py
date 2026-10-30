@@ -281,9 +281,12 @@ class PWM:
 
         return u_c_ref_ab
 
-    def duty_ratios(self, u_c_ref_ab: complex, u_dc: float) -> list[float]:
+    def _duty_ratios(self, u_c_ref_ab: complex, u_dc: float) -> list[float]:
         """
         Compute the duty ratios for three-phase carrier-based PWM.
+
+        The angle of the reference is modified before this in six-step overmodulation,
+        see `compute_output`.
 
         Parameters
         ----------
@@ -315,9 +318,9 @@ class PWM:
 
         # MME overmodulation (does nothing if MPE already used)
         d_abc = np.clip(d_abc, 0, 1)
-        return list(self.clamp(u_c_ref_ab, d_abc))
+        return list(self._clamp(u_c_ref_ab, d_abc))
 
-    def clamp(self, u_c_ref_ab: complex, d_abc: np.ndarray) -> np.ndarray:
+    def _clamp(self, u_c_ref_ab: complex, d_abc: np.ndarray) -> np.ndarray:
         """
         Clamp a leg to the DC rail in discontinuous PWM.
 
@@ -409,7 +412,7 @@ class PWM:
             u_c_ref_ab = self.six_step_overmodulation(u_c_ref_ab, u_dc)
 
         # Duty ratios of the voltage reference, excluding the compensation
-        d_abc = self.duty_ratios(u_c_ref_ab, u_dc)
+        d_abc = self._duty_ratios(u_c_ref_ab, u_dc)
         d_ref = np.array(d_abc)
 
         # Compensate for the duty-ratio error using the predicted currents
@@ -418,7 +421,7 @@ class PWM:
             i_c_abc = complex2abc(exp(1j * self.k_pred * T_s * w) * self._i_c_ab)
             d_err = self._bind(self.d_err, i_c_abc, u_dc, self._half_period(T_s))
             err = d_err(d_ref)
-            d_comp = self.clamp(u_c_ref_ab, d_ref + err)
+            d_comp = self._clamp(u_c_ref_ab, d_ref + err)
             if self.method != "SVPWM":
                 # The error of the clamped leg is compensated for by the other legs,
                 # which shifts the realized duty ratios aimed at
@@ -428,7 +431,7 @@ class PWM:
         # Minimum pulses and the duty ratios realized with them
         d_realized = d_ref
         if self.d_min > 0:
-            d_abc, d_realized = self.limit_pulses(d_abc, d_ref, d_err)
+            d_abc, d_realized = self._limit_pulses(d_abc, d_ref, d_err)
 
         # Limited voltage reference, excluding and including the compensation
         self.limited_voltage = abc2complex(d_realized) * u_dc
@@ -436,7 +439,7 @@ class PWM:
 
         return d_abc, u_c_ab
 
-    def limit_pulses(
+    def _limit_pulses(
         self,
         d_abc: list[float],
         d_ref: np.ndarray,

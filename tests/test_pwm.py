@@ -230,7 +230,7 @@ def test_min_pulse(method: Method, t_d: float) -> None:
         i_c_ab = 5 * np.exp(2j * np.pi * rng.uniform())
         converter.inp.i_c_ab = i_c_ab
         pwm.get_realized_voltage(i_c_ab, u_dc)
-        d_ref = np.array(pwm.duty_ratios(u_ref, u_dc))
+        d_ref = np.array(pwm._duty_ratios(u_ref, u_dc))
         d = np.array(pwm(T_s, u_ref, u_dc, w=0))
         switching = (d > 0) & (d < 1)
         assert np.all(d[switching] >= d_min - 1e-12)
@@ -282,18 +282,20 @@ def test_min_pulse_dead_time() -> None:
     d_comp = np.clip(d_ref + d_err(i_abc, d_ref), 0, 1)  # [0.022, 0.002, 0.995]
     # Rounding the compensated duty ratio would give d_min = 0.04 in phase a, whose
     # realized duty ratio 0.03 is farther from the reference 0.012 than 0
-    d_lim, _ = pwm.limit_pulses(list(d_comp), d_ref, partial(d_err, i_abc))
+    d_lim, _ = pwm._limit_pulses(list(d_comp), d_ref, partial(d_err, i_abc))
     assert d_lim == [0, 0, 1]
     # Without the compensation, the duty ratios are rounded to the nearest
     d = [0.022, 0.002, 0.995]
-    assert pwm.limit_pulses(d, np.array(d))[0] == [d_min, 0, 1]
+    assert pwm._limit_pulses(d, np.array(d))[0] == [d_min, 0, 1]
     # Exhaustively, the realized duty ratio is the nearest among the allowed ones
     rng = np.random.default_rng(1)
     for _ in range(200):
         d_ref = rng.uniform(0, 1, 3) ** 4 * rng.choice([1, -1], 3) % 1
         i_abc = rng.uniform(-5, 5, 3)
         d_comp = np.clip(d_ref + d_err(i_abc, d_ref), 0, 1)
-        d_lim, d_realized = pwm.limit_pulses(list(d_comp), d_ref, partial(d_err, i_abc))
+        d_lim, d_realized = pwm._limit_pulses(
+            list(d_comp), d_ref, partial(d_err, i_abc)
+        )
         d = np.array(d_lim)
         realized = d - d_err(i_abc, d)
         assert d_realized == pytest.approx(np.where(d != d_comp, realized, d_ref))
@@ -341,8 +343,8 @@ def test_discontinuous_pwm(
     ff = PWM(method=method, d_err=InverterNonlinearity(t_d=2e-6, u_th=1.5))
     for theta in np.arange(0.5, 360, 1):
         u_c_ref_ab = u_ref * np.exp(1j * np.deg2rad(theta))
-        d_sv = np.array(svpwm.duty_ratios(u_c_ref_ab, u_dc))
-        d = np.array(dpwm.duty_ratios(u_c_ref_ab, u_dc))
+        d_sv = np.array(svpwm._duty_ratios(u_c_ref_ab, u_dc))
+        d = np.array(dpwm._duty_ratios(u_c_ref_ab, u_dc))
         assert abc2complex(d) == pytest.approx(abc2complex(d_sv))
         if u_ref < u_dc / np.sqrt(3):
             # Angles (deg) from the positive and negative peaks of phase a
