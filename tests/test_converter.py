@@ -32,7 +32,6 @@ class Inputs:
 
     i_c_ab: complex = 0j
     q_c_ab: complex = 0j
-    enabled: bool = True
 
 
 @dataclass
@@ -74,8 +73,8 @@ class IdealConverter(Converter, ControlledConverter):
     def extend_history(self, n: int, u_c_ab: Any) -> None:
         self._history["q_c_ab"].extend([self.inp.q_c_ab] * n)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "ConverterTimeSeries"]:
-        return "converter", ConverterTimeSeries(t, self)
+    def create_time_series(self, t: np.ndarray) -> "ConverterTimeSeries":
+        return ConverterTimeSeries(t, self)
 
 
 @dataclass
@@ -104,11 +103,16 @@ class GridSystem(Model[IdealConverter]):
         self.ac_filter = ac_filter
         self.ac_source = ac_source
         connections = {
-            (converter, "i_c_ab"): (ac_filter, "i_c_ab"),
-            (ac_filter, "u_c_ab"): (converter, "u_c_ab"),
-            (ac_filter, "e_g_ab"): (ac_source, "e_g_ab"),
+            ("converter", "i_c_ab"): ("ac_filter", "i_c_ab"),
+            ("ac_filter", "u_c_ab"): ("converter", "u_c_ab"),
+            ("ac_filter", "e_g_ab"): ("ac_source", "e_g_ab"),
         }
-        super().__init__(converter, [converter, ac_filter, ac_source], connections)
+        subsystems = {
+            "converter": converter,
+            "ac_filter": ac_filter,
+            "ac_source": ac_source,
+        }
+        super().__init__(converter, subsystems, connections)
 
 
 def test_converter_without_diodes_and_dc_bus() -> None:
@@ -116,7 +120,7 @@ def test_converter_without_diodes_and_dc_bus() -> None:
     converter = IdealConverter(u_dc=650.0)
     assert converter.ac_load is None and not converter.blocked
     assert converter.margin == inf
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(TypeError):
         converter.set_enable(False)
     with pytest.raises(TypeError):  # A DC bus would draw the current
         converter.compute_internal_dc_current(converter.inp)

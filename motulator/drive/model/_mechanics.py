@@ -68,9 +68,9 @@ class MechanicalSystem(Subsystem):
         """Set external rotor speed (rad/s), constant or a function of time."""
         raise NotImplementedError
 
-    def compute_total_load_torque(self, t: float, w_M: float) -> float:
-        """Total load torque (Nm)."""
-        return get_value(self.B_L, w_M) * w_M + get_value(self.inp.tau_L, t)
+    def compute_total_load_torque(self, w_M: Any, tau_L: Any) -> Any:
+        """Total load torque (Nm), including the friction."""
+        return get_value(self.B_L, w_M) * w_M + tau_L
 
     def set_states(self, state_list: list[complex], index: int) -> int:
         """Set states, keeping the rotor angle within [-pi, pi)."""
@@ -86,7 +86,8 @@ class MechanicalSystem(Subsystem):
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
         state, inp = self.state, self.inp
-        tau_L_tot = self.compute_total_load_torque(t, state.w_M.real)
+        tau_L = get_value(inp.tau_L, t)
+        tau_L_tot = self.compute_total_load_torque(state.w_M.real, tau_L)
         d_theta_M = state.w_M
         d_w_M = (inp.tau_M - tau_L_tot) / self.J
         return [d_theta_M, d_w_M]
@@ -99,11 +100,9 @@ class MechanicalSystem(Subsystem):
         """Measure mechanical rotor speed (rad/s)."""
         return self.out.w_M
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "MechanicalSystemTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "MechanicalSystemTimeSeries":
         """Create time series from state list."""
-        return "mechanics", MechanicalSystemTimeSeries(t, self)
+        return MechanicalSystemTimeSeries(t, self)
 
 
 @dataclass
@@ -115,9 +114,11 @@ class MechanicalSystemTimeSeries(SubsystemTimeSeries):
     # States
     w_M: np.ndarray = field(default_factory=empty_array)
     theta_M: np.ndarray = field(default_factory=empty_array)
-    # Outputs
-    tau_L_tot: np.ndarray = field(default_factory=empty_array)
+    # Inputs
+    tau_M: np.ndarray = field(default_factory=empty_array)
+    tau_L: np.ndarray = field(default_factory=empty_array)
     # Derived
+    tau_L_tot: np.ndarray = field(default_factory=empty_array)
     exp_j_theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: MechanicalSystem) -> None:
@@ -125,10 +126,17 @@ class MechanicalSystemTimeSeries(SubsystemTimeSeries):
         theta_M = np.real(np.array(subsystem._history["theta_M"]))
         self.exp_j_theta_M = np.exp(1j * theta_M)
         self.theta_M = np.angle(self.exp_j_theta_M)
+        # External load torque, replaced by the connected one if any
+        self.tau_L = np.array([get_value(subsystem.inp.tau_L, t_k) for t_k in t])
+
+    def compute_derived_signals(
+        self, t: np.ndarray, subsystem: MechanicalSystem
+    ) -> None:
+        """Compute the total load torque from the speed and the load torque."""
         self.tau_L_tot = np.array(
             [
-                subsystem.compute_total_load_torque(t_k, w_M_k)
-                for t_k, w_M_k in zip(t, self.w_M, strict=True)
+                subsystem.compute_total_load_torque(w_M_k, tau_L_k)
+                for w_M_k, tau_L_k in zip(self.w_M, self.tau_L, strict=True)
             ]
         )
 
@@ -197,9 +205,9 @@ class TwoMassMechanicalSystem(Subsystem):
         """Shaft torque (Nm)."""
         return self.K_S * theta_ML + self.C_S * (w_M - w_L)
 
-    def compute_total_load_torque(self, t: float, w_L: float) -> float:
-        """Total load torque (Nm)."""
-        return get_value(self.B_L, w_L) * w_L + get_value(self.inp.tau_L, t)
+    def compute_total_load_torque(self, w_L: Any, tau_L: Any) -> Any:
+        """Total load torque (Nm), including the friction."""
+        return get_value(self.B_L, w_L) * w_L + tau_L
 
     def set_states(self, state_list: list[complex], index: int) -> int:
         """Set states, keeping the rotor angle within [-pi, pi)."""
@@ -216,7 +224,8 @@ class TwoMassMechanicalSystem(Subsystem):
         """Compute state derivatives."""
         state, inp = self.state, self.inp
         tau_S = self.compute_shaft_torque(state.theta_ML, state.w_M, state.w_L)
-        tau_L_tot = self.compute_total_load_torque(t, state.w_L.real)
+        tau_L = get_value(inp.tau_L, t)
+        tau_L_tot = self.compute_total_load_torque(state.w_L.real, tau_L)
         d_theta_M = state.w_M
         d_w_M = (inp.tau_M - tau_S) / self.J_M
         d_w_L = (tau_S - tau_L_tot) / self.J_L
@@ -239,11 +248,9 @@ class TwoMassMechanicalSystem(Subsystem):
         """Measure the load angle."""
         return wrap(self.out.theta_M - self.state.theta_ML.real)
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "TwoMassMechanicalSystemTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "TwoMassMechanicalSystemTimeSeries":
         """Create time series from state list."""
-        return "mechanics", TwoMassMechanicalSystemTimeSeries(t, self)
+        return TwoMassMechanicalSystemTimeSeries(t, self)
 
 
 @dataclass
@@ -257,10 +264,12 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
     theta_M: np.ndarray = field(default_factory=empty_array)
     w_L: np.ndarray = field(default_factory=empty_array)
     theta_ML: np.ndarray = field(default_factory=empty_array)
-    # Outputs
+    # Inputs
+    tau_M: np.ndarray = field(default_factory=empty_array)
+    tau_L: np.ndarray = field(default_factory=empty_array)
+    # Derived
     tau_S: np.ndarray = field(default_factory=empty_array)
     tau_L_tot: np.ndarray = field(default_factory=empty_array)
-    # Derived
     exp_j_theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: TwoMassMechanicalSystem) -> None:
@@ -271,10 +280,17 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
         self.w_L = np.real(np.array(subsystem._history["w_L"]))
         self.theta_ML = np.real(np.array(subsystem._history["theta_ML"]))
         self.tau_S = subsystem.compute_shaft_torque(self.theta_ML, self.w_M, self.w_L)
+        # External load torque, replaced by the connected one if any
+        self.tau_L = np.array([get_value(subsystem.inp.tau_L, t_k) for t_k in t])
+
+    def compute_derived_signals(
+        self, t: np.ndarray, subsystem: TwoMassMechanicalSystem
+    ) -> None:
+        """Compute the total load torque from the load speed and the load torque."""
         self.tau_L_tot = np.array(
             [
-                subsystem.compute_total_load_torque(t_k, w_L_k)
-                for t_k, w_L_k in zip(t, self.w_L, strict=True)
+                subsystem.compute_total_load_torque(w_L_k, tau_L_k)
+                for w_L_k, tau_L_k in zip(self.w_L, self.tau_L, strict=True)
             ]
         )
 
@@ -335,11 +351,9 @@ class ExternalRotorSpeed(Subsystem):
         """Measure mechanical rotor speed (rad/s)."""
         return self.out.w_M
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "ExternalRotorSpeedTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "ExternalRotorSpeedTimeSeries":
         """Create time series from state list."""
-        return "mechanics", ExternalRotorSpeedTimeSeries(t, self)
+        return ExternalRotorSpeedTimeSeries(t, self)
 
 
 @dataclass

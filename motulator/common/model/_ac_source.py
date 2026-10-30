@@ -101,11 +101,9 @@ class ThreePhaseSource(Subsystem):
         """Compute the state derivative."""
         return [get_value(self.w_g, t)]
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "ThreePhaseSourceTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "ThreePhaseSourceTimeSeries":
         """Create time series from state list."""
-        return "ac_source", ThreePhaseSourceTimeSeries(t, self)
+        return ThreePhaseSourceTimeSeries(t, self)
 
 
 @dataclass

@@ -16,7 +16,9 @@ import numpy as np
 
 from motulator.common.model._ac_port import (
     ACPort,
+    DCPort,
     current_direction,
+    dc_voltage,
     diode_margin,
     leg_voltages,
     update_diodes,
@@ -58,6 +60,7 @@ class Outputs:
 
     u_c_ab: complex
     u_dc: float
+    i_dc: float = 0.0  # DC current (A) fed to the DC load of a current-fed bridge
 
 
 class DiodeBridge(Converter):
@@ -72,17 +75,25 @@ class DiodeBridge(Converter):
     current between the legs follows from the inductance of the load, e.g., an AC
     filter and the grid. The threshold voltage of the diodes is included in the diode
     drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
-    model is connected to it (see `DCBus` and `Model`).
+    model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge
+    feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives
+    the relation between the DC current and the voltage, see `DCPort`. The bridge then
+    solves its DC voltage together with the leg voltages, and the DC current is its
+    output `i_dc`. The devices of the legs can be gated through `gated`, which models
+    thyristors: a floating leg is clamped to a rail only by a gated device.
 
     Parameters
     ----------
     u_dc : float, optional
         Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
-        fed from a DC-bus model.
+        fed from a DC-bus model or feed a DC load.
     u_th : float, optional
         Threshold voltage (V) of the diodes, defaults to 0.
 
     """
+
+    # The converter voltage depends directly on the DC-bus voltage
+    feedthrough = frozenset({"u_dc"})
 
     def __init__(self, u_dc: float | None = None, u_th: float = 0.0) -> None:
         self.u_th = u_th
@@ -92,6 +103,10 @@ class DiodeBridge(Converter):
         self.out: Outputs = Outputs(u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc)
         self.state = None
         self.ac_load = None  # Set by the model
+        # DC load of a current-fed bridge, set by the model
+        self.dc_load: Subsystem | None = None
+        # Gate signals of the devices, shape (2, 3), None for diodes
+        self.gated: np.ndarray | None = None
         # Diode states of the legs, latched from the current directions at the first
         # evaluation, see `update_diodes`
         self._diodes: np.ndarray | None = None
@@ -104,7 +119,7 @@ class DiodeBridge(Converter):
     @property
     def margin(self) -> float:
         """Margin of the diode states at the latest evaluation, see `diode_margin`."""
-        return diode_margin(*self._latest)
+        return diode_margin(*self._latest, self.gated)
 
     def _ac_port(self) -> ACPort:
         """Get the AC port of the load."""
@@ -113,19 +128,29 @@ class DiodeBridge(Converter):
             raise ValueError("The diodes require a load with an AC port")
         return port
 
-    def _rail_voltage(self) -> float:
-        """Voltage (V) between the rails, including the drops of the diodes."""
-        return self.out.u_dc + 2 * self.u_th
+    def _dc_side(self) -> float | DCPort:
+        """Voltage (V) between the rails or the DC port, including the diode drops."""
+        if self.dc_load is None:
+            return self.out.u_dc + 2 * self.u_th
+        dc = self.dc_load.compute_dc_port()
+        if dc is None:
+            raise ValueError("The current-fed bridge requires a load with a DC port")
+        return DCPort(dc.e + 2 * self.u_th, dc.R, dc.L)
 
     def update_diodes(self) -> None:
         """Update the diode states at a transition, see `update_diodes`."""
         self._diodes = update_diodes(
-            self._ac_port(), self._rail_voltage(), self._diodes
+            self._ac_port(), self._dc_side(), self._diodes, self.gated
         )
+
+    @staticmethod
+    def _rectified_current(i_c_ab: Any) -> Any:
+        """Current (A) rectified by the diodes from the AC current."""
+        return 0.5 * np.sum(np.abs(complex2abc(i_c_ab)), axis=0)
 
     def compute_internal_dc_current(self, inp: Any) -> Any:
         """Compute the internal DC current (A), rectified by the diodes."""
-        return -0.5 * np.sum(np.abs(complex2abc(inp.i_c_ab)), axis=0)
+        return -self._rectified_current(inp.i_c_ab)
 
     def _set_dc_voltage(self) -> None:
         """Set the DC-bus voltage from the input."""
@@ -138,12 +163,19 @@ class DiodeBridge(Converter):
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
-        self._set_dc_voltage()
-        port, u_dc = self._ac_port(), self._rail_voltage()
+        if self.dc_load is None:
+            self._set_dc_voltage()
+        port, dc = self._ac_port(), self._dc_side()
         if self._diodes is None:
-            self._diodes = update_diodes(port, u_dc)
+            self._diodes = update_diodes(port, dc, None, self.gated)
+        u_dc = dc_voltage(port, dc, self._diodes) if isinstance(dc, DCPort) else dc
         u_abc = leg_voltages(port, u_dc, self._diodes)
         self.out.u_c_ab = abc2complex(u_abc)
+        if self.dc_load is not None:
+            # The DC current is computed from the current of the port, which comes
+            # from the states of the load, independently of the evaluation order
+            self.out.u_dc = u_dc - 2 * self.u_th
+            self.out.i_dc = self._rectified_current(port.i)
         # The margin is computed on demand, only for locating the transitions
         self._latest = (port, u_dc, self._diodes, u_abc)
 
@@ -152,11 +184,17 @@ class DiodeBridge(Converter):
         return []
 
     def init_state_history(self) -> None:
-        """Initialize the history of the voltage, which is evaluated by the model."""
+        """Initialize the history of the voltages, which are evaluated by the model."""
         super().init_state_history()
-        self._history["u_c_ab"] = []
+        self._history |= {"u_c_ab": [], "u_dc": [], "i_dc": []}
 
-    def extend_history(self, n: int, u_c_ab: Sequence[complex] | None) -> None:
+    def sample(self) -> Any:
+        """Voltage, and the DC voltage and current of a current-fed bridge."""
+        if self.dc_load is None:
+            return self.out.u_c_ab
+        return self.out.u_c_ab, self.out.u_dc, self.out.i_dc
+
+    def extend_history(self, n: int, samples: Sequence[Any] | None) -> None:
         """
         Extend the history over the solution points of an integration interval.
 
@@ -164,16 +202,25 @@ class DiodeBridge(Converter):
         ----------
         n : int
             Number of solution points.
-        u_c_ab : Sequence[complex] | None
+        samples : Sequence[Any] | None
             Voltages (V) evaluated at the solution points if only the diodes conduct,
-            otherwise None.
+            otherwise None. For a current-fed bridge, each sample consists of the
+            converter voltage, the DC voltage, and the DC current, see `sample`.
 
         """
-        self._history["u_c_ab"].extend([np.nan] * n if u_c_ab is None else u_c_ab)
+        if samples is None:
+            self._history["u_c_ab"].extend([np.nan] * n)
+        elif self.dc_load is None:
+            self._history["u_c_ab"].extend(samples)
+        else:
+            u_c_ab, u_dc, i_dc = zip(*samples, strict=True)
+            self._history["u_c_ab"].extend(u_c_ab)
+            self._history["u_dc"].extend(u_dc)
+            self._history["i_dc"].extend(i_dc)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "DiodeBridgeTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "DiodeBridgeTimeSeries":
         """Create time series."""
-        return "converter", DiodeBridgeTimeSeries(t, self)
+        return DiodeBridgeTimeSeries(t, self)
 
 
 @dataclass
@@ -185,11 +232,17 @@ class DiodeBridgeTimeSeries[T: DiodeBridge](SubsystemTimeSeries):
     u_dc: np.ndarray = field(default_factory=empty_array)
     i_c_ab: np.ndarray = field(default_factory=empty_array)
     u_c_ab: np.ndarray = field(default_factory=empty_array)
+    i_dc: np.ndarray = field(default_factory=empty_array)
     i_dc_int: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: T) -> None:
-        # Constant DC-bus voltage, replaced by the DC-bus time series if connected
-        self.u_dc = np.full(np.size(t), subsystem.inp.u_dc, dtype=float)
+        # Constant DC-bus voltage, replaced by the DC-bus time series if connected,
+        # or the DC voltage of a current-fed bridge
+        if subsystem._history["u_dc"]:
+            self.u_dc = np.array(subsystem._history["u_dc"], dtype=float)
+            self.i_dc = np.array(subsystem._history["i_dc"], dtype=float)
+        else:
+            self.u_dc = np.full(np.size(t), subsystem.inp.u_dc, dtype=float)
         self.u_c_ab = np.array(subsystem._history["u_c_ab"], dtype=complex)
 
     def compute_derived_signals(self, t: np.ndarray, subsystem: T) -> None:
@@ -350,19 +403,17 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
         super().init_state_history()
         self._history |= {"q_c_ab": [], "s_c_ab": [], "enabled": []}
 
-    def extend_history(self, n: int, u_c_ab: Sequence[complex] | None) -> None:
+    def extend_history(self, n: int, samples: Sequence[Any] | None) -> None:
         """Extend the history, the switching state held constant, see `DiodeBridge`."""
-        super().extend_history(n, u_c_ab)
+        super().extend_history(n, samples)
         inp = self.inp
         self._history["q_c_ab"].extend([inp.q_c_ab] * n)
         self._history["s_c_ab"].extend([inp.s_c_ab] * n)
         self._history["enabled"].extend([inp.enabled] * n)
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "VoltageSourceConverterTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "VoltageSourceConverterTimeSeries":
         """Create time series."""
-        return "converter", VoltageSourceConverterTimeSeries(t, self)
+        return VoltageSourceConverterTimeSeries(t, self)
 
 
 @dataclass
@@ -475,9 +526,9 @@ class DCBus(Subsystem):
         """Compute state derivatives."""
         return [self.compute_dc_current(t) / self.C_dc]
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "DCBusTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "DCBusTimeSeries":
         """Create time series from state list."""
-        return "dc_bus", DCBusTimeSeries(t, self)
+        return DCBusTimeSeries(t, self)
 
 
 @dataclass

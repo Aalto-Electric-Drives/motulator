@@ -88,6 +88,9 @@ class InductionMachine(Subsystem):
 
     """
 
+    # The stator current depends directly on the voltage through the core losses
+    feedthrough = frozenset({"u_s_ab"})
+
     def __init__(
         self,
         par: InductionMachinePars | InductionMachineInvGammaPars,
@@ -151,11 +154,9 @@ class InductionMachine(Subsystem):
         i_s_abc = complex2abc(self.out.i_s_ab)
         return i_s_abc if self.i_s_sensor is None else self.i_s_sensor(i_s_abc)
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "InductionMachineTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "InductionMachineTimeSeries":
         """Create time series from state list."""
-        return "machine", InductionMachineTimeSeries(t, self)
+        return InductionMachineTimeSeries(t, self)
 
 
 @dataclass
@@ -262,6 +263,9 @@ class SynchronousMachine(Subsystem):
 
     """
 
+    # The stator current depends directly on the voltage through the core losses
+    feedthrough = frozenset({"u_s_ab"})
+
     def __init__(
         self,
         par: SynchronousMachinePars
@@ -346,11 +350,9 @@ class SynchronousMachine(Subsystem):
         i_s_abc = complex2abc(self.out.i_s_ab)
         return i_s_abc if self.i_s_sensor is None else self.i_s_sensor(i_s_abc)
 
-    def create_time_series(
-        self, t: np.ndarray
-    ) -> tuple[str, "SynchronousMachineTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "SynchronousMachineTimeSeries":
         """Create time series from state list."""
-        return "machine", SynchronousMachineTimeSeries(t, self)
+        return SynchronousMachineTimeSeries(t, self)
 
 
 @dataclass

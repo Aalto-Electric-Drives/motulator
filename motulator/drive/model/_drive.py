@@ -1,7 +1,7 @@
 """Continuous-time models for electric machine drives and grid-connected machines."""
 
 from motulator.common.model._ac_source import ThreePhaseSource
-from motulator.common.model._base import Model
+from motulator.common.model._base import Model, Subsystem
 from motulator.common.model._converter import DCBus, VoltageSourceConverter
 from motulator.drive.model._lc_filter import LCFilter
 from motulator.drive.model._machine import InductionMachine, SynchronousMachine
@@ -47,28 +47,27 @@ class Drive(Model[VoltageSourceConverter]):
         self.machine = machine
         self.mechanics = mechanics
         self.lc_filter = lc_filter
+        subsystems: dict[str, Subsystem] = {"converter": converter}
         connections = {
-            (machine, "w_M"): (mechanics, "w_M"),
-            (mechanics, "tau_M"): (machine, "tau_M"),
+            ("machine", "w_M"): ("mechanics", "w_M"),
+            ("mechanics", "tau_M"): ("machine", "tau_M"),
         }
         if lc_filter is None:
-            subsystems = [converter, machine, mechanics]
             connections |= {
-                (converter, "i_c_ab"): (machine, "i_s_ab"),
-                (machine, "u_s_ab"): (converter, "u_c_ab"),
+                ("converter", "i_c_ab"): ("machine", "i_s_ab"),
+                ("machine", "u_s_ab"): ("converter", "u_c_ab"),
             }
             converter.ac_load = machine
         else:
-            # The machine comes after the filter, since its current can depend directly
-            # on the filter voltage
-            subsystems = [converter, lc_filter, machine, mechanics]
+            subsystems["lc_filter"] = lc_filter
             connections |= {
-                (converter, "i_c_ab"): (lc_filter, "i_c_ab"),
-                (lc_filter, "i_f_ab"): (machine, "i_s_ab"),
-                (lc_filter, "u_c_ab"): (converter, "u_c_ab"),
-                (machine, "u_s_ab"): (lc_filter, "u_f_ab"),
+                ("converter", "i_c_ab"): ("lc_filter", "i_c_ab"),
+                ("lc_filter", "i_f_ab"): ("machine", "i_s_ab"),
+                ("lc_filter", "u_c_ab"): ("converter", "u_c_ab"),
+                ("machine", "u_s_ab"): ("lc_filter", "u_f_ab"),
             }
             converter.ac_load = lc_filter
+        subsystems |= {"machine": machine, "mechanics": mechanics}
         super().__init__(converter, subsystems, connections, dc_bus=dc_bus)
 
 
@@ -104,10 +103,13 @@ class GridConnectedMachine(Model[None]):
         self.mechanics = mechanics
         self.ac_source = ac_source
         connections = {
-            (machine, "u_s_ab"): (ac_source, "e_g_ab"),
-            (machine, "w_M"): (mechanics, "w_M"),
-            (mechanics, "tau_M"): (machine, "tau_M"),
+            ("machine", "u_s_ab"): ("ac_source", "e_g_ab"),
+            ("machine", "w_M"): ("mechanics", "w_M"),
+            ("mechanics", "tau_M"): ("machine", "tau_M"),
         }
-        # The source comes first, since the stator current can depend directly on the
-        # voltage
-        super().__init__(None, [ac_source, machine, mechanics], connections)
+        subsystems: dict[str, Subsystem] = {
+            "ac_source": ac_source,
+            "machine": machine,
+            "mechanics": mechanics,
+        }
+        super().__init__(None, subsystems, connections)

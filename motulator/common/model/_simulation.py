@@ -170,7 +170,7 @@ class Simulation:
             raise ValueError("t_start must be given for the control systems")
         # A DC bus computes the currents of all its converters, so their models must be
         # simulated too
-        for dc_bus in mdl.subsystems:
+        for dc_bus in mdl.subsystems.values():
             if isinstance(dc_bus, DCBus) and not all(
                 c in mdl.converters for c in dc_bus.converters
             ):
@@ -186,6 +186,8 @@ class Simulation:
             ctrls[name].t = t
         # Pending switching events (instant, gate states) of each converter
         self._events: list[list[tuple[float, np.ndarray]]] = [[] for _ in self._pairs]
+        # Gate enables of the converters, initially those of the converter states
+        self._enabled = [not mdl.converter.blocked for mdl, _ in self._pairs]
 
     def simulate(self, t_stop: float = 1.0, N_eval: int = 0) -> SimulationResults:
         """
@@ -265,7 +267,8 @@ class Simulation:
                     # The gate enable takes effect at the sampling instant, so that
                     # the control system measures the converter with blocked gates
                     enabled = ctrl.get_enable()
-                    if enabled != mdl.converter.inp.enabled:
+                    if enabled != self._enabled[k]:
+                        self._enabled[k] = enabled
                         mdl.converter.set_enable(enabled)
                         self.mdl.set_outputs(t0)
                     T_s, command = ctrl(mdl)

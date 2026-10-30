@@ -1,7 +1,12 @@
 """Controllers for grid converters."""
 
 from motulator.common.control._pwm import PWM, InverterNonlinearity
-from motulator.grid.control._base import GridConverterControlSystem
+from motulator.grid.control._base import (
+    Feedbacks,
+    GridConverterControlSystem,
+    Measurements,
+    References,
+)
 from motulator.grid.control._common import CurrentLimiter, DCBusVoltageController
 from motulator.grid.control._gfl_current_vector import (
     PLL,
@@ -40,7 +45,9 @@ __all__ = [
     "DualVoltageFormingController",
     "DualVoltageFormingControllerCfg",
     "DualVoltageFormingOutputs",
+    "Feedbacks",
     "GridConverterControlSystem",
+    "Measurements",
     "ObserverBasedGridFormingController",
     "ObserverBasedGridFormingControllerCfg",
     "ObserverOutputs",
@@ -48,6 +55,7 @@ __all__ = [
     "PLLOutputs",
     "PowerSynchronizationController",
     "PowerSynchronizationControllerCfg",
+    "References",
     "SequenceObserverBasedGridFormingController",
     "SequenceObserverBasedGridFormingControllerCfg",
 ]

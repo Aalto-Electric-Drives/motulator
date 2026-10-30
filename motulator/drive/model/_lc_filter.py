@@ -92,9 +92,9 @@ class LCFilter(Subsystem):
         """Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""
         return complex2line(self.out.u_f_ab)
 
-    def create_time_series(self, t: np.ndarray) -> tuple[str, "LCFilterTimeSeries"]:
+    def create_time_series(self, t: np.ndarray) -> "LCFilterTimeSeries":
         """Create time series from state list."""
-        return "lc_filter", LCFilterTimeSeries(t, self)
+        return LCFilterTimeSeries(t, self)
 
 
 @dataclass
