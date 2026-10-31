@@ -217,7 +217,9 @@ class SequenceObserverBasedGridFormingControllerCfg:
     i_max : float
         Maximum current (A), peak value.
     i_d_max : float
-        Maximum active current (A), peak value.
+        Maximum active current (A), peak value, for the active-power reference
+        limitation. A value somewhat below `i_max` is recommended, e.g.,
+        `i_d_max = 0.85*i_max`.
     L : float
         Total inductance estimate (H).
     R : float, optional
@@ -231,9 +233,9 @@ class SequenceObserverBasedGridFormingControllerCfg:
     alpha_c : float, optional
         Current control bandwidth (rad/s), defaults to 2*pi*300.
     alpha_l : float, optional
-        Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
-    w_o : float | None, optional
-        Observer natural frequency (rad/s), defaults to `w_nom`.
+        Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
+    w_o : float, optional
+        Observer natural frequency (rad/s), defaults to 2*pi*50.
     zeta_o : float, optional
         Observer damping ratio, defaults to 1.
     u_nom : float, optional
@@ -255,7 +257,7 @@ class SequenceObserverBasedGridFormingControllerCfg:
     k_n: float = 2
     alpha_c: float = 2 * pi * 300
     alpha_l: float = 2 * pi * 50
-    w_o: float | None = None
+    w_o: float = 2 * pi * 50
     zeta_o: float = 1.0
     u_nom: float = sqrt(2 / 3) * 400
     w_nom: float = 2 * pi * 50
@@ -308,7 +310,7 @@ class SequenceObserverBasedGridFormingController:
             u_nom=cfg.u_nom,
             w_nom=cfg.w_nom,
             L=cfg.L,
-            w_o=cfg.w_nom if cfg.w_o is None else cfg.w_o,
+            w_o=cfg.w_o,
             zeta_o=cfg.zeta_o,
             T_s=cfg.T_s,
         )
