@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2.2-kW IPMSM, blocked gates, CVC &#8212; motulator 0.21.0 documentation</title>
+    <title>2.2-kW IPMSM, blocked gates, CVC &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -523,14 +523,14 @@ permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are bl
 before the start and during coasting. The converter output voltage is not measured.
 While the gates are blocked, the control system runs in standby: its observer runs on
 its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its
-current controller computes its output for zero torque. The gates are released at
-0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked
-again: the stator current decays through the diodes within a millisecond, after which
-the loaded machine coasts at open circuit, since its voltage is below the DC-bus
-voltage, and decelerates. At 0.8 s, the gates are released, and the control system
-catches the rotating machine with a flying start: it initializes its observer from the
-current response to a zero-voltage period (cf. <a class="footnote-reference brackets" href="#tan2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) and its current controller
-from the resulting back-EMF, after which the drive returns to the speed reference.</p>
+current controller computes its output for zero torque. The gates are released at 0.05
+s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked again:
+the stator current decays through the diodes within a millisecond, after which the
+loaded machine coasts at open circuit, since its voltage is below the DC-bus voltage,
+and decelerates. At 0.8 s, the gates are released, and the control system catches the
+rotating machine with a flying start: it initializes its observer from the current
+response to a zero-voltage period (cf. <a class="footnote-reference brackets" href="#tan2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) and its current controller from the
+resulting back-EMF, after which the drive returns to the speed reference.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a><span class="w">
 </span><span class="w">
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="nn">.</span><span class="nn">pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span><span class="w">
@@ -602,7 +602,7 @@ procedure of rotational sensorless PMSM in the rotating condition,” IEEE Trans
 Ind. Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009496">https://doi.org/10.1109/TIA.2008.2009496</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 12.816 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.643 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-ipmsm-blocked-cvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4d2d22bbe1d4dc0fe6730edde5b24d96/plot_2kw_ipmsm_blocked_cvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_ipmsm_blocked_cvc.ipynb</span></code></a></p>

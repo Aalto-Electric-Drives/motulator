@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.common.model._composite &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.common.model._composite &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -487,13 +487,13 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Composite of models sharing subsystems.</span>
 
-<span class="sd">    The models are coupled through shared subsystem objects, e.g., a DC bus given to</span>
-<span class="sd">    the models of a grid converter and a drive. Each model keeps its converter, whose</span>
+<span class="sd">    The models are coupled through shared subsystem objects, e.g., a DC bus given to the</span>
+<span class="sd">    models of a grid converter and a drive. Each model keeps its converter, whose</span>
 <span class="sd">    modulator includes the PWM model and the computational delay, and the model of a</span>
 <span class="sd">    controlled converter is driven by its own control system in the simulation, see</span>
-<span class="sd">    `Simulation`. A shared subsystem is evaluated once, whatever its names in the</span>
-<span class="sd">    models (the composite names the subsystems `model.subsystem` after their first</span>
-<span class="sd">    occurrence), in the order derived from the direct dependencies, see `Model`.</span>
+<span class="sd">    `Simulation`. A shared subsystem is evaluated once, whatever its names in the models</span>
+<span class="sd">    (the composite names the subsystems `model.subsystem` after their first occurrence),</span>
+<span class="sd">    in the order derived from the direct dependencies, see `Model`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -548,9 +548,9 @@
 <span class="sd">    Time series of the simulation results of a composite model.</span>
 
 <span class="sd">    The time series of each model is stored as an attribute by the model name (e.g.,</span>
-<span class="sd">    `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of</span>
-<span class="sd">    the composite, so a subsystem shared by the models has the same time series in</span>
-<span class="sd">    each of them.</span>
+<span class="sd">    `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of the</span>
+<span class="sd">    composite, so a subsystem shared by the models has the same time series in each of</span>
+<span class="sd">    them.</span>
 
 <span class="sd">    """</span>
 

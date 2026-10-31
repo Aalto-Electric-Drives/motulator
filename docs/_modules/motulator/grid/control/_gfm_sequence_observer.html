@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.control._gfm_sequence_observer &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.grid.control._gfm_sequence_observer &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -519,6 +519,8 @@
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="SequenceObserverOutputs">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.grid.control.SequenceObserverOutputs">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SequenceObserverOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Feedback signals for the control system."""</span>
@@ -540,7 +542,8 @@
     <span class="n">q_g</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angle of the coordinate system (rad)</span>
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Angular speed of the coordinate system (rad/s)</span>
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC-bus voltage (set by the control system)</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># DC-bus voltage (set by the control system)</span></div>
+
 
 
 <span class="nd">@dataclass</span>
@@ -571,9 +574,9 @@
 <span class="sd">    `s + 1j*w_nom` in stationary coordinates have the natural frequency `w_o` and the</span>
 <span class="sd">    damping ratio `zeta_o`.</span>
 
-<span class="sd">    The converter current is separated into its quasi-static sequence components using</span>
-<span class="sd">    a complex first-order filter. Its discrete-time coefficients are selected such</span>
-<span class="sd">    that the separation is exact for both sequences in the periodic steady state.</span>
+<span class="sd">    The converter current is separated into its quasi-static sequence components using a</span>
+<span class="sd">    complex first-order filter. Its discrete-time coefficients are selected such that</span>
+<span class="sd">    the separation is exact for both sequences in the periodic steady state.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -741,9 +744,9 @@
 <span class="sd">    and converter-voltage magnitude are controlled, while the negative-sequence</span>
 <span class="sd">    converter voltage is suppressed. The disturbance observer estimates the positive-</span>
 <span class="sd">    and negative-sequence grid voltages. The active-power reference is limited to a</span>
-<span class="sd">    realizable level, prioritizing the reactive and negative-sequence currents, and</span>
-<span class="sd">    the sequence current references are limited such that the peak phase current does</span>
-<span class="sd">    not exceed `i_max`.</span>
+<span class="sd">    realizable level, prioritizing the reactive and negative-sequence currents, and the</span>
+<span class="sd">    sequence current references are limited such that the peak phase current does not</span>
+<span class="sd">    exceed `i_max`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -754,11 +757,11 @@
 <span class="sd">    -----</span>
 <span class="sd">    The control system operates in synchronous coordinates rotating at the nominal grid</span>
 <span class="sd">    angular frequency. The controller compensates for the computational delay of one</span>
-<span class="sd">    sampling period and the zero-order-hold delay of half a sampling period itself:</span>
-<span class="sd">    the angle of the positive-sequence voltage reference is advanced by</span>
-<span class="sd">    `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite</span>
-<span class="sd">    direction, is retarded by the same angle. Therefore, the control system does not</span>
-<span class="sd">    advance the angle of the voltage reference (`k_comp = 0`).</span>
+<span class="sd">    sampling period and the zero-order-hold delay of half a sampling period itself: the</span>
+<span class="sd">    angle of the positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and</span>
+<span class="sd">    that of the negative sequence, which rotates in the opposite direction, is retarded</span>
+<span class="sd">    by the same angle. Therefore, the control system does not advance the angle of the</span>
+<span class="sd">    voltage reference (`k_comp = 0`).</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>

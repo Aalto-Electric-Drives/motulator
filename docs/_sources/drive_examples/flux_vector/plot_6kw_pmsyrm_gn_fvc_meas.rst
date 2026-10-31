@@ -23,8 +23,8 @@
 
 This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
 machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
-spatial harmonics are used for both the machine model and the control system. The
-models are trained with the related package
+spatial harmonics are used for both the machine model and the control system. The models
+are trained with the related package
 `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 14-22
@@ -242,7 +242,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.779 seconds)
+   **Total running time of the script:** (0 minutes 15.111 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_gn_fvc_meas.py:

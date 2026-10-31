@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.common.model._ac_port &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.common.model._ac_port &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -525,8 +525,8 @@
 <span class="sd">    Relation between the DC current and the terminal voltage of a current-fed load.</span>
 
 <span class="sd">    The terminal voltage of the load is ``u = e + R*i + L*di/dt``, where `i` is the</span>
-<span class="sd">    current fed by the converter. A current-fed converter (e.g., a diode bridge with</span>
-<span class="sd">    a DC choke) uses the port to solve its DC voltage, see `dc_voltage`.</span>
+<span class="sd">    current fed by the converter. A current-fed converter (e.g., a diode bridge with a</span>
+<span class="sd">    DC choke) uses the port to solve its DC voltage, see `dc_voltage`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -577,10 +577,10 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the leg voltages of a converter with blocked gates.</span>
 
-<span class="sd">    The diode state of each leg is 1 if its lower diode conducts (the leg is clamped</span>
-<span class="sd">    to the negative rail), -1 if its upper diode conducts (positive rail), and 0 if</span>
-<span class="sd">    the leg floats. The voltage of a floating leg keeps its current at zero, i.e., it</span>
-<span class="sd">    drives the residual current to zero.</span>
+<span class="sd">    The diode state of each leg is 1 if its lower diode conducts (the leg is clamped to</span>
+<span class="sd">    the negative rail), -1 if its upper diode conducts (positive rail), and 0 if the leg</span>
+<span class="sd">    floats. The voltage of a floating leg keeps its current at zero, i.e., it drives the</span>
+<span class="sd">    residual current to zero.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -626,11 +626,11 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Solve the voltage between the rails of a current-fed bridge.</span>
 
-<span class="sd">    The DC current of the bridge is the current of the legs clamped to the positive</span>
-<span class="sd">    rail (equally, the negative of the current of the legs clamped to the negative</span>
-<span class="sd">    rail). Its derivative follows from the AC port and the leg voltages, which depend</span>
-<span class="sd">    on the rail voltage, see `leg_voltages`. The rail voltage satisfying the DC port</span>
-<span class="sd">    ``u_dc = e + R*i_dc + L*di_dc/dt`` is solved from this linear relation.</span>
+<span class="sd">    The DC current of the bridge is the current of the legs clamped to the positive rail</span>
+<span class="sd">    (equally, the negative of the current of the legs clamped to the negative rail). Its</span>
+<span class="sd">    derivative follows from the AC port and the leg voltages, which depend on the rail</span>
+<span class="sd">    voltage, see `leg_voltages`. The rail voltage satisfying the DC port ``u_dc = e +</span>
+<span class="sd">    R*i_dc + L*di_dc/dt`` is solved from this linear relation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -680,9 +680,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the margin of the diode states.</span>
 
-<span class="sd">    The margin is positive while the diode states are valid, and it reaches zero</span>
-<span class="sd">    when the current of a conducting leg reverses or the voltage of a floating leg</span>
-<span class="sd">    reaches a rail through a gated device, i.e., at a transition of the diode states.</span>
+<span class="sd">    The margin is positive while the diode states are valid, and it reaches zero when</span>
+<span class="sd">    the current of a conducting leg reverses or the voltage of a floating leg reaches a</span>
+<span class="sd">    rail through a gated device, i.e., at a transition of the diode states.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -773,8 +773,8 @@
 <span class="sd">        Diode states of the legs, see `leg_voltages`. Defaults to None, which latches</span>
 <span class="sd">        the states from the directions of the currents.</span>
 <span class="sd">    gated : ndarray, shape (2, 3), optional</span>
-<span class="sd">        Gate signals of the upper and lower devices of the legs. Defaults to None,</span>
-<span class="sd">        i.e., all the devices are gated (diodes).</span>
+<span class="sd">        Gate signals of the upper and lower devices of the legs. Defaults to None, i.e.,</span>
+<span class="sd">        all the devices are gated (diodes).</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>

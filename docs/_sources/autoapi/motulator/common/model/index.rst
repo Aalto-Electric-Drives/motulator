@@ -205,8 +205,8 @@ Package Contents
       Simultaneous switching instants are merged, so the number of intervals varies.
       Blanking continues across half carrier periods, including changes in their
       length. A reversed command cancels a pending turn-on and starts a new blanking
-      interval. On the first call, the initial commanded state is assumed to
-      already conduct.
+      interval. On the first call, the initial commanded state is assumed to already
+      conduct.
 
 
 
@@ -234,13 +234,13 @@ Package Contents
    
    Composite of models sharing subsystems.
 
-   The models are coupled through shared subsystem objects, e.g., a DC bus given to
-   the models of a grid converter and a drive. Each model keeps its converter, whose
+   The models are coupled through shared subsystem objects, e.g., a DC bus given to the
+   models of a grid converter and a drive. Each model keeps its converter, whose
    modulator includes the PWM model and the computational delay, and the model of a
    controlled converter is driven by its own control system in the simulation, see
-   `Simulation`. A shared subsystem is evaluated once, whatever its names in the
-   models (the composite names the subsystems `model.subsystem` after their first
-   occurrence), in the order derived from the direct dependencies, see `Model`.
+   `Simulation`. A shared subsystem is evaluated once, whatever its names in the models
+   (the composite names the subsystems `model.subsystem` after their first occurrence),
+   in the order derived from the direct dependencies, see `Model`.
 
    :param models: Models by name. The names are used for the control systems and the results, so
                   they must be valid attribute names (not starting with an underscore, and not
@@ -294,9 +294,9 @@ Package Contents
    Time series of the simulation results of a composite model.
 
    The time series of each model is stored as an attribute by the model name (e.g.,
-   `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of
-   the composite, so a subsystem shared by the models has the same time series in
-   each of them.
+   `drive`), see `ModelTimeSeries`. The time series are computed with the wiring of the
+   composite, so a subsystem shared by the models has the same time series in each of
+   them.
 
 
 
@@ -327,12 +327,12 @@ Package Contents
    a control system. Its modulator converts the command of the control system (e.g.,
    the duty ratios) into the gate states and their durations within the sampling
    period, see `Modulator`. The simulation sets the gate states at the switching
-   instants, from which the converter resolves its switching state (e.g., from the
-   gate signals and the phase currents during the blanking). The format of the
-   command and the gate states is up to the converter and its modulator. The control
-   system can block the gates through `set_enable` at its sampling instants, after
-   which only the diodes conduct (see `Converter.blocked`). By default, blocking the
-   gates is not supported.
+   instants, from which the converter resolves its switching state (e.g., from the gate
+   signals and the phase currents during the blanking). The format of the command and
+   the gate states is up to the converter and its modulator. The control system can
+   block the gates through `set_enable` at its sampling instants, after which only the
+   diodes conduct (see `Converter.blocked`). By default, blocking the gates is not
+   supported.
 
 
 
@@ -435,19 +435,18 @@ Package Contents
    current, which a DC bus draws (see `DCBus`), and the states of its diodes. While
    only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is
    determined by the AC port of the load `ac_load` and the states of the diodes, see
-   `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also
-   solves its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and
-   the model evaluates the DC load after the converter. The simulation locates the
+   `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also solves
+   its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and the
+   model evaluates the DC load after the converter. The simulation locates the
    transitions of the diode states as events, using the margin of the states, and
-   updates the states at the transitions.
-   Since the voltage varies within the integration interval, the model evaluates the
-   signals given by `sample` (the voltage by default) at the solution points and
-   passes them to `extend_history`, which also saves the other signals of the
-   converter that are not states.
+   updates the states at the transitions. Since the voltage varies within the
+   integration interval, the model evaluates the signals given by `sample` (the voltage
+   by default) at the solution points and passes them to `extend_history`, which also
+   saves the other signals of the converter that are not states.
 
-   The diodes and the DC bus are optional capabilities: by default, the gates are
-   never blocked, so there are no diode-state transitions, and the converter cannot
-   be fed from a DC bus. A converter subclassing this protocol implements only the
+   The diodes and the DC bus are optional capabilities: by default, the gates are never
+   blocked, so there are no diode-state transitions, and the converter cannot be fed
+   from a DC bus. A converter subclassing this protocol implements only the
    capabilities it has.
 
 
@@ -621,12 +620,12 @@ Package Contents
    
    Capacitive DC bus feeding converters.
 
-   The DC bus feeds the converters of the models it is given to, see `Model`. The
-   model connects its converter to the DC bus through `connect`, which registers the
+   The DC bus feeds the converters of the models it is given to, see `Model`. The model
+   connects its converter to the DC bus through `connect`, which registers the
    converter in `converters` and gives the connections of its DC terminals, i.e., the
    DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
-   currents of the registered converters, computed from their switching states and
-   AC currents. The DC bus can be shared by the converters of several models, see
+   currents of the registered converters, computed from their switching states and AC
+   currents. The DC bus can be shared by the converters of several models, see
    `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
    can also be fed to the DC bus.
 
@@ -651,30 +650,6 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
-
-   .. py:method:: compute_dc_current(t)
-
-      
-      Compute the net current (A) fed to the DC-bus capacitor.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
    .. py:method:: connect(converter)
 
@@ -807,8 +782,8 @@ Package Contents
    Relation between the DC current and the terminal voltage of a current-fed load.
 
    The terminal voltage of the load is ``u = e + R*i + L*di/dt``, where `i` is the
-   current fed by the converter. A current-fed converter (e.g., a diode bridge with
-   a DC choke) uses the port to solve its DC voltage, see `dc_voltage`.
+   current fed by the converter. A current-fed converter (e.g., a diode bridge with a
+   DC choke) uses the port to solve its DC voltage, see `dc_voltage`.
 
    :param e: Voltage (V) at zero current and zero current derivative, e.g., the EMF of the
              load.
@@ -848,15 +823,15 @@ Package Contents
    keeping its current at zero. The voltage is computed from the AC port of the load,
    see `ACPort`. The diode states are updated at their transitions, which the
    simulation locates as events, see `Simulation`. Hence, the commutation of the
-   current between the legs follows from the inductance of the load, e.g., an AC
-   filter and the grid. The threshold voltage of the diodes is included in the diode
-   drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
-   model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge
-   feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives
-   the relation between the DC current and the voltage, see `DCPort`. The bridge then
-   solves its DC voltage together with the leg voltages, and the DC current is its
-   output `i_dc`. The devices of the legs can be gated through `gated`, which models
-   thyristors: a floating leg is clamped to a rail only by a gated device.
+   current between the legs follows from the inductance of the load, e.g., an AC filter
+   and the grid. The threshold voltage of the diodes is included in the diode drops.
+   The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus model is
+   connected to it (see `DCBus` and `Model`). Alternatively, the bridge feeds a DC load
+   `dc_load` (e.g., an EMF through a DC choke), whose DC port gives the relation
+   between the DC current and the voltage, see `DCPort`. The bridge then solves its DC
+   voltage together with the leg voltages, and the DC current is its output `i_dc`. The
+   devices of the legs can be gated through `gated`, which models thyristors: a
+   floating leg is clamped to a rail only by a gated device.
 
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
                 fed from a DC-bus model or feed a DC load.
@@ -1136,13 +1111,13 @@ Package Contents
 
    A model consists of named subsystems and connections between them. The outputs are
    computed in an order that respects the direct dependencies of the subsystems (see
-   `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that
-   the outputs are consistent with the inputs of the same evaluation. The order
-   follows the order of the subsystems where the dependencies allow, and a loop of
-   direct dependencies is rejected. The voltage of a blocked converter depends on
-   the port of its load, which depends on the inputs of the load, so the converter is
-   evaluated after the sources of these inputs. The names of the subsystems name
-   their time series in the results, see `ModelTimeSeries`.
+   `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that the
+   outputs are consistent with the inputs of the same evaluation. The order follows the
+   order of the subsystems where the dependencies allow, and a loop of direct
+   dependencies is rejected. The voltage of a blocked converter depends on the port of
+   its load, which depends on the inputs of the load, so the converter is evaluated
+   after the sources of these inputs. The names of the subsystems name their time
+   series in the results, see `ModelTimeSeries`.
 
    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
    controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -1159,9 +1134,9 @@ Package Contents
                        and `source` are the names of the subsystems.
    :type connections: dict[tuple[str, str], tuple[str, str]]
    :param dc_bus: DC bus feeding the converter. The DC bus is added to the subsystems under the
-                  name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The
-                  DC bus can be shared with other models, see `CompositeModel`. Defaults to None,
-                  in which case the converter has a constant DC-bus voltage.
+                  name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The DC
+                  bus can be shared with other models, see `CompositeModel`. Defaults to None, in
+                  which case the converter has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
 
 
@@ -1365,20 +1340,20 @@ Package Contents
    Base class for modulators.
 
    The sampling period consists of one half carrier period with double update and of
-   two with single update. The command passes through the computational delay once
-   per half carrier period, and the gate states of each half carrier period are
-   computed by `schedule`, which the subclasses implement. The type parameter `Cmd`
-   is the type of the command, e.g., the duty ratios of a voltage-source converter.
+   two with single update. The command passes through the computational delay once per
+   half carrier period, and the gate states of each half carrier period are computed by
+   `schedule`, which the subclasses implement. The type parameter `Cmd` is the type of
+   the command, e.g., the duty ratios of a voltage-source converter.
 
    :param delay: Computational delay in half carrier periods from the sampling instant to the
                  loading of the command. Defaults to None, i.e., one sampling period, which the
-                 control systems of this package compensate for: 1 with double update and 2
-                 with single update. With single update, `delay=1` loads the command at the
-                 carrier extremum between the sampling instants.
+                 control systems of this package compensate for: 1 with double update and 2 with
+                 single update. With single update, `delay=1` loads the command at the carrier
+                 extremum between the sampling instants.
    :type delay: int, optional
-   :param single_update: Sample and update the command once per carrier period, i.e., the sampling
-                         period of the control system equals the carrier period, defaults to False
-                         (double update, the sampling period is half the carrier period).
+   :param single_update: Sample and update the command once per carrier period, i.e., the sampling period
+                         of the control system equals the carrier period, defaults to False (double
+                         update, the sampling period is half the carrier period).
    :type single_update: bool, optional
 
 
@@ -1472,9 +1447,9 @@ Package Contents
    The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
    signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
    independently for each channel at each sample. The parameters are scalars or arrays
-   with one element per channel (e.g., per phase), in the units of the measured
-   signal. The noise represents the sampled signal, i.e., `std` is the standard
-   deviation of the samples after the anti-aliasing filter and the A/D conversion.
+   with one element per channel (e.g., per phase), in the units of the measured signal.
+   The noise represents the sampled signal, i.e., `std` is the standard deviation of
+   the samples after the anti-aliasing filter and the A/D conversion.
 
    :param gain: Gain, defaults to 1.
    :type gain: array_like, optional
@@ -1516,27 +1491,27 @@ Package Contents
    
    Simulation environment.
 
-   Each control system is called at its own sampling instants, which gives the
-   sampling period of its next control cycle. The control systems of a composite
-   model can have different sampling periods, and their sampling instants need not
-   coincide. The switching states of the converters are held constant between the
-   sampling and switching instants of all the converters.
+   Each control system is called at its own sampling instants, which gives the sampling
+   period of its next control cycle. The control systems of a composite model can have
+   different sampling periods, and their sampling instants need not coincide. The
+   switching states of the converters are held constant between the sampling and
+   switching instants of all the converters.
 
    :param mdl: Continuous-time system model.
    :type mdl: Model
    :param ctrl: Discrete-time control system of a model with a controlled converter. For a
-                composite model, the control systems of the models with controlled converters
-                by the model names. Defaults to None, i.e., no control systems.
+                composite model, the control systems of the models with controlled converters by
+                the model names. Defaults to None, i.e., no control systems.
    :type ctrl: ControlSystem | Mapping[str, ControlSystem], optional
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
    :param cfg: Solver configuration parameters.
    :type cfg: SolverCfg, optional
-   :param t_start: First sampling instant (s) of the control system or, for a composite model,
-                   of the control systems by the model names. The time `ctrl.t` of the control
-                   system is set to this value. Defaults to the initial time of the model, as do
-                   the control systems not included in the mapping, in which case `ctrl.t` is
-                   not changed.
+   :param t_start: First sampling instant (s) of the control system or, for a composite model, of
+                   the control systems by the model names. The time `ctrl.t` of the control system
+                   is set to this value. Defaults to the initial time of the model, as do the
+                   control systems not included in the mapping, in which case `ctrl.t` is not
+                   changed.
    :type t_start: float | Mapping[str, float], optional
 
 
@@ -1561,17 +1536,16 @@ Package Contents
       
       Solve continuous-time system model and call control system.
 
-      The simulation runs until the first sampling instant after `t_stop`, or
-      until `t_stop` without control systems. A subsequent call continues the
-      simulation.
+      The simulation runs until the first sampling instant after `t_stop`, or until
+      `t_stop` without control systems. A subsequent call continues the simulation.
 
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
                      integration interval, i.e., for each interval between the sampling and
                      switching instants, or for the whole simulation without control systems.
-                     Defaults to 0, in which case the number and spacing of points is selected
-                     by the solver.
+                     Defaults to 0, in which case the number and spacing of points is selected by
+                     the solver.
       :type N_eval: int, optional
 
 
@@ -1614,8 +1588,8 @@ Package Contents
 
    .. attribute:: success
 
-      False if the simulation stopped before the stop time due to a numerical
-      failure, in which case the results cover the time until the failure.
+      False if the simulation stopped before the stop time due to a numerical failure,
+      in which case the results cover the time until the failure.
 
       :type: bool
 
@@ -1642,11 +1616,10 @@ Package Contents
    Solver configuration parameters.
 
    :param max_step: Maximum step size (s) for the integrator. Defaults to None, i.e., 1e-4 s while
-                    the gates of a converter are blocked, so that the solver locates the
-                    transitions of the diodes driven by the AC voltages, and without control
-                    systems, so that the solver resolves the waveforms. Otherwise, the step size is
-                    not limited, since the sampling and switching instants limit the integration
-                    intervals.
+                    the gates of a converter are blocked, so that the solver locates the transitions
+                    of the diodes driven by the AC voltages, and without control systems, so that
+                    the solver resolves the waveforms. Otherwise, the step size is not limited,
+                    since the sampling and switching instants limit the integration intervals.
    :type max_step: float, optional
    :param method: Integration method, defaults to "RK45".
    :type method: str, optional
@@ -1710,14 +1683,14 @@ Package Contents
    pass the outputs to the inputs (see `Model`), and the states are gathered into the
    state vector of the solver in their declaration order. The class provides methods
    for setting states, outputs, and computing state derivatives. It also provides
-   methods for extending the state history and creating the time-series
-   representation of the subsystem, which the model names in the results (see
-   `ModelTimeSeries`). A subsystem whose outputs depend directly on some of its
-   inputs lists these inputs in `feedthrough`, from which the model derives the
-   evaluation order of the outputs. The state history is a dict of lists, keyed by
-   the names of the state fields. The model initializes it by `init_state_history`
-   and extends it by `extend_state_history`. A subclass can keep its other signals
-   in the history as well, under other keys, as a converter does (see `Converter`).
+   methods for extending the state history and creating the time-series representation
+   of the subsystem, which the model names in the results (see `ModelTimeSeries`). A
+   subsystem whose outputs depend directly on some of its inputs lists these inputs in
+   `feedthrough`, from which the model derives the evaluation order of the outputs. The
+   state history is a dict of lists, keyed by the names of the state fields. The model
+   initializes it by `init_state_history` and extends it by `extend_state_history`. A
+   subclass can keep its other signals in the history as well, under other keys, as a
+   converter does (see `Converter`).
 
 
 
@@ -1936,9 +1909,9 @@ Package Contents
    
    Base class for subsystem time series.
 
-   The outputs are computed when the time series is created or, if they depend
-   directly on the inputs, in `set_outputs`. The signals computed in
-   `compute_derived_signals` are not passed to other subsystems.
+   The outputs are computed when the time series is created or, if they depend directly
+   on the inputs, in `set_outputs`. The signals computed in `compute_derived_signals`
+   are not passed to other subsystems.
 
 
 
@@ -2180,10 +2153,9 @@ Package Contents
 
    The gate state of a leg consists of the gate signal of its upper switch and the
    blanking signal, see `VoltageSourceConverter`. Hence, the gate states of the N
-   intervals form an array of shape (N, 2, n_legs), the gate signals in the first
-   row and the blanking signals in the second row of each interval. In the averaged
-   model, they are the on-time fractions of the upper switches and the blanking
-   fractions.
+   intervals form an array of shape (N, 2, n_legs), the gate signals in the first row
+   and the blanking signals in the second row of each interval. In the averaged model,
+   they are the on-time fractions of the upper switches and the blanking fractions.
 
 
 
@@ -2210,8 +2182,8 @@ Package Contents
    
    Three-phase voltage-source converter.
 
-   The modulator converts the duty ratios of the control system into the gate states
-   of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+   The modulator converts the duty ratios of the control system into the gate states of
+   the legs, i.e., the gate signals of the upper switches and the blanking signals,
    including the computational delay and the dead time, see `ZOH` and
    `CarrierComparison`. The switches are ideal, except for the dead time and the
    threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
@@ -2231,11 +2203,11 @@ Package Contents
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
                 be fed from a DC-bus model.
    :type u_dc: float, optional
-   :param modulator: Modulator converting the command of the control system into the gate states,
-                     see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle
-                     averaged model of the duty ratios without the dead time and with the
-                     computational delay of one sampling period. A modulator keeps its state, so
-                     each converter needs its own.
+   :param modulator: Modulator converting the command of the control system into the gate states, see
+                     `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle averaged
+                     model of the duty ratios without the dead time and with the computational delay
+                     of one sampling period. A modulator keeps its state, so each converter needs its
+                     own.
    :type modulator: TwoLevelModulator, optional
    :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
    :type u_th: float, optional
@@ -2437,8 +2409,8 @@ Package Contents
       
       Convert the command to the gate states and their durations.
 
-      The command passes through the modulator also while the gates are blocked,
-      but the gate states are then zero for the whole sampling period.
+      The command passes through the modulator also while the gates are blocked, but
+      the gate states are then zero for the whole sampling period.
 
       :param T_s: Sampling period (s).
       :type T_s: float
@@ -2550,8 +2522,8 @@ Package Contents
    Zero-order hold of the duty ratios of a voltage-source converter.
 
    The dead time reduces the gate signal duty ratios of both switches of a leg by
-   `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the
-   half carrier period `T_half`, unless the leg does not switch. Short pulses are
+   `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the half
+   carrier period `T_half`, unless the leg does not switch. Short pulses are
    suppressed, and the blanking fraction is computed from the remaining on-times of
    both switches. This is a switching-cycle averaged model, not a model of switching
    transients.
@@ -2618,11 +2590,11 @@ Package Contents
    
    Solve the voltage between the rails of a current-fed bridge.
 
-   The DC current of the bridge is the current of the legs clamped to the positive
-   rail (equally, the negative of the current of the legs clamped to the negative
-   rail). Its derivative follows from the AC port and the leg voltages, which depend
-   on the rail voltage, see `leg_voltages`. The rail voltage satisfying the DC port
-   ``u_dc = e + R*i_dc + L*di_dc/dt`` is solved from this linear relation.
+   The DC current of the bridge is the current of the legs clamped to the positive rail
+   (equally, the negative of the current of the legs clamped to the negative rail). Its
+   derivative follows from the AC port and the leg voltages, which depend on the rail
+   voltage, see `leg_voltages`. The rail voltage satisfying the DC port ``u_dc = e +
+   R*i_dc + L*di_dc/dt`` is solved from this linear relation.
 
    :param port: Relation between the terminal current and voltage of the AC-side load.
    :type port: ACPort
@@ -2656,9 +2628,9 @@ Package Contents
    
    Compute the margin of the diode states.
 
-   The margin is positive while the diode states are valid, and it reaches zero
-   when the current of a conducting leg reverses or the voltage of a floating leg
-   reaches a rail through a gated device, i.e., at a transition of the diode states.
+   The margin is positive while the diode states are valid, and it reaches zero when
+   the current of a conducting leg reverses or the voltage of a floating leg reaches a
+   rail through a gated device, i.e., at a transition of the diode states.
 
    :param port: Relation between the terminal current and voltage of the load.
    :type port: ACPort
@@ -2697,10 +2669,10 @@ Package Contents
    
    Compute the leg voltages of a converter with blocked gates.
 
-   The diode state of each leg is 1 if its lower diode conducts (the leg is clamped
-   to the negative rail), -1 if its upper diode conducts (positive rail), and 0 if
-   the leg floats. The voltage of a floating leg keeps its current at zero, i.e., it
-   drives the residual current to zero.
+   The diode state of each leg is 1 if its lower diode conducts (the leg is clamped to
+   the negative rail), -1 if its upper diode conducts (positive rail), and 0 if the leg
+   floats. The voltage of a floating leg keeps its current at zero, i.e., it drives the
+   residual current to zero.
 
    :param port: Relation between the terminal current and voltage of the load.
    :type port: ACPort
@@ -2748,8 +2720,8 @@ Package Contents
    :param diodes: Diode states of the legs, see `leg_voltages`. Defaults to None, which latches
                   the states from the directions of the currents.
    :type diodes: ndarray, shape (3,), optional
-   :param gated: Gate signals of the upper and lower devices of the legs. Defaults to None,
-                 i.e., all the devices are gated (diodes).
+   :param gated: Gate signals of the upper and lower devices of the legs. Defaults to None, i.e.,
+                 all the devices are gated (diodes).
    :type gated: ndarray, shape (2, 3), optional
 
    :returns: Updated diode states.

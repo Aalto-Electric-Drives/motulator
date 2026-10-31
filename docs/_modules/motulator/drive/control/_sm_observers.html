@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._sm_observers &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.control._sm_observers &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -610,10 +610,10 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        u_s_ab : complex | None</span>
-<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing</span>
-<span class="sd">            sampling period, i.e., from this sampling instant to the next one. If</span>
-<span class="sd">            None (unknown voltage, e.g., with blocked gates), the flux estimate</span>
-<span class="sd">            follows the current model alone.</span>
+<span class="sd">            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling</span>
+<span class="sd">            period, i.e., from this sampling instant to the next one. If None (unknown</span>
+<span class="sd">            voltage, e.g., with blocked gates), the flux estimate follows the current</span>
+<span class="sd">            model alone.</span>
 <span class="sd">        i_s_ab : complex</span>
 <span class="sd">            Stator current (A) in stator coordinates.</span>
 <span class="sd">        w_M : float</span>
@@ -841,15 +841,14 @@
 <span class="sd">        Initialize the estimates from the current response to a zero-voltage period.</span>
 
 <span class="sd">        The back-EMF drives the current along the negative q axis of the rotor, which</span>
-<span class="sd">        gives the rotor angle and the speed magnitude (a flying start, cf.</span>
-<span class="sd">        [#Tan2009]_), the direction of rotation being taken from the speed estimate.</span>
-<span class="sd">        The resistive voltage drop and the cross-coupling of the current are</span>
-<span class="sd">        neglected.</span>
+<span class="sd">        gives the rotor angle and the speed magnitude (a flying start, cf. [#Tan2009]_),</span>
+<span class="sd">        the direction of rotation being taken from the speed estimate. The resistive</span>
+<span class="sd">        voltage drop and the cross-coupling of the current are neglected.</span>
 
-<span class="sd">        This method is called by `compute_output` at the first sampling instant with</span>
-<span class="sd">        a known voltage after unknown ones. The period is the last of them, in which</span>
-<span class="sd">        the control system applies the zero voltage vector after the release of the</span>
-<span class="sd">        gates (see `VectorControlSystem`).</span>
+<span class="sd">        This method is called by `compute_output` at the first sampling instant with a</span>
+<span class="sd">        known voltage after unknown ones. The period is the last of them, in which the</span>
+<span class="sd">        control system applies the zero voltage vector after the release of the gates</span>
+<span class="sd">        (see `VectorControlSystem`).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -863,16 +862,15 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
-<span class="sd">            True if the estimates were initialized, False if the back-EMF estimate</span>
-<span class="sd">            does not exceed the resistive voltage drop of the current (standstill, or</span>
-<span class="sd">            a current that has not decayed) or the machine has no magnets.</span>
+<span class="sd">            True if the estimates were initialized, False if the back-EMF estimate does</span>
+<span class="sd">            not exceed the resistive voltage drop of the current (standstill, or a</span>
+<span class="sd">            current that has not decayed) or the machine has no magnets.</span>
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
-<span class="sd">        .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,</span>
-<span class="sd">           "Starting procedure of rotational sensorless PMSM in the rotating</span>
-<span class="sd">           condition," IEEE Trans. Ind. Appl., 2009,</span>
-<span class="sd">           https://doi.org/10.1109/TIA.2008.2009496</span>
+<span class="sd">        .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, "Starting</span>
+<span class="sd">           procedure of rotational sensorless PMSM in the rotating condition," IEEE</span>
+<span class="sd">           Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2008.2009496</span>
 
 <span class="sd">        """</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flux_observer</span><span class="o">.</span><span class="n">par</span>
@@ -907,8 +905,8 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the feedback signals in sensorless or sensored mode.</span>
 
-<span class="sd">    In sensored mode, the measured rotor angle gives the external position error</span>
-<span class="sd">    signal, which is used exclusively (`h = 1`).</span>
+<span class="sd">    In sensored mode, the measured rotor angle gives the external position error signal,</span>
+<span class="sd">    which is used exclusively (`h = 1`).</span>
 
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">sensorless</span><span class="p">:</span>
@@ -971,9 +969,9 @@
 <span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float | None</span>
-<span class="sd">        Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless`</span>
-<span class="sd">        is True, otherwise 2*pi*400. If `J` is given, the default is divided by</span>
-<span class="sd">        sqrt(3), which keeps the speed estimation gain approximately the same.</span>
+<span class="sd">        Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless` is</span>
+<span class="sd">        True, otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3),</span>
+<span class="sd">        which keeps the speed estimation gain approximately the same.</span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s), see :class:`SpeedFluxObserver`.</span>
 <span class="sd">    k_o : Callable[[float], float], optional</span>

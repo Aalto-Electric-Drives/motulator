@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.model &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.model &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -524,7 +524,6 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus"><code class="docutils literal notranslate"><span class="pre">DCBus</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.compute_dc_current"><code class="docutils literal notranslate"><span class="pre">DCBus.compute_dc_current()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.connect"><code class="docutils literal notranslate"><span class="pre">DCBus.connect()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.create_time_series"><code class="docutils literal notranslate"><span class="pre">DCBus.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.rhs"><code class="docutils literal notranslate"><span class="pre">DCBus.rhs()</span></code></a></li>
@@ -547,7 +546,6 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.GridConnectedMachine"><code class="docutils literal notranslate"><span class="pre">GridConnectedMachine</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine"><code class="docutils literal notranslate"><span class="pre">InductionMachine</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_ac_port()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">InductionMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">InductionMachine.meas_currents()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.rhs"><code class="docutils literal notranslate"><span class="pre">InductionMachine.rhs()</span></code></a></li>
@@ -584,7 +582,6 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.compute_total_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.meas_position"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.meas_position()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.meas_speed"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.meas_speed()</span></code></a></li>
@@ -613,6 +610,10 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SimulationResults.success"><code class="docutils literal notranslate"><span class="pre">SimulationResults.success</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SolverCfg"><code class="docutils literal notranslate"><span class="pre">SolverCfg</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SolverCfg.solver"><code class="docutils literal notranslate"><span class="pre">SolverCfg.solver</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.magnetic_map()</span></code></a></li>
@@ -620,7 +621,6 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_ac_port()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.meas_currents()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.rhs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.rhs()</span></code></a></li>
@@ -644,8 +644,6 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_shaft_torque()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_total_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_position()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_speed()</span></code></a></li>
@@ -741,25 +739,28 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.SimulationResults" title="motulator.drive.model.SimulationResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimulationResults</span></code></a></p></td>
 <td><p>Container for simulation results.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars" title="motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.SolverCfg" title="motulator.drive.model.SolverCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolverCfg</span></code></a></p></td>
+<td><p>Solver configuration parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars" title="motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars</span></code></a></p></td>
 <td><p>Parameters of a saturated synchronous machine with spatial harmonics.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.SynchronousMachine" title="motulator.drive.model.SynchronousMachine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.SynchronousMachine" title="motulator.drive.model.SynchronousMachine"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a></p></td>
 <td><p>Synchronous machine model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.SynchronousMachinePars" title="motulator.drive.model.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.SynchronousMachinePars" title="motulator.drive.model.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
 <td><p>Synchronous machine parameters, without saturation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.ThreePhaseSource" title="motulator.drive.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.ThreePhaseSource" title="motulator.drive.model.ThreePhaseSource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThreePhaseSource</span></code></a></p></td>
 <td><p>Three-phase source model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.TwoMassMechanicalSystem" title="motulator.drive.model.TwoMassMechanicalSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a></p></td>
 <td><p>Two-mass mechanical subsystem.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.VoltageSourceConverter" title="motulator.drive.model.VoltageSourceConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VoltageSourceConverter</span></code></a></p></td>
 <td><p>Three-phase voltage-source converter.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.model.ZOH" title="motulator.drive.model.ZOH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZOH</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.model.ZOH" title="motulator.drive.model.ZOH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ZOH</span></code></a></p></td>
 <td><p>Zero-order hold of the duty ratios of a voltage-source converter.</p></td>
 </tr>
 </tbody>
@@ -857,8 +858,8 @@ see <cite>Modulator</cite>.</p></li>
 <p>Simultaneous switching instants are merged, so the number of intervals varies.
 Blanking continues across half carrier periods, including changes in their
 length. A reversed command cancels a pending turn-on and starts a new blanking
-interval. On the first call, the initial commanded state is assumed to
-already conduct.</p>
+interval. On the first call, the initial commanded state is assumed to already
+conduct.</p>
 </dd></dl>
 
 </dd></dl>
@@ -868,13 +869,13 @@ already conduct.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">CompositeModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_composite.html#CompositeModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.CompositeModel" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Model</span></code>[<a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 <p>Composite of models sharing subsystems.</p>
-<p>The models are coupled through shared subsystem objects, e.g., a DC bus given to
-the models of a grid converter and a drive. Each model keeps its converter, whose
+<p>The models are coupled through shared subsystem objects, e.g., a DC bus given to the
+models of a grid converter and a drive. Each model keeps its converter, whose
 modulator includes the PWM model and the computational delay, and the model of a
 controlled converter is driven by its own control system in the simulation, see
-<cite>Simulation</cite>. A shared subsystem is evaluated once, whatever its names in the
-models (the composite names the subsystems <cite>model.subsystem</cite> after their first
-occurrence), in the order derived from the direct dependencies, see <cite>Model</cite>.</p>
+<cite>Simulation</cite>. A shared subsystem is evaluated once, whatever its names in the models
+(the composite names the subsystems <cite>model.subsystem</cite> after their first occurrence),
+in the order derived from the direct dependencies, see <cite>Model</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>models</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a><em>]</em>) – Models by name. The names are used for the control systems and the results, so
@@ -903,12 +904,12 @@ they must be valid attribute names (not starting with an underscore, and not
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">DCBus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DCBus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.DCBus" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
 <p>Capacitive DC bus feeding converters.</p>
-<p>The DC bus feeds the converters of the models it is given to, see <cite>Model</cite>. The
-model connects its converter to the DC bus through <cite>connect</cite>, which registers the
+<p>The DC bus feeds the converters of the models it is given to, see <cite>Model</cite>. The model
+connects its converter to the DC bus through <cite>connect</cite>, which registers the
 converter in <cite>converters</cite> and gives the connections of its DC terminals, i.e., the
 DC-bus voltage to the input <cite>u_dc</cite> of the converter. The DC bus draws the DC
-currents of the registered converters, computed from their switching states and
-AC currents. The DC bus can be shared by the converters of several models, see
+currents of the registered converters, computed from their switching states and AC
+currents. The DC bus can be shared by the converters of several models, see
 <cite>CompositeModel</cite>. An external current, e.g., from a battery or a braking chopper,
 can also be fed to the DC bus.</p>
 <dl class="field-list simple">
@@ -919,20 +920,6 @@ can also be fed to the DC bus.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.DCBus.compute_dc_current">
-<span class="sig-name descname"><span class="pre">compute_dc_current</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DCBus.compute_dc_current"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.DCBus.compute_dc_current" title="Link to this definition">#</a></dt>
-<dd><p>Compute the net current (A) fed to the DC-bus capacitor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.DCBus.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DCBus.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.DCBus.connect" title="Link to this definition">#</a></dt>
@@ -1204,8 +1191,8 @@ torque.</p>
 <aside class="footnote brackets" id="sle1989" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
-<p>Slemon, “Modelling of induction machines for electric
-drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a></p>
+<p>Slemon, “Modelling of induction machines for electric drives,” IEEE
+Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a></p>
 </aside>
 </aside>
 <dl class="py method">
@@ -1215,23 +1202,6 @@ drives,” IEEE Trans. Ind. Appl., 1989, <a class="reference external" href="htt
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../common/model/index.html#motulator.common.model.ACPort" title="motulator.common.model.ACPort">motulator.common.model.ACPort</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.InductionMachine.compute_outputs">
-<span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#InductionMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.InductionMachine.compute_outputs" title="Link to this definition">#</a></dt>
-<dd><p>Compute output variables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>Any</em>)</p></li>
-<li><p><strong>inp</strong> (<em>Any</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[Any, Any, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1655,23 +1625,6 @@ Defaults to 0.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.compute_total_load_torque">
-<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Total load torque (Nm), including the friction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>w_M</strong> (<em>Any</em>)</p></li>
-<li><p><strong>tau_L</strong> (<em>Any</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.MechanicalSystem.create_time_series">
 <span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#MechanicalSystem.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.MechanicalSystem.create_time_series" title="Link to this definition">#</a></dt>
 <dd><p>Create time series from state list.</p>
@@ -1872,9 +1825,9 @@ efficient but may be convenient in some special cases.</p>
 <p>The measured signal is <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">gain*x</span> <span class="pre">+</span> <span class="pre">offset</span> <span class="pre">+</span> <span class="pre">std*n</span></code>, where <cite>x</cite> is the actual
 signal and <cite>n</cite> is zero-mean white Gaussian noise with unit variance, drawn
 independently for each channel at each sample. The parameters are scalars or arrays
-with one element per channel (e.g., per phase), in the units of the measured
-signal. The noise represents the sampled signal, i.e., <cite>std</cite> is the standard
-deviation of the samples after the anti-aliasing filter and the A/D conversion.</p>
+with one element per channel (e.g., per phase), in the units of the measured signal.
+The noise represents the sampled signal, i.e., <cite>std</cite> is the standard deviation of
+the samples after the anti-aliasing filter and the A/D conversion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1900,25 +1853,25 @@ generators of the same seed would produce identical noise.</p></li>
 <dt class="sig sig-object py" id="motulator.drive.model.Simulation">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_progress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Simulation" title="Link to this definition">#</a></dt>
 <dd><p>Simulation environment.</p>
-<p>Each control system is called at its own sampling instants, which gives the
-sampling period of its next control cycle. The control systems of a composite
-model can have different sampling periods, and their sampling instants need not
-coincide. The switching states of the converters are held constant between the
-sampling and switching instants of all the converters.</p>
+<p>Each control system is called at its own sampling instants, which gives the sampling
+period of its next control cycle. The control systems of a composite model can have
+different sampling periods, and their sampling instants need not coincide. The
+switching states of the converters are held constant between the sampling and
+switching instants of all the converters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mdl</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.Model" title="motulator.common.model.Model"><em>Model</em></a>) – Continuous-time system model.</p></li>
 <li><p><strong>ctrl</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a><em> | </em><em>Mapping</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference internal" href="../../common/control/index.html#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><em>ControlSystem</em></a><em>]</em><em>, </em><em>optional</em>) – Discrete-time control system of a model with a controlled converter. For a
-composite model, the control systems of the models with controlled converters
-by the model names. Defaults to None, i.e., no control systems.</p></li>
+composite model, the control systems of the models with controlled converters by
+the model names. Defaults to None, i.e., no control systems.</p></li>
 <li><p><strong>show_progress</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Show progress during simulation, defaults to True.</p></li>
-<li><p><strong>cfg</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.SolverCfg" title="motulator.common.model.SolverCfg"><em>SolverCfg</em></a><em>, </em><em>optional</em>) – Solver configuration parameters.</p></li>
-<li><p><strong>t_start</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Mapping</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – First sampling instant (s) of the control system or, for a composite model,
-of the control systems by the model names. The time <cite>ctrl.t</cite> of the control
-system is set to this value. Defaults to the initial time of the model, as do
-the control systems not included in the mapping, in which case <cite>ctrl.t</cite> is
-not changed.</p></li>
+<li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.model.SolverCfg" title="motulator.drive.model.SolverCfg"><em>SolverCfg</em></a><em>, </em><em>optional</em>) – Solver configuration parameters.</p></li>
+<li><p><strong>t_start</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Mapping</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><em>optional</em>) – First sampling instant (s) of the control system or, for a composite model, of
+the control systems by the model names. The time <cite>ctrl.t</cite> of the control system
+is set to this value. Defaults to the initial time of the model, as do the
+control systems not included in the mapping, in which case <cite>ctrl.t</cite> is not
+changed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1926,9 +1879,8 @@ not changed.</p></li>
 <dt class="sig sig-object py" id="motulator.drive.model.Simulation.simulate">
 <span class="sig-name descname"><span class="pre">simulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_eval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#Simulation.simulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.Simulation.simulate" title="Link to this definition">#</a></dt>
 <dd><p>Solve continuous-time system model and call control system.</p>
-<p>The simulation runs until the first sampling instant after <cite>t_stop</cite>, or
-until <cite>t_stop</cite> without control systems. A subsequent call continues the
-simulation.</p>
+<p>The simulation runs until the first sampling instant after <cite>t_stop</cite>, or until
+<cite>t_stop</cite> without control systems. A subsequent call continues the simulation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1936,8 +1888,8 @@ simulation.</p>
 <li><p><strong>N_eval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Number of evenly spaced data points to be returned by the solver for each
 integration interval, i.e., for each interval between the sampling and
 switching instants, or for the whole simulation without control systems.
-Defaults to 0, in which case the number and spacing of points is selected
-by the solver.</p></li>
+Defaults to 0, in which case the number and spacing of points is selected by
+the solver.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1980,11 +1932,42 @@ attribute by the model name (None for a model without a control system).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.drive.model.SimulationResults.success">
 <span class="sig-name descname"><span class="pre">success</span></span><a class="headerlink" href="#motulator.drive.model.SimulationResults.success" title="Link to this definition">#</a></dt>
-<dd><p>False if the simulation stopped before the stop time due to a numerical
-failure, in which case the results cover the time until the failure.</p>
+<dd><p>False if the simulation stopped before the stop time due to a numerical failure,
+in which case the results cover the time until the failure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.model.SolverCfg">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">SolverCfg</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_simulation.html#SolverCfg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SolverCfg" title="Link to this definition">#</a></dt>
+<dd><p>Solver configuration parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_step</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum step size (s) for the integrator. Defaults to None, i.e., 1e-4 s while
+the gates of a converter are blocked, so that the solver locates the transitions
+of the diodes driven by the AC voltages, and without control systems, so that
+the solver resolves the waveforms. Otherwise, the step size is not limited,
+since the sampling and switching instants limit the integration intervals.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – Integration method, defaults to “RK45”.</p></li>
+<li><p><strong>rtol</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Relative tolerance, defaults to 1e-3.</p></li>
+<li><p><strong>atol</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Absolute tolerance, defaults to 1e-6.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.model.SolverCfg.solver">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">solver</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#motulator.drive.model.SolverCfg.solver" title="Link to this definition">#</a></dt>
+<dd><p>Return the solver configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)">dict</a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a>, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2061,9 +2044,9 @@ pole pair.</p>
 simplest implementation. The interfaces are in stator coordinates. The magnetic
 saturation can be modeled by providing a nonlinear current map, either as
 <cite>i_s_dq_fcn</cite> in <cite>SaturatedSynchronousMachinePars</cite> or, including spatial harmonics,
-as <cite>magnetic_map_fcn</cite> in <cite>SpatialSaturatedSynchronousMachinePars</cite>.
-Optionally, eddy-current core losses can be modeled by means of a constant core-loss
-conductance <cite>G_c</cite>, connected in parallel with the magnetizing branch.</p>
+as <cite>magnetic_map_fcn</cite> in <cite>SpatialSaturatedSynchronousMachinePars</cite>. Optionally,
+eddy-current core losses can be modeled by means of a constant core-loss conductance
+<cite>G_c</cite>, connected in parallel with the magnetizing branch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2085,23 +2068,6 @@ magnetic circuit, i.e., the core-loss current is excluded from the torque.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../common/model/index.html#motulator.common.model.ACPort" title="motulator.common.model.ACPort">motulator.common.model.ACPort</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachine.compute_outputs">
-<span class="sig-name descname"><span class="pre">compute_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_machine.html#SynchronousMachine.compute_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachine.compute_outputs" title="Link to this definition">#</a></dt>
-<dd><p>Compute output variables.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>state</strong> (<em>Any</em>)</p></li>
-<li><p><strong>inp</strong> (<em>Any</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[Any, Any, Any]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2368,41 +2334,6 @@ Defaults to 0.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque">
-<span class="sig-name descname"><span class="pre">compute_shaft_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta_ML</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_shaft_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque" title="Link to this definition">#</a></dt>
-<dd><p>Shaft torque (Nm).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>theta_ML</strong> (<em>Any</em>)</p></li>
-<li><p><strong>w_M</strong> (<em>Any</em>)</p></li>
-<li><p><strong>w_L</strong> (<em>Any</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque">
-<span class="sig-name descname"><span class="pre">compute_total_load_torque</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.compute_total_load_torque"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque" title="Link to this definition">#</a></dt>
-<dd><p>Total load torque (Nm), including the friction.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>w_L</strong> (<em>Any</em>)</p></li>
-<li><p><strong>tau_L</strong> (<em>Any</em>)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Any</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.TwoMassMechanicalSystem.create_time_series">
 <span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/model/_mechanics.html#TwoMassMechanicalSystem.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.TwoMassMechanicalSystem.create_time_series" title="Link to this definition">#</a></dt>
 <dd><p>Create time series from state list.</p>
@@ -2537,8 +2468,8 @@ Defaults to 0.</p></li>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.ControlledConverter</span></code></p>
 <p>Three-phase voltage-source converter.</p>
-<p>The modulator converts the duty ratios of the control system into the gate states
-of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+<p>The modulator converts the duty ratios of the control system into the gate states of
+the legs, i.e., the gate signals of the upper switches and the blanking signals,
 including the computational delay and the dead time, see <cite>ZOH</cite> and
 <cite>CarrierComparison</cite>. The switches are ideal, except for the dead time and the
 threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
@@ -2558,11 +2489,11 @@ latched from the current directions when the gates are blocked.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Constant DC-bus voltage (V). Defaults to None, in which case the converter must
 be fed from a DC-bus model.</p></li>
-<li><p><strong>modulator</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><em>TwoLevelModulator</em></a><em>, </em><em>optional</em>) – Modulator converting the command of the control system into the gate states,
-see <cite>TwoLevelModulator</cite>. Defaults to <cite>ZOH()</cite>, i.e., the switching-cycle
-averaged model of the duty ratios without the dead time and with the
-computational delay of one sampling period. A modulator keeps its state, so
-each converter needs its own.</p></li>
+<li><p><strong>modulator</strong> (<a class="reference internal" href="../../common/model/index.html#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><em>TwoLevelModulator</em></a><em>, </em><em>optional</em>) – Modulator converting the command of the control system into the gate states, see
+<cite>TwoLevelModulator</cite>. Defaults to <cite>ZOH()</cite>, i.e., the switching-cycle averaged
+model of the duty ratios without the dead time and with the computational delay
+of one sampling period. A modulator keeps its state, so each converter needs its
+own.</p></li>
 <li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the power devices, defaults to 0.</p></li>
 <li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Function of the phase currents (A) determining the leg states during blanking,
 defaults to <cite>np.sign</cite>. A smooth function, such as <cite>2/pi*arctan(i/i_d)</cite>, can be
@@ -2664,8 +2595,8 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dt class="sig sig-object py" id="motulator.drive.model.VoltageSourceConverter.modulate">
 <span class="sig-name descname"><span class="pre">modulate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.modulate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.VoltageSourceConverter.modulate" title="Link to this definition">#</a></dt>
 <dd><p>Convert the command to the gate states and their durations.</p>
-<p>The command passes through the modulator also while the gates are blocked,
-but the gate states are then zero for the whole sampling period.</p>
+<p>The command passes through the modulator also while the gates are blocked, but
+the gate states are then zero for the whole sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2737,8 +2668,8 @@ but the gate states are then zero for the whole sampling period.</p>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code>[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>]]</p>
 <p>Zero-order hold of the duty ratios of a voltage-source converter.</p>
 <p>The dead time reduces the gate signal duty ratios of both switches of a leg by
-<cite>t_d/(2*T_half)</cite>, leaving the leg blanked for the fraction <cite>t_d/T_half</cite> of the
-half carrier period <cite>T_half</cite>, unless the leg does not switch. Short pulses are
+<cite>t_d/(2*T_half)</cite>, leaving the leg blanked for the fraction <cite>t_d/T_half</cite> of the half
+carrier period <cite>T_half</cite>, unless the leg does not switch. Short pulses are
 suppressed, and the blanking fraction is computed from the remaining on-times of
 both switches. This is a switching-cycle averaged model, not a model of switching
 transients.</p>
@@ -2840,7 +2771,6 @@ see <cite>Modulator</cite>.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus"><code class="docutils literal notranslate"><span class="pre">DCBus</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.compute_dc_current"><code class="docutils literal notranslate"><span class="pre">DCBus.compute_dc_current()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.connect"><code class="docutils literal notranslate"><span class="pre">DCBus.connect()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.create_time_series"><code class="docutils literal notranslate"><span class="pre">DCBus.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.DCBus.rhs"><code class="docutils literal notranslate"><span class="pre">DCBus.rhs()</span></code></a></li>
@@ -2863,7 +2793,6 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.GridConnectedMachine"><code class="docutils literal notranslate"><span class="pre">GridConnectedMachine</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine"><code class="docutils literal notranslate"><span class="pre">InductionMachine</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_ac_port()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">InductionMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">InductionMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">InductionMachine.meas_currents()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.InductionMachine.rhs"><code class="docutils literal notranslate"><span class="pre">InductionMachine.rhs()</span></code></a></li>
@@ -2900,7 +2829,6 @@ see <cite>Modulator</cite>.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.compute_total_load_torque"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.compute_total_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.meas_position"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.meas_position()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.MechanicalSystem.meas_speed"><code class="docutils literal notranslate"><span class="pre">MechanicalSystem.meas_speed()</span></code></a></li>
@@ -2929,6 +2857,10 @@ see <cite>Modulator</cite>.</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SimulationResults.success"><code class="docutils literal notranslate"><span class="pre">SimulationResults.success</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SolverCfg"><code class="docutils literal notranslate"><span class="pre">SolverCfg</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SolverCfg.solver"><code class="docutils literal notranslate"><span class="pre">SolverCfg.solver</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.i_s_dq()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">SpatialSaturatedSynchronousMachinePars.magnetic_map()</span></code></a></li>
@@ -2936,7 +2868,6 @@ see <cite>Modulator</cite>.</p></li>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_ac_port"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_ac_port()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.compute_outputs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.compute_outputs()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.create_time_series"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.meas_currents"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.meas_currents()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.SynchronousMachine.rhs"><code class="docutils literal notranslate"><span class="pre">SynchronousMachine.rhs()</span></code></a></li>
@@ -2960,8 +2891,6 @@ see <cite>Modulator</cite>.</p></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_shaft_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_shaft_torque()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.compute_total_load_torque"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.compute_total_load_torque()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.create_time_series"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_position()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed"><code class="docutils literal notranslate"><span class="pre">TwoMassMechanicalSystem.meas_load_speed()</span></code></a></li>

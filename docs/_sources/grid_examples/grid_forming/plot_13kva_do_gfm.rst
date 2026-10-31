@@ -23,12 +23,11 @@
 
 This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM)
 converter, connected to a weak grid. The converter output voltage and the active power
-are directly controlled. Grid synchronization is provided by the disturbance observer.
-A transparent current controller is included for current limitation. A grid-voltage
-sag in this weak grid is simulated in
-:doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
+are directly controlled. Grid synchronization is provided by the disturbance observer. A
+transparent current controller is included for current limitation. A grid-voltage sag in
+this weak grid is simulated in :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-17
+.. GENERATED FROM PYTHON SOURCE LINES 14-16
 
 .. code-block:: Python
 
@@ -41,11 +40,11 @@ sag in this weak grid is simulated in
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-19
+.. GENERATED FROM PYTHON SOURCE LINES 17-18
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 19-23
+.. GENERATED FROM PYTHON SOURCE LINES 18-22
 
 .. code-block:: Python
 
@@ -60,11 +59,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-31
+.. GENERATED FROM PYTHON SOURCE LINES 24-30
 
 .. code-block:: Python
 
@@ -81,11 +80,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 31-32
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-45
+.. GENERATED FROM PYTHON SOURCE LINES 32-44
 
 .. code-block:: Python
 
@@ -108,11 +107,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-47
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Set the references for converter output voltage magnitude and active power.
 
-.. GENERATED FROM PYTHON SOURCE LINES 47-57
+.. GENERATED FROM PYTHON SOURCE LINES 46-56
 
 .. code-block:: Python
 
@@ -133,11 +132,11 @@ Set the references for converter output voltage magnitude and active power.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-59
+.. GENERATED FROM PYTHON SOURCE LINES 57-58
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 59-64
+.. GENERATED FROM PYTHON SOURCE LINES 58-63
 
 .. code-block:: Python
 
@@ -173,7 +172,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.480 seconds)
+   **Total running time of the script:** (0 minutes 4.559 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm.py:

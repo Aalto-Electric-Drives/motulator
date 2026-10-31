@@ -2,9 +2,8 @@
 10-kVA, DC bus, GFL
 ===================
 
-This example extends :doc:`/grid_examples/grid_following/plot_10kva_gfl` by modeling
-the DC-bus dynamics. The control system additionally includes a DC-bus voltage
-controller.
+This example extends :doc:`/grid_examples/grid_following/plot_10kva_gfl` by modeling the
+DC-bus dynamics. The control system additionally includes a DC-bus voltage controller.
 
 """
 

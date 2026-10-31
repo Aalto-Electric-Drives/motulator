@@ -133,8 +133,8 @@ Package Contents
       
       Preset the integral state to the steady state of the output.
 
-      In the steady state, the reference and feedback signals are zero, and the
-      output is `u`, e.g., the back-EMF of a machine at zero current.
+      In the steady state, the reference and feedback signals are zero, and the output
+      is `u`, e.g., the back-EMF of a machine at zero current.
 
       :param u: Controller output.
       :type u: complex
@@ -201,9 +201,9 @@ Package Contents
    be used with different models, measurements, feedback signals, and reference
    signals. The class provides methods for saving, post-processing, and clearing data.
 
-   The control loop returns the sampling period and the command to the converter,
-   see `get_command`. The gates of the converter can be blocked with `set_enable`.
-   While the gates are blocked, the control system runs its control loop with
+   The control loop returns the sampling period and the command to the converter, see
+   `get_command`. The gates of the converter can be blocked with `set_enable`. While
+   the gates are blocked, the control system runs its control loop with
    `compute_standby_output` in place of `compute_output`, so that its observers keep
    running, and the model holds the switches open.
 
@@ -473,8 +473,8 @@ Package Contents
       Set the gate enable.
 
       :param enable: Gate enable, constant or a function of time, evaluated at the sampling
-                     instants. While the gates are blocked (False), the control system
-                     computes its standby output, see `compute_standby_output`.
+                     instants. While the gates are blocked (False), the control system computes
+                     its standby output, see `compute_standby_output`.
       :type enable: bool | Callable[[float], bool]
 
 
@@ -603,11 +603,11 @@ Package Contents
       
       Preset the integral state to the steady state of the output.
 
-      In the steady state, the reference and feedback signals are zero, and the
-      output is `u`, e.g., the back-EMF of a machine at zero current. The limited
-      output of the previous sampling period is kept, since it has been realized.
-      Hence, the next output equals `u` only if the previous one did, and otherwise
-      it also compensates for their difference.
+      In the steady state, the reference and feedback signals are zero, and the output
+      is `u`, e.g., the back-EMF of a machine at zero current. The limited output of
+      the previous sampling period is kept, since it has been realized. Hence, the
+      next output equals `u` only if the previous one did, and otherwise it also
+      compensates for their difference.
 
       :param u: Controller output.
       :type u: complex

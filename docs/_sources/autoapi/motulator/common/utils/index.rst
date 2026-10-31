@@ -408,8 +408,8 @@ Package Contents
    
    Configure matplotlib for screen viewing or for LaTeX documents.
 
-   The plotting functions of motulator use this style, and it can be set before
-   drawing other figures in the same style (e.g., in related packages).
+   The plotting functions of motulator use this style, and it can be set before drawing
+   other figures in the same style (e.g., in related packages).
 
    :param latex: Use the style for LaTeX documents instead of the style for screen viewing,
                  defaults to False.

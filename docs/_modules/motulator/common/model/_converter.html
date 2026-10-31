@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.common.model._converter &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.common.model._converter &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -539,15 +539,15 @@
 <span class="sd">    keeping its current at zero. The voltage is computed from the AC port of the load,</span>
 <span class="sd">    see `ACPort`. The diode states are updated at their transitions, which the</span>
 <span class="sd">    simulation locates as events, see `Simulation`. Hence, the commutation of the</span>
-<span class="sd">    current between the legs follows from the inductance of the load, e.g., an AC</span>
-<span class="sd">    filter and the grid. The threshold voltage of the diodes is included in the diode</span>
-<span class="sd">    drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus</span>
-<span class="sd">    model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge</span>
-<span class="sd">    feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives</span>
-<span class="sd">    the relation between the DC current and the voltage, see `DCPort`. The bridge then</span>
-<span class="sd">    solves its DC voltage together with the leg voltages, and the DC current is its</span>
-<span class="sd">    output `i_dc`. The devices of the legs can be gated through `gated`, which models</span>
-<span class="sd">    thyristors: a floating leg is clamped to a rail only by a gated device.</span>
+<span class="sd">    current between the legs follows from the inductance of the load, e.g., an AC filter</span>
+<span class="sd">    and the grid. The threshold voltage of the diodes is included in the diode drops.</span>
+<span class="sd">    The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus model is</span>
+<span class="sd">    connected to it (see `DCBus` and `Model`). Alternatively, the bridge feeds a DC load</span>
+<span class="sd">    `dc_load` (e.g., an EMF through a DC choke), whose DC port gives the relation</span>
+<span class="sd">    between the DC current and the voltage, see `DCPort`. The bridge then solves its DC</span>
+<span class="sd">    voltage together with the leg voltages, and the DC current is its output `i_dc`. The</span>
+<span class="sd">    devices of the legs can be gated through `gated`, which models thyristors: a</span>
+<span class="sd">    floating leg is clamped to a rail only by a gated device.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -758,8 +758,8 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Three-phase voltage-source converter.</span>
 
-<span class="sd">    The modulator converts the duty ratios of the control system into the gate states</span>
-<span class="sd">    of the legs, i.e., the gate signals of the upper switches and the blanking signals,</span>
+<span class="sd">    The modulator converts the duty ratios of the control system into the gate states of</span>
+<span class="sd">    the legs, i.e., the gate signals of the upper switches and the blanking signals,</span>
 <span class="sd">    including the computational delay and the dead time, see `ZOH` and</span>
 <span class="sd">    `CarrierComparison`. The switches are ideal, except for the dead time and the</span>
 <span class="sd">    threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,</span>
@@ -782,11 +782,11 @@
 <span class="sd">        Constant DC-bus voltage (V). Defaults to None, in which case the converter must</span>
 <span class="sd">        be fed from a DC-bus model.</span>
 <span class="sd">    modulator : TwoLevelModulator, optional</span>
-<span class="sd">        Modulator converting the command of the control system into the gate states,</span>
-<span class="sd">        see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle</span>
-<span class="sd">        averaged model of the duty ratios without the dead time and with the</span>
-<span class="sd">        computational delay of one sampling period. A modulator keeps its state, so</span>
-<span class="sd">        each converter needs its own.</span>
+<span class="sd">        Modulator converting the command of the control system into the gate states, see</span>
+<span class="sd">        `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle averaged</span>
+<span class="sd">        model of the duty ratios without the dead time and with the computational delay</span>
+<span class="sd">        of one sampling period. A modulator keeps its state, so each converter needs its</span>
+<span class="sd">        own.</span>
 <span class="sd">    u_th : float, optional</span>
 <span class="sd">        Threshold voltage (V) of the power devices, defaults to 0.</span>
 <span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
@@ -832,8 +832,8 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Convert the command to the gate states and their durations.</span>
 
-<span class="sd">        The command passes through the modulator also while the gates are blocked,</span>
-<span class="sd">        but the gate states are then zero for the whole sampling period.</span>
+<span class="sd">        The command passes through the modulator also while the gates are blocked, but</span>
+<span class="sd">        the gate states are then zero for the whole sampling period.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -990,12 +990,12 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Capacitive DC bus feeding converters.</span>
 
-<span class="sd">    The DC bus feeds the converters of the models it is given to, see `Model`. The</span>
-<span class="sd">    model connects its converter to the DC bus through `connect`, which registers the</span>
+<span class="sd">    The DC bus feeds the converters of the models it is given to, see `Model`. The model</span>
+<span class="sd">    connects its converter to the DC bus through `connect`, which registers the</span>
 <span class="sd">    converter in `converters` and gives the connections of its DC terminals, i.e., the</span>
 <span class="sd">    DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC</span>
-<span class="sd">    currents of the registered converters, computed from their switching states and</span>
-<span class="sd">    AC currents. The DC bus can be shared by the converters of several models, see</span>
+<span class="sd">    currents of the registered converters, computed from their switching states and AC</span>
+<span class="sd">    currents. The DC bus can be shared by the converters of several models, see</span>
 <span class="sd">    `CompositeModel`. An external current, e.g., from a battery or a braking chopper,</span>
 <span class="sd">    can also be fed to the DC bus.</span>
 
@@ -1046,13 +1046,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span> <span class="o">=</span> <span class="n">i_dc</span></div>
 
 
-<div class="viewcode-block" id="DCBus.compute_dc_current">
-<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DCBus.compute_dc_current">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compute_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_dc_current</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the net current (A) fed to the DC-bus capacitor."""</span>
         <span class="n">i_dc</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">i_dc</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">i_dc</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">)</span></div>
-
+        <span class="k">return</span> <span class="n">i_dc</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">compute_internal_dc_current</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DCBus.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DCBus.set_outputs">[docs]</a>
@@ -1065,7 +1062,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.DCBus.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Compute state derivatives."""</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_dc_current</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_dc_current</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_dc</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="DCBus.create_time_series">

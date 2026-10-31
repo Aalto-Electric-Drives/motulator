@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.gradnet._maps &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.gradnet._maps &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -468,8 +468,8 @@
 
 <span class="sd">A trained network is evaluated in double precision with numpy, so the maps need no</span>
 <span class="sd">PyTorch. The function `GradNetFunction` holds the parameters of the network, and it is</span>
-<span class="sd">saved to and loaded from an npz file. The networks are trained with the related</span>
-<span class="sd">package motulator-gradnet.</span>
+<span class="sd">saved to and loaded from an npz file. The networks are trained with the related package</span>
+<span class="sd">motulator-gradnet.</span>
 
 <span class="sd">"""</span>
 
@@ -559,10 +559,10 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Trained GradNet as a numpy function in double precision.</span>
 
-<span class="sd">    The function maps the per-unit input, shape (..., in_dim), to the per-unit output</span>
-<span class="sd">    of the same shape, which is the gradient of the scalar state function of the</span>
-<span class="sd">    network. It is created from a trained model by the related package</span>
-<span class="sd">    motulator-gradnet, saved to an npz file by `save`, and loaded by `load_gradnet`.</span>
+<span class="sd">    The function maps the per-unit input, shape (..., in_dim), to the per-unit output of</span>
+<span class="sd">    the same shape, which is the gradient of the scalar state function of the network.</span>
+<span class="sd">    It is created from a trained model by the related package motulator-gradnet, saved</span>
+<span class="sd">    to an npz file by `save`, and loaded by `load_gradnet`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -627,8 +627,8 @@
 <span class="sd">        y : ndarray, shape (..., in_dim)</span>
 <span class="sd">            Per-unit output.</span>
 <span class="sd">        jac : ndarray, shape (..., in_dim, in_dim) | None</span>
-<span class="sd">            Jacobian matrix of the output with respect to the input (the Hessian of</span>
-<span class="sd">            the underlying scalar state function), if requested.</span>
+<span class="sd">            Jacobian matrix of the output with respect to the input (the Hessian of the</span>
+<span class="sd">            underlying scalar state function), if requested.</span>
 
 <span class="sd">        """</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mu</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias</span>
@@ -752,8 +752,8 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Callable wrapper for GradNet flux-linkage map models.</span>
 
-<span class="sd">    The map returns the stator flux linkage (Vs) at the given stator current (A). It</span>
-<span class="sd">    is symmetrized about the d-axis to ensure physical consistency.</span>
+<span class="sd">    The map returns the stator flux linkage (Vs) at the given stator current (A). It is</span>
+<span class="sd">    symmetrized about the d-axis to ensure physical consistency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

@@ -26,14 +26,14 @@ permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are bl
 before the start and during coasting. The converter output voltage is not measured.
 While the gates are blocked, the control system runs in standby: its observer runs on
 its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its
-current controller computes its output for zero torque. The gates are released at
-0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked
-again: the stator current decays through the diodes within a millisecond, after which
-the loaded machine coasts at open circuit, since its voltage is below the DC-bus
-voltage, and decelerates. At 0.8 s, the gates are released, and the control system
-catches the rotating machine with a flying start: it initializes its observer from the
-current response to a zero-voltage period (cf. [#Tan2009]_) and its current controller
-from the resulting back-EMF, after which the drive returns to the speed reference.
+current controller computes its output for zero torque. The gates are released at 0.05
+s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked again:
+the stator current decays through the diodes within a millisecond, after which the
+loaded machine coasts at open circuit, since its voltage is below the DC-bus voltage,
+and decelerates. At 0.8 s, the gates are released, and the control system catches the
+rotating machine with a flying start: it initializes its observer from the current
+response to a zero-voltage period (cf. [#Tan2009]_) and its current controller from the
+resulting back-EMF, after which the drive returns to the speed reference.
 
 .. GENERATED FROM PYTHON SOURCE LINES 22-30
 
@@ -219,7 +219,7 @@ the machine coasts and catches the actual speed after the release.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 12.816 seconds)
+   **Total running time of the script:** (0 minutes 8.643 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_blocked_cvc.py:

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.common.model._base &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.common.model._base &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -492,14 +492,14 @@
 <span class="sd">    pass the outputs to the inputs (see `Model`), and the states are gathered into the</span>
 <span class="sd">    state vector of the solver in their declaration order. The class provides methods</span>
 <span class="sd">    for setting states, outputs, and computing state derivatives. It also provides</span>
-<span class="sd">    methods for extending the state history and creating the time-series</span>
-<span class="sd">    representation of the subsystem, which the model names in the results (see</span>
-<span class="sd">    `ModelTimeSeries`). A subsystem whose outputs depend directly on some of its</span>
-<span class="sd">    inputs lists these inputs in `feedthrough`, from which the model derives the</span>
-<span class="sd">    evaluation order of the outputs. The state history is a dict of lists, keyed by</span>
-<span class="sd">    the names of the state fields. The model initializes it by `init_state_history`</span>
-<span class="sd">    and extends it by `extend_state_history`. A subclass can keep its other signals</span>
-<span class="sd">    in the history as well, under other keys, as a converter does (see `Converter`).</span>
+<span class="sd">    methods for extending the state history and creating the time-series representation</span>
+<span class="sd">    of the subsystem, which the model names in the results (see `ModelTimeSeries`). A</span>
+<span class="sd">    subsystem whose outputs depend directly on some of its inputs lists these inputs in</span>
+<span class="sd">    `feedthrough`, from which the model derives the evaluation order of the outputs. The</span>
+<span class="sd">    state history is a dict of lists, keyed by the names of the state fields. The model</span>
+<span class="sd">    initializes it by `init_state_history` and extends it by `extend_state_history`. A</span>
+<span class="sd">    subclass can keep its other signals in the history as well, under other keys, as a</span>
+<span class="sd">    converter does (see `Converter`).</span>
 
 <span class="sd">    """</span>
 
@@ -586,19 +586,18 @@
 <span class="sd">    current, which a DC bus draws (see `DCBus`), and the states of its diodes. While</span>
 <span class="sd">    only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is</span>
 <span class="sd">    determined by the AC port of the load `ac_load` and the states of the diodes, see</span>
-<span class="sd">    `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also</span>
-<span class="sd">    solves its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and</span>
-<span class="sd">    the model evaluates the DC load after the converter. The simulation locates the</span>
+<span class="sd">    `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also solves</span>
+<span class="sd">    its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and the</span>
+<span class="sd">    model evaluates the DC load after the converter. The simulation locates the</span>
 <span class="sd">    transitions of the diode states as events, using the margin of the states, and</span>
-<span class="sd">    updates the states at the transitions.</span>
-<span class="sd">    Since the voltage varies within the integration interval, the model evaluates the</span>
-<span class="sd">    signals given by `sample` (the voltage by default) at the solution points and</span>
-<span class="sd">    passes them to `extend_history`, which also saves the other signals of the</span>
-<span class="sd">    converter that are not states.</span>
+<span class="sd">    updates the states at the transitions. Since the voltage varies within the</span>
+<span class="sd">    integration interval, the model evaluates the signals given by `sample` (the voltage</span>
+<span class="sd">    by default) at the solution points and passes them to `extend_history`, which also</span>
+<span class="sd">    saves the other signals of the converter that are not states.</span>
 
-<span class="sd">    The diodes and the DC bus are optional capabilities: by default, the gates are</span>
-<span class="sd">    never blocked, so there are no diode-state transitions, and the converter cannot</span>
-<span class="sd">    be fed from a DC bus. A converter subclassing this protocol implements only the</span>
+<span class="sd">    The diodes and the DC bus are optional capabilities: by default, the gates are never</span>
+<span class="sd">    blocked, so there are no diode-state transitions, and the converter cannot be fed</span>
+<span class="sd">    from a DC bus. A converter subclassing this protocol implements only the</span>
 <span class="sd">    capabilities it has.</span>
 
 <span class="sd">    """</span>
@@ -660,12 +659,12 @@
 <span class="sd">    a control system. Its modulator converts the command of the control system (e.g.,</span>
 <span class="sd">    the duty ratios) into the gate states and their durations within the sampling</span>
 <span class="sd">    period, see `Modulator`. The simulation sets the gate states at the switching</span>
-<span class="sd">    instants, from which the converter resolves its switching state (e.g., from the</span>
-<span class="sd">    gate signals and the phase currents during the blanking). The format of the</span>
-<span class="sd">    command and the gate states is up to the converter and its modulator. The control</span>
-<span class="sd">    system can block the gates through `set_enable` at its sampling instants, after</span>
-<span class="sd">    which only the diodes conduct (see `Converter.blocked`). By default, blocking the</span>
-<span class="sd">    gates is not supported.</span>
+<span class="sd">    instants, from which the converter resolves its switching state (e.g., from the gate</span>
+<span class="sd">    signals and the phase currents during the blanking). The format of the command and</span>
+<span class="sd">    the gate states is up to the converter and its modulator. The control system can</span>
+<span class="sd">    block the gates through `set_enable` at its sampling instants, after which only the</span>
+<span class="sd">    diodes conduct (see `Converter.blocked`). By default, blocking the gates is not</span>
+<span class="sd">    supported.</span>
 
 <span class="sd">    """</span>
 
@@ -711,13 +710,13 @@
 
 <span class="sd">    A model consists of named subsystems and connections between them. The outputs are</span>
 <span class="sd">    computed in an order that respects the direct dependencies of the subsystems (see</span>
-<span class="sd">    `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that</span>
-<span class="sd">    the outputs are consistent with the inputs of the same evaluation. The order</span>
-<span class="sd">    follows the order of the subsystems where the dependencies allow, and a loop of</span>
-<span class="sd">    direct dependencies is rejected. The voltage of a blocked converter depends on</span>
-<span class="sd">    the port of its load, which depends on the inputs of the load, so the converter is</span>
-<span class="sd">    evaluated after the sources of these inputs. The names of the subsystems name</span>
-<span class="sd">    their time series in the results, see `ModelTimeSeries`.</span>
+<span class="sd">    `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that the</span>
+<span class="sd">    outputs are consistent with the inputs of the same evaluation. The order follows the</span>
+<span class="sd">    order of the subsystems where the dependencies allow, and a loop of direct</span>
+<span class="sd">    dependencies is rejected. The voltage of a blocked converter depends on the port of</span>
+<span class="sd">    its load, which depends on the inputs of the load, so the converter is evaluated</span>
+<span class="sd">    after the sources of these inputs. The names of the subsystems name their time</span>
+<span class="sd">    series in the results, see `ModelTimeSeries`.</span>
 
 <span class="sd">    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a</span>
 <span class="sd">    controlled one (see `ControlledConverter`), which is driven by a control system, see</span>
@@ -737,9 +736,9 @@
 <span class="sd">        and `source` are the names of the subsystems.</span>
 <span class="sd">    dc_bus : DCBus, optional</span>
 <span class="sd">        DC bus feeding the converter. The DC bus is added to the subsystems under the</span>
-<span class="sd">        name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The</span>
-<span class="sd">        DC bus can be shared with other models, see `CompositeModel`. Defaults to None,</span>
-<span class="sd">        in which case the converter has a constant DC-bus voltage.</span>
+<span class="sd">        name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The DC</span>
+<span class="sd">        bus can be shared with other models, see `CompositeModel`. Defaults to None, in</span>
+<span class="sd">        which case the converter has a constant DC-bus voltage.</span>
 
 <span class="sd">    """</span>
 
@@ -929,9 +928,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for subsystem time series.</span>
 
-<span class="sd">    The outputs are computed when the time series is created or, if they depend</span>
-<span class="sd">    directly on the inputs, in `set_outputs`. The signals computed in</span>
-<span class="sd">    `compute_derived_signals` are not passed to other subsystems.</span>
+<span class="sd">    The outputs are computed when the time series is created or, if they depend directly</span>
+<span class="sd">    on the inputs, in `set_outputs`. The signals computed in `compute_derived_signals`</span>
+<span class="sd">    are not passed to other subsystems.</span>
 
 <span class="sd">    """</span>
 

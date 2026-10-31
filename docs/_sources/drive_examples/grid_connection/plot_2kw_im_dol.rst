@@ -22,8 +22,8 @@
 ===============================
 
 This example simulates the direct-on-line start of a 2.2-kW induction machine (IM),
-whose stator is connected directly to a stiff grid. The machine drives a fan, whose
-load torque is proportional to the square of the speed.
+whose stator is connected directly to a stiff grid. The machine drives a fan, whose load
+torque is proportional to the square of the speed.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-14
 
@@ -135,7 +135,7 @@ DC components, which depend on the instant of the connection.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.612 seconds)
+   **Total running time of the script:** (0 minutes 1.160 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_dol.py:

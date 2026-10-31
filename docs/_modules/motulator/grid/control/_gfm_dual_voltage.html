@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.control._gfm_dual_voltage &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.grid.control._gfm_dual_voltage &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -496,13 +496,13 @@
 <span class="sd">    Disturbance-power observer.</span>
 
 <span class="sd">    This observer estimates the disturbance power, i.e., the external power fed to the</span>
-<span class="sd">    DC bus minus the grid power and the resistive losses, from the energy balance of</span>
-<span class="sd">    the DC-bus capacitor and the inductor [#Mou2025]_. The estimate is `p_dis = x +</span>
-<span class="sd">    alpha_o_dc*(W_dc + 0.75*L*|i_c|**2)`, where the auxiliary state `x` is updated by</span>
-<span class="sd">    `dx/dt = -(1.5/L)*Re{u_g*conj(e_c)} - alpha_o_dc*p_dis` and `e_c` is the realized</span>
-<span class="sd">    feedback correction, i.e., the realized converter voltage minus the quasi-static</span>
-<span class="sd">    converter voltage. The derivatives of the energies are thus integrated directly. On</span>
-<span class="sd">    the first call, the disturbance power is assumed to be zero.</span>
+<span class="sd">    DC bus minus the grid power and the resistive losses, from the energy balance of the</span>
+<span class="sd">    DC-bus capacitor and the inductor [#Mou2025]_. The estimate is</span>
+<span class="sd">    `p_dis = x + alpha_o_dc*(W_dc + 0.75*L*|i_c|**2)`, where the auxiliary state `x` is</span>
+<span class="sd">    updated by `dx/dt = -(1.5/L)*Re{u_g*conj(e_c)} - alpha_o_dc*p_dis` and `e_c` is the</span>
+<span class="sd">    realized feedback correction, i.e., the realized converter voltage minus the</span>
+<span class="sd">    quasi-static converter voltage. The derivatives of the energies are thus integrated</span>
+<span class="sd">    directly. On the first call, the disturbance power is assumed to be zero.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -552,11 +552,11 @@
 <span class="sd">    R : float, optional</span>
 <span class="sd">        Total series resistance estimate (Ω), defaults to 0.</span>
 <span class="sd">    k_d : float | None, optional</span>
-<span class="sd">        DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the</span>
-<span class="sd">        base power `1.5*u_nom*i_max`.</span>
+<span class="sd">        DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the base</span>
+<span class="sd">        power `1.5*u_nom*i_max`.</span>
 <span class="sd">    alpha_dc : float, optional</span>
-<span class="sd">        Approximate closed-loop bandwidth of the DC-bus energy control (rad/s),</span>
-<span class="sd">        defaults to 2*pi*7.5.</span>
+<span class="sd">        Approximate closed-loop bandwidth of the DC-bus energy control (rad/s), defaults</span>
+<span class="sd">        to 2*pi*7.5.</span>
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer bandwidth of the quasi-static converter voltage (rad/s), defaults to</span>
 <span class="sd">        2*pi*100.</span>
@@ -602,12 +602,12 @@
 <span class="sd">    magnitude [#Mou2025]_, extending the disturbance-observer-based grid-forming control</span>
 <span class="sd">    [#Nur2024b]_. The disturbance observer estimates the quasi-static converter voltage</span>
 <span class="sd">    as in `ObserverBasedGridFormingController`, and a second observer estimates the</span>
-<span class="sd">    disturbance power, i.e., the external power fed to the DC bus minus the grid</span>
-<span class="sd">    power and the resistive losses, from the energy balance of the DC-bus capacitor</span>
-<span class="sd">    and the inductor. The control law feeds the estimated disturbance power forward and</span>
-<span class="sd">    corrects the DC-bus energy error, which controls the active power without a</span>
-<span class="sd">    cascaded DC-bus voltage controller. The disturbance observers provide the integral</span>
-<span class="sd">    action and the synchronization. Transparent current control is also implemented.</span>
+<span class="sd">    disturbance power, i.e., the external power fed to the DC bus minus the grid power</span>
+<span class="sd">    and the resistive losses, from the energy balance of the DC-bus capacitor and the</span>
+<span class="sd">    inductor. The control law feeds the estimated disturbance power forward and corrects</span>
+<span class="sd">    the DC-bus energy error, which controls the active power without a cascaded DC-bus</span>
+<span class="sd">    voltage controller. The disturbance observers provide the integral action and the</span>
+<span class="sd">    synchronization. Transparent current control is also implemented.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -617,9 +617,9 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    The control law equals the grid-forming mode of `ObserverBasedGridFormingController`</span>
-<span class="sd">    with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power</span>
-<span class="sd">    reference `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g`</span>
-<span class="sd">    is the estimated external power fed to the DC bus, excluding the resistive losses</span>
+<span class="sd">    with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power reference</span>
+<span class="sd">    `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g` is the</span>
+<span class="sd">    estimated external power fed to the DC bus, excluding the resistive losses</span>
 <span class="sd">    `1.5*R*|i_c|**2`. This equivalent reference is logged in `ref.p_g`.</span>
 
 <span class="sd">    References</span>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.common.control &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.common.control &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -666,8 +666,8 @@ complex vectors,” IEEE Trans. Ind. Appl., 2000, <a class="reference external" 
 <dt class="sig sig-object py" id="motulator.common.control.ComplexPIController.preset">
 <span class="sig-name descname"><span class="pre">preset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#ComplexPIController.preset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ComplexPIController.preset" title="Link to this definition">#</a></dt>
 <dd><p>Preset the integral state to the steady state of the output.</p>
-<p>In the steady state, the reference and feedback signals are zero, and the
-output is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
+<p>In the steady state, the reference and feedback signals are zero, and the output
+is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -709,9 +709,9 @@ output is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
 <p>This class defines the interface for control systems. It is a generic class that can
 be used with different models, measurements, feedback signals, and reference
 signals. The class provides methods for saving, post-processing, and clearing data.</p>
-<p>The control loop returns the sampling period and the command to the converter,
-see <cite>get_command</cite>. The gates of the converter can be blocked with <cite>set_enable</cite>.
-While the gates are blocked, the control system runs its control loop with
+<p>The control loop returns the sampling period and the command to the converter, see
+<cite>get_command</cite>. The gates of the converter can be blocked with <cite>set_enable</cite>. While
+the gates are blocked, the control system runs its control loop with
 <cite>compute_standby_output</cite> in place of <cite>compute_output</cite>, so that its observers keep
 running, and the model holds the switches open.</p>
 <dl class="py method">
@@ -858,8 +858,8 @@ converter consists of the duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>enable</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>]</em>) – Gate enable, constant or a function of time, evaluated at the sampling
-instants. While the gates are blocked (False), the control system
-computes its standby output, see <cite>compute_standby_output</cite>.</p>
+instants. While the gates are blocked (False), the control system computes
+its standby output, see <cite>compute_standby_output</cite>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -945,11 +945,11 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
 <dt class="sig sig-object py" id="motulator.common.control.DiscreteComplexController.preset">
 <span class="sig-name descname"><span class="pre">preset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#DiscreteComplexController.preset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.DiscreteComplexController.preset" title="Link to this definition">#</a></dt>
 <dd><p>Preset the integral state to the steady state of the output.</p>
-<p>In the steady state, the reference and feedback signals are zero, and the
-output is <cite>u</cite>, e.g., the back-EMF of a machine at zero current. The limited
-output of the previous sampling period is kept, since it has been realized.
-Hence, the next output equals <cite>u</cite> only if the previous one did, and otherwise
-it also compensates for their difference.</p>
+<p>In the steady state, the reference and feedback signals are zero, and the output
+is <cite>u</cite>, e.g., the back-EMF of a machine at zero current. The limited output of
+the previous sampling period is kept, since it has been realized. Hence, the
+next output equals <cite>u</cite> only if the previous one did, and otherwise it also
+compensates for their difference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.model._ac_filter &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.grid.model._ac_filter &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -558,17 +558,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">LFilterStates</span> <span class="o">=</span> <span class="n">LFilterStates</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">LFilterOutputs</span> <span class="o">=</span> <span class="n">LFilterOutputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LFilter.pcc_voltage">
-<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.pcc_voltage">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the voltage at the point of common coupling (PCC)."""</span>
         <span class="n">L_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span> <span class="o">*</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">u_c_ab</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_f</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">*</span> <span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">e_g_ab</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_g</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">)</span>
         <span class="p">)</span> <span class="o">/</span> <span class="n">L_t</span>
-        <span class="k">return</span> <span class="n">u_g_ab</span></div>
-
+        <span class="k">return</span> <span class="n">u_g_ab</span>
 
 <div class="viewcode-block" id="LFilter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.set_outputs">[docs]</a>
@@ -610,7 +607,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_pcc_voltages">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">meas_pcc_voltages</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""</span>
-        <span class="n">u_g_line</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">))</span>
+        <span class="n">u_g_line</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">u_g_line</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span><span class="p">(</span><span class="n">u_g_line</span><span class="p">)</span></div>
 
 
@@ -645,7 +642,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the PCC voltage."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>
@@ -734,9 +731,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_g_ab</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="LCLFilter.pcc_voltage">
-<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.pcc_voltage">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the voltage at the point of common coupling (PCC)."""</span>
         <span class="n">L_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span>
         <span class="n">u_g_ab</span> <span class="o">=</span> <span class="p">(</span>
@@ -744,8 +739,7 @@
             <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span>
             <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_g</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_fg</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_fg</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_g</span><span class="p">)</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">i_g_ab</span>
         <span class="p">)</span> <span class="o">/</span> <span class="n">L_t</span>
-        <span class="k">return</span> <span class="n">u_g_ab</span></div>
-
+        <span class="k">return</span> <span class="n">u_g_ab</span>
 
 <div class="viewcode-block" id="LCLFilter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.set_outputs">[docs]</a>
@@ -797,7 +791,7 @@
 <span class="sd">        Measure the line-to-line voltages u_ab and u_bc (V) at the point of common</span>
 <span class="sd">        coupling (PCC).</span>
 <span class="sd">        """</span>
-        <span class="n">u_g_line</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">))</span>
+        <span class="n">u_g_line</span> <span class="o">=</span> <span class="n">complex2line</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">u_g_line</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_g_sensor</span><span class="p">(</span><span class="n">u_g_line</span><span class="p">)</span></div>
 
 
@@ -848,7 +842,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_derived_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">LCLFilter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the PCC voltage."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 </pre></div>
 
                 </article>

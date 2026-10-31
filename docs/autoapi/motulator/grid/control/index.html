@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.grid.control &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.grid.control &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -599,6 +599,7 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverOutputs"><code class="docutils literal notranslate"><span class="pre">SequenceObserverOutputs</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -687,6 +688,9 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></p></td>
 <td><p>Sequence-separated disturbance-observer-based grid-forming controller configuration.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverOutputs" title="motulator.grid.control.SequenceObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceObserverOutputs</span></code></a></p></td>
+<td><p>Feedback signals for the control system.</p></td>
 </tr>
 </tbody>
 </table>
@@ -897,12 +901,12 @@ PWM converter-inverter system,” IEEE Trans. Ind. Electron., 2001,
 magnitude <a class="footnote-reference brackets" href="#mou2025" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>, extending the disturbance-observer-based grid-forming control
 <a class="footnote-reference brackets" href="#nur2024b" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The disturbance observer estimates the quasi-static converter voltage
 as in <cite>ObserverBasedGridFormingController</cite>, and a second observer estimates the
-disturbance power, i.e., the external power fed to the DC bus minus the grid
-power and the resistive losses, from the energy balance of the DC-bus capacitor
-and the inductor. The control law feeds the estimated disturbance power forward and
-corrects the DC-bus energy error, which controls the active power without a
-cascaded DC-bus voltage controller. The disturbance observers provide the integral
-action and the synchronization. Transparent current control is also implemented.</p>
+disturbance power, i.e., the external power fed to the DC bus minus the grid power
+and the resistive losses, from the energy balance of the DC-bus capacitor and the
+inductor. The control law feeds the estimated disturbance power forward and corrects
+the DC-bus energy error, which controls the active power without a cascaded DC-bus
+voltage controller. The disturbance observers provide the integral action and the
+synchronization. Transparent current control is also implemented.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.DualVoltageFormingControllerCfg" title="motulator.grid.control.DualVoltageFormingControllerCfg"><em>DualVoltageFormingControllerCfg</em></a>) – Dual-voltage-forming control configuration.</p>
@@ -910,9 +914,9 @@ action and the synchronization. Transparent current control is also implemented.
 </dl>
 <p class="rubric">Notes</p>
 <p>The control law equals the grid-forming mode of <cite>ObserverBasedGridFormingController</cite>
-with the power control gain <cite>R_a/(1.5*v_c_ref) = k_d</cite> and the active-power
-reference <cite>p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)</cite>, where <cite>p_dis + p_g</cite>
-is the estimated external power fed to the DC bus, excluding the resistive losses
+with the power control gain <cite>R_a/(1.5*v_c_ref) = k_d</cite> and the active-power reference
+<cite>p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)</cite>, where <cite>p_dis + p_g</cite> is the
+estimated external power fed to the DC bus, excluding the resistive losses
 <cite>1.5*R*|i_c|**2</cite>. This equivalent reference is logged in <cite>ref.p_g</cite>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
@@ -1022,10 +1026,10 @@ Power Electron., 2024, <a class="reference external" href="https://doi.org/10.11
 <li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Total inductance estimate (H).</p></li>
 <li><p><strong>C_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – DC-bus capacitance estimate (F).</p></li>
 <li><p><strong>R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Total series resistance estimate (Ω), defaults to 0.</p></li>
-<li><p><strong>k_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – DC-bus power gain (V/W), defaults to <cite>1/(1.5*i_max)</cite>, i.e., 1 p.u. with the
-base power <cite>1.5*u_nom*i_max</cite>.</p></li>
-<li><p><strong>alpha_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Approximate closed-loop bandwidth of the DC-bus energy control (rad/s),
-defaults to 2*pi*7.5.</p></li>
+<li><p><strong>k_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – DC-bus power gain (V/W), defaults to <cite>1/(1.5*i_max)</cite>, i.e., 1 p.u. with the base
+power <cite>1.5*u_nom*i_max</cite>.</p></li>
+<li><p><strong>alpha_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Approximate closed-loop bandwidth of the DC-bus energy control (rad/s), defaults
+to 2*pi*7.5.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth of the quasi-static converter voltage (rad/s), defaults to
 2*pi*100.</p></li>
 <li><p><strong>alpha_o_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Observer bandwidth of the disturbance power (rad/s), defaults to 2*pi*60.</p></li>
@@ -1074,13 +1078,13 @@ itself.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inner_ctrl</strong> (<em>InnerController</em>) – Inner controller. A grid-forming controller takes the AC voltage reference
-and a grid-following controller the reactive power reference. A
-DC-bus-forming controller takes the DC-bus voltage reference instead of the
-active power reference.</p></li>
-<li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller, which gives the active power reference. If not
-given, the active power reference is set externally, unless the inner
-controller is DC-bus forming.</p></li>
+<li><p><strong>inner_ctrl</strong> (<em>InnerController</em>) – Inner controller. A grid-forming controller takes the AC voltage reference and a
+grid-following controller the reactive power reference. A DC-bus-forming
+controller takes the DC-bus voltage reference instead of the active power
+reference.</p></li>
+<li><p><strong>dc_bus_voltage_ctrl</strong> (<a class="reference internal" href="#motulator.grid.control.DCBusVoltageController" title="motulator.grid.control.DCBusVoltageController"><em>DCBusVoltageController</em></a><em>, </em><em>optional</em>) – DC-bus voltage controller, which gives the active power reference. If not given,
+the active power reference is set externally, unless the inner controller is
+DC-bus forming.</p></li>
 <li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.grid.control.PWM" title="motulator.grid.control.PWM"><em>PWM</em></a><em>, </em><em>optional</em>) – Pulse-width modulator, defaults to <cite>PWM()</cite>.</p></li>
 </ul>
 </dd>
@@ -1832,9 +1836,9 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 and converter-voltage magnitude are controlled, while the negative-sequence
 converter voltage is suppressed. The disturbance observer estimates the positive-
 and negative-sequence grid voltages. The active-power reference is limited to a
-realizable level, prioritizing the reactive and negative-sequence currents, and
-the sequence current references are limited such that the peak phase current does
-not exceed <cite>i_max</cite>.</p>
+realizable level, prioritizing the reactive and negative-sequence currents, and the
+sequence current references are limited such that the peak phase current does not
+exceed <cite>i_max</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg" title="motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><em>SequenceObserverBasedGridFormingControllerCfg</em></a>) – Grid-forming control configuration.</p>
@@ -1843,11 +1847,11 @@ not exceed <cite>i_max</cite>.</p>
 <p class="rubric">Notes</p>
 <p>The control system operates in synchronous coordinates rotating at the nominal grid
 angular frequency. The controller compensates for the computational delay of one
-sampling period and the zero-order-hold delay of half a sampling period itself:
-the angle of the positive-sequence voltage reference is advanced by
-<cite>1.5*w_nom*T_s</cite>, and that of the negative sequence, which rotates in the opposite
-direction, is retarded by the same angle. Therefore, the control system does not
-advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
+sampling period and the zero-order-hold delay of half a sampling period itself: the
+angle of the positive-sequence voltage reference is advanced by <cite>1.5*w_nom*T_s</cite>, and
+that of the negative sequence, which rotates in the opposite direction, is retarded
+by the same angle. Therefore, the control system does not advance the angle of the
+voltage reference (<cite>k_comp = 0</cite>).</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="maa2026b" role="doc-footnote">
@@ -1866,7 +1870,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>p_g_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>v_c_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<em>SequenceObserverOutputs</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.SequenceObserverOutputs" title="motulator.grid.control.SequenceObserverOutputs"><em>SequenceObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1881,7 +1885,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <dd><p>Compute references while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>SequenceObserverOutputs</em>)</p>
+<dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.SequenceObserverOutputs" title="motulator.grid.control.SequenceObserverOutputs"><em>SequenceObserverOutputs</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>SequenceReferences</p>
@@ -1901,7 +1905,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>SequenceObserverOutputs</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.SequenceObserverOutputs" title="motulator.grid.control.SequenceObserverOutputs">SequenceObserverOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1928,7 +1932,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ref</strong> (<em>SequenceReferences</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>SequenceObserverOutputs</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.SequenceObserverOutputs" title="motulator.grid.control.SequenceObserverOutputs"><em>SequenceObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1964,6 +1968,12 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.grid.control.SequenceObserverOutputs">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">SequenceObserverOutputs</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_sequence_observer.html#SequenceObserverOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.SequenceObserverOutputs" title="Link to this definition">#</a></dt>
+<dd><p>Feedback signals for the control system.</p>
 </dd></dl>
 
 </section>
@@ -2102,6 +2112,7 @@ advance the angle of the voltage reference (<cite>k_comp = 0</cite>).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg"><code class="docutils literal notranslate"><span class="pre">SequenceObserverBasedGridFormingControllerCfg</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.grid.control.SequenceObserverOutputs"><code class="docutils literal notranslate"><span class="pre">SequenceObserverOutputs</span></code></a></li>
 </ul>
 </li>
 </ul>

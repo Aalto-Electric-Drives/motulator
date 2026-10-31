@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.gradnet &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.gradnet &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -634,8 +634,8 @@ the output of the map, in SI units.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">FluxMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#FluxMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.FluxMap" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.gradnet.CurrentMap" title="motulator.drive.gradnet.CurrentMap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></p>
 <p>Callable wrapper for GradNet flux-linkage map models.</p>
-<p>The map returns the stator flux linkage (Vs) at the given stator current (A). It
-is symmetrized about the d-axis to ensure physical consistency.</p>
+<p>The map returns the stator flux linkage (Vs) at the given stator current (A). It is
+symmetrized about the d-axis to ensure physical consistency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="#motulator.drive.gradnet.GradNetFunction" title="motulator.drive.gradnet.GradNetFunction"><em>GradNetFunction</em></a>) – Trained GradNet for the flux-linkage map, see <cite>load_gradnet</cite>.</p>
@@ -662,10 +662,10 @@ is symmetrized about the d-axis to ensure physical consistency.</p>
 <dt class="sig sig-object py" id="motulator.drive.gradnet.GradNetFunction">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">GradNetFunction</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#GradNetFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.GradNetFunction" title="Link to this definition">#</a></dt>
 <dd><p>Trained GradNet as a numpy function in double precision.</p>
-<p>The function maps the per-unit input, shape (…, in_dim), to the per-unit output
-of the same shape, which is the gradient of the scalar state function of the
-network. It is created from a trained model by the related package
-motulator-gradnet, saved to an npz file by <cite>save</cite>, and loaded by <cite>load_gradnet</cite>.</p>
+<p>The function maps the per-unit input, shape (…, in_dim), to the per-unit output of
+the same shape, which is the gradient of the scalar state function of the network.
+It is created from a trained model by the related package motulator-gradnet, saved
+to an npz file by <cite>save</cite>, and loaded by <cite>load_gradnet</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

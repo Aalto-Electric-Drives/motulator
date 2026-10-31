@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._sm_flux_maps &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.utils._sm_flux_maps &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -566,9 +566,9 @@
 <span class="sd">    psi_s_dq : np.ndarray</span>
 <span class="sd">        Complex array of stator flux linkage (Vs).</span>
 <span class="sd">    lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional</span>
-<span class="sd">        Function that evaluates the map at arbitrary points. Takes complex inputs</span>
-<span class="sd">        (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;</span>
-<span class="sd">        for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation</span>
+<span class="sd">        Function that evaluates the map at arbitrary points. Takes complex inputs (d +</span>
+<span class="sd">        j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq; for</span>
+<span class="sd">        current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation</span>
 <span class="sd">        function, which extrapolates outside the map range, is created from the data.</span>
 <span class="sd">    tau_M : np.ndarray, optional</span>
 <span class="sd">        Array of electromagnetic torque (Nm).</span>
@@ -624,14 +624,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"current_map"</span></div>
 
 
-<div class="viewcode-block" id="MagneticModel.get_input_output">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.get_input_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_input_output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_input_output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Get input and output arrays based on map type."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_flux_map</span><span class="p">():</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span></div>
-
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span>
 
 <div class="viewcode-block" id="MagneticModel.create_interpolated_model">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.create_interpolated_model">[docs]</a>
@@ -671,7 +668,7 @@
             <span class="k">return</span> <span class="n">d_grid</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">q_grid</span>
 
         <span class="c1"># Get input/output arrays based on map type</span>
-        <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_input_output</span><span class="p">()</span>
+        <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_output</span><span class="p">()</span>
         <span class="n">new_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
 
         <span class="c1"># Set default num value based on input data if not provided</span>
@@ -784,9 +781,8 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        map_fcn : Callable, optional</span>
-<span class="sd">            Callable implementing either a current map (psi_s -&gt; i_s) or a flux map</span>
-<span class="sd">            (i_s -&gt; psi_s). If not provided, subclasses are expected to override</span>
-<span class="sd">            `__call__`.</span>
+<span class="sd">            Callable implementing either a current map (psi_s -&gt; i_s) or a flux map (i_s</span>
+<span class="sd">            -&gt; psi_s). If not provided, subclasses are expected to override `__call__`.</span>
 <span class="sd">        map_type : {"current_map", "flux_map"}, optional</span>
 <span class="sd">            Declares what the model represents, defaults to "current_map".</span>
 

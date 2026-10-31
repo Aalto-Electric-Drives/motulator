@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.control.sm &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.control.sm &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -887,8 +887,8 @@ defaults to <code class="docutils literal notranslate"><span class="pre">lambda<
 <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">2*pi*15</span></code>.</p></li>
 <li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – PM-flux estimation gain as a function of the electrical rotor angular speed. If
 None, the gain is zero, i.e., the PM-flux linkage is not estimated.</p></li>
-<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite> elsewhere. It must be
-positive for machines without PMs.</p></li>
+<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite> elsewhere. It must be positive
+for machines without PMs.</p></li>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.9.</p></li>
@@ -960,8 +960,8 @@ modulation, the angle of the voltage reference is advanced by <cite>k_comp*T_s*w
 where <cite>k_comp</cite> is given by the inner controller. The value 1.5 compensates for the
 computational delay of one sampling period and the delay of half a sampling period
 caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the
-angle is not advanced, which is used if the controller takes the delays into
-account itself, e.g., in a direct discrete-time design.</p>
+angle is not advanced, which is used if the controller takes the delays into account
+itself, e.g., in a direct discrete-time design.</p>
 <p>While the gates are blocked (see <cite>set_enable</cite>), the control system is in standby:
 the observers run on their open-circuit model, since the converter voltage is
 unknown, the inner controller computes its output for zero torque, and the speed
@@ -1125,10 +1125,10 @@ adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>) – Stator voltage (V) in stator coordinates, averaged over the ongoing
-sampling period, i.e., from this sampling instant to the next one. If
-None (unknown voltage, e.g., with blocked gates), the flux estimate
-follows the current model alone.</p></li>
+<li><p><strong>u_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>None</em>) – Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+period, i.e., from this sampling instant to the next one. If None (unknown
+voltage, e.g., with blocked gates), the flux estimate follows the current
+model alone.</p></li>
 <li><p><strong>i_s_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Stator current (A) in stator coordinates.</p></li>
 <li><p><strong>w_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Mechanical rotor speed (rad/s), typically from the speed observer.</p></li>
 <li><p><strong>eps_ext</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – External mechanical position error signal (rad), defaults to 0.</p></li>
@@ -1444,12 +1444,12 @@ decoupling between the stator flux and torque channels are used <a class="footno
 <li><p><strong>alpha_f</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Filter bandwidth (rad/s), defaults to 2*pi*1.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Angle estimation pole (rad/s), defaults to 2*pi*200.</p></li>
 <li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed. If None,
-defaults to <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0.25*R_s*(1/L_d</span> <span class="pre">+</span> <span class="pre">1/L_q)</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)</span></code>
-(incremental inductances at zero current).</p></li>
+defaults to <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0.25*R_s*(1/L_d</span> <span class="pre">+</span> <span class="pre">1/L_q)</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)</span></code> (incremental
+inductances at zero current).</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_mtpv</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – MTPV margin, defaults to 0.9.</p></li>
-<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite> elsewhere. It must be
-positive for machines without PMs.</p></li>
+<li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Minimum stator flux (Vs), defaults to <cite>par.psi_f</cite> elsewhere. It must be positive
+for machines without PMs.</p></li>
 <li><p><strong>psi_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum stator flux (Vs), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 250e-6.</p></li>
 </ul>
@@ -1773,15 +1773,15 @@ EPE-PEMC, 2006, <a class="reference external" href="https://doi.org/10.1109/EPEP
 <aside class="footnote brackets" id="awa2018" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">14</a><span class="fn-bracket">]</span></span>
 <p>Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
-saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
+saturated synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2862410">https://doi.org/10.1109/TIA.2018.2862410</a></p>
 </aside>
 <aside class="footnote brackets" id="sar2026" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></span>
 <span class="backrefs">(<a role="doc-backlink" href="#id18">1</a>,<a role="doc-backlink" href="#id19">2</a>)</span>
 <p>Sarén, Hartikainen, Piippo, Hinkkanen, “Decoupled online feedforward
-generation of optimal references for saturated synchronous machine drives,”
-2026, <a class="reference external" href="https://arxiv.org/abs/2607.08528">https://arxiv.org/abs/2607.08528</a></p>
+generation of optimal references for saturated synchronous machine drives,” 2026,
+<a class="reference external" href="https://arxiv.org/abs/2607.08528">https://arxiv.org/abs/2607.08528</a></p>
 </aside>
 </aside>
 <dl class="py method">
@@ -2134,14 +2134,13 @@ mechanical system model is not used.</p></li>
 <span class="sig-name descname"><span class="pre">catch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver.catch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.catch" title="Link to this definition">#</a></dt>
 <dd><p>Initialize the estimates from the current response to a zero-voltage period.</p>
 <p>The back-EMF drives the current along the negative q axis of the rotor, which
-gives the rotor angle and the speed magnitude (a flying start, cf.
-<a class="footnote-reference brackets" href="#tan2009" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a>), the direction of rotation being taken from the speed estimate.
-The resistive voltage drop and the cross-coupling of the current are
-neglected.</p>
-<p>This method is called by <cite>compute_output</cite> at the first sampling instant with
-a known voltage after unknown ones. The period is the last of them, in which
-the control system applies the zero voltage vector after the release of the
-gates (see <cite>VectorControlSystem</cite>).</p>
+gives the rotor angle and the speed magnitude (a flying start, cf. <a class="footnote-reference brackets" href="#tan2009" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a>),
+the direction of rotation being taken from the speed estimate. The resistive
+voltage drop and the cross-coupling of the current are neglected.</p>
+<p>This method is called by <cite>compute_output</cite> at the first sampling instant with a
+known voltage after unknown ones. The period is the last of them, in which the
+control system applies the zero voltage vector after the release of the gates
+(see <cite>VectorControlSystem</cite>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2151,9 +2150,9 @@ gates (see <cite>VectorControlSystem</cite>).</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the estimates were initialized, False if the back-EMF estimate
-does not exceed the resistive voltage drop of the current (standstill, or
-a current that has not decayed) or the machine has no magnets.</p>
+<dd class="field-even"><p>True if the estimates were initialized, False if the back-EMF estimate does
+not exceed the resistive voltage drop of the current (standstill, or a
+current that has not decayed) or the machine has no magnets.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
@@ -2163,10 +2162,9 @@ a current that has not decayed) or the machine has no magnets.</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="tan2009" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id24">20</a><span class="fn-bracket">]</span></span>
-<p>Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,
-“Starting procedure of rotational sensorless PMSM in the rotating
-condition,” IEEE Trans. Ind. Appl., 2009,
-<a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009496">https://doi.org/10.1109/TIA.2008.2009496</a></p>
+<p>Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, “Starting
+procedure of rotational sensorless PMSM in the rotating condition,” IEEE
+Trans. Ind. Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009496">https://doi.org/10.1109/TIA.2008.2009496</a></p>
 </aside>
 </aside>
 </dd></dl>
@@ -2440,10 +2438,10 @@ defaults to 0 (no core losses).</p></li>
 that can be used with different inner controllers (such as current-vector control
 and flux-vector control).</p>
 <p>A sensorless drive stays in standby with the zero voltage vector also at the first
-sampling instant after the release of the gates. Due to the computational delay,
-the first two sampling periods are then zero-voltage periods, and the observer of
-a synchronous machine catches the rotating machine from the current response to
-the first one (a flying start).</p>
+sampling instant after the release of the gates. Due to the computational delay, the
+first two sampling periods are then zero-voltage periods, and the observer of a
+synchronous machine catches the rotating machine from the current response to the
+first one (a flying start).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>2.2-kW IM, direct-on-line start &#8212; motulator 0.21.0 documentation</title>
+    <title>2.2-kW IM, direct-on-line start &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -519,8 +519,8 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="kw-im-direct-on-line-start">
 <span id="sphx-glr-drive-examples-grid-connection-plot-2kw-im-dol-py"></span><h1>2.2-kW IM, direct-on-line start<a class="headerlink" href="#kw-im-direct-on-line-start" title="Link to this heading">#</a></h1>
 <p>This example simulates the direct-on-line start of a 2.2-kW induction machine (IM),
-whose stator is connected directly to a stiff grid. The machine drives a fan, whose
-load torque is proportional to the square of the speed.</p>
+whose stator is connected directly to a stiff grid. The machine drives a fan, whose load
+torque is proportional to the square of the speed.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span><span class="w">
 </span></pre></div></div>
 <p>Compute base values based on the nominal values.</p>
@@ -548,7 +548,7 @@ currents and voltages are plotted as the magnitudes of their space vectors.</p>
 DC components, which depend on the instant of the connection.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-motulator-drive-utils sphx-glr-backref-type-py-function reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_stator_waveforms" title="motulator.drive.utils.plot_stator_waveforms"><span class="n">utils</span><span class="o">.</span><span class="n">plot_stator_waveforms</span></a><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><span class="n">base</span></a><span class="p">,</span> <span class="n">t_lims</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<img src="../../_images/sphx_glr_plot_2kw_im_dol_002.png" srcset="../../_images/sphx_glr_plot_2kw_im_dol_002.png" alt="plot 2kw im dol" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.612 seconds)</p>
+<img src="../../_images/sphx_glr_plot_2kw_im_dol_002.png" srcset="../../_images/sphx_glr_plot_2kw_im_dol_002.png" alt="plot 2kw im dol" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.160 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-grid-connection-plot-2kw-im-dol-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/6fe4cadd8eb9969b9f847c03ce49b9b8/plot_2kw_im_dol.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_im_dol.ipynb</span></code></a></p>

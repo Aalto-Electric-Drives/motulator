@@ -55,6 +55,7 @@ Classes
    motulator.grid.control.References
    motulator.grid.control.SequenceObserverBasedGridFormingController
    motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg
+   motulator.grid.control.SequenceObserverOutputs
 
 
 Package Contents
@@ -391,12 +392,12 @@ Package Contents
    magnitude [#Mou2025]_, extending the disturbance-observer-based grid-forming control
    [#Nur2024b]_. The disturbance observer estimates the quasi-static converter voltage
    as in `ObserverBasedGridFormingController`, and a second observer estimates the
-   disturbance power, i.e., the external power fed to the DC bus minus the grid
-   power and the resistive losses, from the energy balance of the DC-bus capacitor
-   and the inductor. The control law feeds the estimated disturbance power forward and
-   corrects the DC-bus energy error, which controls the active power without a
-   cascaded DC-bus voltage controller. The disturbance observers provide the integral
-   action and the synchronization. Transparent current control is also implemented.
+   disturbance power, i.e., the external power fed to the DC bus minus the grid power
+   and the resistive losses, from the energy balance of the DC-bus capacitor and the
+   inductor. The control law feeds the estimated disturbance power forward and corrects
+   the DC-bus energy error, which controls the active power without a cascaded DC-bus
+   voltage controller. The disturbance observers provide the integral action and the
+   synchronization. Transparent current control is also implemented.
 
    :param cfg: Dual-voltage-forming control configuration.
    :type cfg: DualVoltageFormingControllerCfg
@@ -404,9 +405,9 @@ Package Contents
    .. rubric:: Notes
 
    The control law equals the grid-forming mode of `ObserverBasedGridFormingController`
-   with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power
-   reference `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g`
-   is the estimated external power fed to the DC bus, excluding the resistive losses
+   with the power control gain `R_a/(1.5*v_c_ref) = k_d` and the active-power reference
+   `p_g_ref = p_dis + p_g - alpha_dc*(W_dc_ref - W_dc)`, where `p_dis + p_g` is the
+   estimated external power fed to the DC bus, excluding the resistive losses
    `1.5*R*|i_c|**2`. This equivalent reference is logged in `ref.p_g`.
 
    .. rubric:: References
@@ -569,11 +570,11 @@ Package Contents
    :type C_dc: float
    :param R: Total series resistance estimate (Ω), defaults to 0.
    :type R: float, optional
-   :param k_d: DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the
-               base power `1.5*u_nom*i_max`.
+   :param k_d: DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the base
+               power `1.5*u_nom*i_max`.
    :type k_d: float | None, optional
-   :param alpha_dc: Approximate closed-loop bandwidth of the DC-bus energy control (rad/s),
-                    defaults to 2*pi*7.5.
+   :param alpha_dc: Approximate closed-loop bandwidth of the DC-bus energy control (rad/s), defaults
+                    to 2*pi*7.5.
    :type alpha_dc: float, optional
    :param alpha_o: Observer bandwidth of the quasi-static converter voltage (rad/s), defaults to
                    2*pi*100.
@@ -683,14 +684,14 @@ Package Contents
    angle is not advanced, which is used if the controller takes the delays into account
    itself.
 
-   :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference
-                      and a grid-following controller the reactive power reference. A
-                      DC-bus-forming controller takes the DC-bus voltage reference instead of the
-                      active power reference.
+   :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference and a
+                      grid-following controller the reactive power reference. A DC-bus-forming
+                      controller takes the DC-bus voltage reference instead of the active power
+                      reference.
    :type inner_ctrl: InnerController
-   :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active power reference. If not
-                               given, the active power reference is set externally, unless the inner
-                               controller is DC-bus forming.
+   :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active power reference. If not given,
+                               the active power reference is set externally, unless the inner controller is
+                               DC-bus forming.
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
@@ -1882,9 +1883,9 @@ Package Contents
    and converter-voltage magnitude are controlled, while the negative-sequence
    converter voltage is suppressed. The disturbance observer estimates the positive-
    and negative-sequence grid voltages. The active-power reference is limited to a
-   realizable level, prioritizing the reactive and negative-sequence currents, and
-   the sequence current references are limited such that the peak phase current does
-   not exceed `i_max`.
+   realizable level, prioritizing the reactive and negative-sequence currents, and the
+   sequence current references are limited such that the peak phase current does not
+   exceed `i_max`.
 
    :param cfg: Grid-forming control configuration.
    :type cfg: SequenceObserverBasedGridFormingControllerCfg
@@ -1893,11 +1894,11 @@ Package Contents
 
    The control system operates in synchronous coordinates rotating at the nominal grid
    angular frequency. The controller compensates for the computational delay of one
-   sampling period and the zero-order-hold delay of half a sampling period itself:
-   the angle of the positive-sequence voltage reference is advanced by
-   `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite
-   direction, is retarded by the same angle. Therefore, the control system does not
-   advance the angle of the voltage reference (`k_comp = 0`).
+   sampling period and the zero-order-hold delay of half a sampling period itself: the
+   angle of the positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and
+   that of the negative sequence, which rotates in the opposite direction, is retarded
+   by the same angle. Therefore, the control system does not advance the angle of the
+   voltage reference (`k_comp = 0`).
 
    .. rubric:: References
 
@@ -2076,6 +2077,29 @@ Package Contents
    :type w_nom: float, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: SequenceObserverOutputs
+
+   
+   Feedback signals for the control system.
+
 
 
 

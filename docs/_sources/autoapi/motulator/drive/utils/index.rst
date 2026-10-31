@@ -203,7 +203,7 @@ Package Contents
 
    .. [#Mor1994] Morimoto, Sanada, Takeda, "Wide-speed operation of interior permanent
       magnet synchronous motors with high-performance current regulator," IEEE Trans.
-      Ind. Appl., https://doi.org/10.1109/28.297908
+      Ind. Appl., 1994, https://doi.org/10.1109/28.297908
 
    .. [#Var2022] Varatharajan, Pellegrino, Armando, "Direct flux vector control of
       synchronous motor drives: Accurate decoupled control with online adaptive maximum
@@ -235,8 +235,8 @@ Package Contents
       :param i_s_max: Current limit (A).
       :type i_s_max: float
       :param gamma_range: Range of the current angle (electrical rad), defaults to (pi, pi/2) for PM
-                          machines and (pi/2, 0) for machines without PMs. If the first element is
-                          NaN (no MTPV), the range starts from pi or pi/2, respectively.
+                          machines and (pi/2, 0) for machines without PMs. If the first element is NaN
+                          (no MTPV), the range starts from pi or pi/2, respectively.
       :type gamma_range: tuple, optional
       :param num: Number of points.
       :type num: int, optional
@@ -592,9 +592,9 @@ Package Contents
 
    .. attribute:: lookup_fcn
 
-      Function that evaluates the map at arbitrary points. Takes complex inputs
-      (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;
-      for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
+      Function that evaluates the map at arbitrary points. Takes complex inputs (d +
+      j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq; for
+      current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
       function, which extrapolates outside the map range, is created from the data.
 
       :type: Callable[[complex | np.ndarray], complex | np.ndarray], optional
@@ -647,30 +647,6 @@ Package Contents
 
       :returns: Interpolated magnetic model.
       :rtype: MagneticModel
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_input_output()
-
-      
-      Get input and output arrays based on map type.
-
 
 
 
@@ -1175,8 +1151,8 @@ Package Contents
 
    :param data: Flux map data. The current array should be a rectilinear grid.
    :type data: MagneticModel
-   :param base: Base values for scaling the maps. If not given, the maps are plotted
-                in SI units.
+   :param base: Base values for scaling the maps. If not given, the maps are plotted in SI
+                units.
    :type base: BaseValues, optional
    :param x_lims: x-axis limits. If None, uses automatic scaling.
    :type x_lims: tuple[float, float], optional
@@ -1219,8 +1195,8 @@ Package Contents
    :type data: MagneticModel
    :param component: Which component to plot: "d" for d-axis, "q" for q-axis.
    :type component: {"d", "q"}
-   :param base: Base values for scaling the maps. If not given, the maps are plotted
-                in SI units.
+   :param base: Base values for scaling the maps. If not given, the maps are plotted in SI
+                units.
    :type base: BaseValues, optional
    :param lims: Axis limits. Keys should be 'x', 'y', 'z'.
    :type lims: dict[str, tuple[float, float]], optional

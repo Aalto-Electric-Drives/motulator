@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**02:58.671** total execution time for 5 files **from drive_examples/grid_connection**:
+**01:59.455** total execution time for 5 files **from drive_examples/grid_connection**:
 
 .. container::
 
@@ -33,17 +33,17 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr_drive_examples_grid_connection_plot_2kw_ipmsm_afe_dvf_cvc.py` (``plot_2kw_ipmsm_afe_dvf_cvc.py``)
-     - 00:52.736
+     - 00:36.044
      - 0.0
    * - :ref:`sphx_glr_drive_examples_grid_connection_plot_2kw_ipmsm_afe_cvc.py` (``plot_2kw_ipmsm_afe_cvc.py``)
-     - 00:50.305
+     - 00:34.619
      - 0.0
    * - :ref:`sphx_glr_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py` (``plot_2kw_im_diode_vhz.py``)
-     - 00:40.825
+     - 00:26.055
      - 0.0
    * - :ref:`sphx_glr_drive_examples_grid_connection_plot_2kw_ipmsm_diode_cvc.py` (``plot_2kw_ipmsm_diode_cvc.py``)
-     - 00:33.192
+     - 00:21.576
      - 0.0
    * - :ref:`sphx_glr_drive_examples_grid_connection_plot_2kw_im_dol.py` (``plot_2kw_im_dol.py``)
-     - 00:01.612
+     - 00:01.160
      - 0.0

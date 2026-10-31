@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.control._base &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.grid.control._base &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -550,8 +550,8 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Post-process controller outputs.</span>
 
-<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated</span>
-<span class="sd">        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
+<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated to</span>
+<span class="sd">        the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
 <span class="sd">        i.e., it remains that of the controller coordinates, which equals that of the</span>
 <span class="sd">        new coordinates in steady state.</span>
 
@@ -582,14 +582,14 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    inner_ctrl : InnerController</span>
-<span class="sd">        Inner controller. A grid-forming controller takes the AC voltage reference</span>
-<span class="sd">        and a grid-following controller the reactive power reference. A</span>
-<span class="sd">        DC-bus-forming controller takes the DC-bus voltage reference instead of the</span>
-<span class="sd">        active power reference.</span>
+<span class="sd">        Inner controller. A grid-forming controller takes the AC voltage reference and a</span>
+<span class="sd">        grid-following controller the reactive power reference. A DC-bus-forming</span>
+<span class="sd">        controller takes the DC-bus voltage reference instead of the active power</span>
+<span class="sd">        reference.</span>
 <span class="sd">    dc_bus_voltage_ctrl : DCBusVoltageController, optional</span>
-<span class="sd">        DC-bus voltage controller, which gives the active power reference. If not</span>
-<span class="sd">        given, the active power reference is set externally, unless the inner</span>
-<span class="sd">        controller is DC-bus forming.</span>
+<span class="sd">        DC-bus voltage controller, which gives the active power reference. If not given,</span>
+<span class="sd">        the active power reference is set externally, unless the inner controller is</span>
+<span class="sd">        DC-bus forming.</span>
 <span class="sd">    pwm : PWM, optional</span>
 <span class="sd">        Pulse-width modulator, defaults to `PWM()`.</span>
 

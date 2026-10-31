@@ -467,8 +467,8 @@ Module Contents
    where `k_comp` is given by the inner controller. The value 1.5 compensates for the
    computational delay of one sampling period and the delay of half a sampling period
    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
-   angle is not advanced, which is used if the controller takes the delays into
-   account itself, e.g., in a direct discrete-time design.
+   angle is not advanced, which is used if the controller takes the delays into account
+   itself, e.g., in a direct discrete-time design.
 
    While the gates are blocked (see `set_enable`), the control system is in standby:
    the observers run on their open-circuit model, since the converter voltage is
@@ -669,9 +669,8 @@ Module Contents
    providing the saturation model via `InductionMachinePars`.
 
    The flux estimate is corrected and predicted using a hold-equivalent discrete-time
-   model, and the estimation error is the difference between the rotor flux
-   predictions of the current model and the voltage model, cf. [#Bot1993]_,
-   [#Hin2018]_.
+   model, and the estimation error is the difference between the rotor flux predictions
+   of the current model and the voltage model, cf. [#Bot1993]_, [#Hin2018]_.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
@@ -720,10 +719,10 @@ Module Contents
       
       Compute the feedback signals for the control system.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
-                     sampling period, i.e., from this sampling instant to the next one. If
-                     None (unknown voltage, e.g., with blocked gates), the flux estimate
-                     follows the current model alone.
+      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+                     period, i.e., from this sampling instant to the next one. If None (unknown
+                     voltage, e.g., with blocked gates), the flux estimate follows the current
+                     model alone.
       :type u_s_ab: complex | None
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
@@ -1280,8 +1279,8 @@ Module Contents
    
    Observer-based V/Hz controller for induction machine drives.
 
-   This class implements sensorless observer-based V/Hz control. Decoupling between
-   the stator flux and torque channels is used [#Tii2025b]_.
+   This class implements sensorless observer-based V/Hz control. Decoupling between the
+   stator flux and torque channels is used [#Tii2025b]_.
 
    :param par: Machine model parameters.
    :type par: InductionMachineInvGammaPars | InductionMachinePars
@@ -2289,10 +2288,10 @@ Module Contents
    and flux-vector control).
 
    A sensorless drive stays in standby with the zero voltage vector also at the first
-   sampling instant after the release of the gates. Due to the computational delay,
-   the first two sampling periods are then zero-voltage periods, and the observer of
-   a synchronous machine catches the rotating machine from the current response to
-   the first one (a flying start).
+   sampling instant after the release of the gates. Due to the computational delay, the
+   first two sampling periods are then zero-voltage periods, and the observer of a
+   synchronous machine catches the rotating machine from the current response to the
+   first one (a flying start).
 
    :param vector_ctrl: Vector controller whose input is the torque reference.
    :type vector_ctrl: VectorController

@@ -149,8 +149,8 @@ Package Contents
    
    Callable wrapper for GradNet flux-linkage map models.
 
-   The map returns the stator flux linkage (Vs) at the given stator current (A). It
-   is symmetrized about the d-axis to ensure physical consistency.
+   The map returns the stator flux linkage (Vs) at the given stator current (A). It is
+   symmetrized about the d-axis to ensure physical consistency.
 
    :param model: Trained GradNet for the flux-linkage map, see `load_gradnet`.
    :type model: GradNetFunction
@@ -207,10 +207,10 @@ Package Contents
    
    Trained GradNet as a numpy function in double precision.
 
-   The function maps the per-unit input, shape (..., in_dim), to the per-unit output
-   of the same shape, which is the gradient of the scalar state function of the
-   network. It is created from a trained model by the related package
-   motulator-gradnet, saved to an npz file by `save`, and loaded by `load_gradnet`.
+   The function maps the per-unit input, shape (..., in_dim), to the per-unit output of
+   the same shape, which is the gradient of the scalar state function of the network.
+   It is created from a trained model by the related package motulator-gradnet, saved
+   to an npz file by `save`, and loaded by `load_gradnet`.
 
    :param W: Weights of the modules.
    :type W: ndarray, shape (num_modules, embed_dim, in_dim)

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.common.model._pwm &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.common.model._pwm &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -469,11 +469,11 @@
 <span class="sd">A modulator converts the command of the control system into the gate states of the</span>
 <span class="sd">converter and their durations within the sampling period, including the computational</span>
 <span class="sd">delay. The command and the gate states are specific to the converter type. For a</span>
-<span class="sd">voltage-source converter, the command consists of the duty ratios of the legs. The</span>
-<span class="sd">gate state of a leg is the gate signal `q` of its upper switch and the blanking signal</span>
-<span class="sd">`b`, which is one when neither of the switches conducts due to the dead time. The</span>
-<span class="sd">converter then resolves the leg state from the current direction. In the averaged</span>
-<span class="sd">model, `q` and `b` are the fractions of the half carrier period.</span>
+<span class="sd">voltage-source converter, the command consists of the duty ratios of the legs. The gate</span>
+<span class="sd">state of a leg is the gate signal `q` of its upper switch and the blanking signal `b`,</span>
+<span class="sd">which is one when neither of the switches conducts due to the dead time. The converter</span>
+<span class="sd">then resolves the leg state from the current direction. In the averaged model, `q` and</span>
+<span class="sd">`b` are the fractions of the half carrier period.</span>
 
 <span class="sd">"""</span>
 
@@ -498,8 +498,8 @@
 <span class="sd">    length : int, optional</span>
 <span class="sd">        Length of the buffer, i.e., the delay in calls, defaults to 1.</span>
 <span class="sd">    zeros : Callable[[Any], Any], optional</span>
-<span class="sd">        Function giving the initial content of the buffer from the first input,</span>
-<span class="sd">        defaults to `np.zeros_like`.</span>
+<span class="sd">        Function giving the initial content of the buffer from the first input, defaults</span>
+<span class="sd">        to `np.zeros_like`.</span>
 
 <span class="sd">    """</span>
 
@@ -541,23 +541,23 @@
 <span class="sd">    Base class for modulators.</span>
 
 <span class="sd">    The sampling period consists of one half carrier period with double update and of</span>
-<span class="sd">    two with single update. The command passes through the computational delay once</span>
-<span class="sd">    per half carrier period, and the gate states of each half carrier period are</span>
-<span class="sd">    computed by `schedule`, which the subclasses implement. The type parameter `Cmd`</span>
-<span class="sd">    is the type of the command, e.g., the duty ratios of a voltage-source converter.</span>
+<span class="sd">    two with single update. The command passes through the computational delay once per</span>
+<span class="sd">    half carrier period, and the gate states of each half carrier period are computed by</span>
+<span class="sd">    `schedule`, which the subclasses implement. The type parameter `Cmd` is the type of</span>
+<span class="sd">    the command, e.g., the duty ratios of a voltage-source converter.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    delay : int, optional</span>
 <span class="sd">        Computational delay in half carrier periods from the sampling instant to the</span>
 <span class="sd">        loading of the command. Defaults to None, i.e., one sampling period, which the</span>
-<span class="sd">        control systems of this package compensate for: 1 with double update and 2</span>
-<span class="sd">        with single update. With single update, `delay=1` loads the command at the</span>
-<span class="sd">        carrier extremum between the sampling instants.</span>
+<span class="sd">        control systems of this package compensate for: 1 with double update and 2 with</span>
+<span class="sd">        single update. With single update, `delay=1` loads the command at the carrier</span>
+<span class="sd">        extremum between the sampling instants.</span>
 <span class="sd">    single_update : bool, optional</span>
-<span class="sd">        Sample and update the command once per carrier period, i.e., the sampling</span>
-<span class="sd">        period of the control system equals the carrier period, defaults to False</span>
-<span class="sd">        (double update, the sampling period is half the carrier period).</span>
+<span class="sd">        Sample and update the command once per carrier period, i.e., the sampling period</span>
+<span class="sd">        of the control system equals the carrier period, defaults to False (double</span>
+<span class="sd">        update, the sampling period is half the carrier period).</span>
 
 <span class="sd">    """</span>
 
@@ -660,10 +660,9 @@
 
 <span class="sd">    The gate state of a leg consists of the gate signal of its upper switch and the</span>
 <span class="sd">    blanking signal, see `VoltageSourceConverter`. Hence, the gate states of the N</span>
-<span class="sd">    intervals form an array of shape (N, 2, n_legs), the gate signals in the first</span>
-<span class="sd">    row and the blanking signals in the second row of each interval. In the averaged</span>
-<span class="sd">    model, they are the on-time fractions of the upper switches and the blanking</span>
-<span class="sd">    fractions.</span>
+<span class="sd">    intervals form an array of shape (N, 2, n_legs), the gate signals in the first row</span>
+<span class="sd">    and the blanking signals in the second row of each interval. In the averaged model,</span>
+<span class="sd">    they are the on-time fractions of the upper switches and the blanking fractions.</span>
 
 <span class="sd">    """</span></div>
 
@@ -677,8 +676,8 @@
 <span class="sd">    Zero-order hold of the duty ratios of a voltage-source converter.</span>
 
 <span class="sd">    The dead time reduces the gate signal duty ratios of both switches of a leg by</span>
-<span class="sd">    `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the</span>
-<span class="sd">    half carrier period `T_half`, unless the leg does not switch. Short pulses are</span>
+<span class="sd">    `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the half</span>
+<span class="sd">    carrier period `T_half`, unless the leg does not switch. Short pulses are</span>
 <span class="sd">    suppressed, and the blanking fraction is computed from the remaining on-times of</span>
 <span class="sd">    both switches. This is a switching-cycle averaged model, not a model of switching</span>
 <span class="sd">    transients.</span>
@@ -841,8 +840,8 @@
 <span class="sd">        Simultaneous switching instants are merged, so the number of intervals varies.</span>
 <span class="sd">        Blanking continues across half carrier periods, including changes in their</span>
 <span class="sd">        length. A reversed command cancels a pending turn-on and starts a new blanking</span>
-<span class="sd">        interval. On the first call, the initial commanded state is assumed to</span>
-<span class="sd">        already conduct.</span>
+<span class="sd">        interval. On the first call, the initial commanded state is assumed to already</span>
+<span class="sd">        conduct.</span>
 
 <span class="sd">        """</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">command</span><span class="p">))</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>

@@ -269,8 +269,8 @@ Module Contents
    :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
                None, the gain is zero, i.e., the PM-flux linkage is not estimated.
    :type k_f: Callable[[float], float] | None, optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
-                     positive for machines without PMs.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be positive
+                     for machines without PMs.
    :type psi_s_min: float, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -396,8 +396,8 @@ Module Contents
    where `k_comp` is given by the inner controller. The value 1.5 compensates for the
    computational delay of one sampling period and the delay of half a sampling period
    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
-   angle is not advanced, which is used if the controller takes the delays into
-   account itself, e.g., in a direct discrete-time design.
+   angle is not advanced, which is used if the controller takes the delays into account
+   itself, e.g., in a direct discrete-time design.
 
    While the gates are blocked (see `set_enable`), the control system is in standby:
    the observers run on their open-circuit model, since the converter voltage is
@@ -640,10 +640,10 @@ Module Contents
       
       Compute the feedback signals for the control system.
 
-      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing
-                     sampling period, i.e., from this sampling instant to the next one. If
-                     None (unknown voltage, e.g., with blocked gates), the flux estimate
-                     follows the current model alone.
+      :param u_s_ab: Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+                     period, i.e., from this sampling instant to the next one. If None (unknown
+                     voltage, e.g., with blocked gates), the flux estimate follows the current
+                     model alone.
       :type u_s_ab: complex | None
       :param i_s_ab: Stator current (A) in stator coordinates.
       :type i_s_ab: complex
@@ -1119,15 +1119,15 @@ Module Contents
    :param alpha_o: Angle estimation pole (rad/s), defaults to 2*pi*200.
    :type alpha_o: float, optional
    :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
-               defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)``
-               (incremental inductances at zero current).
+               defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` (incremental
+               inductances at zero current).
    :type k_o: Callable[[float], float] | None, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
    :type k_mtpv: float, optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
-                     positive for machines without PMs.
+   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be positive
+                     for machines without PMs.
    :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -1571,17 +1571,17 @@ Module Contents
 
    .. rubric:: References
 
-   .. [#Mey2006] Meyer, Böcker, “Optimum control for interior permanent magnet
-      synchronous motors (IPMSM) in constant torque and flux weakening range,” Proc.
+   .. [#Mey2006] Meyer, Böcker, "Optimum control for interior permanent magnet
+      synchronous motors (IPMSM) in constant torque and flux weakening range," Proc.
       EPE-PEMC, 2006, https://doi.org/10.1109/EPEPEMC.2006.4778413
 
-   .. [#Awa2018] Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
-      saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
+   .. [#Awa2018] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
+      saturated synchronous motors: Plug-and-play method," IEEE Trans. Ind. Appl.,
       2018, https://doi.org/10.1109/TIA.2018.2862410
 
    .. [#Sar2026] Sarén, Hartikainen, Piippo, Hinkkanen, "Decoupled online feedforward
-      generation of optimal references for saturated synchronous machine drives,"
-      2026, https://arxiv.org/abs/2607.08528
+      generation of optimal references for saturated synchronous machine drives," 2026,
+      https://arxiv.org/abs/2607.08528
 
 
 
@@ -2164,15 +2164,14 @@ Module Contents
       Initialize the estimates from the current response to a zero-voltage period.
 
       The back-EMF drives the current along the negative q axis of the rotor, which
-      gives the rotor angle and the speed magnitude (a flying start, cf.
-      [#Tan2009]_), the direction of rotation being taken from the speed estimate.
-      The resistive voltage drop and the cross-coupling of the current are
-      neglected.
+      gives the rotor angle and the speed magnitude (a flying start, cf. [#Tan2009]_),
+      the direction of rotation being taken from the speed estimate. The resistive
+      voltage drop and the cross-coupling of the current are neglected.
 
-      This method is called by `compute_output` at the first sampling instant with
-      a known voltage after unknown ones. The period is the last of them, in which
-      the control system applies the zero voltage vector after the release of the
-      gates (see `VectorControlSystem`).
+      This method is called by `compute_output` at the first sampling instant with a
+      known voltage after unknown ones. The period is the last of them, in which the
+      control system applies the zero voltage vector after the release of the gates
+      (see `VectorControlSystem`).
 
       :param delta_i_s_ab: Change of the stator current (A) over the period, in stator coordinates.
       :type delta_i_s_ab: complex
@@ -2181,17 +2180,16 @@ Module Contents
       :param T_s: Length of the period (s).
       :type T_s: float
 
-      :returns: True if the estimates were initialized, False if the back-EMF estimate
-                does not exceed the resistive voltage drop of the current (standstill, or
-                a current that has not decayed) or the machine has no magnets.
+      :returns: True if the estimates were initialized, False if the back-EMF estimate does
+                not exceed the resistive voltage drop of the current (standstill, or a
+                current that has not decayed) or the machine has no magnets.
       :rtype: bool
 
       .. rubric:: References
 
-      .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,
-         "Starting procedure of rotational sensorless PMSM in the rotating
-         condition," IEEE Trans. Ind. Appl., 2009,
-         https://doi.org/10.1109/TIA.2008.2009496
+      .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, "Starting
+         procedure of rotational sensorless PMSM in the rotating condition," IEEE
+         Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2008.2009496
 
 
 
@@ -2672,10 +2670,10 @@ Module Contents
    and flux-vector control).
 
    A sensorless drive stays in standby with the zero voltage vector also at the first
-   sampling instant after the release of the gates. Due to the computational delay,
-   the first two sampling periods are then zero-voltage periods, and the observer of
-   a synchronous machine catches the rotating machine from the current response to
-   the first one (a flying start).
+   sampling instant after the release of the gates. Due to the computational delay, the
+   first two sampling periods are then zero-voltage periods, and the observer of a
+   synchronous machine catches the rotating machine from the current response to the
+   first one (a flying start).
 
    :param vector_ctrl: Vector controller whose input is the torque reference.
    :type vector_ctrl: VectorController

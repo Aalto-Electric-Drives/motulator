@@ -304,7 +304,7 @@ clamped segments are closer to the current peaks.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.576 seconds)
+   **Total running time of the script:** (0 minutes 4.573 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_dpwm_fvc.py:

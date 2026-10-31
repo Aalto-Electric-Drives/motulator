@@ -176,7 +176,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.879 seconds)
+   **Total running time of the script:** (0 minutes 4.023 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:

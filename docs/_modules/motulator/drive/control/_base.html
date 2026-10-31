@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._base &#8212; motulator 0.21.0 documentation</title>
+    <title>motulator.drive.control._base &#8212; motulator 0.22.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=174dfe6e"></script>
+    <script src="../../../../_static/documentation_options.js?v=c952a61b"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.21.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -538,8 +538,8 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Post-process controller outputs.</span>
 
-<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated</span>
-<span class="sd">        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
+<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated to</span>
+<span class="sd">        the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
 <span class="sd">        i.e., it remains that of the controller coordinates, which equals that of the</span>
 <span class="sd">        new coordinates in steady state.</span>
 
@@ -575,8 +575,8 @@
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Post-process controller outputs.</span>
 
-<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated</span>
-<span class="sd">        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
+<span class="sd">        If the signals are transformed to other coordinates, `fbk.theta_c` is updated to</span>
+<span class="sd">        the angle of these coordinates. The angular speed `fbk.w_c` is not updated,</span>
 <span class="sd">        i.e., it remains that of the controller coordinates, which equals that of the</span>
 <span class="sd">        new coordinates in steady state.</span>
 
@@ -603,8 +603,8 @@
 <span class="sd">    where `k_comp` is given by the inner controller. The value 1.5 compensates for the</span>
 <span class="sd">    computational delay of one sampling period and the delay of half a sampling period</span>
 <span class="sd">    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the</span>
-<span class="sd">    angle is not advanced, which is used if the controller takes the delays into</span>
-<span class="sd">    account itself, e.g., in a direct discrete-time design.</span>
+<span class="sd">    angle is not advanced, which is used if the controller takes the delays into account</span>
+<span class="sd">    itself, e.g., in a direct discrete-time design.</span>
 
 <span class="sd">    While the gates are blocked (see `set_enable`), the control system is in standby:</span>
 <span class="sd">    the observers run on their open-circuit model, since the converter voltage is</span>
@@ -748,10 +748,10 @@
 <span class="sd">    and flux-vector control).</span>
 
 <span class="sd">    A sensorless drive stays in standby with the zero voltage vector also at the first</span>
-<span class="sd">    sampling instant after the release of the gates. Due to the computational delay,</span>
-<span class="sd">    the first two sampling periods are then zero-voltage periods, and the observer of</span>
-<span class="sd">    a synchronous machine catches the rotating machine from the current response to</span>
-<span class="sd">    the first one (a flying start).</span>
+<span class="sd">    sampling instant after the release of the gates. Due to the computational delay, the</span>
+<span class="sd">    first two sampling periods are then zero-voltage periods, and the observer of a</span>
+<span class="sd">    synchronous machine catches the rotating machine from the current response to the</span>
+<span class="sd">    first one (a flying start).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

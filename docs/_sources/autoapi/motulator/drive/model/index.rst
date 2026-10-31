@@ -47,6 +47,7 @@ Classes
    motulator.drive.model.Sensor
    motulator.drive.model.Simulation
    motulator.drive.model.SimulationResults
+   motulator.drive.model.SolverCfg
    motulator.drive.model.SpatialSaturatedSynchronousMachinePars
    motulator.drive.model.SynchronousMachine
    motulator.drive.model.SynchronousMachinePars
@@ -160,8 +161,8 @@ Package Contents
       Simultaneous switching instants are merged, so the number of intervals varies.
       Blanking continues across half carrier periods, including changes in their
       length. A reversed command cancels a pending turn-on and starts a new blanking
-      interval. On the first call, the initial commanded state is assumed to
-      already conduct.
+      interval. On the first call, the initial commanded state is assumed to already
+      conduct.
 
 
 
@@ -189,13 +190,13 @@ Package Contents
    
    Composite of models sharing subsystems.
 
-   The models are coupled through shared subsystem objects, e.g., a DC bus given to
-   the models of a grid converter and a drive. Each model keeps its converter, whose
+   The models are coupled through shared subsystem objects, e.g., a DC bus given to the
+   models of a grid converter and a drive. Each model keeps its converter, whose
    modulator includes the PWM model and the computational delay, and the model of a
    controlled converter is driven by its own control system in the simulation, see
-   `Simulation`. A shared subsystem is evaluated once, whatever its names in the
-   models (the composite names the subsystems `model.subsystem` after their first
-   occurrence), in the order derived from the direct dependencies, see `Model`.
+   `Simulation`. A shared subsystem is evaluated once, whatever its names in the models
+   (the composite names the subsystems `model.subsystem` after their first occurrence),
+   in the order derived from the direct dependencies, see `Model`.
 
    :param models: Models by name. The names are used for the control systems and the results, so
                   they must be valid attribute names (not starting with an underscore, and not
@@ -251,12 +252,12 @@ Package Contents
    
    Capacitive DC bus feeding converters.
 
-   The DC bus feeds the converters of the models it is given to, see `Model`. The
-   model connects its converter to the DC bus through `connect`, which registers the
+   The DC bus feeds the converters of the models it is given to, see `Model`. The model
+   connects its converter to the DC bus through `connect`, which registers the
    converter in `converters` and gives the connections of its DC terminals, i.e., the
    DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
-   currents of the registered converters, computed from their switching states and
-   AC currents. The DC bus can be shared by the converters of several models, see
+   currents of the registered converters, computed from their switching states and AC
+   currents. The DC bus can be shared by the converters of several models, see
    `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
    can also be fed to the DC bus.
 
@@ -281,30 +282,6 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
-
-   .. py:method:: compute_dc_current(t)
-
-      
-      Compute the net current (A) fed to the DC-bus capacitor.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
    .. py:method:: connect(converter)
 
@@ -767,8 +744,8 @@ Package Contents
 
    .. rubric:: References
 
-   .. [#Sle1989] Slemon, "Modelling of induction machines for electric
-      drives," IEEE Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
+   .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," IEEE
+      Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
 
 
 
@@ -791,30 +768,6 @@ Package Contents
 
       
       Compute the AC port for a converter with blocked gates, see `ACPort`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: compute_outputs(state, inp)
-
-      
-      Compute output variables.
 
 
 
@@ -1404,30 +1357,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_total_load_torque(w_M, tau_L)
-
-      
-      Total load torque (Nm), including the friction.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: create_time_series(t)
 
       
@@ -1775,9 +1704,9 @@ Package Contents
    The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
    signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
    independently for each channel at each sample. The parameters are scalars or arrays
-   with one element per channel (e.g., per phase), in the units of the measured
-   signal. The noise represents the sampled signal, i.e., `std` is the standard
-   deviation of the samples after the anti-aliasing filter and the A/D conversion.
+   with one element per channel (e.g., per phase), in the units of the measured signal.
+   The noise represents the sampled signal, i.e., `std` is the standard deviation of
+   the samples after the anti-aliasing filter and the A/D conversion.
 
    :param gain: Gain, defaults to 1.
    :type gain: array_like, optional
@@ -1819,27 +1748,27 @@ Package Contents
    
    Simulation environment.
 
-   Each control system is called at its own sampling instants, which gives the
-   sampling period of its next control cycle. The control systems of a composite
-   model can have different sampling periods, and their sampling instants need not
-   coincide. The switching states of the converters are held constant between the
-   sampling and switching instants of all the converters.
+   Each control system is called at its own sampling instants, which gives the sampling
+   period of its next control cycle. The control systems of a composite model can have
+   different sampling periods, and their sampling instants need not coincide. The
+   switching states of the converters are held constant between the sampling and
+   switching instants of all the converters.
 
    :param mdl: Continuous-time system model.
    :type mdl: Model
    :param ctrl: Discrete-time control system of a model with a controlled converter. For a
-                composite model, the control systems of the models with controlled converters
-                by the model names. Defaults to None, i.e., no control systems.
+                composite model, the control systems of the models with controlled converters by
+                the model names. Defaults to None, i.e., no control systems.
    :type ctrl: ControlSystem | Mapping[str, ControlSystem], optional
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
    :param cfg: Solver configuration parameters.
    :type cfg: SolverCfg, optional
-   :param t_start: First sampling instant (s) of the control system or, for a composite model,
-                   of the control systems by the model names. The time `ctrl.t` of the control
-                   system is set to this value. Defaults to the initial time of the model, as do
-                   the control systems not included in the mapping, in which case `ctrl.t` is
-                   not changed.
+   :param t_start: First sampling instant (s) of the control system or, for a composite model, of
+                   the control systems by the model names. The time `ctrl.t` of the control system
+                   is set to this value. Defaults to the initial time of the model, as do the
+                   control systems not included in the mapping, in which case `ctrl.t` is not
+                   changed.
    :type t_start: float | Mapping[str, float], optional
 
 
@@ -1864,17 +1793,16 @@ Package Contents
       
       Solve continuous-time system model and call control system.
 
-      The simulation runs until the first sampling instant after `t_stop`, or
-      until `t_stop` without control systems. A subsequent call continues the
-      simulation.
+      The simulation runs until the first sampling instant after `t_stop`, or until
+      `t_stop` without control systems. A subsequent call continues the simulation.
 
       :param t_stop: Simulation stop time, defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
                      integration interval, i.e., for each interval between the sampling and
                      switching instants, or for the whole simulation without control systems.
-                     Defaults to 0, in which case the number and spacing of points is selected
-                     by the solver.
+                     Defaults to 0, in which case the number and spacing of points is selected by
+                     the solver.
       :type N_eval: int, optional
 
 
@@ -1917,8 +1845,8 @@ Package Contents
 
    .. attribute:: success
 
-      False if the simulation stopped before the stop time due to a numerical
-      failure, in which case the results cover the time until the failure.
+      False if the simulation stopped before the stop time due to a numerical failure,
+      in which case the results cover the time until the failure.
 
       :type: bool
 
@@ -1938,6 +1866,66 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+.. py:class:: SolverCfg
+
+   
+   Solver configuration parameters.
+
+   :param max_step: Maximum step size (s) for the integrator. Defaults to None, i.e., 1e-4 s while
+                    the gates of a converter are blocked, so that the solver locates the transitions
+                    of the diodes driven by the AC voltages, and without control systems, so that
+                    the solver resolves the waveforms. Otherwise, the step size is not limited,
+                    since the sampling and switching instants limit the integration intervals.
+   :type max_step: float, optional
+   :param method: Integration method, defaults to "RK45".
+   :type method: str, optional
+   :param rtol: Relative tolerance, defaults to 1e-3.
+   :type rtol: float, optional
+   :param atol: Absolute tolerance, defaults to 1e-6.
+   :type atol: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: solver
+      :type: dict[str, Any]
+
+      
+      Return the solver configuration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: SpatialSaturatedSynchronousMachinePars
 
@@ -2048,9 +2036,9 @@ Package Contents
    simplest implementation. The interfaces are in stator coordinates. The magnetic
    saturation can be modeled by providing a nonlinear current map, either as
    `i_s_dq_fcn` in `SaturatedSynchronousMachinePars` or, including spatial harmonics,
-   as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`.
-   Optionally, eddy-current core losses can be modeled by means of a constant core-loss
-   conductance `G_c`, connected in parallel with the magnetizing branch.
+   as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`. Optionally,
+   eddy-current core losses can be modeled by means of a constant core-loss conductance
+   `G_c`, connected in parallel with the magnetizing branch.
 
    :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
    :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars         | SpatialSaturatedSynchronousMachinePars
@@ -2086,30 +2074,6 @@ Package Contents
 
       
       Compute the AC port for a converter with blocked gates, see `ACPort`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: compute_outputs(state, inp)
-
-      
-      Compute output variables.
 
 
 
@@ -2589,54 +2553,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_shaft_torque(theta_ML, w_M, w_L)
-
-      
-      Shaft torque (Nm).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: compute_total_load_torque(w_L, tau_L)
-
-      
-      Total load torque (Nm), including the friction.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: create_time_series(t)
 
       
@@ -2887,8 +2803,8 @@ Package Contents
    
    Three-phase voltage-source converter.
 
-   The modulator converts the duty ratios of the control system into the gate states
-   of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+   The modulator converts the duty ratios of the control system into the gate states of
+   the legs, i.e., the gate signals of the upper switches and the blanking signals,
    including the computational delay and the dead time, see `ZOH` and
    `CarrierComparison`. The switches are ideal, except for the dead time and the
    threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
@@ -2908,11 +2824,11 @@ Package Contents
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the converter must
                 be fed from a DC-bus model.
    :type u_dc: float, optional
-   :param modulator: Modulator converting the command of the control system into the gate states,
-                     see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle
-                     averaged model of the duty ratios without the dead time and with the
-                     computational delay of one sampling period. A modulator keeps its state, so
-                     each converter needs its own.
+   :param modulator: Modulator converting the command of the control system into the gate states, see
+                     `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle averaged
+                     model of the duty ratios without the dead time and with the computational delay
+                     of one sampling period. A modulator keeps its state, so each converter needs its
+                     own.
    :type modulator: TwoLevelModulator, optional
    :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
    :type u_th: float, optional
@@ -3114,8 +3030,8 @@ Package Contents
       
       Convert the command to the gate states and their durations.
 
-      The command passes through the modulator also while the gates are blocked,
-      but the gate states are then zero for the whole sampling period.
+      The command passes through the modulator also while the gates are blocked, but
+      the gate states are then zero for the whole sampling period.
 
       :param T_s: Sampling period (s).
       :type T_s: float
@@ -3227,8 +3143,8 @@ Package Contents
    Zero-order hold of the duty ratios of a voltage-source converter.
 
    The dead time reduces the gate signal duty ratios of both switches of a leg by
-   `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the
-   half carrier period `T_half`, unless the leg does not switch. Short pulses are
+   `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the half
+   carrier period `T_half`, unless the leg does not switch. Short pulses are
    suppressed, and the blanking fraction is computed from the remaining on-times of
    both switches. This is a switching-cycle averaged model, not a model of switching
    transients.
