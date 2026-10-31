@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import motulator.drive.control.sm as control
-from motulator.common.utils import complex2abc
+from motulator.common.utils import complex2abc, set_style
 from motulator.drive import model, utils
 
 # %%
@@ -144,7 +144,8 @@ for w_pu, n_periods in [(0.3, 1), (1.0, 3)]:
 # approaches zero at the end of the segment in which phase c is clamped to the negative
 # rail, where the voltages of the phases a and c are equal.
 
-fig, axes = plt.subplots(2, len(METHODS), figsize=(10, 5), sharex=True, sharey="row")
+set_style()
+_, axes = plt.subplots(2, len(METHODS), figsize=(10, 5), sharex=True, sharey="row")
 T_1 = 2 * pi / (par.n_p * base.w_M)
 for col, method in enumerate(METHODS):
     res = results[1.0, method][0]
@@ -154,14 +155,11 @@ for col, method in enumerate(METHODS):
     ax2.plot(1e3 * (res.mdl.t - T_SETTLE), i_a / base.i)
     ax1.set_title(method)
     ax2.set_xlabel("Time (ms)")
-    for ax in (ax1, ax2):
-        ax.grid(True)
-        ax.set_xlim(0, 1e3 * T_1)
+axes[0, 0].set_xlim(0, 1e3 * T_1)
 axes[0, 0].set_ylabel(r"$d_\mathrm{a}$")
 axes[1, 0].set_ylabel(r"$i_\mathrm{a}$ (p.u.)")
 for ax in axes[:, 1:].flat:
     ax.tick_params(labelleft=True)
-fig.tight_layout()
 plt.show()
 
 # %%
