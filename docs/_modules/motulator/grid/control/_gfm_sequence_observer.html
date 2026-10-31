@@ -465,6 +465,7 @@
 <span></span><span class="sd">"""Disturbance-observer-based grid-forming control with sequence separation."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">phase</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cmath</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span> <span class="k">as</span> <span class="n">csqrt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
 
@@ -562,8 +563,12 @@
 <span class="sd">    estimates are corrected using the prediction error of the measured current, after</span>
 <span class="sd">    which the current and the estimates are predicted for the next sampling instant,</span>
 <span class="sd">    using the realized converter voltage of the ongoing sampling period.</span>
-<span class="sd">    The observer gains place the poles of the estimation-error dynamics at</span>
-<span class="sd">    `exp(p*alpha_o*T_s)`.</span>
+
+<span class="sd">    The observer gains place the poles of the estimation-error dynamics at `exp(s*T_s)`,</span>
+<span class="sd">    where the continuous-time poles `s` in synchronous coordinates satisfy</span>
+<span class="sd">    `(s + 1j*w_nom)**2 + 2*zeta_o*w_o*(s + 1j*w_nom) + w_o**2 = 0`, i.e., the poles</span>
+<span class="sd">    `s + 1j*w_nom` in stationary coordinates have the natural frequency `w_o` and the</span>
+<span class="sd">    damping ratio `zeta_o`.</span>
 
 <span class="sd">    The converter current is separated into its quasi-static sequence components using</span>
 <span class="sd">    a complex first-order filter. Its discrete-time coefficients are selected such</span>
@@ -577,10 +582,10 @@
 <span class="sd">        Nominal grid angular frequency (rad/s).</span>
 <span class="sd">    L : float</span>
 <span class="sd">        Total inductance (H).</span>
-<span class="sd">    alpha_o : float</span>
-<span class="sd">        Observer bandwidth (rad/s).</span>
-<span class="sd">    p : tuple[complex, complex]</span>
-<span class="sd">        Continuous-time observer poles, normalized by `alpha_o`.</span>
+<span class="sd">    w_o : float</span>
+<span class="sd">        Observer natural frequency (rad/s).</span>
+<span class="sd">    zeta_o : float</span>
+<span class="sd">        Observer damping ratio.</span>
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s).</span>
 
@@ -591,8 +596,8 @@
         <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">L</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">p</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">],</span>
+        <span class="n">w_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">zeta_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">L</span>
@@ -603,8 +608,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma_c</span> <span class="o">=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">/</span> <span class="n">L</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_nom</span> <span class="o">*</span> <span class="n">L</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span>
+        <span class="c1"># Continuous-time observer poles in synchronous coordinates</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">w_o</span> <span class="o">*</span> <span class="n">csqrt</span><span class="p">(</span><span class="n">zeta_o</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">s_1</span> <span class="o">=</span> <span class="o">-</span><span class="n">zeta_o</span> <span class="o">*</span> <span class="n">w_o</span> <span class="o">+</span> <span class="n">d</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_nom</span>
+        <span class="n">s_2</span> <span class="o">=</span> <span class="o">-</span><span class="n">zeta_o</span> <span class="o">*</span> <span class="n">w_o</span> <span class="o">-</span> <span class="n">d</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_nom</span>
+        <span class="c1"># Corresponding discrete-time poles</span>
+        <span class="n">z_1</span><span class="p">,</span> <span class="n">z_2</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="n">s_1</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">),</span> <span class="n">exp</span><span class="p">(</span><span class="n">s_2</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>
         <span class="c1"># Observer gains</span>
-        <span class="n">z_1</span><span class="p">,</span> <span class="n">z_2</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">alpha_o</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">),</span> <span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">alpha_o</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_p</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z_1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">z_2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_p</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_n</span> <span class="o">=</span> <span class="p">(</span>
             <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">-</span> <span class="n">z_1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">-</span> <span class="n">z_2</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">phi_n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma_n</span><span class="p">)</span>
@@ -680,25 +690,23 @@
 <span class="sd">        Total series resistance estimate (Ω), defaults to 0.</span>
 <span class="sd">    R_a : float | None, optional</span>
 <span class="sd">        Active resistance (Ω), defaults to `0.2*u_nom/i_max`.</span>
-<span class="sd">    k_v : float | None, optional</span>
-<span class="sd">        Voltage control gain, defaults to `alpha_o/w_nom`.</span>
+<span class="sd">    k_v : float, optional</span>
+<span class="sd">        Voltage control gain, defaults to 1.</span>
 <span class="sd">    k_n : float, optional</span>
 <span class="sd">        Negative-sequence voltage gain, defaults to 2.</span>
 <span class="sd">    alpha_c : float, optional</span>
 <span class="sd">        Current control bandwidth (rad/s), defaults to 2*pi*300.</span>
 <span class="sd">    alpha_l : float, optional</span>
 <span class="sd">        Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.</span>
-<span class="sd">    alpha_o : float, optional</span>
-<span class="sd">        Observer bandwidth (rad/s), defaults to 2*pi*50.</span>
+<span class="sd">    w_o : float | None, optional</span>
+<span class="sd">        Observer natural frequency (rad/s), defaults to `w_nom`.</span>
+<span class="sd">    zeta_o : float, optional</span>
+<span class="sd">        Observer damping ratio, defaults to 1.</span>
 <span class="sd">    u_nom : float, optional</span>
 <span class="sd">        Nominal grid voltage (V), line-to-neutral peak value, defaults to</span>
 <span class="sd">        `sqrt(2/3)*400`.</span>
 <span class="sd">    w_nom : float, optional</span>
 <span class="sd">        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</span>
-<span class="sd">    p : tuple[complex, complex], optional</span>
-<span class="sd">        Continuous-time observer poles, normalized by `alpha_o`, defaults to</span>
-<span class="sd">        (-1 - 1j, -0.58 - 1j). The poles of the discrete-time observer are</span>
-<span class="sd">        `exp(p*alpha_o*T_s)`.</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s), defaults to 125e-6.</span>
 
@@ -709,14 +717,14 @@
     <span class="n">L</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">R</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">R_a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">k_v</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">k_n</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">alpha_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">300</span>
     <span class="n">alpha_l</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
-    <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
+    <span class="n">w_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">zeta_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">u_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">400</span>
     <span class="n">w_nom</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="mi">50</span>
-    <span class="n">p</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.58</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">125e-6</span></div>
 
 
@@ -769,15 +777,15 @@
             <span class="n">u_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">,</span>
             <span class="n">w_nom</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span><span class="p">,</span>
             <span class="n">L</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">L</span><span class="p">,</span>
-            <span class="n">alpha_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span><span class="p">,</span>
-            <span class="n">p</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">p</span><span class="p">,</span>
+            <span class="n">w_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">w_o</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">w_o</span><span class="p">,</span>
+            <span class="n">zeta_o</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">zeta_o</span><span class="p">,</span>
             <span class="n">T_s</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">power_limiter</span> <span class="o">=</span> <span class="n">PowerReferenceLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_d_max</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_l</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_limiter</span> <span class="o">=</span> <span class="n">SequenceCurrentLimiter</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_a</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">u_nom</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">i_max</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">R_a</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_o</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">w_nom</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k_v</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_v</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_n</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">k_n</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k_c</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">alpha_c</span> <span class="o">*</span> <span class="n">cfg</span><span class="o">.</span><span class="n">L</span>  <span class="c1"># Current control gain</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">T_s</span>

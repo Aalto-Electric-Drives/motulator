@@ -2113,25 +2113,23 @@ Package Contents
    :type R: float, optional
    :param R_a: Active resistance (Ω), defaults to `0.2*u_nom/i_max`.
    :type R_a: float | None, optional
-   :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
-   :type k_v: float | None, optional
+   :param k_v: Voltage control gain, defaults to 1.
+   :type k_v: float, optional
    :param k_n: Negative-sequence voltage gain, defaults to 2.
    :type k_n: float, optional
    :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*300.
    :type alpha_c: float, optional
    :param alpha_l: Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_l: float, optional
-   :param alpha_o: Observer bandwidth (rad/s), defaults to 2*pi*50.
-   :type alpha_o: float, optional
+   :param w_o: Observer natural frequency (rad/s), defaults to `w_nom`.
+   :type w_o: float | None, optional
+   :param zeta_o: Observer damping ratio, defaults to 1.
+   :type zeta_o: float, optional
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
                  `sqrt(2/3)*400`.
    :type u_nom: float, optional
    :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
    :type w_nom: float, optional
-   :param p: Continuous-time observer poles, normalized by `alpha_o`, defaults to
-             (-1 - 1j, -0.58 - 1j). The poles of the discrete-time observer are
-             `exp(p*alpha_o*T_s)`.
-   :type p: tuple[complex, complex], optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
 
