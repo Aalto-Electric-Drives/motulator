@@ -92,14 +92,6 @@ class MechanicalSystem(Subsystem):
         d_w_M = (inp.tau_M - tau_L_tot) / self.J
         return [d_theta_M, d_w_M]
 
-    def meas_position(self) -> float:
-        """Measure mechanical rotor angle (rad)."""
-        return wrap(self.out.theta_M)
-
-    def meas_speed(self) -> float:
-        """Measure mechanical rotor speed (rad/s)."""
-        return self.out.w_M
-
     def create_time_series(self, t: np.ndarray) -> "MechanicalSystemTimeSeries":
         """Create time series from state list."""
         return MechanicalSystemTimeSeries(t, self)
@@ -232,22 +224,6 @@ class TwoMassMechanicalSystem(Subsystem):
         d_theta_ML = state.w_M - state.w_L
         return [d_theta_M, d_w_M, d_w_L, d_theta_ML]
 
-    def meas_position(self) -> float:
-        """Measure mechanical rotor angle (rad)."""
-        return wrap(self.out.theta_M)
-
-    def meas_speed(self) -> float:
-        """Measure mechanical rotor speed (rad/s)."""
-        return self.out.w_M
-
-    def meas_load_speed(self) -> float:
-        """Measure the load speed."""
-        return self.state.w_L.real
-
-    def meas_load_position(self) -> float:
-        """Measure the load angle."""
-        return wrap(self.out.theta_M - self.state.theta_ML.real)
-
     def create_time_series(self, t: np.ndarray) -> "TwoMassMechanicalSystemTimeSeries":
         """Create time series from state list."""
         return TwoMassMechanicalSystemTimeSeries(t, self)
@@ -342,14 +318,6 @@ class ExternalRotorSpeed(Subsystem):
         """Compute state derivatives."""
         d_theta_M = self.out.w_M
         return [d_theta_M]
-
-    def meas_position(self) -> float:
-        """Measure mechanical rotor angle (rad)."""
-        return wrap(self.out.theta_M)
-
-    def meas_speed(self) -> float:
-        """Measure mechanical rotor speed (rad/s)."""
-        return self.out.w_M
 
     def create_time_series(self, t: np.ndarray) -> "ExternalRotorSpeedTimeSeries":
         """Create time series from state list."""

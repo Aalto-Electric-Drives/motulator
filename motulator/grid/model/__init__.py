@@ -8,13 +8,17 @@ from motulator.common.model._sensor import Sensor
 from motulator.common.model._simulation import Simulation, SimulationResults, SolverCfg
 from motulator.grid.model._ac_filter import LCLFilter, LFilter
 from motulator.grid.model._ac_source import ThreePhaseSourceWithSignalInjection
-from motulator.grid.model._converter_system import GridConverterSystem
+from motulator.grid.model._converter_system import (
+    GridConverterSensors,
+    GridConverterSystem,
+)
 
 __all__ = [
     "CarrierComparison",
     "CompositeModel",
     "DCBus",
     "DiodeBridge",
+    "GridConverterSensors",
     "GridConverterSystem",
     "LCLFilter",
     "LFilter",

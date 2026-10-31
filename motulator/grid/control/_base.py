@@ -206,11 +206,11 @@ class GridConverterControlSystem(ControlSystem):
     def get_measurement(
         self, mdl: GridConverterSystem[VoltageSourceConverter]
     ) -> Measurements:
-        """Get measurements from sensors."""
-        u_dc = mdl.converter.meas_dc_voltage()
-        i_c_ab = abc2complex(mdl.ac_filter.meas_currents())
-        u_g_ab = line2complex(mdl.ac_filter.meas_pcc_voltages())
-        return Measurements(i_c_ab, u_g_ab, u_dc)
+        """Sample the sensors."""
+        sensors = mdl.sensors
+        i_c_ab = abc2complex(sensors.i_c.sample())
+        u_g_ab = line2complex(sensors.u_g.sample())
+        return Measurements(i_c_ab, u_g_ab, sensors.u_dc.sample())
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""

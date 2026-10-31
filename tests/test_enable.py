@@ -29,6 +29,11 @@ def sm_pars() -> drive_model.SynchronousMachinePars:
     )
 
 
+def position_sensor() -> drive_model.DriveSensors:
+    """Sensors of a sensored synchronous machine drive."""
+    return drive_model.DriveSensors(theta_M=drive_model.Sensor())
+
+
 def spinning_pmsm(
     w_M: float, u_dc: float | None, u_th: float = 0.0, pwm: bool = False
 ) -> drive_model.Drive:
@@ -42,7 +47,9 @@ def spinning_pmsm(
     mechanics.set_external_rotor_speed(w_M)
     par = sm_pars()
     machine = drive_model.SynchronousMachine(par)
-    return drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
+    return drive_model.Drive(
+        machine, mechanics, converter, dc_bus=dc_bus, sensors=position_sensor()
+    )
 
 
 def pmsm_cvc(
@@ -115,7 +122,9 @@ def test_two_blocked_converters() -> None:
         mechanics = drive_model.ExternalRotorSpeed()
         mechanics.set_external_rotor_speed(w_M)
         machine = drive_model.SynchronousMachine(sm_pars())
-        models[name] = drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
+        models[name] = drive_model.Drive(
+            machine, mechanics, converter, dc_bus=dc_bus, sensors=position_sensor()
+        )
         ctrls[name] = pmsm_cvc(sensorless=False)
         ctrls[name].set_speed_ref(w_M)
         ctrls[name].set_enable(False)
@@ -136,7 +145,9 @@ def test_discharged_dc_bus(system: str) -> None:
         mechanics = drive_model.ExternalRotorSpeed()
         mechanics.set_external_rotor_speed(100)
         machine = drive_model.SynchronousMachine(sm_pars())
-        mdl = drive_model.Drive(machine, mechanics, converter, dc_bus=dc_bus)
+        mdl = drive_model.Drive(
+            machine, mechanics, converter, dc_bus=dc_bus, sensors=position_sensor()
+        )
         ctrl = pmsm_cvc(sensorless=False)
         ctrl.pwm = sm_control.PWM(d_err=d_err)
         ctrl.set_speed_ref(100)
@@ -170,6 +181,7 @@ def test_standby_feedforward_current() -> None:
         drive_model.SynchronousMachine(sm_pars()),
         drive_model.MechanicalSystem(J=0.015),
         drive_model.VoltageSourceConverter(540, drive_model.ZOH(t_d=2e-6), sign=sign),
+        sensors=position_sensor(),
     )
     ctrl = pmsm_cvc(sensorless=False)
     d_err = sm_control.InverterNonlinearity(t_d=2e-6, sign=sign)
@@ -197,6 +209,7 @@ def test_drive_restart(sensorless: bool) -> None:
         drive_model.SynchronousMachine(par),
         mechanics,
         drive_model.VoltageSourceConverter(u_dc=540),
+        sensors=None if sensorless else position_sensor(),
     )
     ctrl = pmsm_cvc(sensorless)
     ctrl.set_speed_ref(lambda t: (t > 0.02) * 2 * pi * 30)
@@ -340,10 +353,12 @@ def test_induction_machine_restart(ctrl_type: str, sensorless: bool) -> None:
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
     mechanics = drive_model.MechanicalSystem(J=0.015)
+    sensors = None if sensorless else drive_model.DriveSensors(w_M=drive_model.Sensor())
     mdl = drive_model.Drive(
         drive_model.InductionMachine(par),
         mechanics,
         drive_model.VoltageSourceConverter(u_dc=540),
+        sensors=sensors,
     )
     if ctrl_type == "fvc":
         vector_ctrl = im_control.FluxVectorController(

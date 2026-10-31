@@ -11,9 +11,9 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import ACPort, Sensor, Subsystem, SubsystemTimeSeries
+from motulator.common.model import ACPort, Subsystem, SubsystemTimeSeries
 from motulator.common.model._ac_port import jacobian
-from motulator.common.utils._utils import complex2abc, empty_array, get_value, wrap
+from motulator.common.utils._utils import empty_array, get_value, wrap
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
@@ -65,8 +65,6 @@ class InductionMachine(Subsystem):
     ----------
     par : InductionMachinePars | InductionMachineInvGammaPars
         Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
-    i_s_sensor : Sensor, optional
-        Phase-current sensors, defaults to an ideal measurement.
 
     Notes
     -----
@@ -92,14 +90,11 @@ class InductionMachine(Subsystem):
     feedthrough = frozenset({"u_s_ab"})
 
     def __init__(
-        self,
-        par: InductionMachinePars | InductionMachineInvGammaPars,
-        i_s_sensor: Sensor | None = None,
+        self, par: InductionMachinePars | InductionMachineInvGammaPars
     ) -> None:
         if isinstance(par, InductionMachineInvGammaPars):
             par = InductionMachinePars.from_inv_gamma_pars(par)
         self.par = par
-        self.i_s_sensor = i_s_sensor
         self.inp: InductionMachineInputs = InductionMachineInputs()
         self.state: InductionMachineStates = InductionMachineStates()
         i_s_ab, i_r_ab, tau_M = self._compute_outputs(self.state, self.inp)
@@ -148,11 +143,6 @@ class InductionMachine(Subsystem):
         d_psi_r_ab = -par.R_r * i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
         e = np.linalg.solve(Y, [d_psi_r_ab.real, d_psi_r_ab.imag]) / par.L_ell
         return ACPort(i_s_ab, par.R_s * i_s_ab + complex(e[0], e[1]), Y)
-
-    def meas_currents(self) -> Any:
-        """Measure phase currents (A)."""
-        i_s_abc = complex2abc(self.out.i_s_ab)
-        return i_s_abc if self.i_s_sensor is None else self.i_s_sensor(i_s_abc)
 
     def create_time_series(self, t: np.ndarray) -> "InductionMachineTimeSeries":
         """Create time series from state list."""
@@ -250,8 +240,6 @@ class SynchronousMachine(Subsystem):
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars \
         | SpatialSaturatedSynchronousMachinePars
         Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
-    i_s_sensor : Sensor, optional
-        Phase-current sensors, defaults to an ideal measurement.
 
     Notes
     -----
@@ -271,10 +259,8 @@ class SynchronousMachine(Subsystem):
         par: SynchronousMachinePars
         | SaturatedSynchronousMachinePars
         | SpatialSaturatedSynchronousMachinePars,
-        i_s_sensor: Sensor | None = None,
     ) -> None:
         self.par = par
-        self.i_s_sensor = i_s_sensor
         self.inp: SynchronousMachineInputs = SynchronousMachineInputs()
         self.state: SynchronousMachineStates = SynchronousMachineStates(par)
         i_s_dq, i_s_ab, tau_M = self._compute_outputs(self.state, self.inp)
@@ -344,11 +330,6 @@ class SynchronousMachine(Subsystem):
         d_psi_s_dq = u_s_dq - par.R_s * out.i_s_dq - 1j * w_m * state.psi_s_dq
         d_theta_m = w_m
         return [d_psi_s_dq, d_theta_m]
-
-    def meas_currents(self) -> Any:
-        """Measure phase currents (A)."""
-        i_s_abc = complex2abc(self.out.i_s_ab)
-        return i_s_abc if self.i_s_sensor is None else self.i_s_sensor(i_s_abc)
 
     def create_time_series(self, t: np.ndarray) -> "SynchronousMachineTimeSeries":
         """Create time series from state list."""

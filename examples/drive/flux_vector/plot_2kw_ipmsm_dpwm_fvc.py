@@ -53,6 +53,7 @@ def simulate(method, w_M, t_stop):
         model.SynchronousMachine(par),
         model.ExternalRotorSpeed(),
         model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
+        sensors=model.DriveSensors(theta_M=model.Sensor()),  # Sensored control
     )
     mdl.mechanics.set_external_rotor_speed(w_M)
     T_s = 250e-6 if method == "SVPWM" else 2 / 3 * 250e-6

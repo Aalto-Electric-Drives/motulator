@@ -316,19 +316,12 @@ class VectorControlSystem(DriveControlSystem):
         self.ext_ref.tau_M = ref_fcn
 
     def get_measurement(self, mdl: Drive) -> Measurements:
-        """Get measurements from sensors."""
-        u_dc = mdl.converter.meas_dc_voltage()
-        if mdl.lc_filter is not None:
-            i_c_ab = abc2complex(mdl.lc_filter.meas_currents())
-        else:
-            i_c_ab = abc2complex(mdl.machine.meas_currents())
-
-        if self.vector_ctrl.sensorless:
-            w_M = None
-            theta_M = None
-        else:
-            w_M = mdl.mechanics.meas_speed()
-            theta_M = wrap(mdl.mechanics.meas_position())
+        """Sample the sensors, the speed and position sensors if the drive has them."""
+        sensors = mdl.sensors
+        i_c_ab = abc2complex(sensors.i_c.sample())
+        u_dc = sensors.u_dc.sample()
+        w_M = None if sensors.w_M is None else sensors.w_M.sample()
+        theta_M = None if sensors.theta_M is None else wrap(sensors.theta_M.sample())
         return Measurements(i_c_ab, u_dc, w_M, theta_M)
 
     def _standby(self) -> bool:
@@ -418,10 +411,9 @@ class VHzControlSystem(DriveControlSystem):
         self._w_M_ref: float = 0  # For storing ramp-limited speed reference
 
     def get_measurement(self, mdl: Drive) -> Measurements:
-        """Get measurements."""
-        u_dc = mdl.converter.meas_dc_voltage()
-        i_s_ab = abc2complex(mdl.machine.meas_currents())
-        return Measurements(i_s_ab, u_dc)
+        """Sample the sensors."""
+        i_c_ab = abc2complex(mdl.sensors.i_c.sample())
+        return Measurements(i_c_ab, mdl.sensors.u_dc.sample())
 
     def _get_inner_feedback(
         self, u_s_ab: complex | None, meas: Measurements

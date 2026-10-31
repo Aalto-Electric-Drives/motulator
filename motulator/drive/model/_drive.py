@@ -1,8 +1,12 @@
 """Continuous-time models for electric machine drives and grid-connected machines."""
 
+from dataclasses import dataclass, field
+
 from motulator.common.model._ac_source import ThreePhaseSource
 from motulator.common.model._base import Model, Subsystem
 from motulator.common.model._converter import DCBus, VoltageSourceConverter
+from motulator.common.model._sensor import Sensor
+from motulator.common.utils._utils import complex2abc
 from motulator.drive.model._lc_filter import LCFilter
 from motulator.drive.model._machine import InductionMachine, SynchronousMachine
 from motulator.drive.model._mechanics import (
@@ -10,6 +14,38 @@ from motulator.drive.model._mechanics import (
     MechanicalSystem,
     TwoMassMechanicalSystem,
 )
+
+
+# %%
+@dataclass
+class DriveSensors:
+    """
+    Sensors of a drive, ideal by default, see `Sensor`.
+
+    Parameters
+    ----------
+    i_c : Sensor, optional
+        Converter phase-current sensors. Their conversion defaults to `complex2abc`.
+    u_dc : Sensor, optional
+        DC-bus voltage sensor.
+    w_M : Sensor, optional
+        Rotor speed sensor (mechanical rad/s), defaults to None, i.e., no sensor.
+        Sensored control of an induction machine uses the speed sensor.
+    theta_M : Sensor, optional
+        Rotor position sensor (mechanical rad), defaults to None, i.e., no sensor.
+        Sensored control of a synchronous machine uses the position sensor. The sensor
+        cannot have a bandwidth, since the angle is wrapped.
+
+    """
+
+    i_c: Sensor = field(default_factory=Sensor)
+    u_dc: Sensor = field(default_factory=Sensor)
+    w_M: Sensor | None = None
+    theta_M: Sensor | None = None
+
+    def __post_init__(self) -> None:
+        if self.i_c.convert is None:
+            self.i_c.convert = complex2abc
 
 
 # %%
@@ -33,6 +69,11 @@ class Drive(Model[VoltageSourceConverter]):
         a grid converter system with a diode bridge or an active front end), see
         `CompositeModel`. Defaults to None, in which case the converter has a constant
         DC-bus voltage.
+    sensors : DriveSensors, optional
+        Sensors, which the control system samples, defaults to ideal phase-current and
+        DC-bus voltage sensors. They are the subsystems `i_c_sensor`, `u_dc_sensor`,
+        and, if given, `w_M_sensor` and `theta_M_sensor` of the model, connected to the
+        signals they measure.
 
     """
 
@@ -43,10 +84,12 @@ class Drive(Model[VoltageSourceConverter]):
         converter: VoltageSourceConverter,
         lc_filter: LCFilter | None = None,
         dc_bus: DCBus | None = None,
+        sensors: DriveSensors | None = None,
     ) -> None:
         self.machine = machine
         self.mechanics = mechanics
         self.lc_filter = lc_filter
+        self.sensors = DriveSensors() if sensors is None else sensors
         subsystems: dict[str, Subsystem] = {"converter": converter}
         connections = {
             ("machine", "w_M"): ("mechanics", "w_M"),
@@ -56,6 +99,7 @@ class Drive(Model[VoltageSourceConverter]):
             connections |= {
                 ("converter", "i_c_ab"): ("machine", "i_s_ab"),
                 ("machine", "u_s_ab"): ("converter", "u_c_ab"),
+                ("i_c_sensor", "x"): ("machine", "i_s_ab"),
             }
             converter.ac_load = machine
         else:
@@ -65,9 +109,24 @@ class Drive(Model[VoltageSourceConverter]):
                 ("lc_filter", "i_f_ab"): ("machine", "i_s_ab"),
                 ("lc_filter", "u_c_ab"): ("converter", "u_c_ab"),
                 ("machine", "u_s_ab"): ("lc_filter", "u_f_ab"),
+                ("i_c_sensor", "x"): ("lc_filter", "i_c_ab"),
             }
             converter.ac_load = lc_filter
-        subsystems |= {"machine": machine, "mechanics": mechanics}
+        subsystems |= {
+            "machine": machine,
+            "mechanics": mechanics,
+            "i_c_sensor": self.sensors.i_c,
+            "u_dc_sensor": self.sensors.u_dc,
+        }
+        connections[("u_dc_sensor", "x")] = ("converter", "u_dc")
+        if self.sensors.w_M is not None:
+            subsystems["w_M_sensor"] = self.sensors.w_M
+            connections[("w_M_sensor", "x")] = ("mechanics", "w_M")
+        if self.sensors.theta_M is not None:
+            if self.sensors.theta_M.state is not None:
+                raise ValueError("The position sensor cannot have a bandwidth")
+            subsystems["theta_M_sensor"] = self.sensors.theta_M
+            connections[("theta_M_sensor", "x")] = ("mechanics", "theta_M")
         super().__init__(converter, subsystems, connections, dc_bus=dc_bus)
 
 
