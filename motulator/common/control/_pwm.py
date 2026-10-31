@@ -103,13 +103,13 @@ class PWM:
 
     In DPWM, one leg at a time is clamped to the positive or negative DC rail, so that
     each leg stops switching for 120° of the fundamental period in the linear modulation
-    range, and the average switching frequency is 2/3 of the carrier frequency. The leg
-    is clamped after the overmodulation, so the voltage is the same as in space-vector
-    PWM. The switching losses are minimized if the clamped leg conducts the largest
-    current: DPWM1 suits a current in phase with the voltage, DPWM2 a current lagging by
-    about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly reactive
-    current. At the same average switching frequency, DPWM gives a lower current ripple
-    than space-vector PWM only in the high modulation range [#Hav1998]_.
+    range, and the average switching frequency is about 2/3 of the carrier frequency.
+    The leg is clamped after the overmodulation, so the voltage is the same as in
+    space-vector PWM. The switching losses are minimized if the clamped leg conducts the
+    largest current: DPWM1 suits a current in phase with the voltage, DPWM2 a current
+    lagging by about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly
+    reactive current. At the same average switching frequency, DPWM gives a lower
+    current ripple than space-vector PWM only in the high modulation range [#Hav1998]_.
 
     Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such
     as the dead time and the threshold voltages of the power devices, is taken into
