@@ -27,7 +27,7 @@ current controller [#Awa2019]_ in sensorless current-vector control of a saturat
 is 5 kHz and the current-control bandwidth is 2π·500 rad/s, which is high compared with
 the sampling frequency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-23
+.. GENERATED FROM PYTHON SOURCE LINES 13-24
 
 .. code-block:: Python
 
@@ -39,6 +39,7 @@ the sampling frequency.
     import numpy as np
 
     import motulator.drive.control.sm as control
+    from motulator.common.utils import set_style
     from motulator.drive import model, utils
 
 
@@ -48,11 +49,11 @@ the sampling frequency.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-25
+.. GENERATED FROM PYTHON SOURCE LINES 25-26
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-29
+.. GENERATED FROM PYTHON SOURCE LINES 26-30
 
 .. code-block:: Python
 
@@ -67,12 +68,12 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-32
+.. GENERATED FROM PYTHON SOURCE LINES 31-33
 
 Configure the machine parameters based on the measured flux map, see
 :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-42
+.. GENERATED FROM PYTHON SOURCE LINES 33-43
 
 .. code-block:: Python
 
@@ -93,12 +94,12 @@ Configure the machine parameters based on the measured flux map, see
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 43-45
+.. GENERATED FROM PYTHON SOURCE LINES 44-46
 
 The control system uses an analytical saturation model fitted to the measured data,
 so the model has small errors.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-69
+.. GENERATED FROM PYTHON SOURCE LINES 46-70
 
 .. code-block:: Python
 
@@ -133,13 +134,13 @@ so the model has small errors.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-73
+.. GENERATED FROM PYTHON SOURCE LINES 71-74
 
 Simulate the drive in torque-control mode at the constant speed of 1.5 p.u. The
 discrete-time design includes the delays, so the control system does not advance
 the angle of its voltage reference (`k_comp = 0`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-109
+.. GENERATED FROM PYTHON SOURCE LINES 74-110
 
 .. code-block:: Python
 
@@ -186,15 +187,16 @@ the angle of its voltage reference (`k_comp = 0`).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-111
+.. GENERATED FROM PYTHON SOURCE LINES 111-112
 
 Plot the speed estimates and the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-136
+.. GENERATED FROM PYTHON SOURCE LINES 112-136
 
 .. code-block:: Python
 
 
+    set_style()
     _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 7), sharex=True)
     for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete")]:
         t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
@@ -215,8 +217,6 @@ Plot the speed estimates and the current responses in per-unit values.
     ax3.set_xlim(0.045, 0.1)
     ax1.legend(loc="lower left")
     ax3.legend(loc="lower left")
-    for ax in (ax1, ax2, ax3):
-        ax.grid(True)
     plt.show()
 
 
@@ -240,13 +240,13 @@ remains well damped. In the largest steps, the voltage is limited.
 .. rubric:: References
 
 .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-   saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+   saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
    https://doi.org/10.1109/TIA.2019.2919258
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.496 seconds)
+   **Total running time of the script:** (0 minutes 1.434 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py:

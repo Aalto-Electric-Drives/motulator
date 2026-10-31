@@ -26,7 +26,7 @@ current controller in sensorless current-vector control of a 2.2-kW induction ma
 (IM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·700 rad/s,
 which is high compared with the sampling frequency.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-20
+.. GENERATED FROM PYTHON SOURCE LINES 12-21
 
 .. code-block:: Python
 
@@ -36,6 +36,7 @@ which is high compared with the sampling frequency.
     import matplotlib.pyplot as plt
 
     import motulator.drive.control.im as control
+    from motulator.common.utils import set_style
     from motulator.drive import model, utils
 
 
@@ -45,11 +46,11 @@ which is high compared with the sampling frequency.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 22-23
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-26
+.. GENERATED FROM PYTHON SOURCE LINES 23-27
 
 .. code-block:: Python
 
@@ -64,11 +65,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-28
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
 Configure the machine parameters.
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-34
+.. GENERATED FROM PYTHON SOURCE LINES 29-35
 
 .. code-block:: Python
 
@@ -85,13 +86,13 @@ Configure the machine parameters.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-38
+.. GENERATED FROM PYTHON SOURCE LINES 36-39
 
 Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
 discrete-time design includes the delays, so the control system does not advance
 the angle of its voltage reference (`k_comp = 0`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-65
+.. GENERATED FROM PYTHON SOURCE LINES 39-66
 
 .. code-block:: Python
 
@@ -129,15 +130,16 @@ the angle of its voltage reference (`k_comp = 0`).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-67
+.. GENERATED FROM PYTHON SOURCE LINES 67-68
 
 Plot the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-86
+.. GENERATED FROM PYTHON SOURCE LINES 68-86
 
 .. code-block:: Python
 
 
+    set_style()
     _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
     for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete")]:
         t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
@@ -152,8 +154,6 @@ Plot the current responses in per-unit values.
     ax2.set_xlabel("Time (s)")
     ax2.set_xlim(0.29, 0.37)
     ax2.legend(loc="lower left")
-    for ax in (ax1, ax2):
-        ax.grid(True)
     plt.show()
 
 
@@ -176,7 +176,7 @@ while the discrete-time design is well damped.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.023 seconds)
+   **Total running time of the script:** (0 minutes 2.430 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_discrete.py:

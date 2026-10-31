@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import motulator.drive.control.sm as control
+from motulator.common.utils import set_style
 from motulator.drive import model, utils
 
 # %%
@@ -109,6 +110,7 @@ res_cont, res_disc = simulate(discrete=False), simulate(discrete=True)
 # %%
 # Plot the speed estimates and the current responses in per-unit values.
 
+set_style()
 _, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(8, 7), sharex=True)
 for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete")]:
     t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
@@ -129,8 +131,6 @@ ax3.set_xlabel("Time (s)")
 ax3.set_xlim(0.045, 0.1)
 ax1.legend(loc="lower left")
 ax3.legend(loc="lower left")
-for ax in (ax1, ax2, ax3):
-    ax.grid(True)
 plt.show()
 
 # %%
@@ -141,5 +141,5 @@ plt.show()
 # .. rubric:: References
 #
 # .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-#    saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+#    saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
 #    https://doi.org/10.1109/TIA.2019.2919258

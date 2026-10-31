@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>5.6-kW saturated PM-SyRM, discrete-time current control &#8212; motulator 0.22.0 documentation</title>
+    <title>5.6-kW saturated PM-SyRM, discrete-time current control &#8212; motulator 0.22.1 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=c952a61b"></script>
+    <script src="../../_static/documentation_options.js?v=72ae2406"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -182,7 +182,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.22.0 documentation</p>
+    <p class="title logo__title">motulator 0.22.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -222,8 +222,8 @@
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_dead_time_cvc.html">2.2-kW IM, dead time, CVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_blocked_cvc.html">2.2-kW IPMSM, blocked gates, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_cvc_discrete.html">2.2-kW IM, discrete-time current control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_6kw_pmsyrm_sat_cvc.html">5.6-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3 current active"><a class="current reference internal" href="#">5.6-kW saturated PM-SyRM, discrete-time current control</a></li>
 </ul>
@@ -530,6 +530,7 @@ the sampling frequency.</p>
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="w">
 </span><span class="w">
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="nn">.</span><span class="nn">control</span><span class="nn">.</span><span class="nn">sm</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">control</span><span class="w">
+</span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">common</span><span class="nn">.</span><span class="nn">utils</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-motulator-common-utils sphx-glr-backref-type-py-function reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.set_style" title="motulator.common.utils.set_style"><span class="n">set_style</span></a><span class="w">
 </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator</span><span class="nn">.</span><span class="nn">drive</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span><span class="p">,</span> <span class="n">utils</span><span class="w">
 </span></pre></div></div>
 <p>Compute base values based on the nominal values.</p>
@@ -610,7 +611,8 @@ the angle of its voltage reference (<cite>k_comp = 0</cite>).</p>
 </span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_cont</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_disc</span></a> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">discrete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="p">,</span> <span class="n">simulate</span><span class="p">(</span><span class="n">discrete</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
 <p>Plot the speed estimates and the current responses in per-unit values.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="w">
+<div class="highlight-Python notranslate"><div class="highlight"><pre><a class="sphx-glr-backref-module-motulator-common-utils sphx-glr-backref-type-py-function reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.set_style" title="motulator.common.utils.set_style"><span class="n">set_style</span></a><span class="p">(</span><span class="p">)</span><span class="w">
+</span><span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="w">
 </span><span class="k">for</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">ls</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="str"><span class="n">label</span></a> <span class="ow">in</span> <span class="p">[</span><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_cont</span></a><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">--</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">continuous</span><span class="s2">&quot;</span><span class="p">)</span><span class="p">,</span> <span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res_disc</span></a><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">-</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s2">discrete</span><span class="s2">&quot;</span><span class="p">)</span><span class="p">]</span><span class="p">:</span><span class="w">
 </span>    <span class="n">t</span><span class="p">,</span> <span class="n">i_s</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">i_s</span> <span class="o">/</span> <a class="sphx-glr-backref-module-motulator-common-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><span class="n">base</span></a><span class="o">.</span><span class="n">i</span><span class="w">
 </span>    <span class="n">w_M</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">fbk</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="w">
@@ -630,8 +632,6 @@ the angle of its voltage reference (<cite>k_comp = 0</cite>).</p>
 </span><span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.045</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span><span class="w">
 </span><span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">lower left</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
 </span><span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;</span><span class="s2">lower left</span><span class="s2">&quot;</span><span class="p">)</span><span class="w">
-</span><span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span><span class="p">:</span><span class="w">
-</span>    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="w">
 </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
 <img src="../../_images/sphx_glr_plot_6kw_pmsyrm_sat_cvc_discrete_001.png" srcset="../../_images/sphx_glr_plot_6kw_pmsyrm_sat_cvc_discrete_001.png" alt="plot 6kw pmsyrm sat cvc discrete" class = "sphx-glr-single-img"/><p>At this bandwidth, the continuous-time design is sensitive to the errors in the flux
@@ -642,11 +642,11 @@ remains well damped. In the largest steps, the voltage is limited.</p>
 <aside class="footnote brackets" id="awa2019" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
 <p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
-saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
+saturated synchronous motors,” IEEE Trans. Ind. Appl., 2019,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.496 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.434 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-6kw-pmsyrm-sat-cvc-discrete-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/fab151330155d6e32e166631d65c793a/plot_6kw_pmsyrm_sat_cvc_discrete.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_6kw_pmsyrm_sat_cvc_discrete.ipynb</span></code></a></p>

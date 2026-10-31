@@ -1826,7 +1826,7 @@ Package Contents
    :type w_nom: float, optional
    :param R: Total series resistance (Ω), defaults to 0.
    :type R: float, optional
-   :param R_a: Active resistance (Ω), defaults to ``0.25*u_nom/i_max``.
+   :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
    :type R_a: float | None, optional
    :param w_b: Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
    :type w_b: float, optional
@@ -2050,7 +2050,9 @@ Package Contents
 
    :param i_max: Maximum current (A), peak value.
    :type i_max: float
-   :param i_d_max: Maximum active current (A), peak value.
+   :param i_d_max: Maximum active current (A), peak value, for the active-power reference
+                   limitation. A value somewhat below `i_max` is recommended, e.g.,
+                   `i_d_max = 0.85*i_max`.
    :type i_d_max: float
    :param L: Total inductance estimate (H).
    :type L: float
@@ -2064,10 +2066,10 @@ Package Contents
    :type k_n: float, optional
    :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*300.
    :type alpha_c: float, optional
-   :param alpha_l: Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
+   :param alpha_l: Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_l: float, optional
-   :param w_o: Observer natural frequency (rad/s), defaults to `w_nom`.
-   :type w_o: float | None, optional
+   :param w_o: Observer natural frequency (rad/s), defaults to 2*pi*50.
+   :type w_o: float, optional
    :param zeta_o: Observer damping ratio, defaults to 1.
    :type zeta_o: float, optional
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to

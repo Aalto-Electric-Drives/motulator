@@ -269,9 +269,9 @@ Module Contents
    :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
                None, the gain is zero, i.e., the PM-flux linkage is not estimated.
    :type k_f: Callable[[float], float] | None, optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be positive
-                     for machines without PMs.
-   :type psi_s_min: float, optional
+   :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
+                     machines without PMs.
+   :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
@@ -871,8 +871,8 @@ Module Contents
    :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
                None, the gain is zero, i.e., the PM-flux linkage is not estimated.
    :type k_f: Callable[[float], float] | None, optional
-   :param psi_s_min: Minimum stator flux (Vs). If None, defaults to `par.psi_f` elsewhere. It must be
-                     positive for machines without PMs.
+   :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
+                     machines without PMs.
    :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional
@@ -1126,8 +1126,8 @@ Module Contents
    :type k_u: float, optional
    :param k_mtpv: MTPV margin, defaults to 0.9.
    :type k_mtpv: float, optional
-   :param psi_s_min: Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be positive
-                     for machines without PMs.
+   :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
+                     machines without PMs.
    :type psi_s_min: float | None, optional
    :param psi_s_max: Maximum stator flux (Vs), defaults to `inf`.
    :type psi_s_max: float, optional

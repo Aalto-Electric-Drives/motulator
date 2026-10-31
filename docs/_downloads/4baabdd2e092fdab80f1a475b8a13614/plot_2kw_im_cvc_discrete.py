@@ -15,6 +15,7 @@ from math import pi
 import matplotlib.pyplot as plt
 
 import motulator.drive.control.im as control
+from motulator.common.utils import set_style
 from motulator.drive import model, utils
 
 # %%
@@ -65,6 +66,7 @@ res_cont, res_disc = simulate(discrete=False), simulate(discrete=True)
 # %%
 # Plot the current responses in per-unit values.
 
+set_style()
 _, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 5), sharex=True)
 for res, ls, label in [(res_cont, "--", "continuous"), (res_disc, "-", "discrete")]:
     t, i_s = res.ctrl.t, res.ctrl.fbk.i_s / base.i
@@ -79,8 +81,6 @@ ax2.set_ylabel(r"$i_\mathrm{q}$ (p.u.)")
 ax2.set_xlabel("Time (s)")
 ax2.set_xlim(0.29, 0.37)
 ax2.legend(loc="lower left")
-for ax in (ax1, ax2):
-    ax.grid(True)
 plt.show()
 
 # %%
