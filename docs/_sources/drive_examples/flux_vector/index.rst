@@ -152,6 +152,23 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
     </div>
 
 
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example compares space-vector PWM (SVPWM) and discontinuous PWM (DPWM) [#Hav1998]_ in flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The converter is modeled by carrier comparison, so the switching ripple of the currents is included. The drive operates at the nominal torque and a constant speed.">
+
+.. only:: html
+
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_dpwm_fvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, DPWM, FVC</div>
+    </div>
+
+
 .. thumbnail-parent-div-close
 
 .. raw:: html
@@ -169,4 +186,5 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
    /drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas
    /drive_examples/flux_vector/plot_7kw_syrm_sat_fvc
    /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc
+   /drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc
 
