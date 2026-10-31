@@ -39,7 +39,7 @@ class PowerSynchronizationControllerCfg:
     R : float, optional
         Total series resistance (Ω), defaults to 0.
     R_a : float | None, optional
-        Active resistance (Ω), defaults to ``0.25*u_nom/i_max``.
+        Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
     w_b : float, optional
         Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
     T_s : float, optional
