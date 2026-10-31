@@ -72,15 +72,15 @@ class DiodeBridge(Converter):
     keeping its current at zero. The voltage is computed from the AC port of the load,
     see `ACPort`. The diode states are updated at their transitions, which the
     simulation locates as events, see `Simulation`. Hence, the commutation of the
-    current between the legs follows from the inductance of the load, e.g., an AC
-    filter and the grid. The threshold voltage of the diodes is included in the diode
-    drops. The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus
-    model is connected to it (see `DCBus` and `Model`). Alternatively, the bridge
-    feeds a DC load `dc_load` (e.g., an EMF through a DC choke), whose DC port gives
-    the relation between the DC current and the voltage, see `DCPort`. The bridge then
-    solves its DC voltage together with the leg voltages, and the DC current is its
-    output `i_dc`. The devices of the legs can be gated through `gated`, which models
-    thyristors: a floating leg is clamped to a rail only by a gated device.
+    current between the legs follows from the inductance of the load, e.g., an AC filter
+    and the grid. The threshold voltage of the diodes is included in the diode drops.
+    The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus model is
+    connected to it (see `DCBus` and `Model`). Alternatively, the bridge feeds a DC load
+    `dc_load` (e.g., an EMF through a DC choke), whose DC port gives the relation
+    between the DC current and the voltage, see `DCPort`. The bridge then solves its DC
+    voltage together with the leg voltages, and the DC current is its output `i_dc`. The
+    devices of the legs can be gated through `gated`, which models thyristors: a
+    floating leg is clamped to a rail only by a gated device.
 
     Parameters
     ----------
@@ -264,8 +264,8 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
     """
     Three-phase voltage-source converter.
 
-    The modulator converts the duty ratios of the control system into the gate states
-    of the legs, i.e., the gate signals of the upper switches and the blanking signals,
+    The modulator converts the duty ratios of the control system into the gate states of
+    the legs, i.e., the gate signals of the upper switches and the blanking signals,
     including the computational delay and the dead time, see `ZOH` and
     `CarrierComparison`. The switches are ideal, except for the dead time and the
     threshold voltage. When a leg is blanked, i.e., neither of its switches conducts,
@@ -288,11 +288,11 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
         Constant DC-bus voltage (V). Defaults to None, in which case the converter must
         be fed from a DC-bus model.
     modulator : TwoLevelModulator, optional
-        Modulator converting the command of the control system into the gate states,
-        see `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle
-        averaged model of the duty ratios without the dead time and with the
-        computational delay of one sampling period. A modulator keeps its state, so
-        each converter needs its own.
+        Modulator converting the command of the control system into the gate states, see
+        `TwoLevelModulator`. Defaults to `ZOH()`, i.e., the switching-cycle averaged
+        model of the duty ratios without the dead time and with the computational delay
+        of one sampling period. A modulator keeps its state, so each converter needs its
+        own.
     u_th : float, optional
         Threshold voltage (V) of the power devices, defaults to 0.
     sign : Callable[[np.ndarray], np.ndarray], optional
@@ -333,8 +333,8 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
         """
         Convert the command to the gate states and their durations.
 
-        The command passes through the modulator also while the gates are blocked,
-        but the gate states are then zero for the whole sampling period.
+        The command passes through the modulator also while the gates are blocked, but
+        the gate states are then zero for the whole sampling period.
 
         Parameters
         ----------
@@ -463,12 +463,12 @@ class DCBus(Subsystem):
     """
     Capacitive DC bus feeding converters.
 
-    The DC bus feeds the converters of the models it is given to, see `Model`. The
-    model connects its converter to the DC bus through `connect`, which registers the
+    The DC bus feeds the converters of the models it is given to, see `Model`. The model
+    connects its converter to the DC bus through `connect`, which registers the
     converter in `converters` and gives the connections of its DC terminals, i.e., the
     DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
-    currents of the registered converters, computed from their switching states and
-    AC currents. The DC bus can be shared by the converters of several models, see
+    currents of the registered converters, computed from their switching states and AC
+    currents. The DC bus can be shared by the converters of several models, see
     `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
     can also be fed to the DC bus.
 
@@ -513,7 +513,7 @@ class DCBus(Subsystem):
         """Set external DC current (A), constant or a function of time."""
         self.inp.i_dc = i_dc
 
-    def compute_dc_current(self, t: float) -> float:
+    def _compute_dc_current(self, t: float) -> float:
         """Compute the net current (A) fed to the DC-bus capacitor."""
         i_dc = 0.0 if self.inp.i_dc is None else get_value(self.inp.i_dc, t)
         return i_dc - sum(c.compute_internal_dc_current(c.inp) for c in self.converters)
@@ -524,7 +524,7 @@ class DCBus(Subsystem):
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
-        return [self.compute_dc_current(t) / self.C_dc]
+        return [self._compute_dc_current(t) / self.C_dc]
 
     def create_time_series(self, t: np.ndarray) -> "DCBusTimeSeries":
         """Create time series from state list."""

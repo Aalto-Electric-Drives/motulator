@@ -106,9 +106,9 @@ class SequenceObserver:
     `s + 1j*w_nom` in stationary coordinates have the natural frequency `w_o` and the
     damping ratio `zeta_o`.
 
-    The converter current is separated into its quasi-static sequence components using
-    a complex first-order filter. Its discrete-time coefficients are selected such
-    that the separation is exact for both sequences in the periodic steady state.
+    The converter current is separated into its quasi-static sequence components using a
+    complex first-order filter. Its discrete-time coefficients are selected such that
+    the separation is exact for both sequences in the periodic steady state.
 
     Parameters
     ----------
@@ -271,9 +271,9 @@ class SequenceObserverBasedGridFormingController:
     and converter-voltage magnitude are controlled, while the negative-sequence
     converter voltage is suppressed. The disturbance observer estimates the positive-
     and negative-sequence grid voltages. The active-power reference is limited to a
-    realizable level, prioritizing the reactive and negative-sequence currents, and
-    the sequence current references are limited such that the peak phase current does
-    not exceed `i_max`.
+    realizable level, prioritizing the reactive and negative-sequence currents, and the
+    sequence current references are limited such that the peak phase current does not
+    exceed `i_max`.
 
     Parameters
     ----------
@@ -284,11 +284,11 @@ class SequenceObserverBasedGridFormingController:
     -----
     The control system operates in synchronous coordinates rotating at the nominal grid
     angular frequency. The controller compensates for the computational delay of one
-    sampling period and the zero-order-hold delay of half a sampling period itself:
-    the angle of the positive-sequence voltage reference is advanced by
-    `1.5*w_nom*T_s`, and that of the negative sequence, which rotates in the opposite
-    direction, is retarded by the same angle. Therefore, the control system does not
-    advance the angle of the voltage reference (`k_comp = 0`).
+    sampling period and the zero-order-hold delay of half a sampling period itself: the
+    angle of the positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and
+    that of the negative sequence, which rotates in the opposite direction, is retarded
+    by the same angle. Therefore, the control system does not advance the angle of the
+    voltage reference (`k_comp = 0`).
 
     References
     ----------

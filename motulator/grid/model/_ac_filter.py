@@ -91,7 +91,7 @@ class LFilter(Subsystem):
         self.state: LFilterStates = LFilterStates()
         self.out: LFilterOutputs = LFilterOutputs(self.state.i_c_ab)
 
-    def pcc_voltage(self, state: Any, inp: Any) -> Any:
+    def _pcc_voltage(self, state: Any, inp: Any) -> Any:
         """Compute the voltage at the point of common coupling (PCC)."""
         L_t = self.L_f + self.L_g
         u_g_ab = (
@@ -126,7 +126,7 @@ class LFilter(Subsystem):
 
     def meas_pcc_voltages(self) -> Any:
         """Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""
-        u_g_line = complex2line(self.pcc_voltage(self.state, self.inp))
+        u_g_line = complex2line(self._pcc_voltage(self.state, self.inp))
         return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
 
     def create_time_series(self, t: np.ndarray) -> "LFilterTimeSeries":
@@ -156,7 +156,7 @@ class LFilterTimeSeries(SubsystemTimeSeries):
 
     def compute_derived_signals(self, t: np.ndarray, subsystem: LFilter) -> None:
         """Compute the PCC voltage."""
-        self.u_g_ab = subsystem.pcc_voltage(self, self)
+        self.u_g_ab = subsystem._pcc_voltage(self, self)
 
 
 # %%
@@ -243,7 +243,7 @@ class LCLFilter(Subsystem):
             self.state.i_c_ab, self.state.u_f_ab, self.state.i_g_ab
         )
 
-    def pcc_voltage(self, state: Any, inp: Any) -> Any:
+    def _pcc_voltage(self, state: Any, inp: Any) -> Any:
         """Compute the voltage at the point of common coupling (PCC)."""
         L_t = self.L_fg + self.L_g
         u_g_ab = (
@@ -289,7 +289,7 @@ class LCLFilter(Subsystem):
         Measure the line-to-line voltages u_ab and u_bc (V) at the point of common
         coupling (PCC).
         """
-        u_g_line = complex2line(self.pcc_voltage(self.state, self.inp))
+        u_g_line = complex2line(self._pcc_voltage(self.state, self.inp))
         return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
 
     def meas_grid_currents(self) -> Any:
@@ -329,4 +329,4 @@ class LCLFilterTimeSeries(SubsystemTimeSeries):
 
     def compute_derived_signals(self, t: np.ndarray, subsystem: LCLFilter) -> None:
         """Compute the PCC voltage."""
-        self.u_g_ab = subsystem.pcc_voltage(self, self)
+        self.u_g_ab = subsystem._pcc_voltage(self, self)

@@ -330,8 +330,8 @@ class ObserverBasedVHzController:
     """
     Observer-based V/Hz controller for induction machine drives.
 
-    This class implements sensorless observer-based V/Hz control. Decoupling between
-    the stator flux and torque channels is used [#Tii2025b]_.
+    This class implements sensorless observer-based V/Hz control. Decoupling between the
+    stator flux and torque channels is used [#Tii2025b]_.
 
     Parameters
     ----------

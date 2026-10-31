@@ -74,9 +74,9 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
     be used with different models, measurements, feedback signals, and reference
     signals. The class provides methods for saving, post-processing, and clearing data.
 
-    The control loop returns the sampling period and the command to the converter,
-    see `get_command`. The gates of the converter can be blocked with `set_enable`.
-    While the gates are blocked, the control system runs its control loop with
+    The control loop returns the sampling period and the command to the converter, see
+    `get_command`. The gates of the converter can be blocked with `set_enable`. While
+    the gates are blocked, the control system runs its control loop with
     `compute_standby_output` in place of `compute_output`, so that its observers keep
     running, and the model holds the switches open.
 
@@ -105,8 +105,8 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
         ----------
         enable : bool | Callable[[float], bool]
             Gate enable, constant or a function of time, evaluated at the sampling
-            instants. While the gates are blocked (False), the control system
-            computes its standby output, see `compute_standby_output`.
+            instants. While the gates are blocked (False), the control system computes
+            its standby output, see `compute_standby_output`.
 
         """
         self._enable = enable

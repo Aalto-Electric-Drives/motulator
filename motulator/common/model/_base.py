@@ -25,14 +25,14 @@ class Subsystem(Protocol):
     pass the outputs to the inputs (see `Model`), and the states are gathered into the
     state vector of the solver in their declaration order. The class provides methods
     for setting states, outputs, and computing state derivatives. It also provides
-    methods for extending the state history and creating the time-series
-    representation of the subsystem, which the model names in the results (see
-    `ModelTimeSeries`). A subsystem whose outputs depend directly on some of its
-    inputs lists these inputs in `feedthrough`, from which the model derives the
-    evaluation order of the outputs. The state history is a dict of lists, keyed by
-    the names of the state fields. The model initializes it by `init_state_history`
-    and extends it by `extend_state_history`. A subclass can keep its other signals
-    in the history as well, under other keys, as a converter does (see `Converter`).
+    methods for extending the state history and creating the time-series representation
+    of the subsystem, which the model names in the results (see `ModelTimeSeries`). A
+    subsystem whose outputs depend directly on some of its inputs lists these inputs in
+    `feedthrough`, from which the model derives the evaluation order of the outputs. The
+    state history is a dict of lists, keyed by the names of the state fields. The model
+    initializes it by `init_state_history` and extends it by `extend_state_history`. A
+    subclass can keep its other signals in the history as well, under other keys, as a
+    converter does (see `Converter`).
 
     """
 
@@ -92,19 +92,18 @@ class Converter(Subsystem, Protocol):
     current, which a DC bus draws (see `DCBus`), and the states of its diodes. While
     only the diodes conduct (`blocked` is True), the converter voltage `out.u_c_ab` is
     determined by the AC port of the load `ac_load` and the states of the diodes, see
-    `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also
-    solves its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and
-    the model evaluates the DC load after the converter. The simulation locates the
+    `ACPort`. A current-fed converter (e.g., a diode bridge with a DC choke) also solves
+    its DC voltage from the DC port of its DC load `dc_load`, see `DCPort`, and the
+    model evaluates the DC load after the converter. The simulation locates the
     transitions of the diode states as events, using the margin of the states, and
-    updates the states at the transitions.
-    Since the voltage varies within the integration interval, the model evaluates the
-    signals given by `sample` (the voltage by default) at the solution points and
-    passes them to `extend_history`, which also saves the other signals of the
-    converter that are not states.
+    updates the states at the transitions. Since the voltage varies within the
+    integration interval, the model evaluates the signals given by `sample` (the voltage
+    by default) at the solution points and passes them to `extend_history`, which also
+    saves the other signals of the converter that are not states.
 
-    The diodes and the DC bus are optional capabilities: by default, the gates are
-    never blocked, so there are no diode-state transitions, and the converter cannot
-    be fed from a DC bus. A converter subclassing this protocol implements only the
+    The diodes and the DC bus are optional capabilities: by default, the gates are never
+    blocked, so there are no diode-state transitions, and the converter cannot be fed
+    from a DC bus. A converter subclassing this protocol implements only the
     capabilities it has.
 
     """
@@ -151,12 +150,12 @@ class ControlledConverter(Protocol):
     a control system. Its modulator converts the command of the control system (e.g.,
     the duty ratios) into the gate states and their durations within the sampling
     period, see `Modulator`. The simulation sets the gate states at the switching
-    instants, from which the converter resolves its switching state (e.g., from the
-    gate signals and the phase currents during the blanking). The format of the
-    command and the gate states is up to the converter and its modulator. The control
-    system can block the gates through `set_enable` at its sampling instants, after
-    which only the diodes conduct (see `Converter.blocked`). By default, blocking the
-    gates is not supported.
+    instants, from which the converter resolves its switching state (e.g., from the gate
+    signals and the phase currents during the blanking). The format of the command and
+    the gate states is up to the converter and its modulator. The control system can
+    block the gates through `set_enable` at its sampling instants, after which only the
+    diodes conduct (see `Converter.blocked`). By default, blocking the gates is not
+    supported.
 
     """
 
@@ -190,13 +189,13 @@ class Model[C: Converter | None]:
 
     A model consists of named subsystems and connections between them. The outputs are
     computed in an order that respects the direct dependencies of the subsystems (see
-    `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that
-    the outputs are consistent with the inputs of the same evaluation. The order
-    follows the order of the subsystems where the dependencies allow, and a loop of
-    direct dependencies is rejected. The voltage of a blocked converter depends on
-    the port of its load, which depends on the inputs of the load, so the converter is
-    evaluated after the sources of these inputs. The names of the subsystems name
-    their time series in the results, see `ModelTimeSeries`.
+    `Subsystem.feedthrough`) and passed to the connected inputs immediately, so that the
+    outputs are consistent with the inputs of the same evaluation. The order follows the
+    order of the subsystems where the dependencies allow, and a loop of direct
+    dependencies is rejected. The voltage of a blocked converter depends on the port of
+    its load, which depends on the inputs of the load, so the converter is evaluated
+    after the sources of these inputs. The names of the subsystems name their time
+    series in the results, see `ModelTimeSeries`.
 
     A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
     controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -216,9 +215,9 @@ class Model[C: Converter | None]:
         and `source` are the names of the subsystems.
     dc_bus : DCBus, optional
         DC bus feeding the converter. The DC bus is added to the subsystems under the
-        name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The
-        DC bus can be shared with other models, see `CompositeModel`. Defaults to None,
-        in which case the converter has a constant DC-bus voltage.
+        name `dc_bus`, and the converter is connected to it, see `DCBus.connect`. The DC
+        bus can be shared with other models, see `CompositeModel`. Defaults to None, in
+        which case the converter has a constant DC-bus voltage.
 
     """
 
@@ -387,9 +386,9 @@ class SubsystemTimeSeries[S: Subsystem](Protocol):
     """
     Base class for subsystem time series.
 
-    The outputs are computed when the time series is created or, if they depend
-    directly on the inputs, in `set_outputs`. The signals computed in
-    `compute_derived_signals` are not passed to other subsystems.
+    The outputs are computed when the time series is created or, if they depend directly
+    on the inputs, in `set_outputs`. The signals computed in `compute_derived_signals`
+    are not passed to other subsystems.
 
     """
 

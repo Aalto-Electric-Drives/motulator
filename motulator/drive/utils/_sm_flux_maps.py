@@ -99,9 +99,9 @@ class MagneticModel:
     psi_s_dq : np.ndarray
         Complex array of stator flux linkage (Vs).
     lookup_fcn : Callable[[complex | np.ndarray], complex | np.ndarray], optional
-        Function that evaluates the map at arbitrary points. Takes complex inputs
-        (d + j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq;
-        for current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
+        Function that evaluates the map at arbitrary points. Takes complex inputs (d +
+        j*q) and returns the output values. For flux maps, maps i_s_dq → psi_s_dq; for
+        current maps, maps psi_s_dq → i_s_dq. If not given, a linear interpolation
         function, which extrapolates outside the map range, is created from the data.
     tau_M : np.ndarray, optional
         Array of electromagnetic torque (Nm).
@@ -151,7 +151,7 @@ class MagneticModel:
         """Return True if this is a current map (psi_s → i_s)."""
         return self.type == "current_map"
 
-    def get_input_output(self) -> tuple[np.ndarray, np.ndarray]:
+    def _get_input_output(self) -> tuple[np.ndarray, np.ndarray]:
         """Get input and output arrays based on map type."""
         if self.is_flux_map():
             return self.i_s_dq, self.psi_s_dq
@@ -193,7 +193,7 @@ class MagneticModel:
             return d_grid + 1j * q_grid
 
         # Get input/output arrays based on map type
-        inp, out = self.get_input_output()
+        inp, out = self._get_input_output()
         new_type = self.type
 
         # Set default num value based on input data if not provided
@@ -299,9 +299,8 @@ class SaturationModelBase:
         Parameters
         ----------
         map_fcn : Callable, optional
-            Callable implementing either a current map (psi_s -> i_s) or a flux map
-            (i_s -> psi_s). If not provided, subclasses are expected to override
-            `__call__`.
+            Callable implementing either a current map (psi_s -> i_s) or a flux map (i_s
+            -> psi_s). If not provided, subclasses are expected to override `__call__`.
         map_type : {"current_map", "flux_map"}, optional
             Declares what the model represents, defaults to "current_map".
 

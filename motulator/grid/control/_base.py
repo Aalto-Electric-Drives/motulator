@@ -79,8 +79,8 @@ class InnerController[Ref: References, Fbk](Protocol):
         """
         Post-process controller outputs.
 
-        If the signals are transformed to other coordinates, `fbk.theta_c` is updated
-        to the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+        If the signals are transformed to other coordinates, `fbk.theta_c` is updated to
+        the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
         i.e., it remains that of the controller coordinates, which equals that of the
         new coordinates in steady state.
 
@@ -109,14 +109,14 @@ class GridConverterControlSystem(ControlSystem):
     Parameters
     ----------
     inner_ctrl : InnerController
-        Inner controller. A grid-forming controller takes the AC voltage reference
-        and a grid-following controller the reactive power reference. A
-        DC-bus-forming controller takes the DC-bus voltage reference instead of the
-        active power reference.
+        Inner controller. A grid-forming controller takes the AC voltage reference and a
+        grid-following controller the reactive power reference. A DC-bus-forming
+        controller takes the DC-bus voltage reference instead of the active power
+        reference.
     dc_bus_voltage_ctrl : DCBusVoltageController, optional
-        DC-bus voltage controller, which gives the active power reference. If not
-        given, the active power reference is set externally, unless the inner
-        controller is DC-bus forming.
+        DC-bus voltage controller, which gives the active power reference. If not given,
+        the active power reference is set externally, unless the inner controller is
+        DC-bus forming.
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
 

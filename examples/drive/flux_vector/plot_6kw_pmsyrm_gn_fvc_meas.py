@@ -4,8 +4,8 @@
 
 This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
 machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
-spatial harmonics are used for both the machine model and the control system. The
-models are trained with the related package
+spatial harmonics are used for both the machine model and the control system. The models
+are trained with the related package
 `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 """

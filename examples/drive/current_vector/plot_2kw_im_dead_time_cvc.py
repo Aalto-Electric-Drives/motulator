@@ -3,11 +3,10 @@
 =========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive at low speeds. The dead time and the threshold voltage of the
-converter are modeled, and their effects are compensated for in the control system.
-The magnetic saturation is included in the machine model and taken into account in
-the control system. The sensorless observer and the compensation method are similar
-to [#Hin2010]_.
+motor (IM) drive at low speeds. The dead time and the threshold voltage of the converter
+are modeled, and their effects are compensated for in the control system. The magnetic
+saturation is included in the machine model and taken into account in the control
+system. The sensorless observer and the compensation method are similar to [#Hin2010]_.
 
 """
 

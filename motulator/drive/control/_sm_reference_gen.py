@@ -108,17 +108,17 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
 
     References
     ----------
-    .. [#Mey2006] Meyer, Böcker, “Optimum control for interior permanent magnet
-       synchronous motors (IPMSM) in constant torque and flux weakening range,” Proc.
+    .. [#Mey2006] Meyer, Böcker, "Optimum control for interior permanent magnet
+       synchronous motors (IPMSM) in constant torque and flux weakening range," Proc.
        EPE-PEMC, 2006, https://doi.org/10.1109/EPEPEMC.2006.4778413
 
-    .. [#Awa2018] Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
-       saturated  synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
+    .. [#Awa2018] Awan, Song, Saarakkala, Hinkkanen, "Optimal torque control of
+       saturated synchronous motors: Plug-and-play method," IEEE Trans. Ind. Appl.,
        2018, https://doi.org/10.1109/TIA.2018.2862410
 
     .. [#Sar2026] Sarén, Hartikainen, Piippo, Hinkkanen, "Decoupled online feedforward
-       generation of optimal references for saturated synchronous machine drives,"
-       2026, https://arxiv.org/abs/2607.08528
+       generation of optimal references for saturated synchronous machine drives," 2026,
+       https://arxiv.org/abs/2607.08528
 
     """
 

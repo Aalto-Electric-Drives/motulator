@@ -271,8 +271,8 @@ def test_flying_start_zero_torque(ctrl_type: str) -> None:
 
 
 def test_catch_with_residual_current() -> None:
-    """The flying start leaves the estimates if the current has not decayed, since
-    the resistive decay of the current would be taken for the back-EMF."""
+    """The flying start leaves the estimates if the current has not decayed, since the
+    resistive decay of the current would be taken for the back-EMF."""
     par = sm_pars()
     machine = drive_model.SynchronousMachine(par)
     machine.state.psi_s_dq = complex(par.psi_s_dq(5 + 0j))  # Residual d-axis current
@@ -332,10 +332,10 @@ def test_controller_preset(discrete: bool) -> None:
 @pytest.mark.parametrize("sensorless", [False, True])
 @pytest.mark.parametrize("ctrl_type", ["cvc", "fvc"])
 def test_induction_machine_restart(ctrl_type: str, sensorless: bool) -> None:
-    """An induction machine drive starts and restarts after its flux has decayed
-    within the current limit, the flux estimate decaying with it (the speed estimate
-    of a sensorless drive holds, which suffices here, since the unloaded machine keeps
-    its speed)."""
+    """An induction machine drive starts and restarts after its flux has decayed within
+    the current limit, the flux estimate decaying with it (the speed estimate of a
+    sensorless drive holds, which suffices here, since the unloaded machine keeps its
+    speed)."""
     par = drive_model.InductionMachineInvGammaPars(
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )

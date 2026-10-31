@@ -16,9 +16,9 @@ class Sensor:
     The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
     signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
     independently for each channel at each sample. The parameters are scalars or arrays
-    with one element per channel (e.g., per phase), in the units of the measured
-    signal. The noise represents the sampled signal, i.e., `std` is the standard
-    deviation of the samples after the anti-aliasing filter and the A/D conversion.
+    with one element per channel (e.g., per phase), in the units of the measured signal.
+    The noise represents the sampled signal, i.e., `std` is the standard deviation of
+    the samples after the anti-aliasing filter and the A/D conversion.
 
     Parameters
     ----------

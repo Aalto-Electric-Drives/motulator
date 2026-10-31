@@ -136,8 +136,8 @@ class CurrentVectorControllerCfg:
         PM-flux estimation gain as a function of the electrical rotor angular speed. If
         None, the gain is zero, i.e., the PM-flux linkage is not estimated.
     psi_s_min : float, optional
-        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be
-        positive for machines without PMs.
+        Minimum stator flux (Vs), defaults to `par.psi_f` elsewhere. It must be positive
+        for machines without PMs.
     psi_s_max : float, optional
         Maximum stator flux (Vs), defaults to `inf`.
     k_u : float, optional

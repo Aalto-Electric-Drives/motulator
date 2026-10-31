@@ -68,7 +68,7 @@ class MechanicalSystem(Subsystem):
         """Set external rotor speed (rad/s), constant or a function of time."""
         raise NotImplementedError
 
-    def compute_total_load_torque(self, w_M: Any, tau_L: Any) -> Any:
+    def _compute_total_load_torque(self, w_M: Any, tau_L: Any) -> Any:
         """Total load torque (Nm), including the friction."""
         return get_value(self.B_L, w_M) * w_M + tau_L
 
@@ -87,7 +87,7 @@ class MechanicalSystem(Subsystem):
         """Compute state derivatives."""
         state, inp = self.state, self.inp
         tau_L = get_value(inp.tau_L, t)
-        tau_L_tot = self.compute_total_load_torque(state.w_M.real, tau_L)
+        tau_L_tot = self._compute_total_load_torque(state.w_M.real, tau_L)
         d_theta_M = state.w_M
         d_w_M = (inp.tau_M - tau_L_tot) / self.J
         return [d_theta_M, d_w_M]
@@ -135,7 +135,7 @@ class MechanicalSystemTimeSeries(SubsystemTimeSeries):
         """Compute the total load torque from the speed and the load torque."""
         self.tau_L_tot = np.array(
             [
-                subsystem.compute_total_load_torque(w_M_k, tau_L_k)
+                subsystem._compute_total_load_torque(w_M_k, tau_L_k)
                 for w_M_k, tau_L_k in zip(self.w_M, self.tau_L, strict=True)
             ]
         )
@@ -201,11 +201,11 @@ class TwoMassMechanicalSystem(Subsystem):
         """Set external rotor speed (rad/s), constant or a function of time."""
         raise NotImplementedError
 
-    def compute_shaft_torque(self, theta_ML: Any, w_M: Any, w_L: Any) -> Any:
+    def _compute_shaft_torque(self, theta_ML: Any, w_M: Any, w_L: Any) -> Any:
         """Shaft torque (Nm)."""
         return self.K_S * theta_ML + self.C_S * (w_M - w_L)
 
-    def compute_total_load_torque(self, w_L: Any, tau_L: Any) -> Any:
+    def _compute_total_load_torque(self, w_L: Any, tau_L: Any) -> Any:
         """Total load torque (Nm), including the friction."""
         return get_value(self.B_L, w_L) * w_L + tau_L
 
@@ -223,9 +223,9 @@ class TwoMassMechanicalSystem(Subsystem):
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
         state, inp = self.state, self.inp
-        tau_S = self.compute_shaft_torque(state.theta_ML, state.w_M, state.w_L)
+        tau_S = self._compute_shaft_torque(state.theta_ML, state.w_M, state.w_L)
         tau_L = get_value(inp.tau_L, t)
-        tau_L_tot = self.compute_total_load_torque(state.w_L.real, tau_L)
+        tau_L_tot = self._compute_total_load_torque(state.w_L.real, tau_L)
         d_theta_M = state.w_M
         d_w_M = (inp.tau_M - tau_S) / self.J_M
         d_w_L = (tau_S - tau_L_tot) / self.J_L
@@ -279,7 +279,7 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
         self.theta_M = np.angle(self.exp_j_theta_M)
         self.w_L = np.real(np.array(subsystem._history["w_L"]))
         self.theta_ML = np.real(np.array(subsystem._history["theta_ML"]))
-        self.tau_S = subsystem.compute_shaft_torque(self.theta_ML, self.w_M, self.w_L)
+        self.tau_S = subsystem._compute_shaft_torque(self.theta_ML, self.w_M, self.w_L)
         # External load torque, replaced by the connected one if any
         self.tau_L = np.array([get_value(subsystem.inp.tau_L, t_k) for t_k in t])
 
@@ -289,7 +289,7 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
         """Compute the total load torque from the load speed and the load torque."""
         self.tau_L_tot = np.array(
             [
-                subsystem.compute_total_load_torque(w_L_k, tau_L_k)
+                subsystem._compute_total_load_torque(w_L_k, tau_L_k)
                 for w_L_k, tau_L_k in zip(self.w_L, self.tau_L, strict=True)
             ]
         )

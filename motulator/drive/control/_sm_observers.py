@@ -138,10 +138,10 @@ class FluxObserver:
         Parameters
         ----------
         u_s_ab : complex | None
-            Stator voltage (V) in stator coordinates, averaged over the ongoing
-            sampling period, i.e., from this sampling instant to the next one. If
-            None (unknown voltage, e.g., with blocked gates), the flux estimate
-            follows the current model alone.
+            Stator voltage (V) in stator coordinates, averaged over the ongoing sampling
+            period, i.e., from this sampling instant to the next one. If None (unknown
+            voltage, e.g., with blocked gates), the flux estimate follows the current
+            model alone.
         i_s_ab : complex
             Stator current (A) in stator coordinates.
         w_M : float
@@ -354,15 +354,14 @@ class SpeedFluxObserver:
         Initialize the estimates from the current response to a zero-voltage period.
 
         The back-EMF drives the current along the negative q axis of the rotor, which
-        gives the rotor angle and the speed magnitude (a flying start, cf.
-        [#Tan2009]_), the direction of rotation being taken from the speed estimate.
-        The resistive voltage drop and the cross-coupling of the current are
-        neglected.
+        gives the rotor angle and the speed magnitude (a flying start, cf. [#Tan2009]_),
+        the direction of rotation being taken from the speed estimate. The resistive
+        voltage drop and the cross-coupling of the current are neglected.
 
-        This method is called by `compute_output` at the first sampling instant with
-        a known voltage after unknown ones. The period is the last of them, in which
-        the control system applies the zero voltage vector after the release of the
-        gates (see `VectorControlSystem`).
+        This method is called by `compute_output` at the first sampling instant with a
+        known voltage after unknown ones. The period is the last of them, in which the
+        control system applies the zero voltage vector after the release of the gates
+        (see `VectorControlSystem`).
 
         Parameters
         ----------
@@ -376,16 +375,15 @@ class SpeedFluxObserver:
         Returns
         -------
         bool
-            True if the estimates were initialized, False if the back-EMF estimate
-            does not exceed the resistive voltage drop of the current (standstill, or
-            a current that has not decayed) or the machine has no magnets.
+            True if the estimates were initialized, False if the back-EMF estimate does
+            not exceed the resistive voltage drop of the current (standstill, or a
+            current that has not decayed) or the machine has no magnets.
 
         References
         ----------
-        .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama,
-           "Starting procedure of rotational sensorless PMSM in the rotating
-           condition," IEEE Trans. Ind. Appl., 2009,
-           https://doi.org/10.1109/TIA.2008.2009496
+        .. [#Tan2009] Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, "Starting
+           procedure of rotational sensorless PMSM in the rotating condition," IEEE
+           Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2008.2009496
 
         """
         par = self.flux_observer.par
@@ -418,8 +416,8 @@ def compute_feedback(
     """
     Compute the feedback signals in sensorless or sensored mode.
 
-    In sensored mode, the measured rotor angle gives the external position error
-    signal, which is used exclusively (`h = 1`).
+    In sensored mode, the measured rotor angle gives the external position error signal,
+    which is used exclusively (`h = 1`).
 
     """
     if sensorless:
@@ -482,9 +480,9 @@ def create_speed_flux_observer(
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars
         Machine model parameters.
     alpha_o : float | None
-        Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless`
-        is True, otherwise 2*pi*400. If `J` is given, the default is divided by
-        sqrt(3), which keeps the speed estimation gain approximately the same.
+        Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless` is
+        True, otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3),
+        which keeps the speed estimation gain approximately the same.
     T_s : float
         Sampling period (s), see :class:`SpeedFluxObserver`.
     k_o : Callable[[float], float], optional
