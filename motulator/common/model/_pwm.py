@@ -4,11 +4,11 @@ Modulators of the converter models.
 A modulator converts the command of the control system into the gate states of the
 converter and their durations within the sampling period, including the computational
 delay. The command and the gate states are specific to the converter type. For a
-voltage-source converter, the command consists of the duty ratios of the legs. The
-gate state of a leg is the gate signal `q` of its upper switch and the blanking signal
-`b`, which is one when neither of the switches conducts due to the dead time. The
-converter then resolves the leg state from the current direction. In the averaged
-model, `q` and `b` are the fractions of the half carrier period.
+voltage-source converter, the command consists of the duty ratios of the legs. The gate
+state of a leg is the gate signal `q` of its upper switch and the blanking signal `b`,
+which is one when neither of the switches conducts due to the dead time. The converter
+then resolves the leg state from the current direction. In the averaged model, `q` and
+`b` are the fractions of the half carrier period.
 
 """
 
@@ -33,8 +33,8 @@ class Delay:
     length : int, optional
         Length of the buffer, i.e., the delay in calls, defaults to 1.
     zeros : Callable[[Any], Any], optional
-        Function giving the initial content of the buffer from the first input,
-        defaults to `np.zeros_like`.
+        Function giving the initial content of the buffer from the first input, defaults
+        to `np.zeros_like`.
 
     """
 
@@ -74,23 +74,23 @@ class Modulator[Cmd]:
     Base class for modulators.
 
     The sampling period consists of one half carrier period with double update and of
-    two with single update. The command passes through the computational delay once
-    per half carrier period, and the gate states of each half carrier period are
-    computed by `schedule`, which the subclasses implement. The type parameter `Cmd`
-    is the type of the command, e.g., the duty ratios of a voltage-source converter.
+    two with single update. The command passes through the computational delay once per
+    half carrier period, and the gate states of each half carrier period are computed by
+    `schedule`, which the subclasses implement. The type parameter `Cmd` is the type of
+    the command, e.g., the duty ratios of a voltage-source converter.
 
     Parameters
     ----------
     delay : int, optional
         Computational delay in half carrier periods from the sampling instant to the
         loading of the command. Defaults to None, i.e., one sampling period, which the
-        control systems of this package compensate for: 1 with double update and 2
-        with single update. With single update, `delay=1` loads the command at the
-        carrier extremum between the sampling instants.
+        control systems of this package compensate for: 1 with double update and 2 with
+        single update. With single update, `delay=1` loads the command at the carrier
+        extremum between the sampling instants.
     single_update : bool, optional
-        Sample and update the command once per carrier period, i.e., the sampling
-        period of the control system equals the carrier period, defaults to False
-        (double update, the sampling period is half the carrier period).
+        Sample and update the command once per carrier period, i.e., the sampling period
+        of the control system equals the carrier period, defaults to False (double
+        update, the sampling period is half the carrier period).
 
     """
 
@@ -184,10 +184,9 @@ class TwoLevelModulator[Cmd](Modulator[Cmd]):
 
     The gate state of a leg consists of the gate signal of its upper switch and the
     blanking signal, see `VoltageSourceConverter`. Hence, the gate states of the N
-    intervals form an array of shape (N, 2, n_legs), the gate signals in the first
-    row and the blanking signals in the second row of each interval. In the averaged
-    model, they are the on-time fractions of the upper switches and the blanking
-    fractions.
+    intervals form an array of shape (N, 2, n_legs), the gate signals in the first row
+    and the blanking signals in the second row of each interval. In the averaged model,
+    they are the on-time fractions of the upper switches and the blanking fractions.
 
     """
 
@@ -198,8 +197,8 @@ class ZOH(TwoLevelModulator[Sequence[float]]):
     Zero-order hold of the duty ratios of a voltage-source converter.
 
     The dead time reduces the gate signal duty ratios of both switches of a leg by
-    `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the
-    half carrier period `T_half`, unless the leg does not switch. Short pulses are
+    `t_d/(2*T_half)`, leaving the leg blanked for the fraction `t_d/T_half` of the half
+    carrier period `T_half`, unless the leg does not switch. Short pulses are
     suppressed, and the blanking fraction is computed from the remaining on-times of
     both switches. This is a switching-cycle averaged model, not a model of switching
     transients.
@@ -354,8 +353,8 @@ class CarrierComparison(TwoLevelModulator[Sequence[float]]):
         Simultaneous switching instants are merged, so the number of intervals varies.
         Blanking continues across half carrier periods, including changes in their
         length. A reversed command cancels a pending turn-on and starts a new blanking
-        interval. On the first call, the initial commanded state is assumed to
-        already conduct.
+        interval. On the first call, the initial commanded state is assumed to already
+        conduct.
 
         """
         d = np.round(self.N * np.asarray(command)) / self.N
