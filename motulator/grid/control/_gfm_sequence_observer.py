@@ -1,6 +1,7 @@
 """Disturbance-observer-based grid-forming control with sequence separation."""
 
 from cmath import exp, phase
+from cmath import sqrt as csqrt
 from dataclasses import dataclass
 from math import cos, pi, sqrt
 
@@ -97,8 +98,13 @@ class SequenceObserver:
     rotating at the nominal grid angular frequency. At each sampling instant, the
     estimates are corrected using the prediction error of the measured current, after
     which the current and the estimates are predicted for the next sampling instant,
-    using the realized converter voltage of the ongoing sampling period. The observer
-    gains place the poles of the estimation-error dynamics at `exp(p*alpha_o*T_s)`.
+    using the realized converter voltage of the ongoing sampling period.
+
+    The observer gains place the poles of the estimation-error dynamics at `exp(s*T_s)`,
+    where the continuous-time poles `s` in synchronous coordinates satisfy
+    `(s + 1j*w_nom)**2 + 2*zeta_o*w_o*(s + 1j*w_nom) + w_o**2 = 0`, i.e., the poles
+    `s + 1j*w_nom` in stationary coordinates have the natural frequency `w_o` and the
+    damping ratio `zeta_o`.
 
     The converter current is separated into its quasi-static sequence components using a
     complex first-order filter. Its discrete-time coefficients are selected such that
@@ -112,10 +118,10 @@ class SequenceObserver:
         Nominal grid angular frequency (rad/s).
     L : float
         Total inductance (H).
-    alpha_o : float
-        Observer bandwidth (rad/s).
-    p : tuple[complex, complex]
-        Continuous-time observer poles, normalized by `alpha_o`.
+    w_o : float
+        Observer natural frequency (rad/s).
+    zeta_o : float
+        Observer damping ratio.
     T_s : float
         Sampling period (s).
 
@@ -126,8 +132,8 @@ class SequenceObserver:
         u_nom: float,
         w_nom: float,
         L: float,
-        alpha_o: float,
-        p: tuple[complex, complex],
+        w_o: float,
+        zeta_o: float,
         T_s: float,
     ) -> None:
         self.L: float = L
@@ -138,8 +144,13 @@ class SequenceObserver:
         self.gamma_c = T_s * self.phi / L
         self.gamma_p = (self.phi - 1) / (1j * w_nom * L)
         self.gamma_n = self.phi * self.gamma_p
+        # Continuous-time observer poles in synchronous coordinates
+        d = w_o * csqrt(zeta_o**2 - 1)
+        s_1 = -zeta_o * w_o + d - 1j * w_nom
+        s_2 = -zeta_o * w_o - d - 1j * w_nom
+        # Corresponding discrete-time poles
+        z_1, z_2 = exp(s_1 * T_s), exp(s_2 * T_s)
         # Observer gains
-        z_1, z_2 = exp(p[0] * alpha_o * T_s), exp(p[1] * alpha_o * T_s)
         self.k_p = (1 - z_1) * (1 - z_2) / ((1 - self.phi_n) * self.gamma_p)
         self.k_n = (
             (self.phi_n - z_1) * (self.phi_n - z_2) / ((self.phi_n - 1) * self.gamma_n)
@@ -213,24 +224,23 @@ class SequenceObserverBasedGridFormingControllerCfg:
         Total series resistance estimate (Ω), defaults to 0.
     R_a : float | None, optional
         Active resistance (Ω), defaults to `0.2*u_nom/i_max`.
-    k_v : float | None, optional
-        Voltage control gain, defaults to `alpha_o/w_nom`.
+    k_v : float, optional
+        Voltage control gain, defaults to 1.
     k_n : float, optional
         Negative-sequence voltage gain, defaults to 2.
     alpha_c : float, optional
         Current control bandwidth (rad/s), defaults to 2*pi*300.
     alpha_l : float, optional
         Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
-    alpha_o : float, optional
-        Observer bandwidth (rad/s), defaults to 2*pi*50.
+    w_o : float | None, optional
+        Observer natural frequency (rad/s), defaults to `w_nom`.
+    zeta_o : float, optional
+        Observer damping ratio, defaults to 1.
     u_nom : float, optional
         Nominal grid voltage (V), line-to-neutral peak value, defaults to
         `sqrt(2/3)*400`.
     w_nom : float, optional
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
-    p : tuple[complex, complex], optional
-        Continuous-time observer poles, normalized by `alpha_o`, defaults to (-1 - 1j,
-        -0.58 - 1j). The poles of the discrete-time observer are `exp(p*alpha_o*T_s)`.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
 
@@ -241,14 +251,14 @@ class SequenceObserverBasedGridFormingControllerCfg:
     L: float
     R: float = 0.0
     R_a: float | None = None
-    k_v: float | None = None
+    k_v: float = 1.0
     k_n: float = 2
     alpha_c: float = 2 * pi * 300
     alpha_l: float = 2 * pi * 50
-    alpha_o: float = 2 * pi * 50
+    w_o: float | None = None
+    zeta_o: float = 1.0
     u_nom: float = sqrt(2 / 3) * 400
     w_nom: float = 2 * pi * 50
-    p: tuple[complex, complex] = (-1 - 1j, -0.58 - 1j)
     T_s: float = 125e-6
 
 
@@ -298,15 +308,15 @@ class SequenceObserverBasedGridFormingController:
             u_nom=cfg.u_nom,
             w_nom=cfg.w_nom,
             L=cfg.L,
-            alpha_o=cfg.alpha_o,
-            p=cfg.p,
+            w_o=cfg.w_nom if cfg.w_o is None else cfg.w_o,
+            zeta_o=cfg.zeta_o,
             T_s=cfg.T_s,
         )
         self.power_limiter = PowerReferenceLimiter(cfg.i_d_max, cfg.alpha_l, cfg.u_nom)
         self.current_limiter = SequenceCurrentLimiter(cfg.i_max)
         self.R = cfg.R
         self.R_a = 0.2 * cfg.u_nom / cfg.i_max if cfg.R_a is None else cfg.R_a
-        self.k_v = cfg.alpha_o / cfg.w_nom if cfg.k_v is None else cfg.k_v
+        self.k_v = cfg.k_v
         self.k_n = cfg.k_n
         self.k_c = cfg.alpha_c * cfg.L  # Current control gain
         self.T_s = cfg.T_s
