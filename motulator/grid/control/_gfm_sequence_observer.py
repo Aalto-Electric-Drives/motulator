@@ -100,12 +100,11 @@ class SequenceObserver:
     which the current and the estimates are predicted for the next sampling instant,
     using the realized converter voltage of the ongoing sampling period.
 
-    The observer gains place the poles of the estimation-error dynamics based on the
-    damping ratio `zeta_o` and the natural frequency `omega_o`. In synchronous
-    coordinates, the continuous-time poles are
-    `s = omega_o*(-zeta_o ± sqrt(zeta_o**2 - 1)) - 1j*w_nom`, i.e., the stationary
-    poles form a complex pair for `zeta_o < 1` and are real otherwise. The poles of
-    the discrete-time observer are `exp(s*T_s)`.
+    The observer gains place the poles of the estimation-error dynamics at `exp(s*T_s)`,
+    where the continuous-time poles `s` in synchronous coordinates satisfy
+    `(s + 1j*w_nom)**2 + 2*zeta_o*w_o*(s + 1j*w_nom) + w_o**2 = 0`, i.e., the poles
+    `s + 1j*w_nom` in stationary coordinates have the natural frequency `w_o` and the
+    damping ratio `zeta_o`.
 
     The converter current is separated into its quasi-static sequence components using
     a complex first-order filter. Its discrete-time coefficients are selected such
@@ -119,7 +118,7 @@ class SequenceObserver:
         Nominal grid angular frequency (rad/s).
     L : float
         Total inductance (H).
-    omega_o : float
+    w_o : float
         Observer natural frequency (rad/s).
     zeta_o : float
         Observer damping ratio.
@@ -133,7 +132,7 @@ class SequenceObserver:
         u_nom: float,
         w_nom: float,
         L: float,
-        omega_o: float,
+        w_o: float,
         zeta_o: float,
         T_s: float,
     ) -> None:
@@ -146,9 +145,9 @@ class SequenceObserver:
         self.gamma_p = (self.phi - 1) / (1j * w_nom * L)
         self.gamma_n = self.phi * self.gamma_p
         # Continuous-time observer poles in synchronous coordinates
-        d = omega_o * csqrt(zeta_o**2 - 1)
-        s_1 = -zeta_o * omega_o + d - 1j * w_nom
-        s_2 = -zeta_o * omega_o - d - 1j * w_nom
+        d = w_o * csqrt(zeta_o**2 - 1)
+        s_1 = -zeta_o * w_o + d - 1j * w_nom
+        s_2 = -zeta_o * w_o - d - 1j * w_nom
         # Corresponding discrete-time poles
         z_1, z_2 = exp(s_1 * T_s), exp(s_2 * T_s)
         # Observer gains
@@ -233,7 +232,7 @@ class SequenceObserverBasedGridFormingControllerCfg:
         Current control bandwidth (rad/s), defaults to 2*pi*300.
     alpha_l : float, optional
         Power reference limiter bandwidth (rad/s), defaults to 2*pi*50.
-    omega_o : float | None, optional
+    w_o : float | None, optional
         Observer natural frequency (rad/s), defaults to `w_nom`.
     zeta_o : float, optional
         Observer damping ratio, defaults to 1.
@@ -256,7 +255,7 @@ class SequenceObserverBasedGridFormingControllerCfg:
     k_n: float = 2
     alpha_c: float = 2 * pi * 300
     alpha_l: float = 2 * pi * 50
-    omega_o: float | None = None
+    w_o: float | None = None
     zeta_o: float = 1.0
     u_nom: float = sqrt(2 / 3) * 400
     w_nom: float = 2 * pi * 50
@@ -291,9 +290,6 @@ class SequenceObserverBasedGridFormingController:
     direction, is retarded by the same angle. Therefore, the control system does not
     advance the angle of the voltage reference (`k_comp = 0`).
 
-    By default, the observer damping ratio `zeta_o = 1` and the natural frequency
-    `omega_o = w_nom` are used.
-
     References
     ----------
     .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
@@ -312,7 +308,7 @@ class SequenceObserverBasedGridFormingController:
             u_nom=cfg.u_nom,
             w_nom=cfg.w_nom,
             L=cfg.L,
-            omega_o=cfg.w_nom if cfg.omega_o is None else cfg.omega_o,
+            w_o=cfg.w_nom if cfg.w_o is None else cfg.w_o,
             zeta_o=cfg.zeta_o,
             T_s=cfg.T_s,
         )

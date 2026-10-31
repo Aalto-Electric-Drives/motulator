@@ -219,12 +219,12 @@ def test_observers() -> None:
 
     # The error of the sequence observer satisfies the characteristic equation of the
     # poles placed by the natural frequency and the damping ratio: a double pole and a
-    # complex pair, given as the continuous-time poles in synchronous coordinates
+    # complex pair, given as the continuous-time poles in stationary coordinates
     u_gp, u_gn = 0.8 * U_NOM, 0.2j * U_NOM
     u_c, i_c = exact_model(u_gp, u_gn, L, t)
-    for w_o, zeta_o, s in [
-        (W_NOM, 1.0, W_NOM * np.array([-1 - 1j, -1 - 1j])),
-        (W_NOM, 0.7, W_NOM * (-0.7 + (np.array([1, -1]) * 0.51**0.5 - 1) * 1j)),
+    for w_o, zeta_o, s_ab in [
+        (W_NOM, 1.0, W_NOM * np.array([-1, -1])),
+        (0.5 * W_NOM, 0.7, 0.5 * W_NOM * (-0.7 + np.array([1, -1]) * 0.51**0.5 * 1j)),
     ]:
         observer, err = SequenceObserver(U_NOM, W_NOM, L, w_o, zeta_o, T_s), []
         for u_c_ab, i_c_ab, t_k in zip(u_c, i_c, t, strict=True):
@@ -232,7 +232,7 @@ def test_observers() -> None:
             observer.update(T_s, out)
             err.append([u_gp - out.u_gp, u_gn * np.exp(-2j * W_NOM * t_k) - out.u_gn])
         e = np.array(err)
-        z_1, z_2 = np.exp(s * T_s)
+        z_1, z_2 = np.exp((s_ab - 1j * W_NOM) * T_s)
         e_pred = (z_1 + z_2) * e[1:-1] - z_1 * z_2 * e[:-2]
         assert e[2:] == pytest.approx(e_pred, abs=1e-9 * U_NOM)
 
