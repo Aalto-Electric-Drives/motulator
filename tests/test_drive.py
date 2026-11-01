@@ -26,12 +26,14 @@ T_STOP = 0.6
 T_LOAD = 0.3
 
 
-def ipmsm_drive(pwm: bool, G_c: float = 0.0, sensored: bool = False) -> model.Drive:
+def ipmsm_drive(
+    pwm: bool, G_c: float = 0.0, sensored: bool = False, sampling_delay: float = 0.0
+) -> model.Drive:
     """2.2-kW IPMSM drive, with a position sensor if `sensored`."""
     par = model.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
     )
-    modulator = model.CarrierComparison() if pwm else None
+    modulator = model.CarrierComparison(sampling_delay=sampling_delay) if pwm else None
     sensors = model.DriveSensors(theta_M=model.Sensor()) if sensored else None
     return model.Drive(
         model.SynchronousMachine(par),
@@ -146,6 +148,10 @@ CASES = {
         lambda: ipmsm_fvc(False),
     ),
     "ipmsm_fvc_pwm": (lambda: ipmsm_drive(True), lambda: ipmsm_fvc(True)),
+    "ipmsm_fvc_pwm_sampling_delay": (
+        lambda: ipmsm_drive(True, sampling_delay=20e-6),
+        lambda: ipmsm_fvc(True),
+    ),
     "ipmsm_cvc_sensorless": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(True)),
     "ipmsm_cvc_sensored": (
         lambda: ipmsm_drive(False, sensored=True),
