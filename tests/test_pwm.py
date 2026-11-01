@@ -356,3 +356,68 @@ def test_discontinuous_pwm(
             ff.get_realized_voltage(10 * np.exp(1j * np.deg2rad(theta - 30)), u_dc)
             d_ff = np.array(ff(T_s, u_c_ref_ab, u_dc, w=0))
             assert np.array_equal(d_ff[clamped], d[clamped])
+
+
+def gate_states_at(
+    modulator: TwoLevelModulator[list[float]],
+    T_s: float,
+    commands: np.ndarray,
+    t0: float,
+    t: np.ndarray,
+) -> np.ndarray:
+    """Gate states at the times `t`, with the first sampling instant at `t0`."""
+    parts = [modulator(T_s, list(c)) for c in commands]
+    t_steps = np.concatenate([p[0] for p in parts])
+    gates = np.concatenate([p[1] for p in parts])
+    t_sw = t0 + np.cumsum(t_steps) - t_steps
+    return gates[np.searchsorted(t_sw, t, side="right") - 1]
+
+
+@pytest.mark.parametrize(
+    "single_update, delay",
+    [(False, 1), (True, 2), (True, 1)],
+    ids=["double", "single", "single_half_delay"],
+)
+@pytest.mark.parametrize("pwm_cls", [ZOH, CarrierComparison], ids=["zoh", "carrier"])
+def test_sampling_delay_shifts_gate_states(
+    pwm_cls: type[ZOH | CarrierComparison], single_update: bool, delay: int
+) -> None:
+    """With the sampling delayed from the carrier extremum, the gate states are those
+    of sampling at the extremum, for the same commands at the same instants."""
+    T_s, sampling_delay = 125e-6, 17.7e-6
+    commands = np.random.default_rng(1).uniform(0, 1, (20, 3))
+    ref = pwm_cls(t_d=2e-6, delay=delay, single_update=single_update)
+    delayed = pwm_cls(
+        t_d=2e-6,
+        delay=delay,
+        single_update=single_update,
+        sampling_delay=sampling_delay,
+    )
+    # Off the switching instants, from the first sampling instant of the delayed one
+    t = np.linspace(sampling_delay, 19 * T_s, 5000) + 1.234e-9
+    np.testing.assert_array_equal(
+        gate_states_at(delayed, T_s, commands, sampling_delay, t),
+        gate_states_at(ref, T_s, commands, 0.0, t),
+    )
+
+
+def test_invalid_sampling_delay() -> None:
+    """A negative sampling delay, one without a computational delay, one not shorter
+    than a half carrier period, and a changing sampling period are rejected, and a
+    rejected call leaves the modulator unchanged."""
+    d = [0.5, 0.4, 0.3]
+    for sampling_delay in (-1e-6, float("nan")):
+        with pytest.raises(ValueError):
+            ZOH(sampling_delay=sampling_delay)
+    with pytest.raises(ValueError):
+        ZOH(delay=0, sampling_delay=1e-6)
+    modulator, ref = (ZOH(single_update=True, sampling_delay=60e-6) for _ in range(2))
+    with pytest.raises(ValueError):
+        modulator(100e-6, [0.8, 0.7, 0.6])  # Not shorter than the half carrier period
+    np.testing.assert_array_equal(modulator(200e-6, d)[1], ref(200e-6, d)[1])
+    modulator, ref = (ZOH(sampling_delay=10e-6) for _ in range(2))
+    modulator(100e-6, d)
+    ref(100e-6, d)
+    with pytest.raises(ValueError):
+        modulator(120e-6, [0.8, 0.7, 0.6])  # Changed sampling period
+    np.testing.assert_array_equal(modulator(100e-6, d)[1], ref(100e-6, d)[1])

@@ -43,7 +43,19 @@ class Delay:
     ) -> None:
         self.length = length
         self.zeros = zeros
-        self.data: list[Any] = []  # Filled at the first call
+        self.data: list[Any] | None = None  # Filled at the first push
+
+    def push(self, u: Any) -> None:
+        """Add the latest value to the end of the buffer."""
+        if self.data is None:
+            self.data = [self.zeros(u) for _ in range(self.length)]
+        self.data.append(u)
+
+    def pop(self) -> Any:
+        """Remove and return the oldest value of the buffer."""
+        if not self.data:
+            raise ValueError("The buffer is empty")
+        return self.data.pop(0)
 
     def __call__(self, u: Any) -> Any:
         """
@@ -60,12 +72,32 @@ class Delay:
             Input `length` calls earlier, or zeros before that.
 
         """
-        if not self.data:
-            self.data = [self.zeros(u) for _ in range(self.length)]
-        # Add the latest value to the end of the list
-        self.data.append(u)
-        # Pop the first element and return it
-        return self.data.pop(0)
+        self.push(u)
+        return self.pop()
+
+
+def _concatenate(
+    parts: list[tuple[SwitchingTimes, GateStates]],
+) -> tuple[SwitchingTimes, GateStates]:
+    """Concatenate the gate states of consecutive intervals."""
+    if len(parts) == 1:
+        return parts[0]
+    t_steps = np.concatenate([p[0] for p in parts])
+    gates = np.concatenate([p[1] for p in parts])
+    return t_steps, gates
+
+
+def _split(
+    t_steps: SwitchingTimes, gates: GateStates, t: float
+) -> tuple[tuple[SwitchingTimes, GateStates], tuple[SwitchingTimes, GateStates]]:
+    """Split the gate states at the time `t` from their beginning."""
+    t_end = np.cumsum(t_steps)
+    t_start = t_end - t_steps
+    before, after = t_start < t, t_end > t
+    return (
+        (np.minimum(t_end[before], t) - t_start[before], gates[before]),
+        (t_end[after] - np.maximum(t_start[after], t), gates[after]),
+    )
 
 
 # %%
@@ -82,23 +114,48 @@ class Modulator[Cmd]:
     Parameters
     ----------
     delay : int, optional
-        Computational delay in half carrier periods from the sampling instant to the
-        loading of the command. Defaults to None, i.e., one sampling period, which the
-        control systems of this package compensate for: 1 with double update and 2 with
-        single update. With single update, `delay=1` loads the command at the carrier
-        extremum between the sampling instants.
+        Computational delay in half carrier periods from the carrier extremum at the
+        sampling instant (or preceding it, with a sampling delay) to the loading of the
+        command. Defaults to None, i.e., one sampling period, which the control systems
+        of this package compensate for: 1 with double update and 2 with single update.
+        With single update, `delay=1` loads the command at the carrier extremum between
+        the sampling instants.
     single_update : bool, optional
         Sample and update the command once per carrier period, i.e., the sampling period
         of the control system equals the carrier period, defaults to False (double
         update, the sampling period is half the carrier period).
+    sampling_delay : float, optional
+        Delay (s) of the sampling instant from the carrier extremum, defaults to 0. The
+        command is loaded at the carrier extrema as without the delay, so the gate
+        states returned at a sampling instant consist of the rest of the half carrier
+        period started at the preceding extremum and the beginning of the next one.
+        This models, e.g., sampling after the anti-aliasing filters of the current
+        measurement have settled, while the control systems assume sampling at the
+        extrema. The delay must be shorter than a half carrier period and requires a
+        computational delay, and the sampling period must be constant.
 
     """
 
-    def __init__(self, delay: int | None = None, single_update: bool = False) -> None:
+    def __init__(
+        self,
+        delay: int | None = None,
+        single_update: bool = False,
+        sampling_delay: float = 0.0,
+    ) -> None:
         if delay is None:
             delay = 2 if single_update else 1
+        if not sampling_delay >= 0 or (sampling_delay > 0 and delay < 1):
+            raise ValueError(
+                "The sampling delay must be nonnegative and requires a computational "
+                "delay"
+            )
         self.delay = Delay(delay, self.initial_command)
         self.single_update = single_update
+        self.sampling_delay = sampling_delay
+        # With a sampling delay, the first half carrier period of the next sampling
+        # period is scheduled ahead, and the sampling period must stay the same
+        self._next: tuple[SwitchingTimes, GateStates] | None = None
+        self._T_s: float | None = None
 
     def initial_command(self, command: Cmd) -> Any:
         """
@@ -146,12 +203,33 @@ class Modulator[Cmd]:
 
         """
         n = 2 if self.single_update else 1  # Half carrier periods per sampling period
-        parts = [self.schedule(T_s / n, self.delay(command)) for _ in range(n)]
-        if n == 1:
-            return parts[0]
-        t_steps = np.concatenate([p[0] for p in parts])
-        gates = np.concatenate([p[1] for p in parts])
-        return t_steps, gates
+        T_half = T_s / n
+        if self.sampling_delay > 0:  # Checked before the state changes
+            if not self.sampling_delay < T_half:
+                raise ValueError(
+                    "The sampling delay must be shorter than a half carrier period"
+                )
+            if self._T_s is not None and T_s != self._T_s:
+                raise ValueError(
+                    "The sampling period must be constant with a sampling delay"
+                )
+            self._T_s = T_s
+        parts: list[tuple[SwitchingTimes, GateStates]] = []
+        for j in range(n):
+            self.delay.push(command)
+            if j == 0 and self._next is not None:
+                parts.append(self._next)  # Scheduled at the previous sampling instant
+            else:
+                parts.append(self.schedule(T_half, self.delay.pop()))
+        if self.sampling_delay == 0:
+            return _concatenate(parts)
+        # The command loaded at the next extremum is already in the buffer, so the
+        # half carrier period following it is scheduled now
+        self._next = self.schedule(T_half, self.delay.pop())
+        _, (t_rest, gates_rest) = _split(*_concatenate(parts), self.sampling_delay)
+        (t_first, gates_first), _ = _split(*self._next, self.sampling_delay)
+        t_steps = np.concatenate([t_rest, t_first])
+        return t_steps, np.concatenate([gates_rest, gates_first])
 
     def schedule(
         self, T_half: float, command: Cmd
@@ -213,13 +291,20 @@ class ZOH(TwoLevelModulator[Sequence[float]]):
     single_update : bool, optional
         Sample and update the duty ratios once per carrier period, defaults to False,
         see `Modulator`.
+    sampling_delay : float, optional
+        Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+        `Modulator`.
 
     """
 
     def __init__(
-        self, t_d: float = 0.0, delay: int | None = None, single_update: bool = False
+        self,
+        t_d: float = 0.0,
+        delay: int | None = None,
+        single_update: bool = False,
+        sampling_delay: float = 0.0,
     ) -> None:
-        super().__init__(delay, single_update)
+        super().__init__(delay, single_update, sampling_delay)
         self.t_d = t_d
 
     def schedule(
@@ -270,6 +355,9 @@ class CarrierComparison(TwoLevelModulator[Sequence[float]]):
         see `Modulator`.
     N : int, optional
         Amount of the counter quantization levels, defaults to 2**12.
+    sampling_delay : float, optional
+        Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+        `Modulator`.
 
     Examples
     --------
@@ -320,8 +408,9 @@ class CarrierComparison(TwoLevelModulator[Sequence[float]]):
         delay: int | None = None,
         single_update: bool = False,
         N: int = 2**12,
+        sampling_delay: float = 0.0,
     ) -> None:
-        super().__init__(delay, single_update)
+        super().__init__(delay, single_update, sampling_delay)
         self.t_d = t_d
         self.N = N
         self._rising_edge = True  # Stores the carrier direction
