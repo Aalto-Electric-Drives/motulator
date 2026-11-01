@@ -98,7 +98,7 @@ i.e., the carrier frequency is 2 kHz in SVPWM and 3 kHz in DPWM. The rotor speed
 constant, and the measured rotor angle is used, so that the results depend only on
 the modulation.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-68
+.. GENERATED FROM PYTHON SOURCE LINES 46-69
 
 .. code-block:: Python
 
@@ -112,6 +112,7 @@ the modulation.
             model.SynchronousMachine(par),
             model.ExternalRotorSpeed(),
             model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
+            sensors=model.DriveSensors(theta_M=model.Sensor()),  # Sensored control
         )
         mdl.mechanics.set_external_rotor_speed(w_M)
         T_s = 250e-6 if method == "SVPWM" else 2 / 3 * 250e-6
@@ -131,7 +132,7 @@ the modulation.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 69-75
+.. GENERATED FROM PYTHON SOURCE LINES 70-76
 
 The results are evaluated over an integer number of fundamental periods in the
 steady state. The switching instants are obtained by replaying the duty ratios
@@ -140,7 +141,7 @@ proportional to the switched current. The current ripple is the RMS value of the
 phase currents after removing the fundamental component, which is constant in rotor
 coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-112
+.. GENERATED FROM PYTHON SOURCE LINES 76-113
 
 .. code-block:: Python
 
@@ -188,7 +189,7 @@ coordinates.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-119
+.. GENERATED FROM PYTHON SOURCE LINES 114-120
 
 Simulate the methods at a low and a high modulation index, i.e., the ratio of the
 fundamental voltage to its maximum `u_dc/sqrt(3)` in the linear modulation range.
@@ -197,7 +198,7 @@ the current ripple. At the boundaries of the clamped segments, a leg may switch 
 the start of a half carrier period, so the realized switching frequency of DPWM is
 slightly higher than the nominal one.
 
-.. GENERATED FROM PYTHON SOURCE LINES 119-140
+.. GENERATED FROM PYTHON SOURCE LINES 120-141
 
 .. code-block:: Python
 
@@ -242,7 +243,7 @@ slightly higher than the nominal one.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-146
+.. GENERATED FROM PYTHON SOURCE LINES 142-147
 
 Plot the duty ratio and the current of phase a over one fundamental period at the
 nominal speed. Since the current lags the voltage, the clamped segments of DPWM2 are
@@ -250,7 +251,7 @@ closer to the current peaks than those of DPWM1. In DPWM2, the duty ratio of pha
 approaches zero at the end of the segment in which phase c is clamped to the negative
 rail, where the voltages of the phases a and c are equal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-165
+.. GENERATED FROM PYTHON SOURCE LINES 147-166
 
 .. code-block:: Python
 
@@ -285,14 +286,14 @@ rail, where the voltages of the phases a and c are equal.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-170
+.. GENERATED FROM PYTHON SOURCE LINES 167-171
 
 At the same nominal average switching frequency, DPWM gives a lower current ripple
 than SVPWM only at the high modulation index. DPWM1 and DPWM2 reduce the switching
 losses by 15–20 %. At the nominal speed, DPWM2 reduces them slightly more, since its
 clamped segments are closer to the current peaks.
 
-.. GENERATED FROM PYTHON SOURCE LINES 172-176
+.. GENERATED FROM PYTHON SOURCE LINES 173-177
 
 .. rubric:: References
 
@@ -302,7 +303,7 @@ clamped segments are closer to the current peaks.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 6.686 seconds)
+   **Total running time of the script:** (0 minutes 6.447 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_dpwm_fvc.py:

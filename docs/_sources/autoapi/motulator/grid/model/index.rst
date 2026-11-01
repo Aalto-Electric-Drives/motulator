@@ -36,6 +36,7 @@ Classes
    motulator.grid.model.CompositeModel
    motulator.grid.model.DCBus
    motulator.grid.model.DiodeBridge
+   motulator.grid.model.GridConverterSensors
    motulator.grid.model.GridConverterSystem
    motulator.grid.model.LCLFilter
    motulator.grid.model.LFilter
@@ -52,7 +53,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12)
+.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12, sampling_delay = 0.0)
 
    Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
 
@@ -76,6 +77,9 @@ Package Contents
    :type single_update: bool, optional
    :param N: Amount of the counter quantization levels, defaults to 2**12.
    :type N: int, optional
+   :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+                          `Modulator`.
+   :type sampling_delay: float, optional
 
    .. rubric:: Examples
 
@@ -694,7 +698,37 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, dc_load = None)
+.. py:class:: GridConverterSensors
+
+   
+   Sensors of a grid converter system, ideal by default, see `Sensor`.
+
+   :param i_c: Converter phase-current sensors. Their conversion defaults to `complex2abc`.
+   :type i_c: Sensor, optional
+   :param u_g: Sensors of the line-to-line voltages `u_ab` and `u_bc` at the point of common
+               coupling. Their conversion defaults to `complex2line`.
+   :type u_g: Sensor, optional
+   :param u_dc: DC-bus voltage sensor.
+   :type u_dc: Sensor, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, dc_load = None, sensors = None)
 
    Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`C`\ ]
 
@@ -719,6 +753,10 @@ Package Contents
                    `i_dc` the current fed to the DC bus (negative when drawn), which replaces the
                    external current of the DC bus. Defaults to None.
    :type dc_load: Subsystem, optional
+   :param sensors: Sensors, which the control system samples, defaults to ideal sensors. They are
+                   the subsystems `i_c_sensor`, `u_g_sensor`, and `u_dc_sensor` of the model,
+                   connected to the signals they measure.
+   :type sensors: GridConverterSensors, optional
 
 
 
@@ -737,7 +775,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: LCLFilter(L_fc, L_fg, C_f, R_fc = 0.0, R_fg = 0.0, L_g = 0.0, R_g = 0.0, u_f0_ab = 0j, i_c_sensor = None, u_g_sensor = None)
+.. py:class:: LCLFilter(L_fc, L_fg, C_f, R_fc = 0.0, R_fg = 0.0, L_g = 0.0, R_g = 0.0, u_f0_ab = 0j)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -765,11 +803,6 @@ Package Contents
    :type R_g: float, optional
    :param u_f0_ab: Initial value of the filter capacitor voltage (V), defaults to 0.
    :type u_f0_ab: complex, optional
-   :param i_c_sensor: Converter phase-current sensors, defaults to an ideal measurement.
-   :type i_c_sensor: Sensor, optional
-   :param u_g_sensor: Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
-                      measurement.
-   :type u_g_sensor: Sensor, optional
 
 
 
@@ -816,103 +849,6 @@ Package Contents
 
       
       Create time series from state list.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_capacitor_voltages()
-
-      
-      Measure the capacitor line-to-line voltages u_ab and u_bc (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_currents()
-
-      
-      Measure the converter phase currents (A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_grid_currents()
-
-      
-      Measure the grid phase currents (A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_pcc_voltages()
-
-      
-      Measure the line-to-line voltages u_ab and u_bc (V) at the point of common
-      coupling (PCC).
 
 
 
@@ -981,7 +917,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: LFilter(L_f, R_f = 0.0, L_g = 0.0, R_g = 0.0, i_c_sensor = None, u_g_sensor = None)
+.. py:class:: LFilter(L_f, R_f = 0.0, L_g = 0.0, R_g = 0.0)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
@@ -1002,11 +938,6 @@ Package Contents
    :type L_g: float, optional
    :param R_g: Grid resistance (Ω), defaults to 0.
    :type R_g: float, optional
-   :param i_c_sensor: Converter phase-current sensors, defaults to an ideal measurement.
-   :type i_c_sensor: Sensor, optional
-   :param u_g_sensor: Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
-                      measurement.
-   :type u_g_sensor: Sensor, optional
 
 
 
@@ -1053,54 +984,6 @@ Package Contents
 
       
       Create time series from state list.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_currents()
-
-      
-      Measure the converter phase currents (A).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_pcc_voltages()
-
-      
-      Measure the line-to-line voltages u_ab and u_bc (V) at the PCC.
 
 
 
@@ -1169,34 +1052,55 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: Sensor
+.. py:class:: Sensor(alpha = inf, y0 = 0.0, gain = None, offset = None, std = None, rng = None, convert = None)
+
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+
 
    
-   Sensor with a gain error, an offset, and additive Gaussian noise.
+   Sensor with a bandwidth, a gain error, an offset, and additive Gaussian noise.
 
-   The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
-   signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
+   A sensor is a subsystem that the model connects to the signal `x` it measures, e.g.,
+   the stator current of a machine or the DC-bus voltage of a converter, see `Drive`
+   and `GridConverterSystem`. Its output `y` follows `x` through a first-order low-pass
+   filter with the bandwidth `alpha`, which models the dynamics of the sensor and the
+   anti-aliasing filter, or equals `x` if the bandwidth is infinite. The control system
+   samples the measurement by `sample`, which converts the output to the measured
+   channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset
+   + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn
    independently for each channel at each sample. The parameters are scalars or arrays
-   with one element per channel (e.g., per phase), in the units of the measured signal.
-   The noise represents the sampled signal, i.e., `std` is the standard deviation of
-   the samples after the anti-aliasing filter and the A/D conversion.
+   with one element per channel, in the units of the measured signal.
 
-   :param gain: Gain, defaults to 1.
+   :param alpha: Bandwidth (rad/s), defaults to `inf`, i.e., no dynamics.
+   :type alpha: float, optional
+   :param y0: Initial value of the output, defaults to 0. Relevant with a finite bandwidth,
+              e.g., for a DC-bus voltage sensor, whose output otherwise rises from zero.
+   :type y0: complex | float, optional
+   :param gain: Gain, defaults to None, i.e., unity gain.
    :type gain: array_like, optional
-   :param offset: Offset, defaults to 0.
+   :param offset: Offset, defaults to None, i.e., no offset.
    :type offset: array_like, optional
-   :param std: Standard deviation of the noise, defaults to 0.
+   :param std: Standard deviation of the noise, defaults to None, i.e., no noise.
    :type std: array_like, optional
    :param rng: Random number generator, defaults to an unseeded generator. For reproducible
                results, pass the same seeded generator to all sensors. Sensors with separate
                generators of the same seed would produce identical noise.
    :type rng: numpy.random.Generator, optional
+   :param convert: Function converting the output to the measured channels, e.g., `complex2abc`
+                   for the phase currents of a space vector or `complex2line` for the line-to-line
+                   voltages. Defaults to None, i.e., the output is measured as such. The sensors
+                   of a model default to the conversion of their measurement, see `DriveSensors`
+                   and `GridConverterSensors`.
+   :type convert: Callable[[Any], Any], optional
 
    .. rubric:: Examples
 
    >>> from motulator.common.model import Sensor
-   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0])
-   >>> sensor([1.0, -0.5, -0.5])
+   >>> from motulator.common.utils import complex2abc
+   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0], convert=complex2abc)
+   >>> sensor.inp.x = 1 + 0j
+   >>> sensor.set_outputs(0.0)
+   >>> sensor.sample()
    array([ 1.02, -0.4 , -0.5 ])
 
 
@@ -1215,6 +1119,102 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: sample()
+
+      
+      Sample the measurement: the channels with the gain, offset, and noise.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: Simulation(mdl, ctrl = None, show_progress = True, cfg = None, t_start = None)
 
@@ -1629,7 +1629,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
+.. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign)
 
    Bases: :py:obj:`DiodeBridge`, :py:obj:`motulator.common.model._base.ControlledConverter`
 
@@ -1670,8 +1670,6 @@ Package Contents
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
                 used to model the effect of parasitic capacitances, for example.
    :type sign: Callable[[np.ndarray], np.ndarray], optional
-   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
-   :type u_dc_sensor: Sensor, optional
 
 
 
@@ -1811,54 +1809,6 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_dc_voltage()
-
-      
-      Measure converter DC-bus voltage (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_voltages()
-
-      
-      Measure the converter line-to-line voltages u_ab and u_bc (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: modulate(T_s, command)
 
       
@@ -1968,7 +1918,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ZOH(t_d = 0.0, delay = None, single_update = False)
+.. py:class:: ZOH(t_d = 0.0, delay = None, single_update = False, sampling_delay = 0.0)
 
    Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
 
@@ -1991,6 +1941,9 @@ Package Contents
    :param single_update: Sample and update the duty ratios once per carrier period, defaults to False,
                          see `Modulator`.
    :type single_update: bool, optional
+   :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+                          `Modulator`.
+   :type sampling_delay: float, optional
 
 
 

@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -693,11 +694,11 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">GridConverterSystem</span><span class="p">[</span><span class="n">VoltageSourceConverter</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get measurements from sensors."""</span>
-        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
-        <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">line2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">ac_filter</span><span class="o">.</span><span class="n">meas_pcc_voltages</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Sample the sensors."""</span>
+        <span class="n">sensors</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">sensors</span>
+        <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">sensors</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+        <span class="n">u_g_ab</span> <span class="o">=</span> <span class="n">line2complex</span><span class="p">(</span><span class="n">sensors</span><span class="o">.</span><span class="n">u_g</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_g_ab</span><span class="p">,</span> <span class="n">sensors</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="GridConverterControlSystem.get_feedback">

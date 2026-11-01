@@ -216,6 +216,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -578,7 +579,13 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Modulator.schedule"><code class="docutils literal notranslate"><span class="pre">Modulator.schedule()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor"><code class="docutils literal notranslate"><span class="pre">Sensor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor"><code class="docutils literal notranslate"><span class="pre">Sensor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.create_time_series"><code class="docutils literal notranslate"><span class="pre">Sensor.create_time_series()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.rhs"><code class="docutils literal notranslate"><span class="pre">Sensor.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.sample"><code class="docutils literal notranslate"><span class="pre">Sensor.sample()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.set_outputs"><code class="docutils literal notranslate"><span class="pre">Sensor.set_outputs()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation.simulate"><code class="docutils literal notranslate"><span class="pre">Simulation.simulate()</span></code></a></li>
 </ul>
@@ -624,8 +631,6 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.create_time_series"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.extend_history"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.extend_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.init_state_history"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.init_state_history()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.modulate"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_gates"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gates()</span></code></a></li>
@@ -697,7 +702,7 @@
 <td><p>Base class for modulators.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sensor</span></code></a></p></td>
-<td><p>Sensor with a gain error, an offset, and additive Gaussian noise.</p></td>
+<td><p>Sensor with a bandwidth, a gain error, an offset, and additive Gaussian noise.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.model.Simulation" title="motulator.common.model.Simulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Simulation</span></code></a></p></td>
 <td><p>Simulation environment.</p></td>
@@ -773,7 +778,7 @@ the port to compute its voltage when its gates are blocked.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.CarrierComparison">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CarrierComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2**12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CarrierComparison" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CarrierComparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2**12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#CarrierComparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CarrierComparison" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>]]</p>
 <p>Carrier comparison of a voltage-source converter.</p>
 <p>This computes the gate signals and their durations based on the duty ratios. Instead
@@ -790,6 +795,8 @@ see <cite>Modulator</cite>.</p></li>
 <li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the duty ratios once per carrier period, defaults to False,
 see <cite>Modulator</cite>.</p></li>
 <li><p><strong>N</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Amount of the counter quantization levels, defaults to 2**12.</p></li>
+<li><p><strong>sampling_delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+<cite>Modulator</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1357,8 +1364,12 @@ outputs are consistent with the inputs of the same evaluation. The order follows
 order of the subsystems where the dependencies allow, and a loop of direct
 dependencies is rejected. The voltage of a blocked converter depends on the port of
 its load, which depends on the inputs of the load, so the converter is evaluated
-after the sources of these inputs. The names of the subsystems name their time
-series in the results, see <cite>ModelTimeSeries</cite>.</p>
+after the sources of these inputs. A subsystem without states whose outputs are not
+connected to other subsystems, such as a sensor without dynamics, does not affect
+the integration, so its outputs are computed only when all the outputs are requested
+(<cite>set_outputs</cite>), e.g., at the sampling instants, and not at every evaluation of the
+state derivatives (<cite>rhs</cite>). The names of the subsystems name their time series in
+the results, see <cite>ModelTimeSeries</cite>.</p>
 <p>A model can have a converter, either a passive one (e.g., <cite>DiodeBridge</cite>) or a
 controlled one (see <cite>ControlledConverter</cite>), which is driven by a control system, see
 <cite>Simulation</cite>. The modulator of the controlled converter includes the computational
@@ -1487,7 +1498,7 @@ computed from the model, see <cite>Model.time_series</cite>.</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Modulator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Modulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#Modulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Modulator" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Modulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#Modulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Modulator" title="Link to this definition">#</a></dt>
 <dd><p>Base class for modulators.</p>
 <p>The sampling period consists of one half carrier period with double update and of
 two with single update. The command passes through the computational delay once per
@@ -1497,14 +1508,23 @@ the command, e.g., the duty ratios of a voltage-source converter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay in half carrier periods from the sampling instant to the
-loading of the command. Defaults to None, i.e., one sampling period, which the
-control systems of this package compensate for: 1 with double update and 2 with
-single update. With single update, <cite>delay=1</cite> loads the command at the carrier
-extremum between the sampling instants.</p></li>
+<li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – Computational delay in half carrier periods from the carrier extremum at the
+sampling instant (or preceding it, with a sampling delay) to the loading of the
+command. Defaults to None, i.e., one sampling period, which the control systems
+of this package compensate for: 1 with double update and 2 with single update.
+With single update, <cite>delay=1</cite> loads the command at the carrier extremum between
+the sampling instants.</p></li>
 <li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the command once per carrier period, i.e., the sampling period
 of the control system equals the carrier period, defaults to False (double
 update, the sampling period is half the carrier period).</p></li>
+<li><p><strong>sampling_delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Delay (s) of the sampling instant from the carrier extremum, defaults to 0. The
+command is loaded at the carrier extrema as without the delay, so the gate
+states returned at a sampling instant consist of the rest of the half carrier
+period started at the preceding extremum and the beginning of the next one.
+This models, e.g., sampling after the anti-aliasing filters of the current
+measurement have settled, while the control systems assume sampling at the
+extrema. The delay must be shorter than a half carrier period and requires a
+computational delay, and the sampling period must be constant.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1556,33 +1576,102 @@ method.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Sensor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor" title="Link to this definition">#</a></dt>
-<dd><p>Sensor with a gain error, an offset, and additive Gaussian noise.</p>
-<p>The measured signal is <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">gain*x</span> <span class="pre">+</span> <span class="pre">offset</span> <span class="pre">+</span> <span class="pre">std*n</span></code>, where <cite>x</cite> is the actual
-signal and <cite>n</cite> is zero-mean white Gaussian noise with unit variance, drawn
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
+<p>Sensor with a bandwidth, a gain error, an offset, and additive Gaussian noise.</p>
+<p>A sensor is a subsystem that the model connects to the signal <cite>x</cite> it measures, e.g.,
+the stator current of a machine or the DC-bus voltage of a converter, see <cite>Drive</cite>
+and <cite>GridConverterSystem</cite>. Its output <cite>y</cite> follows <cite>x</cite> through a first-order low-pass
+filter with the bandwidth <cite>alpha</cite>, which models the dynamics of the sensor and the
+anti-aliasing filter, or equals <cite>x</cite> if the bandwidth is infinite. The control system
+samples the measurement by <cite>sample</cite>, which converts the output to the measured
+channels (e.g., the phase currents of a space vector) and returns <code class="docutils literal notranslate"><span class="pre">gain*y</span> <span class="pre">+</span> <span class="pre">offset</span>
+<span class="pre">+</span> <span class="pre">std*n</span></code>, where <cite>n</cite> is zero-mean white Gaussian noise with unit variance, drawn
 independently for each channel at each sample. The parameters are scalars or arrays
-with one element per channel (e.g., per phase), in the units of the measured signal.
-The noise represents the sampled signal, i.e., <cite>std</cite> is the standard deviation of
-the samples after the anti-aliasing filter and the A/D conversion.</p>
+with one element per channel, in the units of the measured signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>gain</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Gain, defaults to 1.</p></li>
-<li><p><strong>offset</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Offset, defaults to 0.</p></li>
-<li><p><strong>std</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Standard deviation of the noise, defaults to 0.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Bandwidth (rad/s), defaults to <cite>inf</cite>, i.e., no dynamics.</p></li>
+<li><p><strong>y0</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Initial value of the output, defaults to 0. Relevant with a finite bandwidth,
+e.g., for a DC-bus voltage sensor, whose output otherwise rises from zero.</p></li>
+<li><p><strong>gain</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Gain, defaults to None, i.e., unity gain.</p></li>
+<li><p><strong>offset</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Offset, defaults to None, i.e., no offset.</p></li>
+<li><p><strong>std</strong> (<em>array_like</em><em>, </em><em>optional</em>) – Standard deviation of the noise, defaults to None, i.e., no noise.</p></li>
 <li><p><strong>rng</strong> (<em>numpy.random.Generator</em><em>, </em><em>optional</em>) – Random number generator, defaults to an unseeded generator. For reproducible
 results, pass the same seeded generator to all sensors. Sensors with separate
 generators of the same seed would produce identical noise.</p></li>
+<li><p><strong>convert</strong> (<em>Callable</em><em>[</em><em>[</em><em>Any</em><em>]</em><em>, </em><em>Any</em><em>]</em><em>, </em><em>optional</em>) – Function converting the output to the measured channels, e.g., <cite>complex2abc</cite>
+for the phase currents of a space vector or <cite>complex2line</cite> for the line-to-line
+voltages. Defaults to None, i.e., the output is measured as such. The sensors
+of a model default to the conversion of their measurement, see <cite>DriveSensors</cite>
+and <cite>GridConverterSensors</cite>.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sensor</span> <span class="o">=</span> <span class="n">Sensor</span><span class="p">(</span><span class="n">gain</span><span class="o">=</span><span class="p">[</span><span class="mf">1.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">offset</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sensor</span> <span class="o">=</span> <span class="n">Sensor</span><span class="p">(</span><span class="n">gain</span><span class="o">=</span><span class="p">[</span><span class="mf">1.02</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">offset</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">convert</span><span class="o">=</span><span class="n">complex2abc</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sensor</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sensor</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sensor</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
 <span class="go">array([ 1.02, -0.4 , -0.5 ])</span>
 </pre></div>
 </div>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Sensor.create_time_series">
+<span class="sig-name descname"><span class="pre">create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor.create_time_series"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor.create_time_series" title="Link to this definition">#</a></dt>
+<dd><p>Create time series from state list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<em>numpy.ndarray</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SensorTimeSeries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Sensor.rhs">
+<span class="sig-name descname"><span class="pre">rhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor.rhs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor.rhs" title="Link to this definition">#</a></dt>
+<dd><p>Compute state derivatives.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Sensor.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor.sample" title="Link to this definition">#</a></dt>
+<dd><p>Sample the measurement: the channels with the gain, offset, and noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.model.Sensor.set_outputs">
+<span class="sig-name descname"><span class="pre">set_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor.set_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor.set_outputs" title="Link to this definition">#</a></dt>
+<dd><p>Set output variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1979,7 +2068,7 @@ to represent, e.g., a current source as well.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.TwoLevelModulator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">TwoLevelModulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#TwoLevelModulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.TwoLevelModulator" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">TwoLevelModulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#TwoLevelModulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.TwoLevelModulator" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.common.model.Modulator" title="motulator.common.model.Modulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Modulator</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Cmd</span></code>]</p>
 <p>Base class for the modulators of two-level voltage-source converters.</p>
 <p>The gate state of a leg consists of the gate signal of its upper switch and the
@@ -1992,6 +2081,7 @@ they are the on-time fractions of the upper switches and the blanking fractions.
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a>)</p></li>
+<li><p><strong>sampling_delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1999,7 +2089,7 @@ they are the on-time fractions of the upper switches and the blanking fractions.
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc_sensor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.ControlledConverter</span></code></p>
 <p>Three-phase voltage-source converter.</p>
 <p>The modulator converts the duty ratios of the control system into the gate states of
@@ -2032,7 +2122,6 @@ own.</p></li>
 <li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Function of the phase currents (A) determining the leg states during blanking,
 defaults to <cite>np.sign</cite>. A smooth function, such as <cite>2/pi*arctan(i/i_d)</cite>, can be
 used to model the effect of parasitic capacitances, for example.</p></li>
-<li><p><strong>u_dc_sensor</strong> (<a class="reference internal" href="#motulator.common.model.Sensor" title="motulator.common.model.Sensor"><em>Sensor</em></a><em>, </em><em>optional</em>) – DC-bus voltage sensor, defaults to an ideal measurement.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2099,28 +2188,6 @@ used to model the effect of parasitic capacitances, for example.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.meas_dc_voltage">
-<span class="sig-name descname"><span class="pre">meas_dc_voltage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.meas_dc_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.meas_dc_voltage" title="Link to this definition">#</a></dt>
-<dd><p>Measure converter DC-bus voltage (V).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter.meas_voltages">
-<span class="sig-name descname"><span class="pre">meas_voltages</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter.meas_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter.meas_voltages" title="Link to this definition">#</a></dt>
-<dd><p>Measure the converter line-to-line voltages u_ab and u_bc (V).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2198,7 +2265,7 @@ the gate states are then zero for the whole sampling period.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.ZOH">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">ZOH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#ZOH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ZOH" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">ZOH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_pwm.html#ZOH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ZOH" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.common.model.TwoLevelModulator" title="motulator.common.model.TwoLevelModulator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TwoLevelModulator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collections.abc.Sequence</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>]]</p>
 <p>Zero-order hold of the duty ratios of a voltage-source converter.</p>
 <p>The dead time reduces the gate signal duty ratios of both switches of a leg by
@@ -2215,6 +2282,8 @@ transients.</p>
 see <cite>Modulator</cite>.</p></li>
 <li><p><strong>single_update</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – Sample and update the duty ratios once per carrier period, defaults to False,
 see <cite>Modulator</cite>.</p></li>
+<li><p><strong>sampling_delay</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+<cite>Modulator</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2467,7 +2536,13 @@ all the devices are gated (diodes).</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Modulator.schedule"><code class="docutils literal notranslate"><span class="pre">Modulator.schedule()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor"><code class="docutils literal notranslate"><span class="pre">Sensor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor"><code class="docutils literal notranslate"><span class="pre">Sensor</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.create_time_series"><code class="docutils literal notranslate"><span class="pre">Sensor.create_time_series()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.rhs"><code class="docutils literal notranslate"><span class="pre">Sensor.rhs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.sample"><code class="docutils literal notranslate"><span class="pre">Sensor.sample()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Sensor.set_outputs"><code class="docutils literal notranslate"><span class="pre">Sensor.set_outputs()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.Simulation.simulate"><code class="docutils literal notranslate"><span class="pre">Simulation.simulate()</span></code></a></li>
 </ul>
@@ -2513,8 +2588,6 @@ all the devices are gated (diodes).</p></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.create_time_series"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.create_time_series()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.extend_history"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.extend_history()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.init_state_history"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.init_state_history()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_dc_voltage"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_dc_voltage()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.meas_voltages"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.meas_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.modulate"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.modulate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_enable"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_enable()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.model.VoltageSourceConverter.set_gates"><code class="docutils literal notranslate"><span class="pre">VoltageSourceConverter.set_gates()</span></code></a></li>

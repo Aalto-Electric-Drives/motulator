@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -465,62 +466,184 @@
   <h1>Source code for motulator.common.model._sensor</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Sensor model for measured signals."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span>
+
 
 <span class="c1"># %%</span>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SensorInputs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Measured signal."""</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SensorStates</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Filtered signal, complex also for a real signal."""</span>
+
+    <span class="n">y</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SensorOutputs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Sensor output."""</span>
+
+    <span class="n">y</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+
+
 <div class="viewcode-block" id="Sensor">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.Sensor">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Sensor</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Sensor</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Sensor with a gain error, an offset, and additive Gaussian noise.</span>
+<span class="sd">    Sensor with a bandwidth, a gain error, an offset, and additive Gaussian noise.</span>
 
-<span class="sd">    The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual</span>
-<span class="sd">    signal and `n` is zero-mean white Gaussian noise with unit variance, drawn</span>
+<span class="sd">    A sensor is a subsystem that the model connects to the signal `x` it measures, e.g.,</span>
+<span class="sd">    the stator current of a machine or the DC-bus voltage of a converter, see `Drive`</span>
+<span class="sd">    and `GridConverterSystem`. Its output `y` follows `x` through a first-order low-pass</span>
+<span class="sd">    filter with the bandwidth `alpha`, which models the dynamics of the sensor and the</span>
+<span class="sd">    anti-aliasing filter, or equals `x` if the bandwidth is infinite. The control system</span>
+<span class="sd">    samples the measurement by `sample`, which converts the output to the measured</span>
+<span class="sd">    channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset</span>
+<span class="sd">    + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn</span>
 <span class="sd">    independently for each channel at each sample. The parameters are scalars or arrays</span>
-<span class="sd">    with one element per channel (e.g., per phase), in the units of the measured signal.</span>
-<span class="sd">    The noise represents the sampled signal, i.e., `std` is the standard deviation of</span>
-<span class="sd">    the samples after the anti-aliasing filter and the A/D conversion.</span>
+<span class="sd">    with one element per channel, in the units of the measured signal.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    alpha : float, optional</span>
+<span class="sd">        Bandwidth (rad/s), defaults to `inf`, i.e., no dynamics.</span>
+<span class="sd">    y0 : complex | float, optional</span>
+<span class="sd">        Initial value of the output, defaults to 0. Relevant with a finite bandwidth,</span>
+<span class="sd">        e.g., for a DC-bus voltage sensor, whose output otherwise rises from zero.</span>
 <span class="sd">    gain : array_like, optional</span>
-<span class="sd">        Gain, defaults to 1.</span>
+<span class="sd">        Gain, defaults to None, i.e., unity gain.</span>
 <span class="sd">    offset : array_like, optional</span>
-<span class="sd">        Offset, defaults to 0.</span>
+<span class="sd">        Offset, defaults to None, i.e., no offset.</span>
 <span class="sd">    std : array_like, optional</span>
-<span class="sd">        Standard deviation of the noise, defaults to 0.</span>
+<span class="sd">        Standard deviation of the noise, defaults to None, i.e., no noise.</span>
 <span class="sd">    rng : numpy.random.Generator, optional</span>
 <span class="sd">        Random number generator, defaults to an unseeded generator. For reproducible</span>
 <span class="sd">        results, pass the same seeded generator to all sensors. Sensors with separate</span>
 <span class="sd">        generators of the same seed would produce identical noise.</span>
+<span class="sd">    convert : Callable[[Any], Any], optional</span>
+<span class="sd">        Function converting the output to the measured channels, e.g., `complex2abc`</span>
+<span class="sd">        for the phase currents of a space vector or `complex2line` for the line-to-line</span>
+<span class="sd">        voltages. Defaults to None, i.e., the output is measured as such. The sensors</span>
+<span class="sd">        of a model default to the conversion of their measurement, see `DriveSensors`</span>
+<span class="sd">        and `GridConverterSensors`.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from motulator.common.model import Sensor</span>
-<span class="sd">    &gt;&gt;&gt; sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0])</span>
-<span class="sd">    &gt;&gt;&gt; sensor([1.0, -0.5, -0.5])</span>
+<span class="sd">    &gt;&gt;&gt; from motulator.common.utils import complex2abc</span>
+<span class="sd">    &gt;&gt;&gt; sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0], convert=complex2abc)</span>
+<span class="sd">    &gt;&gt;&gt; sensor.inp.x = 1 + 0j</span>
+<span class="sd">    &gt;&gt;&gt; sensor.set_outputs(0.0)</span>
+<span class="sd">    &gt;&gt;&gt; sensor.sample()</span>
 <span class="sd">    array([ 1.02, -0.4 , -0.5 ])</span>
 
 <span class="sd">    """</span>
 
-    <span class="n">gain</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">offset</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">std</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">inf</span><span class="p">,</span>
+        <span class="n">y0</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">gain</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">offset</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">std</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">convert</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The bandwidth must be positive"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="o">=</span> <span class="n">gain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">std</span> <span class="o">=</span> <span class="n">std</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">()</span> <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">rng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convert</span> <span class="o">=</span> <span class="n">convert</span>
+        <span class="c1"># Without dynamics, the output depends directly on the measured signal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedthrough</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span> <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="n">inf</span> <span class="k">else</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"x"</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">SensorInputs</span> <span class="o">=</span> <span class="n">SensorInputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">SensorStates</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">SensorStates</span><span class="p">(</span><span class="nb">complex</span><span class="p">(</span><span class="n">y0</span><span class="p">))</span> <span class="k">if</span> <span class="n">alpha</span> <span class="o">&lt;</span> <span class="n">inf</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">SensorOutputs</span> <span class="o">=</span> <span class="n">SensorOutputs</span><span class="p">(</span><span class="n">y0</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Return the measured signal."""</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gain</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="p">):</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+<div class="viewcode-block" id="Sensor.set_outputs">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.Sensor.set_outputs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Set output variables."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">y</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span> <span class="k">else</span> <span class="n">y</span><span class="o">.</span><span class="n">real</span></div>
+
+
+<div class="viewcode-block" id="Sensor.rhs">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.Sensor.rhs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Compute state derivatives."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">y</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="Sensor.sample">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.Sensor.sample">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Sample the measurement: the channels with the gain, offset, and noise."""</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">y</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gain</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gain</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">std</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">std</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">y</span></div>
 
+
+<div class="viewcode-block" id="Sensor.create_time_series">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.Sensor.create_time_series">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SensorTimeSeries"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Create time series from state list."""</span>
+        <span class="k">return</span> <span class="n">SensorTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SensorTimeSeries</span><span class="p">(</span><span class="n">SubsystemTimeSeries</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Continuous time series."""</span>
+
+    <span class="n">t</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+    <span class="n">subsystem</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">Sensor</span><span class="p">]</span>
+    <span class="c1"># Input</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
+    <span class="c1"># Output</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">Sensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the output time series from the state."""</span>
+        <span class="k">if</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span>
+            <span class="c1"># Real output of a real signal, as in `Sensor.set_outputs`</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nb">complex</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">Sensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Pass the input through without dynamics."""</span>
+        <span class="k">if</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
 </pre></div>
 
                 </article>

@@ -66,17 +66,17 @@ Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 28-32
 
-Configure the current sensors. A sensor maps the actual signal `x` to the measured
-signal `gain*x + offset + std*n`, where `n` is white Gaussian noise. Here, the
-parameters are given per phase. The random number generator is seeded to make the
-results reproducible.
+Configure the current sensors. A sensor maps each sampled channel `x` to `gain*x +
+offset + std*n`, where `n` is white Gaussian noise. The current sensors measure the
+phase currents, so the parameters are given per phase. The random number generator
+is seeded to make the results reproducible.
 
 .. GENERATED FROM PYTHON SOURCE LINES 32-40
 
 .. code-block:: Python
 
 
-    i_s_sensor = model.Sensor(
+    i_c_sensor = model.Sensor(
         gain=[1.0, 1.02, 0.99],
         offset=[0.02 * base.i, -0.01 * base.i, 0.0],
         std=0.005 * base.i,
@@ -90,22 +90,22 @@ results reproducible.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-44
+.. GENERATED FROM PYTHON SOURCE LINES 41-43
 
-Configure the system model. A sensor is a parameter of the subsystem whose signals it
-measures. Similarly, a DC-bus voltage sensor could be given to the converter model as
-`u_dc_sensor`. Without sensors, the measurements are ideal.
+Configure the system model. The sensors are given to the drive model, which connects
+them to the signals they measure. The DC-bus voltage sensor is ideal.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-51
+.. GENERATED FROM PYTHON SOURCE LINES 43-51
 
 .. code-block:: Python
 
 
     par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
-    machine = model.SynchronousMachine(par, i_s_sensor=i_s_sensor)
+    machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.015)
     converter = model.VoltageSourceConverter(u_dc=540)
-    mdl = model.Drive(machine, mechanics, converter)
+    sensors = model.DriveSensors(i_c=i_c_sensor)
+    mdl = model.Drive(machine, mechanics, converter, sensors=sensors)
 
 
 
@@ -185,7 +185,7 @@ currents are the measured ones, while the torque is the actual one.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.266 seconds)
+   **Total running time of the script:** (0 minutes 11.089 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sensor_errors_fvc.py:

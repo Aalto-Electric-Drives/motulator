@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -508,7 +509,19 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zeros</span> <span class="o">=</span> <span class="n">zeros</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Filled at the first call</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Filled at the first push</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Add the latest value to the end of the buffer."""</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Remove and return the oldest value of the buffer."""</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The buffer is empty"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
@@ -525,12 +538,32 @@
 <span class="sd">            Input `length` calls earlier, or zeros before that.</span>
 
 <span class="sd">        """</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)]</span>
-        <span class="c1"># Add the latest value to the end of the list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
-        <span class="c1"># Pop the first element and return it</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_concatenate</span><span class="p">(</span>
+    <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Concatenate the gate states of consecutive intervals."""</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
+    <span class="n">gates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_split</span><span class="p">(</span>
+    <span class="n">t_steps</span><span class="p">:</span> <span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">gates</span><span class="p">:</span> <span class="n">GateStates</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Split the gate states at the time `t` from their beginning."""</span>
+    <span class="n">t_end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">t_steps</span><span class="p">)</span>
+    <span class="n">t_start</span> <span class="o">=</span> <span class="n">t_end</span> <span class="o">-</span> <span class="n">t_steps</span>
+    <span class="n">before</span><span class="p">,</span> <span class="n">after</span> <span class="o">=</span> <span class="n">t_start</span> <span class="o">&lt;</span> <span class="n">t</span><span class="p">,</span> <span class="n">t_end</span> <span class="o">&gt;</span> <span class="n">t</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">t_end</span><span class="p">[</span><span class="n">before</span><span class="p">],</span> <span class="n">t</span><span class="p">)</span> <span class="o">-</span> <span class="n">t_start</span><span class="p">[</span><span class="n">before</span><span class="p">],</span> <span class="n">gates</span><span class="p">[</span><span class="n">before</span><span class="p">]),</span>
+        <span class="p">(</span><span class="n">t_end</span><span class="p">[</span><span class="n">after</span><span class="p">]</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">t_start</span><span class="p">[</span><span class="n">after</span><span class="p">],</span> <span class="n">t</span><span class="p">),</span> <span class="n">gates</span><span class="p">[</span><span class="n">after</span><span class="p">]),</span>
+    <span class="p">)</span>
 
 
 <span class="c1"># %%</span>
@@ -549,23 +582,48 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    delay : int, optional</span>
-<span class="sd">        Computational delay in half carrier periods from the sampling instant to the</span>
-<span class="sd">        loading of the command. Defaults to None, i.e., one sampling period, which the</span>
-<span class="sd">        control systems of this package compensate for: 1 with double update and 2 with</span>
-<span class="sd">        single update. With single update, `delay=1` loads the command at the carrier</span>
-<span class="sd">        extremum between the sampling instants.</span>
+<span class="sd">        Computational delay in half carrier periods from the carrier extremum at the</span>
+<span class="sd">        sampling instant (or preceding it, with a sampling delay) to the loading of the</span>
+<span class="sd">        command. Defaults to None, i.e., one sampling period, which the control systems</span>
+<span class="sd">        of this package compensate for: 1 with double update and 2 with single update.</span>
+<span class="sd">        With single update, `delay=1` loads the command at the carrier extremum between</span>
+<span class="sd">        the sampling instants.</span>
 <span class="sd">    single_update : bool, optional</span>
 <span class="sd">        Sample and update the command once per carrier period, i.e., the sampling period</span>
 <span class="sd">        of the control system equals the carrier period, defaults to False (double</span>
 <span class="sd">        update, the sampling period is half the carrier period).</span>
+<span class="sd">    sampling_delay : float, optional</span>
+<span class="sd">        Delay (s) of the sampling instant from the carrier extremum, defaults to 0. The</span>
+<span class="sd">        command is loaded at the carrier extrema as without the delay, so the gate</span>
+<span class="sd">        states returned at a sampling instant consist of the rest of the half carrier</span>
+<span class="sd">        period started at the preceding extremum and the beginning of the next one.</span>
+<span class="sd">        This models, e.g., sampling after the anti-aliasing filters of the current</span>
+<span class="sd">        measurement have settled, while the control systems assume sampling at the</span>
+<span class="sd">        extrema. The delay must be shorter than a half carrier period and requires a</span>
+<span class="sd">        computational delay, and the sampling period must be constant.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">sampling_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">delay</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="n">single_update</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sampling_delay</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">sampling_delay</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">delay</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"The sampling delay must be nonnegative and requires a computational "</span>
+                <span class="s2">"delay"</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">delay</span> <span class="o">=</span> <span class="n">Delay</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_command</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="o">=</span> <span class="n">single_update</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampling_delay</span> <span class="o">=</span> <span class="n">sampling_delay</span>
+        <span class="c1"># With a sampling delay, the first half carrier period of the next sampling</span>
+        <span class="c1"># period is scheduled ahead, and the sampling period must stay the same</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="Modulator.initial_command">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Modulator.initial_command">[docs]</a>
@@ -616,12 +674,33 @@
 
 <span class="sd">        """</span>
         <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_update</span> <span class="k">else</span> <span class="mi">1</span>  <span class="c1"># Half carrier periods per sampling period</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">T_s</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="p">(</span><span class="n">command</span><span class="p">))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
-        <span class="n">gates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">gates</span>
+        <span class="n">T_half</span> <span class="o">=</span> <span class="n">T_s</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_delay</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Checked before the state changes</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_delay</span> <span class="o">&lt;</span> <span class="n">T_half</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"The sampling delay must be shorter than a half carrier period"</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">T_s</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">"The sampling period must be constant with a sampling delay"</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_T_s</span> <span class="o">=</span> <span class="n">T_s</span>
+        <span class="n">parts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">SwitchingTimes</span><span class="p">,</span> <span class="n">GateStates</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="p">)</span>  <span class="c1"># Scheduled at the previous sampling instant</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">T_half</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">pop</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_delay</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">_concatenate</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+        <span class="c1"># The command loaded at the next extremum is already in the buffer, so the</span>
+        <span class="c1"># half carrier period following it is scheduled now</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">T_half</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delay</span><span class="o">.</span><span class="n">pop</span><span class="p">())</span>
+        <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">t_rest</span><span class="p">,</span> <span class="n">gates_rest</span><span class="p">)</span> <span class="o">=</span> <span class="n">_split</span><span class="p">(</span><span class="o">*</span><span class="n">_concatenate</span><span class="p">(</span><span class="n">parts</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_delay</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">t_first</span><span class="p">,</span> <span class="n">gates_first</span><span class="p">),</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_split</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_next</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling_delay</span><span class="p">)</span>
+        <span class="n">t_steps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">t_rest</span><span class="p">,</span> <span class="n">t_first</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">t_steps</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">gates_rest</span><span class="p">,</span> <span class="n">gates_first</span><span class="p">])</span>
 
 <div class="viewcode-block" id="Modulator.schedule">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Modulator.schedule">[docs]</a>
@@ -692,13 +771,20 @@
 <span class="sd">    single_update : bool, optional</span>
 <span class="sd">        Sample and update the duty ratios once per carrier period, defaults to False,</span>
 <span class="sd">        see `Modulator`.</span>
+<span class="sd">    sampling_delay : float, optional</span>
+<span class="sd">        Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see</span>
+<span class="sd">        `Modulator`.</span>
 
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">t_d</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">sampling_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">single_update</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">single_update</span><span class="p">,</span> <span class="n">sampling_delay</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
 
 <div class="viewcode-block" id="ZOH.schedule">
@@ -755,6 +841,9 @@
 <span class="sd">        see `Modulator`.</span>
 <span class="sd">    N : int, optional</span>
 <span class="sd">        Amount of the counter quantization levels, defaults to 2**12.</span>
+<span class="sd">    sampling_delay : float, optional</span>
+<span class="sd">        Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see</span>
+<span class="sd">        `Modulator`.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -805,8 +894,9 @@
         <span class="n">delay</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">single_update</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">N</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">12</span><span class="p">,</span>
+        <span class="n">sampling_delay</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">single_update</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="n">single_update</span><span class="p">,</span> <span class="n">sampling_delay</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t_d</span> <span class="o">=</span> <span class="n">t_d</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rising_edge</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Stores the carrier direction</span>

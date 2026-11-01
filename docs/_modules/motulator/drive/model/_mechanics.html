@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -574,20 +575,6 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">d_theta_M</span><span class="p">,</span> <span class="n">d_w_M</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="MechanicalSystem.meas_position">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.meas_position">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure mechanical rotor angle (rad)."""</span>
-        <span class="k">return</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="MechanicalSystem.meas_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.meas_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure mechanical rotor speed (rad/s)."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span></div>
-
-
 <div class="viewcode-block" id="MechanicalSystem.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.create_time_series">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MechanicalSystemTimeSeries"</span><span class="p">:</span>
@@ -741,34 +728,6 @@
         <span class="k">return</span> <span class="p">[</span><span class="n">d_theta_M</span><span class="p">,</span> <span class="n">d_w_M</span><span class="p">,</span> <span class="n">d_w_L</span><span class="p">,</span> <span class="n">d_theta_ML</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="TwoMassMechanicalSystem.meas_position">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_position">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure mechanical rotor angle (rad)."""</span>
-        <span class="k">return</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="TwoMassMechanicalSystem.meas_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure mechanical rotor speed (rad/s)."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span></div>
-
-
-<div class="viewcode-block" id="TwoMassMechanicalSystem.meas_load_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_load_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure the load speed."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_L</span><span class="o">.</span><span class="n">real</span></div>
-
-
-<div class="viewcode-block" id="TwoMassMechanicalSystem.meas_load_position">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_load_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure the load angle."""</span>
-        <span class="k">return</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_ML</span><span class="o">.</span><span class="n">real</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="TwoMassMechanicalSystem.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.create_time_series">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"TwoMassMechanicalSystemTimeSeries"</span><span class="p">:</span>
@@ -883,20 +842,6 @@
 <span class="w">        </span><span class="sd">"""Compute state derivatives."""</span>
         <span class="n">d_theta_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">d_theta_M</span><span class="p">]</span></div>
-
-
-<div class="viewcode-block" id="ExternalRotorSpeed.meas_position">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.meas_position">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure mechanical rotor angle (rad)."""</span>
-        <span class="k">return</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">theta_M</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ExternalRotorSpeed.meas_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.meas_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">meas_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Measure mechanical rotor speed (rad/s)."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span></div>
 
 
 <div class="viewcode-block" id="ExternalRotorSpeed.create_time_series">

@@ -46,7 +46,8 @@ par = model.SpatialSaturatedSynchronousMachinePars(
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.05)
 converter = model.VoltageSourceConverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+sensors = model.DriveSensors(theta_M=model.Sensor())  # Sensored control
+mdl = model.Drive(machine, mechanics, converter, sensors=sensors)
 
 # %%
 # Configure the control system.

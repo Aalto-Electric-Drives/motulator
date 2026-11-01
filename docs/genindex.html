@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -774,6 +775,8 @@
       <ul>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridge.create_time_series">(motulator.common.model.DiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Sensor.create_time_series">(motulator.common.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.create_time_series">(motulator.common.model.Subsystem method)</a>
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ThreePhaseSource.create_time_series">(motulator.common.model.ThreePhaseSource method)</a>
@@ -790,6 +793,8 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.create_time_series">(motulator.drive.model.MechanicalSystem method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Sensor.create_time_series">(motulator.drive.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.create_time_series">(motulator.drive.model.SynchronousMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ThreePhaseSource.create_time_series">(motulator.drive.model.ThreePhaseSource method)</a>
@@ -805,6 +810,8 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.create_time_series">(motulator.grid.model.LCLFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.create_time_series">(motulator.grid.model.LFilter method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.Sensor.create_time_series">(motulator.grid.model.Sensor method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ThreePhaseSource.create_time_series">(motulator.grid.model.ThreePhaseSource method)</a>
 </li>
@@ -897,6 +904,8 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.DriveControlSystem">(class in motulator.drive.control.sm)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveSensors">DriveSensors (class in motulator.drive.model)</a>
+</li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingController">DualVoltageFormingController (class in motulator.grid.control)</a>
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.DualVoltageFormingControllerCfg">DualVoltageFormingControllerCfg (class in motulator.grid.control)</a>
@@ -1081,6 +1090,8 @@
 </li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.GridConverterControlSystem">GridConverterControlSystem (class in motulator.grid.control)</a>
 </li>
+      <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.GridConverterSensors">GridConverterSensors (class in motulator.grid.model)</a>
+</li>
       <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.GridConverterSystem">GridConverterSystem (class in motulator.grid.model)</a>
 </li>
   </ul></td>
@@ -1249,68 +1260,6 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SimulationResults.mdl">(motulator.drive.model.SimulationResults attribute)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.SimulationResults.mdl">(motulator.grid.model.SimulationResults attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.meas_capacitor_voltages">meas_capacitor_voltages() (motulator.drive.model.LCFilter method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_capacitor_voltages">(motulator.grid.model.LCLFilter method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.meas_currents">meas_currents() (motulator.drive.model.InductionMachine method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.meas_currents">(motulator.drive.model.LCFilter method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.meas_currents">(motulator.drive.model.SynchronousMachine method)</a>
-</li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_currents">(motulator.grid.model.LCLFilter method)</a>
-</li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_currents">(motulator.grid.model.LFilter method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.VoltageSourceConverter.meas_dc_voltage">meas_dc_voltage() (motulator.common.model.VoltageSourceConverter method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.meas_dc_voltage">(motulator.drive.model.VoltageSourceConverter method)</a>
-</li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.meas_dc_voltage">(motulator.grid.model.VoltageSourceConverter method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_grid_currents">meas_grid_currents() (motulator.grid.model.LCLFilter method)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_load_position">meas_load_position() (motulator.drive.model.TwoMassMechanicalSystem method)</a>
-</li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_load_speed">meas_load_speed() (motulator.drive.model.TwoMassMechanicalSystem method)</a>
-</li>
-      <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.meas_pcc_voltages">meas_pcc_voltages() (motulator.grid.model.LCLFilter method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.meas_pcc_voltages">(motulator.grid.model.LFilter method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.meas_position">meas_position() (motulator.drive.model.ExternalRotorSpeed method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.meas_position">(motulator.drive.model.MechanicalSystem method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_position">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.meas_speed">meas_speed() (motulator.drive.model.ExternalRotorSpeed method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.meas_speed">(motulator.drive.model.MechanicalSystem method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.meas_speed">(motulator.drive.model.TwoMassMechanicalSystem method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.VoltageSourceConverter.meas_voltages">meas_voltages() (motulator.common.model.VoltageSourceConverter method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.VoltageSourceConverter.meas_voltages">(motulator.drive.model.VoltageSourceConverter method)</a>
-</li>
-        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.VoltageSourceConverter.meas_voltages">(motulator.grid.model.VoltageSourceConverter method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.Measurements">Measurements (class in motulator.grid.control)</a>
@@ -1693,6 +1642,8 @@
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.rhs">(motulator.common.model.Model method)</a>
 </li>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Sensor.rhs">(motulator.common.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.rhs">(motulator.common.model.Subsystem method)</a>
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ThreePhaseSource.rhs">(motulator.common.model.ThreePhaseSource method)</a>
@@ -1707,6 +1658,8 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.rhs">(motulator.drive.model.MechanicalSystem method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Sensor.rhs">(motulator.drive.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.rhs">(motulator.drive.model.SynchronousMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ThreePhaseSource.rhs">(motulator.drive.model.ThreePhaseSource method)</a>
@@ -1720,6 +1673,8 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.rhs">(motulator.grid.model.LCLFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.rhs">(motulator.grid.model.LFilter method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.Sensor.rhs">(motulator.grid.model.Sensor method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ThreePhaseSource.rhs">(motulator.grid.model.ThreePhaseSource method)</a>
 </li>
@@ -1741,7 +1696,13 @@
       <ul>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.DiodeBridge.sample">(motulator.common.model.DiodeBridge method)</a>
 </li>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Sensor.sample">(motulator.common.model.Sensor method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Sensor.sample">(motulator.drive.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.DiodeBridge.sample">(motulator.grid.model.DiodeBridge method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.Sensor.sample">(motulator.grid.model.Sensor method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SaturatedSynchronousMachinePars">SaturatedSynchronousMachinePars (class in motulator.drive.control.sm)</a>
@@ -1865,6 +1826,8 @@
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Model.set_outputs">(motulator.common.model.Model method)</a>
 </li>
+        <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Sensor.set_outputs">(motulator.common.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.set_outputs">(motulator.common.model.Subsystem method)</a>
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.SubsystemTimeSeries.set_outputs">(motulator.common.model.SubsystemTimeSeries method)</a>
@@ -1883,6 +1846,8 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_outputs">(motulator.drive.model.MechanicalSystem method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.Sensor.set_outputs">(motulator.drive.model.Sensor method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.set_outputs">(motulator.drive.model.SynchronousMachine method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ThreePhaseSource.set_outputs">(motulator.drive.model.ThreePhaseSource method)</a>
@@ -1898,6 +1863,8 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LCLFilter.set_outputs">(motulator.grid.model.LCLFilter method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.LFilter.set_outputs">(motulator.grid.model.LFilter method)</a>
+</li>
+        <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.Sensor.set_outputs">(motulator.grid.model.Sensor method)</a>
 </li>
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.ThreePhaseSource.set_outputs">(motulator.grid.model.ThreePhaseSource method)</a>
 </li>

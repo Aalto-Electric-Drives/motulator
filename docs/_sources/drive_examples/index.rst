@@ -175,6 +175,23 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example shows how the sampling instant affects filtered current measurements in flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The converter is modeled by carrier comparison, so the switching ripple of the currents is included. The current sensors have a first-order low-pass characteristic, which models the sensors and the anti-aliasing filters. The drive operates at the nominal torque and speed.">
+
+.. only:: html
+
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_sampling_delay_fvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, sampling delay, FVC</div>
+    </div>
+
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="This example compares space-vector PWM (SVPWM) and discontinuous PWM (DPWM) [#Hav1998]_ in flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The converter is modeled by carrier comparison, so the switching ripple of the currents is included. The drive operates at the nominal torque and a constant speed.">
 
 .. only:: html

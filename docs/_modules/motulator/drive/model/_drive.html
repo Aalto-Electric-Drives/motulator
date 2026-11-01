@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -465,9 +466,13 @@
   <h1>Source code for motulator.drive.model._drive</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Continuous-time models for electric machine drives and grid-connected machines."""</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_source</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreePhaseSource</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Subsystem</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DCBus</span><span class="p">,</span> <span class="n">VoltageSourceConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._sensor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sensor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._lc_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">LCFilter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">InductionMachine</span><span class="p">,</span> <span class="n">SynchronousMachine</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._mechanics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -475,6 +480,41 @@
     <span class="n">MechanicalSystem</span><span class="p">,</span>
     <span class="n">TwoMassMechanicalSystem</span><span class="p">,</span>
 <span class="p">)</span>
+
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="DriveSensors">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.DriveSensors">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DriveSensors</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Sensors of a drive, ideal by default, see `Sensor`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    i_c : Sensor, optional</span>
+<span class="sd">        Converter phase-current sensors. Their conversion defaults to `complex2abc`.</span>
+<span class="sd">    u_dc : Sensor, optional</span>
+<span class="sd">        DC-bus voltage sensor.</span>
+<span class="sd">    w_M : Sensor, optional</span>
+<span class="sd">        Rotor speed sensor (mechanical rad/s), defaults to None, i.e., no sensor.</span>
+<span class="sd">        Sensored control of an induction machine uses the speed sensor.</span>
+<span class="sd">    theta_M : Sensor, optional</span>
+<span class="sd">        Rotor position sensor (mechanical rad), defaults to None, i.e., no sensor.</span>
+<span class="sd">        Sensored control of a synchronous machine uses the position sensor. The sensor</span>
+<span class="sd">        cannot have a bandwidth, since the angle is wrapped.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">i_c</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Sensor</span><span class="p">)</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Sensor</span><span class="p">)</span>
+    <span class="n">w_M</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">theta_M</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">convert</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">convert</span> <span class="o">=</span> <span class="n">complex2abc</span></div>
+
 
 
 <span class="c1"># %%</span>
@@ -500,6 +540,11 @@
 <span class="sd">        a grid converter system with a diode bridge or an active front end), see</span>
 <span class="sd">        `CompositeModel`. Defaults to None, in which case the converter has a constant</span>
 <span class="sd">        DC-bus voltage.</span>
+<span class="sd">    sensors : DriveSensors, optional</span>
+<span class="sd">        Sensors, which the control system samples, defaults to ideal phase-current and</span>
+<span class="sd">        DC-bus voltage sensors. They are the subsystems `i_c_sensor`, `u_dc_sensor`,</span>
+<span class="sd">        and, if given, `w_M_sensor` and `theta_M_sensor` of the model, connected to the</span>
+<span class="sd">        signals they measure.</span>
 
 <span class="sd">    """</span>
 
@@ -510,10 +555,12 @@
         <span class="n">converter</span><span class="p">:</span> <span class="n">VoltageSourceConverter</span><span class="p">,</span>
         <span class="n">lc_filter</span><span class="p">:</span> <span class="n">LCFilter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dc_bus</span><span class="p">:</span> <span class="n">DCBus</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sensors</span><span class="p">:</span> <span class="n">DriveSensors</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mechanics</span> <span class="o">=</span> <span class="n">mechanics</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lc_filter</span> <span class="o">=</span> <span class="n">lc_filter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="n">DriveSensors</span><span class="p">()</span> <span class="k">if</span> <span class="n">sensors</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">sensors</span>
         <span class="n">subsystems</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"converter"</span><span class="p">:</span> <span class="n">converter</span><span class="p">}</span>
         <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
             <span class="p">(</span><span class="s2">"machine"</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"mechanics"</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">),</span>
@@ -523,6 +570,7 @@
             <span class="n">connections</span> <span class="o">|=</span> <span class="p">{</span>
                 <span class="p">(</span><span class="s2">"converter"</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"machine"</span><span class="p">,</span> <span class="s2">"i_s_ab"</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">"machine"</span><span class="p">,</span> <span class="s2">"u_s_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"converter"</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"i_c_sensor"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"machine"</span><span class="p">,</span> <span class="s2">"i_s_ab"</span><span class="p">),</span>
             <span class="p">}</span>
             <span class="n">converter</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="n">machine</span>
         <span class="k">else</span><span class="p">:</span>
@@ -532,9 +580,24 @@
                 <span class="p">(</span><span class="s2">"lc_filter"</span><span class="p">,</span> <span class="s2">"i_f_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"machine"</span><span class="p">,</span> <span class="s2">"i_s_ab"</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">"lc_filter"</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"converter"</span><span class="p">,</span> <span class="s2">"u_c_ab"</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">"machine"</span><span class="p">,</span> <span class="s2">"u_s_ab"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"lc_filter"</span><span class="p">,</span> <span class="s2">"u_f_ab"</span><span class="p">),</span>
+                <span class="p">(</span><span class="s2">"i_c_sensor"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"lc_filter"</span><span class="p">,</span> <span class="s2">"i_c_ab"</span><span class="p">),</span>
             <span class="p">}</span>
             <span class="n">converter</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="n">lc_filter</span>
-        <span class="n">subsystems</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">"machine"</span><span class="p">:</span> <span class="n">machine</span><span class="p">,</span> <span class="s2">"mechanics"</span><span class="p">:</span> <span class="n">mechanics</span><span class="p">}</span>
+        <span class="n">subsystems</span> <span class="o">|=</span> <span class="p">{</span>
+            <span class="s2">"machine"</span><span class="p">:</span> <span class="n">machine</span><span class="p">,</span>
+            <span class="s2">"mechanics"</span><span class="p">:</span> <span class="n">mechanics</span><span class="p">,</span>
+            <span class="s2">"i_c_sensor"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">i_c</span><span class="p">,</span>
+            <span class="s2">"u_dc_sensor"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">connections</span><span class="p">[(</span><span class="s2">"u_dc_sensor"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"converter"</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">subsystems</span><span class="p">[</span><span class="s2">"w_M_sensor"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">w_M</span>
+            <span class="n">connections</span><span class="p">[(</span><span class="s2">"w_M_sensor"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"mechanics"</span><span class="p">,</span> <span class="s2">"w_M"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">theta_M</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The position sensor cannot have a bandwidth"</span><span class="p">)</span>
+            <span class="n">subsystems</span><span class="p">[</span><span class="s2">"theta_M_sensor"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">theta_M</span>
+            <span class="n">connections</span><span class="p">[(</span><span class="s2">"theta_M_sensor"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"mechanics"</span><span class="p">,</span> <span class="s2">"theta_M"</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">)</span></div>
 
 

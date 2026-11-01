@@ -216,6 +216,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -2388,7 +2389,7 @@ defaults to 0 (no core losses).</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.VHzControlSystem.get_measurement">
 <span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VHzControlSystem.get_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VHzControlSystem.get_measurement" title="Link to this definition">#</a></dt>
-<dd><p>Get measurements.</p>
+<dd><p>Sample the sensors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>mdl</strong> (<em>motulator.drive.model._drive.Drive</em>)</p>
@@ -2468,7 +2469,7 @@ first one (a flying start).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.VectorControlSystem.get_measurement">
 <span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#VectorControlSystem.get_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.VectorControlSystem.get_measurement" title="Link to this definition">#</a></dt>
-<dd><p>Get measurements from sensors.</p>
+<dd><p>Sample the sensors, the speed and position sensors if the drive has them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>mdl</strong> (<em>motulator.drive.model._drive.Drive</em>)</p>

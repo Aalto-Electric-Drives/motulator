@@ -818,7 +818,7 @@ Package Contents
    .. py:method:: get_measurement(mdl)
 
       
-      Get measurements from sensors.
+      Sample the sensors.
 
 
 

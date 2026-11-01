@@ -90,7 +90,7 @@ Determine the path of the current script.
 Configure the system model using the GradNet saturation model with spatial harmonics,
 trained on the FEM data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-51
+.. GENERATED FROM PYTHON SOURCE LINES 38-52
 
 .. code-block:: Python
 
@@ -105,7 +105,8 @@ trained on the FEM data.
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.05)
     converter = model.VoltageSourceConverter(u_dc=540)
-    mdl = model.Drive(machine, mechanics, converter)
+    sensors = model.DriveSensors(theta_M=model.Sensor())  # Sensored control
+    mdl = model.Drive(machine, mechanics, converter, sensors=sensors)
 
 
 
@@ -114,11 +115,11 @@ trained on the FEM data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-69
+.. GENERATED FROM PYTHON SOURCE LINES 54-70
 
 .. code-block:: Python
 
@@ -145,11 +146,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-71
+.. GENERATED FROM PYTHON SOURCE LINES 71-72
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-75
+.. GENERATED FROM PYTHON SOURCE LINES 72-76
 
 .. code-block:: Python
 
@@ -164,11 +165,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 76-77
+.. GENERATED FROM PYTHON SOURCE LINES 77-78
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-81
+.. GENERATED FROM PYTHON SOURCE LINES 78-82
 
 .. code-block:: Python
 
@@ -191,7 +192,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 25.053 seconds)
+   **Total running time of the script:** (0 minutes 24.651 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_gn_fvc_fem_harm.py:

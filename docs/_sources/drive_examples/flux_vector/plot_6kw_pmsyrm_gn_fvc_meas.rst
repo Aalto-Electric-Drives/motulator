@@ -88,7 +88,7 @@ Determine the path of the current script.
 Configure the system model using the GradNet current map, without spatial harmonics,
 trained on the measured dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-47
+.. GENERATED FROM PYTHON SOURCE LINES 36-48
 
 .. code-block:: Python
 
@@ -101,7 +101,8 @@ trained on the measured dataset.
     machine = model.SynchronousMachine(par)
     mechanics = model.MechanicalSystem(J=0.05)
     converter = model.VoltageSourceConverter(u_dc=540)
-    mdl = model.Drive(machine, mechanics, converter)
+    sensors = model.DriveSensors(theta_M=model.Sensor())  # Sensored control
+    mdl = model.Drive(machine, mechanics, converter, sensors=sensors)
 
 
 
@@ -110,12 +111,12 @@ trained on the measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-50
+.. GENERATED FROM PYTHON SOURCE LINES 49-51
 
 Configure the control system using the GradNet flux map, without spatial harmonics,
 trained on the measured dataset.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-66
+.. GENERATED FROM PYTHON SOURCE LINES 51-67
 
 .. code-block:: Python
 
@@ -142,11 +143,11 @@ trained on the measured dataset.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-68
+.. GENERATED FROM PYTHON SOURCE LINES 68-69
 
 Visualize the control loci.
 
-.. GENERATED FROM PYTHON SOURCE LINES 68-76
+.. GENERATED FROM PYTHON SOURCE LINES 69-77
 
 .. code-block:: Python
 
@@ -196,11 +197,11 @@ Visualize the control loci.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 78-79
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 79-83
 
 .. code-block:: Python
 
@@ -215,11 +216,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 83-84
+.. GENERATED FROM PYTHON SOURCE LINES 84-85
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-88
+.. GENERATED FROM PYTHON SOURCE LINES 85-89
 
 .. code-block:: Python
 
@@ -242,7 +243,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 22.978 seconds)
+   **Total running time of the script:** (0 minutes 22.640 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_gn_fvc_meas.py:

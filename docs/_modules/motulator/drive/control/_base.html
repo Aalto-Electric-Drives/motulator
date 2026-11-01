@@ -211,6 +211,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html">5.6-kW saturated PM-SyRM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sampling_delay_fvc.html">2.2-kW IPMSM, sampling delay, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_dpwm_fvc.html">2.2-kW IPMSM, DPWM, FVC</a></li>
 </ul>
 </details></li>
@@ -812,19 +813,12 @@
 <div class="viewcode-block" id="VectorControlSystem.get_measurement">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.get_measurement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get measurements from sensors."""</span>
-        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">lc_filter</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span><span class="p">:</span>
-            <span class="n">w_M</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">theta_M</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">w_M</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_speed</span><span class="p">()</span>
-            <span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">meas_position</span><span class="p">())</span>
+<span class="w">        </span><span class="sd">"""Sample the sensors, the speed and position sensors if the drive has them."""</span>
+        <span class="n">sensors</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">sensors</span>
+        <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">sensors</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">sensors</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+        <span class="n">w_M</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">sensors</span><span class="o">.</span><span class="n">w_M</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">sensors</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>
+        <span class="n">theta_M</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">sensors</span><span class="o">.</span><span class="n">theta_M</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">wrap</span><span class="p">(</span><span class="n">sensors</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="n">w_M</span><span class="p">,</span> <span class="n">theta_M</span><span class="p">)</span></div>
 
 
@@ -932,10 +926,9 @@
 <div class="viewcode-block" id="VHzControlSystem.get_measurement">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VHzControlSystem.get_measurement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Drive</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Measurements</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Get measurements."""</span>
-        <span class="n">u_dc</span> <span class="o">=</span> <span class="n">mdl</span><span class="o">.</span><span class="n">converter</span><span class="o">.</span><span class="n">meas_dc_voltage</span><span class="p">()</span>
-        <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">meas_currents</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Sample the sensors."""</span>
+        <span class="n">i_c_ab</span> <span class="o">=</span> <span class="n">abc2complex</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">Measurements</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">mdl</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">u_dc</span><span class="o">.</span><span class="n">sample</span><span class="p">())</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_inner_feedback</span><span class="p">(</span>

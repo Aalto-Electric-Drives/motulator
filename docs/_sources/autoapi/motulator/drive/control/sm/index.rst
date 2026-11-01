@@ -2588,7 +2588,7 @@ Module Contents
    .. py:method:: get_measurement(mdl)
 
       
-      Get measurements.
+      Sample the sensors.
 
 
 
@@ -2726,7 +2726,7 @@ Module Contents
    .. py:method:: get_measurement(mdl)
 
       
-      Get measurements from sensors.
+      Sample the sensors, the speed and position sensors if the drive has them.
 
 
 

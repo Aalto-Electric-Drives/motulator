@@ -104,7 +104,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12)
+.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12, sampling_delay = 0.0)
 
    Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
 
@@ -128,6 +128,9 @@ Package Contents
    :type single_update: bool, optional
    :param N: Amount of the counter quantization levels, defaults to 2**12.
    :type N: int, optional
+   :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+                          `Modulator`.
+   :type sampling_delay: float, optional
 
    .. rubric:: Examples
 
@@ -1116,8 +1119,12 @@ Package Contents
    order of the subsystems where the dependencies allow, and a loop of direct
    dependencies is rejected. The voltage of a blocked converter depends on the port of
    its load, which depends on the inputs of the load, so the converter is evaluated
-   after the sources of these inputs. The names of the subsystems name their time
-   series in the results, see `ModelTimeSeries`.
+   after the sources of these inputs. A subsystem without states whose outputs are not
+   connected to other subsystems, such as a sensor without dynamics, does not affect
+   the integration, so its outputs are computed only when all the outputs are requested
+   (`set_outputs`), e.g., at the sampling instants, and not at every evaluation of the
+   state derivatives (`rhs`). The names of the subsystems name their time series in
+   the results, see `ModelTimeSeries`.
 
    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
    controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -1334,7 +1341,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Modulator(delay = None, single_update = False)
+.. py:class:: Modulator(delay = None, single_update = False, sampling_delay = 0.0)
 
    
    Base class for modulators.
@@ -1345,16 +1352,26 @@ Package Contents
    `schedule`, which the subclasses implement. The type parameter `Cmd` is the type of
    the command, e.g., the duty ratios of a voltage-source converter.
 
-   :param delay: Computational delay in half carrier periods from the sampling instant to the
-                 loading of the command. Defaults to None, i.e., one sampling period, which the
-                 control systems of this package compensate for: 1 with double update and 2 with
-                 single update. With single update, `delay=1` loads the command at the carrier
-                 extremum between the sampling instants.
+   :param delay: Computational delay in half carrier periods from the carrier extremum at the
+                 sampling instant (or preceding it, with a sampling delay) to the loading of the
+                 command. Defaults to None, i.e., one sampling period, which the control systems
+                 of this package compensate for: 1 with double update and 2 with single update.
+                 With single update, `delay=1` loads the command at the carrier extremum between
+                 the sampling instants.
    :type delay: int, optional
    :param single_update: Sample and update the command once per carrier period, i.e., the sampling period
                          of the control system equals the carrier period, defaults to False (double
                          update, the sampling period is half the carrier period).
    :type single_update: bool, optional
+   :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0. The
+                          command is loaded at the carrier extrema as without the delay, so the gate
+                          states returned at a sampling instant consist of the rest of the half carrier
+                          period started at the preceding extremum and the beginning of the next one.
+                          This models, e.g., sampling after the anti-aliasing filters of the current
+                          measurement have settled, while the control systems assume sampling at the
+                          extrema. The delay must be shorter than a half carrier period and requires a
+                          computational delay, and the sampling period must be constant.
+   :type sampling_delay: float, optional
 
 
 
@@ -1439,34 +1456,55 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: Sensor
+.. py:class:: Sensor(alpha = inf, y0 = 0.0, gain = None, offset = None, std = None, rng = None, convert = None)
+
+   Bases: :py:obj:`motulator.common.model._base.Subsystem`
+
 
    
-   Sensor with a gain error, an offset, and additive Gaussian noise.
+   Sensor with a bandwidth, a gain error, an offset, and additive Gaussian noise.
 
-   The measured signal is ``y = gain*x + offset + std*n``, where `x` is the actual
-   signal and `n` is zero-mean white Gaussian noise with unit variance, drawn
+   A sensor is a subsystem that the model connects to the signal `x` it measures, e.g.,
+   the stator current of a machine or the DC-bus voltage of a converter, see `Drive`
+   and `GridConverterSystem`. Its output `y` follows `x` through a first-order low-pass
+   filter with the bandwidth `alpha`, which models the dynamics of the sensor and the
+   anti-aliasing filter, or equals `x` if the bandwidth is infinite. The control system
+   samples the measurement by `sample`, which converts the output to the measured
+   channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset
+   + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn
    independently for each channel at each sample. The parameters are scalars or arrays
-   with one element per channel (e.g., per phase), in the units of the measured signal.
-   The noise represents the sampled signal, i.e., `std` is the standard deviation of
-   the samples after the anti-aliasing filter and the A/D conversion.
+   with one element per channel, in the units of the measured signal.
 
-   :param gain: Gain, defaults to 1.
+   :param alpha: Bandwidth (rad/s), defaults to `inf`, i.e., no dynamics.
+   :type alpha: float, optional
+   :param y0: Initial value of the output, defaults to 0. Relevant with a finite bandwidth,
+              e.g., for a DC-bus voltage sensor, whose output otherwise rises from zero.
+   :type y0: complex | float, optional
+   :param gain: Gain, defaults to None, i.e., unity gain.
    :type gain: array_like, optional
-   :param offset: Offset, defaults to 0.
+   :param offset: Offset, defaults to None, i.e., no offset.
    :type offset: array_like, optional
-   :param std: Standard deviation of the noise, defaults to 0.
+   :param std: Standard deviation of the noise, defaults to None, i.e., no noise.
    :type std: array_like, optional
    :param rng: Random number generator, defaults to an unseeded generator. For reproducible
                results, pass the same seeded generator to all sensors. Sensors with separate
                generators of the same seed would produce identical noise.
    :type rng: numpy.random.Generator, optional
+   :param convert: Function converting the output to the measured channels, e.g., `complex2abc`
+                   for the phase currents of a space vector or `complex2line` for the line-to-line
+                   voltages. Defaults to None, i.e., the output is measured as such. The sensors
+                   of a model default to the conversion of their measurement, see `DriveSensors`
+                   and `GridConverterSensors`.
+   :type convert: Callable[[Any], Any], optional
 
    .. rubric:: Examples
 
    >>> from motulator.common.model import Sensor
-   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0])
-   >>> sensor([1.0, -0.5, -0.5])
+   >>> from motulator.common.utils import complex2abc
+   >>> sensor = Sensor(gain=[1.02, 1, 1], offset=[0, 0.1, 0], convert=complex2abc)
+   >>> sensor.inp.x = 1 + 0j
+   >>> sensor.set_outputs(0.0)
+   >>> sensor.sample()
    array([ 1.02, -0.4 , -0.5 ])
 
 
@@ -1485,6 +1523,102 @@ Package Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: create_time_series(t)
+
+      
+      Create time series from state list.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(t)
+
+      
+      Compute state derivatives.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: sample()
+
+      
+      Sample the measurement: the channels with the gain, offset, and noise.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: set_outputs(t)
+
+      
+      Set output variables.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: Simulation(mdl, ctrl = None, show_progress = True, cfg = None, t_start = None)
 
@@ -2143,7 +2277,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: TwoLevelModulator(delay = None, single_update = False)
+.. py:class:: TwoLevelModulator(delay = None, single_update = False, sampling_delay = 0.0)
 
    Bases: :py:obj:`Modulator`\ [\ :py:obj:`Cmd`\ ]
 
@@ -2174,7 +2308,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign, u_dc_sensor = None)
+.. py:class:: VoltageSourceConverter(u_dc = None, modulator = None, u_th = 0.0, sign = np.sign)
 
    Bases: :py:obj:`DiodeBridge`, :py:obj:`motulator.common.model._base.ControlledConverter`
 
@@ -2215,8 +2349,6 @@ Package Contents
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
                 used to model the effect of parasitic capacitances, for example.
    :type sign: Callable[[np.ndarray], np.ndarray], optional
-   :param u_dc_sensor: DC-bus voltage sensor, defaults to an ideal measurement.
-   :type u_dc_sensor: Sensor, optional
 
 
 
@@ -2356,54 +2488,6 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: meas_dc_voltage()
-
-      
-      Measure converter DC-bus voltage (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: meas_voltages()
-
-      
-      Measure the converter line-to-line voltages u_ab and u_bc (V).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: modulate(T_s, command)
 
       
@@ -2513,7 +2597,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ZOH(t_d = 0.0, delay = None, single_update = False)
+.. py:class:: ZOH(t_d = 0.0, delay = None, single_update = False, sampling_delay = 0.0)
 
    Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
 
@@ -2536,6 +2620,9 @@ Package Contents
    :param single_update: Sample and update the duty ratios once per carrier period, defaults to False,
                          see `Modulator`.
    :type single_update: bool, optional
+   :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
+                          `Modulator`.
+   :type sampling_delay: float, optional
 
 
 
