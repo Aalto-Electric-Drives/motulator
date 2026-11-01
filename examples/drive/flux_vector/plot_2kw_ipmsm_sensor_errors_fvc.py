@@ -25,12 +25,12 @@ nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
 base = utils.BaseValues.from_nominal(nom, n_p=3)
 
 # %%
-# Configure the current sensors. A sensor maps the actual signal `x` to the measured
-# signal `gain*x + offset + std*n`, where `n` is white Gaussian noise. Here, the
-# parameters are given per phase. The random number generator is seeded to make the
-# results reproducible.
+# Configure the current sensors. A sensor maps each sampled channel `x` to `gain*x +
+# offset + std*n`, where `n` is white Gaussian noise. The current sensors measure the
+# phase currents, so the parameters are given per phase. The random number generator
+# is seeded to make the results reproducible.
 
-i_s_sensor = model.Sensor(
+i_c_sensor = model.Sensor(
     gain=[1.0, 1.02, 0.99],
     offset=[0.02 * base.i, -0.01 * base.i, 0.0],
     std=0.005 * base.i,
@@ -38,15 +38,15 @@ i_s_sensor = model.Sensor(
 )
 
 # %%
-# Configure the system model. A sensor is a parameter of the subsystem whose signals it
-# measures. Similarly, a DC-bus voltage sensor could be given to the converter model as
-# `u_dc_sensor`. Without sensors, the measurements are ideal.
+# Configure the system model. The sensors are given to the drive model, which connects
+# them to the signals they measure. The DC-bus voltage sensor is ideal.
 
 par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
-machine = model.SynchronousMachine(par, i_s_sensor=i_s_sensor)
+machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.015)
 converter = model.VoltageSourceConverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+sensors = model.DriveSensors(i_c=i_c_sensor)
+mdl = model.Drive(machine, mechanics, converter, sensors=sensors)
 
 # %%
 # Configure the control system.

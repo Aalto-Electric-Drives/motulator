@@ -6,7 +6,7 @@ from motulator.common.model._converter import DCBus, VoltageSourceConverter
 from motulator.common.model._pwm import ZOH, CarrierComparison
 from motulator.common.model._sensor import Sensor
 from motulator.common.model._simulation import Simulation, SimulationResults, SolverCfg
-from motulator.drive.model._drive import Drive, GridConnectedMachine
+from motulator.drive.model._drive import Drive, DriveSensors, GridConnectedMachine
 from motulator.drive.model._lc_filter import LCFilter
 from motulator.drive.model._machine import InductionMachine, SynchronousMachine
 from motulator.drive.model._mechanics import (
@@ -27,6 +27,7 @@ __all__ = [
     "CompositeModel",
     "DCBus",
     "Drive",
+    "DriveSensors",
     "ExternalRotorSpeed",
     "GridConnectedMachine",
     "InductionMachine",

@@ -175,6 +175,8 @@ class ControlledConverter(Protocol):
 
 # %%
 Wiring = dict[tuple[Subsystem, str], tuple[Subsystem, str]]
+# Subsystems in their evaluation order with their outgoing connections, see `Model`
+Plan = list[tuple[Subsystem, list[tuple[Subsystem, str, str]]]]
 
 
 def check_name(name: str) -> None:
@@ -194,8 +196,12 @@ class Model[C: Converter | None]:
     order of the subsystems where the dependencies allow, and a loop of direct
     dependencies is rejected. The voltage of a blocked converter depends on the port of
     its load, which depends on the inputs of the load, so the converter is evaluated
-    after the sources of these inputs. The names of the subsystems name their time
-    series in the results, see `ModelTimeSeries`.
+    after the sources of these inputs. A subsystem without states whose outputs are not
+    connected to other subsystems, such as a sensor without dynamics, does not affect
+    the integration, so its outputs are computed only when all the outputs are requested
+    (`set_outputs`), e.g., at the sampling instants, and not at every evaluation of the
+    state derivatives (`rhs`). The names of the subsystems name their time series in
+    the results, see `ModelTimeSeries`.
 
     A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
     controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -257,6 +263,8 @@ class Model[C: Converter | None]:
     def _wire(self, subsystems: dict[str, Subsystem], wiring: Wiring) -> None:
         """Set the subsystems and group the connections by the source."""
         self.subsystems = subsystems
+        # Subsystems with states, which the solver integrates
+        self._stateful = [s for s in subsystems.values() if s.state is not None]
         self._outgoing: dict[Subsystem, list[tuple[Subsystem, str, str]]] = {
             s: [] for s in subsystems.values()
         }
@@ -267,20 +275,35 @@ class Model[C: Converter | None]:
                     f"{type(target).__name__}.{inp}"
                 )
             self._outgoing[src].append((target, inp, out))
+        # Subsystems without states whose outputs are not connected anywhere (e.g.,
+        # sensors without dynamics) do not affect the integration
+        self._active = {
+            s for s in subsystems.values() if s.state is not None or self._outgoing[s]
+        }
         self.t0: float = 0.0
         self._t: list[float] = []  # Time history
         for subsystem in subsystems.values():
             subsystem.init_state_history()
-        # Evaluation orders of the outputs by the blocked converters, see `_order`
-        self._orders: dict[tuple[bool, ...], list[Subsystem]] = {}
-        self._order((False,) * len(self.converters))
+        # Evaluation plans of the outputs by the blocked converters, see `_plan`
+        self._plans: dict[tuple[bool, ...], tuple[Plan, Plan]] = {}
+        self._plan((False,) * len(self.converters))
 
-    def _order(self, blocked: tuple[bool, ...]) -> list[Subsystem]:
-        """Evaluation order of the outputs, given which converters are blocked."""
-        if blocked not in self._orders:
+    def _plan(self, blocked: tuple[bool, ...]) -> tuple[Plan, Plan]:
+        """Evaluation plans of the outputs, given which converters are blocked: of all
+        the subsystems and of those affecting the integration."""
+        if blocked not in self._plans:
             converters = [c for c, b in zip(self.converters, blocked, strict=True) if b]
-            self._orders[blocked] = self._sort(converters)
-        return self._orders[blocked]
+            order = self._sort(converters)
+            active = self._active
+            self._plans[blocked] = (
+                [(s, self._outgoing[s]) for s in order],
+                [
+                    (s, [c for c in self._outgoing[s] if c[0] in active])
+                    for s in order
+                    if s in active
+                ],
+            )
+        return self._plans[blocked]
 
     def _sort(self, blocked: list[Converter]) -> list[Subsystem]:
         """Sort the subsystems by their direct dependencies, keeping their order
@@ -310,39 +333,44 @@ class Model[C: Converter | None]:
     def get_initial_values(self) -> list[complex]:
         """Get initial values of all subsystems before the solver."""
         state0: list[complex] = []
-        for subsystem in self.subsystems.values():
-            if subsystem.state is not None:
-                state0.extend(vars(subsystem.state).values())
+        for subsystem in self._stateful:
+            state0.extend(vars(subsystem.state).values())
         return state0
 
     def set_states(self, state_list: list[complex]) -> None:
         """Set states in all subsystems."""
         index = 0
-        for subsystem in self.subsystems.values():
+        for subsystem in self._stateful:
             index = subsystem.set_states(state_list, index)
 
     def set_outputs(self, t: float) -> None:
         """Compute the outputs and pass them to the connected inputs."""
-        for subsystem in self._order(tuple(c.blocked for c in self.converters)):
+        plan, _ = self._plan(tuple(c.blocked for c in self.converters))
+        self._set_outputs(t, plan)
+
+    def _set_outputs(self, t: float, plan: Plan) -> None:
+        """Compute the outputs and pass them to the inputs according to the plan."""
+        for subsystem, outgoing in plan:
             subsystem.set_outputs(t)
-            for target, inp, out in self._outgoing[subsystem]:
+            for target, inp, out in outgoing:
                 setattr(target.inp, inp, getattr(subsystem.out, out))
 
     def rhs(self, t: float, state_list: list[complex]) -> list[complex]:
         """Compute complete state derivative list for the solver."""
         self.set_states(state_list)
-        self.set_outputs(t)
+        # Only the subsystems affecting the integration, see `_wire`
+        _, plan = self._plan(tuple(c.blocked for c in self.converters))
+        self._set_outputs(t, plan)
         rhs_list: list[complex] = []
-        for subsystem in self.subsystems.values():
-            if derivatives := subsystem.rhs(t):
-                rhs_list.extend(derivatives)
+        for subsystem in self._stateful:
+            rhs_list.extend(subsystem.rhs(t))
         return rhs_list
 
     def save(self, sol: OdeResult) -> None:
         """Save the solution and the signals of the converters."""
         self._t.extend(sol.t)
         index = 0
-        for subsystem in self.subsystems.values():
+        for subsystem in self._stateful:
             index = subsystem.extend_state_history(sol.y, index)
         # The voltage of a blocked converter varies within the integration interval,
         # so its samples are evaluated at the solution points
@@ -359,9 +387,9 @@ class Model[C: Converter | None]:
         # Outputs in the evaluation order of the simulation (the voltage of a blocked
         # converter is in its history), passed to the inputs immediately, see
         # `set_outputs`
-        for subsystem in self._order((False,) * len(self.converters)):
+        for subsystem, outgoing in self._plan((False,) * len(self.converters))[0]:
             ts[subsystem].set_outputs(t, subsystem)
-            for target, inp, out in self._outgoing[subsystem]:
+            for target, inp, out in outgoing:
                 setattr(ts[target], inp, np.array(getattr(ts[subsystem], out)))
         # Signals derived from the inputs, which are all available now
         for subsystem in self.subsystems.values():

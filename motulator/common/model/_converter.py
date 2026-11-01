@@ -35,11 +35,9 @@ from motulator.common.model._pwm import (
     SwitchingTimes,
     TwoLevelModulator,
 )
-from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import (
     abc2complex,
     complex2abc,
-    complex2line,
     empty_array,
     get_value,
 )
@@ -299,8 +297,6 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
         Function of the phase currents (A) determining the leg states during blanking,
         defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be
         used to model the effect of parasitic capacitances, for example.
-    u_dc_sensor : Sensor, optional
-        DC-bus voltage sensor, defaults to an ideal measurement.
 
     """
 
@@ -310,12 +306,10 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
         modulator: TwoLevelModulator[Any] | None = None,
         u_th: float = 0.0,
         sign: Callable[[np.ndarray], np.ndarray] = np.sign,
-        u_dc_sensor: Sensor | None = None,
     ) -> None:
         super().__init__(u_dc, u_th)
         self.modulator = ZOH() if modulator is None else modulator
         self.sign = sign
-        self.u_dc_sensor = u_dc_sensor
         self.inp: VoltageSourceConverterInputs = VoltageSourceConverterInputs(u_dc=u_dc)
 
     @property
@@ -387,16 +381,6 @@ class VoltageSourceConverter(DiodeBridge, ControlledConverter):
             self._set_dc_voltage()
             inp = self.inp
             self.out.u_c_ab = inp.q_c_ab * self.out.u_dc - self.u_th * inp.s_c_ab
-
-    def meas_dc_voltage(self) -> float:
-        """Measure converter DC-bus voltage (V)."""
-        if self.u_dc_sensor is None:
-            return self.out.u_dc
-        return float(self.u_dc_sensor(self.out.u_dc))
-
-    def meas_voltages(self) -> np.ndarray:
-        """Measure the converter line-to-line voltages u_ab and u_bc (V)."""
-        return complex2line(self.out.u_c_ab)
 
     def init_state_history(self) -> None:
         """Initialize the history of the switching state and the voltage."""

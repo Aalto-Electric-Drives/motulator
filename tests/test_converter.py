@@ -63,9 +63,6 @@ class IdealConverter(Converter, ControlledConverter):
     def rhs(self, t: float) -> list[complex]:
         return []
 
-    def meas_dc_voltage(self) -> float:
-        return self.out.u_dc
-
     def init_state_history(self) -> None:
         super().init_state_history()
         self._history["q_c_ab"] = []
@@ -85,10 +82,12 @@ class ConverterTimeSeries(SubsystemTimeSeries):
     subsystem: InitVar[IdealConverter]
     q_c_ab: np.ndarray = field(default_factory=lambda: np.array([]))
     u_c_ab: np.ndarray = field(default_factory=lambda: np.array([]))
+    u_dc: np.ndarray = field(default_factory=lambda: np.array([]))
 
     def __post_init__(self, t: np.ndarray, subsystem: IdealConverter) -> None:
         self.q_c_ab = np.array(subsystem._history["q_c_ab"])
-        self.u_c_ab = self.q_c_ab * subsystem.out.u_dc
+        self.u_dc = np.full(len(t), subsystem.out.u_dc)
+        self.u_c_ab = self.q_c_ab * self.u_dc
 
 
 class GridSystem(Model[IdealConverter]):
@@ -102,15 +101,22 @@ class GridSystem(Model[IdealConverter]):
     ) -> None:
         self.ac_filter = ac_filter
         self.ac_source = ac_source
+        self.sensors = model.GridConverterSensors()
         connections = {
             ("converter", "i_c_ab"): ("ac_filter", "i_c_ab"),
             ("ac_filter", "u_c_ab"): ("converter", "u_c_ab"),
             ("ac_filter", "e_g_ab"): ("ac_source", "e_g_ab"),
+            ("i_c_sensor", "x"): ("ac_filter", "i_c_ab"),
+            ("u_g_sensor", "x"): ("ac_filter", "u_g_ab"),
+            ("u_dc_sensor", "x"): ("converter", "u_dc"),
         }
         subsystems = {
             "converter": converter,
             "ac_filter": ac_filter,
             "ac_source": ac_source,
+            "i_c_sensor": self.sensors.i_c,
+            "u_g_sensor": self.sensors.u_g,
+            "u_dc_sensor": self.sensors.u_dc,
         }
         super().__init__(converter, subsystems, connections)
 

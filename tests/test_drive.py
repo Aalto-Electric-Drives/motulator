@@ -26,28 +26,32 @@ T_STOP = 0.6
 T_LOAD = 0.3
 
 
-def ipmsm_drive(pwm: bool, G_c: float = 0.0) -> model.Drive:
-    """2.2-kW IPMSM drive."""
+def ipmsm_drive(pwm: bool, G_c: float = 0.0, sensored: bool = False) -> model.Drive:
+    """2.2-kW IPMSM drive, with a position sensor if `sensored`."""
     par = model.SynchronousMachinePars(
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
     )
     modulator = model.CarrierComparison() if pwm else None
+    sensors = model.DriveSensors(theta_M=model.Sensor()) if sensored else None
     return model.Drive(
         model.SynchronousMachine(par),
         model.MechanicalSystem(J=0.015),
         model.VoltageSourceConverter(u_dc=540, modulator=modulator),
+        sensors=sensors,
     )
 
 
-def im_drive(G_c: float = 0.0) -> model.Drive:
-    """2.2-kW induction machine drive."""
+def im_drive(G_c: float = 0.0, sensored: bool = False) -> model.Drive:
+    """2.2-kW induction machine drive, with a speed sensor if `sensored`."""
     par = model.InductionMachineInvGammaPars(
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224, G_c=G_c
     )
+    sensors = model.DriveSensors(w_M=model.Sensor()) if sensored else None
     return model.Drive(
         model.InductionMachine(par),
         model.MechanicalSystem(J=0.015),
         model.VoltageSourceConverter(u_dc=540),
+        sensors=sensors,
     )
 
 
@@ -137,10 +141,16 @@ def im_fvc() -> im_control.VectorControlSystem:
 
 CASES = {
     "ipmsm_fvc_sensorless": (lambda: ipmsm_drive(False), lambda: ipmsm_fvc(True)),
-    "ipmsm_fvc_sensored": (lambda: ipmsm_drive(False), lambda: ipmsm_fvc(False)),
+    "ipmsm_fvc_sensored": (
+        lambda: ipmsm_drive(False, sensored=True),
+        lambda: ipmsm_fvc(False),
+    ),
     "ipmsm_fvc_pwm": (lambda: ipmsm_drive(True), lambda: ipmsm_fvc(True)),
     "ipmsm_cvc_sensorless": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(True)),
-    "ipmsm_cvc_sensored": (lambda: ipmsm_drive(False), lambda: ipmsm_cvc(False)),
+    "ipmsm_cvc_sensored": (
+        lambda: ipmsm_drive(False, sensored=True),
+        lambda: ipmsm_cvc(False),
+    ),
     "ipmsm_cvc_discrete": (lambda: ipmsm_drive(False), ipmsm_cvc_discrete),
     "ipmsm_signal_inj": (lambda: ipmsm_drive(False), ipmsm_signal_inj),
     "ipmsm_signal_inj_n3": (lambda: ipmsm_drive(False), lambda: ipmsm_signal_inj(3)),
@@ -199,7 +209,7 @@ def test_models_and_control_systems_can_be_pickled() -> None:
 @pytest.mark.parametrize("t_fail", [0.0, 0.02])
 def test_numerical_failure_is_flagged(t_fail: float) -> None:
     """A numerical failure stops the simulation and is flagged in the results."""
-    mdl = ipmsm_drive(pwm=False)
+    mdl = ipmsm_drive(pwm=False, sensored=True)
     ctrl = ipmsm_fvc(sensorless=False)
     ctrl.set_speed_ref(0.0)
     mdl.mechanics.set_external_load_torque(lambda t: (t >= t_fail) * 1e300)
@@ -377,7 +387,10 @@ def test_scalar_mechanics_functions(two_mass: bool) -> None:
         n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
     )
     mdl = model.Drive(
-        model.SynchronousMachine(par), mechanics, model.VoltageSourceConverter(u_dc=540)
+        model.SynchronousMachine(par),
+        mechanics,
+        model.VoltageSourceConverter(u_dc=540),
+        sensors=model.DriveSensors(theta_M=model.Sensor()),
     )
     ctrl = ipmsm_cvc(sensorless=False)
     ctrl.set_speed_ref(lambda t: 20.0)
@@ -671,7 +684,7 @@ def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
             psi_s_nom=1.04, i_s_max=10.6, sensorless=False, T_s=1e-3
         )
         vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
-        mdl = im_drive()
+        mdl = im_drive(sensored=True)
     else:
         par = sm_control.SynchronousMachinePars(
             n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
@@ -680,7 +693,7 @@ def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
             i_s_max=6.5, sensorless=False, T_s=1e-3
         )
         vector_ctrl = sm_control.FluxVectorController(par, cfg)
-        mdl = ipmsm_drive(False)
+        mdl = ipmsm_drive(False, sensored=True)
     ctrl = im_control.VectorControlSystem(
         vector_ctrl, im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
     )

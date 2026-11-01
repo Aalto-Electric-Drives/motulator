@@ -12,8 +12,8 @@ from typing import Any
 
 import numpy as np
 
-from motulator.common.model import ACPort, Sensor, Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import complex2abc, complex2line, empty_array
+from motulator.common.model import ACPort, Subsystem, SubsystemTimeSeries
+from motulator.common.utils._utils import empty_array
 
 
 # %%
@@ -31,6 +31,7 @@ class LFilterOutputs:
     """Outputs of the L filter."""
 
     i_c_ab: complex
+    u_g_ab: complex  # PCC voltage
 
 
 @dataclass
@@ -59,37 +60,28 @@ class LFilter(Subsystem):
         Grid inductance (H), defaults to 0.
     R_g : float, optional
         Grid resistance (Ω), defaults to 0.
-    i_c_sensor : Sensor, optional
-        Converter phase-current sensors, defaults to an ideal measurement.
-    u_g_sensor : Sensor, optional
-        Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
-        measurement.
 
     """
 
+    # The PCC voltage depends directly on the converter and grid voltages
+    feedthrough = frozenset({"u_c_ab", "e_g_ab"})
+
     def __init__(
-        self,
-        L_f: float,
-        R_f: float = 0.0,
-        L_g: float = 0.0,
-        R_g: float = 0.0,
-        i_c_sensor: Sensor | None = None,
-        u_g_sensor: Sensor | None = None,
+        self, L_f: float, R_f: float = 0.0, L_g: float = 0.0, R_g: float = 0.0
     ) -> None:
         self.L_f = L_f
         self.R_f = R_f
         self.L_g = L_g
         self.R_g = R_g
-        self.i_c_sensor = i_c_sensor
-        self.u_g_sensor = u_g_sensor
         # The following initial conditions are needed for computing the PCC voltage,
-        # which has direct feedthrough. The PCC voltage is used only as a feedback
-        # signal for the control system (but not coupled to the solution of the
-        # continuous-time system). If the transients during the very first time steps
-        # are important, these initial conditions can be set to appropriate values.
+        # which has direct feedthrough. If the transients during the very first time
+        # steps are important, these initial conditions can be set to appropriate
+        # values.
         self.inp: Inputs = Inputs()
         self.state: LFilterStates = LFilterStates()
-        self.out: LFilterOutputs = LFilterOutputs(self.state.i_c_ab)
+        self.out: LFilterOutputs = LFilterOutputs(
+            self.state.i_c_ab, self._pcc_voltage(self.state, self.inp)
+        )
 
     def _pcc_voltage(self, state: Any, inp: Any) -> Any:
         """Compute the voltage at the point of common coupling (PCC)."""
@@ -103,6 +95,7 @@ class LFilter(Subsystem):
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         self.out.i_c_ab = self.state.i_c_ab
+        self.out.u_g_ab = self._pcc_voltage(self.state, self.inp)
 
     def rhs(self, t: float) -> list[complex]:
         """Compute the state derivatives."""
@@ -118,16 +111,6 @@ class LFilter(Subsystem):
         state, inp = self.state, self.inp
         e = inp.e_g_ab + (self.R_f + self.R_g) * state.i_c_ab
         return ACPort(state.i_c_ab, e, np.eye(2) / (self.L_f + self.L_g))
-
-    def meas_currents(self) -> Any:
-        """Measure the converter phase currents (A)."""
-        i_c_abc = complex2abc(self.state.i_c_ab)
-        return i_c_abc if self.i_c_sensor is None else self.i_c_sensor(i_c_abc)
-
-    def meas_pcc_voltages(self) -> Any:
-        """Measure the line-to-line voltages u_ab and u_bc (V) at the PCC."""
-        u_g_line = complex2line(self._pcc_voltage(self.state, self.inp))
-        return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
 
     def create_time_series(self, t: np.ndarray) -> "LFilterTimeSeries":
         """Create time series from state list."""
@@ -154,8 +137,8 @@ class LFilterTimeSeries(SubsystemTimeSeries):
         self.i_c_ab = np.array(subsystem._history["i_c_ab"])
         self.i_g_ab = self.i_c_ab
 
-    def compute_derived_signals(self, t: np.ndarray, subsystem: LFilter) -> None:
-        """Compute the PCC voltage."""
+    def set_outputs(self, t: np.ndarray, subsystem: LFilter) -> None:
+        """Compute the PCC voltage, which depends directly on the inputs."""
         self.u_g_ab = subsystem._pcc_voltage(self, self)
 
 
@@ -176,6 +159,7 @@ class LCLFilterOutputs:
     i_c_ab: complex
     u_f_ab: complex
     i_g_ab: complex
+    u_g_ab: complex  # PCC voltage
 
 
 class LCLFilter(Subsystem):
@@ -204,13 +188,11 @@ class LCLFilter(Subsystem):
         Grid resistance (Ω), defaults to 0.
     u_f0_ab : complex, optional
         Initial value of the filter capacitor voltage (V), defaults to 0.
-    i_c_sensor : Sensor, optional
-        Converter phase-current sensors, defaults to an ideal measurement.
-    u_g_sensor : Sensor, optional
-        Line-to-line PCC voltage sensors (`u_ab` and `u_bc`), defaults to an ideal
-        measurement.
 
     """
+
+    # The PCC voltage depends directly on the grid voltage
+    feedthrough = frozenset({"e_g_ab"})
 
     def __init__(
         self,
@@ -222,8 +204,6 @@ class LCLFilter(Subsystem):
         L_g: float = 0.0,
         R_g: float = 0.0,
         u_f0_ab: complex = 0j,
-        i_c_sensor: Sensor | None = None,
-        u_g_sensor: Sensor | None = None,
     ) -> None:
         self.L_fc = L_fc
         self.L_fg = L_fg
@@ -232,15 +212,15 @@ class LCLFilter(Subsystem):
         self.R_fg = R_fg
         self.L_g = L_g
         self.R_g = R_g
-        self.i_c_sensor = i_c_sensor
-        self.u_g_sensor = u_g_sensor
         self.state: LCLFilterStates = LCLFilterStates(0j, u_f0_ab, 0j)
         # The following initial conditions are needed for computing the PCC voltage,
-        # which has direct feedthrough. The PCC voltage is used only as a feedback
-        # signal for the control system.
+        # which has direct feedthrough.
         self.inp: Inputs = Inputs(u_f0_ab, u_f0_ab)
         self.out: LCLFilterOutputs = LCLFilterOutputs(
-            self.state.i_c_ab, self.state.u_f_ab, self.state.i_g_ab
+            self.state.i_c_ab,
+            self.state.u_f_ab,
+            self.state.i_g_ab,
+            self._pcc_voltage(self.state, self.inp),
         )
 
     def _pcc_voltage(self, state: Any, inp: Any) -> Any:
@@ -259,6 +239,7 @@ class LCLFilter(Subsystem):
         out.i_c_ab = state.i_c_ab
         out.u_f_ab = state.u_f_ab
         out.i_g_ab = state.i_g_ab
+        out.u_g_ab = self._pcc_voltage(state, self.inp)
 
     def rhs(self, t: float) -> list[complex]:
         """Compute the state derivatives."""
@@ -278,27 +259,6 @@ class LCLFilter(Subsystem):
         state = self.state
         e = state.u_f_ab + self.R_fc * state.i_c_ab
         return ACPort(state.i_c_ab, e, np.eye(2) / self.L_fc)
-
-    def meas_currents(self) -> Any:
-        """Measure the converter phase currents (A)."""
-        i_c_abc = complex2abc(self.state.i_c_ab)
-        return i_c_abc if self.i_c_sensor is None else self.i_c_sensor(i_c_abc)
-
-    def meas_pcc_voltages(self) -> Any:
-        """
-        Measure the line-to-line voltages u_ab and u_bc (V) at the point of common
-        coupling (PCC).
-        """
-        u_g_line = complex2line(self._pcc_voltage(self.state, self.inp))
-        return u_g_line if self.u_g_sensor is None else self.u_g_sensor(u_g_line)
-
-    def meas_grid_currents(self) -> Any:
-        """Measure the grid phase currents (A)."""
-        return complex2abc(self.state.i_g_ab)
-
-    def meas_capacitor_voltages(self) -> Any:
-        """Measure the capacitor line-to-line voltages u_ab and u_bc (V)."""
-        return complex2line(self.state.u_f_ab)
 
     def create_time_series(self, t: np.ndarray) -> "LCLFilterTimeSeries":
         """Create time series from state list."""
@@ -327,6 +287,6 @@ class LCLFilterTimeSeries(SubsystemTimeSeries):
         self.i_g_ab = np.array(subsystem._history["i_g_ab"])
         self.u_f_ab = np.array(subsystem._history["u_f_ab"])
 
-    def compute_derived_signals(self, t: np.ndarray, subsystem: LCLFilter) -> None:
-        """Compute the PCC voltage."""
+    def set_outputs(self, t: np.ndarray, subsystem: LCLFilter) -> None:
+        """Compute the PCC voltage, which depends directly on the grid voltage."""
         self.u_g_ab = subsystem._pcc_voltage(self, self)

@@ -42,7 +42,8 @@ par = model.SaturatedSynchronousMachinePars(n_p=2, R_s=0.63, i_s_dq_fcn=current_
 machine = model.SynchronousMachine(par)
 mechanics = model.MechanicalSystem(J=0.05)
 converter = model.VoltageSourceConverter(u_dc=540)
-mdl = model.Drive(machine, mechanics, converter)
+sensors = model.DriveSensors(theta_M=model.Sensor())  # Sensored control
+mdl = model.Drive(machine, mechanics, converter, sensors=sensors)
 
 # %%
 # Configure the control system using the GradNet flux map, without spatial harmonics,
