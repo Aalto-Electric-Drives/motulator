@@ -47,8 +47,7 @@ class Sensor(Subsystem):
     channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset
     + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn
     independently for each channel at each sample. The parameters are scalars or arrays
-    with one element per channel, in the units of the measured signal, given at
-    construction.
+    with one element per channel, in the units of the measured signal.
 
     Parameters
     ----------
@@ -58,11 +57,11 @@ class Sensor(Subsystem):
         Initial value of the output, defaults to 0. Relevant with a finite bandwidth,
         e.g., for a DC-bus voltage sensor, whose output otherwise rises from zero.
     gain : array_like, optional
-        Gain, defaults to 1.
+        Gain, defaults to None, i.e., unity gain.
     offset : array_like, optional
-        Offset, defaults to 0.
+        Offset, defaults to None, i.e., no offset.
     std : array_like, optional
-        Standard deviation of the noise, defaults to 0.
+        Standard deviation of the noise, defaults to None, i.e., no noise.
     rng : numpy.random.Generator, optional
         Random number generator, defaults to an unseeded generator. For reproducible
         results, pass the same seeded generator to all sensors. Sensors with separate
@@ -90,9 +89,9 @@ class Sensor(Subsystem):
         self,
         alpha: float = inf,
         y0: complex | float = 0.0,
-        gain: ArrayLike = 1.0,
-        offset: ArrayLike = 0.0,
-        std: ArrayLike = 0.0,
+        gain: ArrayLike | None = None,
+        offset: ArrayLike | None = None,
+        std: ArrayLike | None = None,
         rng: np.random.Generator | None = None,
         convert: Callable[[Any], Any] | None = None,
     ) -> None:
@@ -104,10 +103,6 @@ class Sensor(Subsystem):
         self.std = std
         self.rng = np.random.default_rng() if rng is None else rng
         self.convert = convert
-        # An ideal sensor passes the channels through, see `sample`
-        self._ideal = not (
-            np.any(np.not_equal(gain, 1)) or np.any(offset) or np.any(std)
-        )
         # Without dynamics, the output depends directly on the measured signal
         self.feedthrough = frozenset() if alpha < inf else frozenset({"x"})
         self.inp: SensorInputs = SensorInputs()
@@ -133,10 +128,11 @@ class Sensor(Subsystem):
     def sample(self) -> Any:
         """Sample the measurement: the channels with the gain, offset, and noise."""
         y = self.out.y if self.convert is None else self.convert(self.out.y)
-        if self._ideal:
-            return y
-        y = np.multiply(self.gain, y) + self.offset
-        if np.any(self.std):
+        if self.gain is not None:
+            y = np.multiply(self.gain, y)
+        if self.offset is not None:
+            y = np.add(y, self.offset)
+        if self.std is not None:
             y = y + np.multiply(self.std, self.rng.standard_normal(np.shape(y)))
         return y
 
@@ -159,14 +155,11 @@ class SensorTimeSeries(SubsystemTimeSeries):
     def __post_init__(self, t: np.ndarray, subsystem: Sensor) -> None:
         """Compute the output time series from the state."""
         if subsystem.state is not None:
-            self.y = np.array(subsystem._history["y"])
+            y = np.array(subsystem._history["y"])
+            # Real output of a real signal, as in `Sensor.set_outputs`
+            self.y = y if isinstance(subsystem.inp.x, complex) else np.real(y)
 
     def set_outputs(self, t: np.ndarray, subsystem: Sensor) -> None:
         """Pass the input through without dynamics."""
         if subsystem.state is None:
             self.y = self.x
-
-    def compute_derived_signals(self, t: np.ndarray, subsystem: Sensor) -> None:
-        """Drop the zero imaginary part of a filtered real signal."""
-        if not np.iscomplexobj(self.x):
-            self.y = np.real(self.y)

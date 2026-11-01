@@ -96,6 +96,31 @@ def test_sample() -> None:
     samples = np.array([sensor.sample() for _ in range(2000)])
     np.testing.assert_allclose(np.mean(samples, axis=0), [1.02, -0.4, -0.5], atol=0.05)
     np.testing.assert_allclose(np.std(samples, axis=0), 0.5, rtol=0.1)
+    # Parameters changed after construction take effect, also in an ideal sensor
+    sensor = Sensor()
+    sensor.inp.x = 10.0
+    sensor.set_outputs(0.0)
+    sensor.gain = 2.0
+    assert sensor.sample() == pytest.approx(20.0)
+    sensor.gain = None
+    assert sensor.sample() == pytest.approx(10.0)
+
+
+def test_real_signal_stays_real() -> None:
+    """A filtered real signal is real, also through a cascade of sensors."""
+    speed = model.ExternalRotorSpeed()
+    speed.set_external_rotor_speed(10.0)
+    subsystems = {
+        "speed": speed,
+        "first": Sensor(alpha=1e3, y0=10.0),
+        "second": Sensor(alpha=1e3, y0=10.0),
+    }
+    connections = {("first", "x"): ("speed", "w_M"), ("second", "x"): ("first", "y")}
+    mdl = Model(None, subsystems, connections)
+    res = Simulation(mdl, show_progress=False).simulate(t_stop=0.01)
+    assert not np.iscomplexobj(res.mdl.first.y)
+    assert not np.iscomplexobj(res.mdl.second.y)
+    assert res.mdl.second.y[-1] == pytest.approx(10.0)
 
 
 def test_drive_sensors() -> None:
