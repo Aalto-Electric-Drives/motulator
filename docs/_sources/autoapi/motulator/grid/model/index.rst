@@ -710,6 +710,9 @@ Package Contents
    :type u_g: Sensor, optional
    :param u_dc: DC-bus voltage sensor.
    :type u_dc: Sensor, optional
+   :param i_dc: Current sensor of the DC load, which measures its output `i_dc`, i.e., the
+                current fed to the DC bus. Defaults to None, i.e., no sensor.
+   :type i_dc: Sensor, optional
 
 
 
@@ -754,8 +757,8 @@ Package Contents
                    external current of the DC bus. Defaults to None.
    :type dc_load: Subsystem, optional
    :param sensors: Sensors, which the control system samples, defaults to ideal sensors. They are
-                   the subsystems `i_c_sensor`, `u_g_sensor`, and `u_dc_sensor` of the model,
-                   connected to the signals they measure.
+                   the subsystems `i_c_sensor`, `u_g_sensor`, `u_dc_sensor`, and, if given,
+                   `i_dc_sensor` of the model, connected to the signals they measure.
    :type sensors: GridConverterSensors, optional
 
 

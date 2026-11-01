@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.grid.model._converter_system &#8212; motulator 0.23.0 documentation</title>
+    <title>motulator.grid.model._converter_system &#8212; motulator 0.23.1 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=358893f7"></script>
+    <script src="../../../../_static/documentation_options.js?v=8e7411ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.23.0 documentation</p>
+    <p class="title logo__title">motulator 0.23.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -493,12 +493,16 @@
 <span class="sd">        coupling. Their conversion defaults to `complex2line`.</span>
 <span class="sd">    u_dc : Sensor, optional</span>
 <span class="sd">        DC-bus voltage sensor.</span>
+<span class="sd">    i_dc : Sensor, optional</span>
+<span class="sd">        Current sensor of the DC load, which measures its output `i_dc`, i.e., the</span>
+<span class="sd">        current fed to the DC bus. Defaults to None, i.e., no sensor.</span>
 
 <span class="sd">    """</span>
 
     <span class="n">i_c</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Sensor</span><span class="p">)</span>
     <span class="n">u_g</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Sensor</span><span class="p">)</span>
     <span class="n">u_dc</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Sensor</span><span class="p">)</span>
+    <span class="n">i_dc</span><span class="p">:</span> <span class="n">Sensor</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_c</span><span class="o">.</span><span class="n">convert</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -536,8 +540,8 @@
 <span class="sd">        external current of the DC bus. Defaults to None.</span>
 <span class="sd">    sensors : GridConverterSensors, optional</span>
 <span class="sd">        Sensors, which the control system samples, defaults to ideal sensors. They are</span>
-<span class="sd">        the subsystems `i_c_sensor`, `u_g_sensor`, and `u_dc_sensor` of the model,</span>
-<span class="sd">        connected to the signals they measure.</span>
+<span class="sd">        the subsystems `i_c_sensor`, `u_g_sensor`, `u_dc_sensor`, and, if given,</span>
+<span class="sd">        `i_dc_sensor` of the model, connected to the signals they measure.</span>
 
 <span class="sd">    """</span>
 
@@ -578,6 +582,11 @@
                 <span class="p">(</span><span class="s2">"dc_load"</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"dc_bus"</span><span class="p">,</span> <span class="s2">"u_dc"</span><span class="p">),</span>
                 <span class="p">(</span><span class="s2">"dc_bus"</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">):</span> <span class="p">(</span><span class="s2">"dc_load"</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">),</span>
             <span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">i_dc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dc_load</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The DC-load current sensor requires a DC load"</span><span class="p">)</span>
+            <span class="n">subsystems</span><span class="p">[</span><span class="s2">"i_dc_sensor"</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">i_dc</span>
+            <span class="n">connections</span><span class="p">[(</span><span class="s2">"i_dc_sensor"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"dc_load"</span><span class="p">,</span> <span class="s2">"i_dc"</span><span class="p">)</span>
         <span class="n">converter</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="n">ac_filter</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span> <span class="n">subsystems</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">dc_bus</span><span class="o">=</span><span class="n">dc_bus</span><span class="p">)</span></div>
 

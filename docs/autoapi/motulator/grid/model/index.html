@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.grid.model &#8212; motulator 0.23.0 documentation</title>
+    <title>motulator.grid.model &#8212; motulator 0.23.1 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=358893f7"></script>
+    <script src="../../../../_static/documentation_options.js?v=8e7411ea"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.23.0 documentation</p>
+    <p class="title logo__title">motulator 0.23.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -1083,6 +1083,8 @@ converter voltage, the DC voltage, and the DC current, see <cite>sample</cite>.<
 <li><p><strong>u_g</strong> (<a class="reference internal" href="#motulator.grid.model.Sensor" title="motulator.grid.model.Sensor"><em>Sensor</em></a><em>, </em><em>optional</em>) – Sensors of the line-to-line voltages <cite>u_ab</cite> and <cite>u_bc</cite> at the point of common
 coupling. Their conversion defaults to <cite>complex2line</cite>.</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference internal" href="#motulator.grid.model.Sensor" title="motulator.grid.model.Sensor"><em>Sensor</em></a><em>, </em><em>optional</em>) – DC-bus voltage sensor.</p></li>
+<li><p><strong>i_dc</strong> (<a class="reference internal" href="#motulator.grid.model.Sensor" title="motulator.grid.model.Sensor"><em>Sensor</em></a><em>, </em><em>optional</em>) – Current sensor of the DC load, which measures its output <cite>i_dc</cite>, i.e., the
+current fed to the DC bus. Defaults to None, i.e., no sensor.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1108,8 +1110,8 @@ has a constant DC-bus voltage.</p></li>
 <cite>i_dc</cite> the current fed to the DC bus (negative when drawn), which replaces the
 external current of the DC bus. Defaults to None.</p></li>
 <li><p><strong>sensors</strong> (<a class="reference internal" href="#motulator.grid.model.GridConverterSensors" title="motulator.grid.model.GridConverterSensors"><em>GridConverterSensors</em></a><em>, </em><em>optional</em>) – Sensors, which the control system samples, defaults to ideal sensors. They are
-the subsystems <cite>i_c_sensor</cite>, <cite>u_g_sensor</cite>, and <cite>u_dc_sensor</cite> of the model,
-connected to the signals they measure.</p></li>
+the subsystems <cite>i_c_sensor</cite>, <cite>u_g_sensor</cite>, <cite>u_dc_sensor</cite>, and, if given,
+<cite>i_dc_sensor</cite> of the model, connected to the signals they measure.</p></li>
 </ul>
 </dd>
 </dl>
