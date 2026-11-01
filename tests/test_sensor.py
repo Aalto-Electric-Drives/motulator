@@ -1,6 +1,7 @@
 """Tests for the sensor model."""
 
 from math import pi
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -8,14 +9,19 @@ import pytest
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.model import (
+    DCBus,
     Model,
     Sensor,
     Simulation,
     SolverCfg,
+    Subsystem,
+    SubsystemTimeSeries,
     ThreePhaseSource,
+    VoltageSourceConverter,
 )
 from motulator.common.utils import abc2complex, complex2abc
 from motulator.drive import model
+from motulator.grid.model import GridConverterSensors, GridConverterSystem, LFilter
 
 
 def test_bandwidth() -> None:
@@ -174,3 +180,45 @@ def test_drive_sensors() -> None:
     assert meas.w_M == pytest.approx(gain * mdl.mechanics.out.w_M)
     assert meas.theta_M == pytest.approx(mdl.mechanics.out.theta_M)
     assert mdl.mechanics.out.w_M == pytest.approx(w_M_ref, rel=0.01)
+
+
+class ResistiveLoad(Subsystem):
+    """Resistor connected to the DC bus."""
+
+    feedthrough = frozenset({"u_dc"})
+
+    def __init__(self, R: float) -> None:
+        self.R = R
+        self.inp = SimpleNamespace(u_dc=0.0)
+        self.out = SimpleNamespace(i_dc=0.0)
+        self.state = None
+
+    def set_outputs(self, t: float) -> None:
+        self.out.i_dc = -self.inp.u_dc / self.R
+
+    def rhs(self, t: float) -> list[complex]:
+        return []
+
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
+        raise NotImplementedError  # Not simulated
+
+
+def test_dc_load_current_sensor() -> None:
+    """The current sensor of the DC load measures the current that the load feeds to
+    the DC bus, and it requires a DC load."""
+    sensor = Sensor(gain=2.0)
+
+    def system(dc_load: Subsystem | None) -> GridConverterSystem:
+        return GridConverterSystem(
+            VoltageSourceConverter(),
+            LFilter(L_f=1e-3),
+            ThreePhaseSource(w_g=2 * pi * 50, e_g=325.0),
+            dc_bus=DCBus(C_dc=1e-3, u_dc=600.0),
+            dc_load=dc_load,
+            sensors=GridConverterSensors(i_dc=sensor),
+        )
+
+    system(ResistiveLoad(R=10.0)).set_outputs(0.0)
+    assert sensor.sample() == pytest.approx(-120.0)
+    with pytest.raises(ValueError):
+        system(None)

@@ -25,12 +25,16 @@ class GridConverterSensors:
         coupling. Their conversion defaults to `complex2line`.
     u_dc : Sensor, optional
         DC-bus voltage sensor.
+    i_dc : Sensor, optional
+        Current sensor of the DC load, which measures its output `i_dc`, i.e., the
+        current fed to the DC bus. Defaults to None, i.e., no sensor.
 
     """
 
     i_c: Sensor = field(default_factory=Sensor)
     u_g: Sensor = field(default_factory=Sensor)
     u_dc: Sensor = field(default_factory=Sensor)
+    i_dc: Sensor | None = None
 
     def __post_init__(self) -> None:
         if self.i_c.convert is None:
@@ -65,8 +69,8 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         external current of the DC bus. Defaults to None.
     sensors : GridConverterSensors, optional
         Sensors, which the control system samples, defaults to ideal sensors. They are
-        the subsystems `i_c_sensor`, `u_g_sensor`, and `u_dc_sensor` of the model,
-        connected to the signals they measure.
+        the subsystems `i_c_sensor`, `u_g_sensor`, `u_dc_sensor`, and, if given,
+        `i_dc_sensor` of the model, connected to the signals they measure.
 
     """
 
@@ -107,5 +111,10 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
                 ("dc_load", "u_dc"): ("dc_bus", "u_dc"),
                 ("dc_bus", "i_dc"): ("dc_load", "i_dc"),
             }
+        if self.sensors.i_dc is not None:
+            if dc_load is None:
+                raise ValueError("The DC-load current sensor requires a DC load")
+            subsystems["i_dc_sensor"] = self.sensors.i_dc
+            connections[("i_dc_sensor", "x")] = ("dc_load", "i_dc")
         converter.ac_load = ac_filter
         super().__init__(converter, subsystems, connections, dc_bus=dc_bus)
