@@ -86,6 +86,7 @@ Almost all control methods in the examples have also been implemented and tested
 
 The following packages extend *motulator*, each maintained in its own repository:
 
+- [motulator-bearingless](https://github.com/Aalto-Electric-Drives/motulator-bearingless): six-phase bearingless machine drives with direct radial force control and levitation control
 - [motulator-export](https://github.com/Aalto-Electric-Drives/motulator-export): export of drive and grid converter systems to PLECS and Simulink, with the control algorithms ported to C
 - [motulator-gradnet](https://github.com/Aalto-Electric-Drives/motulator-gradnet): training of gradient-network magnetic models of synchronous machines from measured or finite-element data
 - [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance): mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps

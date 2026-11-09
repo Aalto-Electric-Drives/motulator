@@ -8,12 +8,13 @@ The packages listed on this page extend *motulator* with additional models, cont
      one-sentence description, and the latest motulator release the package has been
      tested with. -->
 
-| Package                                                                               | Description                                                                                                    | Tested with |
-| ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------- |
-| [motulator-export](https://github.com/Aalto-Electric-Drives/motulator-export)         | Export of drive and grid converter systems to PLECS and Simulink, with the control algorithms ported to C.     | 0.23.0      |
-| [motulator-gradnet](https://github.com/Aalto-Electric-Drives/motulator-gradnet)       | Training of gradient-network magnetic models of synchronous machines from measured or finite-element data.     | 0.23.0      |
-| [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance)   | Mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps. | 0.23.0      |
-| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase) | Multi-three-phase machine drives based on the decoupled multi-stator transformation.                           | 0.23.0      |
+| Package                                                                                 | Description                                                                                                    | Tested with |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------- |
+| [motulator-bearingless](https://github.com/Aalto-Electric-Drives/motulator-bearingless) | Six-phase bearingless machine drives with direct radial force control and levitation control.                  | 0.23.0      |
+| [motulator-export](https://github.com/Aalto-Electric-Drives/motulator-export)           | Export of drive and grid converter systems to PLECS and Simulink, with the control algorithms ported to C.     | 0.23.0      |
+| [motulator-gradnet](https://github.com/Aalto-Electric-Drives/motulator-gradnet)         | Training of gradient-network magnetic models of synchronous machines from measured or finite-element data.     | 0.23.0      |
+| [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance)     | Mechanical impedance of machine drives and output admittance of grid converters, measured by frequency sweeps. | 0.23.0      |
+| [motulator-multiphase](https://github.com/Aalto-Electric-Drives/motulator-multiphase)   | Multi-three-phase machine drives based on the decoupled multi-stator transformation.                           | 0.23.0      |
 
 ## Listing a Package
 
