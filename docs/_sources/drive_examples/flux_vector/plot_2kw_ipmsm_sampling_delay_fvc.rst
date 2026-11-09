@@ -237,7 +237,7 @@ ratios, since they are still loaded at the following carrier extremum.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.804 seconds)
+   **Total running time of the script:** (0 minutes 3.976 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sampling_delay_fvc.py:

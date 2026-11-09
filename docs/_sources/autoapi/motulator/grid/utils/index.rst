@@ -276,9 +276,9 @@ Package Contents
    :param t_ticks: Time axis tick locations.
    :type t_ticks: ArrayLike, optional
    :param y_lims: y-axis limits for each subplot.
-   :type y_lims: list[tuple[float, float] | None], optional
+   :type y_lims: Sequence[tuple[float, float] | None], optional
    :param y_ticks: y-axis tick locations for each subplot.
-   :type y_ticks: list[ArrayLike | None], optional
+   :type y_ticks: Sequence[ArrayLike | None], optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
    :type latex: bool, optional
@@ -324,9 +324,9 @@ Package Contents
    :param t_ticks: Time axis tick locations.
    :type t_ticks: ArrayLike, optional
    :param y_lims: y-axis limits for each subplot.
-   :type y_lims: list[tuple[float, float] | None], optional
+   :type y_lims: Sequence[tuple[float, float] | None], optional
    :param y_ticks: y-axis tick locations for each subplot.
-   :type y_ticks: list[ArrayLike | None], optional
+   :type y_ticks: Sequence[ArrayLike | None], optional
    :param latex: Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
                  installation, defaults to False.
    :type latex: bool, optional

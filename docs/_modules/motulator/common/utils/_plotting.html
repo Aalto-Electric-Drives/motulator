@@ -466,6 +466,7 @@
   <h1>Source code for motulator.common.utils._plotting</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Helper functions for plots."""</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -571,8 +572,8 @@
     <span class="n">axes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
     <span class="n">t_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t_ticks</span><span class="p">:</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">y_lims</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">y_ticks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_lims</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">y_ticks</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ArrayLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Configure time and y-axis settings for all subplots.</span>
@@ -585,10 +586,10 @@
 <span class="sd">        Time axis limits. If None, no limits are set.</span>
 <span class="sd">    t_ticks : ArrayLike | None</span>
 <span class="sd">        Time axis tick locations. If None, no ticks are set.</span>
-<span class="sd">    y_lims : list[tuple[float, float] | None] | None</span>
+<span class="sd">    y_lims : Sequence[tuple[float, float] | None] | None</span>
 <span class="sd">        y-axis limits for each subplot. Each element should be a tuple (y_min, y_max) or</span>
 <span class="sd">        None for automatic scaling.</span>
-<span class="sd">    y_ticks : list of ArrayLike or None</span>
+<span class="sd">    y_ticks : Sequence[ArrayLike | None] | None</span>
 <span class="sd">        y-axis tick locations for each subplot. Each element should be an array of tick</span>
 <span class="sd">        positions or None for automatic ticks.</span>
 
