@@ -1,5 +1,6 @@
 """Helper functions for plots."""
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -102,8 +103,8 @@ def configure_axes(
     axes: list,
     t_lims: tuple[float, float] | None,
     t_ticks: ArrayLike | None,
-    y_lims: list[tuple[float, float] | None] | None,
-    y_ticks: list[ArrayLike | None] | None,
+    y_lims: Sequence[tuple[float, float] | None] | None,
+    y_ticks: Sequence[ArrayLike | None] | None,
 ) -> None:
     """
     Configure time and y-axis settings for all subplots.
@@ -116,10 +117,10 @@ def configure_axes(
         Time axis limits. If None, no limits are set.
     t_ticks : ArrayLike | None
         Time axis tick locations. If None, no ticks are set.
-    y_lims : list[tuple[float, float] | None] | None
+    y_lims : Sequence[tuple[float, float] | None] | None
         y-axis limits for each subplot. Each element should be a tuple (y_min, y_max) or
         None for automatic scaling.
-    y_ticks : list of ArrayLike or None
+    y_ticks : Sequence[ArrayLike | None] | None
         y-axis tick locations for each subplot. Each element should be an array of tick
         positions or None for automatic ticks.
 

@@ -1,5 +1,6 @@
 """Example plotting scripts for grid converters."""
 
+from collections.abc import Sequence
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -127,8 +128,8 @@ def plot_control_signals(
     base: BaseValues | None = None,
     t_lims: tuple[float, float] | None = None,
     t_ticks: ArrayLike | None = None,
-    y_lims: list[tuple[float, float] | None] | None = None,
-    y_ticks: list[ArrayLike | None] | None = None,
+    y_lims: Sequence[tuple[float, float] | None] | None = None,
+    y_ticks: Sequence[ArrayLike | None] | None = None,
     latex: bool = False,
     save_path: str | Path | None = None,
     **savefig_kwargs,
@@ -147,9 +148,9 @@ def plot_control_signals(
         Time axis limits. If None, uses full time range.
     t_ticks : ArrayLike, optional
         Time axis tick locations.
-    y_lims : list[tuple[float, float] | None], optional
+    y_lims : Sequence[tuple[float, float] | None], optional
         y-axis limits for each subplot.
-    y_ticks : list[ArrayLike | None], optional
+    y_ticks : Sequence[ArrayLike | None], optional
         y-axis tick locations for each subplot.
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
@@ -254,8 +255,8 @@ def plot_grid_waveforms(
     base: BaseValues | None = None,
     t_lims: tuple[float, float] | None = None,
     t_ticks: ArrayLike | None = None,
-    y_lims: list[tuple[float, float] | None] | None = None,
-    y_ticks: list[ArrayLike | None] | None = None,
+    y_lims: Sequence[tuple[float, float] | None] | None = None,
+    y_ticks: Sequence[ArrayLike | None] | None = None,
     latex: bool = False,
     plot_pcc_voltage: bool = True,
     save_path: str | Path | None = None,
@@ -281,9 +282,9 @@ def plot_grid_waveforms(
         Time axis limits. If None, uses full time range.
     t_ticks : ArrayLike, optional
         Time axis tick locations.
-    y_lims : list[tuple[float, float] | None], optional
+    y_lims : Sequence[tuple[float, float] | None], optional
         y-axis limits for each subplot.
-    y_ticks : list[ArrayLike | None], optional
+    y_ticks : Sequence[ArrayLike | None], optional
         y-axis tick locations for each subplot.
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
