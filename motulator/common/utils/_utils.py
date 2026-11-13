@@ -309,8 +309,9 @@ class BaseValues:
 
         Notes
         -----
-        Notice that the nominal torque is larger than the base torque due to the power
-        factor and efficiency being less than unity.
+        The nominal torque is smaller than the base torque, since the base power equals
+        the nominal apparent power and the power factor and efficiency are less than
+        unity.
 
         """
         u = np.sqrt(2 / 3) * nom.U
