@@ -516,8 +516,8 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-model">Induction Machine Γ Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-losses">Core Losses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine">Induction Machine Γ Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#im-core-losses">Core Losses</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-inverse-model">Induction Machine Inverse-Γ Model</a><ul class="nav section-nav flex-column">
@@ -540,8 +540,8 @@
   <section class="tex2jax_ignore mathjax_ignore" id="induction-machines">
 <h1>Induction Machines<a class="headerlink" href="#induction-machines" title="Link to this heading">#</a></h1>
 <p>This document describes continuous-time induction machine models of the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#module-motulator.drive.model" title="motulator.drive.model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.drive.model</span></code></a> package.</p>
-<section id="induction-machine-model">
-<span id="induction-machine"></span><h2>Induction Machine Γ Model<a class="headerlink" href="#induction-machine-model" title="Link to this heading">#</a></h2>
+<section id="induction-machine">
+<span id="induction-machine-model"></span><h2>Induction Machine Γ Model<a class="headerlink" href="#induction-machine" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#fig-im-gamma"><span class="std std-ref">Figure 1</span></a> shows the Γ-equivalent circuit model of an induction machine. We apply it as the base model, as it readily extends to include magnetic saturation <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id48" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The model is implemented in <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class.</p>
 <figure class="align-center" id="fig-im-gamma">
 <a class="only-light reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="only-light" src="../../_images/im_gamma.svg" style="width: 100%;" />
@@ -589,8 +589,8 @@
 </figure>
 <p>The main-flux saturation is modeled using a nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span> where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id42" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>, <a class="reference internal" href="../../bibliography.html#id48" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The saturable stator inductance can be unambiguously characterized using simple no-load tests. It also properly takes into account the effect of the load variations on the saturation state. Notice that the nonlinear stator inductance only appears in <a class="reference internal" href="#equation-gamma-factor">(3)</a>.</p>
 <p>The Γ model in stator coordinates (<span class="math notranslate nohighlight">\(\omegac = 0\)</span>) is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class. Its parameters are defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class, which accepts nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>. See also examples <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a> and <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>.</p>
-<section id="core-losses">
-<span id="im-core-losses"></span><h3>Core Losses<a class="headerlink" href="#core-losses" title="Link to this heading">#</a></h3>
+<section id="im-core-losses">
+<span id="core-losses"></span><h3>Core Losses<a class="headerlink" href="#im-core-losses" title="Link to this heading">#</a></h3>
 <p>Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance <span class="math notranslate nohighlight">\(\Gc\)</span>, connected in parallel with the magnetizing inductance <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id42" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>]</span>. In this case, the current given by <a class="reference internal" href="#equation-im-currents">(2)</a> is the current <span class="math notranslate nohighlight">\(\isp\)</span> flowing into the magnetic circuit and the stator current becomes</p>
 <div class="math notranslate nohighlight" id="equation-im-core-loss">
 <span class="eqno">(5)<a class="headerlink" href="#equation-im-core-loss" title="Link to this equation">#</a></span>\[    \is = \isp + \Gc(\us - \Rs\is) = \frac{\isp + \Gc\us}{1 + \Gc\Rs}\]</div>
@@ -657,8 +657,8 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Substituting <span class="math notranslate nohighlight">\(\omegar = \omegarb\)</span> in <a class="reference internal" href="#equation-im-flux-torque">(9)</a> yields the breakdown condition <span class="math notranslate nohighlight">\(\IM\{\psis\psir^*\} = \RE\{\psis\psir^*\}\)</span>. Applying this condition in <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a> and assuming the steady state results in the breakdown torque expression</p>
-<div class="amsmath math notranslate nohighlight" id="equation-c4683803-3724-4f5c-8c89-8e03f13b28ce">
-<span class="eqno">(11)<a class="headerlink" href="#equation-c4683803-3724-4f5c-8c89-8e03f13b28ce" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-4e040d0c-d4e9-46eb-8b23-79e53f683dc8">
+<span class="eqno">(11)<a class="headerlink" href="#equation-4e040d0c-d4e9-46eb-8b23-79e53f683dc8" title="Permalink to this equation">#</a></span>\[\begin{equation}
     \tau_\mathrm{b} = \frac{3\np}{2} \frac{\abspsis^2}{2 L_\ell}
 \end{equation}\]</div>
 </div>
@@ -712,8 +712,8 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-model">Induction Machine Γ Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-losses">Core Losses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine">Induction Machine Γ Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#im-core-losses">Core Losses</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-inverse-model">Induction Machine Inverse-Γ Model</a><ul class="nav section-nav flex-column">

@@ -516,13 +516,13 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machine-model">Synchronous Machine Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machine">Synchronous Machine Model</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-magnetic-model">Linear Magnetic Model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#saturation-models">Saturation Models</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-losses">Core Losses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sm-magnetic-saturation">Saturation Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sm-core-losses">Core Losses</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mtpv-and-mtpa-conditions">MTPV and MTPA Conditions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mtpa-mtpv">MTPV and MTPA Conditions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
 </ul>
             </nav>
@@ -538,8 +538,8 @@
   <section class="tex2jax_ignore mathjax_ignore" id="synchronous-machines">
 <h1>Synchronous Machines<a class="headerlink" href="#synchronous-machines" title="Link to this heading">#</a></h1>
 <p>This document describes continuous-time synchronous machine models of the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#module-motulator.drive.model" title="motulator.drive.model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.drive.model</span></code></a> package.</p>
-<section id="synchronous-machine-model">
-<span id="synchronous-machine"></span><h2>Synchronous Machine Model<a class="headerlink" href="#synchronous-machine-model" title="Link to this heading">#</a></h2>
+<section id="synchronous-machine">
+<span id="synchronous-machine-model"></span><h2>Synchronous Machine Model<a class="headerlink" href="#synchronous-machine" title="Link to this heading">#</a></h2>
 <p><a class="reference internal" href="#fig-sm"><span class="std std-ref">Figure 1</span></a> shows the space-vector equivalent circuit model of a synchronous machine in rotor coordinates. The model is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine" title="motulator.drive.model.SynchronousMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SynchronousMachine</span></code></a> class. The synchronous machine model can be parametrized to represent permanent-magnet synchronous machines (PMSMs) and synchronous reluctance machines (SyRMs).</p>
 <figure class="align-center" id="fig-sm">
 <a class="only-light reference internal image-reference" href="../../_images/sm.svg"><img alt="Equivalent circuit model of a synchronous machine" class="only-light" src="../../_images/sm.svg" style="width: 100%;" />
@@ -606,8 +606,8 @@
 <span class="eqno">(4)<a class="headerlink" href="#equation-sm-current-linear" title="Link to this equation">#</a></span>\[    \is = \frac{\psid - \psif}{\Ld} + \jj\frac{\psiq}{\Lq}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\Ld\)</span> is the d-axis inductance, <span class="math notranslate nohighlight">\(\Lq\)</span> is the q-axis inductance, and <span class="math notranslate nohighlight">\(\psif\)</span> is the permanent-magnet (PM) flux linkage. The model represents a surface-PMSM with <span class="math notranslate nohighlight">\(\Ld = \Lq\)</span> and SyRM with <span class="math notranslate nohighlight">\(\psif = 0\)</span>. The linear magnetic model <a class="reference internal" href="#equation-sm-current-linear">(4)</a> can be inverted, i.e., the flux linkage is <span class="math notranslate nohighlight">\(\psis = \psif + \Ld\id + \jj\Lq\iq\)</span>.</p>
 </section>
-<section id="saturation-models">
-<span id="sm-magnetic-saturation"></span><h3>Saturation Models<a class="headerlink" href="#saturation-models" title="Link to this heading">#</a></h3>
+<section id="sm-magnetic-saturation">
+<span id="saturation-models"></span><h3>Saturation Models<a class="headerlink" href="#sm-magnetic-saturation" title="Link to this heading">#</a></h3>
 <p>Nonlinear magnetic models are parametrized using the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedSynchronousMachinePars" title="motulator.drive.model.SaturatedSynchronousMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SaturatedSynchronousMachinePars</span></code></a> class. The term <em>magnetic model</em> refers to the complete magnetic characterization of the machine. This characterization can be represented in two equivalent ways: as current maps or as flux linkage maps. These two representations are mathematically inverse to each other but describe the same physical relationship.</p>
 <p>The magnetic model can be obtained through experimental measurements <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id2" title="Armando, Bojoi, Guglielmi, Pellegrino, and Pastorelli. Experimental identification of the magnetic model of synchronous machines. IEEE Trans. Ind. Appl., 2013. doi:10.1109/TIA.2013.2258876.">Armando <em>et al.</em>, 2013</a>]</span> or finite-element method analysis. Regardless of the source, these models can be implemented as the current map <span class="math notranslate nohighlight">\(\is = \isfcn(\psis)\)</span> or as its inverse, the flux linkage map</p>
 <div class="math notranslate nohighlight" id="equation-sm-flux-linkage-map">
@@ -617,8 +617,8 @@
 <p>Methods for manipulating and plotting the magnetic models are provided in the classes <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel" title="motulator.drive.utils.MagneticModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.utils.MagneticModel</span></code></a>, <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_map" title="motulator.drive.utils.plot_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.plot_map()</span></code></a>, and <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.plot_flux_vs_current" title="motulator.drive.utils.plot_flux_vs_current"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.plot_flux_vs_current()</span></code></a>. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the <a class="reference internal" href="../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.invert" title="motulator.drive.utils.MagneticModel.invert"><code class="xref py py-func docutils literal notranslate"><span class="pre">motulator.drive.utils.MagneticModel.invert()</span></code></a> method.</p>
 <p>See also the examples <a class="reference internal" href="../../drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc.html"><span class="doc">5.6-kW saturated PM-SyRM, FVC</span></a>, <a class="reference internal" href="../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html"><span class="doc">6.7-kW saturated SyRM, FVC</span></a>, and <a class="reference internal" href="../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html"><span class="doc">5.1-kW saturated PM-SyRM, CVC</span></a>.</p>
 </section>
-<section id="core-losses">
-<span id="sm-core-losses"></span><h3>Core Losses<a class="headerlink" href="#core-losses" title="Link to this heading">#</a></h3>
+<section id="sm-core-losses">
+<span id="core-losses"></span><h3>Core Losses<a class="headerlink" href="#sm-core-losses" title="Link to this heading">#</a></h3>
 <p>Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance <span class="math notranslate nohighlight">\(\Gc\)</span>, connected in parallel with the magnetizing branch, similarly as in the <a class="reference internal" href="induction_machine.html#im-core-losses"><span class="std std-ref">Γ model</span></a> of induction machines <span class="bibtex-citation" id="id7">[<a class="reference internal" href="../../bibliography.html#id42" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>]</span>. In this case, the current given by <a class="reference internal" href="#equation-sm-current">(2)</a> is the current <span class="math notranslate nohighlight">\(\isp\)</span> flowing into the magnetic circuit and the stator current becomes</p>
 <div class="math notranslate nohighlight" id="equation-sm-core-loss">
 <span class="eqno">(6)<a class="headerlink" href="#equation-sm-core-loss" title="Link to this equation">#</a></span>\[    \is = \isp + \Gc(\us - \Rs\is) = \frac{\isp + \Gc\us}{1 + \Gc\Rs}\]</div>
@@ -629,8 +629,8 @@
 </div>
 </section>
 </section>
-<section id="mtpv-and-mtpa-conditions">
-<span id="mtpa-mtpv"></span><h2>MTPV and MTPA Conditions<a class="headerlink" href="#mtpv-and-mtpa-conditions" title="Link to this heading">#</a></h2>
+<section id="mtpa-mtpv">
+<span id="mtpv-and-mtpa-conditions"></span><h2>MTPV and MTPA Conditions<a class="headerlink" href="#mtpa-mtpv" title="Link to this heading">#</a></h2>
 <p>The maximum-torque-per-volt (MTPV) and maximum-torque-per-ampere (MTPA) conditions for saturable machines can be compactly presented by means of the auxiliary current and flux vectors <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../../bibliography.html#id52" title="Varatharajan, Pellegrino, and Armando. Direct flux vector control of synchronous motor drives: accurate decoupled control with online adaptive maximum torque per ampere and maximum torque per volts evaluation. IEEE Trans. Ind. Electron., 2022. doi:10.1109/TIE.2021.3060665.">Varatharajan <em>et al.</em>, 2022</a>]</span>. In addition to optimal reference generation, these vectors are useful in flux-vector control and sensorless observers <span class="bibtex-citation" id="id9">[<a class="reference internal" href="../../bibliography.html#id49" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span>.</p>
 <p>Consider the MTPV condition as an example. Applying the flux linkage vector <span class="math notranslate nohighlight">\(\psis = \abspsis \e^{\jj\delta}\)</span> with a given magnitude <span class="math notranslate nohighlight">\(\abspsis\)</span> in the torque expression <a class="reference internal" href="#equation-sm-torque">(3)</a>, the MTPV condition is obtained by setting <span class="math notranslate nohighlight">\(\partial \tauM/\partial \delta = 0\)</span>. This results in</p>
 <div class="math notranslate nohighlight" id="equation-sm-mtpv">
@@ -709,13 +709,13 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machine-model">Synchronous Machine Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#synchronous-machine">Synchronous Machine Model</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-magnetic-model">Linear Magnetic Model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#saturation-models">Saturation Models</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#core-losses">Core Losses</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sm-magnetic-saturation">Saturation Models</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sm-core-losses">Core Losses</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mtpv-and-mtpa-conditions">MTPV and MTPA Conditions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mtpa-mtpv">MTPV and MTPA Conditions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
 </ul>
   </nav></div>

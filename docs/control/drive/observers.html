@@ -520,9 +520,9 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-induction-machines">For Induction Machines</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-model">Machine Model</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-observer">Flux Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-analysis-and-selection">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#im-obs-analysis">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#sensored-drives">Sensored Drives</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#sensorless-drives">Sensorless Drives</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#im-obs-sensorless">Sensorless Drives</a></li>
 </ul>
 </li>
 </ul>
@@ -616,8 +616,8 @@
 <p class="admonition-title">Note</p>
 <p>Real-valued column vectors and the corresponding <span class="math notranslate nohighlight">\(2\times 2\)</span> gain matrix were used in <span class="bibtex-citation" id="id7">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Harnefors, and Luomi. Reduced-order flux observers with stator-resistance adaptation for speed-sensorless induction motor drives. IEEE Trans. Power Electron., 2010. doi:10.1109/TPEL.2009.2039650.">Hinkkanen <em>et al.</em>, 2010</a>]</span>. The complex form in <a class="reference internal" href="#equation-im-obs">(4)</a> has the same degrees of freedom.</p>
 </div>
-<section id="gain-analysis-and-selection">
-<span id="im-obs-analysis"></span><h4>Gain Analysis and Selection<a class="headerlink" href="#gain-analysis-and-selection" title="Link to this heading">#</a></h4>
+<section id="im-obs-analysis">
+<span id="gain-analysis-and-selection"></span><h4>Gain Analysis and Selection<a class="headerlink" href="#im-obs-analysis" title="Link to this heading">#</a></h4>
 <p>The estimation-error dynamics are obtained by subtracting <a class="reference internal" href="#equation-im-obs">(4)</a> from <a class="reference internal" href="#equation-im-model-obs">(3)</a>. The resulting system is linearized for analysis and gain selection purposes. Assuming accurate parameter estimates, linearized estimation-error dynamics are <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Harnefors, and Luomi. Reduced-order flux observers with stator-resistance adaptation for speed-sensorless induction motor drives. IEEE Trans. Power Electron., 2010. doi:10.1109/TPEL.2009.2039650.">Hinkkanen <em>et al.</em>, 2010</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-tilde-psis">
 <span class="eqno">(7)<a class="headerlink" href="#equation-tilde-psis" title="Link to this equation">#</a></span>\[    \frac{\D \Delta\tildepsis}{\D t} = -\koa \Delta \eo - \kob \Delta \eo^* - \jj\omegaso \Delta\tildepsis\]</div>
@@ -640,8 +640,8 @@
 <p>As a special case, <span class="math notranslate nohighlight">\(\koa = 0\)</span> yields the voltage model. As another special case, the current model is obtained choosing <span class="math notranslate nohighlight">\(\koa = 1\)</span>.</p>
 </div>
 </section>
-<section id="sensorless-drives">
-<span id="im-obs-sensorless"></span><h5>Sensorless Drives<a class="headerlink" href="#sensorless-drives" title="Link to this heading">#</a></h5>
+<section id="im-obs-sensorless">
+<span id="sensorless-drives"></span><h5>Sensorless Drives<a class="headerlink" href="#im-obs-sensorless" title="Link to this heading">#</a></h5>
 <p>In sensorless drives, the rotor speed estimate <span class="math notranslate nohighlight">\(\hatomegam\)</span> is canceled out from the observer equations by choosing <span class="bibtex-citation" id="id10">[<a class="reference internal" href="../../bibliography.html#id21" title="Hinkkanen, Harnefors, and Luomi. Reduced-order flux observers with stator-resistance adaptation for speed-sensorless induction motor drives. IEEE Trans. Power Electron., 2010. doi:10.1109/TPEL.2009.2039650.">Hinkkanen <em>et al.</em>, 2010</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-inherently">
 <span class="eqno">(11)<a class="headerlink" href="#equation-inherently" title="Link to this equation">#</a></span>\[    \kob = \frac{\hatpsiR}{\hatpsiR^*} \koa\]</div>
@@ -870,9 +870,9 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#for-induction-machines">For Induction Machines</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#machine-model">Machine Model</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-observer">Flux Observer</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#gain-analysis-and-selection">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#im-obs-analysis">Gain Analysis and Selection</a><ul class="nav section-nav flex-column">
 <li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#sensored-drives">Sensored Drives</a></li>
-<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#sensorless-drives">Sensorless Drives</a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#im-obs-sensorless">Sensorless Drives</a></li>
 </ul>
 </li>
 </ul>
