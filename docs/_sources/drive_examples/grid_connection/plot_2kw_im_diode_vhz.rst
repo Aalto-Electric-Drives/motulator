@@ -227,7 +227,7 @@ the peak of the line-to-line grid voltage.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-119
+.. GENERATED FROM PYTHON SOURCE LINES 104-120
 
 .. note::
    The DC link of this particular example is unstable at 1-p.u. speed at the rated
@@ -235,9 +235,10 @@ the peak of the line-to-line grid voltage.
    After the speed has settled, an oscillation at about 150 Hz, half the frequency of
    the six-pulse ripple, grows in the DC-bus voltage. It is seen above as the unequal
    current pulses of the diode bridge. The oscillation does not grow without bound,
-   but it settles into a limit cycle of about 77 V peak to peak at about 1.5 s. With
-   twice the DC-bus capacitance, the oscillation does not occur, and only the
-   six-pulse ripple remains. For analysis, see e.g., [#Hin2007]_.
+   but it settles into a limit cycle of about 77 V peak to peak at about 1.5 s,
+   slightly after the end of this simulation. With twice the DC-bus capacitance, the
+   oscillation does not occur, and only the six-pulse ripple remains. For analysis,
+   see e.g., [#Hin2007]_.
 
 .. rubric:: References
 
@@ -248,7 +249,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.197 seconds)
+   **Total running time of the script:** (0 minutes 16.276 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:

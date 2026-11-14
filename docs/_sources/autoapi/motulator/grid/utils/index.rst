@@ -35,7 +35,6 @@ Classes
    motulator.grid.utils.BaseValues
    motulator.grid.utils.NominalValues
    motulator.grid.utils.SequenceGenerator
-   motulator.grid.utils.Step
 
 
 Functions
@@ -45,7 +44,6 @@ Functions
 
    motulator.grid.utils.plot_control_signals
    motulator.grid.utils.plot_grid_waveforms
-   motulator.grid.utils.plot_voltage_vector
 
 
 Package Contents
@@ -233,35 +231,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: Step(step_time, step_value, initial_value = 0.0)
-
-   
-   Step function.
-
-   :param step_time: Time of the step.
-   :type step_time: float
-   :param step_value: Value of the step.
-   :type step_value: float
-   :param initial_value: Initial value, defaults to 0.
-   :type initial_value: float, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
 .. py:function:: plot_control_signals(res, base = None, t_lims = None, t_ticks = None, y_lims = None, y_ticks = None, latex = False, save_path = None, **savefig_kwargs)
 
    
@@ -334,37 +303,6 @@ Package Contents
    :param plot_pcc_voltage: If True, plot the phase voltage waveforms at the point of common coupling (PCC).
                             Otherwise, plot the grid voltage waveforms, defaults to True.
    :type plot_pcc_voltage: bool, optional
-   :param save_path: Path to save the figure. If None, the figure is not saved.
-   :type save_path: str | Path, optional
-   :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:function:: plot_voltage_vector(res, base = None, save_path = None, **savefig_kwargs)
-
-   
-   Plot locus of the grid voltage vector.
-
-   :param res: Simulation results.
-   :type res: ~motulator.common.model.SimulationResults
-   :param base: Base values for scaling the waveforms. If not given, the waveforms are plotted
-                in SI units.
-   :type base: BaseValues, optional
    :param save_path: Path to save the figure. If None, the figure is not saved.
    :type save_path: str | Path, optional
    :param \*\*savefig_kwargs: Additional keyword arguments passed to plt.savefig().

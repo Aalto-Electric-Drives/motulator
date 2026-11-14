@@ -107,9 +107,10 @@ plt.show()
 #    After the speed has settled, an oscillation at about 150 Hz, half the frequency of
 #    the six-pulse ripple, grows in the DC-bus voltage. It is seen above as the unequal
 #    current pulses of the diode bridge. The oscillation does not grow without bound,
-#    but it settles into a limit cycle of about 77 V peak to peak at about 1.5 s. With
-#    twice the DC-bus capacitance, the oscillation does not occur, and only the
-#    six-pulse ripple remains. For analysis, see e.g., [#Hin2007]_.
+#    but it settles into a limit cycle of about 77 V peak to peak at about 1.5 s,
+#    slightly after the end of this simulation. With twice the DC-bus capacitance, the
+#    oscillation does not occur, and only the six-pulse ripple remains. For analysis,
+#    see e.g., [#Hin2007]_.
 #
 # .. rubric:: References
 #

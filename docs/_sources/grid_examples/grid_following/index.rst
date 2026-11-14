@@ -38,23 +38,6 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example extends /grid_examples/grid_following/plot_10kva_gfl by modeling the DC-bus dynamics. The control system additionally includes a DC-bus voltage controller.">
-
-.. only:: html
-
-  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png
-    :alt:
-
-  :doc:`/grid_examples/grid_following/plot_10kva_dc_bus_gfl`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">10-kVA, DC bus, GFL</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 10-kVA grid-following (GFL) converter connected to an L filter and a strong grid. The control system includes a phase-locked loop (PLL) to synchronize with the grid, a current reference generator, and a PI-based current controller.">
 
 .. only:: html
@@ -67,6 +50,23 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">10-kVA, GFL</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example extends /grid_examples/grid_following/plot_10kva_gfl by modeling the DC-bus dynamics. The control system additionally includes a DC-bus voltage controller.">
+
+.. only:: html
+
+  .. image:: /grid_examples/grid_following/images/thumb/sphx_glr_plot_10kva_dc_bus_gfl_thumb.png
+    :alt:
+
+  :doc:`/grid_examples/grid_following/plot_10kva_dc_bus_gfl`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">10-kVA, DC bus, GFL</div>
     </div>
 
 
@@ -98,7 +98,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
    :hidden:
 
    /grid_examples/grid_following/plot_10kva_lcl_gfl
-   /grid_examples/grid_following/plot_10kva_dc_bus_gfl
    /grid_examples/grid_following/plot_10kva_gfl
+   /grid_examples/grid_following/plot_10kva_dc_bus_gfl
    /grid_examples/grid_following/plot_10kva_startup_gfl
 

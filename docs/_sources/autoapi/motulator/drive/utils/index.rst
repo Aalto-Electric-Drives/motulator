@@ -41,7 +41,6 @@ Classes
    motulator.drive.utils.SaturationModelPMSyRM
    motulator.drive.utils.SaturationModelSyRM
    motulator.drive.utils.SequenceGenerator
-   motulator.drive.utils.Step
 
 
 Functions
@@ -1010,35 +1009,6 @@ Package Contents
    :type values: ndarray
    :param periodic: Enables periodicity, defaults to False.
    :type periodic: bool, optional
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-.. py:class:: Step(step_time, step_value, initial_value = 0.0)
-
-   
-   Step function.
-
-   :param step_time: Time of the step.
-   :type step_time: float
-   :param step_value: Value of the step.
-   :type step_value: float
-   :param initial_value: Initial value, defaults to 0.
-   :type initial_value: float, optional
 
 
 

@@ -472,6 +472,7 @@ Package Contents
    .. py:property:: blocked
       :type: bool
 
+
       
       Only the diodes conduct.
 
@@ -544,6 +545,7 @@ Package Contents
 
    .. py:property:: margin
       :type: float
+
 
       
       Margin of the diode states, zero at their transition.
@@ -862,6 +864,7 @@ Package Contents
    .. py:property:: blocked
       :type: bool
 
+
       
       Only the diodes conduct, as the bridge has no switches.
 
@@ -988,6 +991,7 @@ Package Contents
 
    .. py:property:: margin
       :type: float
+
 
       
       Margin of the diode states at the latest evaluation, see `diode_margin`.
@@ -1782,6 +1786,7 @@ Package Contents
    .. py:property:: solver
       :type: dict[str, Any]
 
+
       
       Return the solver configuration.
 
@@ -2395,6 +2400,7 @@ Package Contents
 
    .. py:property:: blocked
       :type: bool
+
 
       
       Only the diodes conduct while the gates are blocked.

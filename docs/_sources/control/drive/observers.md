@@ -6,7 +6,7 @@ Observers estimate the internal state of electrical machines. We first present a
 
 The rotor speed observer described below is available in the {class}`motulator.drive.control.im.SpeedObserver` and {class}`motulator.drive.control.sm.SpeedObserver` classes for induction machines and synchronous machines, respectively.
 
-The rotor speed can be estimated (or filtered in sensored drives) using a disturbance observer structure {cite}`Fra1997`. The starting point is the mechanical model \[see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`\], in which the load torque is considered as a quasi-constant disturbance. The resulting speed observer is
+The rotor speed can be estimated (or filtered in sensored drives) using a disturbance observer structure {cite}`Fra1998`. The starting point is the mechanical model \[see {eq}`mech_stiff` in {doc}`/model/drive/mechanics`\], in which the load torque is considered as a quasi-constant disturbance. The resulting speed observer is
 
 ```{math}
 ---

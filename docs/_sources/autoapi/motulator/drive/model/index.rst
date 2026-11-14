@@ -100,6 +100,7 @@ Package Contents
    .. py:property:: cage
       :type: CageImpedance
 
+
       
       Impedance of the rotor cage, which the machine model reads when created.
 
@@ -1237,6 +1238,7 @@ Package Contents
    .. py:property:: cage
       :type: CageImpedance
 
+
       
       Impedance of the rotor cage, i.e., the rotor resistance.
 
@@ -1407,6 +1409,7 @@ Package Contents
 
    .. py:property:: cage
       :type: CageImpedance
+
 
       
       Impedance of the rotor cage.
@@ -1877,6 +1880,7 @@ Package Contents
 
    .. py:property:: cage
       :type: CageImpedance
+
 
       
       Impedance of the rotor cage.
@@ -2419,6 +2423,7 @@ Package Contents
    .. py:property:: solver
       :type: dict[str, Any]
 
+
       
       Return the solver configuration.
 
@@ -2500,6 +2505,7 @@ Package Contents
 
    .. py:property:: cage
       :type: CageImpedance
+
 
       
       Impedance of the rotor cage.
@@ -3347,6 +3353,7 @@ Package Contents
 
    .. py:property:: blocked
       :type: bool
+
 
       
       Only the diodes conduct while the gates are blocked.

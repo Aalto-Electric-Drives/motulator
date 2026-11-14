@@ -162,14 +162,17 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 Plot the actual and estimated values for flux linkages.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-87
+.. GENERATED FROM PYTHON SOURCE LINES 66-90
 
 .. code-block:: Python
 
 
     plt.figure()
     plt.plot(
-        res.ctrl.t, res.ctrl.ref.psi_s / base.psi, "--", label=r"$\psi_\mathrm{s,ref}$"
+        res.ctrl.t,
+        res.ctrl.ref.psi_s / base.psi,
+        "--",
+        label=r"$\psi_\mathrm{s}^\mathrm{ref}$",
     )
     plt.plot(
         res.mdl.t, abs(res.mdl.machine.psi_s_dq) / base.psi, label=r"$\psi_\mathrm{s}$"
@@ -199,7 +202,7 @@ Plot the actual and estimated values for flux linkages.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-93
+.. GENERATED FROM PYTHON SOURCE LINES 91-96
 
 .. rubric:: References
 
@@ -210,7 +213,7 @@ Plot the actual and estimated values for flux linkages.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.116 seconds)
+   **Total running time of the script:** (0 minutes 2.812 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py:

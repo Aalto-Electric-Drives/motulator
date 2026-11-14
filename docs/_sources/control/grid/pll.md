@@ -1,6 +1,6 @@
 # Phase-Locked Loop
 
-A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid {cite}`Kau1997`. Here, we represent the PLL using the disturbance observer structure {cite}`Fra1997`, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see {cite}`Nur2024`.
+A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid {cite}`Kau1997`. Here, we represent the PLL using the disturbance observer structure {cite}`Fra1998`, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see {cite}`Nur2024`.
 
 ## Disturbance Model
 

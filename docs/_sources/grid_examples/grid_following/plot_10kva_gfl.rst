@@ -129,7 +129,7 @@ Set the time-dependent reference and disturbance signals.
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-60
+.. GENERATED FROM PYTHON SOURCE LINES 51-56
 
 .. code-block:: Python
 
@@ -138,10 +138,6 @@ Create the simulation object, simulate, and plot the results in per-unit values.
     res = sim.simulate(t_stop=0.08)
     utils.plot_control_signals(res, base)
     utils.plot_grid_waveforms(res, base, plot_pcc_voltage=False)
-
-
-    # Uncomment line below to plot locus of the grid voltage space vector
-    # utils.plot_voltage_vector(res, base)
 
 
 
@@ -169,7 +165,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.684 seconds)
+   **Total running time of the script:** (0 minutes 0.476 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_gfl.py:

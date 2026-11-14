@@ -1029,6 +1029,7 @@ Module Contents
    .. py:property:: cage
       :type: CageImpedance
 
+
       
       Impedance of the rotor cage, i.e., the rotor resistance.
 
@@ -1199,6 +1200,7 @@ Module Contents
 
    .. py:property:: cage
       :type: CageImpedance
+
 
       
       Impedance of the rotor cage.
@@ -2093,6 +2095,7 @@ Module Contents
 
    .. py:property:: w_M
       :type: float
+
 
       
       Mechanical angular rotor speed estimate (rad/s), also an initial value.

@@ -169,7 +169,7 @@ the converter, the intervals with blocked gates shaded. The DC current is negati
 while the stator current decays through the diodes. The speed estimate holds while
 the machine coasts and catches the actual speed after the release.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-96
+.. GENERATED FROM PYTHON SOURCE LINES 73-98
 
 .. code-block:: Python
 
@@ -183,9 +183,11 @@ the machine coasts and catches the actual speed after the release.
     for ax in (ax1, ax2, ax3):
         for k_off, k_on in zip(edges[::2], edges[1::2], strict=True):
             ax.axvspan(t_ctrl[k_off], t_ctrl[min(k_on, len(t_ctrl) - 1)], color="0.9")
-    ax1.plot(res.mdl.t, w_M, label=r"$\omega_\mathrm{M}$")
-    ax1.plot(t_ctrl, res.ctrl.fbk.w_M / base.w_M, label=r"$\hat{\omega}_\mathrm{M}$")
-    ax1.plot(t_ctrl, res.ctrl.ref.w_M / base.w_M, "--", label=r"$\omega_\mathrm{M,ref}$")
+    ax1.plot(res.mdl.t, w_M, label=r"$\omega_\mathrm{m}$")
+    ax1.plot(t_ctrl, res.ctrl.fbk.w_M / base.w_M, label=r"$\hat{\omega}_\mathrm{m}$")
+    ax1.plot(
+        t_ctrl, res.ctrl.ref.w_M / base.w_M, "--", label=r"$\omega_\mathrm{m}^\mathrm{ref}$"
+    )
     ax1.set_ylabel("Speed (p.u.)")
     ax1.legend()
     ax2.plot(res.mdl.t, i_s)
@@ -208,7 +210,7 @@ the machine coasts and catches the actual speed after the release.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-102
+.. GENERATED FROM PYTHON SOURCE LINES 99-104
 
 .. rubric:: References
 
@@ -219,7 +221,7 @@ the machine coasts and catches the actual speed after the release.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.388 seconds)
+   **Total running time of the script:** (0 minutes 4.880 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_blocked_cvc.py:

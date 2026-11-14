@@ -72,23 +72,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a saturated 5.1-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The flux maps of this example machine, known as THOR, are from the SyR-e project:">
 
 .. only:: html
@@ -101,6 +84,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">5.1-kW saturated PM-SyRM, CVC</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_cvc_adapt_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, CVC, PM-flux adaptation</div>
     </div>
 
 
@@ -123,23 +123,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are blocked before the start and during coasting. The converter output voltage is not measured. While the gates are blocked, the control system runs in standby: its observer runs on its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its current controller computes its output for zero torque. The gates are released at 0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked again: the stator current decays through the diodes within a millisecond, after which the loaded machine coasts at open circuit, since its voltage is below the DC-bus voltage, and decelerates. At 0.8 s, the gates are released, and the control system catches the rotating machine with a flying start: it initializes its observer from the current response to a zero-voltage period (cf. [#Tan2009]_) and its current controller from the resulting back-EMF, after which the drive returns to the speed reference.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_blocked_cvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, blocked gates, CVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example compares the continuous-time and direct discrete-time designs of the current controller in sensorless current-vector control of a 2.2-kW induction machine (IM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·700 rad/s, which is high compared with the sampling frequency.">
 
 .. only:: html
@@ -152,6 +135,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW IM, discrete-time current control</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are blocked before the start and during coasting. The converter output voltage is not measured. While the gates are blocked, the control system runs in standby: its observer runs on its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its current controller computes its output for zero torque. The gates are released at 0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked again: the stator current decays through the diodes within a millisecond, after which the loaded machine coasts at open circuit, since its voltage is below the DC-bus voltage, and decelerates. At 0.8 s, the gates are released, and the control system catches the rotating machine with a flying start: it initializes its observer from the current response to a zero-voltage period (cf. [#Tan2009]_) and its current controller from the resulting back-EMF, after which the drive returns to the speed reference.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_blocked_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, blocked gates, CVC</div>
     </div>
 
 
@@ -202,11 +202,11 @@ These examples are for current-vector control (CVC) of induction and synchronous
    /drive_examples/current_vector/plot_7kw_syrm_cvc
    /drive_examples/current_vector/plot_2kw_im_cvc_tq
    /drive_examples/current_vector/plot_2kw_im_sat_cvc
-   /drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt
    /drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc
+   /drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt
    /drive_examples/current_vector/plot_2kw_im_dead_time_cvc
-   /drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc
    /drive_examples/current_vector/plot_2kw_im_cvc_discrete
+   /drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc
    /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc
    /drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete
 

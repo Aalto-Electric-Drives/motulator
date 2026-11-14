@@ -2077,30 +2077,6 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process(ts)
-
-      
-      Post-process controller time series.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: SpeedController(J, alpha_s, alpha_i = None, tau_M_max = inf)
 
    Bases: :py:obj:`motulator.common.control._controllers.PIController`
@@ -2274,6 +2250,7 @@ Module Contents
    .. py:property:: theta_m
       :type: float
 
+
       
       Electrical rotor angle estimate (rad).
 
@@ -2322,6 +2299,7 @@ Module Contents
 
    .. py:property:: w_M
       :type: float
+
 
       
       Mechanical angular rotor speed estimate (rad/s), also an initial value.

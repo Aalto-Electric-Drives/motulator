@@ -390,7 +390,7 @@ Package Contents
 
    This controller regulates both the DC-bus voltage and the converter output voltage
    magnitude [#Mou2025]_, extending the disturbance-observer-based grid-forming control
-   [#Nur2024b]_. The disturbance observer estimates the quasi-static converter voltage
+   [#Nur2024]_. The disturbance observer estimates the quasi-static converter voltage
    as in `ObserverBasedGridFormingController`, and a second observer estimates the
    disturbance power, i.e., the external power fed to the DC bus minus the grid power
    and the resistive losses, from the energy balance of the DC-bus capacitor and the
@@ -415,10 +415,6 @@ Package Contents
    .. [#Mou2025] Mourouvin, Nurminen, Hinkkanen, Routimo, "Direct DC-bus control for
       grid-forming converters: Toward the concept of dual-voltage-forming converters,"
       IEEE Trans. Power Electron., 2025, https://doi.org/10.1109/TPEL.2025.3537332
-
-   .. [#Nur2024b] Nurminen, Mourouvin, Hinkkanen, Kukkola, "Multifunctional
-      grid-forming converter control based on a disturbance observer," IEEE Trans.
-      Power Electron., 2024, https://doi.org/10.1109/TPEL.2024.3433503
 
 
 
@@ -1879,7 +1875,7 @@ Package Contents
    Sequence-separated disturbance-observer-based grid-forming controller.
 
    This implements the grid-forming mode of the control method described in
-   [#Maa2026b]_, with transparent current control. The positive-sequence active power
+   [#Maa2026]_, with transparent current control. The positive-sequence active power
    and converter-voltage magnitude are controlled, while the negative-sequence
    converter voltage is suppressed. The disturbance observer estimates the positive-
    and negative-sequence grid voltages. The active-power reference is limited to a
@@ -1899,12 +1895,6 @@ Package Contents
    that of the negative sequence, which rotates in the opposite direction, is retarded
    by the same angle. Therefore, the control system does not advance the angle of the
    voltage reference (`k_comp = 0`).
-
-   .. rubric:: References
-
-   .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
-      "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
-      https://arxiv.org/abs/2608.11857
 
 
 
