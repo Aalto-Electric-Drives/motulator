@@ -43,7 +43,7 @@ class CurrentController(ComplexPIController):
     References
     ----------
     .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+       saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
        https://doi.org/10.1109/TIA.2019.2919258
 
     """

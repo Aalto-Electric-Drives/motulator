@@ -101,5 +101,5 @@ utils.plot(res, base)
 # .. rubric:: References
 #
 # .. [#Sar2026] Sarén, Hartikainen, Piippo, Hinkkanen, "Decoupled online feedforward
-#    generation of optimal references for saturated synchronous machine drives,
-#    2026, https://arxiv.org/abs/2607.08528
+#    generation of optimal references for saturated synchronous machine drives," 2026,
+#    https://arxiv.org/abs/2607.08528

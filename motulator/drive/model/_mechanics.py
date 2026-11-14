@@ -93,7 +93,7 @@ class MechanicalSystem(Subsystem):
         return [d_theta_M, d_w_M]
 
     def create_time_series(self, t: np.ndarray) -> "MechanicalSystemTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return MechanicalSystemTimeSeries(t, self)
 
 
@@ -225,7 +225,7 @@ class TwoMassMechanicalSystem(Subsystem):
         return [d_theta_M, d_w_M, d_w_L, d_theta_ML]
 
     def create_time_series(self, t: np.ndarray) -> "TwoMassMechanicalSystemTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return TwoMassMechanicalSystemTimeSeries(t, self)
 
 
@@ -320,7 +320,7 @@ class ExternalRotorSpeed(Subsystem):
         return [d_theta_M]
 
     def create_time_series(self, t: np.ndarray) -> "ExternalRotorSpeedTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return ExternalRotorSpeedTimeSeries(t, self)
 
 

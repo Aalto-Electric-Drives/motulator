@@ -137,7 +137,7 @@ class Sensor(Subsystem):
         return y
 
     def create_time_series(self, t: np.ndarray) -> "SensorTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return SensorTimeSeries(t, self)
 
 

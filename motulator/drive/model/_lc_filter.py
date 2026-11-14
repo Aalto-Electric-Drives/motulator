@@ -78,7 +78,7 @@ class LCFilter(Subsystem):
         return ACPort(state.i_c_ab, e, np.eye(2) / self.L_f)
 
     def create_time_series(self, t: np.ndarray) -> "LCFilterTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return LCFilterTimeSeries(t, self)
 
 

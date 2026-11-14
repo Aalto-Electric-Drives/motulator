@@ -198,7 +198,7 @@ class DiscreteComplexController:
     Direct discrete-time 2DOF complex-vector controller.
 
     This implements a 2DOF complex-vector controller designed directly in discrete time
-    [#Awa2019]_. The controlled system is an integrator in coordinates rotating at the
+    [#Awa2019a]_. The controlled system is an integrator in coordinates rotating at the
     angular speed `w_c`. Its hold-equivalent model, including the computational delay of
     one sampling period, is::
 
@@ -221,8 +221,8 @@ class DiscreteComplexController:
 
     References
     ----------
-    .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
        https://doi.org/10.1109/TIA.2019.2919258
 
     """
@@ -239,7 +239,7 @@ class DiscreteComplexController:
         self._u: complex = 0j
 
     def _gains(self, w_c: float) -> tuple[complex, complex, complex, complex]:
-        """Gains of the complex-vector design, see (20) and (22) in [#Awa2019]_."""
+        """Gains of the complex-vector design, see (20) and (22) in [#Awa2019a]_."""
         T_s, beta = self.T_s, self.beta
         Phi = exp(-1j * w_c * T_s)  # Rotation of the coordinates over T_s
         k_t = (1 - beta) / (Phi**2 * T_s)
