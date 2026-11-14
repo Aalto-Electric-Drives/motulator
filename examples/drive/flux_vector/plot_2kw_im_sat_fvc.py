@@ -23,8 +23,8 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 
 # %%
-# Configure the system model. The Γ-equivalent machine model with main-flux saturation
-# is used. The parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_.
+# Configure the system model. The Γ model with main-flux saturation is used. The
+# parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_.
 
 par = model.InductionMachinePars(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=lambda psi: 0.34 / (1 + (0.84 * psi) ** 7)

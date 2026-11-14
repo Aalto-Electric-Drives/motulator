@@ -102,7 +102,7 @@ class ThreePhaseSource(Subsystem):
         return [get_value(self.w_g, t)]
 
     def create_time_series(self, t: np.ndarray) -> "ThreePhaseSourceTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return ThreePhaseSourceTimeSeries(t, self)
 
 

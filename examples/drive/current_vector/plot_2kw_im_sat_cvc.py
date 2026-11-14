@@ -3,7 +3,7 @@
 ========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive. The magnetic saturation is included in the machine model, while the
+machine (IM) drive. The magnetic saturation is included in the machine model, while the
 control system uses constant parameters.
 
 """
@@ -31,7 +31,7 @@ def L_s(psi: float, L_su: float = 0.34, beta: float = 0.84, S: float = 7) -> flo
 # %%
 # Configure the system model.
 
-# Γ-equivalent machine model with main-flux saturation included
+# Γ model with main-flux saturation included
 par = model.InductionMachinePars(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=L_s)
 # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
 # par = model.InductionMachineInvGammaPars(

@@ -511,7 +511,7 @@ class DCBus(Subsystem):
         return [self._compute_dc_current(t) / self.C_dc]
 
     def create_time_series(self, t: np.ndarray) -> "DCBusTimeSeries":
-        """Create time series from state list."""
+        """Create the time series."""
         return DCBusTimeSeries(t, self)
 
 
