@@ -26,13 +26,13 @@ A collection of example scripts for machine drives.
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control. The examples with GradNet magnetic models [#Li2026]_, based on gradient networks [#Cha2025]_, which model the current or flux linkage map as the gradient of the magnetic energy or co-energy, use models trained from measured and FEM data with the related package `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
+These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019b]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control. The examples with GradNet magnetic models [#Li2026]_, based on gradient networks [#Cha2025]_, which model the current or flux linkage map as the gradient of the magnetic energy or co-energy, use models trained from measured and FEM data with the related package `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 .. rubric:: References
 
 .. [#Pel2009] Pellegrino, Armando, Guglielmi, "Direct flux field-oriented control of IPM drives with variable DC link in the field-weakening region," IEEE Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2009.2027167
 
-.. [#Awa2019] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
+.. [#Awa2019b] Awan, Hinkkanen, Bojoi, Pellegrino, "Stator-flux-oriented control of synchronous motors: A systematic design procedure," IEEE Trans. Ind. Appl., 2019, https://doi.org/10.1109/TIA.2019.2927316
 
 .. [#Tii2025a] Tiitinen, Hinkkanen, Harnefors, "Design framework for sensorless control of synchronous machine drives," IEEE Trans. Ind. Electron., 2025, https://doi.org/10.1109/TIE.2024.3429650
 
@@ -249,7 +249,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control (CVC) of a 2.2-kW induction motor (IM) drive in torque-control mode.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control (CVC) of a 2.2-kW induction machine (IM) drive in torque-control mode.">
 
 .. only:: html
 
@@ -266,7 +266,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction machine (IM) drive. The magnetic saturation is included in the machine model, while the control system uses constant parameters.">
 
 .. only:: html
 
@@ -317,7 +317,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction motor (IM) drive at low speeds. The dead time and the threshold voltage of the converter are modeled, and their effects are compensated for in the control system. The magnetic saturation is included in the machine model and taken into account in the control system. The sensorless observer and the compensation method are similar to [#Hin2010]_.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction machine (IM) drive at low speeds. The dead time and the threshold voltage of the converter are modeled, and their effects are compensated for in the control system. The magnetic saturation is included in the machine model and taken into account in the control system. The sensorless observer and the compensation method are similar to [#Hin2010]_.">
 
 .. only:: html
 
@@ -385,7 +385,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example compares the continuous-time and direct discrete-time designs of the current controller [#Awa2019]_ in sensorless current-vector control of a saturated 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·500 rad/s, which is high compared with the sampling frequency.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example compares the continuous-time and direct discrete-time designs of the current controller [#Awa2019a]_ in sensorless current-vector control of a saturated 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The sampling frequency is 5 kHz and the current-control bandwidth is 2π·500 rad/s, which is high compared with the sampling frequency.">
 
 .. only:: html
 

@@ -64,8 +64,8 @@ Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 26-28
 
-Configure the system model. The Γ-equivalent machine model with main-flux saturation
-is used. The parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_.
+Configure the system model. The Γ model with main-flux saturation is used. The
+parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 28-37
 
@@ -174,7 +174,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.582 seconds)
+   **Total running time of the script:** (0 minutes 4.701 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py:

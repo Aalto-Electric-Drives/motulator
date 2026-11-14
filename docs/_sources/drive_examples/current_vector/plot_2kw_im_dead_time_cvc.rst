@@ -22,12 +22,13 @@
 =========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive at low speeds. The dead time and the threshold voltage of the converter
-are modeled, and their effects are compensated for in the control system. The magnetic
-saturation is included in the machine model and taken into account in the control
-system. The sensorless observer and the compensation method are similar to [#Hin2010]_.
+machine (IM) drive at low speeds. The dead time and the threshold voltage of the
+converter are modeled, and their effects are compensated for in the control system. The
+magnetic saturation is included in the machine model and taken into account in the
+control system. The sensorless observer and the compensation method are similar to
+[#Hin2010]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-21
+.. GENERATED FROM PYTHON SOURCE LINES 15-22
 
 .. code-block:: Python
 
@@ -45,11 +46,11 @@ system. The sensorless observer and the compensation method are similar to [#Hin
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-23
+.. GENERATED FROM PYTHON SOURCE LINES 23-24
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-27
+.. GENERATED FROM PYTHON SOURCE LINES 24-28
 
 .. code-block:: Python
 
@@ -64,14 +65,14 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-32
+.. GENERATED FROM PYTHON SOURCE LINES 29-33
 
 The dead time and the threshold voltage of the power devices cause a duty-ratio error
 that depends on the sign of the phase current. As in [#Hin2010]_, the signum function
 is replaced with a smooth arctangent function, which approximates the effect of the
 parasitic capacitances at low currents.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-43
+.. GENERATED FROM PYTHON SOURCE LINES 33-44
 
 .. code-block:: Python
 
@@ -93,17 +94,17 @@ parasitic capacitances at low currents.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-51
+.. GENERATED FROM PYTHON SOURCE LINES 45-52
 
-Configure the system model. The Γ-equivalent machine model with main-flux saturation
-is used. The parameters are based on the measured data of a 2.2-kW machine
-[#Qu2012]_. The dead time is a parameter of the modulator of the converter and the
-threshold voltage of the converter itself. The duty ratios are updated once per
-carrier period (single update), which is common in practice. The sampling period
-then equals the carrier period, i.e., the switching frequency is 8 kHz, and the
-computational delay of one sampling period (the default) is two half carrier periods.
+Configure the system model. The Γ model with main-flux saturation is used. The
+parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_. The dead
+time is a parameter of the modulator of the converter and the threshold voltage of the
+converter itself. The duty ratios are updated once per carrier period (single update),
+which is common in practice. The sampling period then equals the carrier period, i.e.,
+the switching frequency is 8 kHz, and the computational delay of one sampling period
+(the default) is two half carrier periods.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-69
+.. GENERATED FROM PYTHON SOURCE LINES 52-70
 
 .. code-block:: Python
 
@@ -132,13 +133,13 @@ computational delay of one sampling period (the default) is two half carrier per
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-73
+.. GENERATED FROM PYTHON SOURCE LINES 71-74
 
 Configure the control system. If the duty-ratio error is given, the PWM compensates
 for it, and the realized voltage fed to the observer includes it. The speed
 reference is reversed under the load torque, leading to the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-87
+.. GENERATED FROM PYTHON SOURCE LINES 74-88
 
 .. code-block:: Python
 
@@ -163,13 +164,13 @@ reference is reversed under the load torque, leading to the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-91
+.. GENERATED FROM PYTHON SOURCE LINES 89-92
 
 Simulate without the compensation. The voltage error caused by the inverter
 nonlinearities corrupts the flux and speed estimates. After the speed reversal, the
 drive fails in the regenerating mode.
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 92-97
 
 .. code-block:: Python
 
@@ -190,13 +191,13 @@ drive fails in the regenerating mode.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 97-100
+.. GENERATED FROM PYTHON SOURCE LINES 98-101
 
 Simulate with the compensation, using the same duty-ratio error model as in the
 system model. The PWM of the control system is also configured for single update,
 so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-109
+.. GENERATED FROM PYTHON SOURCE LINES 101-110
 
 .. code-block:: Python
 
@@ -221,7 +222,7 @@ so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-119
+.. GENERATED FROM PYTHON SOURCE LINES 111-120
 
 .. rubric:: References
 
@@ -236,7 +237,7 @@ so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 24.376 seconds)
+   **Total running time of the script:** (0 minutes 24.241 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:

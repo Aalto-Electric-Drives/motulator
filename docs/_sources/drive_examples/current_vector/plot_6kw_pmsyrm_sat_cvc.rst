@@ -200,13 +200,13 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 .. rubric:: References
 
 .. [#Sar2026] Sarén, Hartikainen, Piippo, Hinkkanen, "Decoupled online feedforward
-   generation of optimal references for saturated synchronous machine drives,
-   2026, https://arxiv.org/abs/2607.08528
+   generation of optimal references for saturated synchronous machine drives," 2026,
+   https://arxiv.org/abs/2607.08528
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.857 seconds)
+   **Total running time of the script:** (0 minutes 11.882 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc.py:

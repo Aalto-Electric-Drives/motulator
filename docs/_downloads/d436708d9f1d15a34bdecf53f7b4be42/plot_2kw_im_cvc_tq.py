@@ -2,7 +2,7 @@
 2.2-kW IM, CVC, torque-control mode
 ===================================
 
-This example simulates current-vector control (CVC) of a 2.2-kW induction motor (IM)
+This example simulates current-vector control (CVC) of a 2.2-kW induction machine (IM)
 drive in torque-control mode.
 
 """

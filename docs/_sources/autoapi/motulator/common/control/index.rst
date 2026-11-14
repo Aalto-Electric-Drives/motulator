@@ -525,7 +525,7 @@ Package Contents
    Direct discrete-time 2DOF complex-vector controller.
 
    This implements a 2DOF complex-vector controller designed directly in discrete time
-   [#Awa2019]_. The controlled system is an integrator in coordinates rotating at the
+   [#Awa2019a]_. The controlled system is an integrator in coordinates rotating at the
    angular speed `w_c`. Its hold-equivalent model, including the computational delay of
    one sampling period, is::
 
@@ -546,8 +546,8 @@ Package Contents
 
    .. rubric:: References
 
-   .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-      saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,
+   .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+      saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
       https://doi.org/10.1109/TIA.2019.2919258
 
 

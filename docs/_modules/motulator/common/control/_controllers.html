@@ -687,7 +687,7 @@
 <span class="sd">    Direct discrete-time 2DOF complex-vector controller.</span>
 
 <span class="sd">    This implements a 2DOF complex-vector controller designed directly in discrete time</span>
-<span class="sd">    [#Awa2019]_. The controlled system is an integrator in coordinates rotating at the</span>
+<span class="sd">    [#Awa2019a]_. The controlled system is an integrator in coordinates rotating at the</span>
 <span class="sd">    angular speed `w_c`. Its hold-equivalent model, including the computational delay of</span>
 <span class="sd">    one sampling period, is::</span>
 
@@ -710,8 +710,8 @@
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
-<span class="sd">    .. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of</span>
-<span class="sd">       saturated synchronous motors," IEEE Trans. Ind. Appl. 2019,</span>
+<span class="sd">    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of</span>
+<span class="sd">       saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,</span>
 <span class="sd">       https://doi.org/10.1109/TIA.2019.2919258</span>
 
 <span class="sd">    """</span>
@@ -728,7 +728,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_u</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_gains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Gains of the complex-vector design, see (20) and (22) in [#Awa2019]_."""</span>
+<span class="w">        </span><span class="sd">"""Gains of the complex-vector design, see (20) and (22) in [#Awa2019a]_."""</span>
         <span class="n">T_s</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">beta</span>
         <span class="n">Phi</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_c</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>  <span class="c1"># Rotation of the coordinates over T_s</span>
         <span class="n">k_t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">beta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">Phi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">T_s</span><span class="p">)</span>

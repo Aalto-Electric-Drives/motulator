@@ -22,7 +22,7 @@
 =======================================================
 
 This example compares the continuous-time and direct discrete-time designs of the
-current controller [#Awa2019]_ in sensorless current-vector control of a saturated
+current controller [#Awa2019a]_ in sensorless current-vector control of a saturated
 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM). The sampling frequency
 is 5 kHz and the current-control bandwidth is 2π·500 rad/s, which is high compared with
 the sampling frequency.
@@ -239,14 +239,14 @@ remains well damped. In the largest steps, the voltage is limited.
 
 .. rubric:: References
 
-.. [#Awa2019] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+.. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
    saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
    https://doi.org/10.1109/TIA.2019.2919258
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.161 seconds)
+   **Total running time of the script:** (0 minutes 2.125 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py:

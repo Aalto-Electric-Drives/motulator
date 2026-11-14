@@ -520,10 +520,11 @@ to download the full example code.</p>
 <section class="sphx-glr-example-title" id="kw-im-dead-time-cvc">
 <span id="sphx-glr-drive-examples-current-vector-plot-2kw-im-dead-time-cvc-py"></span><h1>2.2-kW IM, dead time, CVC<a class="headerlink" href="#kw-im-dead-time-cvc" title="Link to this heading">#</a></h1>
 <p>This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive at low speeds. The dead time and the threshold voltage of the converter
-are modeled, and their effects are compensated for in the control system. The magnetic
-saturation is included in the machine model and taken into account in the control
-system. The sensorless observer and the compensation method are similar to <a class="footnote-reference brackets" href="#hin2010" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
+machine (IM) drive at low speeds. The dead time and the threshold voltage of the
+converter are modeled, and their effects are compensated for in the control system. The
+magnetic saturation is included in the machine model and taken into account in the
+control system. The sensorless observer and the compensation method are similar to
+<a class="footnote-reference brackets" href="#hin2010" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a><span class="w">
 </span><span class="w">
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="w">
@@ -548,13 +549,13 @@ parasitic capacitances at low currents.</p>
 </span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Smooth approximation of the signum function.&quot;&quot;&quot;</span><span class="w">
 </span>    <span class="k">return</span> <span class="mi">2</span> <span class="o">/</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.03</span> <span class="o">*</span> <a class="sphx-glr-backref-module-motulator-common-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><span class="n">base</span></a><span class="o">.</span><span class="n">i</span><span class="p">)</span><span class="p">)</span><span class="w">
 </span></pre></div></div>
-<p>Configure the system model. The Γ-equivalent machine model with main-flux saturation
-is used. The parameters are based on the measured data of a 2.2-kW machine
-<a class="footnote-reference brackets" href="#qu2012" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The dead time is a parameter of the modulator of the converter and the
-threshold voltage of the converter itself. The duty ratios are updated once per
-carrier period (single update), which is common in practice. The sampling period
-then equals the carrier period, i.e., the switching frequency is 8 kHz, and the
-computational delay of one sampling period (the default) is two half carrier periods.</p>
+<p>Configure the system model. The Γ model with main-flux saturation is used. The
+parameters are based on the measured data of a 2.2-kW machine <a class="footnote-reference brackets" href="#qu2012" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The dead
+time is a parameter of the modulator of the converter and the threshold voltage of the
+converter itself. The duty ratios are updated once per carrier period (single update),
+which is common in practice. The sampling period then equals the carrier period, i.e.,
+the switching frequency is 8 kHz, and the computational delay of one sampling period
+(the default) is two half carrier periods.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><span class="n">model</span><span class="o">.</span><span class="n">InductionMachinePars</span></a><span class="p">(</span><span class="w">
 </span>    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">0.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="k">lambda</span> <span class="n">psi</span><span class="p">:</span> <span class="mf">0.34</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.84</span> <span class="o">*</span> <span class="n">psi</span><span class="p">)</span> <span class="o">*</span><span class="o">*</span> <span class="mi">7</span><span class="p">)</span><span class="w">
 </span><span class="p">)</span><span class="w">
@@ -619,7 +620,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 24.376 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 24.241 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-im-dead-time-cvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1d6bf21b36052d196a8ca0a755ea5e7c/plot_2kw_im_dead_time_cvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_im_dead_time_cvc.ipynb</span></code></a></p>

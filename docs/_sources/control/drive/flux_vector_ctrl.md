@@ -36,7 +36,7 @@ Using the machine model \[see {eq}`im_flux_torque` in {ref}`induction_machine`\]
 label: im_flux_torque_fvc
 ---
     \frac{\D \abspsis}{\D t} &= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psis^*\} \\
-    \frac{\D\tauM}{\D t} &= \frac{3 \np}{2 L_\sigma} \IM \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psiR^*\}
+    \frac{\D\tauM}{\D t} &= \frac{3 \np}{2 \Lsgm} \IM \{\left[\us - \Rs \is - \jj\omegas\psis\right] \psiR^*\}
 
 ```
 

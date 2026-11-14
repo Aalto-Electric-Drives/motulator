@@ -311,7 +311,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 
@@ -851,7 +851,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 
@@ -986,7 +986,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 
@@ -1126,7 +1126,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 
@@ -1451,7 +1451,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 

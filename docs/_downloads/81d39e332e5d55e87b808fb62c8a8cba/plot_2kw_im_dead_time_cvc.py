@@ -3,10 +3,11 @@
 =========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive at low speeds. The dead time and the threshold voltage of the converter
-are modeled, and their effects are compensated for in the control system. The magnetic
-saturation is included in the machine model and taken into account in the control
-system. The sensorless observer and the compensation method are similar to [#Hin2010]_.
+machine (IM) drive at low speeds. The dead time and the threshold voltage of the
+converter are modeled, and their effects are compensated for in the control system. The
+magnetic saturation is included in the machine model and taken into account in the
+control system. The sensorless observer and the compensation method are similar to
+[#Hin2010]_.
 
 """
 
@@ -41,13 +42,13 @@ def smooth_sign(i):
 
 
 # %%
-# Configure the system model. The Γ-equivalent machine model with main-flux saturation
-# is used. The parameters are based on the measured data of a 2.2-kW machine
-# [#Qu2012]_. The dead time is a parameter of the modulator of the converter and the
-# threshold voltage of the converter itself. The duty ratios are updated once per
-# carrier period (single update), which is common in practice. The sampling period
-# then equals the carrier period, i.e., the switching frequency is 8 kHz, and the
-# computational delay of one sampling period (the default) is two half carrier periods.
+# Configure the system model. The Γ model with main-flux saturation is used. The
+# parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_. The dead
+# time is a parameter of the modulator of the converter and the threshold voltage of the
+# converter itself. The duty ratios are updated once per carrier period (single update),
+# which is common in practice. The sampling period then equals the carrier period, i.e.,
+# the switching frequency is 8 kHz, and the computational delay of one sampling period
+# (the default) is two half carrier periods.
 
 par = model.InductionMachinePars(
     n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=lambda psi: 0.34 / (1 + (0.84 * psi) ** 7)

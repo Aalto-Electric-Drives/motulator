@@ -892,7 +892,7 @@ its standby output, see <cite>compute_standby_output</cite>.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">DiscreteComplexController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_controllers.html#DiscreteComplexController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.DiscreteComplexController" title="Link to this definition">#</a></dt>
 <dd><p>Direct discrete-time 2DOF complex-vector controller.</p>
 <p>This implements a 2DOF complex-vector controller designed directly in discrete time
-<a class="footnote-reference brackets" href="#awa2019" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The controlled system is an integrator in coordinates rotating at the
+<a class="footnote-reference brackets" href="#awa2019a" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The controlled system is an integrator in coordinates rotating at the
 angular speed <cite>w_c</cite>. Its hold-equivalent model, including the computational delay of
 one sampling period, is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">i</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">=</span> <span class="n">Phi</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">T_s</span><span class="o">*</span><span class="n">u</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
@@ -915,10 +915,10 @@ Since the design includes the delays, the angle of the output must not be advanc
 </dl>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
-<aside class="footnote brackets" id="awa2019" role="doc-footnote">
+<aside class="footnote brackets" id="awa2019a" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
 <p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
-saturated synchronous motors,” IEEE Trans. Ind. Appl. 2019,
+saturated synchronous motors,” IEEE Trans. Ind. Appl., 2019,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
 </aside>
 </aside>

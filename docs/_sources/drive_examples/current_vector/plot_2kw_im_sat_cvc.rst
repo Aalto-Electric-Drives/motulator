@@ -22,7 +22,7 @@
 ========================
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW induction
-motor (IM) drive. The magnetic saturation is included in the machine model, while the
+machine (IM) drive. The magnetic saturation is included in the machine model, while the
 control system uses constant parameters.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-15
@@ -90,7 +90,7 @@ Configure the system model.
 .. code-block:: Python
 
 
-    # Γ-equivalent machine model with main-flux saturation included
+    # Γ model with main-flux saturation included
     par = model.InductionMachinePars(n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=L_s)
     # Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)
     # par = model.InductionMachineInvGammaPars(
@@ -198,7 +198,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.287 seconds)
+   **Total running time of the script:** (0 minutes 4.304 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_sat_cvc.py:

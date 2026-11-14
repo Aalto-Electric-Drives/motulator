@@ -21,7 +21,7 @@
 2.2-kW IM, CVC, torque-control mode
 ===================================
 
-This example simulates current-vector control (CVC) of a 2.2-kW induction motor (IM)
+This example simulates current-vector control (CVC) of a 2.2-kW induction machine (IM)
 drive in torque-control mode.
 
 .. GENERATED FROM PYTHON SOURCE LINES 11-16
@@ -155,7 +155,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.202 seconds)
+   **Total running time of the script:** (0 minutes 5.290 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_tq.py:
