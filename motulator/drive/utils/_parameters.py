@@ -7,6 +7,8 @@ from typing import Protocol, cast
 import numpy as np
 from scipy.optimize import root, root_scalar
 
+from motulator.common.utils._utils import get_value
+
 EPS: float = 1e-3
 
 
@@ -385,12 +387,12 @@ class InductionMachinePars:
     """
     Γ-model parameters of an induction machine.
 
-    This contains Γ-model parameters of an induction machine. The main-flux saturation
-    can also be modeled by providing a callable `L_s` parameter. For convenience, the
-    class also provides the corresponding inverse-Γ model parameters, which can be used
-    in control systems. If the saturation is modeled, these inverse-Γ parameters depend
-    on the stator flux linkage magnitude `psi_s` that should be updated by calling the
-    `update_psi_s` method.
+    This contains Γ-model parameters of an induction machine. Flux-dependent parameters
+    can be modeled by providing callable `L_s`, `L_ell`, and `R_r` parameters. For
+    convenience, the class also provides the corresponding inverse-Γ model parameters,
+    which can be used in control systems. With callable parameters, these inverse-Γ
+    parameters depend on the stator flux linkage magnitude `psi_s` that should be
+    updated by calling the `update_psi_s` method.
 
     Parameters
     ----------
@@ -398,10 +400,12 @@ class InductionMachinePars:
         Number of pole pairs.
     R_s : float
         Stator resistance (Ω).
-    R_r : float
-        Rotor resistance (Ω).
-    L_ell : float
-        Leakage inductance (H).
+    R_r : float | Callable[[float], float]
+        Rotor resistance (Ω). If callable, it should be a function of the stator flux
+        linkage magnitude (Vs).
+    L_ell : float | Callable[[float], float]
+        Leakage inductance (H). If callable, it should be a function of the stator flux
+        linkage magnitude (Vs).
     L_s : float | Callable[[float], float]
         Stator inductance (H). If callable, it should be a function of the stator flux
         linkage magnitude (Vs).
@@ -409,7 +413,7 @@ class InductionMachinePars:
         Core-loss conductance (S), modeled in parallel with the magnetizing branch,
         defaults to 0 (no core losses).
     psi_s : float, optional
-        Stator flux linkage magnitude (Vs), at which the callable `L_s` is evaluated,
+        Stator flux linkage magnitude (Vs), at which callable parameters are evaluated,
         defaults to 0. It can be updated by calling the `update_psi_s` method.
 
     Attributes
@@ -433,8 +437,8 @@ class InductionMachinePars:
 
     n_p: int
     R_s: float
-    R_r: float
-    L_ell: float
+    R_r: float | Callable[[float], float]
+    L_ell: float | Callable[[float], float]
     L_s: float | Callable[[float], float]
     G_c: float = 0.0
     psi_s: float = 0.0
@@ -445,23 +449,21 @@ class InductionMachinePars:
 
     @property
     def gamma(self) -> float:
-        if callable(self.L_s):
-            return self.L_s(self.psi_s) / (self.L_s(self.psi_s) + self.L_ell)
-        return self.L_s / (self.L_s + self.L_ell)
+        L_s = get_value(self.L_s, self.psi_s)
+        L_ell = get_value(self.L_ell, self.psi_s)
+        return L_s / (L_s + L_ell)
 
     @property
     def L_M(self) -> float:
-        if callable(self.L_s):
-            return self.gamma * self.L_s(self.psi_s)
-        return self.gamma * self.L_s
+        return self.gamma * get_value(self.L_s, self.psi_s)
 
     @property
     def L_sgm(self) -> float:
-        return self.gamma * self.L_ell
+        return self.gamma * get_value(self.L_ell, self.psi_s)
 
     @property
     def R_R(self) -> float:
-        return self.gamma**2 * self.R_r
+        return self.gamma**2 * get_value(self.R_r, self.psi_s)
 
     @property
     def R_sgm(self) -> float:
@@ -473,7 +475,8 @@ class InductionMachinePars:
 
     @property
     def w_rb(self) -> float:
-        return self.R_r / self.L_ell if self.L_ell > 0 else 0.0
+        L_ell = get_value(self.L_ell, self.psi_s)
+        return get_value(self.R_r, self.psi_s) / L_ell if L_ell > 0 else 0.0
 
     @classmethod
     def from_inv_gamma_pars(
@@ -587,6 +590,10 @@ class InductionMachineInvGammaPars:
         """
         if callable(par.L_s):
             raise ValueError("L_s must be constant for this transformation")
+        if callable(par.L_ell):
+            raise ValueError("L_ell must be constant for this transformation")
+        if callable(par.R_r):
+            raise ValueError("R_r must be constant for this transformation")
         g = par.L_s / (par.L_s + par.L_ell)
         R_R = g**2 * par.R_r
         L_sgm = g * par.L_ell

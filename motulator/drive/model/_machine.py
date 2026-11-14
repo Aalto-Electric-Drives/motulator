@@ -54,7 +54,8 @@ class InductionMachine(Subsystem):
     Γ-equivalent model of an induction machine.
 
     An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. The stator
-    inductance `L_s` can either be constant or a function of the stator flux magnitude::
+    inductance `L_s`, leakage inductance `L_ell`, and rotor resistance `R_r` can either
+    be constant or functions of the stator flux magnitude, e.g.::
 
         L_s = L_s(abs(psi_s_ab))
 
@@ -106,7 +107,8 @@ class InductionMachine(Subsystem):
         """Compute output variables."""
         par = self.par
         L_s = get_value(par.L_s, abs(state.psi_s_ab))
-        i_r_ab = (state.psi_r_ab - state.psi_s_ab) / par.L_ell
+        L_ell = get_value(par.L_ell, abs(state.psi_s_ab))
+        i_r_ab = (state.psi_r_ab - state.psi_s_ab) / L_ell
         # Current into the magnetic circuit, i.e., the core-loss current excluded
         i_m_ab = state.psi_s_ab / L_s - i_r_ab
         tau_M = 1.5 * par.n_p * np.imag(i_m_ab * np.conj(state.psi_s_ab))
@@ -122,8 +124,9 @@ class InductionMachine(Subsystem):
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
         state, inp, out, par = self.state, self.inp, self.out, self.par
+        R_r = get_value(par.R_r, abs(state.psi_s_ab))
         d_psi_s_ab = inp.u_s_ab - par.R_s * out.i_s_ab
-        d_psi_r_ab = -par.R_r * out.i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
+        d_psi_r_ab = -R_r * out.i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
         return [d_psi_s_ab, d_psi_r_ab]
 
     def compute_ac_port(self) -> ACPort:
@@ -136,12 +139,15 @@ class InductionMachine(Subsystem):
         def current(psi_s_ab: complex) -> complex:
             """Stator current as a function of the stator flux."""
             L_s = get_value(par.L_s, abs(psi_s_ab))
-            return psi_s_ab / L_s + (psi_s_ab - state.psi_r_ab) / par.L_ell
+            L_ell = get_value(par.L_ell, abs(psi_s_ab))
+            return psi_s_ab / L_s + (psi_s_ab - state.psi_r_ab) / L_ell
 
         # The stator current derivative is Y*(u_s - R_s*i_s) - d_psi_r/dt/L_ell
         Y = jacobian(current, state.psi_s_ab)
-        d_psi_r_ab = -par.R_r * i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
-        e = np.linalg.solve(Y, [d_psi_r_ab.real, d_psi_r_ab.imag]) / par.L_ell
+        R_r = get_value(par.R_r, abs(state.psi_s_ab))
+        L_ell = get_value(par.L_ell, abs(state.psi_s_ab))
+        d_psi_r_ab = -R_r * i_r_ab + 1j * par.n_p * inp.w_M * state.psi_r_ab
+        e = np.linalg.solve(Y, [d_psi_r_ab.real, d_psi_r_ab.imag]) / L_ell
         return ACPort(i_s_ab, par.R_s * i_s_ab + complex(e[0], e[1]), Y)
 
     def create_time_series(self, t: np.ndarray) -> "InductionMachineTimeSeries":
@@ -174,8 +180,9 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
         self.psi_s_ab = np.array(subsystem._history["psi_s_ab"])
         self.psi_r_ab = np.array(subsystem._history["psi_r_ab"])
         L_s = get_value(subsystem.par.L_s, np.abs(self.psi_s_ab))
+        L_ell = get_value(subsystem.par.L_ell, np.abs(self.psi_s_ab))
         # Inverse-Γ quantities
-        gamma = L_s / (L_s + subsystem.par.L_ell)
+        gamma = L_s / (L_s + L_ell)
         self.psi_R_ab = gamma * self.psi_r_ab
 
     def set_outputs(self, t: np.ndarray, subsystem: InductionMachine) -> None:
