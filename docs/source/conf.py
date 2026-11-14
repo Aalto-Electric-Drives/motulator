@@ -315,7 +315,9 @@ autoapi_options = [
     "imported-members",
 ]
 
-# Point AutoAPI to a custom template directory
+# Templates that override the defaults of AutoAPI: the signatures without type
+# parameters, whose bounds would show private module paths, and the subpackages of a
+# package under their own heading
 autoapi_template_dir = "../_templates/autoapi"
 
 autoapi_python_class_content = "class"
