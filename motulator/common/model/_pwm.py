@@ -57,24 +57,6 @@ class Delay:
             raise ValueError("The buffer is empty")
         return self.data.pop(0)
 
-    def __call__(self, u: Any) -> Any:
-        """
-        Delay the input.
-
-        Parameters
-        ----------
-        u : Any
-            Input.
-
-        Returns
-        -------
-        Any
-            Input `length` calls earlier, or zeros before that.
-
-        """
-        self.push(u)
-        return self.pop()
-
 
 def _concatenate(
     parts: list[tuple[SwitchingTimes, GateStates]],

@@ -80,9 +80,11 @@ edges = np.flatnonzero(np.diff(np.concatenate(([1], enabled, [1])).astype(int)))
 for ax in (ax1, ax2, ax3):
     for k_off, k_on in zip(edges[::2], edges[1::2], strict=True):
         ax.axvspan(t_ctrl[k_off], t_ctrl[min(k_on, len(t_ctrl) - 1)], color="0.9")
-ax1.plot(res.mdl.t, w_M, label=r"$\omega_\mathrm{M}$")
-ax1.plot(t_ctrl, res.ctrl.fbk.w_M / base.w_M, label=r"$\hat{\omega}_\mathrm{M}$")
-ax1.plot(t_ctrl, res.ctrl.ref.w_M / base.w_M, "--", label=r"$\omega_\mathrm{M,ref}$")
+ax1.plot(res.mdl.t, w_M, label=r"$\omega_\mathrm{m}$")
+ax1.plot(t_ctrl, res.ctrl.fbk.w_M / base.w_M, label=r"$\hat{\omega}_\mathrm{m}$")
+ax1.plot(
+    t_ctrl, res.ctrl.ref.w_M / base.w_M, "--", label=r"$\omega_\mathrm{m}^\mathrm{ref}$"
+)
 ax1.set_ylabel("Speed (p.u.)")
 ax1.legend()
 ax2.plot(res.mdl.t, i_s)

@@ -16,7 +16,6 @@ import sys
 import tomllib
 
 sys.path.insert(0, os.path.abspath("../.."))
-sys.path.insert(0, os.path.abspath("../../motulator"))
 
 os.environ["BUILDING_DOCS"] = "1"
 
@@ -31,12 +30,6 @@ with open(os.path.join(os.path.dirname(__file__), "../../pyproject.toml"), "rb")
     release = tomllib.load(f)["project"]["version"]
 
 # -- General configuration -------------------------------------------------------------
-
-# This value contains a list of modules to be mocked up. This is useful when some
-# external dependencies are not met at build time and break the building process. You
-# may only specify the root package of the dependencies themselves and omit the
-# submodules:
-autodoc_mock_imports = ["numpy", "matplotlib", "scipy", "cycler"]
 
 # Add any Sphinx extension module names here, as strings. They can be extensions coming
 # with Sphinx (named "sphinx.ext.*") or your custom ones.
@@ -53,9 +46,9 @@ extensions = [
 ]
 
 # Configure global bibliography
-bibtex_bibfiles = ["refs.bib"]  # Path to your .bib file
+bibtex_bibfiles = ["refs.bib"]
 bibtex_default_style = "plain"
-bibtex_reference_style = "author_year"  # or 'label' depending on preference
+bibtex_reference_style = "author_year"
 
 # Enable MyST extensions for advanced features
 myst_enable_extensions = [
@@ -83,7 +76,6 @@ mathjax3_config = {
             "D": "\\mathrm{d}",
             "IM": "\\mathrm{Im}",
             "RE": "\\mathrm{Re}",
-            "T": "\\intercal",
             # Space vectors
             "uc": "\\mathbf{u}_\\mathrm{c}",
             "ucref": "\\mathbf{u}_\\mathrm{c}^\\mathrm{ref}",
@@ -92,9 +84,7 @@ mathjax3_config = {
             "ic": "\\mathbf{i}_\\mathrm{c}",
             "icref": "\\mathbf{i}_\\mathrm{c}^\\mathrm{ref}",
             "ics": "\\mathbf{i}_\\mathrm{c}^\\mathrm{s}",
-            "qc": "\\mathbf{q}_\\mathrm{c}",
             "qcs": "\\mathbf{q}_\\mathrm{c}^\\mathrm{s}",
-            "dc": "\\mathbf{d}_\\mathrm{c}",
             "dcs": "\\mathbf{d}_\\mathrm{c}^\\mathrm{s}",
             "us": "\\mathbf{u}_\\mathrm{s}",
             "uss": "\\mathbf{u}_\\mathrm{s}^\\mathrm{s}",
@@ -123,7 +113,6 @@ mathjax3_config = {
             "iaux": "\\mathbf{i}_\\mathrm{a}",
             "hatiaux": "\\hat{\\mathbf{i}}_\\mathrm{a}",
             "es": "\\mathbf{e}_\\mathrm{s}",
-            "ec": "\\mathbf{e}_\\mathrm{c}",
             "eo": "\\mathbf{e}_\\mathrm{o}",
             # Saturation functions
             "isfcn": "\\mathbf{g}",
@@ -139,7 +128,6 @@ mathjax3_config = {
             "hatabspsis": "\\hat{\\psi}_\\mathrm{s}",
             "hatabspsiR": "\\hat{\\psi}_\\mathrm{R}",
             "psif": "\\psi_\\mathrm{f}",
-            "absis": "i_\\mathrm{s}",
             # Components
             "psid": "\\psi_\\mathrm{d}",
             "psiq": "\\psi_\\mathrm{q}",
@@ -213,11 +201,8 @@ mathjax3_config = {
             "udc": "u_\\mathrm{dc}",
             "udcref": "u_\\mathrm{dc}^\\mathrm{ref}",
             "idc": "i_\\mathrm{dc}",
-            "udi": "u_\\mathrm{di}",
-            "iL": "i_\\mathrm{L}",
             "Cdc": "C_\\mathrm{dc}",
             "hatCdc": "\\hat{C}_\\mathrm{dc}",
-            "Ldc": "L_\\mathrm{dc}",
             # Phase currents and voltages
             "iA": "i_\\mathrm{a}",
             "iB": "i_\\mathrm{b}",
@@ -303,7 +288,6 @@ mathjax3_config = {
             # Estimates
             "hatomegam": "\\hat{\\omega}_\\mathrm{m}",
             "hatthetam": "\\hat{\\vartheta}_\\mathrm{m}",
-            "hatthetaM": "\\hat{\\vartheta}_\\mathrm{M}",
             "tildethetam": "\\tilde{\\vartheta}_\\mathrm{m}",
             "hatRs": "\\hat{R}_\\mathrm{s}",
             "hatRR": "\\hat{R}_\\mathrm{R}",
@@ -312,11 +296,9 @@ mathjax3_config = {
             "hatalpha": "\\hat{\\alpha}",
             "hatLsgm": "\\hat{L}_\\upsigma",
             "hatRsgm": "\\hat{R}_\\upsigma",
-            "hatLd": "\\hat{L}_\\mathrm{d}",
-            "hatLq": "\\hat{L}_\\mathrm{q}",
         },
     },
-}  # Configure file extensions
+}
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
@@ -331,12 +313,12 @@ autoapi_options = [
     "show-inheritance",
     "show-module-summary",
     "imported-members",
-]  # "private-members", "imported-members", "undoc-members", "special-members",
+]
 
 # Point AutoAPI to a custom template directory
 autoapi_template_dir = "../_templates/autoapi"
 
-autoapi_python_class_content = "class"  # "both"
+autoapi_python_class_content = "class"
 autoapi_keep_files = True
 autoapi_add_toctree_entry = False
 autoapi_member_order = "alphabetical"
@@ -379,15 +361,7 @@ sphinx_gallery_conf = {
 # List of patterns, relative to source directory, that match files and directories to
 # ignore when looking for source files. This pattern also affects html_static_path and
 # html_extra_path.
-exclude_patterns = [
-    "../../.idea",
-    "../../__pycache__",
-    "../../venv",
-    "_build",
-    "build",
-    "Thumbs.db",
-    ".DS_Store",
-]
+exclude_patterns = ["_build", "build", "Thumbs.db", ".DS_Store"]
 
 # -- Options for HTML output -----------------------------------------------------------
 

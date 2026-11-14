@@ -114,7 +114,6 @@ def test_transformation_keeps_stationary_signals(case: str) -> None:
                 ), name
 
 
-# %%
 @dataclass
 class _States:
     """States of the subsystem below."""

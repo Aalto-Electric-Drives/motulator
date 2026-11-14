@@ -88,8 +88,12 @@ class LCFilterTimeSeries(SubsystemTimeSeries):
 
     t: InitVar[np.ndarray]
     subsystem: InitVar[LCFilter]
+    # States
     i_c_ab: np.ndarray = field(default_factory=empty_array)
     u_f_ab: np.ndarray = field(default_factory=empty_array)
+    # Inputs
+    u_c_ab: np.ndarray = field(default_factory=empty_array)
+    i_f_ab: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: LCFilter) -> None:
         """Compute output time series from the states."""

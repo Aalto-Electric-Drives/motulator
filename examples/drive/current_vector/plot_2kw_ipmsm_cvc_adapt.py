@@ -66,7 +66,10 @@ utils.plot(res, base)
 
 plt.figure()
 plt.plot(
-    res.ctrl.t, res.ctrl.ref.psi_s / base.psi, "--", label=r"$\psi_\mathrm{s,ref}$"
+    res.ctrl.t,
+    res.ctrl.ref.psi_s / base.psi,
+    "--",
+    label=r"$\psi_\mathrm{s}^\mathrm{ref}$",
 )
 plt.plot(
     res.mdl.t, abs(res.mdl.machine.psi_s_dq) / base.psi, label=r"$\psi_\mathrm{s}$"

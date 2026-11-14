@@ -111,7 +111,6 @@ class PowerSynchronizationController:
         # Current reference: feedforward from the power reference in the d-axis and
         # the low-pass-filtered current in the q-axis
         ref.i_c = ref.p_g / (1.5 * ref.v_c) + 1j * self.i_c_flt.imag
-        # ref.i_c = self.i_c_flt  # Conventional PSC
         ref.i_c = self.current_limiter(ref.i_c)
 
         # Voltage reference

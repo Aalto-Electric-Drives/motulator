@@ -122,5 +122,10 @@ class ThreePhaseSourceTimeSeries(SubsystemTimeSeries):
         theta_g = np.real(np.array(subsystem._history["theta_g"]))
         self.exp_j_theta_g = np.exp(1j * theta_g)
         self.theta_g = np.angle(self.exp_j_theta_g)
-        self.w_g = np.vectorize(get_value)(subsystem.w_g, t)
-        self.e_g_ab = subsystem.generate_space_vector(t, self.exp_j_theta_g)
+        self.w_g = np.array([get_value(subsystem.w_g, t_k) for t_k in t])
+        self.e_g_ab = np.array(
+            [
+                subsystem.generate_space_vector(t_k, exp_k)
+                for t_k, exp_k in zip(t, self.exp_j_theta_g, strict=True)
+            ]
+        )

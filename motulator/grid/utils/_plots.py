@@ -32,7 +32,7 @@ def _plot_powers(ax, ctrl, mdl, base: BaseValues) -> None:
     )
     ax.plot(mdl.t, p_g / base.p, label=r"$p_\mathrm{g}$")
 
-    if hasattr(ctrl.ref, "q_g") and np.any(ctrl.ref.q_g):
+    if np.any(ctrl.ref.q_g):
         ax.plot(
             ctrl.t,
             ctrl.ref.q_g / base.p,
@@ -84,7 +84,7 @@ def _plot_voltages(ax, ctrl, mdl, base: BaseValues) -> None:
         ds="steps-post",
     )
 
-    if hasattr(ctrl.ref, "v_c") and np.any(ctrl.ref.v_c):
+    if np.any(ctrl.ref.v_c):
         ax.plot(
             ctrl.t,
             np.abs(ctrl.ref.v_c / base.u),
@@ -369,7 +369,6 @@ def plot_voltage_vector(
     if base is None:
         pu_vals = False
         base = BaseValues.unity()
-        base.p = 1000  # For power use kW
     else:
         pu_vals = True
 

@@ -15,13 +15,13 @@ label: L_filter_model
     \Lt\frac{\D\ic}{\D t} = \uc - \eg - \Rt\ic - \jj\omegac \Lt\ic
 ```
 
-where $\ic$ is the converter current, $\uc$ is the converter voltage, $\eg$ is the grid voltage, $\Rt = \Rfc + \Rg$ is the total resistance comprising the filter series resistance $\Rfc$ and the grid resistance $\Rg$, and $\Lt = \Lfc + \Lg$ is the total inductance comprising the filter inductance $\Lfc$ and the grid inductance $\Lg$. The point of common coupling (PCC) is modeled to be between the L filter and the grid impedance. The voltage at the PCC is
+where $\ic$ is the converter current, $\uc$ is the converter voltage, $\eg$ is the grid voltage, $\Rt = \Rf + \Rg$ is the total resistance comprising the filter series resistance $\Rf$ and the grid resistance $\Rg$, and $\Lt = \Lf + \Lg$ is the total inductance comprising the filter inductance $\Lf$ and the grid inductance $\Lg$. The point of common coupling (PCC) is modeled to be between the L filter and the grid impedance. The voltage at the PCC is
 
 ```{math}
 ---
 label: L_filter_PCC_voltage
 ---
-    \ug = \frac{\Lg(\uc - \Rfc\ic) + \Lfc(\eg + \Rg\ic)}{\Lt}
+    \ug = \frac{\Lg(\uc - \Rf\ic) + \Lf(\eg + \Rg\ic)}{\Lt}
 ```
 
 ```{figure} ../figs/l_filter.svg

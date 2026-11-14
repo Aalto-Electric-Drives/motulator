@@ -84,7 +84,7 @@ class VaryingSamplingPeriod(sm_control.VectorControlSystem):
         self.t_change = t_change
         self.T_s0 = vector_ctrl.T_s
 
-    def compute_output(self, fbk):  # noqa: ANN001, ANN201
+    def compute_output(self, fbk):
         self.cvc.T_s = self.T_s0 if self.t < self.t_change else 2 * self.T_s0
         return super().compute_output(fbk)
 

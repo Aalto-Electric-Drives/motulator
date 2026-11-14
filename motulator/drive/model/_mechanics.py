@@ -332,8 +332,10 @@ class ExternalRotorSpeedTimeSeries(SubsystemTimeSeries):
     subsystem: InitVar[ExternalRotorSpeed]
     # State
     theta_M: np.ndarray = field(default_factory=empty_array)
-    # Input
+    # External rotor speed
     w_M: np.ndarray = field(default_factory=empty_array)
+    # Input
+    tau_M: np.ndarray = field(default_factory=empty_array)
     # Derived
     exp_j_theta_M: np.ndarray = field(default_factory=empty_array)
 

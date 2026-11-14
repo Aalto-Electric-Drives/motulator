@@ -2,11 +2,11 @@
 Tests for models without control systems.
 
 The tests check the direct-on-line start of an induction machine against its
-steady-state equivalent circuit and the commutation of a diode bridge against the
-classical overlap formula, with loose tolerances, and that a diode bridge in a composite
-model is simulated as if alone. A current-fed diode bridge, feeding an EMF through a DC
-choke, is checked against the same formula, and the gating of its devices is checked to
-block the conduction.
+steady-state equivalent circuit, the functions of time of the source in the time series,
+and the commutation of a diode bridge against the classical overlap formula, with loose
+tolerances, and that a diode bridge in a composite model is simulated as if alone. A
+current-fed diode bridge, feeding an EMF through a DC choke, is checked against the same
+formula, and the gating of its devices is checked to block the conduction.
 
 """
 
@@ -67,6 +67,25 @@ def test_direct_on_line_start() -> None:
     tau_M = 1.5 * 2 * abs(psi_R) ** 2 * w_r / par.R_R
     assert tau_M == pytest.approx(10.0, rel=0.01)
     assert res.mdl.machine.tau_M[-1] == pytest.approx(10.0, rel=0.01)
+
+
+def test_source_functions_of_time() -> None:
+    """The functions of time of the source, here written for a scalar time, are also
+    evaluated at each instant of the time series."""
+    par = drive_model.InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
+    )
+    e_g = sqrt(2 / 3) * U_G
+    source = ThreePhaseSource(
+        w_g=lambda t: W_G, e_g=lambda t: e_g if t < 0.05 else 0.5 * e_g
+    )
+    mdl = drive_model.GridConnectedMachine(
+        drive_model.InductionMachine(par), drive_model.MechanicalSystem(J=0.015), source
+    )
+    res = Simulation(mdl, show_progress=False).simulate(t_stop=0.1)
+    t, ts = res.mdl.t, res.mdl.ac_source
+    np.testing.assert_allclose(np.abs(ts.e_g_ab), np.where(t < 0.05, e_g, 0.5 * e_g))
+    np.testing.assert_allclose(ts.w_g, W_G)
 
 
 def diode_bridge(C_dc: float, I_d: float, L_f: float = 1e-3):

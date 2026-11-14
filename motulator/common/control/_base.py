@@ -133,7 +133,7 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
 
     def update(self, ref: Ref, fbk: Fbk) -> None:
         """Update controller internal states."""
-        self.t = (self.t + ref.T_s) % 1e9  # Avoid overflow
+        self.t += ref.T_s
 
     def save(self, t: float, **signal_groups: Any) -> None:
         """Save a single timestep of data."""

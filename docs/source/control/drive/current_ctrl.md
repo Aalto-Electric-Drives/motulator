@@ -67,10 +67,6 @@ label: limited_voltage
 
 where $\mathrm{sat}(\cdot)$ is the saturation function, containing digital delay compensation {cite}`Bae2003`. The {class}`motulator.common.control.ComplexPIController` base class implements the anti-windup of the integrator based on the realized voltage.
 
-%```{note}
-%The gain definitions used in {eq}`cc` differ from {cite}`Hin2024`, where a more general controller structure is considered.
-%```
-
 ### Closed-Loop System Analysis
 
 Here, ideal voltage production is assumed, $\us = \usref$. Using {eq}`im_current` and {eq}`cc`, the closed-loop system in the Laplace domain becomes

@@ -29,10 +29,10 @@ The breakdown torque limit is
 ---
 label: im_bd_lim
 ---
-    \tau_\mathrm{M}^\mathrm{b} = \frac{3\np}{2} \frac{(\abspsisref)^2}{2\hat{L}_\ell}
+    \tau_\mathrm{M}^\mathrm{b} = k_\mathrm{b}\frac{3\np}{2} \frac{(\abspsisref)^2}{2\hat{L}_\ell}
 ```
 
-where the leakage inductance estimate can be expressed by means of the inverse-Γ parameters as $\hat L_\ell = [(\hatLM + \hatLsgm)/\hatLM]\hatLsgm$.
+where $k_\mathrm{b}$ is the breakdown torque margin and the leakage inductance estimate can be expressed by means of the inverse-Γ parameters as $\hat L_\ell = [(\hatLM + \hatLsgm)/\hatLM]\hatLsgm$.
 
 This reference generation is used in the {class}`motulator.drive.control.im.FluxVectorController` class, which implements flux-vector control for induction machines. See also the {doc}`/drive_examples/flux_vector/plot_2kw_im_sat_fvc` example.
 

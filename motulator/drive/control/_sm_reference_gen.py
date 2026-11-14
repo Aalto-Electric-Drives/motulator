@@ -145,14 +145,12 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
 
         # MTPV limit
         mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
-        self.i_s_mtpv = mtpv.i_s_dq_vs_psi_s_abs
         self.tau_M_mtpv = mtpv.tau_M_vs_psi_s_abs
 
         # Current limit
         gamma1 = phase(loci.compute_mtpv_current(i_s_max))
         gamma2 = phase(mtpa.i_s_dq[-1])
         cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
-        self.i_s_cl = cl.i_s_dq_vs_psi_s_abs
         self.tau_M_cl = cl.tau_M_vs_psi_s_abs
 
         # Current-reference state, initialized at the zero-torque operating point of the
