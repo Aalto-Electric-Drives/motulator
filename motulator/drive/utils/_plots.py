@@ -143,14 +143,6 @@ def _plot_flux_linkages(ax, ctrl, mdl, base: BaseValues) -> None:
             ds="steps-post",
         )
     ax.plot(mdl.t, np.abs(mdl.machine.psi_s_ab) / base.psi, label=r"$\psi_\mathrm{s}$")
-
-    if hasattr(mdl.machine, "psi_R_ab"):
-        ax.plot(
-            mdl.t,
-            np.abs(mdl.machine.psi_R_ab) / base.psi,
-            "-.",
-            label=r"$\psi_\mathrm{R}$",
-        )
     if ctrl is not None and hasattr(ctrl.fbk, "psi_s"):
         ax.plot(
             ctrl.t,

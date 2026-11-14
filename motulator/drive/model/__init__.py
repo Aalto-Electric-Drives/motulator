@@ -15,14 +15,22 @@ from motulator.drive.model._mechanics import (
     TwoMassMechanicalSystem,
 )
 from motulator.drive.utils._parameters import (
+    BaseInductionMachinePars,
+    BaseSynchronousMachinePars,
+    CageImpedance,
     InductionMachineInvGammaPars,
     InductionMachinePars,
+    SaturatedInductionMachinePars,
     SaturatedSynchronousMachinePars,
+    SpatialSaturatedInductionMachinePars,
     SpatialSaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
 
 __all__ = [
+    "BaseInductionMachinePars",
+    "BaseSynchronousMachinePars",
+    "CageImpedance",
     "CarrierComparison",
     "CompositeModel",
     "DCBus",
@@ -35,11 +43,13 @@ __all__ = [
     "InductionMachineInvGammaPars",
     "LCFilter",
     "MechanicalSystem",
+    "SaturatedInductionMachinePars",
     "SaturatedSynchronousMachinePars",
     "Sensor",
     "Simulation",
     "SimulationResults",
     "SolverCfg",
+    "SpatialSaturatedInductionMachinePars",
     "SpatialSaturatedSynchronousMachinePars",
     "SynchronousMachine",
     "SynchronousMachinePars",

@@ -2,6 +2,7 @@
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from math import pi
 from typing import Any
 
 import numpy as np
@@ -192,23 +193,23 @@ class Step:
 
 
 # %%
-def wrap(theta: float) -> Any:
+def wrap(theta: Any) -> Any:
     """
     Limit the angle into the range [-pi, pi).
 
     Parameters
     ----------
-    theta : float
+    theta : float | ndarray
         Angle (rad).
 
     Returns
     -------
-    float
+    float | ndarray
         Limited angle.
 
     """
 
-    return np.mod(theta + np.pi, 2 * np.pi) - np.pi
+    return (theta + pi) % (2 * pi) - pi
 
 
 # %%

@@ -75,6 +75,39 @@ class DCPort:
     L: float
 
 
+def derivative(
+    fcn: Callable[[Any], Any], x: complex, v: complex, h: float = 1e-4
+) -> complex:
+    """
+    Derivative of a complex-valued function along a direction.
+
+    The derivative is computed by central differences with a step of the length `h`
+    in the direction of `v`, so the step is in the units of the argument.
+
+    Parameters
+    ----------
+    fcn : Callable[[Any], Any]
+        Function of a real or complex variable, whose value is converted to a complex
+        number.
+    x : float | complex
+        Point at which the derivative is evaluated.
+    v : float | complex
+        Rate of change of the argument, e.g., its time derivative.
+    h : float, optional
+        Length of the step of the central differences, defaults to 1e-4.
+
+    Returns
+    -------
+    complex
+        Rate of change of the value of `fcn`.
+
+    """
+    if not v:
+        return 0j
+    step = h * v / abs(v)
+    return abs(v) * (complex(fcn(x + step)) - complex(fcn(x - step))) / (2 * h)
+
+
 def jacobian(fcn: Callable[[complex], Any], x: complex, h: float = 1e-4) -> np.ndarray:
     """
     Jacobian of a complex-valued function of a complex variable.
@@ -94,8 +127,7 @@ def jacobian(fcn: Callable[[complex], Any], x: complex, h: float = 1e-4) -> np.n
         Jacobian acting on the real and imaginary parts.
 
     """
-    d_x = (complex(fcn(x + h)) - complex(fcn(x - h))) / (2 * h)
-    d_y = (complex(fcn(x + 1j * h)) - complex(fcn(x - 1j * h))) / (2 * h)
+    d_x, d_y = derivative(fcn, x, 1.0, h), derivative(fcn, x, 1j, h)
     return np.array([[d_x.real, d_y.real], [d_x.imag, d_y.imag]])
 
 
