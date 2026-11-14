@@ -61,7 +61,7 @@ alt: Disturbance-observer-based grid-forming control
 
 ### Disturbance Observer
 
-Based on {eq}`system_model1`--{eq}`quasi_static_converter_voltage`, a disturbance observer for the grid voltage can be formed {cite}`Nur2024,Kuk2021,Fra1997`
+Based on {eq}`system_model1`--{eq}`quasi_static_converter_voltage`, a disturbance observer for the grid voltage can be formed {cite}`Nur2024,Kuk2021,Fra1998`
 
 ```{math}
 ---
