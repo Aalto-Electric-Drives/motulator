@@ -68,7 +68,7 @@ width: 100%
 align: center
 alt: Synchronous machine model
 ---
-*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the optional spatial harmonics are omitted in this figure, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
+*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`, and it depends on the angle $\thetam$ only if spatial harmonics are modeled.
 ```
 
 ```{figure} ../figs/sm_block_rot.svg
@@ -78,7 +78,7 @@ width: 100%
 align: center
 alt: Synchronous machine model
 ---
-*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`. Since the optional spatial harmonics are omitted in this figure, the current $\is$ and the torque $\tauM$ do not depend on the angle $\thetam$.
+*Figure 2:* Block diagram of the synchronous machine model in rotor coordinates. The magnetic model includes {eq}`sm_current` and {eq}`sm_torque`, and it depends on the angle $\thetam$ only if spatial harmonics are modeled.
 ```
 
 ```{figure} ../figs/sm_block_stat.svg
@@ -105,6 +105,8 @@ alt: Synchronous machine model seen from stator coordinates
 ```{note}
 Due to the spatial harmonics, the stator current $\is = \isfcn(\psis, \thetam)$ and the electromagnetic torque $\tauM = \tauM(\psis,\thetam)$ also depend on the angle $\thetam$. This effect is typically omitted in dynamic models, but it can optionally be included in the machine model using the {class}`motulator.drive.model.SpatialSaturatedSynchronousMachinePars` class, see the example {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
 ```
+
+## Magnetic Model
 
 ### Linear Magnetic Model
 
@@ -144,9 +146,9 @@ See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
 
 (sm_core_losses)=
 
-### Core Losses
+## Core Losses
 
-Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance $\Gc$, connected in parallel with the magnetizing branch, similarly as in the {ref}`Γ model <im_core_losses>` of induction machines {cite}`Qu2012`. In this case, the current given by {eq}`sm_current` is the current $\isp$ flowing into the magnetic circuit and the stator current becomes
+Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance $\Gc$, connected between the stator resistance and the magnetic model, similarly as in the {ref}`induction machine model <im_core_losses>` {cite}`Qu2012`. In this case, the current given by {eq}`sm_current` is denoted by $\isp$ and the stator current becomes
 
 ```{math}
 ---

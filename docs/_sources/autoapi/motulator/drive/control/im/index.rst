@@ -968,11 +968,20 @@ Module Contents
 
 .. py:class:: InductionMachineInvGammaPars
 
-   
-   Constant inverse-Γ model parameters of an induction machine.
+   Bases: :py:obj:`BaseInductionMachinePars`
 
-   This contains constant inverse-Γ model parameters of an induction machine. To model
-   the main-flux saturation, use the `InductionMachinePars` class instead.
+
+   
+   Inverse-Γ model parameters of an induction machine.
+
+   These constant parameters can be used both in control systems and in the machine
+   model. The magnetic model is::
+
+       psi_s = L_sgm*i_s + psi_R
+       psi_R = L_M*(i_s + i_R)
+
+   where the rotor flux linkage `psi_R` and the rotor current `i_R` are scaled such
+   that the leakage inductance is on the stator side.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -984,17 +993,9 @@ Module Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
-   :param G_c: Core-loss conductance (S), defaults to 0 (no core losses). It is connected
-               across the stator EMF `u_s - R_s*i_s`, i.e., between the stator resistance and
-               the leakage inductance, which corresponds to the core-loss branch in parallel
-               with the magnetizing branch of the Γ model.
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
-
-   .. attribute:: R_sgm
-
-      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
-
-      :type: float
 
    .. attribute:: alpha
 
@@ -1025,20 +1026,36 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: from_gamma_pars(par)
-      :classmethod:
-
+   .. py:property:: cage
+      :type: CageImpedance
 
       
-      Compute inverse-Γ model parameters from Γ model parameters.
+      Impedance of the rotor cage, i.e., the rotor resistance.
 
-      This transformation assumes that the parameters are constant.
 
-      :param par: Γ-model parameters.
-      :type par: InductionMachinePars
 
-      :returns: Inverse-Γ model parameters.
-      :rtype: InductionMachineInvGammaPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map, the rotor quantities being `psi_R` and `i_R`.
+
 
 
 
@@ -1061,7 +1078,7 @@ Module Contents
    .. py:method:: update_psi_s(psi_s)
 
       
-      Update the stator flux linkage magnitude state.
+      Update the stator flux linkage magnitude, without effect here.
 
 
 
@@ -1084,32 +1101,42 @@ Module Contents
 
 .. py:class:: InductionMachinePars
 
-   
-   Γ-model parameters of an induction machine.
+   Bases: :py:obj:`BaseInductionMachinePars`
 
-   This contains Γ-model parameters of an induction machine. The main-flux saturation
-   can also be modeled by providing a callable `L_s` parameter. For convenience, the
-   class also provides the corresponding inverse-Γ model parameters, which can be used
-   in control systems. If the saturation is modeled, these inverse-Γ parameters depend
-   on the stator flux linkage magnitude `psi_s` that should be updated by calling the
-   `update_psi_s` method.
+
+   
+   Γ-model parameters of an induction machine, with optional main-flux saturation and
+   deep-bar effect.
+
+   These parameters can be used both in control systems and in the machine model. The
+   magnetic model is [#Sle1989]_::
+
+       psi_s = L_s*(i_s + i_r)
+       psi_r = psi_s + L_ell*i_r
+
+   The main-flux saturation is modeled by providing a callable `L_s` and the deep-bar
+   effect by providing the cage impedance as `R_r`. For control systems, the class
+   provides the corresponding inverse-Γ model parameters, which then depend on the
+   stator flux linkage magnitude given to `update_psi_s`. With the cage impedance, they
+   are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
+   series with its DC inductance, which adds to the leakage inductance.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param R_r: Rotor resistance (Ω).
-   :type R_r: float
+   :param R_r: Rotor resistance (Ω) or, for modeling the deep-bar effect, the cage impedance.
+   :type R_r: float | CageImpedance
    :param L_ell: Leakage inductance (H).
    :type L_ell: float
    :param L_s: Stator inductance (H). If callable, it should be a function of the stator flux
                linkage magnitude (Vs).
    :type L_s: float | Callable[[float], float]
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
-   :param psi_s: Stator flux linkage magnitude (Vs), at which the callable `L_s` is evaluated,
-                 defaults to 0. It can be updated by calling the `update_psi_s` method.
+   :param psi_s: Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
+                 evaluated, defaults to 0.
    :type psi_s: float, optional
 
    .. attribute:: gamma
@@ -1136,12 +1163,6 @@ Module Contents
 
       :type: float
 
-   .. attribute:: R_sgm
-
-      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
-
-      :type: float
-
    .. attribute:: alpha
 
       Inverse rotor time constant (rad/s).
@@ -1153,6 +1174,11 @@ Module Contents
       Breakdown slip angular frequency (rad/s).
 
       :type: float
+
+   .. rubric:: References
+
+   .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," IEEE
+      Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
 
 
 
@@ -1171,20 +1197,36 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: from_inv_gamma_pars(par)
-      :classmethod:
-
+   .. py:property:: cage
+      :type: CageImpedance
 
       
-      Compute Γ-model parameters from inverse-Γ model parameters.
+      Impedance of the rotor cage.
 
-      This transformation assumes that the parameters are constant.
 
-      :param par: Inverse-Γ model parameters.
-      :type par: InductionMachineInvGammaPars
 
-      :returns: Γ model parameters.
-      :rtype: InductionMachinePars
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map.
+
 
 
 
@@ -1207,7 +1249,7 @@ Module Contents
    .. py:method:: update_psi_s(psi_s)
 
       
-      Update the stator flux linkage magnitude state.
+      Update the stator flux linkage magnitude.
 
 
 

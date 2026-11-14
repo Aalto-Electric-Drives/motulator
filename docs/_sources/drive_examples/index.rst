@@ -586,7 +586,7 @@ These examples demonstrate a square-wave signal injection for low-speed operatio
 Grid Connection
 ---------------
 
-These examples demonstrate machines and drives connected to the grid. The example :doc:`/drive_examples/grid_connection/plot_2kw_im_dol` simulates the direct-on-line start of an induction machine. In :doc:`/drive_examples/grid_connection/plot_2kw_im_diode_vhz` and :doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc`, the drive is fed from a diode bridge. The examples :doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc` and :doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc` include an active front end with grid-following and dual-voltage-forming control, respectively, each with two independent control systems.
+These examples demonstrate machines and drives connected to the grid. The example :doc:`/drive_examples/grid_connection/plot_2kw_im_dol` simulates the direct-on-line start of an induction machine, and :doc:`/drive_examples/grid_connection/plot_6kw_im_deep_bars_dol` shows the effect of deep rotor bars on the start. In :doc:`/drive_examples/grid_connection/plot_2kw_im_diode_vhz` and :doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc`, the drive is fed from a diode bridge. The examples :doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc` and :doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc` include an active front end with grid-following and dual-voltage-forming control, respectively, each with two independent control systems.
 
 
 .. raw:: html
@@ -631,6 +631,23 @@ These examples demonstrate machines and drives connected to the grid. The exampl
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, diode bridge, CVC</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates the direct-on-line start of a 5.6-kW induction machine (IM) with deep rotor bars. At high slip frequencies, the eddy currents in the bars increase the rotor resistance and decrease the rotor leakage inductance (deep-bar effect), which increases the starting torque. The deep-bar effect is modeled by means of the cage impedance [#Mol2020]_, and the main-flux saturation is also included. The parameters of the machine are given in [#Mol2021]_.">
+
+.. only:: html
+
+  .. image:: /drive_examples/grid_connection/images/thumb/sphx_glr_plot_6kw_im_deep_bars_dol_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/grid_connection/plot_6kw_im_deep_bars_dol`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">5.6-kW deep-bar IM, direct-on-line start</div>
     </div>
 
 

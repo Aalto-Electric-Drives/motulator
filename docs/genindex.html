@@ -244,6 +244,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="drive_examples/grid_connection/index.html">Grid Connection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/grid_connection/plot_2kw_im_dol.html">2.2-kW IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drive_examples/grid_connection/plot_6kw_im_deep_bars_dol.html">5.6-kW deep-bar IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/grid_connection/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
@@ -532,6 +533,10 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.BaseInductionMachinePars">BaseInductionMachinePars (class in motulator.drive.model)</a>
+</li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.BaseSynchronousMachinePars">BaseSynchronousMachinePars (class in motulator.drive.model)</a>
+</li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues">BaseValues (class in motulator.common.utils)</a>
 
       <ul>
@@ -540,6 +545,8 @@
         <li><a href="autoapi/motulator/grid/utils/index.html#motulator.grid.utils.BaseValues">(class in motulator.grid.utils)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Converter.blocked">blocked (motulator.common.model.Converter property)</a>
 
       <ul>
@@ -560,6 +567,24 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.cage">cage (motulator.drive.control.im.InductionMachineInvGammaPars property)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachinePars.cage">(motulator.drive.control.im.InductionMachinePars property)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.BaseInductionMachinePars.cage">(motulator.drive.model.BaseInductionMachinePars property)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars.cage">(motulator.drive.model.InductionMachineInvGammaPars property)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.cage">(motulator.drive.model.InductionMachinePars property)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedInductionMachinePars.cage">(motulator.drive.model.SaturatedInductionMachinePars property)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedInductionMachinePars.cage">(motulator.drive.model.SpatialSaturatedInductionMachinePars property)</a>
+</li>
+      </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CageImpedance">CageImpedance (class in motulator.drive.model)</a>
+</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.CarrierComparison">CarrierComparison (class in motulator.common.model)</a>
 
       <ul>
@@ -962,24 +987,12 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorController">(class in motulator.drive.control.sm)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.FluxVectorControllerCfg">FluxVectorControllerCfg (class in motulator.drive.control.im)</a>
 
       <ul>
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.FluxVectorControllerCfg">(class in motulator.drive.control.sm)</a>
-</li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars">from_gamma_pars() (motulator.drive.control.im.InductionMachineInvGammaPars class method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars.from_gamma_pars">(motulator.drive.model.InductionMachineInvGammaPars class method)</a>
-</li>
-      </ul></li>
-      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachinePars.from_inv_gamma_pars">from_inv_gamma_pars() (motulator.drive.control.im.InductionMachinePars class method)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.from_inv_gamma_pars">(motulator.drive.model.InductionMachinePars class method)</a>
 </li>
       </ul></li>
       <li><a href="autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues.from_nominal">from_nominal() (motulator.common.utils.BaseValues class method)</a>
@@ -990,6 +1003,8 @@
         <li><a href="autoapi/motulator/grid/utils/index.html#motulator.grid.utils.BaseValues.from_nominal">(motulator.grid.utils.BaseValues class method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CageImpedance.from_rectangular_bars">from_rectangular_bars() (motulator.drive.model.CageImpedance class method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1084,6 +1099,8 @@
         <li><a href="autoapi/motulator/grid/control/index.html#motulator.grid.control.PWM.get_realized_voltage">(motulator.grid.control.PWM method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.get_states">get_states() (motulator.common.model.Subsystem method)</a>
+</li>
       <li><a href="autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.GradNetFunction">GradNetFunction (class in motulator.drive.gradnet)</a>
 </li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.GridConnectedMachine">GridConnectedMachine (class in motulator.drive.model)</a>
@@ -1108,8 +1125,6 @@
         <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars.i_s_dq">(motulator.drive.control.sm.SynchronousMachinePars method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedSynchronousMachinePars.i_s_dq">(motulator.drive.model.SaturatedSynchronousMachinePars method)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.i_s_dq">(motulator.drive.model.SpatialSaturatedSynchronousMachinePars method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachinePars.i_s_dq">(motulator.drive.model.SynchronousMachinePars method)</a>
 </li>
@@ -1242,8 +1257,34 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics">MachineCharacteristics (class in motulator.drive.utils)</a>
 </li>
-      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map">magnetic_map() (motulator.drive.model.SpatialSaturatedSynchronousMachinePars method)</a>
+      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map">magnetic_map() (motulator.drive.control.im.InductionMachineInvGammaPars method)</a>
+
+      <ul>
+        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachinePars.magnetic_map">(motulator.drive.control.im.InductionMachinePars method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SaturatedSynchronousMachinePars.magnetic_map">(motulator.drive.control.sm.SaturatedSynchronousMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SynchronousMachinePars.magnetic_map">(motulator.drive.control.sm.SynchronousMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.BaseInductionMachinePars.magnetic_map">(motulator.drive.model.BaseInductionMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.BaseSynchronousMachinePars.magnetic_map">(motulator.drive.model.BaseSynchronousMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars.magnetic_map">(motulator.drive.model.InductionMachineInvGammaPars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.magnetic_map">(motulator.drive.model.InductionMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedInductionMachinePars.magnetic_map">(motulator.drive.model.SaturatedInductionMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedSynchronousMachinePars.magnetic_map">(motulator.drive.model.SaturatedSynchronousMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedInductionMachinePars.magnetic_map">(motulator.drive.model.SpatialSaturatedInductionMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map">(motulator.drive.model.SpatialSaturatedSynchronousMachinePars method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachinePars.magnetic_map">(motulator.drive.model.SynchronousMachinePars method)</a>
+</li>
+      </ul></li>
       <li><a href="autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel">MagneticModel (class in motulator.drive.utils)</a>
 </li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Converter.margin">margin (motulator.common.model.Converter property)</a>
@@ -1613,16 +1654,6 @@
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.R_R">(motulator.drive.model.InductionMachinePars attribute)</a>
 </li>
       </ul></li>
-      <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.R_sgm">R_sgm (motulator.drive.control.im.InductionMachineInvGammaPars attribute)</a>
-
-      <ul>
-        <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachinePars.R_sgm">(motulator.drive.control.im.InductionMachinePars attribute)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars.R_sgm">(motulator.drive.model.InductionMachineInvGammaPars attribute)</a>
-</li>
-        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars.R_sgm">(motulator.drive.model.InductionMachinePars attribute)</a>
-</li>
-      </ul></li>
       <li><a href="autoapi/motulator/common/control/index.html#motulator.common.control.RateLimiter">RateLimiter (class in motulator.common.control)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.ReferenceGenerator">ReferenceGenerator (class in motulator.drive.control.im)</a>
@@ -1647,6 +1678,8 @@
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.rhs">(motulator.common.model.Subsystem method)</a>
 </li>
         <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ThreePhaseSource.rhs">(motulator.common.model.ThreePhaseSource method)</a>
+</li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CageImpedance.rhs">(motulator.drive.model.CageImpedance method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.DCBus.rhs">(motulator.drive.model.DCBus method)</a>
 </li>
@@ -1705,6 +1738,8 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.Sensor.sample">(motulator.grid.model.Sensor method)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedInductionMachinePars">SaturatedInductionMachinePars (class in motulator.drive.model)</a>
+</li>
       <li><a href="autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SaturatedSynchronousMachinePars">SaturatedSynchronousMachinePars (class in motulator.drive.control.sm)</a>
 
       <ul>
@@ -1896,6 +1931,8 @@
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_states">(motulator.drive.model.ExternalRotorSpeed method)</a>
 </li>
+        <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.set_states">(motulator.drive.model.InductionMachine method)</a>
+</li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_states">(motulator.drive.model.MechanicalSystem method)</a>
 </li>
         <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.set_states">(motulator.drive.model.SynchronousMachine method)</a>
@@ -1967,6 +2004,8 @@
         <li><a href="autoapi/motulator/grid/model/index.html#motulator.grid.model.SolverCfg">(class in motulator.grid.model)</a>
 </li>
       </ul></li>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedInductionMachinePars">SpatialSaturatedInductionMachinePars (class in motulator.drive.model)</a>
+</li>
       <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedSynchronousMachinePars">SpatialSaturatedSynchronousMachinePars (class in motulator.drive.model)</a>
 </li>
       <li><a href="autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.SpeedController">SpeedController (class in motulator.drive.control.im)</a>
@@ -2223,6 +2262,8 @@
 <h2 id="Z">Z</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="autoapi/motulator/drive/model/index.html#motulator.drive.model.CageImpedance.Z">Z() (motulator.drive.model.CageImpedance method)</a>
+</li>
       <li><a href="autoapi/motulator/common/model/index.html#motulator.common.model.ZOH">ZOH (class in motulator.common.model)</a>
 
       <ul>

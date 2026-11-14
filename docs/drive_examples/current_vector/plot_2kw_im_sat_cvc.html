@@ -245,6 +245,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../grid_connection/index.html">Grid Connection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../grid_connection/plot_2kw_im_dol.html">2.2-kW IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../grid_connection/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../grid_connection/plot_6kw_im_deep_bars_dol.html">5.6-kW deep-bar IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../grid_connection/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../grid_connection/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../grid_connection/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
@@ -537,7 +538,7 @@ default parameters correspond to the measured data of a 2.2-kW machine.</p>
 </span></pre></div></div>
 <p>Configure the system model.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="c1"># Γ model with main-flux saturation included</span><span class="w">
-</span><span class="n">par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><span class="n">model</span><span class="o">.</span><span class="n">InductionMachinePars</span></a><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">0.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span><span class="w">
+</span><span class="n">par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol"><span class="n">model</span><span class="o">.</span><span class="n">InductionMachinePars</span></a><span class="p">(</span><span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_r</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">L_ell</span><span class="o">=</span><span class="mf">0.023</span><span class="p">,</span> <span class="n">L_s</span><span class="o">=</span><span class="n">L_s</span><span class="p">)</span><span class="w">
 </span><span class="c1"># Unsaturated machine model, using its inverse-Γ parameters (uncomment to try)</span><span class="w">
 </span><span class="c1"># par = model.InductionMachineInvGammaPars(</span><span class="w">
 </span><span class="c1">#     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224)</span><span class="w">
@@ -551,7 +552,7 @@ directly given gains. Alternatively, <cite>SpeedController</cite> sets the gains
 controller based on the inertia estimate and the bandwidth, which avoids the overshoot
 in the speed reference tracking.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="c1"># Machine model parameter estimates</span><span class="w">
-</span><span class="n">est_par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-drive-control-im sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><span class="n">control</span><span class="o">.</span><span class="n">InductionMachineInvGammaPars</span></a><span class="p">(</span><span class="w">
+</span><span class="n">est_par</span> <span class="o">=</span> <a class="sphx-glr-backref-module-typing sphx-glr-backref-type-py-class reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="typing.Protocol"><span class="n">control</span><span class="o">.</span><span class="n">InductionMachineInvGammaPars</span></a><span class="p">(</span><span class="w">
 </span>    <span class="n">n_p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">R_s</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="n">R_R</span><span class="o">=</span><span class="mf">2.1</span><span class="p">,</span> <span class="n">L_sgm</span><span class="o">=</span><span class="mf">0.021</span><span class="p">,</span> <span class="n">L_M</span><span class="o">=</span><span class="mf">0.224</span><span class="w">
 </span><span class="p">)</span><span class="w">
 </span><span class="c1"># est_par = par  # Uncomment this line to use the perfectly known machine model</span><span class="w">
@@ -585,7 +586,7 @@ induction motor drives,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2190818">https://doi.org/10.1109/TIA.2012.2190818</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.304 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.032 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-im-sat-cvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/1dfc21af3ffdec5ab38e033084d08a7e/plot_2kw_im_sat_cvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_im_sat_cvc.ipynb</span></code></a></p>

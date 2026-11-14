@@ -1846,8 +1846,8 @@ Module Contents
                         should be differentiable, if incremental inductances are used. Needed only for
                         control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
 
 
@@ -1867,7 +1867,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
+   .. py:method:: i_s_dq(psi_s_dq)
 
       
       Current (A) as a function of the flux linkage (Vs).
@@ -1891,10 +1891,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: incr_ind_mat(i_s_dq)
 
       
-      Incremental inductance matrix at given current.
+      Incremental inductance matrix (H).
 
 
 
@@ -1942,10 +1942,34 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
 
       
-      Flux linkage as a function of the stator current.
+      Magnetic map.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
+
+      
+      Flux linkage (Vs) as a function of the stator current (A).
 
 
 
@@ -2436,8 +2460,8 @@ Module Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
 
 
@@ -2457,7 +2481,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
+   .. py:method:: i_s_dq(psi_s_dq)
 
       
       Current (A) as a function of the flux linkage (Vs).
@@ -2481,7 +2505,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: incr_ind_mat(i_s_dq)
 
       
       Incremental inductance matrix (H).
@@ -2529,7 +2553,31 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
 
       
       Flux linkage (Vs) as a function of the stator current (A).

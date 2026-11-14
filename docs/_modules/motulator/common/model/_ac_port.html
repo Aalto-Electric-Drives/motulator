@@ -244,6 +244,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/grid_connection/index.html">Grid Connection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_im_dol.html">2.2-kW IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_6kw_im_deep_bars_dol.html">5.6-kW deep-bar IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
@@ -547,6 +548,39 @@
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">derivative</span><span class="p">(</span>
+    <span class="n">fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Derivative of a complex-valued function along a direction.</span>
+
+<span class="sd">    The derivative is computed by central differences with a step of the length `h`</span>
+<span class="sd">    in the direction of `v`, so the step is in the units of the argument.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fcn : Callable[[Any], Any]</span>
+<span class="sd">        Function of a real or complex variable, whose value is converted to a complex</span>
+<span class="sd">        number.</span>
+<span class="sd">    x : float | complex</span>
+<span class="sd">        Point at which the derivative is evaluated.</span>
+<span class="sd">    v : float | complex</span>
+<span class="sd">        Rate of change of the argument, e.g., its time derivative.</span>
+<span class="sd">    h : float, optional</span>
+<span class="sd">        Length of the step of the central differences, defaults to 1e-4.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    complex</span>
+<span class="sd">        Rate of change of the value of `fcn`.</span>
+
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="n">v</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">complex</span><span class="p">(</span><span class="n">fcn</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">step</span><span class="p">))</span> <span class="o">-</span> <span class="nb">complex</span><span class="p">(</span><span class="n">fcn</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">step</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">jacobian</span><span class="p">(</span><span class="n">fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span> <span class="n">x</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Jacobian of a complex-valued function of a complex variable.</span>
@@ -566,8 +600,7 @@
 <span class="sd">        Jacobian acting on the real and imaginary parts.</span>
 
 <span class="sd">    """</span>
-    <span class="n">d_x</span> <span class="o">=</span> <span class="p">(</span><span class="nb">complex</span><span class="p">(</span><span class="n">fcn</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">))</span> <span class="o">-</span> <span class="nb">complex</span><span class="p">(</span><span class="n">fcn</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
-    <span class="n">d_y</span> <span class="o">=</span> <span class="p">(</span><span class="nb">complex</span><span class="p">(</span><span class="n">fcn</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">h</span><span class="p">))</span> <span class="o">-</span> <span class="nb">complex</span><span class="p">(</span><span class="n">fcn</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">h</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+    <span class="n">d_x</span><span class="p">,</span> <span class="n">d_y</span> <span class="o">=</span> <span class="n">derivative</span><span class="p">(</span><span class="n">fcn</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="n">derivative</span><span class="p">(</span><span class="n">fcn</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">d_x</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">d_y</span><span class="o">.</span><span class="n">real</span><span class="p">],</span> <span class="p">[</span><span class="n">d_x</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="n">d_y</span><span class="o">.</span><span class="n">imag</span><span class="p">]])</span>
 
 

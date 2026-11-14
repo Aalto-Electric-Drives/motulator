@@ -1815,16 +1815,18 @@ Package Contents
    A subsystem has the inputs `inp`, the outputs `out`, and the states `state`,
    typically dataclasses, whose attributes the model reads by name: the connections
    pass the outputs to the inputs (see `Model`), and the states are gathered into the
-   state vector of the solver in their declaration order. The class provides methods
-   for setting states, outputs, and computing state derivatives. It also provides
-   methods for extending the state history and creating the time-series representation
-   of the subsystem, which the model names in the results (see `ModelTimeSeries`). A
-   subsystem whose outputs depend directly on some of its inputs lists these inputs in
-   `feedthrough`, from which the model derives the evaluation order of the outputs. The
-   state history is a dict of lists, keyed by the names of the state fields. The model
-   initializes it by `init_state_history` and extends it by `extend_state_history`. A
-   subclass can keep its other signals in the history as well, under other keys, as a
-   converter does (see `Converter`).
+   state vector of the solver in their declaration order. A state is a complex number
+   or, for a variable number of states (e.g., a ladder circuit), a one-dimensional
+   complex array. The class provides methods for getting and setting states, setting
+   outputs, and computing state derivatives. It also provides methods for extending the
+   state history and creating the time-series representation of the subsystem, which
+   the model names in the results (see `ModelTimeSeries`). A subsystem whose outputs
+   depend directly on some of its inputs lists these inputs in `feedthrough`, from
+   which the model derives the evaluation order of the outputs. The state history is a
+   dict of lists, keyed by the names of the state fields, with one item (a number or a
+   nonempty array) per solution point. The model initializes it by `init_state_history`
+   and extends it by `extend_state_history`. A subclass can keep its other signals in
+   the history as well, under other keys, as a converter does (see `Converter`).
 
 
 
@@ -1919,6 +1921,30 @@ Package Contents
 
       
       Extend the state history with values from solver output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_states()
+
+      
+      Get the states as a list.
 
 
 

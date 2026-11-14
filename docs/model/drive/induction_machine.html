@@ -251,6 +251,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../drive_examples/grid_connection/index.html">Grid Connection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_im_dol.html">2.2-kW IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../drive_examples/grid_connection/plot_6kw_im_deep_bars_dol.html">5.6-kW deep-bar IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
@@ -516,15 +517,15 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine">Induction Machine Γ Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#im-core-losses">Core Losses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine">Induction Machine Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#im-magnetic-model">Magnetic Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Γ Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-model">Inverse-Γ Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-magnetic-model">General Magnetic Model</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-inverse-model">Induction Machine Inverse-Γ Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-magnetic-model">Linear Magnetic Model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-model-with-main-flux-saturation">Inverse-Γ Model With Main-Flux Saturation</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#im-cage-impedance">Cage Impedance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#im-core-losses">Core Losses</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
 </ul>
             </nav>
@@ -541,95 +542,89 @@
 <h1>Induction Machines<a class="headerlink" href="#induction-machines" title="Link to this heading">#</a></h1>
 <p>This document describes continuous-time induction machine models of the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#module-motulator.drive.model" title="motulator.drive.model"><code class="xref py py-mod docutils literal notranslate"><span class="pre">motulator.drive.model</span></code></a> package.</p>
 <section id="induction-machine">
-<span id="induction-machine-model"></span><h2>Induction Machine Γ Model<a class="headerlink" href="#induction-machine" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="#fig-im-gamma"><span class="std std-ref">Figure 1</span></a> shows the Γ-equivalent circuit model of an induction machine. We apply it as the base model, as it readily extends to include magnetic saturation <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id48" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The model is implemented in <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class.</p>
-<figure class="align-center" id="fig-im-gamma">
-<a class="only-light reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="only-light" src="../../_images/im_gamma.svg" style="width: 100%;" />
-</a>
-<figcaption>
-<p><span class="caption-text"><em>Figure 1:</em> Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</span><a class="headerlink" href="#fig-im-gamma" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="id6">
-<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="invert-colors-dark only-dark" src="../../_images/im_gamma.svg" style="width: 100%;" />
-</a>
-<figcaption>
-<p><span class="caption-text"><em>Figure 1:</em> Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<p>In general coordinates rotating at <span class="math notranslate nohighlight">\(\omegac\)</span> (see <a class="reference internal" href="../common/space_vectors.html#coordinate-transformation"><span class="std std-ref">Coordinate Transformation</span></a>), the voltage equations are</p>
+<span id="induction-machine-model"></span><h2>Induction Machine Model<a class="headerlink" href="#induction-machine" title="Link to this heading">#</a></h2>
+<p>The induction machine model consists of the stator resistance, the magnetic model, and the rotor cage. In general coordinates rotating at <span class="math notranslate nohighlight">\(\omegac\)</span> (see <a class="reference internal" href="../common/space_vectors.html#coordinate-transformation"><span class="std std-ref">Coordinate Transformation</span></a>), the voltage equations are</p>
 <div class="math notranslate nohighlight" id="equation-im-voltages">
 <span class="eqno">(1)<a class="headerlink" href="#equation-im-voltages" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D\psis}{\D t} &amp;= \us - \Rs\is - \jj\omegac\psis \\
-    \frac{\D\psir}{\D t} &amp;= -\Rr\ir - \jj(\omegac - \omegam)\psir\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\us\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\is\)</span> is the stator current, <span class="math notranslate nohighlight">\(\psis\)</span> is the stator flux linkage, and <span class="math notranslate nohighlight">\(\Rs\)</span> is the stator resistance. The rotor quantities are defined similarly. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omegam = \np \omegaM\)</span>, where <span class="math notranslate nohighlight">\(\omegaM\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(\np\)</span> is the number of pole pairs.</p>
-<p>The stator and rotor currents, respectively, are</p>
-<div class="math notranslate nohighlight" id="equation-im-currents">
-<span class="eqno">(2)<a class="headerlink" href="#equation-im-currents" title="Link to this equation">#</a></span>\[\begin{split}    \is &amp;= \frac{\psis - \gamma\psir}{\gamma L_\ell} \\
-    \ir &amp;= \frac{\psir - \psis}{L_\ell}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\Ls\)</span> is the stator inductance, <span class="math notranslate nohighlight">\(L_\ell\)</span> is the leakage inductance, and <span class="math notranslate nohighlight">\(\gamma\)</span> is the magnetic coupling factor</p>
-<div class="math notranslate nohighlight" id="equation-gamma-factor">
-<span class="eqno">(3)<a class="headerlink" href="#equation-gamma-factor" title="Link to this equation">#</a></span>\[    \gamma = \frac{\Ls}{\Ls + L_\ell}\]</div>
-<p>The electromagnetic torque is</p>
+    \frac{\D\psir}{\D t} &amp;= \mathbf{u}_\mathrm{r} - \Rr\ir - \jj(\omegac - \omegam)\psir\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\us\)</span> is the stator voltage, <span class="math notranslate nohighlight">\(\is\)</span> is the stator current, <span class="math notranslate nohighlight">\(\psis\)</span> is the stator flux linkage, and <span class="math notranslate nohighlight">\(\Rs\)</span> is the stator resistance. The rotor quantities are defined similarly. The rotor winding of a cage machine is short-circuited, i.e., the rotor voltage is <span class="math notranslate nohighlight">\(\mathbf{u}_\mathrm{r} = 0\)</span>. The deep-bar effect can be modeled by replacing the rotor resistance <span class="math notranslate nohighlight">\(\Rr\)</span> with the cage impedance, see <a class="reference internal" href="#im-cage-impedance"><span class="std std-ref">Cage Impedance</span></a>. The electrical angular speed of the rotor is <span class="math notranslate nohighlight">\(\omegam = \np \omegaM\)</span>, where <span class="math notranslate nohighlight">\(\omegaM\)</span> is the mechanical angular speed of the rotor and <span class="math notranslate nohighlight">\(\np\)</span> is the number of pole pairs.</p>
+<p>The magnetic model gives the stator and rotor currents as functions of the stator and rotor flux linkages, see <a class="reference internal" href="#im-magnetic-model"><span class="std std-ref">Magnetic Model</span></a>. Without spatial harmonics, the electromagnetic torque is</p>
 <div class="math notranslate nohighlight" id="equation-im-torque">
-<span class="eqno">(4)<a class="headerlink" href="#equation-im-torque" title="Link to this equation">#</a></span>\[    \tauM = \frac{3\np}{2}\IM \left\{\is \psis^* \right\}\]</div>
-<p>where the star operator denotes the complex conjugate. <a class="reference internal" href="#fig-im-block"><span class="std std-ref">Figure 2</span></a> shows the block diagram of the model in stator coordinates.</p>
+<span class="eqno">(2)<a class="headerlink" href="#equation-im-torque" title="Link to this equation">#</a></span>\[    \tauM = \frac{3\np}{2}\IM \left\{\is \psis^* \right\}\]</div>
+<p>where the star operator denotes the complex conjugate.</p>
+<p>The model is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class in rotor coordinates (<span class="math notranslate nohighlight">\(\omegac = \omegam\)</span>), in which the cage impedance is time invariant and the magnetic model can depend on the electrical rotor angle <span class="math notranslate nohighlight">\(\thetam\)</span>, whose state equation is <span class="math notranslate nohighlight">\(\D\thetam/\D t = \omegam\)</span>. <a class="reference internal" href="#fig-im-block"><span class="std std-ref">Figure 1</span></a> shows the block diagram of the model in these coordinates. Since the machine is fed and observed from stator coordinates, the stator voltage and the stator current are transformed accordingly, in the same way as in the synchronous machine model, see <a class="reference internal" href="synchronous_machine.html#fig-sm-block-stat"><span class="std std-ref">Figure 3</span></a> in <a class="reference internal" href="synchronous_machine.html#synchronous-machine"><span class="std std-ref">Synchronous Machine Model</span></a>.</p>
 <figure class="align-center" id="fig-im-block">
 <a class="only-light reference internal image-reference" href="../../_images/im_block.svg"><img alt="Block diagram of an induction machine model" class="only-light" src="../../_images/im_block.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the induction machine model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#fig-im-block" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Block diagram of the induction machine model in rotor coordinates. The magnetic model gives the currents and the torque, and it depends on the angle <span class="math notranslate nohighlight">\(\thetam\)</span> only if spatial harmonics are modeled. The cage impedance <span class="math notranslate nohighlight">\(Z_\mathrm{c}(s)\)</span> reduces to the rotor resistance <span class="math notranslate nohighlight">\(\Rr\)</span>, if the deep-bar effect is omitted.</span><a class="headerlink" href="#fig-im-block" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id7">
+<figure class="align-center" id="id9">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_block.svg"><img alt="Block diagram of an induction machine model" class="invert-colors-dark only-dark" src="../../_images/im_block.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 2:</em> Block diagram of the machine model. The magnetic model includes the flux equations (or, optionally, saturation characteristics) and the torque equation.</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 1:</em> Block diagram of the induction machine model in rotor coordinates. The magnetic model gives the currents and the torque, and it depends on the angle <span class="math notranslate nohighlight">\(\thetam\)</span> only if spatial harmonics are modeled. The cage impedance <span class="math notranslate nohighlight">\(Z_\mathrm{c}(s)\)</span> reduces to the rotor resistance <span class="math notranslate nohighlight">\(\Rr\)</span>, if the deep-bar effect is omitted.</span><a class="headerlink" href="#id9" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The main-flux saturation is modeled using a nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span> where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id42" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>, <a class="reference internal" href="../../bibliography.html#id48" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The saturable stator inductance can be unambiguously characterized using simple no-load tests. It also properly takes into account the effect of the load variations on the saturation state. Notice that the nonlinear stator inductance only appears in <a class="reference internal" href="#equation-gamma-factor">(3)</a>.</p>
-<p>The Γ model in stator coordinates (<span class="math notranslate nohighlight">\(\omegac = 0\)</span>) is implemented in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> class. Its parameters are defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class, which accepts nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>. See also examples <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a> and <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>.</p>
-<section id="im-core-losses">
-<span id="core-losses"></span><h3>Core Losses<a class="headerlink" href="#im-core-losses" title="Link to this heading">#</a></h3>
-<p>Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance <span class="math notranslate nohighlight">\(\Gc\)</span>, connected in parallel with the magnetizing inductance <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id42" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>]</span>. In this case, the current given by <a class="reference internal" href="#equation-im-currents">(2)</a> is the current <span class="math notranslate nohighlight">\(\isp\)</span> flowing into the magnetic circuit and the stator current becomes</p>
-<div class="math notranslate nohighlight" id="equation-im-core-loss">
-<span class="eqno">(5)<a class="headerlink" href="#equation-im-core-loss" title="Link to this equation">#</a></span>\[    \is = \isp + \Gc(\us - \Rs\is) = \frac{\isp + \Gc\us}{1 + \Gc\Rs}\]</div>
-<p>where <span class="math notranslate nohighlight">\(\us - \Rs\is\)</span> is the voltage across the core-loss conductance. The corresponding core losses are <span class="math notranslate nohighlight">\((3/2)\Gc|\us - \Rs\is|^2\)</span>. Notice that the torque <a class="reference internal" href="#equation-im-torque">(4)</a> is produced by the current <span class="math notranslate nohighlight">\(\isp\)</span>, i.e., the core-loss current does not contribute to the torque. By default, <span class="math notranslate nohighlight">\(\Gc = 0\)</span>, i.e., the core losses are omitted.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For notational simplicity, <span class="math notranslate nohighlight">\(\Gc = 0\)</span> is assumed elsewhere in this documentation, i.e., <span class="math notranslate nohighlight">\(\is = \isp\)</span>. Otherwise, the magnetic model and the expressions derived from it hold as such, if the current <span class="math notranslate nohighlight">\(\isp\)</span> is used in place of <span class="math notranslate nohighlight">\(\is\)</span>.</p>
-</div>
+<p>The rotor quantities can be scaled freely, since the rotor of a cage machine has no terminals. The class uses the scaling of its parameters, e.g., the rotor quantities are those of the inverse-Γ model if the inverse-Γ parameters are used.</p>
 </section>
+<section id="im-magnetic-model">
+<span id="magnetic-model"></span><h2>Magnetic Model<a class="headerlink" href="#im-magnetic-model" title="Link to this heading">#</a></h2>
+<section id="model">
+<h3>Γ Model<a class="headerlink" href="#model" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="#fig-im-gamma"><span class="std std-ref">Figure 2</span></a> shows the Γ-equivalent circuit model of an induction machine, which readily extends to include the main-flux saturation <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../../bibliography.html#id49" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. Its parameters are defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class.</p>
+<figure class="align-center" id="fig-im-gamma">
+<a class="only-light reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="only-light" src="../../_images/im_gamma.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 2:</em> Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</span><a class="headerlink" href="#fig-im-gamma" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id10">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_gamma.svg"><img alt="Gamma-model of an induction machine" class="invert-colors-dark only-dark" src="../../_images/im_gamma.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 2:</em> Γ model of an induction machine in stator coordinates (denoted by the superscript s). The stator inductance can be parametrized to be a nonlinear function of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>.</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The stator and rotor currents, respectively, are</p>
+<div class="math notranslate nohighlight" id="equation-im-currents">
+<span class="eqno">(3)<a class="headerlink" href="#equation-im-currents" title="Link to this equation">#</a></span>\[\begin{split}    \is &amp;= \frac{\psis - \gamma\psir}{\gamma L_\ell} \\
+    \ir &amp;= \frac{\psir - \psis}{L_\ell}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Ls\)</span> is the stator inductance, <span class="math notranslate nohighlight">\(L_\ell\)</span> is the leakage inductance, and <span class="math notranslate nohighlight">\(\gamma\)</span> is the magnetic coupling factor</p>
+<div class="math notranslate nohighlight" id="equation-gamma-factor">
+<span class="eqno">(4)<a class="headerlink" href="#equation-gamma-factor" title="Link to this equation">#</a></span>\[    \gamma = \frac{\Ls}{\Ls + L_\ell}\]</div>
+<p>The main-flux saturation is modeled using a nonlinear stator inductance <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span> where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../../bibliography.html#id43" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>, <a class="reference internal" href="../../bibliography.html#id49" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The saturable stator inductance can be unambiguously characterized using simple no-load tests. It also properly takes into account the effect of the load variations on the saturation state. Notice that the nonlinear stator inductance only appears in <a class="reference internal" href="#equation-gamma-factor">(4)</a>. See also examples <a class="reference internal" href="../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html"><span class="doc">2.2-kW saturated IM, CVC</span></a> and <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>.</p>
 </section>
-<section id="induction-machine-inverse-model">
-<h2>Induction Machine Inverse-Γ Model<a class="headerlink" href="#induction-machine-inverse-model" title="Link to this heading">#</a></h2>
-<section id="linear-magnetic-model">
-<h3>Linear Magnetic Model<a class="headerlink" href="#linear-magnetic-model" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="#fig-im-inv-gamma"><span class="std std-ref">Figure 3</span></a> shows the inverse-Γ model of an induction machine. This model is commonly used in control applications for more straightforward implementation. Constant parameters are defined using <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachineInvGammaPars</span></code></a> and can be used both in control methods and to parametrize the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> model.</p>
+<section id="inverse-model">
+<h3>Inverse-Γ Model<a class="headerlink" href="#inverse-model" title="Link to this heading">#</a></h3>
+<p><a class="reference internal" href="#fig-im-inv-gamma"><span class="std std-ref">Figure 3</span></a> shows the inverse-Γ model of an induction machine. This model is commonly used in control applications for more straightforward implementation. Its constant parameters are defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachineInvGammaPars" title="motulator.drive.model.InductionMachineInvGammaPars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachineInvGammaPars</span></code></a> class, which can be used both in control methods and to parametrize the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine" title="motulator.drive.model.InductionMachine"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachine</span></code></a> model.</p>
 <figure class="align-center" id="fig-im-inv-gamma">
 <a class="only-light reference internal image-reference" href="../../_images/im_inv_gamma.svg"><img alt="Inverse-Gamma model of an induction machine" class="only-light" src="../../_images/im_inv_gamma.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>.</span><a class="headerlink" href="#fig-im-inv-gamma" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine in stator coordinates. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>.</span><a class="headerlink" href="#fig-im-inv-gamma" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<figure class="align-center" id="id8">
+<figure class="align-center" id="id11">
 <a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_inv_gamma.svg"><img alt="Inverse-Gamma model of an induction machine" class="invert-colors-dark only-dark" src="../../_images/im_inv_gamma.svg" style="width: 100%;" />
 </a>
 <figcaption>
-<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>.</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
+<p><span class="caption-text"><em>Figure 3:</em> Inverse-Γ model of an induction machine in stator coordinates. If main-flux saturation is included, the parameters become nonlinear functions of the stator flux magnitude, <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>.</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>If the magnetic saturation is omitted, the inverse-Γ model is mathematically identical to the Γ model <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../bibliography.html#id48" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The parameters can be transformed as</p>
+<p>The stator and rotor flux linkages, respectively, are</p>
+<div class="math notranslate nohighlight" id="equation-im-inv-gamma-fluxes">
+<span class="eqno">(5)<a class="headerlink" href="#equation-im-inv-gamma-fluxes" title="Link to this equation">#</a></span>\[\begin{split}    \psis &amp;= \Lsgm\is + \psiR \\
+    \psiR &amp;= \LM(\is + \iR)\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Lsgm\)</span> is the leakage inductance and <span class="math notranslate nohighlight">\(\LM\)</span> is the magnetizing inductance. The rotor flux linkage <span class="math notranslate nohighlight">\(\psiR = \gamma\psir\)</span> and the rotor current <span class="math notranslate nohighlight">\(\iR = \ir/\gamma\)</span> are scaled with respect to the Γ model, and the rotor resistance is <span class="math notranslate nohighlight">\(\RR\)</span>. If the magnetic saturation is omitted, the inverse-Γ model is mathematically identical to the Γ model <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id49" title="Slemon. Modelling of induction machines for electric drives. IEEE Trans. Ind. Appl., 1989. doi:10.1109/28.44251.">Slemon, 1989</a>]</span>. The parameters can be transformed as</p>
 <div class="math notranslate nohighlight" id="equation-gamma-to-inv-gamma">
 <span class="eqno">(6)<a class="headerlink" href="#equation-gamma-to-inv-gamma" title="Link to this equation">#</a></span>\[    \Lsgm = \gamma L_\ell \qquad
     \LM = \gamma\Ls \qquad
     \RR = \gamma^2 \Rr\]</div>
-<p>where <span class="math notranslate nohighlight">\(\gamma\)</span> is defined in <a class="reference internal" href="#equation-gamma-factor">(3)</a>. Furthermore, the rotor flux linkage <span class="math notranslate nohighlight">\(\psiR = \gamma\psir\)</span> and the rotor current <span class="math notranslate nohighlight">\(\iR = \ir/\gamma\)</span> are also scaled. Otherwise the equations remain the same as in the Γ model.</p>
-</section>
-<section id="inverse-model-with-main-flux-saturation">
-<h3>Inverse-Γ Model With Main-Flux Saturation<a class="headerlink" href="#inverse-model-with-main-flux-saturation" title="Link to this heading">#</a></h3>
-<p>While the inverse-Γ model is convenient for control, incorporating magnetic saturation directly into it is challenging. A more practical approach is to map the saturation effects from the Γ model using the factor <span class="math notranslate nohighlight">\(\gamma\)</span> in <a class="reference internal" href="#equation-gamma-factor">(3)</a>. As a result, the inverse-Γ model parameters become flux-dependent: <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>. The <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class handles the conversion from the Γ parameters to the inverse-Γ parameters, enabling saturation-aware control methods (see example <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>).</p>
+<p>where <span class="math notranslate nohighlight">\(\gamma\)</span> is defined in <a class="reference internal" href="#equation-gamma-factor">(4)</a>.</p>
+<p>While the inverse-Γ model is convenient for control, incorporating magnetic saturation directly into it is challenging. A more practical approach is to map the saturation effects from the Γ model using the factor <span class="math notranslate nohighlight">\(\gamma\)</span> in <a class="reference internal" href="#equation-gamma-factor">(4)</a>. As a result, the inverse-Γ model parameters become flux-dependent: <span class="math notranslate nohighlight">\(\Lsgm(\abspsis)\)</span>, <span class="math notranslate nohighlight">\(\RR(\abspsis)\)</span>, and <span class="math notranslate nohighlight">\(\LM(\abspsis)\)</span>. The <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class provides these inverse-Γ parameters, enabling saturation-aware control methods (see example <a class="reference internal" href="../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html"><span class="doc">2.2-kW saturated IM, FVC</span></a>).</p>
 <p>Using the stator flux linkage and the stator current as state variables, the nonlinear state-space form becomes</p>
 <div class="math notranslate nohighlight" id="equation-im-inv-gamma-ss">
 <span class="eqno">(7)<a class="headerlink" href="#equation-im-inv-gamma-ss" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \psis}{\D t} &amp;= \us - \Rs\is - \jj\omegac\psis \\
@@ -641,24 +636,78 @@
 <span class="eqno">(8)<a class="headerlink" href="#equation-im-inv-gamma-eps" title="Link to this equation">#</a></span>\[    \boldsymbol{\upepsilon} = \frac{1}{2}\frac{\abspsis}{\gamma(\abspsis)}\frac{\partial\gamma(\abspsis)}{\partial\abspsis} \left[ \us - \Rs\is + \frac{\psis}{\psis^*}(\us^* - \Rs\is^*)\right]\]</div>
 <p>This voltage term only appears during changes in the stator-flux magnitude. When the transient voltage term is included, the inverse-Γ model <a class="reference internal" href="#equation-im-inv-gamma-ss">(7)</a> is mathematically identical to the original nonlinear Γ model. However, in control methods, the transient voltage term can typically be neglected.</p>
 </section>
+<section id="general-magnetic-model">
+<h3>General Magnetic Model<a class="headerlink" href="#general-magnetic-model" title="Link to this heading">#</a></h3>
+<p>In general, the magnetic model is a current map, i.e., a map from the flux linkages to the currents. The map is lossless, if the currents are the gradient of the field energy with respect to the flux linkages, i.e.,</p>
+<div class="math notranslate nohighlight" id="equation-im-energy">
+<span class="eqno">(9)<a class="headerlink" href="#equation-im-energy" title="Link to this equation">#</a></span>\[    \is = \frac{\partial W}{\partial \psis} \qquad
+    \ir = \frac{\partial W}{\partial \psir}\]</div>
+<p>where <span class="math notranslate nohighlight">\(W(\psis, \psir)\)</span> is the field energy multiplied by 2/3 and the derivatives are taken with respect to the real and imaginary parts of the flux linkages. The Jacobian of the map is then symmetric, which is known as the reciprocity condition. Without spatial harmonics, <span class="math notranslate nohighlight">\(W\)</span> is invariant under a common rotation of the flux linkages, which makes the torque <a class="reference internal" href="#equation-im-torque">(2)</a> equal to the torque <span class="math notranslate nohighlight">\(-(3\np/2)\IM\{\ir\psir^*\}\)</span> computed from the rotor quantities. As an example, the Γ model with constant inductances corresponds to</p>
+<div class="math notranslate nohighlight" id="equation-im-energy-gamma">
+<span class="eqno">(10)<a class="headerlink" href="#equation-im-energy-gamma" title="Link to this equation">#</a></span>\[    W = \frac{|\psis|^2}{2\Ls} + \frac{|\psir - \psis|^2}{2L_\ell}\]</div>
+<p>A current map can be given as a function using the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SaturatedInductionMachinePars" title="motulator.drive.model.SaturatedInductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SaturatedInductionMachinePars</span></code></a> class, e.g., for modeling the saturation of the leakage flux or the mutual saturation between the main flux and the leakage flux <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../../bibliography.html#id52" title="Tuovinen, Hinkkanen, and Luomi. Modeling of saturation due to main and leakage flux interaction in induction machines. IEEE Trans. Ind. Appl., 2010. doi:10.1109/TIA.2010.2045210.">Tuovinen <em>et al.</em>, 2010</a>]</span>. With spatial harmonics (e.g., due to the slots), the field energy <span class="math notranslate nohighlight">\(W(\psis, \psir, \thetam)\)</span> in rotor coordinates also depends on the electrical rotor angle <span class="math notranslate nohighlight">\(\thetam\)</span>, and the torque is</p>
+<div class="math notranslate nohighlight" id="equation-im-torque-harmonics">
+<span class="eqno">(11)<a class="headerlink" href="#equation-im-torque-harmonics" title="Link to this equation">#</a></span>\[    \tauM = \frac{3\np}{2}\left(\IM \left\{\is \psis^* \right\} - \frac{\partial W}{\partial \thetam}\right)\]</div>
+<p>Such a map, including the torque, can be given using the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SpatialSaturatedInductionMachinePars" title="motulator.drive.model.SpatialSaturatedInductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.SpatialSaturatedInductionMachinePars</span></code></a> class.</p>
+</section>
+</section>
+<section id="im-cage-impedance">
+<span id="cage-impedance"></span><h2>Cage Impedance<a class="headerlink" href="#im-cage-impedance" title="Link to this heading">#</a></h2>
+<p>Due to the eddy currents in the rotor bars, the rotor resistance increases and the rotor leakage inductance decreases with the frequency of the rotor current (deep-bar effect). This effect can be modeled by replacing the rotor resistance with the cage impedance <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../../bibliography.html#id38" title="Mölsä, Saarakkala, Hinkkanen, Arkkio, and Routimo. A dynamic model for saturated induction machines with closed rotor slots and deep bars. IEEE Trans. Energy Convers., 2020. doi:10.1109/TEC.2019.2950810.">Mölsä <em>et al.</em>, 2020</a>]</span></p>
+<div class="math notranslate nohighlight" id="equation-im-cage">
+<span class="eqno">(12)<a class="headerlink" href="#equation-im-cage" title="Link to this equation">#</a></span>\[    Z_\mathrm{c}(s) = R_0 + \cfrac{1}{\cfrac{1}{sL_0} + \cfrac{1}{R_1 + \cfrac{1}{\cfrac{1}{sL_1} + \cdots}}}\]</div>
+<p>in rotor coordinates, i.e., a ladder circuit of series resistances and shunt inductances, terminated with the last resistance, as shown in <a class="reference internal" href="#fig-im-cage"><span class="std std-ref">Figure 4</span></a>. Hence, <span class="math notranslate nohighlight">\(R_0\)</span> is the DC resistance and <span class="math notranslate nohighlight">\(L_0\)</span> is the DC inductance of the cage. The rotor voltage equation in <a class="reference internal" href="#equation-im-voltages">(1)</a> then becomes</p>
+<div class="math notranslate nohighlight" id="equation-im-cage-voltage">
+<span class="eqno">(13)<a class="headerlink" href="#equation-im-cage-voltage" title="Link to this equation">#</a></span>\[    \frac{\D\psir}{\D t} = \mathbf{u}_\mathrm{r} - Z_\mathrm{c}(s)\ir\]</div>
+<p>in rotor coordinates (<span class="math notranslate nohighlight">\(\omegac = \omegam\)</span>), where <span class="math notranslate nohighlight">\(s\)</span> is the differential operator. The flux linkages of the inductances are additional state variables.</p>
+<figure class="align-center" id="fig-im-cage">
+<a class="only-light reference internal image-reference" href="../../_images/im_cage.svg"><img alt="Cage impedance as a ladder circuit" class="only-light" src="../../_images/im_cage.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 4:</em> Cage impedance <span class="math notranslate nohighlight">\(Z_\mathrm{c}(s)\)</span> as a ladder circuit of the order <span class="math notranslate nohighlight">\(N\)</span>.</span><a class="headerlink" href="#fig-im-cage" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id12">
+<a class="invert-colors-dark only-dark reference internal image-reference" href="../../_images/im_cage.svg"><img alt="Cage impedance as a ladder circuit" class="invert-colors-dark only-dark" src="../../_images/im_cage.svg" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-text"><em>Figure 4:</em> Cage impedance <span class="math notranslate nohighlight">\(Z_\mathrm{c}(s)\)</span> as a ladder circuit of the order <span class="math notranslate nohighlight">\(N\)</span>.</span><a class="headerlink" href="#id12" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>For rectangular rotor bars, the elements are <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../../bibliography.html#id38" title="Mölsä, Saarakkala, Hinkkanen, Arkkio, and Routimo. A dynamic model for saturated induction machines with closed rotor slots and deep bars. IEEE Trans. Energy Convers., 2020. doi:10.1109/TEC.2019.2950810.">Mölsä <em>et al.</em>, 2020</a>]</span></p>
+<div class="math notranslate nohighlight" id="equation-im-cage-elements">
+<span class="eqno">(14)<a class="headerlink" href="#equation-im-cage-elements" title="Link to this equation">#</a></span>\[    R_n = (4n + 1)R_0 \qquad
+    L_n = \frac{3L_0}{4n + 3}\]</div>
+<p>The cage impedance is defined in the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.CageImpedance</span></code></a> class, which can be given as the rotor resistance to the Γ-model parameters and to the general magnetic model classes. The inverse-Γ parameters of the Γ-model class, used in control, are then those of the low-frequency equivalent <span class="math notranslate nohighlight">\(Z_\mathrm{c}(s) \approx R_0 + sL_0\)</span>, i.e., the DC inductance of the cage adds to the leakage inductance. See also the example <a class="reference internal" href="../../drive_examples/grid_connection/plot_6kw_im_deep_bars_dol.html"><span class="doc">5.6-kW deep-bar IM, direct-on-line start</span></a>.</p>
+</section>
+<section id="im-core-losses">
+<span id="core-losses"></span><h2>Core Losses<a class="headerlink" href="#im-core-losses" title="Link to this heading">#</a></h2>
+<p>Eddy-current core losses can be optionally modeled by means of a constant core-loss conductance <span class="math notranslate nohighlight">\(\Gc\)</span>, connected between the stator resistance and the magnetic model, i.e., in parallel with the stator inductance in the Γ model <span class="bibtex-citation" id="id7">[<a class="reference internal" href="../../bibliography.html#id43" title="Qu, Ranta, Hinkkanen, and Luomi. Loss-minimizing flux level control of induction motor drives. IEEE Trans. Ind. Appl., 2012. doi:10.1109/TIA.2012.2190818.">Qu <em>et al.</em>, 2012</a>]</span>. In this case, the current given by the magnetic model is denoted by <span class="math notranslate nohighlight">\(\isp\)</span> and the stator current becomes</p>
+<div class="math notranslate nohighlight" id="equation-im-core-loss">
+<span class="eqno">(15)<a class="headerlink" href="#equation-im-core-loss" title="Link to this equation">#</a></span>\[    \is = \isp + \Gc(\us - \Rs\is) = \frac{\isp + \Gc\us}{1 + \Gc\Rs}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\us - \Rs\is\)</span> is the voltage across the core-loss conductance. The corresponding core losses are <span class="math notranslate nohighlight">\((3/2)\Gc|\us - \Rs\is|^2\)</span>. Notice that the torque is produced by the current <span class="math notranslate nohighlight">\(\isp\)</span>, i.e., the core-loss current does not contribute to the torque. By default, <span class="math notranslate nohighlight">\(\Gc = 0\)</span>, i.e., the core losses are omitted.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For notational simplicity, <span class="math notranslate nohighlight">\(\Gc = 0\)</span> is assumed elsewhere in this documentation, i.e., <span class="math notranslate nohighlight">\(\is = \isp\)</span>. Otherwise, the magnetic model and the expressions derived from it hold as such, if the current <span class="math notranslate nohighlight">\(\isp\)</span> is used in place of <span class="math notranslate nohighlight">\(\is\)</span>.</p>
+</div>
 </section>
 <section id="flux-and-torque-dynamics">
 <h2>Flux and Torque Dynamics<a class="headerlink" href="#flux-and-torque-dynamics" title="Link to this heading">#</a></h2>
-<p>Using the machine model <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a>, the flux and torque dynamics can be written as <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../../bibliography.html#id50" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: An extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<p>Using the Γ model with the rotor resistance, the flux and torque dynamics can be written as <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../../bibliography.html#id51" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: An extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-im-flux-torque">
-<span class="eqno">(9)<a class="headerlink" href="#equation-im-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psis^*\} \\
+<span class="eqno">(16)<a class="headerlink" href="#equation-im-flux-torque" title="Link to this equation">#</a></span>\[\begin{split}    \frac{\D \abspsis}{\D t} &amp;= \frac{1}{\abspsis} \RE \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psis^*\} \\
     \frac{\D\tauM}{\D t} &amp;= \frac{3 \np}{2 L_\ell} \IM \{\left[\us - \Rs \is - \jj(\omegam + \omegar)\psis\right] \psir^*\} \\
     \omegar &amp;= \frac{\omegarb \IM\{\psis\psir^*\}}{\RE\{\psis\psir^*\}}\end{split}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\abspsis = |\psis|\)</span> is the flux magnitude, <span class="math notranslate nohighlight">\(\omegarb = \Rr/L_\ell\)</span> is the breakdown angular slip frequency, and <span class="math notranslate nohighlight">\(\omegar\)</span> is the slip angular frequency. These dynamics are valid also for saturated machines where <span class="math notranslate nohighlight">\(\Ls = \Ls(\abspsis)\)</span>, and they are also independent of the coordinate system. In this documentation, the sum of the electrical angular speed and the slip angular frequency</p>
 <div class="math notranslate nohighlight" id="equation-im-omegas">
-<span class="eqno">(10)<a class="headerlink" href="#equation-im-omegas" title="Link to this equation">#</a></span>\[    \omegas = \omegam + \omegar\]</div>
+<span class="eqno">(17)<a class="headerlink" href="#equation-im-omegas" title="Link to this equation">#</a></span>\[    \omegas = \omegam + \omegar\]</div>
 <p>is referred to as the stator angular frequency, with this definition being agnostic to the coordinate system and defined also in transient states.</p>
 <p>The flux and torque dynamics can be easily transformed to the inverse-Γ form by substituting <span class="math notranslate nohighlight">\(\psir = \psiR/\gamma\)</span>, <span class="math notranslate nohighlight">\(L_\ell = \Lsgm/\gamma\)</span>, and <span class="math notranslate nohighlight">\(\Rr = \RR/\gamma^2\)</span>. Compare also to <a class="reference internal" href="synchronous_machine.html#equation-sm-flux-torque">(11)</a> in the <a class="reference internal" href="synchronous_machine.html#synchronous-machine"><span class="std std-ref">Synchronous Machine Model</span></a> document.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Substituting <span class="math notranslate nohighlight">\(\omegar = \omegarb\)</span> in <a class="reference internal" href="#equation-im-flux-torque">(9)</a> yields the breakdown condition <span class="math notranslate nohighlight">\(\IM\{\psis\psir^*\} = \RE\{\psis\psir^*\}\)</span>. Applying this condition in <a class="reference internal" href="#equation-im-voltages">(1)</a>–<a class="reference internal" href="#equation-im-torque">(4)</a> and assuming the steady state results in the breakdown torque expression</p>
-<div class="amsmath math notranslate nohighlight" id="equation-2e5e5c92-f486-46eb-b516-7cad7ea855f7">
-<span class="eqno">(11)<a class="headerlink" href="#equation-2e5e5c92-f486-46eb-b516-7cad7ea855f7" title="Permalink to this equation">#</a></span>\[\begin{equation}
+<p>Substituting <span class="math notranslate nohighlight">\(\omegar = \omegarb\)</span> in <a class="reference internal" href="#equation-im-flux-torque">(16)</a> yields the breakdown condition <span class="math notranslate nohighlight">\(\IM\{\psis\psir^*\} = \RE\{\psis\psir^*\}\)</span>. Applying this condition in the Γ model and assuming the steady state results in the breakdown torque expression</p>
+<div class="amsmath math notranslate nohighlight" id="equation-906e3b56-1be2-4c04-ba2f-1f384c23df2f">
+<span class="eqno">(18)<a class="headerlink" href="#equation-906e3b56-1be2-4c04-ba2f-1f384c23df2f" title="Permalink to this equation">#</a></span>\[\begin{equation}
     \tau_\mathrm{b} = \frac{3\np}{2} \frac{\abspsis^2}{2 L_\ell}
 \end{equation}\]</div>
 </div>
@@ -712,15 +761,15 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine">Induction Machine Γ Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#im-core-losses">Core Losses</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine">Induction Machine Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#im-magnetic-model">Magnetic Model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model">Γ Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-model">Inverse-Γ Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#general-magnetic-model">General Magnetic Model</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#induction-machine-inverse-model">Induction Machine Inverse-Γ Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-magnetic-model">Linear Magnetic Model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#inverse-model-with-main-flux-saturation">Inverse-Γ Model With Main-Flux Saturation</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#im-cage-impedance">Cage Impedance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#im-core-losses">Core Losses</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#flux-and-torque-dynamics">Flux and Torque Dynamics</a></li>
 </ul>
   </nav></div>

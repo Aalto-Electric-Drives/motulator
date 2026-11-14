@@ -249,6 +249,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../drive_examples/grid_connection/index.html">Grid Connection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/grid_connection/plot_2kw_im_dol.html">2.2-kW IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/grid_connection/plot_6kw_im_deep_bars_dol.html">5.6-kW deep-bar IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/grid_connection/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
@@ -557,10 +558,10 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControllerCfg"><code class="docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.R_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.R_sgm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.alpha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.w_rb</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.from_gamma_pars()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.magnetic_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
@@ -569,10 +570,10 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_M"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_M</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_sgm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.R_R"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.R_R</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.R_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.R_sgm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.alpha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.w_rb</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.from_inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.from_inv_gamma_pars()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.magnetic_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
@@ -679,10 +680,10 @@
 <td><p>Flux-vector controller configuration.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a></p></td>
-<td><p>Constant inverse-Γ model parameters of an induction machine.</p></td>
+<td><p>Inverse-Γ model parameters of an induction machine.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a></p></td>
-<td><p>Γ-model parameters of an induction machine.</p></td>
+<td><p>Γ-model parameters of an induction machine, with optional main-flux saturation and</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.InverterNonlinearity" title="motulator.drive.control.im.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
 <td><p>Duty-ratio error due to the dead time and the threshold voltages.</p></td>
@@ -1227,7 +1228,7 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="tii2025b" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
 <p>Tiitinen, Hinkkanen, Harnefors, “Sensorless flux-vector control
 framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 2025, <a class="reference external" href="https://doi.org/10.1109/TIE.2025.3559958">https://doi.org/10.1109/TIE.2025.3559958</a></p>
@@ -1336,9 +1337,16 @@ used in speed estimation.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">InductionMachineInvGammaPars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="Link to this definition">#</a></dt>
-<dd><p>Constant inverse-Γ model parameters of an induction machine.</p>
-<p>This contains constant inverse-Γ model parameters of an induction machine. To model
-the main-flux saturation, use the <cite>InductionMachinePars</cite> class instead.</p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachinePars</span></code></p>
+<p>Inverse-Γ model parameters of an induction machine.</p>
+<p>These constant parameters can be used both in control systems and in the machine
+model. The magnetic model is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">L_sgm</span><span class="o">*</span><span class="n">i_s</span> <span class="o">+</span> <span class="n">psi_R</span>
+<span class="n">psi_R</span> <span class="o">=</span> <span class="n">L_M</span><span class="o">*</span><span class="p">(</span><span class="n">i_s</span> <span class="o">+</span> <span class="n">i_R</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where the rotor flux linkage <cite>psi_R</cite> and the rotor current <cite>i_R</cite> are scaled such
+that the leakage inductance is on the stator side.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1347,27 +1355,11 @@ the main-flux saturation, use the <cite>InductionMachinePars</cite> class instea
 <li><p><strong>R_R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Rotor resistance (Ω).</p></li>
 <li><p><strong>L_sgm</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Leakage inductance (H).</p></li>
 <li><p><strong>L_M</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Magnetizing inductance (H).</p></li>
-<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), defaults to 0 (no core losses). It is connected
-across the stator EMF <cite>u_s - R_s*i_s</cite>, i.e., between the stator resistance and
-the leakage inductance, which corresponds to the core-loss branch in parallel
-with the magnetizing branch of the Γ model.</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), connected between the stator resistance and the
+magnetic model, defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.R_sgm">
-<span class="sig-name descname"><span class="pre">R_sgm</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.R_sgm" title="Link to this definition">#</a></dt>
-<dd><p>Inverse-Γ total resistance <cite>R_s</cite> plus <cite>R_R</cite> (Ω).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.alpha">
 <span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.alpha" title="Link to this definition">#</a></dt>
@@ -1396,20 +1388,31 @@ with the magnetizing branch of the Γ model.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.cage">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cage</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance"><span class="pre">CageImpedance</span></a></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.cage" title="Link to this definition">#</a></dt>
+<dd><p>Impedance of the rotor cage, i.e., the rotor resistance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance">CageImpedance</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_gamma_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars.from_gamma_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars" title="Link to this definition">#</a></dt>
-<dd><p>Compute inverse-Γ model parameters from Γ model parameters.</p>
-<p>This transformation assumes that the parameters are constant.</p>
+<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map">
+<span class="sig-name descname"><span class="pre">magnetic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_r_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars.magnetic_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map" title="Link to this definition">#</a></dt>
+<dd><p>Magnetic map, the rotor quantities being <cite>psi_R</cite> and <cite>i_R</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Γ-model parameters.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p></li>
+<li><p><strong>psi_r_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p></li>
+<li><p><strong>exp_j_theta_m</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em> | </em><em>None</em>)</p></li>
+</ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Inverse-Γ model parameters.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars">InductionMachineInvGammaPars</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a> | numpy.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1417,7 +1420,7 @@ with the magnetizing branch of the Γ model.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s">
 <span class="sig-name descname"><span class="pre">update_psi_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars.update_psi_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s" title="Link to this definition">#</a></dt>
-<dd><p>Update the stator flux linkage magnitude state.</p>
+<dd><p>Update the stator flux linkage magnitude, without effect here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
@@ -1433,26 +1436,34 @@ with the magnetizing branch of the Γ model.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">InductionMachinePars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars" title="Link to this definition">#</a></dt>
-<dd><p>Γ-model parameters of an induction machine.</p>
-<p>This contains Γ-model parameters of an induction machine. The main-flux saturation
-can also be modeled by providing a callable <cite>L_s</cite> parameter. For convenience, the
-class also provides the corresponding inverse-Γ model parameters, which can be used
-in control systems. If the saturation is modeled, these inverse-Γ parameters depend
-on the stator flux linkage magnitude <cite>psi_s</cite> that should be updated by calling the
-<cite>update_psi_s</cite> method.</p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachinePars</span></code></p>
+<p>Γ-model parameters of an induction machine, with optional main-flux saturation and
+deep-bar effect.</p>
+<p>These parameters can be used both in control systems and in the machine model. The
+magnetic model is <a class="footnote-reference brackets" href="#sle1989" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">L_s</span><span class="o">*</span><span class="p">(</span><span class="n">i_s</span> <span class="o">+</span> <span class="n">i_r</span><span class="p">)</span>
+<span class="n">psi_r</span> <span class="o">=</span> <span class="n">psi_s</span> <span class="o">+</span> <span class="n">L_ell</span><span class="o">*</span><span class="n">i_r</span>
+</pre></div>
+</div>
+<p>The main-flux saturation is modeled by providing a callable <cite>L_s</cite> and the deep-bar
+effect by providing the cage impedance as <cite>R_r</cite>. For control systems, the class
+provides the corresponding inverse-Γ model parameters, which then depend on the
+stator flux linkage magnitude given to <cite>update_psi_s</cite>. With the cage impedance, they
+are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
+series with its DC inductance, which adds to the leakage inductance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_p</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – Number of pole pairs.</p></li>
 <li><p><strong>R_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Stator resistance (Ω).</p></li>
-<li><p><strong>R_r</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Rotor resistance (Ω).</p></li>
+<li><p><strong>R_r</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><a class="reference internal" href="../../model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance"><em>CageImpedance</em></a>) – Rotor resistance (Ω) or, for modeling the deep-bar effect, the cage impedance.</p></li>
 <li><p><strong>L_ell</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Leakage inductance (H).</p></li>
 <li><p><strong>L_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Stator inductance (H). If callable, it should be a function of the stator flux
 linkage magnitude (Vs).</p></li>
-<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-defaults to 0 (no core losses).</p></li>
-<li><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Stator flux linkage magnitude (Vs), at which the callable <cite>L_s</cite> is evaluated,
-defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method.</p></li>
+<li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), connected between the stator resistance and the
+magnetic model, defaults to 0 (no core losses).</p></li>
+<li><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
+evaluated, defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1513,20 +1524,6 @@ defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.R_sgm">
-<span class="sig-name descname"><span class="pre">R_sgm</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.R_sgm" title="Link to this definition">#</a></dt>
-<dd><p>Inverse-Γ total resistance <cite>R_s</cite> plus <cite>R_R</cite> (Ω).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.alpha">
 <span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.alpha" title="Link to this definition">#</a></dt>
 <dd><p>Inverse rotor time constant (rad/s).</p>
@@ -1554,20 +1551,39 @@ defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method
 </dl>
 </dd></dl>
 
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="sle1989" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">7</a><span class="fn-bracket">]</span></span>
+<p>Slemon, “Modelling of induction machines for electric drives,” IEEE
+Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a></p>
+</aside>
+</aside>
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.cage">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cage</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance"><span class="pre">CageImpedance</span></a></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.cage" title="Link to this definition">#</a></dt>
+<dd><p>Impedance of the rotor cage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance">CageImpedance</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.from_inv_gamma_pars">
-<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_inv_gamma_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars.from_inv_gamma_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.from_inv_gamma_pars" title="Link to this definition">#</a></dt>
-<dd><p>Compute Γ-model parameters from inverse-Γ model parameters.</p>
-<p>This transformation assumes that the parameters are constant.</p>
+<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.magnetic_map">
+<span class="sig-name descname"><span class="pre">magnetic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_r_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars.magnetic_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.magnetic_map" title="Link to this definition">#</a></dt>
+<dd><p>Magnetic map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Inverse-Γ model parameters.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p></li>
+<li><p><strong>psi_r_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p></li>
+<li><p><strong>exp_j_theta_m</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em><em> | </em><em>None</em>)</p></li>
+</ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Γ model parameters.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars">InductionMachinePars</a></p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a> | numpy.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1575,7 +1591,7 @@ defaults to 0. It can be updated by calling the <cite>update_psi_s</cite> method
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.update_psi_s">
 <span class="sig-name descname"><span class="pre">update_psi_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars.update_psi_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.update_psi_s" title="Link to this definition">#</a></dt>
-<dd><p>Update the stator flux linkage magnitude state.</p>
+<dd><p>Update the stator flux linkage magnitude.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
@@ -1622,7 +1638,7 @@ commands.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ObserverBasedVHzController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ObserverBasedVHzController" title="Link to this definition">#</a></dt>
 <dd><p>Observer-based V/Hz controller for induction machine drives.</p>
 <p>This class implements sensorless observer-based V/Hz control. Decoupling between the
-stator flux and torque channels is used <a class="footnote-reference brackets" href="#tii2025b" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
+stator flux and torque channels is used <a class="footnote-reference brackets" href="#tii2025b" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1811,7 +1827,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SVPWM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase carrier-based PWM.</p>
 <p>This computes the duty ratios for space-vector PWM or discontinuous PWM (DPWM)
-<a class="footnote-reference brackets" href="#hav1999" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, including the overmodulation <a class="footnote-reference brackets" href="#hav1999b" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. The realized voltage is
+<a class="footnote-reference brackets" href="#hav1999" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>, including the overmodulation <a class="footnote-reference brackets" href="#hav1999b" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>. The realized voltage is
 reconstructed from the duty ratios and the measured DC-bus voltage, taking into
 account the computational delay of one sampling period.</p>
 <p>In DPWM, one leg at a time is clamped to the positive or negative DC rail, so that
@@ -1822,7 +1838,7 @@ space-vector PWM. The switching losses are minimized if the clamped leg conducts
 largest current: DPWM1 suits a current in phase with the voltage, DPWM2 a current
 lagging by about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly
 reactive current. At the same average switching frequency, DPWM gives a lower
-current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
+current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>.</p>
 <p>Optionally, the duty-ratio error <cite>d_err</cite> caused by the inverter nonlinearities, such
 as the dead time and the threshold voltages of the power devices, is taken into
 account. The realized voltage is corrected for the error using the measured
@@ -1830,7 +1846,7 @@ currents. By default, the error is also compensated for by feedforward using the
 predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
 compensated for by shifting the other legs.</p>
 <p>Optionally, the duty ratio of a switching leg is limited to the range
-<cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>. A duty ratio in the
+<cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>. A duty ratio in the
 range <cite>(0, d_min)</cite> is rounded to 0 or <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to
 <cite>1 - d_min</cite> or 1, whichever gives the realized duty ratio nearer to that of the
 voltage reference. The limited voltage reference and the realized voltage include
@@ -1877,24 +1893,24 @@ is <cite>T_s</cite>). Must match the system model.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
 <p>Hava, Kerkman, Lipo, “Simple analytical and graphical methods for
 carrier-based PWM-VSI drives,” IEEE Trans. Power Electron., 1999,
 <a class="reference external" href="https://doi.org/10.1109/63.737592">https://doi.org/10.1109/63.737592</a></p>
 </aside>
 <aside class="footnote brackets" id="hav1999b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation characteristics of
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="hav1998" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">10</a><span class="fn-bracket">]</span></span>
 <p>Hava, Kerkman, Lipo, “A high-performance generalized discontinuous PWM
 algorithm,” IEEE Trans. Ind. Appl., 1998, <a class="reference external" href="https://doi.org/10.1109/28.720446">https://doi.org/10.1109/28.720446</a></p>
 </aside>
 <aside class="footnote brackets" id="wel2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">10</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">11</a><span class="fn-bracket">]</span></span>
 <p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
 minimum pulse-width limitations in two-level PWM voltage source inverters,” Proc.
 IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
@@ -1966,7 +1982,7 @@ given, the voltage is corrected for it using the measured currents.</p>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1984,7 +2000,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">11</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">12</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -2148,7 +2164,7 @@ based error signal is used exclusively.</p></li>
 <dd><p>Speed observer.</p>
 <p>This observer estimates the mechanical rotor speed based on the mechanical system
 model and the error signal. If the inertia of the mechanical system is provided, the
-load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>.</p>
+load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2164,7 +2180,7 @@ not used.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="lor1991" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">12</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">13</a><span class="fn-bracket">]</span></span>
 <p>Lorenz, Van Patten, “High-resolution velocity estimation for
 all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
@@ -2479,10 +2495,10 @@ first one (a flying start).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxVectorControllerCfg"><code class="docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.R_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.R_sgm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.alpha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.w_rb</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.from_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.from_gamma_pars()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.magnetic_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
@@ -2491,10 +2507,10 @@ first one (a flying start).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_M"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_M</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_sgm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.R_R"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.R_R</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.R_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.R_sgm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.alpha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.w_rb</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.from_inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.from_inv_gamma_pars()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.magnetic_map()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.update_psi_s()</span></code></a></li>
 </ul>
 </li>

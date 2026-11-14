@@ -32,6 +32,9 @@ Classes
 
 .. autoapisummary::
 
+   motulator.drive.model.BaseInductionMachinePars
+   motulator.drive.model.BaseSynchronousMachinePars
+   motulator.drive.model.CageImpedance
    motulator.drive.model.CarrierComparison
    motulator.drive.model.CompositeModel
    motulator.drive.model.DCBus
@@ -44,11 +47,13 @@ Classes
    motulator.drive.model.InductionMachinePars
    motulator.drive.model.LCFilter
    motulator.drive.model.MechanicalSystem
+   motulator.drive.model.SaturatedInductionMachinePars
    motulator.drive.model.SaturatedSynchronousMachinePars
    motulator.drive.model.Sensor
    motulator.drive.model.Simulation
    motulator.drive.model.SimulationResults
    motulator.drive.model.SolverCfg
+   motulator.drive.model.SpatialSaturatedInductionMachinePars
    motulator.drive.model.SpatialSaturatedSynchronousMachinePars
    motulator.drive.model.SynchronousMachine
    motulator.drive.model.SynchronousMachinePars
@@ -60,6 +65,300 @@ Classes
 
 Package Contents
 ----------------
+
+.. py:class:: BaseInductionMachinePars
+
+   Bases: :py:obj:`Protocol`
+
+
+   
+   Base class for induction machine parameters, as used by the machine model.
+
+   The machine model consists of the stator resistance, the magnetic model, and the
+   rotor cage. The magnetic model maps the stator and rotor flux linkages to the stator
+   and rotor currents. The rotor quantities can be scaled freely, e.g., as in the Γ
+   model or in the inverse-Γ model, provided that the magnetic map and the cage
+   impedance use the same scaling.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: cage
+      :type: CageImpedance
+
+      
+      Impedance of the rotor cage, which the machine model reads when created.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map as a function of flux linkages and electrical rotor angle.
+
+      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
+      :type psi_s_dq: complex | ndarray
+      :param psi_r_dq: Rotor flux linkage (Vs) in rotor coordinates.
+      :type psi_r_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray, optional
+
+      :returns: Stator current (A) and rotor current (A) in rotor coordinates, both positive
+                into the windings, and electromagnetic torque (Nm) per pole pair.
+      :rtype: tuple[complex | ndarray, complex | ndarray, float | ndarray]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: BaseSynchronousMachinePars
+
+   Bases: :py:obj:`Protocol`
+
+
+   
+   Base class for synchronous machine parameters, as used by the machine model.
+
+   The machine model consists of the stator resistance and the magnetic model, which
+   maps the stator flux linkage to the stator current. The permanent-magnet flux
+   linkage `psi_f` is the stator flux linkage at zero current.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map as a function of flux linkage and electrical rotor angle.
+
+      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
+      :type psi_s_dq: complex | ndarray
+      :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
+      :type exp_j_theta_m: complex | ndarray, optional
+
+      :returns: Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
+                pole pair.
+      :rtype: tuple[complex | ndarray, float | ndarray]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: CageImpedance(R, L = ())
+
+   
+   Impedance of the rotor cage as a ladder circuit.
+
+   The impedance of the cage in rotor coordinates is::
+
+       Z(s) = R[0] + 1/(1/(s*L[0]) + 1/(R[1] + 1/(1/(s*L[1]) + ...)))
+
+   i.e., a ladder of series resistances and shunt inductances, terminated with the
+   last resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is
+   the DC inductance of the cage. The ladder models the deep-bar effect, i.e., the
+   rotor resistance increasing and the rotor leakage inductance decreasing with the
+   frequency of the rotor current. Without inductances, the impedance is the
+   resistance ``R[0]``. The flux linkages of the inductances are the states.
+
+   :param R: Series resistances (Ω), one more than the inductances. The first one is
+             nonnegative and the others are positive.
+   :type R: Sequence[float]
+   :param L: Shunt inductances (H), positive, defaults to none.
+   :type L: Sequence[float], optional
+
+   .. rubric:: References
+
+   .. [#Mol2020] Mölsä, Saarakkala, Hinkkanen, Arkkio, Routimo, "A dynamic model for
+      saturated induction machines with closed rotor slots and deep bars," IEEE Trans.
+      Energy Convers., 2020, https://doi.org/10.1109/TEC.2019.2950810
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: Z(s)
+
+      
+      Impedance.
+
+      :param s: Complex frequency (rad/s).
+      :type s: complex | ndarray
+
+      :returns: Impedance (Ω).
+      :rtype: complex | ndarray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: from_rectangular_bars(R_0, L_0, N)
+      :classmethod:
+
+
+      
+      Ladder of rectangular rotor bars.
+
+      The elements are ``R[n] = (4*n + 1)*R_0`` and ``L[n] = 3*L_0/(4*n + 3)``
+      [#Mol2020]_. The impedance of the end rings is omitted.
+
+      :param R_0: DC resistance (Ω).
+      :type R_0: float
+      :param L_0: DC inductance (H).
+      :type L_0: float
+      :param N: Number of the inductances, i.e., the order of the ladder.
+      :type N: int
+
+      :returns: Ladder of the order `N`.
+      :rtype: CageImpedance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: rhs(psi_c, i_r)
+
+      
+      Compute the voltage and the state derivatives.
+
+      :param psi_c: Flux linkages (Vs) of the inductances.
+      :type psi_c: ndarray
+      :param i_r: Rotor current (A).
+      :type i_r: complex
+
+      :returns: Voltage (V) across the impedance and time derivatives of `psi_c`.
+      :rtype: tuple[complex, Sequence[complex] | ndarray]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12, sampling_delay = 0.0)
 
@@ -709,36 +1008,34 @@ Package Contents
 
 
    
-   Γ-equivalent model of an induction machine.
+   Induction machine model.
 
-   An induction machine is modeled using the Γ-equivalent model [#Sle1989]_. The stator
-   inductance `L_s` can either be constant or a function of the stator flux magnitude::
-
-       L_s = L_s(abs(psi_s_ab))
-
-   Optionally, eddy-current core losses can be modeled by means of a constant core-loss
-   conductance `G_c`, connected in parallel with the magnetizing branch.
+   The model consists of the stator resistance, the magnetic model, and the rotor cage.
+   It is internally represented in rotor coordinates, in which the cage impedance is
+   time invariant and the magnetic model can depend on the rotor angle. The interfaces
+   are in stator coordinates. The magnetic model gives the stator and rotor currents as
+   functions of the stator and rotor flux linkages. Depending on the parameters, it is
+   the inverse-Γ model (`InductionMachineInvGammaPars`), the Γ model with optional
+   main-flux saturation (`InductionMachinePars`), or a general magnetic map, either
+   without spatial harmonics (`SaturatedInductionMachinePars`) or with them
+   (`SpatialSaturatedInductionMachinePars`). The rotor cage is a resistance or, for
+   modeling the deep-bar effect, a ladder circuit (`CageImpedance`). Optionally,
+   eddy-current core losses can be modeled by means of a constant core-loss conductance
+   `G_c`, connected between the stator resistance and the magnetic model.
 
    :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
-   :type par: InductionMachinePars | InductionMachineInvGammaPars
+   :type par: BaseInductionMachinePars
 
    .. rubric:: Notes
 
-   The Γ model is chosen here since it can be extended with the magnetic saturation
-   model in a straightforward manner. If the magnetic saturation is omitted, the Γ
-   model is mathematically identical to the inverse-Γ and T models [#Sle1989]_.
+   The rotor flux linkage `psi_r_dq` and the rotor current `i_r_dq` are scaled as in
+   the parameters, e.g., they are the inverse-Γ quantities if the inverse-Γ parameters
+   are used.
 
-   The core-loss branch is located between the stator resistance and the magnetizing
-   inductance, i.e., the voltage across `G_c` is `u_s_ab - R_s*i_s_ab`. Consequently,
-   the stator current depends directly on the stator voltage. This algebraic loop is
-   solved in a closed form. The electromagnetic torque is produced by the current
-   flowing into the magnetic circuit, i.e., the core-loss current is excluded from the
-   torque.
-
-   .. rubric:: References
-
-   .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," IEEE
-      Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
+   The voltage across the core-loss conductance is `u_s - R_s*i_s`. Consequently, the
+   stator current depends directly on the stator voltage. This algebraic loop is solved
+   in a closed form. The electromagnetic torque is produced by the current flowing into
+   the magnetic model, i.e., the core-loss current is excluded from the torque.
 
 
 
@@ -784,7 +1081,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 
@@ -853,13 +1150,46 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: set_states(state_list, index)
+
+      
+      Set states, keeping the rotor angle within [-pi, pi).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: InductionMachineInvGammaPars
 
-   
-   Constant inverse-Γ model parameters of an induction machine.
+   Bases: :py:obj:`BaseInductionMachinePars`
 
-   This contains constant inverse-Γ model parameters of an induction machine. To model
-   the main-flux saturation, use the `InductionMachinePars` class instead.
+
+   
+   Inverse-Γ model parameters of an induction machine.
+
+   These constant parameters can be used both in control systems and in the machine
+   model. The magnetic model is::
+
+       psi_s = L_sgm*i_s + psi_R
+       psi_R = L_M*(i_s + i_R)
+
+   where the rotor flux linkage `psi_R` and the rotor current `i_R` are scaled such
+   that the leakage inductance is on the stator side.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -871,17 +1201,9 @@ Package Contents
    :type L_sgm: float
    :param L_M: Magnetizing inductance (H).
    :type L_M: float
-   :param G_c: Core-loss conductance (S), defaults to 0 (no core losses). It is connected
-               across the stator EMF `u_s - R_s*i_s`, i.e., between the stator resistance and
-               the leakage inductance, which corresponds to the core-loss branch in parallel
-               with the magnetizing branch of the Γ model.
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
-
-   .. attribute:: R_sgm
-
-      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
-
-      :type: float
 
    .. attribute:: alpha
 
@@ -912,20 +1234,36 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: from_gamma_pars(par)
-      :classmethod:
-
+   .. py:property:: cage
+      :type: CageImpedance
 
       
-      Compute inverse-Γ model parameters from Γ model parameters.
+      Impedance of the rotor cage, i.e., the rotor resistance.
 
-      This transformation assumes that the parameters are constant.
 
-      :param par: Γ-model parameters.
-      :type par: InductionMachinePars
 
-      :returns: Inverse-Γ model parameters.
-      :rtype: InductionMachineInvGammaPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map, the rotor quantities being `psi_R` and `i_R`.
+
 
 
 
@@ -948,7 +1286,7 @@ Package Contents
    .. py:method:: update_psi_s(psi_s)
 
       
-      Update the stator flux linkage magnitude state.
+      Update the stator flux linkage magnitude, without effect here.
 
 
 
@@ -971,32 +1309,42 @@ Package Contents
 
 .. py:class:: InductionMachinePars
 
-   
-   Γ-model parameters of an induction machine.
+   Bases: :py:obj:`BaseInductionMachinePars`
 
-   This contains Γ-model parameters of an induction machine. The main-flux saturation
-   can also be modeled by providing a callable `L_s` parameter. For convenience, the
-   class also provides the corresponding inverse-Γ model parameters, which can be used
-   in control systems. If the saturation is modeled, these inverse-Γ parameters depend
-   on the stator flux linkage magnitude `psi_s` that should be updated by calling the
-   `update_psi_s` method.
+
+   
+   Γ-model parameters of an induction machine, with optional main-flux saturation and
+   deep-bar effect.
+
+   These parameters can be used both in control systems and in the machine model. The
+   magnetic model is [#Sle1989]_::
+
+       psi_s = L_s*(i_s + i_r)
+       psi_r = psi_s + L_ell*i_r
+
+   The main-flux saturation is modeled by providing a callable `L_s` and the deep-bar
+   effect by providing the cage impedance as `R_r`. For control systems, the class
+   provides the corresponding inverse-Γ model parameters, which then depend on the
+   stator flux linkage magnitude given to `update_psi_s`. With the cage impedance, they
+   are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
+   series with its DC inductance, which adds to the leakage inductance.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param R_r: Rotor resistance (Ω).
-   :type R_r: float
+   :param R_r: Rotor resistance (Ω) or, for modeling the deep-bar effect, the cage impedance.
+   :type R_r: float | CageImpedance
    :param L_ell: Leakage inductance (H).
    :type L_ell: float
    :param L_s: Stator inductance (H). If callable, it should be a function of the stator flux
                linkage magnitude (Vs).
    :type L_s: float | Callable[[float], float]
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
-   :param psi_s: Stator flux linkage magnitude (Vs), at which the callable `L_s` is evaluated,
-                 defaults to 0. It can be updated by calling the `update_psi_s` method.
+   :param psi_s: Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
+                 evaluated, defaults to 0.
    :type psi_s: float, optional
 
    .. attribute:: gamma
@@ -1023,12 +1371,6 @@ Package Contents
 
       :type: float
 
-   .. attribute:: R_sgm
-
-      Inverse-Γ total resistance `R_s` plus `R_R` (Ω).
-
-      :type: float
-
    .. attribute:: alpha
 
       Inverse rotor time constant (rad/s).
@@ -1040,6 +1382,11 @@ Package Contents
       Breakdown slip angular frequency (rad/s).
 
       :type: float
+
+   .. rubric:: References
+
+   .. [#Sle1989] Slemon, "Modelling of induction machines for electric drives," IEEE
+      Trans. Ind. Appl., 1989, https://doi.org/10.1109/28.44251
 
 
 
@@ -1058,20 +1405,36 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: from_inv_gamma_pars(par)
-      :classmethod:
-
+   .. py:property:: cage
+      :type: CageImpedance
 
       
-      Compute Γ-model parameters from inverse-Γ model parameters.
+      Impedance of the rotor cage.
 
-      This transformation assumes that the parameters are constant.
 
-      :param par: Inverse-Γ model parameters.
-      :type par: InductionMachineInvGammaPars
 
-      :returns: Γ model parameters.
-      :rtype: InductionMachinePars
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map.
+
 
 
 
@@ -1094,7 +1457,7 @@ Package Contents
    .. py:method:: update_psi_s(psi_s)
 
       
-      Update the stator flux linkage magnitude state.
+      Update the stator flux linkage magnitude.
 
 
 
@@ -1422,6 +1785,145 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: SaturatedInductionMachinePars
+
+   Bases: :py:obj:`BaseInductionMachinePars`
+
+
+   
+   Parameters of an induction machine with a general magnetic model.
+
+   The magnetic model is specified as a current map (stator and rotor currents as
+   functions of the stator and rotor flux linkages), which can include the saturation
+   of the main flux and of the leakage flux as well as their mutual effects. This
+   version is intended to parametrize machine models for simulation purposes, while
+   control methods do not support it.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param R_r: Rotor resistance (Ω) or, for modeling the deep-bar effect, the cage impedance.
+   :type R_r: float | CageImpedance
+   :param current_map_fcn: Stator current (A) and rotor current (A) as functions of the stator flux linkage
+                           (Vs) and the rotor flux linkage (Vs). The quantities are complex space vectors
+                           in any common coordinates, and both currents are positive into the windings. The
+                           function should also accept arrays.
+   :type current_map_fcn: Callable[[complex, complex], tuple[complex, complex]]
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
+   :type G_c: float, optional
+
+   .. rubric:: Notes
+
+   The magnetic model is lossless, if the currents are the gradient of a scalar
+   function `W` of the flux linkages (the field energy multiplied by 2/3) with respect
+   to their real and imaginary parts. The Jacobian of the map is then symmetric
+   (reciprocity condition). Furthermore, `W` should be invariant under a common
+   rotation of the flux linkages, in which case the torque computed from the stator
+   quantities equals the torque computed from the rotor quantities. These conditions
+   are not checked. As an example, the map of the Γ model with constant inductances is
+   the gradient of::
+
+       W = abs(psi_s)**2/(2*L_s) + abs(psi_r - psi_s)**2/(2*L_ell)
+
+   .. rubric:: Examples
+
+   The mutual saturation model in [#Tuo2010]_ fulfills the above conditions. Its
+   per-unit parameters below are fitted to the experimental data of a 2.2-kW machine,
+   with the exponents ``b = 1``, ``c = 1``, and ``d = 0``:
+
+   >>> from motulator.drive.model import SaturatedInductionMachinePars
+   >>> from motulator.drive.utils import BaseValues, NominalValues
+   >>> base = BaseValues.from_nominal(NominalValues(U=400, I=5, f=50, P=2.2e3))
+   >>> L_su, L_ellu, alpha, beta, gamma, a = 2.28, 0.216, 0.383, 0.511, 3.20, 7.5
+   >>> def current_map(psi_s, psi_r):
+   ...     psi_ell = psi_r - psi_s  # Leakage flux linkage
+   ...     x, y = abs(psi_s) / base.psi, abs(psi_ell) / base.psi
+   ...     k_m = 1 + alpha * x**a + gamma * L_su / 2 * x * y**2
+   ...     k_r = 1 + beta * y + gamma * L_ellu / 3 * x**3
+   ...     i_m = k_m * psi_s / (L_su * base.L)  # Magnetizing current
+   ...     i_r = k_r * psi_ell / (L_ellu * base.L)
+   ...     return i_m - i_r, i_r
+   >>> par = SaturatedInductionMachinePars(
+   ...     n_p=2,
+   ...     R_s=0.0628 * base.Z,
+   ...     R_r=0.0433 * base.Z,
+   ...     current_map_fcn=current_map,
+   ... )
+
+   .. rubric:: References
+
+   .. [#Tuo2010] Tuovinen, Hinkkanen, Luomi, "Modeling of saturation due to main and
+      leakage flux interaction in induction machines," IEEE Trans. Ind. Appl., 2010,
+      https://doi.org/10.1109/TIA.2010.2045210
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:property:: cage
+      :type: CageImpedance
+
+      
+      Impedance of the rotor cage.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: SaturatedSynchronousMachinePars
 
    Bases: :py:obj:`BaseSynchronousMachinePars`
@@ -1447,8 +1949,8 @@ Package Contents
                         should be differentiable, if incremental inductances are used. Needed only for
                         control methods and optimal reference loci, not used in the system model.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
 
 
@@ -1468,7 +1970,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
+   .. py:method:: i_s_dq(psi_s_dq)
 
       
       Current (A) as a function of the flux linkage (Vs).
@@ -1492,10 +1994,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: incr_ind_mat(i_s_dq)
 
       
-      Incremental inductance matrix at given current.
+      Incremental inductance matrix (H).
 
 
 
@@ -1543,10 +2045,34 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
 
       
-      Flux linkage as a function of the stator current.
+      Magnetic map.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
+
+      
+      Flux linkage (Vs) as a function of the stator current (A).
 
 
 
@@ -1915,29 +2441,45 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: SpatialSaturatedSynchronousMachinePars
+.. py:class:: SpatialSaturatedInductionMachinePars
 
-   Bases: :py:obj:`BaseSynchronousMachinePars`
+   Bases: :py:obj:`BaseInductionMachinePars`
 
 
    
-   Parameters of a saturated synchronous machine with spatial harmonics.
+   Parameters of a saturated induction machine with spatial harmonics.
 
-   This saturation model contains spatial harmonics in addition to the saturation
-   effects. This version is intended to parametrize high-fidelity machine models for
-   simulation purposes, while control methods do not support spatial harmonics.
+   The magnetic model contains spatial harmonics (e.g., due to the slots) in addition
+   to the saturation effects, i.e., it depends on the rotor angle. This version is
+   intended to parametrize high-fidelity machine models for simulation purposes, while
+   control methods do not support spatial harmonics.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param magnetic_map_fcn: Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
-                            the stator flux linkage (Vs) and the complex exponential of the electrical rotor
-                            angle.
-   :type magnetic_map_fcn: Callable[[complex, complex], Tuple[complex, float]]
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param R_r: Rotor resistance (Ω) or, for modeling the deep-bar effect, the cage impedance.
+   :type R_r: float | CageImpedance
+   :param magnetic_map_fcn: Stator current (A), rotor current (A), and electromagnetic torque (Nm) per pole
+                            pair as functions of the stator flux linkage (Vs), the rotor flux linkage (Vs),
+                            and the complex exponential of the electrical rotor angle. The space vectors are
+                            in rotor coordinates, and both currents are positive into the windings. The
+                            function should also accept arrays.
+   :type magnetic_map_fcn: Callable[[complex, complex, complex],             tuple[complex, complex, float]]
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
+
+   .. rubric:: Notes
+
+   The magnetic model is lossless, if the currents are the gradient of a scalar
+   function `W` of the flux linkages and the electrical rotor angle `theta_m` (the
+   field energy multiplied by 2/3) with respect to the real and imaginary parts of the
+   flux linkages, and the torque per pole pair is::
+
+       tau_m = 3/2*(imag(i_s*conj(psi_s)) - dW/dtheta_m)
+
+   These conditions are not checked.
 
 
 
@@ -1956,10 +2498,11 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m = None)
+   .. py:property:: cage
+      :type: CageImpedance
 
       
-      Current (A) as a function of flux linkage (Vs) and rotor angle.
+      Impedance of the rotor cage.
 
 
 
@@ -1980,19 +2523,76 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: SpatialSaturatedSynchronousMachinePars
+
+   Bases: :py:obj:`BaseSynchronousMachinePars`
+
+
+   
+   Parameters of a saturated synchronous machine with spatial harmonics.
+
+   This saturation model contains spatial harmonics in addition to the saturation
+   effects. This version is intended to parametrize high-fidelity machine models for
+   simulation purposes, while control methods do not support spatial harmonics.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param R_s: Stator resistance (Ω).
+   :type R_s: float
+   :param magnetic_map_fcn: Stator current (A) and electromagnetic torque (Nm) per pole pair as functions of
+                            the stator flux linkage (Vs) and the complex exponential of the electrical rotor
+                            angle.
+   :type magnetic_map_fcn: Callable[[complex, complex], tuple[complex, float]]
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
+   :type G_c: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
    .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
 
       
       Magnetic map.
 
-      :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
-      :type psi_s_dq: complex | ndarray
-      :param exp_j_theta_m: Complex exponential of electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray
-
-      :returns: Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
-                pole pair.
-      :rtype: Tuple [complex | ndarray, float | ndarray]
 
 
 
@@ -2020,24 +2620,25 @@ Package Contents
    
    Synchronous machine model.
 
-   This model is internally represented in rotor coordinates, which results in the
-   simplest implementation. The interfaces are in stator coordinates. The magnetic
-   saturation can be modeled by providing a nonlinear current map, either as
-   `i_s_dq_fcn` in `SaturatedSynchronousMachinePars` or, including spatial harmonics,
-   as `magnetic_map_fcn` in `SpatialSaturatedSynchronousMachinePars`. Optionally,
-   eddy-current core losses can be modeled by means of a constant core-loss conductance
-   `G_c`, connected in parallel with the magnetizing branch.
+   The model consists of the stator resistance and the magnetic model. It is internally
+   represented in rotor coordinates, in which the magnetic model is time invariant or
+   depends only on the rotor angle. The interfaces are in stator coordinates. The
+   magnetic model gives the stator current as a function of the stator flux linkage.
+   Depending on the parameters, it is linear (`SynchronousMachinePars`), a saturated
+   current map (`SaturatedSynchronousMachinePars`), or a magnetic map with spatial
+   harmonics (`SpatialSaturatedSynchronousMachinePars`). Optionally, eddy-current core
+   losses can be modeled by means of a constant core-loss conductance `G_c`, connected
+   between the stator resistance and the magnetic model.
 
    :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars         | SpatialSaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachinePars
 
    .. rubric:: Notes
 
-   The core-loss branch is located between the stator resistance and the magnetizing
-   branch, i.e., the voltage across `G_c` is `u_s - R_s*i_s`. Consequently, the stator
-   current depends directly on the stator voltage. This algebraic loop is solved in a
-   closed form. The electromagnetic torque is produced by the current flowing into the
-   magnetic circuit, i.e., the core-loss current is excluded from the torque.
+   The voltage across the core-loss conductance is `u_s - R_s*i_s`. Consequently, the
+   stator current depends directly on the stator voltage. This algebraic loop is solved
+   in a closed form. The electromagnetic torque is produced by the current flowing into
+   the magnetic model, i.e., the core-loss current is excluded from the torque.
 
 
 
@@ -2083,7 +2684,7 @@ Package Contents
    .. py:method:: create_time_series(t)
 
       
-      Create time series from state list.
+      Create the time series.
 
 
 
@@ -2194,8 +2795,8 @@ Package Contents
    :type L_q: float
    :param psi_f: Permanent-magnet flux linkage (Vs).
    :type psi_f: float
-   :param G_c: Core-loss conductance (S), modeled in parallel with the magnetizing branch,
-               defaults to 0 (no core losses).
+   :param G_c: Core-loss conductance (S), connected between the stator resistance and the
+               magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
 
 
@@ -2215,7 +2816,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: i_s_dq(psi_s_dq, exp_j_theta_m=None)
+   .. py:method:: i_s_dq(psi_s_dq)
 
       
       Current (A) as a function of the flux linkage (Vs).
@@ -2239,7 +2840,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: incr_ind_mat(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: incr_ind_mat(i_s_dq)
 
       
       Incremental inductance matrix (H).
@@ -2287,7 +2888,31 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: psi_s_dq(i_s_dq, exp_j_theta_m=None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+
+      
+      Magnetic map.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
 
       
       Flux linkage (Vs) as a function of the stator current (A).

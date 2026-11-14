@@ -244,6 +244,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/grid_connection/index.html">Grid Connection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_im_dol.html">2.2-kW IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_ipmsm_diode_cvc.html">2.2-kW IPMSM, diode bridge, CVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_6kw_im_deep_bars_dol.html">5.6-kW deep-bar IM, direct-on-line start</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_im_diode_vhz.html">2.2-kW IM, diode bridge, V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc.html">2.2-kW IPMSM, dual-voltage-forming AFE, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc.html">2.2-kW IPMSM, active front end, CVC</a></li>
@@ -491,16 +492,18 @@
 <span class="sd">    A subsystem has the inputs `inp`, the outputs `out`, and the states `state`,</span>
 <span class="sd">    typically dataclasses, whose attributes the model reads by name: the connections</span>
 <span class="sd">    pass the outputs to the inputs (see `Model`), and the states are gathered into the</span>
-<span class="sd">    state vector of the solver in their declaration order. The class provides methods</span>
-<span class="sd">    for setting states, outputs, and computing state derivatives. It also provides</span>
-<span class="sd">    methods for extending the state history and creating the time-series representation</span>
-<span class="sd">    of the subsystem, which the model names in the results (see `ModelTimeSeries`). A</span>
-<span class="sd">    subsystem whose outputs depend directly on some of its inputs lists these inputs in</span>
-<span class="sd">    `feedthrough`, from which the model derives the evaluation order of the outputs. The</span>
-<span class="sd">    state history is a dict of lists, keyed by the names of the state fields. The model</span>
-<span class="sd">    initializes it by `init_state_history` and extends it by `extend_state_history`. A</span>
-<span class="sd">    subclass can keep its other signals in the history as well, under other keys, as a</span>
-<span class="sd">    converter does (see `Converter`).</span>
+<span class="sd">    state vector of the solver in their declaration order. A state is a complex number</span>
+<span class="sd">    or, for a variable number of states (e.g., a ladder circuit), a one-dimensional</span>
+<span class="sd">    complex array. The class provides methods for getting and setting states, setting</span>
+<span class="sd">    outputs, and computing state derivatives. It also provides methods for extending the</span>
+<span class="sd">    state history and creating the time-series representation of the subsystem, which</span>
+<span class="sd">    the model names in the results (see `ModelTimeSeries`). A subsystem whose outputs</span>
+<span class="sd">    depend directly on some of its inputs lists these inputs in `feedthrough`, from</span>
+<span class="sd">    which the model derives the evaluation order of the outputs. The state history is a</span>
+<span class="sd">    dict of lists, keyed by the names of the state fields, with one item (a number or a</span>
+<span class="sd">    nonempty array) per solution point. The model initializes it by `init_state_history`</span>
+<span class="sd">    and extends it by `extend_state_history`. A subclass can keep its other signals in</span>
+<span class="sd">    the history as well, under other keys, as a converter does (see `Converter`).</span>
 
 <span class="sd">    """</span>
 
@@ -508,16 +511,35 @@
     <span class="n">out</span><span class="p">:</span> <span class="n">Any</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># None if the subsystem has no states</span>
     <span class="n">feedthrough</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>  <span class="c1"># Inputs the outputs depend on directly</span>
-    <span class="n">_history</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]]</span>
+    <span class="n">_history</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span>
+
+<div class="viewcode-block" id="Subsystem.get_states">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.get_states">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get the states as a list."""</span>
+        <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                    <span class="n">state_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">state_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">state_list</span></div>
+
 
 <div class="viewcode-block" id="Subsystem.set_states">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.set_states">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set states from the state list."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">state_list</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
-                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">n</span> <span class="o">:=</span> <span class="n">value</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                        <span class="n">value</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">state_list</span><span class="p">[</span><span class="n">index</span> <span class="p">:</span> <span class="n">index</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span>
+                        <span class="n">index</span> <span class="o">+=</span> <span class="n">n</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">state_list</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">index</span></div>
 
 
@@ -559,12 +581,17 @@
 
 <div class="viewcode-block" id="Subsystem.extend_state_history">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.extend_state_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">extend_state_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol_y</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extend_state_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Extend the state history with values from solver output."""</span>
         <span class="n">states</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol_y</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
-            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">states</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="o">:=</span> <span class="n">value</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sol_y</span><span class="p">[</span><span class="n">index</span> <span class="p">:</span> <span class="n">index</span> <span class="o">+</span> <span class="n">n</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                    <span class="n">index</span> <span class="o">+=</span> <span class="n">n</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sol_y</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">index</span></div>
 
 
@@ -858,7 +885,7 @@
 <span class="w">        </span><span class="sd">"""Get initial values of all subsystems before the solver."""</span>
         <span class="n">state0</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateful</span><span class="p">:</span>
-            <span class="n">state0</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">state0</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">get_states</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">state0</span></div>
 
 
