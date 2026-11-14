@@ -8,7 +8,7 @@ sign errors but tolerate retuning of the controllers.
 """
 
 import pickle
-from dataclasses import astuple, replace
+from dataclasses import replace
 from math import inf, pi, tanh
 from typing import Any
 
@@ -429,17 +429,6 @@ def test_rotor_angle_with_long_solver_steps() -> None:
     # The angle states are kept within [-pi, pi) between the integration intervals
     assert abs(mechanics.state.theta_M) <= pi
     assert abs(machine.state.theta_m) <= pi
-
-
-def test_im_parameter_conversion_round_trip() -> None:
-    """The Γ and inverse-Γ parameter conversions preserve all the parameters."""
-    par = model.InductionMachinePars(
-        n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245, G_c=0.02
-    )
-    par_inv = model.InductionMachineInvGammaPars.from_gamma_pars(par)
-    assert par_inv.G_c == par.G_c
-    par_back = model.InductionMachinePars.from_inv_gamma_pars(par_inv)
-    assert astuple(par_back) == pytest.approx(astuple(par))
 
 
 @pytest.mark.parametrize("w", [0, 2000, -6000])

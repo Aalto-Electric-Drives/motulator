@@ -149,6 +149,7 @@ def test_state_history_extended_by_states_only() -> None:
     next subsystem, even if the history holds other signals as well."""
     subsystem = _SubsystemWithSignal()
     subsystem.init_state_history()
-    sol_y = [[1.0, 2.0], [3.0, 4.0]]  # Two states of a model, two solution points
+    # Two states of a model, two solution points
+    sol_y = np.array([[1.0, 2.0], [3.0, 4.0]])
     assert subsystem.extend_state_history(sol_y, 1) == 2
     assert subsystem._history == {"x": [3.0, 4.0], "y": []}

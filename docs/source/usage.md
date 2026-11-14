@@ -17,7 +17,7 @@ The {class}`motulator.common.model.SimulationResults` object returned by the sim
 
 ## Conventions
 
-- Space vectors are peak-valued complex numbers, see {doc}`/model/common/space_vectors`. The suffix `_ab` marks stationary coordinates and `_dq` synchronous (rotor) coordinates, e.g., `i_s_ab` and `psi_s_dq`. Inside the controllers, the vectors are in the controller coordinates and have no suffix.
+- Space vectors are peak-valued complex numbers, see {doc}`/model/common/space_vectors`. The suffix `_ab` marks stationary coordinates and `_dq` rotor coordinates, e.g., `i_s_ab` and `psi_s_dq`. Inside the controllers, the vectors are in the controller coordinates and have no suffix.
 - Reference values end in `_ref`, e.g., `tau_M_ref`. Signals inside the controllers are estimates without a special suffix.
 - Lowercase `m` denotes electrical and uppercase `M` mechanical quantities, e.g., the electrical angular speed `w_m = n_p*w_M` and the mechanical angular speed `w_M`.
 - SI units are used. The per-unit base values {class}`motulator.common.utils.BaseValues` are only used for plotting.

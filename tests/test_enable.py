@@ -382,7 +382,7 @@ def test_induction_machine_restart(ctrl_type: str, sensorless: bool) -> None:
     t, w_M = res.mdl.t, res.mdl.mechanics.w_M
     assert np.max(np.abs(res.mdl.machine.i_s_ab)) < 1.05 * 7
     assert np.max(np.abs(res.mdl.machine.i_s_ab[(t > 0.35) & (t < 0.5)])) < 1e-6
-    psi_R = np.abs(res.mdl.machine.psi_R_ab[np.searchsorted(t, 0.5)])
+    psi_R = np.abs(res.mdl.machine.psi_r_dq[np.searchsorted(t, 0.5)])
     assert psi_R < 0.2
     k = np.searchsorted(res.ctrl.t, 0.5) - 1
     assert np.abs(res.ctrl.fbk.psi_R[k]) == pytest.approx(psi_R, abs=0.02)

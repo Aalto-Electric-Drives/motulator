@@ -23,16 +23,18 @@ class Subsystem(Protocol):
     A subsystem has the inputs `inp`, the outputs `out`, and the states `state`,
     typically dataclasses, whose attributes the model reads by name: the connections
     pass the outputs to the inputs (see `Model`), and the states are gathered into the
-    state vector of the solver in their declaration order. The class provides methods
-    for setting states, outputs, and computing state derivatives. It also provides
-    methods for extending the state history and creating the time-series representation
-    of the subsystem, which the model names in the results (see `ModelTimeSeries`). A
-    subsystem whose outputs depend directly on some of its inputs lists these inputs in
-    `feedthrough`, from which the model derives the evaluation order of the outputs. The
-    state history is a dict of lists, keyed by the names of the state fields. The model
-    initializes it by `init_state_history` and extends it by `extend_state_history`. A
-    subclass can keep its other signals in the history as well, under other keys, as a
-    converter does (see `Converter`).
+    state vector of the solver in their declaration order. A state is a complex number
+    or, for a variable number of states (e.g., a ladder circuit), a one-dimensional
+    complex array. The class provides methods for getting and setting states, setting
+    outputs, and computing state derivatives. It also provides methods for extending the
+    state history and creating the time-series representation of the subsystem, which
+    the model names in the results (see `ModelTimeSeries`). A subsystem whose outputs
+    depend directly on some of its inputs lists these inputs in `feedthrough`, from
+    which the model derives the evaluation order of the outputs. The state history is a
+    dict of lists, keyed by the names of the state fields, with one item (a number or a
+    nonempty array) per solution point. The model initializes it by `init_state_history`
+    and extends it by `extend_state_history`. A subclass can keep its other signals in
+    the history as well, under other keys, as a converter does (see `Converter`).
 
     """
 
@@ -40,14 +42,30 @@ class Subsystem(Protocol):
     out: Any
     state: Any  # None if the subsystem has no states
     feedthrough: frozenset[str] = frozenset()  # Inputs the outputs depend on directly
-    _history: dict[str, list[complex]]
+    _history: dict[str, list[Any]]
+
+    def get_states(self) -> list[complex]:
+        """Get the states as a list."""
+        state_list: list[complex] = []
+        if self.state is not None:
+            for value in vars(self.state).values():
+                if isinstance(value, np.ndarray):
+                    state_list.extend(value)
+                else:
+                    state_list.append(value)
+        return state_list
 
     def set_states(self, state_list: list[complex], index: int) -> int:
         """Set states from the state list."""
         if self.state is not None:
-            for attr in vars(self.state):
-                setattr(self.state, attr, state_list[index])
-                index += 1
+            for attr, value in vars(self.state).items():
+                if isinstance(value, np.ndarray):
+                    if n := value.size:
+                        value[:] = state_list[index : index + n]
+                        index += n
+                else:
+                    setattr(self.state, attr, state_list[index])
+                    index += 1
         return index
 
     def set_outputs(self, t: float) -> None:
@@ -71,12 +89,17 @@ class Subsystem(Protocol):
         states = vars(self.state) if self.state is not None else {}
         self._history = {name: [] for name in states}
 
-    def extend_state_history(self, sol_y: list[list[float]], index: int) -> int:
+    def extend_state_history(self, sol_y: np.ndarray, index: int) -> int:
         """Extend the state history with values from solver output."""
         states = vars(self.state) if self.state is not None else {}
-        for name in states:
-            self._history[name].extend(sol_y[index])
-            index += 1
+        for name, value in states.items():
+            if isinstance(value, np.ndarray):
+                if n := value.size:
+                    self._history[name].extend(np.array(sol_y[index : index + n]).T)
+                    index += n
+            else:
+                self._history[name].extend(sol_y[index])
+                index += 1
         return index
 
     def create_time_series(self, t: np.ndarray) -> "SubsystemTimeSeries":
@@ -334,7 +357,7 @@ class Model[C: Converter | None]:
         """Get initial values of all subsystems before the solver."""
         state0: list[complex] = []
         for subsystem in self._stateful:
-            state0.extend(vars(subsystem.state).values())
+            state0.extend(subsystem.get_states())
         return state0
 
     def set_states(self, state_list: list[complex]) -> None:
