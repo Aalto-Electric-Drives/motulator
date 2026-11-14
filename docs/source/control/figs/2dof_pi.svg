@@ -1,745 +1,156 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="480"
-   height="125"
-   id="svg6781"
-   version="1.1"
-   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   sodipodi:docname="2dof_pi.svg"
-   viewBox="0 0 480.00001 125"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:ns3="http://www.iki.fi/pav/software/textext/">
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="2.6561331"
-     inkscape:cx="236.43393"
-     inkscape:cy="18.071383"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1131"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:document-rotation="0"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:showpageshadow="2"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1">
-    <inkscape:grid
-       spacingy="0.5"
-       spacingx="0.5"
-       snapvisiblegridlinesonly="true"
-       enabled="true"
-       visible="true"
-       empspacing="5"
-       id="grid7066"
-       type="xygrid"
-       originx="-150"
-       originy="-415"
-       units="px" />
+<?xml version='1.0' encoding='UTF-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:textext="http://www.iki.fi/pav/software/textext/" width="480" height="125" id="svg6781" version="1.1" inkscape:version="1.4 (e7c3feb100, 2024-10-09)" sodipodi:docname="2dof_pi.svg" viewBox="0 0 480.00001 125">
+  <sodipodi:namedview id="base" pagecolor="#ffffff" bordercolor="#666666" borderopacity="1.0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:zoom="2.6561331" inkscape:cx="236.43393" inkscape:cy="18.071383" inkscape:document-units="px" inkscape:current-layer="layer1" showgrid="true" inkscape:window-width="1920" inkscape:window-height="1131" inkscape:window-x="0" inkscape:window-y="0" inkscape:window-maximized="1" inkscape:document-rotation="0" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0" inkscape:showpageshadow="2" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1">
+    <inkscape:grid spacingy="0.5" spacingx="0.5" snapvisiblegridlinesonly="true" enabled="true" visible="true" empspacing="5" id="grid7066" type="xygrid" originx="-150" originy="-415" units="px" />
   </sodipodi:namedview>
-  <defs
-     id="defs6783">
-    <marker
-       style="overflow:visible"
-       id="Arrow2Mend-9"
-       orient="auto"
-       refY="0"
-       inkscape:stockid="Arrow2Mend"
-       refX="0"
-       viewBox="0 0 6.5555267 4.8212658"
-       markerWidth="6.5555267"
-       markerHeight="4.8212657"
-       preserveAspectRatio="xMidYMid">
-      <path
-         inkscape:connector-curvature="0"
-         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
-         transform="scale(-0.6)"
-         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
-         id="path18502-9" />
+  <defs id="defs6783">
+    <marker style="overflow:visible" id="Dot" refX="0" refY="0" orient="auto" inkscape:stockid="Dot" markerWidth="0.75" markerHeight="0.75" viewBox="0 0 1 1" inkscape:collect="always" preserveAspectRatio="xMidYMid">
+  <path transform="scale(0.5)" d="M 5,0 C 5,2.76 2.76,5 0,5 -2.76,5 -5,2.76 -5,0 c 0,-2.76 2.3,-5 5,-5 2.76,0 5,2.24 5,5 z" style="fill:context-stroke;fill-rule:evenodd;stroke:none" />
+</marker>
+    <marker style="overflow:visible" id="ConcaveTriangle" refX="3" refY="0" orient="auto-start-reverse" inkscape:stockid="Concave triangle arrow" markerWidth="0.75" markerHeight="0.75" viewBox="0 0 1 1" inkscape:isstock="true" inkscape:collect="always" preserveAspectRatio="xMidYMid">
+      <path transform="scale(0.7)" d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z" style="fill:context-stroke;fill-rule:evenodd;stroke:none" />
     </marker>
-    <marker
-       inkscape:stockid="DotM"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="DotM"
-       style="overflow:visible">
-      <path
-         inkscape:connector-curvature="0"
-         id="path4676"
-         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
-         transform="matrix(0.4,0,0,0.4,2.96,0.4)" />
-    </marker>
-    <marker
-       style="overflow:visible"
-       id="marker3394"
-       refX="4.5"
-       refY="0"
-       orient="auto-start-reverse"
-       inkscape:stockid="Arrow2"
-       markerWidth="6.6999998"
-       markerHeight="4.8727274"
-       viewBox="0 0 7.7 5.6"
-       inkscape:isstock="true"
-       inkscape:collect="always"
-       preserveAspectRatio="xMidYMid">
-      <path
-         transform="scale(0.7)"
-         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
-         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
-         id="path3392" />
-    </marker>
-    <marker
-       refX="0"
-       inkscape:stockid="Arrow2Mstart"
-       refY="0"
-       orient="auto"
-       id="Arrow2Mstart"
-       style="overflow:visible">
-      <path
-         id="path21014"
-         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
-         transform="scale(0.6)"
-         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
-         inkscape:connector-curvature="0" />
-    </marker>
-  </defs>
-  <metadata
-     id="metadata6786">
+    </defs>
+  <metadata id="metadata6786">
     <rdf:RDF>
-      <cc:Work
-         rdf:about="">
+      <cc:Work rdf:about="">
         <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <g
-     id="layer1"
-     inkscape:groupmode="layer"
-     inkscape:label="Layer 1"
-     transform="translate(-150, -415)">
-    <g
-       transform="translate(-260.44921,151.86401)"
-       id="g4675" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)"
-       d="M 419.99999,495 V 477.5"
-       id="path16885"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)"
-       d="m 322.50002,470 h 17.5"
-       id="path5635"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <path
-       sodipodi:nodetypes="ccc"
-       inkscape:connector-curvature="0"
-       id="path5621"
-       d="M 290.00002,470 290,435 h 50"
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-end:url(#marker3394)" />
-    <path
-       sodipodi:nodetypes="cc"
-       inkscape:connector-curvature="0"
-       id="path3849"
-       d="m 360,470 h 15"
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)" />
-    <path
-       sodipodi:nodetypes="ccc"
-       inkscape:connector-curvature="0"
-       id="path3809"
-       d="m 360,435 h 60 l -2e-5,27.5"
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)"
-       d="m 270,470 h 37.50002"
-       id="path3851"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Mend-9)"
-       d="M 485,525 H 315 l -10e-6,-47.49999"
-       id="path3783"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccc" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)"
-       d="m 395,470 h 17.49998"
-       id="path3813"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <g
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline"
-       transform="matrix(0,0.7272727,-0.7272727,0,216.6121,447.45455)"
-       id="g3799">
-      <path
-         inkscape:connector-curvature="0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="m 9.5,-274.09586 v -10"
-         sodipodi:nodetypes="cc"
-         id="path3801"
-         transform="translate(10.5,17.500004)" />
-      <path
-         inkscape:connector-curvature="0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="m 19.999996,-279.59586 v 10"
-         sodipodi:nodetypes="cc"
-         id="path3803"
-         transform="rotate(-90,26.5,-268.09586)" />
+  <g id="layer1" inkscape:groupmode="layer" inkscape:label="Layer 1" transform="translate(-150, -415)">
+    <g transform="translate(-260.44921,151.86401)" id="g4675" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" d="M 420,495 L 420,480" id="path16885" inkscape:connector-curvature="0" sodipodi:nodetypes="cc" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" d="M 322.5,470 L 337.5,470" id="path5635" inkscape:connector-curvature="0" sodipodi:nodetypes="cc" />
+    <path sodipodi:nodetypes="ccc" inkscape:connector-curvature="0" id="path5621" d="M 290,470 L 290,435 L 337.5,435" style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Dot);marker-end:url(#ConcaveTriangle)" />
+    <path sodipodi:nodetypes="cc" inkscape:connector-curvature="0" id="path3849" d="M 360,470 L 372.5,470" style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" />
+    <path sodipodi:nodetypes="ccc" inkscape:connector-curvature="0" id="path3809" d="M 360,435 L 420,435 L 420,460" style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" d="M 270,470 L 305,470" id="path3851" inkscape:connector-curvature="0" sodipodi:nodetypes="cc" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#ConcaveTriangle)" d="M 485,525 L 315,525 L 315,480" id="path3783" inkscape:connector-curvature="0" sodipodi:nodetypes="ccc" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" d="M 395,470 L 410,470" id="path3813" inkscape:connector-curvature="0" sodipodi:nodetypes="cc" />
+    <g style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline" transform="matrix(0,0.7272727,-0.7272727,0,216.6121,447.45455)" id="g3799">
+      <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 9.5,-274.09586 v -10" sodipodi:nodetypes="cc" id="path3801" transform="translate(10.5,17.500004)" />
+      <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 19.999996,-279.59586 v 10" sodipodi:nodetypes="cc" id="path3803" transform="rotate(-90,26.5,-268.09586)" />
     </g>
-    <ellipse
-       transform="rotate(90)"
-       id="path3805"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       cx="470"
-       cy="-419.99997"
-       rx="7.5000033"
-       ry="7.4999976" />
-    <g
-       id="g3825"
-       transform="matrix(-0.7272727,0,0,-0.7272727,442.54543,266.61212)"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline">
-      <path
-         transform="translate(10.5,17.500004)"
-         id="path3827"
-         sodipodi:nodetypes="cc"
-         d="m 9.5,-274.09586 v -10"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         inkscape:connector-curvature="0" />
-      <path
-         transform="rotate(-90,26.5,-268.09586)"
-         id="path3829"
-         sodipodi:nodetypes="cc"
-         d="m 19.999996,-279.59586 v 10"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         inkscape:connector-curvature="0" />
+    <ellipse transform="rotate(90)" id="path3805" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" cx="470" cy="-419.99997" rx="7.5000033" ry="7.4999976" />
+    <g id="g3825" transform="matrix(-0.7272727,0,0,-0.7272727,442.54543,266.61212)" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline">
+      <path transform="translate(10.5,17.500004)" id="path3827" sodipodi:nodetypes="cc" d="m 9.5,-274.09586 v -10" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" inkscape:connector-curvature="0" />
+      <path transform="rotate(-90,26.5,-268.09586)" id="path3829" sodipodi:nodetypes="cc" d="m 19.999996,-279.59586 v 10" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" inkscape:connector-curvature="0" />
     </g>
-    <g
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline"
-       transform="matrix(0,0.7272727,-0.7272727,0,111.61213,447.45455)"
-       id="g3835">
-      <path
-         inkscape:connector-curvature="0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="m 9.5,-274.09586 v -10"
-         sodipodi:nodetypes="cc"
-         id="path3837"
-         transform="translate(10.5,17.500004)" />
-      <path
-         inkscape:connector-curvature="0"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         d="m 19.999996,-279.59586 v 10"
-         sodipodi:nodetypes="cc"
-         id="path3839"
-         transform="rotate(-90,26.5,-268.09586)" />
+    <g style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline" transform="matrix(0,0.7272727,-0.7272727,0,111.61213,447.45455)" id="g3835">
+      <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 9.5,-274.09586 v -10" sodipodi:nodetypes="cc" id="path3837" transform="translate(10.5,17.500004)" />
+      <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 19.999996,-279.59586 v 10" sodipodi:nodetypes="cc" id="path3839" transform="rotate(-90,26.5,-268.09586)" />
     </g>
-    <ellipse
-       transform="rotate(90)"
-       id="path3841"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       cx="470"
-       cy="-315"
-       rx="7.5000033"
-       ry="7.4999976" />
-    <path
-       inkscape:connector-curvature="0"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:0.727273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 302.72726,483.50008 h 7.27273"
-       sodipodi:nodetypes="cc"
-       id="path3843" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-end:url(#Arrow2Mend-9)"
-       d="M 420.00002,525 420,510"
-       id="path18563"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
-    <rect
-       style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect3787-7"
-       width="20"
-       y="450"
-       x="375"
-       height="40"
-       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
-       inkscape:export-xdpi="300"
-       inkscape:export-ydpi="300" />
-    <path
-       id="path3059"
-       sodipodi:nodetypes="cc"
-       d="m 408.36364,483.13637 h 7.27273"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:0.727273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       inkscape:connector-curvature="0" />
-    <rect
-       inkscape:export-ydpi="300"
-       inkscape:export-xdpi="300"
-       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
-       height="20"
-       x="340"
-       y="425"
-       width="20"
-       id="rect3940"
-       style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    <rect
-       inkscape:export-ydpi="300"
-       inkscape:export-xdpi="300"
-       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
-       height="20"
-       x="340"
-       y="460"
-       width="20"
-       id="rect4138"
-       style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    <rect
-       inkscape:export-ydpi="300"
-       inkscape:export-xdpi="300"
-       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png"
-       height="20"
-       x="410"
-       y="490"
-       width="20"
-       id="rect4144"
-       style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow2Mstart);marker-mid:none"
-       d="m 447.5,470 h -20"
-       sodipodi:nodetypes="cc"
-       id="path1916"
-       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi.png"
-       inkscape:export-xdpi="300"
-       inkscape:export-ydpi="300"
-       inkscape:connector-curvature="0" />
-    <path
-       sodipodi:nodetypes="cc"
-       inkscape:connector-curvature="0"
-       id="path27958"
-       d="m 455,425 10e-6,37.5"
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#Arrow2Mend-9)" />
-    <path
-       style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow2Mstart);marker-mid:none"
-       d="M 485,470 H 462.5"
-       sodipodi:nodetypes="cc"
-       id="path27970"
-       inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi.png"
-       inkscape:export-xdpi="300"
-       inkscape:export-ydpi="300"
-       inkscape:connector-curvature="0" />
-    <g
-       id="g38890"
-       transform="translate(120,-10)">
-      <ellipse
-         transform="rotate(90)"
-         id="ellipse27960"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         cx="480"
-         cy="-335"
-         rx="7.5000033"
-         ry="7.4999976" />
-      <g
-         id="g27966"
-         transform="matrix(-0.7272727,0,0,-0.7272727,357.54546,276.61212)"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline">
-        <path
-           transform="translate(10.5,17.500004)"
-           id="path27962"
-           sodipodi:nodetypes="cc"
-           d="m 9.5,-274.09586 v -10"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           inkscape:connector-curvature="0" />
-        <path
-           transform="rotate(-90,26.5,-268.09586)"
-           id="path27964"
-           sodipodi:nodetypes="cc"
-           d="m 19.999996,-279.59586 v 10"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           inkscape:connector-curvature="0" />
+    <ellipse transform="rotate(90)" id="path3841" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" cx="470" cy="-315" rx="7.5000033" ry="7.4999976" />
+    <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:0.727273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 302.72726,483.50008 h 7.27273" sodipodi:nodetypes="cc" id="path3843" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Dot);marker-end:url(#ConcaveTriangle)" d="M 420,525 L 420,512.5" id="path18563" inkscape:connector-curvature="0" sodipodi:nodetypes="cc" />
+    <rect style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" id="rect3787-7" width="20" y="450" x="375" height="40" inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png" inkscape:export-xdpi="300" inkscape:export-ydpi="300" />
+    <path id="path3059" sodipodi:nodetypes="cc" d="m 408.36364,483.13637 h 7.27273" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:0.727273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" inkscape:connector-curvature="0" />
+    <rect inkscape:export-ydpi="300" inkscape:export-xdpi="300" inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png" height="20" x="340" y="425" width="20" id="rect3940" style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect inkscape:export-ydpi="300" inkscape:export-xdpi="300" inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png" height="20" x="340" y="460" width="20" id="rect4138" style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect inkscape:export-ydpi="300" inkscape:export-xdpi="300" inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi3.png" height="20" x="410" y="490" width="20" id="rect4144" style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#ConcaveTriangle);marker-mid:none" d="M 445,470 L 427.5,470" sodipodi:nodetypes="cc" id="path1916" inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi.png" inkscape:export-xdpi="300" inkscape:export-ydpi="300" inkscape:connector-curvature="0" />
+    <path sodipodi:nodetypes="cc" inkscape:connector-curvature="0" id="path27958" d="M 455,425 L 455,460" style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:none;marker-end:url(#ConcaveTriangle)" />
+    <path style="display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#ConcaveTriangle);marker-mid:none" d="M 482.5,470 L 462.5,470" sodipodi:nodetypes="cc" id="path27970" inkscape:export-filename="C:\Documents and Settings\mhinkkan\Desktop\testi.png" inkscape:export-xdpi="300" inkscape:export-ydpi="300" inkscape:connector-curvature="0" />
+    <g id="g38890" transform="translate(120,-10)">
+      <ellipse transform="rotate(90)" id="ellipse27960" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.333;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" cx="480" cy="-335" rx="7.5000033" ry="7.4999976" />
+      <g id="g27966" transform="matrix(-0.7272727,0,0,-0.7272727,357.54546,276.61212)" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline">
+        <path transform="translate(10.5,17.500004)" id="path27962" sodipodi:nodetypes="cc" d="m 9.5,-274.09586 v -10" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" inkscape:connector-curvature="0" />
+        <path transform="rotate(-90,26.5,-268.09586)" id="path27964" sodipodi:nodetypes="cc" d="m 19.999996,-279.59586 v 10" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" inkscape:connector-curvature="0" />
       </g>
-      <g
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline"
-         transform="matrix(0,0.7272727,-0.7272727,0,131.61216,457.45454)"
-         id="g33274">
-        <path
-           inkscape:connector-curvature="0"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 9.5,-274.09586 v -10"
-           sodipodi:nodetypes="cc"
-           id="path33270"
-           transform="translate(10.5,17.500004)" />
-        <path
-           inkscape:connector-curvature="0"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           d="m 19.999996,-279.59586 v 10"
-           sodipodi:nodetypes="cc"
-           id="path33272"
-           transform="rotate(-90,26.5,-268.09586)" />
+      <g style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline" transform="matrix(0,0.7272727,-0.7272727,0,131.61216,457.45454)" id="g33274">
+        <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 9.5,-274.09586 v -10" sodipodi:nodetypes="cc" id="path33270" transform="translate(10.5,17.500004)" />
+        <path inkscape:connector-curvature="0" style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.5px;line-height:125%;font-family:'Nimbus Roman No9 L';text-align:start;writing-mode:lr-tb;text-anchor:start;display:inline;fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" d="m 19.999996,-279.59586 v 10" sodipodi:nodetypes="cc" id="path33272" transform="rotate(-90,26.5,-268.09586)" />
       </g>
     </g>
-    <g
-       id="g12"
-       transform="matrix(1.33333,0,0,1.33333,269.99967,459.339)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$r$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="bottom left"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs7909"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g7656"
-         transform="translate(-154.952,-131.808)"
-         style="stroke-width:0">
-        <g
-           transform="translate(154.546,135.761)"
-           id="g4257"
-           style="stroke-width:0">
-          <path
-             d="m 3.6875,-3.5 c 0,-0.265625 -0.15625,-0.453125 -0.40625,-0.453125 -0.21875,0 -0.453125,0.125 -0.6875,0.375 -0.375,0.390625 -0.734375,0.90625 -0.875,1.265625 L 1.59375,-1.984375 2.078125,-3.9375 2.046875,-3.953125 0.65625,-3.71875 v 0.15625 c 0.0625,0 0.15625,0 0.21875,0 0.203125,0 0.40625,0.015625 0.40625,0.203125 0,0.125 0,0.125 -0.15625,0.734375 L 0.40625,0 h 0.671875 c 0.46875,-1.5 0.609375,-1.859375 1,-2.53125 C 2.390625,-3.078125 2.65625,-3.375 2.8125,-3.375 c 0.0625,0 0.109375,0.03125 0.140625,0.125 0.078125,0.15625 0.15625,0.203125 0.328125,0.203125 0.265625,0 0.40625,-0.15625 0.40625,-0.453125 z m 0,0"
-             id="path1583"
-             style="stroke-width:0" />
+    <g id="g12" transform="matrix(1.33333,0,0,1.33333,269.99967,459.339)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$r$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="bottom left" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs7909" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g7656" transform="translate(-154.952,-131.808)" style="stroke-width:0">
+        <g transform="translate(154.546,135.761)" id="g4257" style="stroke-width:0">
+          <path d="m 3.6875,-3.5 c 0,-0.265625 -0.15625,-0.453125 -0.40625,-0.453125 -0.21875,0 -0.453125,0.125 -0.6875,0.375 -0.375,0.390625 -0.734375,0.90625 -0.875,1.265625 L 1.59375,-1.984375 2.078125,-3.9375 2.046875,-3.953125 0.65625,-3.71875 v 0.15625 c 0.0625,0 0.15625,0 0.21875,0 0.203125,0 0.40625,0.015625 0.40625,0.203125 0,0.125 0,0.125 -0.15625,0.734375 L 0.40625,0 h 0.671875 c 0.46875,-1.5 0.609375,-1.859375 1,-2.53125 C 2.390625,-3.078125 2.65625,-3.375 2.8125,-3.375 c 0.0625,0 0.109375,0.03125 0.140625,0.125 0.078125,0.15625 0.15625,0.203125 0.328125,0.203125 0.265625,0 0.40625,-0.15625 0.40625,-0.453125 z m 0,0" id="path1583" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g15"
-       transform="matrix(1.33333,0,0,1.33333,414.85417,494.91668)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$\\kp$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="middle center"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs1664"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g1588"
-         transform="translate(-155.183,-129.636)"
-         style="stroke-width:0">
-        <g
-           transform="translate(155.058,135.761)"
-           id="g2958"
-           style="stroke-width:0">
-          <path
-             d="m 3.84375,-0.875 -0.125,-0.109375 C 3.671875,-0.890625 3.625,-0.8125 3.578125,-0.75 c -0.15625,0.28125 -0.265625,0.375 -0.40625,0.375 -0.1875,0 -0.359375,-0.28125 -0.71875,-1.15625 L 2.109375,-2.3125 C 3.4375,-3.484375 3.71875,-3.671875 4.140625,-3.6875 V -3.84375 H 2.5 v 0.15625 h 0.140625 c 0.21875,0 0.34375,0.0625 0.34375,0.15625 0,0.171875 -0.4375,0.609375 -1.28125,1.25 L 1.3125,-1.984375 2.390625,-6.078125 2.34375,-6.125 c -0.515625,0.109375 -0.859375,0.171875 -1.390625,0.234375 v 0.15625 h 0.15625 c 0.296875,0 0.4375,0.0625 0.453125,0.21875 -0.015625,0.15625 -0.078125,0.390625 -0.203125,0.8125 L 1.28125,-4.40625 1.265625,-4.328125 0.125,0 h 0.671875 l 0.4375,-1.609375 0.375,-0.296875 C 1.75,-1.5 1.984375,-0.953125 2.140625,-0.640625 2.4375,-0.078125 2.59375,0.09375 2.859375,0.09375 3.203125,0.09375 3.4375,-0.125 3.84375,-0.875 Z m 0,0"
-             id="path5580"
-             style="stroke-width:0" />
+    <g id="g15" transform="matrix(1.33333,0,0,1.33333,414.85417,494.91668)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$\\kp$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="middle center" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs1664" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g1588" transform="translate(-155.183,-129.636)" style="stroke-width:0">
+        <g transform="translate(155.058,135.761)" id="g2958" style="stroke-width:0">
+          <path d="m 3.84375,-0.875 -0.125,-0.109375 C 3.671875,-0.890625 3.625,-0.8125 3.578125,-0.75 c -0.15625,0.28125 -0.265625,0.375 -0.40625,0.375 -0.1875,0 -0.359375,-0.28125 -0.71875,-1.15625 L 2.109375,-2.3125 C 3.4375,-3.484375 3.71875,-3.671875 4.140625,-3.6875 V -3.84375 H 2.5 v 0.15625 h 0.140625 c 0.21875,0 0.34375,0.0625 0.34375,0.15625 0,0.171875 -0.4375,0.609375 -1.28125,1.25 L 1.3125,-1.984375 2.390625,-6.078125 2.34375,-6.125 c -0.515625,0.109375 -0.859375,0.171875 -1.390625,0.234375 v 0.15625 h 0.15625 c 0.296875,0 0.4375,0.0625 0.453125,0.21875 -0.015625,0.15625 -0.078125,0.390625 -0.203125,0.8125 L 1.28125,-4.40625 1.265625,-4.328125 0.125,0 h 0.671875 l 0.4375,-1.609375 0.375,-0.296875 C 1.75,-1.5 1.984375,-0.953125 2.140625,-0.640625 2.4375,-0.078125 2.59375,0.09375 2.859375,0.09375 3.203125,0.09375 3.4375,-0.125 3.84375,-0.875 Z m 0,0" id="path5580" style="stroke-width:0" />
         </g>
       </g>
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g9731"
-         transform="translate(-155.183,-129.636)"
-         style="stroke-width:0">
-        <g
-           transform="translate(159.612,137.106)"
-           id="g3153"
-           style="stroke-width:0">
-          <path
-             d="M 3.09375,-1.625 C 3.09375,-2.4375 2.625,-3.03125 2,-3.03125 1.625,-3.03125 1.328125,-2.859375 1.046875,-2.5 V -3.015625 L 1,-3.03125 C 0.65625,-2.890625 0.421875,-2.796875 0.0625,-2.6875 v 0.109375 C 0.125,-2.59375 0.171875,-2.59375 0.21875,-2.59375 c 0.234375,0 0.28125,0.0625 0.28125,0.375 V 0.859375 C 0.5,1.203125 0.421875,1.28125 0.03125,1.3125 V 1.421875 H 1.625 V 1.3125 C 1.125,1.296875 1.046875,1.234375 1.046875,0.8125 V -0.21875 C 1.28125,0 1.4375,0.0625 1.703125,0.0625 c 0.78125,0 1.390625,-0.734375 1.390625,-1.6875 z m -0.5625,0.25 c 0,0.734375 -0.328125,1.234375 -0.796875,1.234375 -0.3125,0 -0.6875,-0.234375 -0.6875,-0.4375 v -1.625 c 0,-0.1875 0.375,-0.421875 0.671875,-0.421875 0.484375,0 0.8125,0.5 0.8125,1.25 z m 0,0"
-             id="path1636"
-             style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g9731" transform="translate(-155.183,-129.636)" style="stroke-width:0">
+        <g transform="translate(159.612,137.106)" id="g3153" style="stroke-width:0">
+          <path d="M 3.09375,-1.625 C 3.09375,-2.4375 2.625,-3.03125 2,-3.03125 1.625,-3.03125 1.328125,-2.859375 1.046875,-2.5 V -3.015625 L 1,-3.03125 C 0.65625,-2.890625 0.421875,-2.796875 0.0625,-2.6875 v 0.109375 C 0.125,-2.59375 0.171875,-2.59375 0.21875,-2.59375 c 0.234375,0 0.28125,0.0625 0.28125,0.375 V 0.859375 C 0.5,1.203125 0.421875,1.28125 0.03125,1.3125 V 1.421875 H 1.625 V 1.3125 C 1.125,1.296875 1.046875,1.234375 1.046875,0.8125 V -0.21875 C 1.28125,0 1.4375,0.0625 1.703125,0.0625 c 0.78125,0 1.390625,-0.734375 1.390625,-1.6875 z m -0.5625,0.25 c 0,0.734375 -0.328125,1.234375 -0.796875,1.234375 -0.3125,0 -0.6875,-0.234375 -0.6875,-0.4375 v -1.625 c 0,-0.1875 0.375,-0.421875 0.671875,-0.421875 0.484375,0 0.8125,0.5 0.8125,1.25 z m 0,0" id="path1636" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g28"
-       transform="matrix(1.33333,0,0,1.33333,345.93276,465.00735)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$\\ki$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="middle center"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs323"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g8696"
-         transform="translate(-155.183,-129.636)"
-         style="stroke-width:0">
-        <g
-           transform="translate(155.058,135.761)"
-           id="g7378"
-           style="stroke-width:0">
-          <path
-             d="m 3.84375,-0.875 -0.125,-0.109375 C 3.671875,-0.890625 3.625,-0.8125 3.578125,-0.75 c -0.15625,0.28125 -0.265625,0.375 -0.40625,0.375 -0.1875,0 -0.359375,-0.28125 -0.71875,-1.15625 L 2.109375,-2.3125 C 3.4375,-3.484375 3.71875,-3.671875 4.140625,-3.6875 V -3.84375 H 2.5 v 0.15625 h 0.140625 c 0.21875,0 0.34375,0.0625 0.34375,0.15625 0,0.171875 -0.4375,0.609375 -1.28125,1.25 L 1.3125,-1.984375 2.390625,-6.078125 2.34375,-6.125 c -0.515625,0.109375 -0.859375,0.171875 -1.390625,0.234375 v 0.15625 h 0.15625 c 0.296875,0 0.4375,0.0625 0.453125,0.21875 -0.015625,0.15625 -0.078125,0.390625 -0.203125,0.8125 L 1.28125,-4.40625 1.265625,-4.328125 0.125,0 h 0.671875 l 0.4375,-1.609375 0.375,-0.296875 C 1.75,-1.5 1.984375,-0.953125 2.140625,-0.640625 2.4375,-0.078125 2.59375,0.09375 2.859375,0.09375 3.203125,0.09375 3.4375,-0.125 3.84375,-0.875 Z m 0,0"
-             id="path688"
-             style="stroke-width:0" />
+    <g id="g28" transform="matrix(1.33333,0,0,1.33333,345.93276,465.00735)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$\\ki$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="middle center" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs323" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g8696" transform="translate(-155.183,-129.636)" style="stroke-width:0">
+        <g transform="translate(155.058,135.761)" id="g7378" style="stroke-width:0">
+          <path d="m 3.84375,-0.875 -0.125,-0.109375 C 3.671875,-0.890625 3.625,-0.8125 3.578125,-0.75 c -0.15625,0.28125 -0.265625,0.375 -0.40625,0.375 -0.1875,0 -0.359375,-0.28125 -0.71875,-1.15625 L 2.109375,-2.3125 C 3.4375,-3.484375 3.71875,-3.671875 4.140625,-3.6875 V -3.84375 H 2.5 v 0.15625 h 0.140625 c 0.21875,0 0.34375,0.0625 0.34375,0.15625 0,0.171875 -0.4375,0.609375 -1.28125,1.25 L 1.3125,-1.984375 2.390625,-6.078125 2.34375,-6.125 c -0.515625,0.109375 -0.859375,0.171875 -1.390625,0.234375 v 0.15625 h 0.15625 c 0.296875,0 0.4375,0.0625 0.453125,0.21875 -0.015625,0.15625 -0.078125,0.390625 -0.203125,0.8125 L 1.28125,-4.40625 1.265625,-4.328125 0.125,0 h 0.671875 l 0.4375,-1.609375 0.375,-0.296875 C 1.75,-1.5 1.984375,-0.953125 2.140625,-0.640625 2.4375,-0.078125 2.59375,0.09375 2.859375,0.09375 3.203125,0.09375 3.4375,-0.125 3.84375,-0.875 Z m 0,0" id="path688" style="stroke-width:0" />
         </g>
       </g>
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g4464"
-         transform="translate(-155.183,-129.636)"
-         style="stroke-width:0">
-        <g
-           transform="translate(159.612,137.125)"
-           id="g2603"
-           style="stroke-width:0">
-          <path
-             d="m 1.671875,0 v -0.09375 c -0.4375,-0.03125 -0.5,-0.109375 -0.5,-0.578125 V -3 L 1.15625,-3.03125 0.125,-2.671875 V -2.5625 l 0.0625,-0.015625 c 0.078125,0 0.15625,-0.015625 0.21875,-0.015625 0.15625,0 0.21875,0.109375 0.21875,0.390625 v 1.53125 c 0,0.46875 -0.0625,0.546875 -0.515625,0.578125 V 0 Z m -0.4375,-4.15625 C 1.234375,-4.34375 1.09375,-4.5 0.90625,-4.5 c -0.1875,0 -0.34375,0.15625 -0.34375,0.34375 0,0.1875 0.15625,0.328125 0.34375,0.328125 0.1875,0 0.328125,-0.140625 0.328125,-0.328125 z m 0,0"
-             id="path5824"
-             style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g4464" transform="translate(-155.183,-129.636)" style="stroke-width:0">
+        <g transform="translate(159.612,137.125)" id="g2603" style="stroke-width:0">
+          <path d="m 1.671875,0 v -0.09375 c -0.4375,-0.03125 -0.5,-0.109375 -0.5,-0.578125 V -3 L 1.15625,-3.03125 0.125,-2.671875 V -2.5625 l 0.0625,-0.015625 c 0.078125,0 0.15625,-0.015625 0.21875,-0.015625 0.15625,0 0.21875,0.109375 0.21875,0.390625 v 1.53125 c 0,0.46875 -0.0625,0.546875 -0.515625,0.578125 V 0 Z m -0.4375,-4.15625 C 1.234375,-4.34375 1.09375,-4.5 0.90625,-4.5 c -0.1875,0 -0.34375,0.15625 -0.34375,0.34375 0,0.1875 0.15625,0.328125 0.34375,0.328125 0.1875,0 0.328125,-0.140625 0.328125,-0.328125 z m 0,0" id="path5824" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g37"
-       transform="matrix(1.33333,0,0,1.33333,345.82859,429.97835)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$\\kt$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="middle center"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs5987"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g963"
-         transform="translate(-155.183,-129.636)"
-         style="stroke-width:0">
-        <g
-           transform="translate(155.058,135.761)"
-           id="g9548"
-           style="stroke-width:0">
-          <path
-             d="m 3.84375,-0.875 -0.125,-0.109375 C 3.671875,-0.890625 3.625,-0.8125 3.578125,-0.75 c -0.15625,0.28125 -0.265625,0.375 -0.40625,0.375 -0.1875,0 -0.359375,-0.28125 -0.71875,-1.15625 L 2.109375,-2.3125 C 3.4375,-3.484375 3.71875,-3.671875 4.140625,-3.6875 V -3.84375 H 2.5 v 0.15625 h 0.140625 c 0.21875,0 0.34375,0.0625 0.34375,0.15625 0,0.171875 -0.4375,0.609375 -1.28125,1.25 L 1.3125,-1.984375 2.390625,-6.078125 2.34375,-6.125 c -0.515625,0.109375 -0.859375,0.171875 -1.390625,0.234375 v 0.15625 h 0.15625 c 0.296875,0 0.4375,0.0625 0.453125,0.21875 -0.015625,0.15625 -0.078125,0.390625 -0.203125,0.8125 L 1.28125,-4.40625 1.265625,-4.328125 0.125,0 h 0.671875 l 0.4375,-1.609375 0.375,-0.296875 C 1.75,-1.5 1.984375,-0.953125 2.140625,-0.640625 2.4375,-0.078125 2.59375,0.09375 2.859375,0.09375 3.203125,0.09375 3.4375,-0.125 3.84375,-0.875 Z m 0,0"
-             id="path6770"
-             style="stroke-width:0" />
+    <g id="g37" transform="matrix(1.33333,0,0,1.33333,345.82859,429.97835)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$\\kt$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="middle center" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs5987" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g963" transform="translate(-155.183,-129.636)" style="stroke-width:0">
+        <g transform="translate(155.058,135.761)" id="g9548" style="stroke-width:0">
+          <path d="m 3.84375,-0.875 -0.125,-0.109375 C 3.671875,-0.890625 3.625,-0.8125 3.578125,-0.75 c -0.15625,0.28125 -0.265625,0.375 -0.40625,0.375 -0.1875,0 -0.359375,-0.28125 -0.71875,-1.15625 L 2.109375,-2.3125 C 3.4375,-3.484375 3.71875,-3.671875 4.140625,-3.6875 V -3.84375 H 2.5 v 0.15625 h 0.140625 c 0.21875,0 0.34375,0.0625 0.34375,0.15625 0,0.171875 -0.4375,0.609375 -1.28125,1.25 L 1.3125,-1.984375 2.390625,-6.078125 2.34375,-6.125 c -0.515625,0.109375 -0.859375,0.171875 -1.390625,0.234375 v 0.15625 h 0.15625 c 0.296875,0 0.4375,0.0625 0.453125,0.21875 -0.015625,0.15625 -0.078125,0.390625 -0.203125,0.8125 L 1.28125,-4.40625 1.265625,-4.328125 0.125,0 h 0.671875 l 0.4375,-1.609375 0.375,-0.296875 C 1.75,-1.5 1.984375,-0.953125 2.140625,-0.640625 2.4375,-0.078125 2.59375,0.09375 2.859375,0.09375 3.203125,0.09375 3.4375,-0.125 3.84375,-0.875 Z m 0,0" id="path6770" style="stroke-width:0" />
         </g>
       </g>
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g9744"
-         transform="translate(-155.183,-129.636)"
-         style="stroke-width:0">
-        <g
-           transform="translate(159.612,137.106)"
-           id="g7718"
-           style="stroke-width:0">
-          <path
-             d="M 1.828125,-0.4375 1.75,-0.5 c -0.140625,0.171875 -0.25,0.21875 -0.390625,0.21875 -0.25,0 -0.34375,-0.171875 -0.34375,-0.59375 V -2.75 h 0.65625 V -2.953125 H 1.015625 V -3.71875 C 1.015625,-3.78125 1,-3.8125 0.96875,-3.8125 0.921875,-3.75 0.875,-3.6875 0.828125,-3.625 0.59375,-3.265625 0.375,-3.015625 0.203125,-2.921875 c -0.078125,0.046875 -0.125,0.09375 -0.125,0.125 0,0.015625 0.015625,0.03125 0.03125,0.046875 h 0.34375 v 1.984375 c 0,0.546875 0.203125,0.828125 0.59375,0.828125 0.328125,0 0.578125,-0.15625 0.78125,-0.5 z m 0,0"
-             id="path8325"
-             style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g9744" transform="translate(-155.183,-129.636)" style="stroke-width:0">
+        <g transform="translate(159.612,137.106)" id="g7718" style="stroke-width:0">
+          <path d="M 1.828125,-0.4375 1.75,-0.5 c -0.140625,0.171875 -0.25,0.21875 -0.390625,0.21875 -0.25,0 -0.34375,-0.171875 -0.34375,-0.59375 V -2.75 h 0.65625 V -2.953125 H 1.015625 V -3.71875 C 1.015625,-3.78125 1,-3.8125 0.96875,-3.8125 0.921875,-3.75 0.875,-3.6875 0.828125,-3.625 0.59375,-3.265625 0.375,-3.015625 0.203125,-2.921875 c -0.078125,0.046875 -0.125,0.09375 -0.125,0.125 0,0.015625 0.015625,0.03125 0.03125,0.046875 h 0.34375 v 1.984375 c 0,0.546875 0.203125,0.828125 0.59375,0.828125 0.328125,0 0.578125,-0.15625 0.78125,-0.5 z m 0,0" id="path8325" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g46"
-       transform="matrix(1.33333,0,0,1.33333,382.01303,457.73745)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$\\dfrac{1}{s}$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="middle center"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs3629"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g4830"
-         transform="translate(-155.887,-126.784)"
-         style="stroke-width:0">
-        <g
-           transform="translate(155.885,132.847)"
-           id="g6641"
-           style="stroke-width:0">
-          <path
-             d="m 3.53125,0 v -0.140625 c -0.703125,0 -0.84375,-0.09375 -0.84375,-0.515625 V -6.046875 L 2.609375,-6.0625 1,-5.25 v 0.125 c 0.109375,-0.046875 0.203125,-0.078125 0.234375,-0.09375 0.171875,-0.0625 0.3125,-0.09375 0.40625,-0.09375 0.1875,0 0.265625,0.125 0.265625,0.421875 v 4.0625 c 0,0.296875 -0.0625,0.5 -0.21875,0.578125 -0.125,0.078125 -0.25,0.109375 -0.625,0.109375 V 0 Z m 0,0"
-             id="path8763"
-             style="stroke-width:0" />
+    <g id="g46" transform="matrix(1.33333,0,0,1.33333,382.01303,457.73745)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$\\dfrac{1}{s}$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="middle center" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs3629" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g4830" transform="translate(-155.887,-126.784)" style="stroke-width:0">
+        <g transform="translate(155.885,132.847)" id="g6641" style="stroke-width:0">
+          <path d="m 3.53125,0 v -0.140625 c -0.703125,0 -0.84375,-0.09375 -0.84375,-0.515625 V -6.046875 L 2.609375,-6.0625 1,-5.25 v 0.125 c 0.109375,-0.046875 0.203125,-0.078125 0.234375,-0.09375 0.171875,-0.0625 0.3125,-0.09375 0.40625,-0.09375 0.1875,0 0.265625,0.125 0.265625,0.421875 v 4.0625 c 0,0.296875 -0.0625,0.5 -0.21875,0.578125 -0.125,0.078125 -0.25,0.109375 -0.625,0.109375 V 0 Z m 0,0" id="path8763" style="stroke-width:0" />
         </g>
       </g>
-      <path
-         fill="#000000"
-         d="M 0,9.5777811 H 4.4804682 V 10.079781 H 0 Z"
-         id="path2040"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g4275"
-         transform="translate(-155.887,-126.784)"
-         style="stroke-width:0">
-        <g
-           transform="translate(156.388,145.068)"
-           id="g1261"
-           style="stroke-width:0">
-          <path
-             d="m 2.71875,-1.0625 c 0,-0.359375 -0.1875,-0.734375 -0.609375,-1.265625 C 1.78125,-2.75 1.625,-3.015625 1.625,-3.265625 1.625,-3.5625 1.828125,-3.75 2.140625,-3.75 c 0.453125,0 0.734375,0.328125 0.8125,1.03125 h 0.15625 l 0.171875,-1.25 h -0.125 c -0.078125,0.125 -0.140625,0.171875 -0.265625,0.171875 -0.078125,0 -0.15625,-0.03125 -0.328125,-0.0625 -0.21875,-0.078125 -0.34375,-0.09375 -0.5,-0.09375 -0.65625,0 -1.078125,0.390625 -1.078125,0.984375 0,0.28125 0.1875,0.671875 0.5625,1.15625 0.34375,0.453125 0.5,0.765625 0.5,1.03125 0,0.40625 -0.265625,0.6875 -0.671875,0.6875 -0.5,0 -0.765625,-0.359375 -0.90625,-1.21875 H 0.328125 l -0.1875,1.421875 H 0.28125 c 0.09375,-0.140625 0.125,-0.1875 0.21875,-0.1875 0.09375,0 0.265625,0.046875 0.4375,0.09375 0.203125,0.0625 0.34375,0.078125 0.5,0.078125 0.75,0 1.28125,-0.484375 1.28125,-1.15625 z m 0,0"
-             id="path5875"
-             style="stroke-width:0" />
+      <path fill="#000000" d="M 0,9.5777811 H 4.4804682 V 10.079781 H 0 Z" id="path2040" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g4275" transform="translate(-155.887,-126.784)" style="stroke-width:0">
+        <g transform="translate(156.388,145.068)" id="g1261" style="stroke-width:0">
+          <path d="m 2.71875,-1.0625 c 0,-0.359375 -0.1875,-0.734375 -0.609375,-1.265625 C 1.78125,-2.75 1.625,-3.015625 1.625,-3.265625 1.625,-3.5625 1.828125,-3.75 2.140625,-3.75 c 0.453125,0 0.734375,0.328125 0.8125,1.03125 h 0.15625 l 0.171875,-1.25 h -0.125 c -0.078125,0.125 -0.140625,0.171875 -0.265625,0.171875 -0.078125,0 -0.15625,-0.03125 -0.328125,-0.0625 -0.21875,-0.078125 -0.34375,-0.09375 -0.5,-0.09375 -0.65625,0 -1.078125,0.390625 -1.078125,0.984375 0,0.28125 0.1875,0.671875 0.5625,1.15625 0.34375,0.453125 0.5,0.765625 0.5,1.03125 0,0.40625 -0.265625,0.6875 -0.671875,0.6875 -0.5,0 -0.765625,-0.359375 -0.90625,-1.21875 H 0.328125 l -0.1875,1.421875 H 0.28125 c 0.09375,-0.140625 0.125,-0.1875 0.21875,-0.1875 0.09375,0 0.265625,0.046875 0.4375,0.09375 0.203125,0.0625 0.34375,0.078125 0.5,0.078125 0.75,0 1.28125,-0.484375 1.28125,-1.15625 z m 0,0" id="path5875" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g51"
-       transform="matrix(1.33333,0,0,1.33333,440.40769,425.00017)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$\\uff$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="top right"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs8277"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g9012"
-         transform="translate(-155.038,-131.808)"
-         style="stroke-width:0">
-        <g
-           transform="translate(154.663,135.761)"
-           id="g8245"
-           style="stroke-width:0">
-          <path
-             d="m 4.265625,-0.96875 -0.125,-0.078125 c -0.484375,0.59375 -0.609375,0.703125 -0.75,0.703125 -0.0625,0 -0.09375,-0.046875 -0.09375,-0.15625 0,-0.046875 0,-0.046875 0.171875,-0.6875 L 4.171875,-3.875 H 3.5 C 3.015625,-2.546875 2.921875,-2.328125 2.515625,-1.6875 1.984375,-0.828125 1.546875,-0.375 1.25,-0.375 c -0.109375,0 -0.1875,-0.09375 -0.1875,-0.21875 0,-0.046875 0,-0.0625 0.015625,-0.09375 l 0.8125,-3.25 -0.03125,-0.015625 c -0.5,0.109375 -0.828125,0.171875 -1.34375,0.234375 v 0.125 c 0.34375,0 0.359375,0.015625 0.4375,0.0625 0.0625,0.015625 0.109375,0.09375 0.109375,0.15625 0,0.078125 -0.046875,0.3125 -0.125,0.609375 L 0.59375,-1.5 C 0.4375,-0.84375 0.375,-0.5625 0.375,-0.390625 c 0,0.328125 0.15625,0.484375 0.484375,0.484375 0.625,0 1.109375,-0.484375 2.140625,-2.203125 -0.28125,0.984375 -0.40625,1.5625 -0.40625,1.765625 0,0.265625 0.15625,0.421875 0.421875,0.421875 0.421875,0 0.625,-0.171875 1.25,-1.046875 z m 0,0"
-             id="path6769"
-             style="stroke-width:0" />
+    <g id="g51" transform="matrix(1.33333,0,0,1.33333,440.40769,425.00017)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$\\uff$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="top right" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs8277" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g9012" transform="translate(-155.038,-131.808)" style="stroke-width:0">
+        <g transform="translate(154.663,135.761)" id="g8245" style="stroke-width:0">
+          <path d="m 4.265625,-0.96875 -0.125,-0.078125 c -0.484375,0.59375 -0.609375,0.703125 -0.75,0.703125 -0.0625,0 -0.09375,-0.046875 -0.09375,-0.15625 0,-0.046875 0,-0.046875 0.171875,-0.6875 L 4.171875,-3.875 H 3.5 C 3.015625,-2.546875 2.921875,-2.328125 2.515625,-1.6875 1.984375,-0.828125 1.546875,-0.375 1.25,-0.375 c -0.109375,0 -0.1875,-0.09375 -0.1875,-0.21875 0,-0.046875 0,-0.0625 0.015625,-0.09375 l 0.8125,-3.25 -0.03125,-0.015625 c -0.5,0.109375 -0.828125,0.171875 -1.34375,0.234375 v 0.125 c 0.34375,0 0.359375,0.015625 0.4375,0.0625 0.0625,0.015625 0.109375,0.09375 0.109375,0.15625 0,0.078125 -0.046875,0.3125 -0.125,0.609375 L 0.59375,-1.5 C 0.4375,-0.84375 0.375,-0.5625 0.375,-0.390625 c 0,0.328125 0.15625,0.484375 0.484375,0.484375 0.625,0 1.109375,-0.484375 2.140625,-2.203125 -0.28125,0.984375 -0.40625,1.5625 -0.40625,1.765625 0,0.265625 0.15625,0.421875 0.421875,0.421875 0.421875,0 0.625,-0.171875 1.25,-1.046875 z m 0,0" id="path6769" style="stroke-width:0" />
         </g>
       </g>
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g6251"
-         transform="translate(-155.038,-131.808)"
-         style="stroke-width:0">
-        <g
-           transform="translate(159.451,137.125)"
-           id="g2100"
-           style="stroke-width:0">
-          <path
-             d="m 2.5625,-3.8125 c -0.09375,0.21875 -0.125,0.453125 -0.125,0.859375 H 1.203125 V -3.28125 c 0,-0.296875 0.015625,-0.546875 0.109375,-0.703125 0.109375,-0.203125 0.34375,-0.34375 0.578125,-0.34375 0.1875,0 0.3125,0.078125 0.46875,0.3125 C 2.4375,-3.90625 2.5,-3.84375 2.5625,-3.8125 Z m 1.71875,-0.265625 c 0,-0.25 -0.296875,-0.421875 -0.6875,-0.421875 -0.296875,0 -0.5625,0.09375 -0.75,0.25 -0.125,-0.15625 -0.390625,-0.25 -0.765625,-0.25 -0.5,0 -0.875,0.171875 -1.109375,0.5 -0.203125,0.28125 -0.265625,0.515625 -0.3125,1.046875 H 0.203125 V -2.75 H 0.65625 v 2.125 c 0,0.421875 -0.078125,0.515625 -0.453125,0.53125 V 0 H 1.65625 V -0.09375 C 1.296875,-0.125 1.203125,-0.21875 1.203125,-0.578125 V -2.75 H 2.4375 v 2.0625 c 0,0.484375 0,0.546875 -0.453125,0.59375 V 0 h 1.4375 V -0.09375 C 3.046875,-0.125 2.984375,-0.1875 2.984375,-0.6875 V -2.75 H 3.78125 V -2.953125 H 2.984375 V -3.71875 c 0,-0.390625 0.125,-0.59375 0.375,-0.59375 0.140625,0 0.21875,0.0625 0.34375,0.265625 C 3.8125,-3.875 3.890625,-3.8125 4,-3.8125 c 0.15625,0 0.28125,-0.125 0.28125,-0.265625 z m 0,0"
-             id="path4162"
-             style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g6251" transform="translate(-155.038,-131.808)" style="stroke-width:0">
+        <g transform="translate(159.451,137.125)" id="g2100" style="stroke-width:0">
+          <path d="m 2.5625,-3.8125 c -0.09375,0.21875 -0.125,0.453125 -0.125,0.859375 H 1.203125 V -3.28125 c 0,-0.296875 0.015625,-0.546875 0.109375,-0.703125 0.109375,-0.203125 0.34375,-0.34375 0.578125,-0.34375 0.1875,0 0.3125,0.078125 0.46875,0.3125 C 2.4375,-3.90625 2.5,-3.84375 2.5625,-3.8125 Z m 1.71875,-0.265625 c 0,-0.25 -0.296875,-0.421875 -0.6875,-0.421875 -0.296875,0 -0.5625,0.09375 -0.75,0.25 -0.125,-0.15625 -0.390625,-0.25 -0.765625,-0.25 -0.5,0 -0.875,0.171875 -1.109375,0.5 -0.203125,0.28125 -0.265625,0.515625 -0.3125,1.046875 H 0.203125 V -2.75 H 0.65625 v 2.125 c 0,0.421875 -0.078125,0.515625 -0.453125,0.53125 V 0 H 1.65625 V -0.09375 C 1.296875,-0.125 1.203125,-0.21875 1.203125,-0.578125 V -2.75 H 2.4375 v 2.0625 c 0,0.484375 0,0.546875 -0.453125,0.59375 V 0 h 1.4375 V -0.09375 C 3.046875,-0.125 2.984375,-0.1875 2.984375,-0.6875 V -2.75 H 3.78125 V -2.953125 H 2.984375 V -3.71875 c 0,-0.390625 0.125,-0.59375 0.375,-0.59375 0.140625,0 0.21875,0.0625 0.34375,0.265625 C 3.8125,-3.875 3.890625,-3.8125 4,-3.8125 c 0.15625,0 0.28125,-0.125 0.28125,-0.265625 z m 0,0" id="path4162" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g59"
-       transform="matrix(1.33333,0,0,1.33333,481.13689,459.542)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$u$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="bottom right"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs5746"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g8780"
-         transform="translate(-155.038,-131.808)"
-         style="stroke-width:0">
-        <g
-           transform="translate(154.663,135.761)"
-           id="g7467"
-           style="stroke-width:0">
-          <path
-             d="m 4.265625,-0.96875 -0.125,-0.078125 c -0.484375,0.59375 -0.609375,0.703125 -0.75,0.703125 -0.0625,0 -0.09375,-0.046875 -0.09375,-0.15625 0,-0.046875 0,-0.046875 0.171875,-0.6875 L 4.171875,-3.875 H 3.5 C 3.015625,-2.546875 2.921875,-2.328125 2.515625,-1.6875 1.984375,-0.828125 1.546875,-0.375 1.25,-0.375 c -0.109375,0 -0.1875,-0.09375 -0.1875,-0.21875 0,-0.046875 0,-0.0625 0.015625,-0.09375 l 0.8125,-3.25 -0.03125,-0.015625 c -0.5,0.109375 -0.828125,0.171875 -1.34375,0.234375 v 0.125 c 0.34375,0 0.359375,0.015625 0.4375,0.0625 0.0625,0.015625 0.109375,0.09375 0.109375,0.15625 0,0.078125 -0.046875,0.3125 -0.125,0.609375 L 0.59375,-1.5 C 0.4375,-0.84375 0.375,-0.5625 0.375,-0.390625 c 0,0.328125 0.15625,0.484375 0.484375,0.484375 0.625,0 1.109375,-0.484375 2.140625,-2.203125 -0.28125,0.984375 -0.40625,1.5625 -0.40625,1.765625 0,0.265625 0.15625,0.421875 0.421875,0.421875 0.421875,0 0.625,-0.171875 1.25,-1.046875 z m 0,0"
-             id="path2672"
-             style="stroke-width:0" />
+    <g id="g59" transform="matrix(1.33333,0,0,1.33333,481.13689,459.542)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$u$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="bottom right" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs5746" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g8780" transform="translate(-155.038,-131.808)" style="stroke-width:0">
+        <g transform="translate(154.663,135.761)" id="g7467" style="stroke-width:0">
+          <path d="m 4.265625,-0.96875 -0.125,-0.078125 c -0.484375,0.59375 -0.609375,0.703125 -0.75,0.703125 -0.0625,0 -0.09375,-0.046875 -0.09375,-0.15625 0,-0.046875 0,-0.046875 0.171875,-0.6875 L 4.171875,-3.875 H 3.5 C 3.015625,-2.546875 2.921875,-2.328125 2.515625,-1.6875 1.984375,-0.828125 1.546875,-0.375 1.25,-0.375 c -0.109375,0 -0.1875,-0.09375 -0.1875,-0.21875 0,-0.046875 0,-0.0625 0.015625,-0.09375 l 0.8125,-3.25 -0.03125,-0.015625 c -0.5,0.109375 -0.828125,0.171875 -1.34375,0.234375 v 0.125 c 0.34375,0 0.359375,0.015625 0.4375,0.0625 0.0625,0.015625 0.109375,0.09375 0.109375,0.15625 0,0.078125 -0.046875,0.3125 -0.125,0.609375 L 0.59375,-1.5 C 0.4375,-0.84375 0.375,-0.5625 0.375,-0.390625 c 0,0.328125 0.15625,0.484375 0.484375,0.484375 0.625,0 1.109375,-0.484375 2.140625,-2.203125 -0.28125,0.984375 -0.40625,1.5625 -0.40625,1.765625 0,0.265625 0.15625,0.421875 0.421875,0.421875 0.421875,0 0.625,-0.171875 1.25,-1.046875 z m 0,0" id="path2672" style="stroke-width:0" />
         </g>
       </g>
     </g>
-    <g
-       id="g64"
-       transform="matrix(1.33333,0,0,1.33333,479.60385,513.209)"
-       ns3:version="1.12.0"
-       ns3:texconverter="pdflatex"
-       ns3:pdfconverter="inkscape"
-       ns3:text="$y$"
-       ns3:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty"
-       ns3:scale="1.0"
-       ns3:alignment="bottom right"
-       ns3:inkscapeversion="1.2.2"
-       ns3:jacobian_sqrt="1.33333"
-       style="stroke-width:0">
-      <defs
-         id="defs6176"
-         style="stroke-width:0" />
-      <g
-         fill="#000000"
-         fill-opacity="1"
-         id="g4972"
-         transform="translate(-154.83,-131.808)"
-         style="stroke-width:0">
-        <g
-           transform="translate(155.049,135.761)"
-           id="g4333"
-           style="stroke-width:0">
-          <path
-             d="m 3.828125,-3.46875 c 0,-0.265625 -0.234375,-0.484375 -0.5,-0.484375 -0.203125,0 -0.34375,0.125 -0.34375,0.328125 0,0.140625 0.0625,0.234375 0.25,0.34375 0.171875,0.109375 0.234375,0.1875 0.234375,0.3125 0,0.359375 -0.328125,1.046875 -1.09375,2.328125 L 2.1875,-1.6875 C 2.046875,-2.484375 1.546875,-3.953125 1.421875,-3.953125 h -0.125 l -0.875,0.15625 -0.28125,0.0625 V -3.59375 C 0.234375,-3.609375 0.3125,-3.625 0.40625,-3.625 c 0.359375,0 0.53125,0.140625 0.703125,0.578125 C 1.34375,-2.4375 1.84375,-0.4375 1.84375,-0.078125 1.84375,0.03125 1.796875,0.140625 1.75,0.234375 1.671875,0.359375 1.28125,0.890625 1.109375,1.0625 0.90625,1.28125 0.796875,1.359375 0.6875,1.359375 0.625,1.359375 0.5625,1.328125 0.46875,1.25 0.328125,1.140625 0.234375,1.109375 0.140625,1.109375 c -0.203125,0 -0.359375,0.140625 -0.359375,0.34375 0,0.234375 0.1875,0.390625 0.453125,0.390625 0.515625,0 1.484375,-1.03125 2.40625,-2.5625 0.765625,-1.25 1.1875,-2.234375 1.1875,-2.75 z m 0,0"
-             id="path5117"
-             style="stroke-width:0" />
+    <g id="g64" transform="matrix(1.33333,0,0,1.33333,479.60385,513.209)" textext:version="1.12.0" textext:texconverter="pdflatex" textext:pdfconverter="inkscape" textext:text="$y$" textext:preamble="/home/mhinkkan/GitHub/motulator/docs/source/inkscape_textext_preamble.sty" textext:scale="1.0" textext:alignment="bottom right" textext:inkscapeversion="1.2.2" textext:jacobian_sqrt="1.33333" style="stroke-width:0">
+      <defs id="defs6176" style="stroke-width:0" />
+      <g fill="#000000" fill-opacity="1" id="g4972" transform="translate(-154.83,-131.808)" style="stroke-width:0">
+        <g transform="translate(155.049,135.761)" id="g4333" style="stroke-width:0">
+          <path d="m 3.828125,-3.46875 c 0,-0.265625 -0.234375,-0.484375 -0.5,-0.484375 -0.203125,0 -0.34375,0.125 -0.34375,0.328125 0,0.140625 0.0625,0.234375 0.25,0.34375 0.171875,0.109375 0.234375,0.1875 0.234375,0.3125 0,0.359375 -0.328125,1.046875 -1.09375,2.328125 L 2.1875,-1.6875 C 2.046875,-2.484375 1.546875,-3.953125 1.421875,-3.953125 h -0.125 l -0.875,0.15625 -0.28125,0.0625 V -3.59375 C 0.234375,-3.609375 0.3125,-3.625 0.40625,-3.625 c 0.359375,0 0.53125,0.140625 0.703125,0.578125 C 1.34375,-2.4375 1.84375,-0.4375 1.84375,-0.078125 1.84375,0.03125 1.796875,0.140625 1.75,0.234375 1.671875,0.359375 1.28125,0.890625 1.109375,1.0625 0.90625,1.28125 0.796875,1.359375 0.6875,1.359375 0.625,1.359375 0.5625,1.328125 0.46875,1.25 0.328125,1.140625 0.234375,1.109375 0.140625,1.109375 c -0.203125,0 -0.359375,0.140625 -0.359375,0.34375 0,0.234375 0.1875,0.390625 0.453125,0.390625 0.515625,0 1.484375,-1.03125 2.40625,-2.5625 0.765625,-1.25 1.1875,-2.234375 1.1875,-2.75 z m 0,0" id="path5117" style="stroke-width:0" />
         </g>
       </g>
     </g>
