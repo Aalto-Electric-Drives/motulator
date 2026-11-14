@@ -269,7 +269,7 @@ class SequenceObserverBasedGridFormingController:
     Sequence-separated disturbance-observer-based grid-forming controller.
 
     This implements the grid-forming mode of the control method described in
-    [#Maa2026b]_, with transparent current control. The positive-sequence active power
+    [#Maa2026]_, with transparent current control. The positive-sequence active power
     and converter-voltage magnitude are controlled, while the negative-sequence
     converter voltage is suppressed. The disturbance observer estimates the positive-
     and negative-sequence grid voltages. The active-power reference is limited to a
@@ -291,12 +291,6 @@ class SequenceObserverBasedGridFormingController:
     that of the negative sequence, which rotates in the opposite direction, is retarded
     by the same angle. Therefore, the control system does not advance the angle of the
     voltage reference (`k_comp = 0`).
-
-    References
-    ----------
-    .. [#Maa2026b] Määttä, Hinkkanen, Nurminen, Karaca, Mourouvin, Kukkola, Harnefors,
-       "Disturbance-observer-based grid-forming control for unbalanced grids," 2026,
-       https://arxiv.org/abs/2608.11857
 
     """
 

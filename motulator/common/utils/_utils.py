@@ -152,47 +152,6 @@ class SequenceGenerator:
 
 
 # %%
-class Step:
-    """
-    Step function.
-
-    Parameters
-    ----------
-    step_time : float
-        Time of the step.
-    step_value : float
-        Value of the step.
-    initial_value : float, optional
-        Initial value, defaults to 0.
-
-    """
-
-    def __init__(
-        self, step_time: float, step_value: float, initial_value: float = 0.0
-    ) -> None:
-        self.step_time = step_time
-        self.step_value = step_value
-        self.initial_value = initial_value
-
-    def __call__(self, t: float) -> float:
-        """
-        Step function.
-
-        Parameters
-        ----------
-        t : float
-            Time.
-
-        Returns
-        -------
-        float
-            Step output.
-
-        """
-        return self.initial_value + (t >= self.step_time) * self.step_value
-
-
-# %%
 def wrap(theta: Any) -> Any:
     """
     Limit the angle into the range [-pi, pi).
@@ -339,13 +298,13 @@ class BaseValues:
 
 
 # %%
-def get_value(u: Any | Callable[[Any], Any] | None, x: Any) -> Any:
+def get_value(u: Any | Callable[[Any], Any], x: Any) -> Any:
     """
     Helper to get the value of an object that is either callable or float.
 
     Parameters
     ----------
-    u : Any | Callable[[Any], Any] | None
+    u : Any | Callable[[Any], Any]
         Input object.
     x : Any
         Argument to the callable object.
@@ -356,8 +315,6 @@ def get_value(u: Any | Callable[[Any], Any] | None, x: Any) -> Any:
         Values of `u(x)` if callable, otherwise `u`.
 
     """
-    if u is None:
-        raise ValueError("Input value cannot be None")
     return u(x) if callable(u) else u
 
 

@@ -16,7 +16,7 @@ label: 2dof_pi
     u &= \kt r - \kp y + \ui + \uff
 ```
 
-where $r$ is the reference signal, $y$ is the measured (or estimated) feedback signal, $\ui$ is the integral state, and $\uff$ is the optional feedforward signal. Furthermore, $\kt$ is the reference-feedforward gain, $\kp$ is the proportional gain, and $\ki$ is the integral gain. Setting $\kt = \kp$ and $\uff = 0$ results in the standard PI controller. This 2DOF PI controller can also be understood as a state-feedback controller with integral action and reference feedforward {cite}`Fra1997`.
+where $r$ is the reference signal, $y$ is the measured (or estimated) feedback signal, $\ui$ is the integral state, and $\uff$ is the optional feedforward signal. Furthermore, $\kt$ is the reference-feedforward gain, $\kp$ is the proportional gain, and $\ki$ is the integral gain. Setting $\kt = \kp$ and $\uff = 0$ results in the standard PI controller. This 2DOF PI controller can also be understood as a state-feedback controller with integral action and reference feedforward {cite}`Fra1998`.
 
 ```{figure} ../figs/2dof_pi.svg
 ---
@@ -54,7 +54,7 @@ label: 2dof_pi_disturbance_observer
     u &= \kt\left(r - y\right) + \hat v
 ```
 
-where $\alphai = \ki/\kt$ is the redefined integral gain and $\hat v$ is the input-equivalent disturbance estimate. This structure is convenient to prevent the integral windup that originates from the actuator saturation {cite}`Fra1997`. The actuator output is limited in practice due to physical constraints. Consequently, the realized actuator output is
+where $\alphai = \ki/\kt$ is the redefined integral gain and $\hat v$ is the input-equivalent disturbance estimate. This structure is convenient to prevent the integral windup that originates from the actuator saturation {cite}`Fra1998`. The actuator output is limited in practice due to physical constraints. Consequently, the realized actuator output is
 
 ```{math}
     \bar{u} = \mathrm{sat}(u)

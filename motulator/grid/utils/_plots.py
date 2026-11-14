@@ -32,7 +32,7 @@ def _plot_powers(ax, ctrl, mdl, base: BaseValues) -> None:
     )
     ax.plot(mdl.t, p_g / base.p, label=r"$p_\mathrm{g}$")
 
-    if hasattr(ctrl.ref, "q_g") and np.any(ctrl.ref.q_g):
+    if np.any(ctrl.ref.q_g):
         ax.plot(
             ctrl.t,
             ctrl.ref.q_g / base.p,
@@ -84,7 +84,7 @@ def _plot_voltages(ax, ctrl, mdl, base: BaseValues) -> None:
         ds="steps-post",
     )
 
-    if hasattr(ctrl.ref, "v_c") and np.any(ctrl.ref.v_c):
+    if np.any(ctrl.ref.v_c):
         ax.plot(
             ctrl.t,
             np.abs(ctrl.ref.v_c / base.u),
@@ -336,62 +336,5 @@ def plot_grid_waveforms(
         axes[1].set_ylabel("Current (A)")
     fig.align_ylabels()
     axes[-1].set_xlabel("Time (s)")
-
-    save_and_show(save_path, **savefig_kwargs)
-
-
-# %%
-def plot_voltage_vector(
-    res: SimulationResults,
-    base: BaseValues | None = None,
-    save_path: str | Path | None = None,
-    **savefig_kwargs,
-) -> None:
-    """
-    Plot locus of the grid voltage vector.
-
-    Parameters
-    ----------
-    res : ~motulator.common.model.SimulationResults
-        Simulation results.
-    base : BaseValues, optional
-        Base values for scaling the waveforms. If not given, the waveforms are plotted
-        in SI units.
-    save_path : str | Path, optional
-        Path to save the figure. If None, the figure is not saved.
-    **savefig_kwargs
-        Additional keyword arguments passed to plt.savefig().
-
-    """
-    mdl = res.mdl  # For brevity
-
-    # Process base values
-    if base is None:
-        pu_vals = False
-        base = BaseValues.unity()
-        base.p = 1000  # For power use kW
-    else:
-        pu_vals = True
-
-    # Plot the grid voltage vector in the complex plane
-    _, ax = plt.subplots()
-    ax.plot(
-        mdl.ac_source.e_g_ab.real / base.u,
-        mdl.ac_source.e_g_ab.imag / base.u,
-        label="Grid voltage",
-    )
-    ax.axhline(0, color="k")
-    ax.axvline(0, color="k")
-    if pu_vals:
-        ax.set_xlabel("Real (p.u.)")
-        ax.set_ylabel("Imaginary (p.u.)")
-        ticks = [-1.5, -1, -0.5, 0, 0.5, 1, 1.5]
-        ax.set_xticks(ticks)
-        ax.set_yticks(ticks)
-    else:
-        ax.set_xlabel("Real (V)")
-        ax.set_ylabel("Imaginary (V)")
-    ax.legend()
-    ax.set_aspect("equal")
 
     save_and_show(save_path, **savefig_kwargs)

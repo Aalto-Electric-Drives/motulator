@@ -1,11 +1,6 @@
 """Utility functions for machine drives."""
 
-from motulator.common.utils._utils import (
-    BaseValues,
-    NominalValues,
-    SequenceGenerator,
-    Step,
-)
+from motulator.common.utils._utils import BaseValues, NominalValues, SequenceGenerator
 from motulator.drive.utils._plots import plot, plot_stator_waveforms
 from motulator.drive.utils._sm_control_loci import ControlLoci
 from motulator.drive.utils._sm_flux_maps import (
@@ -32,6 +27,5 @@ __all__ = [
     "SaturationModelSyRM",
     "SaturationModelBase",
     "SequenceGenerator",
-    "Step",
     "plot_map",
 ]

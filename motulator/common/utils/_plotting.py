@@ -12,7 +12,6 @@ from numpy.typing import ArrayLike
 def set_screen_style() -> None:
     """Configure matplotlib for screen viewing."""
     plt.style.use("default")
-    # plt.style.use("dark_background")
     plt.rcParams.update(
         {
             "axes.prop_cycle": cycler("color", ["b", "r", "m", "c"]),

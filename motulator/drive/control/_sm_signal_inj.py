@@ -3,7 +3,6 @@
 from cmath import exp
 from collections import deque
 
-from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import References, SpeedObserver, matched_pole
 from motulator.drive.control._sm_current_vector import (
@@ -269,6 +268,3 @@ class SignalInjectionController(CurrentVectorController):
         ref = super().compute_output(tau_M_ref, fbk)
         ref.u_s += self.observer.injection.u_sd_inj
         return ref
-
-    def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller time series."""

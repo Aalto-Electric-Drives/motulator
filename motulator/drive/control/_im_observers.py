@@ -165,7 +165,6 @@ class FluxObserver:
 
         # Angular speed of the coordinate system equals synchronous angular frequency
         out.w_c = out.w_s = out.w_m + out.w_r
-        # out.w_c = out.w_m  # Use rotor coordinates instead of synchronous coordinates
 
         # Voltage vector in the observer coordinates, or the open-circuit voltage if
         # unknown, averaged over a period of the length of the previous one. The

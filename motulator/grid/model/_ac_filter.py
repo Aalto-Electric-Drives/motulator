@@ -73,10 +73,8 @@ class LFilter(Subsystem):
         self.R_f = R_f
         self.L_g = L_g
         self.R_g = R_g
-        # The following initial conditions are needed for computing the PCC voltage,
-        # which has direct feedthrough. If the transients during the very first time
-        # steps are important, these initial conditions can be set to appropriate
-        # values.
+        # The inputs are needed for the initial PCC voltage, which has direct
+        # feedthrough
         self.inp: Inputs = Inputs()
         self.state: LFilterStates = LFilterStates()
         self.out: LFilterOutputs = LFilterOutputs(
@@ -213,8 +211,8 @@ class LCLFilter(Subsystem):
         self.L_g = L_g
         self.R_g = R_g
         self.state: LCLFilterStates = LCLFilterStates(0j, u_f0_ab, 0j)
-        # The following initial conditions are needed for computing the PCC voltage,
-        # which has direct feedthrough.
+        # The inputs, consistent with the initial capacitor voltage, are needed for the
+        # initial PCC voltage, which has direct feedthrough
         self.inp: Inputs = Inputs(u_f0_ab, u_f0_ab)
         self.out: LCLFilterOutputs = LCLFilterOutputs(
             self.state.i_c_ab,
