@@ -245,7 +245,7 @@ frequencies is not affected.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.070 seconds)
+   **Total running time of the script:** (0 minutes 5.685 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_6kw_im_deep_bars_dol.py:
