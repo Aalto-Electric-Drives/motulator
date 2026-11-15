@@ -29,7 +29,7 @@ through an AC choke.
 
 .. code-block:: Python
 
-    from math import inf, pi, sqrt
+    from math import pi, sqrt
 
     import matplotlib.pyplot as plt
 
@@ -108,16 +108,12 @@ their models are combined into a composite model.
 
 Configure the control system as open-loop V/Hz control.
 
-.. GENERATED FROM PYTHON SOURCE LINES 56-64
+.. GENERATED FROM PYTHON SOURCE LINES 56-60
 
 .. code-block:: Python
 
 
-    est_par = control.InductionMachineInvGammaPars(n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=inf)
-    cfg = control.ObserverBasedVHzControllerCfg(
-        psi_s_nom=base.psi, i_s_max=inf, alpha_f=0, alpha_tau=0, alpha_psi=0
-    )
-    vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
+    vhz_ctrl = control.OpenLoopVHzController(n_p=2, u_s_ref=lambda w_s: 1j * w_s * base.psi)
     ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 60)
 
 
@@ -127,11 +123,11 @@ Configure the control system as open-loop V/Hz control.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-66
+.. GENERATED FROM PYTHON SOURCE LINES 61-62
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 62-66
 
 .. code-block:: Python
 
@@ -146,12 +142,12 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-73
+.. GENERATED FROM PYTHON SOURCE LINES 67-69
 
 Create the simulation object, with the control system of the drive by the model
 name, and simulate. Plot the drive results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 73-81
+.. GENERATED FROM PYTHON SOURCE LINES 69-77
 
 .. code-block:: Python
 
@@ -187,14 +183,14 @@ name, and simulate. Plot the drive results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-86
+.. GENERATED FROM PYTHON SOURCE LINES 78-82
 
 Plot the grid-side waveforms: the phase-a voltages of the grid and the diode bridge,
 the DC-bus voltage, the phase-a current, and the DC currents of the diode bridge and
 the inverter. The diode bridge conducts in pulses, as the DC-bus voltage is close to
 the peak of the line-to-line grid voltage.
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-103
+.. GENERATED FROM PYTHON SOURCE LINES 82-99
 
 .. code-block:: Python
 
@@ -227,7 +223,7 @@ the peak of the line-to-line grid voltage.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-120
+.. GENERATED FROM PYTHON SOURCE LINES 100-116
 
 .. note::
    The DC link of this particular example is unstable at 1-p.u. speed at the rated
@@ -235,7 +231,7 @@ the peak of the line-to-line grid voltage.
    After the speed has settled, an oscillation at about 150 Hz, half the frequency of
    the six-pulse ripple, grows in the DC-bus voltage. It is seen above as the unequal
    current pulses of the diode bridge. The oscillation does not grow without bound,
-   but it settles into a limit cycle of about 77 V peak to peak at about 1.5 s,
+   but it settles into a limit cycle of about 73 V peak to peak at about 1.5 s,
    slightly after the end of this simulation. With twice the DC-bus capacitance, the
    oscillation does not occur, and only the six-pulse ripple remains. For analysis,
    see e.g., [#Hin2007]_.
@@ -249,7 +245,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 40.515 seconds)
+   **Total running time of the script:** (0 minutes 39.524 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:

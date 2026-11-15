@@ -28,7 +28,7 @@ equipped with an output LC filter.
 
 .. code-block:: Python
 
-    from math import inf, pi
+    from math import pi
 
     import matplotlib.pyplot as plt
 
@@ -89,18 +89,14 @@ Create the system model, filter parameters correspond to [#Sal2006]_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 38-39
 
-Control system (parametrized as open-loop V/Hz control).
+Configure the control system as open-loop V/Hz control.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-48
+.. GENERATED FROM PYTHON SOURCE LINES 39-44
 
 .. code-block:: Python
 
 
-    est_par = control.InductionMachineInvGammaPars(n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=inf)
-    cfg = control.ObserverBasedVHzControllerCfg(
-        psi_s_nom=base.psi, i_s_max=inf, alpha_f=0, alpha_tau=0, alpha_psi=0
-    )
-    vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
+    vhz_ctrl = control.OpenLoopVHzController(n_p=2, u_s_ref=lambda w_s: 1j * w_s * base.psi)
     ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 60)
 
 
@@ -111,11 +107,11 @@ Control system (parametrized as open-loop V/Hz control).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 45-46
 
 Set the speed reference. The external load torque is zero by default.
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-53
+.. GENERATED FROM PYTHON SOURCE LINES 46-49
 
 .. code-block:: Python
 
@@ -129,11 +125,11 @@ Set the speed reference. The external load torque is zero by default.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
+.. GENERATED FROM PYTHON SOURCE LINES 50-51
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 55-61
+.. GENERATED FROM PYTHON SOURCE LINES 51-57
 
 .. code-block:: Python
 
@@ -155,11 +151,11 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-63
+.. GENERATED FROM PYTHON SOURCE LINES 58-59
 
 Plot additional waveforms.
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-83
+.. GENERATED FROM PYTHON SOURCE LINES 59-79
 
 .. code-block:: Python
 
@@ -195,7 +191,7 @@ Plot additional waveforms.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-89
+.. GENERATED FROM PYTHON SOURCE LINES 80-85
 
 .. rubric:: References
 
@@ -206,7 +202,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.936 seconds)
+   **Total running time of the script:** (0 minutes 8.374 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_lc_vhz.py:

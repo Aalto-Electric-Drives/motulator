@@ -31,6 +31,7 @@ Classes
    motulator.drive.control.im.ObserverBasedVHzController
    motulator.drive.control.im.ObserverBasedVHzControllerCfg
    motulator.drive.control.im.ObserverOutputs
+   motulator.drive.control.im.OpenLoopVHzController
    motulator.drive.control.im.PIController
    motulator.drive.control.im.PWM
    motulator.drive.control.im.ReferenceGenerator
@@ -1533,6 +1534,164 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
+
+.. py:class:: OpenLoopVHzController(n_p, u_s_ref, T_s = 0.00025)
+
+   
+   Open-loop V/Hz controller for induction machine drives.
+
+   The stator voltage reference is given by a V/Hz curve `u_s_ref` as a function of the
+   stator angular frequency ``w_s = n_p*w_M_ref``, where `w_M_ref` is the rate-limited
+   speed reference, in coordinates rotating at `w_s`. The slip is not compensated for.
+   The linear curve ``1j*w_s*psi_s_nom`` gives the stator flux linkage `psi_s_nom` if
+   the resistive voltage drop is negligible. With the stator inductance `L_s`, the
+   curve ``(R_s/L_s + 1j*w_s)*psi_s_nom`` also includes the resistive voltage drop at
+   no load.
+
+   :param n_p: Number of pole pairs.
+   :type n_p: int
+   :param u_s_ref: V/Hz curve, i.e., the stator voltage reference (V) as a function of the stator
+                   angular frequency (rad/s).
+   :type u_s_ref: Callable[[float], complex]
+   :param T_s: Sampling period (s), defaults to 250e-6.
+   :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(fbk)
+
+      
+      Compute references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute references while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_ref)
+
+      
+      Get feedback signals, `u_s_ab` None if unknown (blocked gates).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process controller time series, without changes here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update the angle of the coordinate system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: PIController(k_p, k_i, k_t = None, u_max = inf)
 
