@@ -16,6 +16,7 @@ import sys
 import tomllib
 
 sys.path.insert(0, os.path.abspath("../.."))
+sys.path.insert(0, os.path.abspath("."))  # For gallery_sort
 
 os.environ["BUILDING_DOCS"] = "1"
 
@@ -325,39 +326,21 @@ autoapi_keep_files = True
 autoapi_add_toctree_entry = False
 autoapi_member_order = "alphabetical"
 
-from sphinx_gallery.sorting import ExplicitOrder, NumberOfCodeLinesSortKey
-
-
-class ExampleSortKey:
-    """Sort examples by the number of code lines, but place the listed ones last."""
-
-    last = ["plot_13kva_do_gfm_sag.py"]
-
-    def __init__(self, src_dir):
-        self.n_lines = NumberOfCodeLinesSortKey(src_dir)
-
-    def __call__(self, filename):
-        name = os.path.basename(filename)
-        rank = self.last.index(name) if name in self.last else -1
-        return (rank, self.n_lines(filename))
-
-
 sphinx_gallery_conf = {
     "examples_dirs": ["../../examples/drive", "../../examples/grid"],
     "gallery_dirs": ["drive_examples", "grid_examples"],
     "nested_sections": True,
-    "subsection_order": ExplicitOrder(
-        [
-            "../../examples/drive/flux_vector",
-            "../../examples/drive/current_vector",
-            "../../examples/drive/vhz",
-            "../../examples/drive/signal_inj",
-            "../../examples/drive/grid_connection",
-            "../../examples/grid/grid_following",
-            "../../examples/grid/grid_forming",
-        ]
-    ),
-    "within_subsection_order": ExampleSortKey,
+    "subsection_order": [
+        "../../examples/drive/flux_vector",
+        "../../examples/drive/current_vector",
+        "../../examples/drive/vhz",
+        "../../examples/drive/signal_inj",
+        "../../examples/drive/grid_connection",
+        "../../examples/grid/grid_following",
+        "../../examples/grid/grid_forming",
+    ],
+    # The sort key is given by its name, so that the configuration can be cached
+    "within_subsection_order": "gallery_sort.ExampleSortKey",
 }
 
 # List of patterns, relative to source directory, that match files and directories to
