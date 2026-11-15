@@ -758,23 +758,23 @@ def test_zero_field_weakening_gain() -> None:
         (
             "sm",
             sm_control.FluxVectorController,
-            sm_control.FluxVectorControllerCfg(6.5),
+            sm_control.FluxVectorControllerCfg(i_s_max=6.5),
         ),
         (
             "sm",
             sm_control.CurrentVectorController,
-            sm_control.CurrentVectorControllerCfg(6.5),
+            sm_control.CurrentVectorControllerCfg(i_s_max=6.5),
         ),
         (
             "sm",
             sm_control.ObserverBasedVHzController,
-            sm_control.ObserverBasedVHzControllerCfg(6.5),
+            sm_control.ObserverBasedVHzControllerCfg(i_s_max=6.5),
         ),
         (
             # Stored by the constructor of CurrentVectorController
             "sm",
             sm_control.SignalInjectionController,
-            sm_control.CurrentVectorControllerCfg(6.5),
+            sm_control.CurrentVectorControllerCfg(i_s_max=6.5),
         ),
         (
             "im",

@@ -66,7 +66,7 @@ class DisturbancePowerObserver:
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class DualVoltageFormingControllerCfg:
     """
     Dual-voltage-forming controller configuration.

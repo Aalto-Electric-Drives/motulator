@@ -107,7 +107,7 @@ class DiscreteCurrentController(DiscreteComplexController):
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class CurrentVectorControllerCfg:
     """
     Current-vector controller configuration.

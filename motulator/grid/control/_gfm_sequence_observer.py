@@ -207,7 +207,7 @@ class SequenceObserver:
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class SequenceObserverBasedGridFormingControllerCfg:
     """
     Sequence-separated disturbance-observer-based grid-forming controller configuration.

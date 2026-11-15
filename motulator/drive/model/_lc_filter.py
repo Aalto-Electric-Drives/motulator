@@ -10,7 +10,7 @@ from motulator.common.utils._utils import empty_array
 
 # %%
 @dataclass
-class Inputs:
+class LCFilterInputs:
     """Input variables."""
 
     u_c_ab: complex = 0j
@@ -18,7 +18,7 @@ class Inputs:
 
 
 @dataclass
-class Outputs:
+class LCFilterOutputs:
     """Output variables for interconnection."""
 
     i_c_ab: complex
@@ -26,7 +26,7 @@ class Outputs:
 
 
 @dataclass
-class States:
+class LCFilterStates:
     """State variables."""
 
     i_c_ab: complex = 0j
@@ -52,9 +52,11 @@ class LCFilter(Subsystem):
         self.L_f = L_f
         self.C_f = C_f
         self.R_f = R_f
-        self.state: States = States()
-        self.inp: Inputs = Inputs()
-        self.out: Outputs = Outputs(self.state.i_c_ab, self.state.u_f_ab)
+        self.state: LCFilterStates = LCFilterStates()
+        self.inp: LCFilterInputs = LCFilterInputs()
+        self.out: LCFilterOutputs = LCFilterOutputs(
+            self.state.i_c_ab, self.state.u_f_ab
+        )
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""

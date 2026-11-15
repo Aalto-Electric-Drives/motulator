@@ -121,7 +121,7 @@ class CurrentController(ComplexPIController):
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class CurrentVectorControllerCfg:
     """
     Configuration for current-vector grid-following controller.

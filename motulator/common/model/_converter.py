@@ -53,7 +53,7 @@ class DiodeBridgeInputs:
 
 
 @dataclass
-class Outputs:
+class DiodeBridgeOutputs:
     """Output variables for interconnection."""
 
     u_c_ab: complex
@@ -98,7 +98,9 @@ class DiodeBridge(Converter):
         # The inputs are extended by `VoltageSourceConverter`, so their type is not
         # declared here
         self.inp = DiodeBridgeInputs(u_dc=u_dc)
-        self.out: Outputs = Outputs(u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc)
+        self.out: DiodeBridgeOutputs = DiodeBridgeOutputs(
+            u_c_ab=0j, u_dc=0.0 if u_dc is None else u_dc
+        )
         self.state = None
         self.ac_load = None  # Set by the model
         # DC load of a current-fed bridge, set by the model

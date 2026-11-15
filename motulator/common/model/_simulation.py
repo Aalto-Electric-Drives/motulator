@@ -32,7 +32,7 @@ _MAX_STEP = 1e-4
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class SolverCfg:
     """
     Solver configuration parameters.

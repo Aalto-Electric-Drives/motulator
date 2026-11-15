@@ -148,7 +148,7 @@ class ReferenceGenerator:
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class FluxVectorControllerCfg:
     """
     Flux-vector controller configuration.
@@ -283,7 +283,7 @@ class FluxVectorController:
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class ObserverBasedVHzControllerCfg:
     """
     Observer-based V/Hz controller configuration.

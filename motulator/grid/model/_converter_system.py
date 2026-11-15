@@ -26,7 +26,7 @@ class GridConverterSensors:
     u_dc : Sensor, optional
         DC-bus voltage sensor.
     i_dc : Sensor, optional
-        Current sensor of the DC load, which measures its output `i_dc`, i.e., the
+        Current sensor of the DC-bus load, which measures its output `i_dc`, i.e., the
         current fed to the DC bus. Defaults to None, i.e., no sensor.
 
     """
@@ -62,11 +62,11 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         DC bus feeding the converter, which can be shared with other models (e.g., with
         a drive), see `CompositeModel`. Defaults to None, in which case the converter
         has a constant DC-bus voltage.
-    dc_load : Subsystem, optional
+    dc_bus_load : Subsystem, optional
         Load connected to the DC bus, e.g., a battery or an electrolyzer, named
-        `dc_load` in the results. Its input `u_dc` is the DC-bus voltage and its output
-        `i_dc` the current fed to the DC bus (negative when drawn), which replaces the
-        external current of the DC bus. Defaults to None.
+        `dc_bus_load` in the results. Its input `u_dc` is the DC-bus voltage and its
+        output `i_dc` the current fed to the DC bus (negative when drawn), which
+        replaces the external current of the DC bus. Defaults to None.
     sensors : GridConverterSensors, optional
         Sensors, which the control system samples, defaults to ideal sensors. They are
         the subsystems `i_c_sensor`, `u_g_sensor`, `u_dc_sensor`, and, if given,
@@ -80,12 +80,12 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
         ac_filter: LFilter | LCLFilter,
         ac_source: ThreePhaseSource,
         dc_bus: DCBus | None = None,
-        dc_load: Subsystem | None = None,
+        dc_bus_load: Subsystem | None = None,
         sensors: GridConverterSensors | None = None,
     ) -> None:
         self.ac_filter = ac_filter
         self.ac_source = ac_source
-        self.dc_load = dc_load
+        self.dc_bus_load = dc_bus_load
         self.sensors = GridConverterSensors() if sensors is None else sensors
         connections = {
             ("converter", "i_c_ab"): ("ac_filter", "i_c_ab"),
@@ -103,18 +103,20 @@ class GridConverterSystem[C: DiodeBridge](Model[C]):
             "u_g_sensor": self.sensors.u_g,
             "u_dc_sensor": self.sensors.u_dc,
         }
-        if dc_load is not None:
+        if dc_bus_load is not None:
             if dc_bus is None:
-                raise ValueError("A DC load requires a DC bus")
-            subsystems["dc_load"] = dc_load
+                raise ValueError("A DC-bus load requires a DC bus")
+            subsystems["dc_bus_load"] = dc_bus_load
             connections |= {
-                ("dc_load", "u_dc"): ("dc_bus", "u_dc"),
-                ("dc_bus", "i_dc"): ("dc_load", "i_dc"),
+                ("dc_bus_load", "u_dc"): ("dc_bus", "u_dc"),
+                ("dc_bus", "i_dc"): ("dc_bus_load", "i_dc"),
             }
         if self.sensors.i_dc is not None:
-            if dc_load is None:
-                raise ValueError("The DC-load current sensor requires a DC load")
+            if dc_bus_load is None:
+                raise ValueError(
+                    "The current sensor of the DC-bus load requires the load"
+                )
             subsystems["i_dc_sensor"] = self.sensors.i_dc
-            connections[("i_dc_sensor", "x")] = ("dc_load", "i_dc")
+            connections[("i_dc_sensor", "x")] = ("dc_bus_load", "i_dc")
         converter.ac_load = ac_filter
         super().__init__(converter, subsystems, connections, dc_bus=dc_bus)
