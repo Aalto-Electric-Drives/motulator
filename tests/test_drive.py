@@ -19,7 +19,7 @@ import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
 from motulator.common.control import InverterNonlinearity
 from motulator.drive import model
-from motulator.drive.control import _im_flux_vector, _sm_flux_vector
+from motulator.drive.control import _sm_flux_vector
 from motulator.drive.utils import ControlLoci, MagneticModel
 
 T_STOP = 0.6
@@ -242,6 +242,47 @@ def test_observer_based_vhz() -> None:
     assert np.mean(res.mdl.machine.w_M[end]) == pytest.approx(w_M_ref, rel=0.05)
     assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
     assert_controller_coordinates(res)
+
+
+def test_open_loop_vhz() -> None:
+    """Open-loop V/Hz control applies the voltage reference ``1j*w_s*psi_s_nom``, and
+    the induction machine runs below the speed reference by the slip."""
+    vhz_ctrl = im_control.OpenLoopVHzController(
+        n_p=2, u_s_ref=lambda w_s: 1j * w_s * 1.04
+    )
+    ctrl = im_control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 120)
+    mdl = im_drive()
+    w_M_ref, tau_L = 100.0, 7.0
+
+    ctrl.set_speed_ref(lambda t: (t > 0.05) * w_M_ref)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > T_LOAD) * tau_L)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=T_STOP)
+
+    w_s = 2 * res.ctrl.ref.w_M
+    np.testing.assert_allclose(res.ctrl.ref.u_s, 1j * w_s * 1.04)
+    end = res.mdl.t > T_STOP - 0.05
+    w_M = np.mean(res.mdl.machine.w_M[end])
+    assert 0.95 * w_M_ref < w_M < w_M_ref
+    assert np.mean(res.mdl.machine.tau_M[end]) == pytest.approx(tau_L, abs=0.05 * 14)
+
+
+def test_open_loop_vhz_resistance_compensation() -> None:
+    """A V/Hz curve that includes the resistive voltage drop at no load keeps the stator
+    flux linkage at its nominal value at a low speed."""
+    par, psi_s_nom = im_par(), 1.04
+    L_s = par.L_sgm + par.L_M
+    vhz_ctrl = im_control.OpenLoopVHzController(
+        n_p=2, u_s_ref=lambda w_s: (par.R_s / L_s + 1j * w_s) * psi_s_nom
+    )
+    ctrl = im_control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 120)
+    mdl = im_drive()
+
+    ctrl.set_speed_ref(lambda t: (t > 0.05) * 10.0)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=T_STOP)
+
+    end = res.mdl.t > T_STOP - 0.05
+    psi_s = np.mean(np.abs(res.mdl.machine.psi_s_ab[end]))
+    assert psi_s == pytest.approx(psi_s_nom, rel=0.02)
 
 
 @pytest.mark.parametrize("machine", ["im", "ipmsm"])
@@ -676,15 +717,6 @@ def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
 
 def test_flux_torque_controller_without_torque_control() -> None:
     """Without torque controllability, the torque reference is ignored."""
-    # IM with L_sgm = 0 (open-loop V/Hz control): only the flux is controlled
-    par = im_control.InductionMachineInvGammaPars(
-        n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=np.inf
-    )
-    ctrl = _im_flux_vector.FluxTorqueController(par, alpha_psi=100.0, alpha_tau=10.0)
-    fbk = im_control.ObserverOutputs(psi_s=1.0 + 0j, w_s=300.0)
-    u_s = [ctrl.compute_output(0.8, tau_M_ref, fbk) for tau_M_ref in (0.0, 10.0)]
-    assert u_s == pytest.approx([1j * 300 + 100 * (0.8 - 1)] * 2)
-
     # PM machine at a high flux and a small load angle (c_tau < 0): the flux is reduced
     par = ipmsm_par()
     ctrl = _sm_flux_vector.FluxTorqueController(par, alpha_psi=100.0, alpha_tau=10.0)

@@ -587,7 +587,7 @@ class InductionMachineInvGammaPars(BaseInductionMachinePars):
 
     @property
     def w_rb(self) -> float:
-        return self.R_R * (1 / self.L_sgm + 1 / self.L_M) if self.L_sgm > 0 else 0.0
+        return self.R_R * (1 / self.L_sgm + 1 / self.L_M)
 
     @property
     def cage(self) -> CageImpedance:

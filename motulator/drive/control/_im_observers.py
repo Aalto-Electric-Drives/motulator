@@ -4,7 +4,7 @@ from cmath import exp
 from collections.abc import Callable
 from dataclasses import dataclass
 from functools import partial
-from math import inf, pi
+from math import pi
 
 import numpy as np
 
@@ -183,10 +183,7 @@ class FluxObserver:
             out.e_o = (self._psi_R_pred - out.psi_R) / self._T_s
 
         # Torque estimate
-        if par.L_sgm > 0:
-            out.tau_M = 1.5 * par.n_p * (out.i_s * out.psi_s.conjugate()).imag
-        else:  # Disable torque estimation in pure open-loop V/Hz control mode
-            out.tau_M = 0
+        out.tau_M = 1.5 * par.n_p * (out.i_s * out.psi_s.conjugate()).imag
 
         # Rotor speed error signal for the speed observer. The model-based part is faded
         # out as the external error signal takes over.
@@ -362,10 +359,6 @@ def _sensored_k_o(
     return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
 
 
-def _unity_k_o(w_m: float) -> complex:
-    return 1.0
-
-
 def default_sensorless_k_o(
     par: InductionMachineInvGammaPars | InductionMachinePars,
 ) -> Callable[[float], complex]:
@@ -434,10 +427,6 @@ def create_vhz_observer(
     """
     Create a sensorless flux observer without speed estimation.
 
-    The observer gain is `k_o`. However, if ``L_M = inf``, then ``k_o = 1`` is used
-    together with the weight `h = 1`, which disables the model-based correction and
-    allows to parametrize observer-based V/Hz control as pure open loop V/Hz control.
-
     Parameters
     ----------
     par : InductionMachineInvGammaPars | InductionMachinePars
@@ -445,7 +434,6 @@ def create_vhz_observer(
     k_o : Callable[[float], complex], optional
         Observer gain as a function of the electrical angular speed of the rotor,
         defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``.
-        Ignored in the case ``L_M = inf``.
 
     Returns
     -------
@@ -453,9 +441,6 @@ def create_vhz_observer(
         Sensorless flux observer without speed estimation.
 
     """
-    if par.L_M == inf:  # Pure open-loop V/Hz control, used with h = 1
-        return FluxObserver(par, _unity_k_o)
-
     k_o = default_sensorless_k_o(par) if k_o is None else k_o
 
     return FluxObserver(par, k_o)

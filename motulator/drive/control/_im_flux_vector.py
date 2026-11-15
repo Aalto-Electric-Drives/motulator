@@ -70,8 +70,7 @@ class FluxTorqueController(FluxTorqueControllerBase):
             Voltage reference (V).
 
         """
-        # L_sgm = 0 in open-loop V/Hz control, where only the flux is controlled
-        i_a = fbk.psi_R / self.par.L_sgm if self.par.L_sgm > 0 else 0j
+        i_a = fbk.psi_R / self.par.L_sgm
         return self._compute_voltage_ref(psi_s_ref, tau_M_ref, fbk, i_a, fbk.w_s)
 
 
@@ -128,24 +127,23 @@ class ReferenceGenerator:
         psi_s_ref = min(psi_s_max, self.psi_s_nom, psi_s_cl)
 
         # Torque reference limiting
-        if par.L_sgm > 0:  # L_sgm = 0 in open-loop V/Hz control
-            # Breakdown torque limit
-            k = self.k_b * par.L_M / (par.L_M + par.L_sgm)
-            tau_b = 0.75 * par.n_p * k * psi_s_ref**2 / par.L_sgm
-            # Current limit: the stator flux on the circle psi_s_ref stays within the
-            # circle L_sgm*i_s_max around the rotor flux, which gives the maximum
-            # q-component of the stator flux in rotor flux coordinates
-            tau_M_cl = 0.0
-            if psi_R > 0:
-                psi_sd = (psi_s_ref**2 + psi_R**2 - (par.L_sgm * self.i_s_max) ** 2) / (
-                    2 * psi_R
-                )
-                psi_sq = sqrt(max(psi_s_ref**2 - max(psi_sd, 0) ** 2, 0))
-                tau_M_cl = 1.5 * par.n_p * psi_R * psi_sq / par.L_sgm
-            # Limited torque reference
-            tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_cl) * sign(
-                tau_M_ref
+        # Breakdown torque limit
+        k = self.k_b * par.L_M / (par.L_M + par.L_sgm)
+        tau_b = 0.75 * par.n_p * k * psi_s_ref**2 / par.L_sgm
+        # Current limit: the stator flux on the circle psi_s_ref stays within the
+        # circle L_sgm*i_s_max around the rotor flux, which gives the maximum
+        # q-component of the stator flux in rotor flux coordinates
+        tau_M_cl = 0.0
+        if psi_R > 0:
+            psi_sd = (psi_s_ref**2 + psi_R**2 - (par.L_sgm * self.i_s_max) ** 2) / (
+                2 * psi_R
             )
+            psi_sq = sqrt(max(psi_s_ref**2 - max(psi_sd, 0) ** 2, 0))
+            tau_M_cl = 1.5 * par.n_p * psi_R * psi_sq / par.L_sgm
+        # Limited torque reference
+        tau_M_ref = min(abs(tau_M_ref), self.tau_M_max, tau_b, tau_M_cl) * sign(
+            tau_M_ref
+        )
         return psi_s_ref, tau_M_ref
 
 
@@ -359,18 +357,12 @@ class ObserverBasedVHzController:
         self.alpha_f: float = cfg.alpha_f
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.T_s = cfg.T_s
-        # Configurations for pure open-loop V/Hz control
-        self.h: float = 0.0
-        if par.L_M == inf:
-            self.observer.psi_s = cfg.psi_s_nom
-            self.reference_gen.k_u = inf
-            self.h = 1.0  # Disables the model-based correction
 
     def get_feedback(
         self, u_s_ab: complex | None, i_s_ab: complex, w_M_ref: float
     ) -> ObserverOutputs:
         """Get feedback signals."""
-        return self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref, 0.0, self.h)
+        return self.observer.compute_output(u_s_ab, i_s_ab, w_M_ref)
 
     def compute_output(self, fbk: ObserverOutputs) -> References:
         """Compute references."""

@@ -8,7 +8,7 @@ equipped with an output LC filter.
 """
 
 # %%
-from math import inf, pi
+from math import pi
 
 import matplotlib.pyplot as plt
 
@@ -35,13 +35,9 @@ lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=0.1)
 mdl = model.Drive(machine, mechanics, converter, lc_filter)
 
 # %%
-# Control system (parametrized as open-loop V/Hz control).
+# Configure the control system as open-loop V/Hz control.
 
-est_par = control.InductionMachineInvGammaPars(n_p=2, R_s=0, R_R=0, L_sgm=0, L_M=inf)
-cfg = control.ObserverBasedVHzControllerCfg(
-    psi_s_nom=base.psi, i_s_max=inf, alpha_f=0, alpha_tau=0, alpha_psi=0
-)
-vhz_ctrl = control.ObserverBasedVHzController(est_par, cfg)
+vhz_ctrl = control.OpenLoopVHzController(n_p=2, u_s_ref=lambda w_s: 1j * w_s * base.psi)
 ctrl = control.VHzControlSystem(vhz_ctrl, slew_rate=2 * pi * 60)
 
 
