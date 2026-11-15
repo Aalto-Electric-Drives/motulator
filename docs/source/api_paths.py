@@ -4,8 +4,8 @@ Public paths of the objects in the API reference.
 AutoAPI writes the bases and the type hints as the paths of the objects in the private
 modules (e.g., ``motulator.common.control._base.TimeSeries``). This extension replaces
 each of them by a public path of the same object, preferring the module of the page and
-then the module closest to the private one. A path without a public counterpart gives a
-warning.
+then the module closest to the private one. A path without a public counterpart stops
+the build, since the object should then be exported.
 
 """
 
@@ -94,16 +94,12 @@ def public_path(path: str, context: str) -> str | None:
 
 def _replace(text: str, context: str, location: str) -> str:
     """Replace the private paths in a text by public paths."""
-    from sphinx.util import logging
 
     def public(match: re.Match[str]) -> str:
         path = match.group(0)
         new_path = public_path(path, context)
         if new_path is None:
-            logging.getLogger(__name__).warning(
-                f"No public path for {path}", location=location
-            )
-            return path
+            raise ValueError(f"No public path for {path} in {location}")
         return new_path
 
     return PRIVATE_PATH.sub(public, text)
