@@ -28,11 +28,13 @@ from motulator.drive.control._im_observers import (
 )
 from motulator.drive.control._im_open_loop_vhz import OpenLoopVHzController
 from motulator.drive.utils._parameters import (
+    BaseInductionMachineControlPars,
     InductionMachineInvGammaPars,
     InductionMachinePars,
 )
 
 __all__ = [
+    "BaseInductionMachineControlPars",
     "DriveControlSystem",
     "PWM",
     "InverterNonlinearity",

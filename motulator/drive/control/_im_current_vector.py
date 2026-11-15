@@ -2,7 +2,6 @@
 
 from cmath import exp, phase
 from collections.abc import Callable
-from copy import copy
 from dataclasses import dataclass
 from math import pi, sqrt
 
@@ -17,8 +16,8 @@ from motulator.drive.control._im_observers import (
     to_rotor_flux_coordinates,
 )
 from motulator.drive.utils._parameters import (
+    BaseInductionMachineControlPars,
     InductionMachineInvGammaPars,
-    InductionMachinePars,
 )
 
 
@@ -29,8 +28,8 @@ class CurrentController(ComplexPIController):
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
-        Machine model parameters.
+    par : InductionMachineInvGammaPars
+        Inverse-Γ model parameters, e.g., at the nominal operating point.
     alpha_c : float
         Reference-tracking bandwidth (rad/s).
     alpha_i : float, optional
@@ -40,7 +39,7 @@ class CurrentController(ComplexPIController):
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars | InductionMachinePars,
+        par: InductionMachineInvGammaPars,
         alpha_c: float,
         alpha_i: float | None = None,
     ) -> None:
@@ -63,8 +62,8 @@ class DiscreteCurrentController(DiscreteComplexController):
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
-        Machine model parameters.
+    par : InductionMachineInvGammaPars
+        Inverse-Γ model parameters, e.g., at the nominal operating point.
     alpha_c : float
         Reference-tracking bandwidth (rad/s).
     T_s : float
@@ -73,10 +72,7 @@ class DiscreteCurrentController(DiscreteComplexController):
     """
 
     def __init__(
-        self,
-        par: InductionMachineInvGammaPars | InductionMachinePars,
-        alpha_c: float,
-        T_s: float,
+        self, par: InductionMachineInvGammaPars, alpha_c: float, T_s: float
     ) -> None:
         self.par = par
         super().__init__(alpha_c, T_s)
@@ -115,7 +111,7 @@ class CurrentReferenceGenerator:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
+    par : BaseInductionMachineControlPars
         Machine model parameters.
     psi_s_nom : float
         Nominal stator flux linkage (Vs).
@@ -126,7 +122,8 @@ class CurrentReferenceGenerator:
     k_u : float
         Voltage utilization factor.
     k_fw : float | None
-        Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
+        Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used, with
+        the parameters at `psi_s_nom`.
 
     References
     ----------
@@ -138,24 +135,26 @@ class CurrentReferenceGenerator:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars | InductionMachinePars,
+        par: BaseInductionMachineControlPars,
         psi_s_nom: float,
         i_s_max: float,
         w_s_nom: float,
         k_u: float,
         k_fw: float | None,
     ) -> None:
-        self.par = par
         self.i_s_max = i_s_max
         self.k_u = k_u
         # Magnetizing current at the nominal flux, taking the saturation into account
-        par_nom = copy(par)
-        par_nom.update_psi_s(psi_s_nom)
+        par_nom = par.inv_gamma_pars(psi_s_nom)
         self.i_sd_nom = psi_s_nom / (par_nom.L_M + par_nom.L_sgm)
-        self.k_fw = 2 * par.R_R / (w_s_nom * par.L_sgm**2) if k_fw is None else k_fw
+        if k_fw is None:
+            k_fw = 2 * par_nom.R_R / (w_s_nom * par_nom.L_sgm**2)
+        self.k_fw = k_fw
         self.i_sd_ref = self.i_sd_nom  # Integral state
 
-    def compute_output(self, tau_M_ref: float, psi_R: float) -> tuple[complex, float]:
+    def compute_output(
+        self, tau_M_ref: float, psi_R: float, op_par: InductionMachineInvGammaPars
+    ) -> tuple[complex, float]:
         """
         Compute the stator current reference.
 
@@ -165,6 +164,8 @@ class CurrentReferenceGenerator:
             Torque reference (Nm).
         psi_R : float
             Estimated rotor flux magnitude (Vs).
+        op_par : InductionMachineInvGammaPars
+            Inverse-Γ model parameters at the operating point.
 
         Returns
         -------
@@ -172,20 +173,19 @@ class CurrentReferenceGenerator:
             Stator current reference (A) and limited torque reference (Nm).
 
         """
-        par = self.par  # Unpack
         i_sd_ref = self.i_sd_ref  # Get the state
 
         def q_axis_current_limit(i_sd_ref: float, psi_R: float) -> float:
             # Priority given to the d component
             max_i_sq1 = sqrt(self.i_s_max**2 - i_sd_ref**2)
             # Breakdown torque limit
-            i_sq_max2 = psi_R / par.L_sgm + i_sd_ref
+            i_sq_max2 = psi_R / op_par.L_sgm + i_sd_ref
             # q-axis current limit
             i_sq_max = min(max_i_sq1, i_sq_max2)
             return i_sq_max
 
         # q-axis current reference
-        i_sq_ref = tau_M_ref / (1.5 * par.n_p * psi_R) if psi_R > 0 else 0
+        i_sq_ref = tau_M_ref / (1.5 * op_par.n_p * psi_R) if psi_R > 0 else 0
 
         # Limit the current
         i_sq_max = q_axis_current_limit(i_sd_ref, psi_R)
@@ -195,7 +195,7 @@ class CurrentReferenceGenerator:
         i_s_ref = i_sd_ref + 1j * i_sq_ref
 
         # Limited torque (for the speed controller)
-        tau_M_ref = 1.5 * par.n_p * psi_R * i_sq_ref
+        tau_M_ref = 1.5 * op_par.n_p * psi_R * i_sq_ref
 
         return i_s_ref, tau_M_ref
 
@@ -239,11 +239,12 @@ class CurrentVectorControllerCfg:
         Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
         speed estimation gain approximately the same.
-    k_o : Callable[[float], complex] | None, optional
-        Observer gain as a function of the electrical rotor angular speed. If None,
-        defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)`` if
-        `sensorless` is True, otherwise ``lambda w_m: 1 + 0.2*abs(w_m)/(alpha -
-        1j*w_m)``, where ``alpha = R_R/L_M``.
+    k_o : Callable[[float, InductionMachineInvGammaPars], complex] | None, optional
+        Observer gain as a function of the electrical rotor angular speed and the
+        inverse-Γ model parameters at the operating point. If None, defaults to
+        ``lambda w_m, par: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)`` if
+        `sensorless` is True, otherwise ``lambda w_m, par: 1 + 0.2*abs(w_m)/(par.alpha
+        - 1j*w_m)``.
     w_s_nom : float, optional
         Nominal stator angular frequency (rad/s), defaults to 2*pi*50.
     k_u : float, optional
@@ -268,7 +269,7 @@ class CurrentVectorControllerCfg:
     alpha_c: float = 2 * pi * 200
     alpha_i: float | None = None
     alpha_o: float | None = None
-    k_o: Callable[[float], complex] | None = None
+    k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None = None
     w_s_nom: float = 2 * pi * 50
     k_u: float = 0.95
     k_fw: float | None = None
@@ -284,29 +285,29 @@ class CurrentVectorController:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
-        Machine model parameters.
+    par : BaseInductionMachineControlPars
+        Machine model parameters. The current controller uses the parameters at the
+        nominal stator flux linkage.
     cfg : CurrentVectorControllerCfg
         Current-vector controller configuration.
 
     """
 
     def __init__(
-        self,
-        par: InductionMachineInvGammaPars | InductionMachinePars,
-        cfg: CurrentVectorControllerCfg,
+        self, par: BaseInductionMachineControlPars, cfg: CurrentVectorControllerCfg
     ) -> None:
-        par = copy(par)  # The observer updates the saturation state of this copy
+        self.par = par
         self.cfg = cfg
         self.sensorless = cfg.sensorless
         self.reference_gen = CurrentReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
+        par_nom = par.inv_gamma_pars(cfg.psi_s_nom)
         self.current_ctrl: CurrentController | DiscreteCurrentController
         if cfg.discrete:
-            self.current_ctrl = DiscreteCurrentController(par, cfg.alpha_c, cfg.T_s)
+            self.current_ctrl = DiscreteCurrentController(par_nom, cfg.alpha_c, cfg.T_s)
         else:
-            self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
+            self.current_ctrl = CurrentController(par_nom, cfg.alpha_c, cfg.alpha_i)
         self.observer = create_speed_flux_observer(
             par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
         )
@@ -330,7 +331,7 @@ class CurrentVectorController:
         """Compute references."""
         ref = References(T_s=self.T_s, tau_M=tau_M_ref)
         ref.i_s, ref.tau_M = self.reference_gen.compute_output(
-            ref.tau_M, abs(fbk.psi_R)
+            ref.tau_M, abs(fbk.psi_R), self.observer.op_par
         )
         # Transform the reference to the same coordinates as the feedback
         ref.i_s = exp(1j * phase(fbk.psi_R)) * ref.i_s
