@@ -13,11 +13,9 @@ from motulator.drive.control._common import (
     SpeedObserver,
 )
 from motulator.drive.control._im_current_vector import (
-    CurrentController,
     CurrentReferenceGenerator,
     CurrentVectorController,
     CurrentVectorControllerCfg,
-    DiscreteCurrentController,
 )
 from motulator.drive.control._im_flux_vector import (
     FluxVectorController,
@@ -43,11 +41,9 @@ __all__ = [
     "DriveControlSystem",
     "PWM",
     "InverterNonlinearity",
-    "CurrentController",
     "CurrentReferenceGenerator",
     "CurrentVectorController",
     "CurrentVectorControllerCfg",
-    "DiscreteCurrentController",
     "FluxObserver",
     "SpeedFluxObserver",
     "FluxVectorController",

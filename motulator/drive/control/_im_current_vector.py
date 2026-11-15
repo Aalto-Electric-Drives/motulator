@@ -22,68 +22,6 @@ from motulator.drive.utils._parameters import (
 
 
 # %%
-class CurrentController(ComplexPIController):
-    """
-    Current controller for induction machines.
-
-    Parameters
-    ----------
-    par : InductionMachineInvGammaPars
-        Inverse-Γ model parameters, e.g., at the nominal operating point.
-    alpha_c : float
-        Reference-tracking bandwidth (rad/s).
-    alpha_i : float, optional
-        Integral action bandwidth (rad/s), defaults to `alpha_c`.
-
-    """
-
-    def __init__(
-        self,
-        par: InductionMachineInvGammaPars,
-        alpha_c: float,
-        alpha_i: float | None = None,
-    ) -> None:
-        alpha_i = alpha_c if alpha_i is None else alpha_i
-        k_t = alpha_c * par.L_sgm
-        k_i = alpha_c * alpha_i * par.L_sgm
-        k_p = (alpha_c + alpha_i) * par.L_sgm
-        super().__init__(k_p, k_i, k_t)
-
-
-# %%
-class DiscreteCurrentController(DiscreteComplexController):
-    """
-    Direct discrete-time current controller for induction machines.
-
-    The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
-    resistive voltage drop and the back-emf are disturbances, which the integral action
-    compensates for. Since the design includes the delays, the angle of the voltage
-    reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
-
-    Parameters
-    ----------
-    par : InductionMachineInvGammaPars
-        Inverse-Γ model parameters, e.g., at the nominal operating point.
-    alpha_c : float
-        Reference-tracking bandwidth (rad/s).
-    T_s : float
-        Sampling period (s).
-
-    """
-
-    def __init__(
-        self, par: InductionMachineInvGammaPars, alpha_c: float, T_s: float
-    ) -> None:
-        self.par = par
-        super().__init__(alpha_c, T_s)
-
-    def compute_output(self, i_ref: complex, i: complex) -> complex:
-        # Extends the base class method by mapping the currents to the flux linkages
-        L_sgm = self.par.L_sgm
-        return super().compute_output(L_sgm * i_ref, L_sgm * i)
-
-
-# %%
 class CurrentReferenceGenerator:
     """
     Current reference generator.
@@ -123,7 +61,7 @@ class CurrentReferenceGenerator:
         Voltage utilization factor.
     k_fw : float | None
         Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used, with
-        the parameters at `psi_s_nom`.
+        the parameters at the operating point.
 
     References
     ----------
@@ -143,13 +81,12 @@ class CurrentReferenceGenerator:
         k_fw: float | None,
     ) -> None:
         self.i_s_max = i_s_max
+        self.w_s_nom = w_s_nom
         self.k_u = k_u
+        self.k_fw = k_fw
         # Magnetizing current at the nominal flux, taking the saturation into account
         par_nom = par.inv_gamma_pars(psi_s_nom)
         self.i_sd_nom = psi_s_nom / (par_nom.L_M + par_nom.L_sgm)
-        if k_fw is None:
-            k_fw = 2 * par_nom.R_R / (w_s_nom * par_nom.L_sgm**2)
-        self.k_fw = k_fw
         self.i_sd_ref = self.i_sd_nom  # Integral state
 
     def compute_output(
@@ -199,7 +136,13 @@ class CurrentReferenceGenerator:
 
         return i_s_ref, tau_M_ref
 
-    def update(self, T_s: float, u_s_ref: complex, u_dc: float) -> None:
+    def update(
+        self,
+        T_s: float,
+        u_s_ref: complex,
+        u_dc: float,
+        op_par: InductionMachineInvGammaPars,
+    ) -> None:
         """
         Field-weakening based on the unlimited reference voltage.
 
@@ -211,10 +154,15 @@ class CurrentReferenceGenerator:
             Unlimited stator voltage reference (V).
         u_dc : float
             DC-link voltage (V).
+        op_par : InductionMachineInvGammaPars
+            Inverse-Γ model parameters at the operating point.
 
         """
+        k_fw = self.k_fw
+        if k_fw is None:
+            k_fw = 2 * op_par.R_R / (self.w_s_nom * op_par.L_sgm**2)
         u_s_max = self.k_u * u_dc / sqrt(3)
-        self.i_sd_ref += T_s * self.k_fw * (u_s_max - abs(u_s_ref))
+        self.i_sd_ref += T_s * k_fw * (u_s_max - abs(u_s_ref))
         self.i_sd_ref = clip(self.i_sd_ref, -self.i_s_max, self.i_sd_nom)
 
 
@@ -283,13 +231,24 @@ class CurrentVectorController:
     """
     Current-vector controller for induction machine drives.
 
+    The currents are mapped to the leakage flux linkages ``L_sgm*i_s``, where `L_sgm`
+    is evaluated at the operating point, and the flux linkages are controlled by the
+    2DOF PI controller or, if `discrete` is True, by the direct discrete-time
+    controller. The magnetic saturation is thus taken into account as in the
+    flux-linkage-based current control of synchronous machines [#Awa2019a]_.
+
     Parameters
     ----------
     par : BaseInductionMachineControlPars
-        Machine model parameters. The current controller uses the parameters at the
-        nominal stator flux linkage.
+        Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector controller configuration.
+
+    References
+    ----------
+    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
+       https://doi.org/10.1109/TIA.2019.2919258
 
     """
 
@@ -302,12 +261,15 @@ class CurrentVectorController:
         self.reference_gen = CurrentReferenceGenerator(
             par, cfg.psi_s_nom, cfg.i_s_max, cfg.w_s_nom, cfg.k_u, cfg.k_fw
         )
-        par_nom = par.inv_gamma_pars(cfg.psi_s_nom)
-        self.current_ctrl: CurrentController | DiscreteCurrentController
+        # Controllers of the leakage flux linkages
+        self.current_ctrl: ComplexPIController | DiscreteComplexController
         if cfg.discrete:
-            self.current_ctrl = DiscreteCurrentController(par_nom, cfg.alpha_c, cfg.T_s)
+            self.current_ctrl = DiscreteComplexController(cfg.alpha_c, cfg.T_s)
         else:
-            self.current_ctrl = CurrentController(par_nom, cfg.alpha_c, cfg.alpha_i)
+            alpha_i = cfg.alpha_c if cfg.alpha_i is None else cfg.alpha_i
+            self.current_ctrl = ComplexPIController(
+                k_p=cfg.alpha_c + alpha_i, k_i=cfg.alpha_c * alpha_i, k_t=cfg.alpha_c
+            )
         self.observer = create_speed_flux_observer(
             par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.sensorless, cfg.J
         )
@@ -329,19 +291,22 @@ class CurrentVectorController:
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
+        op_par = self.observer.op_par
         ref = References(T_s=self.T_s, tau_M=tau_M_ref)
         ref.i_s, ref.tau_M = self.reference_gen.compute_output(
-            ref.tau_M, abs(fbk.psi_R), self.observer.op_par
+            ref.tau_M, abs(fbk.psi_R), op_par
         )
         # Transform the reference to the same coordinates as the feedback
         ref.i_s = exp(1j * phase(fbk.psi_R)) * ref.i_s
-        ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
+        # Map the currents to the leakage flux linkages at the operating point
+        L_sgm = op_par.L_sgm
+        ref.u_s = self.current_ctrl.compute_output(L_sgm * ref.i_s, L_sgm * fbk.i_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
-        self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc)
+        self.reference_gen.update(ref.T_s, ref.u_s, fbk.u_dc, self.observer.op_par)
         # The discrete-time controller takes its limited output, except with blocked
         # gates, when the open-circuit voltage of the observer is the realized one
         u_s = ref.u_s_lim if self.cfg.discrete and ref.enabled else fbk.u_s

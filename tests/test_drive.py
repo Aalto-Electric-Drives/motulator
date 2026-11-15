@@ -640,8 +640,9 @@ def test_im_flux_observer_at_low_sampling_rate() -> None:
 
 
 @pytest.mark.parametrize("w_M_ref", [100.0, 300.0], ids=["nominal", "weakened"])
-def test_im_fvc_with_saturation(w_M_ref: float) -> None:
-    """With the main-flux saturation in the control parameters, sensorless flux-vector
+@pytest.mark.parametrize("controller", ["fvc", "cvc", "cvc_discrete"])
+def test_im_vector_control_with_saturation(controller: str, w_M_ref: float) -> None:
+    """With the main-flux saturation in the control parameters, sensorless vector
     control estimates the speed of the saturated machine without a steady-state error,
     both at the nominal flux and in field weakening."""
     # The 2.2-kW machine of examples/drive/flux_vector/plot_2kw_im_sat_fvc.py
@@ -657,12 +658,19 @@ def test_im_fvc_with_saturation(w_M_ref: float) -> None:
         model.MechanicalSystem(J=0.015),
         model.VoltageSourceConverter(u_dc=540),
     )
-    cfg = im_control.FluxVectorControllerCfg(
-        psi_s_nom=0.99, i_s_max=10.6, J=0.015, alpha_i=0
-    )
+    vector_ctrl: im_control.FluxVectorController | im_control.CurrentVectorController
+    if controller == "fvc":
+        cfg = im_control.FluxVectorControllerCfg(
+            psi_s_nom=0.99, i_s_max=10.6, J=0.015, alpha_i=0
+        )
+        vector_ctrl = im_control.FluxVectorController(par, cfg)
+    else:
+        cfg = im_control.CurrentVectorControllerCfg(
+            psi_s_nom=0.99, i_s_max=10.6, J=0.015, discrete=controller == "cvc_discrete"
+        )
+        vector_ctrl = im_control.CurrentVectorController(par, cfg)
     ctrl = im_control.VectorControlSystem(
-        im_control.FluxVectorController(par, cfg),
-        im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+        vector_ctrl, im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
     )
     ctrl.set_speed_ref(lambda t: (t > 0.05) * w_M_ref)
     mdl.mechanics.set_external_load_torque(lambda t: (t > T_LOAD) * 3.5)
