@@ -26,13 +26,25 @@ T_STOP = 0.6
 T_LOAD = 0.3
 
 
+def ipmsm_par(G_c: float = 0.0) -> model.SynchronousMachinePars:
+    """Parameters of the 2.2-kW IPMSM."""
+    return model.SynchronousMachinePars(
+        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
+    )
+
+
+def im_par(G_c: float = 0.0) -> model.InductionMachineInvGammaPars:
+    """Inverse-Γ parameters of the 2.2-kW induction machine."""
+    return model.InductionMachineInvGammaPars(
+        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224, G_c=G_c
+    )
+
+
 def ipmsm_drive(
     pwm: bool, G_c: float = 0.0, sensored: bool = False, sampling_delay: float = 0.0
 ) -> model.Drive:
     """2.2-kW IPMSM drive, with a position sensor if `sensored`."""
-    par = model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
-    )
+    par = ipmsm_par(G_c)
     modulator = model.CarrierComparison(sampling_delay=sampling_delay) if pwm else None
     sensors = model.DriveSensors(theta_M=model.Sensor()) if sensored else None
     return model.Drive(
@@ -45,9 +57,7 @@ def ipmsm_drive(
 
 def im_drive(G_c: float = 0.0, sensored: bool = False) -> model.Drive:
     """2.2-kW induction machine drive, with a speed sensor if `sensored`."""
-    par = model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224, G_c=G_c
-    )
+    par = im_par(G_c)
     sensors = model.DriveSensors(w_M=model.Sensor()) if sensored else None
     return model.Drive(
         model.InductionMachine(par),
@@ -58,9 +68,7 @@ def im_drive(G_c: float = 0.0, sensored: bool = False) -> model.Drive:
 
 
 def ipmsm_fvc(sensorless: bool) -> sm_control.VectorControlSystem:
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.FluxVectorControllerCfg(i_s_max=6.5, sensorless=sensorless)
     return sm_control.VectorControlSystem(
         sm_control.FluxVectorController(par, cfg),
@@ -69,9 +77,7 @@ def ipmsm_fvc(sensorless: bool) -> sm_control.VectorControlSystem:
 
 
 def ipmsm_cvc(sensorless: bool) -> sm_control.VectorControlSystem:
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, sensorless=sensorless)
     return sm_control.VectorControlSystem(
         sm_control.CurrentVectorController(par, cfg),
@@ -80,9 +86,7 @@ def ipmsm_cvc(sensorless: bool) -> sm_control.VectorControlSystem:
 
 
 def ipmsm_cvc_discrete() -> sm_control.VectorControlSystem:
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, discrete=True)
     return sm_control.VectorControlSystem(
         sm_control.CurrentVectorController(par, cfg),
@@ -91,9 +95,7 @@ def ipmsm_cvc_discrete() -> sm_control.VectorControlSystem:
 
 
 def ipmsm_signal_inj(N_inj: int = 1) -> sm_control.VectorControlSystem:
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     # Signal injection is always sensorless, regardless of the cfg. The sampling period
     # is scaled to keep the injection frequency at 4 kHz.
     cfg = sm_control.CurrentVectorControllerCfg(
@@ -102,12 +104,6 @@ def ipmsm_signal_inj(N_inj: int = 1) -> sm_control.VectorControlSystem:
     return sm_control.VectorControlSystem(
         sm_control.SignalInjectionController(par, cfg, N_inj=N_inj),
         sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
-    )
-
-
-def im_par() -> im_control.InductionMachineInvGammaPars:
-    return im_control.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
 
 
@@ -283,9 +279,7 @@ def speed_observer_gain(machine: str, ctrl: str, **kwargs) -> float:
     """
     kwargs["T_s"] = 1e-7
     if machine == "sm":
-        par = sm_control.SynchronousMachinePars(
-            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-        )
+        par = ipmsm_par()
         if ctrl == "fvc":
             cfg = replace(sm_control.FluxVectorControllerCfg(i_s_max=6.5), **kwargs)
             observer = sm_control.FluxVectorController(par, cfg).observer
@@ -328,9 +322,7 @@ def test_default_speed_observer_gain(machine: str, sensorless: bool) -> None:
 
 def test_pm_flux_adaptation_keeps_parameters() -> None:
     """PM-flux adaptation does not modify the parameter object given by the user."""
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, k_f=lambda w_m: 1.0)
     ctrl = sm_control.VectorControlSystem(
         sm_control.CurrentVectorController(par, cfg),
@@ -389,9 +381,7 @@ def test_scalar_mechanics_functions(two_mass: bool) -> None:
         if two_mass
         else model.MechanicalSystem(J=0.015, B_L=B_L)
     )
-    par = model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     mdl = model.Drive(
         model.SynchronousMachine(par),
         mechanics,
@@ -410,9 +400,7 @@ def test_scalar_mechanics_functions(two_mass: bool) -> None:
 
 def test_rotor_angle_with_long_solver_steps() -> None:
     """The rotor angles are exact also when a solver step spans a large angle."""
-    par = model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     machine, mechanics = model.SynchronousMachine(par), model.ExternalRotorSpeed()
     mdl = model.Drive(machine, mechanics, model.VoltageSourceConverter(u_dc=540))
     w_M = 300.0  # Electrical angle of 0.9 rad per sampling period
@@ -469,19 +457,13 @@ def test_discrete_current_control(w: float) -> None:
 def test_discrete_current_control_angle_estimate() -> None:
     """The discrete-time design does not disturb the rotor angle estimate."""
     mdl = model.Drive(
-        model.SynchronousMachine(
-            model.SynchronousMachinePars(
-                n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-            )
-        ),
+        model.SynchronousMachine(ipmsm_par()),
         model.ExternalRotorSpeed(),
         model.VoltageSourceConverter(u_dc=540),
     )
     w_M = 300.0
     mdl.mechanics.set_external_rotor_speed(w_M)
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, discrete=True)
     vector_ctrl = sm_control.CurrentVectorController(par, cfg)
     vector_ctrl.observer.w_M = w_M
@@ -500,11 +482,7 @@ def test_discrete_current_control_dead_time() -> None:
     steady-state error."""
     T_s, t_d, u_th, w_M = 200e-6, 4e-6, 1.5, 75.0
     mdl = model.Drive(
-        model.InductionMachine(
-            model.InductionMachineInvGammaPars(
-                n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-            )
-        ),
+        model.InductionMachine(im_par()),
         model.ExternalRotorSpeed(),
         model.VoltageSourceConverter(540, model.CarrierComparison(t_d=t_d), u_th=u_th),
     )
@@ -601,9 +579,7 @@ def test_sm_flux_observer_update(w_M: float) -> None:
 def test_im_flux_observer_at_low_sampling_rate() -> None:
     """The flux estimate is accurate even if w_s*T_s = 0.3 (50 Hz at 1 kHz)."""
     w_M = 150.0
-    par = model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    par = im_par()
     mdl = model.Drive(
         model.InductionMachine(par),
         model.ExternalRotorSpeed(),
@@ -654,9 +630,7 @@ def test_speed_observer_poles(machine: str, J: float | None) -> None:
         # States: speed and load-torque estimation errors
         A = np.array([[-k_w, -1 / (J or 1)], [k_tau, 0]])
     else:
-        par = sm_control.SynchronousMachinePars(
-            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-        )
+        par = ipmsm_par()
         observer = sm_control.SpeedFluxObserver(
             par, alpha_o, T_s, lambda w_m: 0, lambda w_m: 0, J
         )
@@ -681,9 +655,7 @@ def test_sensored_speed_control_at_low_sampling_rate(machine: str) -> None:
         vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
         mdl = im_drive(sensored=True)
     else:
-        par = sm_control.SynchronousMachinePars(
-            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-        )
+        par = ipmsm_par()
         cfg = sm_control.FluxVectorControllerCfg(
             i_s_max=6.5, sensorless=False, T_s=1e-3
         )
@@ -714,9 +686,7 @@ def test_flux_torque_controller_without_torque_control() -> None:
     assert u_s == pytest.approx([1j * 300 + 100 * (0.8 - 1)] * 2)
 
     # PM machine at a high flux and a small load angle (c_tau < 0): the flux is reduced
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     ctrl = _sm_flux_vector.FluxTorqueController(par, alpha_psi=100.0, alpha_tau=10.0)
     psi_s = 2.5 + 0j
     fbk = sm_control.ObserverOutputs(psi_s=psi_s, i_s=(psi_s - par.psi_f) / par.L_d)
@@ -732,9 +702,7 @@ def test_reference_of_other_mode_is_rejected() -> None:
     """The control mode is given by the speed controller, not by the references."""
     with pytest.raises(ValueError):  # The speed controller gives the torque reference
         ipmsm_fvc(sensorless=True).set_torque_ref(1.0)
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.FluxVectorControllerCfg(i_s_max=6.5)
     ctrl = sm_control.VectorControlSystem(sm_control.FluxVectorController(par, cfg))
     with pytest.raises(ValueError):  # Speed control requires the speed controller
@@ -798,9 +766,7 @@ def test_controller_stores_cfg(machine: str, controller: Any, cfg: Any) -> None:
     """The controller stores its configuration (e.g., for exporting the controller)."""
     par: Any = im_par()
     if machine == "sm":
-        par = sm_control.SynchronousMachinePars(
-            n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-        )
+        par = ipmsm_par()
     assert controller(par, cfg).cfg is cfg
 
 
