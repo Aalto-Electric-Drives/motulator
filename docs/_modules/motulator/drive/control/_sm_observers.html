@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._sm_observers &#8212; motulator 0.24.1 documentation</title>
+    <title>motulator.drive.control._sm_observers &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -302,6 +302,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -477,8 +478,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.control._common</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpeedObserver</span><span class="p">,</span> <span class="n">hold_equivalent</span><span class="p">,</span> <span class="n">matched_pole</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
-    <span class="n">SynchronousMachinePars</span><span class="p">,</span>
+    <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
     <span class="n">aux_flux</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -558,7 +558,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
+<span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    k_theta : float</span>
 <span class="sd">        Rotor angle estimation gain (rad/s).</span>
@@ -581,7 +581,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+        <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
         <span class="n">k_theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
         <span class="n">k_f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
@@ -725,7 +725,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
+<span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float</span>
 <span class="sd">        Speed-estimation pole (rad/s).</span>
@@ -744,7 +744,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+        <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
         <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
@@ -935,7 +935,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">default_sensorless_k_o</span><span class="p">(</span>
-    <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+    <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""Default observer gain for sensorless drives."""</span>
     <span class="c1"># Poles at zero speed are located at s = 0 and s = -2*sigma0</span>
@@ -952,7 +952,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_speed_flux_observer</span><span class="p">(</span>
-    <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+    <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
     <span class="n">alpha_o</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -968,7 +968,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
+<span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float | None</span>
 <span class="sd">        Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless` is</span>
@@ -1007,7 +1007,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">create_vhz_observer</span><span class="p">(</span>
-    <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span> <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
+    <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
     <span class="n">k_theta</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">k_o</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FluxObserver</span><span class="p">:</span>
@@ -1016,7 +1016,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars</span>
+<span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    k_theta : float</span>
 <span class="sd">        Angle estimation gain (rad/s).</span>

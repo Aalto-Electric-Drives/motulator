@@ -16,10 +16,9 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.control.sm.CurrentController
+   motulator.drive.control.sm.BaseSynchronousMachineControlPars
    motulator.drive.control.sm.CurrentVectorController
    motulator.drive.control.sm.CurrentVectorControllerCfg
-   motulator.drive.control.sm.DiscreteCurrentController
    motulator.drive.control.sm.DriveControlSystem
    motulator.drive.control.sm.FluxObserver
    motulator.drive.control.sm.FluxVectorController
@@ -46,30 +45,15 @@ Classes
 Module Contents
 ---------------
 
-.. py:class:: CurrentController(par, alpha_c, alpha_i = None)
+.. py:class:: BaseSynchronousMachineControlPars
 
-   Bases: :py:obj:`motulator.common.control.ComplexPIController`
+   Bases: :py:obj:`Protocol`
 
 
    
-   Current controller for synchronous machines.
+   Base class for synchronous machine parameters, as used by the control systems.
 
-   This provides an interface of a current controller for synchronous machines
-   [#Awa2019a]_. The gains are initialized based on the desired closed-loop bandwidth
-   and the inductances (or nonlinear flux linkage maps).
-
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param alpha_c: Reference-tracking bandwidth (rad/s).
-   :type alpha_c: float
-   :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_c`.
-   :type alpha_i: float, optional
-
-   .. rubric:: References
-
-   .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-      saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
-      https://doi.org/10.1109/TIA.2019.2919258
+   The control systems use the flux linkage map of the machine in rotor coordinates.
 
 
 
@@ -88,20 +72,59 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(i_ref, i, u_ff = 0j)
+   .. py:method:: incr_ind_mat(i_s_dq)
 
       
-      Compute the controller output.
+      Incremental inductance matrix (H) as a function of the stator current (A).
 
-      :param i_ref: Reference signal.
-      :type i_ref: complex
-      :param i: Feedback signal.
-      :type i: complex
-      :param u_ff: Feedforward signal, defaults to 0.
-      :type u_ff: complex, optional
 
-      :returns: **u** -- Controller output.
-      :rtype: complex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: iterate_i_s_dq(psi_s_dq)
+
+      
+      Stator current (A) as a function of the flux linkage (Vs).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s_dq)
+
+      
+      Flux linkage (Vs) as a function of the stator current (A).
+
 
 
 
@@ -126,10 +149,21 @@ Module Contents
    
    Current vector controller for synchronous machine drives.
 
+   The currents are mapped to the flux linkages by the flux linkage map, and the flux
+   linkages are controlled by the 2DOF PI controller or, if `discrete` is True, by the
+   direct discrete-time controller. The saliency and the magnetic saturation are thus
+   taken into account [#Awa2019a]_.
+
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param cfg: Current-vector control configuration.
    :type cfg: CurrentVectorControllerCfg
+
+   .. rubric:: References
+
+   .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+      saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
+      https://doi.org/10.1109/TIA.2019.2919258
 
 
 
@@ -309,74 +343,6 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: DiscreteCurrentController(par, alpha_c, T_s)
-
-   Bases: :py:obj:`motulator.common.control.DiscreteComplexController`
-
-
-   
-   Direct discrete-time current controller for synchronous machines.
-
-   This implements the flux-linkage-based current controller designed directly in
-   discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
-   the flux linkages. Since the design includes the delays, the angle of the voltage
-   reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
-
-   :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-   :param alpha_c: Reference-tracking bandwidth (rad/s).
-   :type alpha_c: float
-   :param T_s: Sampling period (s).
-   :type T_s: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: compute_output(i_ref, i)
-
-      
-      Compute the controller output.
-
-      :param i_ref: Reference signal.
-      :type i_ref: complex
-      :param i: Feedback signal.
-      :type i: complex
-
-      :returns: **u** -- Controller output.
-      :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: DriveControlSystem(pwm, k_comp)
 
    Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`
@@ -534,7 +500,7 @@ Module Contents
    using a hold-equivalent discrete-time model, cf. [#Hin2018]_.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param k_theta: Rotor angle estimation gain (rad/s).
    :type k_theta: float
    :param k_o: Observer gain as a function of the rotor angular speed.
@@ -646,7 +612,7 @@ Module Contents
    into account [#Var2022]_.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param cfg: Flux-vector control configuration.
    :type cfg: FluxVectorControllerCfg
 
@@ -896,7 +862,7 @@ Module Contents
    decoupling between the stator flux and torque channels are used [#Tii2025a]_.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param cfg: Observer-based V/Hz control configuration.
    :type cfg: ObserverBasedVHzControllerCfg
 
@@ -1486,7 +1452,7 @@ Module Contents
    tracking law [#Sar2026]_, needed only for current-vector control.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
    :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
@@ -1640,7 +1606,7 @@ Module Contents
    current-vector control.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param i_s_max: Maximum stator current (A).
    :type i_s_max: float
    :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
@@ -1780,7 +1746,7 @@ Module Contents
 
 .. py:class:: SaturatedSynchronousMachinePars
 
-   Bases: :py:obj:`BaseSynchronousMachinePars`
+   Bases: :py:obj:`BaseSynchronousMachinePars`, :py:obj:`BaseSynchronousMachineControlPars`
 
 
    
@@ -1963,7 +1929,7 @@ Module Contents
    locked loop is used.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param cfg: Current-vector control configuration. The drive is always sensorless, and the
                fields `sensorless`, `k_o`, and `k_f` are not used.
    :type cfg: CurrentVectorControllerCfg
@@ -2084,7 +2050,7 @@ Module Contents
    error signal, see :class:`FluxObserver`.
 
    :param par: Machine model parameters.
-   :type par: SynchronousMachinePars | SaturatedSynchronousMachinePars
+   :type par: BaseSynchronousMachineControlPars
    :param alpha_o: Speed-estimation pole (rad/s).
    :type alpha_o: float
    :param T_s: Sampling period (s). The poles of the ideal sensored estimation-error dynamics
@@ -2379,7 +2345,7 @@ Module Contents
 
 .. py:class:: SynchronousMachinePars
 
-   Bases: :py:obj:`BaseSynchronousMachinePars`
+   Bases: :py:obj:`BaseSynchronousMachinePars`, :py:obj:`BaseSynchronousMachineControlPars`
 
 
    

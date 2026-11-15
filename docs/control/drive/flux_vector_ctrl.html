@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Flux-Vector Control &#8212; motulator 0.24.1 documentation</title>
+    <title>Flux-Vector Control &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -59,7 +59,7 @@
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Observers" href="observers.html" />
+    <link rel="next" title="V/Hz Control" href="vhz_ctrl.html" />
     <link rel="prev" title="Current Control" href="current_ctrl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -309,6 +309,7 @@
 <li class="toctree-l2"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observers.html">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -573,7 +574,7 @@
 </section>
 <section id="proportional-control-law">
 <h3>Proportional Control Law<a class="headerlink" href="#proportional-control-law" title="Link to this heading">#</a></h3>
-<p>Based on <a class="reference internal" href="#equation-im-flux-torque-fvc">(1)</a>, the proportional control law can be derived <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id50" title="Tiitinen, Hinkkanen, and Harnefors. Design framework for sensorless control of synchronous machine drives. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2024.3429650.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
+<p>Based on <a class="reference internal" href="#equation-im-flux-torque-fvc">(1)</a>, the proportional control law can be derived <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../../bibliography.html#id51" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: An extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span></p>
 <div class="math notranslate nohighlight" id="equation-im-flux-vector-control-usref">
 <span class="eqno">(3)<a class="headerlink" href="#equation-im-flux-vector-control-usref" title="Link to this equation">#</a></span>\[    \usref = \hatRs \is + \jj\hatomegas \hatpsis + e_\uppsi \mathbf{t}_\uppsi + e_\uptau \mathbf{t}_\uptau\]</div>
 <p>where <span class="math notranslate nohighlight">\(e_\uppsi = \alpha_\uppsi(\abspsisref - \hatabspsis)\)</span> and <span class="math notranslate nohighlight">\(e_\uptau = \alpha_\uptau(\tauMref - \hattauM)\)</span> are the bandwidth-scaled control errors of the stator flux linkage and torque, respectively, and the estimates are marked with the hat. The complex quantities <span class="math notranslate nohighlight">\(\mathbf{t}_\uppsi\)</span> and <span class="math notranslate nohighlight">\(\mathbf{t}_\uptau\)</span> are the direction vectors:</p>
@@ -648,11 +649,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="observers.html"
+       href="vhz_ctrl.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Observers</p>
+        <p class="prev-next-title">V/Hz Control</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

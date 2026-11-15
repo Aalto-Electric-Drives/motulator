@@ -54,7 +54,7 @@ where $\omegarb = \Rr/L_\ell = [(\LM + \Lsgm)/(\LM\Lsgm)]\RR$ is the breakdown a
 
 ### Proportional Control Law
 
-Based on {eq}`im_flux_torque_fvc`, the proportional control law can be derived {cite}`Tii2025a`
+Based on {eq}`im_flux_torque_fvc`, the proportional control law can be derived {cite}`Tii2025b`
 
 ```{math}
 ---

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.control.sm &#8212; motulator 0.24.1 documentation</title>
+    <title>motulator.drive.control.sm &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../../../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -307,6 +307,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../control/drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../control/drive/vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../control/drive/observers.html">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../control/drive/reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -517,8 +518,10 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentController.compute_output()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.iterate_i_s_dq"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars.iterate_i_s_dq()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
@@ -529,10 +532,6 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorControllerCfg"><code class="docutils literal notranslate"><span class="pre">CurrentVectorControllerCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DiscreteCurrentController"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DiscreteCurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController.compute_output()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_standby_output()</span></code></a></li>
@@ -659,8 +658,8 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentController</span></code></a></p></td>
-<td><p>Current controller for synchronous machines.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></a></p></td>
+<td><p>Base class for synchronous machine parameters, as used by the control systems.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorController" title="motulator.drive.control.sm.CurrentVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a></p></td>
 <td><p>Current vector controller for synchronous machine drives.</p></td>
@@ -668,70 +667,67 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorControllerCfg" title="motulator.drive.control.sm.CurrentVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentVectorControllerCfg</span></code></a></p></td>
 <td><p>Current-vector controller configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.DiscreteCurrentController" title="motulator.drive.control.sm.DiscreteCurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a></p></td>
-<td><p>Direct discrete-time current controller for synchronous machines.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.DriveControlSystem" title="motulator.drive.control.sm.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.DriveControlSystem" title="motulator.drive.control.sm.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p></td>
 <td><p>Base class for drive control systems.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxObserver" title="motulator.drive.control.sm.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
 <td><p>Observer for synchronous machines in estimated rotor coordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorController" title="motulator.drive.control.sm.FluxVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorController" title="motulator.drive.control.sm.FluxVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a></p></td>
 <td><p>Flux-vector controller of synchronous machine drives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorControllerCfg" title="motulator.drive.control.sm.FluxVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.FluxVectorControllerCfg" title="motulator.drive.control.sm.FluxVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></p></td>
 <td><p>Flux-vector controller configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.InverterNonlinearity" title="motulator.drive.control.sm.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.InverterNonlinearity" title="motulator.drive.control.sm.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
 <td><p>Duty-ratio error due to the dead time and the threshold voltages.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="motulator.drive.control.sm.ObserverBasedVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="motulator.drive.control.sm.ObserverBasedVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a></p></td>
 <td><p>Observer-based V/Hz controller for synchronous machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzControllerCfg" title="motulator.drive.control.sm.ObserverBasedVHzControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzControllerCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzControllerCfg" title="motulator.drive.control.sm.ObserverBasedVHzControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzControllerCfg</span></code></a></p></td>
 <td><p>Observer-based V/Hz controller configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ObserverOutputs" title="motulator.drive.control.sm.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
 <td><p>Feedback signals for the control system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PIController" title="motulator.drive.control.sm.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PIController" title="motulator.drive.control.sm.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PWM" title="motulator.drive.control.sm.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.PWM" title="motulator.drive.control.sm.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase carrier-based PWM.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGenerator" title="motulator.drive.control.sm.ReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGenerator" title="motulator.drive.control.sm.ReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a></p></td>
 <td><p>Optimal feedforward reference generator for synchronous machines.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGeneratorOnline" title="motulator.drive.control.sm.ReferenceGeneratorOnline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGeneratorOnline</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.ReferenceGeneratorOnline" title="motulator.drive.control.sm.ReferenceGeneratorOnline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGeneratorOnline</span></code></a></p></td>
 <td><p>Optimal feedforward online reference generator for synchronous machines.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.References" title="motulator.drive.control.sm.References"><code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.References" title="motulator.drive.control.sm.References"><code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code></a></p></td>
 <td><p>Reference signals of the drive controllers.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SaturatedSynchronousMachinePars</span></code></a></p></td>
 <td><p>Parameters of a saturated synchronous machine.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SignalInjectionController" title="motulator.drive.control.sm.SignalInjectionController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SignalInjectionController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SignalInjectionController" title="motulator.drive.control.sm.SignalInjectionController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SignalInjectionController</span></code></a></p></td>
 <td><p>Sensorless controller with signal injection for synchronous machine drives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedController" title="motulator.drive.control.sm.SpeedController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedController" title="motulator.drive.control.sm.SpeedController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedController</span></code></a></p></td>
 <td><p>2DOF PI speed controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedFluxObserver" title="motulator.drive.control.sm.SpeedFluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a></p></td>
 <td><p>Flux observer with speed estimation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedObserver" title="motulator.drive.control.sm.SpeedObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SpeedObserver" title="motulator.drive.control.sm.SpeedObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedObserver</span></code></a></p></td>
 <td><p>Speed observer.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SynchronousMachinePars</span></code></a></p></td>
 <td><p>Synchronous machine parameters, without saturation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VHzControlSystem" title="motulator.drive.control.sm.VHzControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VHzControlSystem" title="motulator.drive.control.sm.VHzControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VHzControlSystem</span></code></a></p></td>
 <td><p>V/Hz control system.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VectorControlSystem" title="motulator.drive.control.sm.VectorControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.sm.VectorControlSystem" title="motulator.drive.control.sm.VectorControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VectorControlSystem</span></code></a></p></td>
 <td><p>Vector control system.</p></td>
 </tr>
 </tbody>
@@ -741,49 +737,49 @@
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">CurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a></p>
-<p>Current controller for synchronous machines.</p>
-<p>This provides an interface of a current controller for synchronous machines
-<a class="footnote-reference brackets" href="#awa2019a" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. The gains are initialized based on the desired closed-loop bandwidth
-and the inductances (or nonlinear flux linkage maps).</p>
+<dt class="sig sig-object py" id="motulator.drive.control.sm.BaseSynchronousMachineControlPars">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">BaseSynchronousMachineControlPars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#BaseSynchronousMachineControlPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Base class for synchronous machine parameters, as used by the control systems.</p>
+<p>The control systems use the flux linkage map of the machine in rotor coordinates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.BaseSynchronousMachineControlPars.incr_ind_mat">
+<span class="sig-name descname"><span class="pre">incr_ind_mat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#BaseSynchronousMachineControlPars.incr_ind_mat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.incr_ind_mat" title="Link to this definition">#</a></dt>
+<dd><p>Incremental inductance matrix (H) as a function of the stator current (A).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Reference-tracking bandwidth (rad/s).</p></li>
-<li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Integral-action bandwidth (rad/s), defaults to <cite>alpha_c</cite>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>i_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
 </dd>
 </dl>
-<p class="rubric">References</p>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="awa2019a" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id1">1</a>,<a role="doc-backlink" href="#id2">2</a>)</span>
-<p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
-saturated synchronous motors,” IEEE Trans. Ind. Appl., 2019,
-<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
-</aside>
-</aside>
+</dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentController.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0j</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentController.compute_output" title="Link to this definition">#</a></dt>
-<dd><p>Compute the controller output.</p>
+<dt class="sig sig-object py" id="motulator.drive.control.sm.BaseSynchronousMachineControlPars.iterate_i_s_dq">
+<span class="sig-name descname"><span class="pre">iterate_i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#BaseSynchronousMachineControlPars.iterate_i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.iterate_i_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Stator current (A) as a function of the flux linkage (Vs).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>i_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Reference signal.</p></li>
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Feedback signal.</p></li>
-<li><p><strong>u_ff</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>, </em><em>optional</em>) – Feedforward signal, defaults to 0.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>psi_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u</strong> – Controller output.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.sm.BaseSynchronousMachineControlPars.psi_s_dq">
+<span class="sig-name descname"><span class="pre">psi_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#BaseSynchronousMachineControlPars.psi_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.psi_s_dq" title="Link to this definition">#</a></dt>
+<dd><p>Flux linkage (Vs) as a function of the stator current (A).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>i_s_dq</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em> | </em><em>numpy.ndarray</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -794,14 +790,27 @@ saturated synchronous motors,” IEEE Trans. Ind. Appl., 2019,
 <dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">CurrentVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController" title="Link to this definition">#</a></dt>
 <dd><p>Current vector controller for synchronous machine drives.</p>
+<p>The currents are mapped to the flux linkages by the flux linkage map, and the flux
+linkages are controlled by the 2DOF PI controller or, if <cite>discrete</cite> is True, by the
+direct discrete-time controller. The saliency and the magnetic saturation are thus
+taken into account <a class="footnote-reference brackets" href="#awa2019a" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorControllerCfg" title="motulator.drive.control.sm.CurrentVectorControllerCfg"><em>CurrentVectorControllerCfg</em></a>) – Current-vector control configuration.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="awa2019a" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
+saturated synchronous motors,” IEEE Trans. Ind. Appl., 2019,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
+</aside>
+</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.CurrentVectorController.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#CurrentVectorController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.CurrentVectorController.compute_output" title="Link to this definition">#</a></dt>
@@ -910,46 +919,6 @@ continuous-time design, defaults to False.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.DiscreteCurrentController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">DiscreteCurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#DiscreteCurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DiscreteCurrentController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.DiscreteComplexController" title="motulator.common.control.DiscreteComplexController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.DiscreteComplexController</span></code></a></p>
-<p>Direct discrete-time current controller for synchronous machines.</p>
-<p>This implements the flux-linkage-based current controller designed directly in
-discrete time <a class="footnote-reference brackets" href="#awa2019a" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. As in <cite>CurrentController</cite>, the currents are mapped to
-the flux linkages. Since the design includes the delays, the angle of the voltage
-reference is not advanced (<cite>k_comp = 0</cite> in <cite>CurrentVectorController</cite>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Reference-tracking bandwidth (rad/s).</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s).</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.sm.DiscreteCurrentController.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_current_vector.html#DiscreteCurrentController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DiscreteCurrentController.compute_output" title="Link to this definition">#</a></dt>
-<dd><p>Compute the controller output.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>i_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Reference signal.</p></li>
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Feedback signal.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u</strong> – Controller output.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.DriveControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">DriveControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_comp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.DriveControlSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.ConverterControlSystem" title="motulator.common.control.ConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ConverterControlSystem</span></code></a></p>
@@ -1033,7 +1002,7 @@ controller is not updated.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">FluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_f</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#FluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.FluxObserver" title="Link to this definition">#</a></dt>
 <dd><p>Observer for synchronous machines in estimated rotor coordinates.</p>
 <p>This observer estimates the stator flux linkage, the rotor angle, and (optionally)
-the PM-flux linkage. The design is based on <a class="footnote-reference brackets" href="#hin2018" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> and <a class="footnote-reference brackets" href="#tuo2018" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The
+the PM-flux linkage. The design is based on <a class="footnote-reference brackets" href="#hin2018" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> and <a class="footnote-reference brackets" href="#tuo2018" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The
 observer gain decouples the electrical and mechanical dynamics and allows placing
 the poles of the corresponding linearized estimation error dynamics. The rotor angle
 is tracked using a position error signal, which is either computed internally from
@@ -1043,11 +1012,11 @@ measured rotor angle. The weight <cite>h</cite> of the external signal, given to
 (sensorless) operation, <cite>h = 1</cite> relies on the external signal alone, and
 intermediate values blend the two. The magnetic saturation is taken into account
 based on the provided machine model. The flux estimate is corrected and predicted
-using a hold-equivalent discrete-time model, cf. <a class="footnote-reference brackets" href="#hin2018" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+using a hold-equivalent discrete-time model, cf. <a class="footnote-reference brackets" href="#hin2018" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>k_theta</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Rotor angle estimation gain (rad/s).</p></li>
 <li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – Observer gain as a function of the rotor angular speed.</p></li>
 <li><p><strong>k_f</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em>) – PM-flux estimation gain (V) as a function of the rotor angular speed.</p></li>
@@ -1058,13 +1027,13 @@ using a hold-equivalent discrete-time model, cf. <a class="footnote-reference br
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hin2018" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
 <p>Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, “Observers for
 sensorless synchronous motor drives: Framework for design and analysis,” IEEE
 Trans. Ind. Appl., 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2858753">https://doi.org/10.1109/TIA.2018.2858753</a></p>
 </aside>
 <aside class="footnote brackets" id="tuo2018" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Tuovinen, Awan, Kukkola, Saarakkala, Hinkkanen, “Permanent-magnet flux
 adaptation for sensorless synchronous motor drives,” Proc. IEEE SLED, 2018,
 <a class="reference external" href="https://doi.org/10.1109/SLED.2018.8485899">https://doi.org/10.1109/SLED.2018.8485899</a></p>
@@ -1122,13 +1091,13 @@ based error signal is used exclusively.</p></li>
 <dd><p>Flux-vector controller of synchronous machine drives.</p>
 <p>This class implements a variant of flux-vector control. Rotor coordinates and
 decoupling between the stator flux and torque channels are used according to
-<a class="footnote-reference brackets" href="#awa2019b" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. Here, the stator flux magnitude and the electromagnetic torque are
-selected as controllable variables <a class="footnote-reference brackets" href="#tii2025a" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. The magnetic saturation is taken
-into account <a class="footnote-reference brackets" href="#var2022" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
+<a class="footnote-reference brackets" href="#awa2019b" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>. Here, the stator flux magnitude and the electromagnetic torque are
+selected as controllable variables <a class="footnote-reference brackets" href="#tii2025a" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>. The magnetic saturation is taken
+into account <a class="footnote-reference brackets" href="#var2022" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.FluxVectorControllerCfg" title="motulator.drive.control.sm.FluxVectorControllerCfg"><em>FluxVectorControllerCfg</em></a>) – Flux-vector control configuration.</p></li>
 </ul>
 </dd>
@@ -1136,20 +1105,20 @@ into account <a class="footnote-reference brackets" href="#var2022" id="id8" rol
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="awa2019b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">4</a><span class="fn-bracket">]</span></span>
 <p>Awan, Hinkkanen, Bojoi, Pellegrino, “Stator-flux-oriented control of
 synchronous motors: A systematic design procedure,” IEEE Trans. Ind. Appl., 2019,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2019.2927316">https://doi.org/10.1109/TIA.2019.2927316</a></p>
 </aside>
 <aside class="footnote brackets" id="tii2025a" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id9">2</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
 <p>Tiitinen, Hinkkanen, Harnefors, “Design framework for sensorless
 control of synchronous machine drives,” IEEE Trans. Ind. Electron., 2025,
 <a class="reference external" href="https://doi.org/10.1109/TIE.2024.3429650">https://doi.org/10.1109/TIE.2024.3429650</a></p>
 </aside>
 <aside class="footnote brackets" id="var2022" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">6</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">6</a><span class="fn-bracket">]</span></span>
 <p>Varatharajan, Pellegrino, Armando, “Direct flux vector control of
 synchronous motor drives: Accurate decoupled control with online adaptive maximum
 torque per ampere and maximum torque per volts evaluation,” IEEE Trans. Ind.
@@ -1295,11 +1264,11 @@ commands.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_flux_vector.html#ObserverBasedVHzController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.ObserverBasedVHzController" title="Link to this definition">#</a></dt>
 <dd><p>Observer-based V/Hz controller for synchronous machine drives.</p>
 <p>This class implements sensorless observer-based V/Hz control. Rotor coordinates and
-decoupling between the stator flux and torque channels are used <a class="footnote-reference brackets" href="#tii2025a" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
+decoupling between the stator flux and torque channels are used <a class="footnote-reference brackets" href="#tii2025a" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.ObserverBasedVHzControllerCfg" title="motulator.drive.control.sm.ObserverBasedVHzControllerCfg"><em>ObserverBasedVHzControllerCfg</em></a>) – Observer-based V/Hz control configuration.</p></li>
 </ul>
 </dd>
@@ -1487,7 +1456,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SVPWM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase carrier-based PWM.</p>
 <p>This computes the duty ratios for space-vector PWM or discontinuous PWM (DPWM)
-<a class="footnote-reference brackets" href="#hav1999" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, including the overmodulation <a class="footnote-reference brackets" href="#hav1999b" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. The realized voltage is
+<a class="footnote-reference brackets" href="#hav1999" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, including the overmodulation <a class="footnote-reference brackets" href="#hav1999b" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. The realized voltage is
 reconstructed from the duty ratios and the measured DC-bus voltage, taking into
 account the computational delay of one sampling period.</p>
 <p>In DPWM, one leg at a time is clamped to the positive or negative DC rail, so that
@@ -1498,7 +1467,7 @@ space-vector PWM. The switching losses are minimized if the clamped leg conducts
 largest current: DPWM1 suits a current in phase with the voltage, DPWM2 a current
 lagging by about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly
 reactive current. At the same average switching frequency, DPWM gives a lower
-current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
+current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
 <p>Optionally, the duty-ratio error <cite>d_err</cite> caused by the inverter nonlinearities, such
 as the dead time and the threshold voltages of the power devices, is taken into
 account. The realized voltage is corrected for the error using the measured
@@ -1506,7 +1475,7 @@ currents. By default, the error is also compensated for by feedforward using the
 predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
 compensated for by shifting the other legs.</p>
 <p>Optionally, the duty ratio of a switching leg is limited to the range
-<cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>. A duty ratio in the
+<cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>. A duty ratio in the
 range <cite>(0, d_min)</cite> is rounded to 0 or <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to
 <cite>1 - d_min</cite> or 1, whichever gives the realized duty ratio nearer to that of the
 voltage reference. The limited voltage reference and the realized voltage include
@@ -1553,24 +1522,24 @@ is <cite>T_s</cite>). Must match the system model.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">7</a><span class="fn-bracket">]</span></span>
 <p>Hava, Kerkman, Lipo, “Simple analytical and graphical methods for
 carrier-based PWM-VSI drives,” IEEE Trans. Power Electron., 1999,
 <a class="reference external" href="https://doi.org/10.1109/63.737592">https://doi.org/10.1109/63.737592</a></p>
 </aside>
 <aside class="footnote brackets" id="hav1999b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">8</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation characteristics of
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="hav1998" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">9</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">9</a><span class="fn-bracket">]</span></span>
 <p>Hava, Kerkman, Lipo, “A high-performance generalized discontinuous PWM
 algorithm,” IEEE Trans. Ind. Appl., 1998, <a class="reference external" href="https://doi.org/10.1109/28.720446">https://doi.org/10.1109/28.720446</a></p>
 </aside>
 <aside class="footnote brackets" id="wel2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">10</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">10</a><span class="fn-bracket">]</span></span>
 <p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
 minimum pulse-width limitations in two-level PWM voltage source inverters,” Proc.
 IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
@@ -1642,7 +1611,7 @@ given, the voltage is corrected for it using the measured currents.</p>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1660,7 +1629,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">11</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">11</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -1696,12 +1665,12 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 given torque reference. The MTPA locus as well as the current, voltage and MTPV
 limits are taken into account. This class can be used also for a saturated machine
 model. The flux and torque references are computed using pre-computed lookup tables
-<a class="footnote-reference brackets" href="#mey2006" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2018" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>. The current reference is generated dynamically using a
-tracking law <a class="footnote-reference brackets" href="#sar2026" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>, needed only for current-vector control.</p>
+<a class="footnote-reference brackets" href="#mey2006" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#awa2018" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>. The current reference is generated dynamically using a
+tracking law <a class="footnote-reference brackets" href="#sar2026" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>, needed only for current-vector control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Maximum stator current (A).</p></li>
 <li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>) – Minimum stator flux (Vs). If None, <cite>par.psi_f</cite> is used. It must be positive for
 machines without PMs.</p></li>
@@ -1717,20 +1686,20 @@ maintain a numerical margin.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="mey2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">12</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">12</a><span class="fn-bracket">]</span></span>
 <p>Meyer, Böcker, “Optimum control for interior permanent magnet
 synchronous motors (IPMSM) in constant torque and flux weakening range,” Proc.
 EPE-PEMC, 2006, <a class="reference external" href="https://doi.org/10.1109/EPEPEMC.2006.4778413">https://doi.org/10.1109/EPEPEMC.2006.4778413</a></p>
 </aside>
 <aside class="footnote brackets" id="awa2018" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">13</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">13</a><span class="fn-bracket">]</span></span>
 <p>Awan, Song, Saarakkala, Hinkkanen, “Optimal torque control of
 saturated synchronous motors: Plug-and-play method,” IEEE Trans. Ind. Appl.,
 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2862410">https://doi.org/10.1109/TIA.2018.2862410</a></p>
 </aside>
 <aside class="footnote brackets" id="sar2026" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id17">1</a>,<a role="doc-backlink" href="#id18">2</a>)</span>
+<span class="backrefs">(<a role="doc-backlink" href="#id16">1</a>,<a role="doc-backlink" href="#id17">2</a>)</span>
 <p>Sarén, Hartikainen, Piippo, Hinkkanen, “Decoupled online feedforward
 generation of optimal references for saturated synchronous machine drives,” 2026,
 <a class="reference external" href="https://arxiv.org/abs/2607.08528">https://arxiv.org/abs/2607.08528</a></p>
@@ -1798,14 +1767,14 @@ reference state. The state is updated in the <cite>update</cite> method.</p>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">_ReferenceGeneratorBase</span></code></p>
 <p>Optimal feedforward online reference generator for synchronous machines.</p>
 <p>This class tracks online in a feedforward manner the optimal flux, limited torque,
-and current references from a given torque reference <a class="footnote-reference brackets" href="#sar2026" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>. The MTPA locus as
+and current references from a given torque reference <a class="footnote-reference brackets" href="#sar2026" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></a>. The MTPA locus as
 well as the current, voltage, and MTPV limits are taken into account. This class can
 be used also for a saturated machine model. The current reference is only needed for
 current-vector control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Maximum stator current (A).</p></li>
 <li><p><strong>psi_s_min</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>) – Minimum stator flux (Vs). If None, <cite>par.psi_f</cite> is used. It must be positive for
 machines without PMs.</p></li>
@@ -1876,7 +1845,7 @@ machines without PMs.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">SaturatedSynchronousMachinePars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code></p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code>, <a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></a></p>
 <p>Parameters of a saturated synchronous machine.</p>
 <p>The saturation model is specified as a current map (current as a function of the
 flux linkage). Optionally, to be used only in control systems, a flux map (flux
@@ -1982,15 +1951,15 @@ efficient but may be convenient in some special cases.</p>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorController" title="motulator.drive.control.sm.CurrentVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentVectorController</span></code></a></p>
 <p>Sensorless controller with signal injection for synchronous machine drives.</p>
 <p>This class implements a square-wave signal injection for low-speed operation
-according to <a class="footnote-reference brackets" href="#kim2012" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a>. Cross-saturation errors are compensated for using flux
-maps <a class="footnote-reference brackets" href="#you2018" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a>. A related adjustable-frequency method is presented in <a class="footnote-reference brackets" href="#yu2022" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a>.
+according to <a class="footnote-reference brackets" href="#kim2012" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>15<span class="fn-bracket">]</span></a>. Cross-saturation errors are compensated for using flux
+maps <a class="footnote-reference brackets" href="#you2018" id="id19" role="doc-noteref"><span class="fn-bracket">[</span>16<span class="fn-bracket">]</span></a>. A related adjustable-frequency method is presented in <a class="footnote-reference brackets" href="#yu2022" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>17<span class="fn-bracket">]</span></a>.
 If the inertia of the mechanical system is provided, the speed is estimated using
-the speed observer based on the mechanical model <a class="footnote-reference brackets" href="#kim2003" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>, otherwise the phase-
+the speed observer based on the mechanical model <a class="footnote-reference brackets" href="#kim2003" id="id21" role="doc-noteref"><span class="fn-bracket">[</span>18<span class="fn-bracket">]</span></a>, otherwise the phase-
 locked loop is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.sm.CurrentVectorControllerCfg" title="motulator.drive.control.sm.CurrentVectorControllerCfg"><em>CurrentVectorControllerCfg</em></a>) – Current-vector control configuration. The drive is always sensorless, and the
 fields <cite>sensorless</cite>, <cite>k_o</cite>, and <cite>k_f</cite> are not used.</p></li>
 <li><p><strong>U_inj</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Injected voltage amplitude (V), defaults to 250.</p></li>
@@ -2003,26 +1972,26 @@ requires reducing <cite>cfg.alpha_o</cite> accordingly.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="kim2012" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">15</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">15</a><span class="fn-bracket">]</span></span>
 <p>Kim, Ha, Sul, “PWM switching frequency signal injection sensorless
 method in IPMSM,” IEEE Trans. Ind. Appl., 2012,
 <a class="reference external" href="https://doi.org/10.1109/TIA.2012.2210175">https://doi.org/10.1109/TIA.2012.2210175</a></p>
 </aside>
 <aside class="footnote brackets" id="you2018" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">16</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">16</a><span class="fn-bracket">]</span></span>
 <p>Yousefi-Talouki, Pescetto, Pellegrino, Boldea, “Combined active flux
 and high-frequency injection methods for sensorless direct-flux vector control of
 synchronous reluctance machines,” IEEE Trans. Power Electron., 2018,
 <a class="reference external" href="https://doi.org/10.1109/TPEL.2017.2697209">https://doi.org/10.1109/TPEL.2017.2697209</a></p>
 </aside>
 <aside class="footnote brackets" id="yu2022" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">17</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">17</a><span class="fn-bracket">]</span></span>
 <p>Yu, Wang, “Position sensorless control of IPMSM using adjustable
 frequency setting square-wave voltage injection,” IEEE Trans. Power Electron.,
 2022, <a class="reference external" href="https://doi.org/10.1109/TPEL.2022.3179611">https://doi.org/10.1109/TPEL.2022.3179611</a></p>
 </aside>
 <aside class="footnote brackets" id="kim2003" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">18</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">18</a><span class="fn-bracket">]</span></span>
 <p>Kim, Harke, Lorenz, “Sensorless control of interior permanent-magnet
 machine drives with zero-phase lag position estimation,” IEEE Trans. Ind. Appl.,
 2003, <a class="reference external" href="https://doi.org/10.1109/TIA.2003.818966">https://doi.org/10.1109/TIA.2003.818966</a></p>
@@ -2079,7 +2048,7 @@ error signal, see <a class="reference internal" href="#motulator.drive.control.s
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.SynchronousMachinePars" title="motulator.drive.control.sm.SynchronousMachinePars"><em>SynchronousMachinePars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars" title="motulator.drive.control.sm.SaturatedSynchronousMachinePars"><em>SaturatedSynchronousMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><em>BaseSynchronousMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Speed-estimation pole (rad/s).</p></li>
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s). The poles of the ideal sensored estimation-error dynamics
 are placed at <code class="docutils literal notranslate"><span class="pre">exp(-alpha_o*T_s)</span></code>.</p></li>
@@ -2095,7 +2064,7 @@ mechanical system model is not used.</p></li>
 <span class="sig-name descname"><span class="pre">catch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_sm_observers.html#SpeedFluxObserver.catch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SpeedFluxObserver.catch" title="Link to this definition">#</a></dt>
 <dd><p>Initialize the estimates from the current response to a zero-voltage period.</p>
 <p>The back-EMF drives the current along the negative q axis of the rotor, which
-gives the rotor angle and the speed magnitude (a flying start, cf. <a class="footnote-reference brackets" href="#tan2009" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a>),
+gives the rotor angle and the speed magnitude (a flying start, cf. <a class="footnote-reference brackets" href="#tan2009" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>19<span class="fn-bracket">]</span></a>),
 the direction of rotation being taken from the speed estimate. The resistive
 voltage drop and the cross-coupling of the current are neglected.</p>
 <p>This method is called by <cite>compute_output</cite> at the first sampling instant with a
@@ -2122,7 +2091,7 @@ current that has not decayed) or the machine has no magnets.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="tan2009" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">19</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">19</a><span class="fn-bracket">]</span></span>
 <p>Taniguchi, Mochiduki, Yamakawa, Wakao, Kondo, Yoneyama, “Starting
 procedure of rotational sensorless PMSM in the rotating condition,” IEEE
 Trans. Ind. Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009496">https://doi.org/10.1109/TIA.2008.2009496</a></p>
@@ -2202,7 +2171,7 @@ based error signal is used exclusively.</p></li>
 <dd><p>Speed observer.</p>
 <p>This observer estimates the mechanical rotor speed based on the mechanical system
 model and the error signal. If the inertia of the mechanical system is provided, the
-load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id24" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a>.</p>
+load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>20<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2218,7 +2187,7 @@ not used.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="lor1991" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id24">20</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id23">20</a><span class="fn-bracket">]</span></span>
 <p>Lorenz, Van Patten, “High-resolution velocity estimation for
 all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
@@ -2259,7 +2228,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SynchronousMachinePars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.sm.</span></span><span class="sig-name descname"><span class="pre">SynchronousMachinePars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SynchronousMachinePars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code></p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code>, <a class="reference internal" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars" title="motulator.drive.control.sm.BaseSynchronousMachineControlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></a></p>
 <p>Synchronous machine parameters, without saturation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2585,8 +2554,10 @@ first one (a flying start).</p>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentController.compute_output()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.incr_ind_mat"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars.incr_ind_mat()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.iterate_i_s_dq"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars.iterate_i_s_dq()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.BaseSynchronousMachineControlPars.psi_s_dq"><code class="docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars.psi_s_dq()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorController"><code class="docutils literal notranslate"><span class="pre">CurrentVectorController</span></code></a><ul class="nav section-nav flex-column">
@@ -2597,10 +2568,6 @@ first one (a flying start).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.CurrentVectorControllerCfg"><code class="docutils literal notranslate"><span class="pre">CurrentVectorControllerCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DiscreteCurrentController"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DiscreteCurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController.compute_output()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.sm.DriveControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_standby_output()</span></code></a></li>

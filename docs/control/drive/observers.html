@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Observers &#8212; motulator 0.24.1 documentation</title>
+    <title>Observers &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -60,7 +60,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Reference Generation" href="reference_gen.html" />
-    <link rel="prev" title="Flux-Vector Control" href="flux_vector_ctrl.html" />
+    <link rel="prev" title="V/Hz Control" href="vhz_ctrl.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -309,6 +309,7 @@
 <li class="toctree-l2"><a class="reference internal" href="speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -605,7 +606,7 @@
 <p>where <span class="math notranslate nohighlight">\(\us\)</span> is the realized voltage estimate obtained from the PWM algorithm, <span class="math notranslate nohighlight">\(\koa\)</span> and <span class="math notranslate nohighlight">\(\kob\)</span> are complex gains, the estimates are marked with the hat, and <span class="math notranslate nohighlight">\(^*\)</span> marks the complex conjugate. The estimation error is</p>
 <div class="math notranslate nohighlight" id="equation-im-eo">
 <span class="eqno">(5)<a class="headerlink" href="#equation-im-eo" title="Link to this equation">#</a></span>\[    \eo = \hatLsgm\frac{\D \is}{\D t} - \us + \left(\hatRsgm + \jj\omegac\hatLsgm\right)\is - \left(\hatalpha - \jj\hatomegam\right)\hatpsiR\]</div>
-<p>where <span class="math notranslate nohighlight">\(\hatomegam = \np\hatomegaM\)</span> represents the filtered rotor speed in sensored drives and estimated rotor speed in sensorless drives. In observer-based V/Hz control <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../../bibliography.html#id51" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: An extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span>, the speed estimate is replaced with the (rate-limited) speed reference, <span class="math notranslate nohighlight">\(\hatomegam = \omegamref\)</span>. Note that the derivative of the stator current in <a class="reference internal" href="#equation-im-eo">(5)</a> is integrated, i.e., the noise is not amplified. The torque estimate is given by</p>
+<p>where <span class="math notranslate nohighlight">\(\hatomegam = \np\hatomegaM\)</span> represents the filtered rotor speed in sensored drives and estimated rotor speed in sensorless drives. In observer-based V/Hz control <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../../bibliography.html#id51" title="Tiitinen, Hinkkanen, and Harnefors. Sensorless flux-vector control framework: An extension for induction machines. IEEE Trans. Ind. Electron., 2025. doi:10.1109/TIE.2025.3559958.">Tiitinen <em>et al.</em>, 2025</a>]</span>, the speed estimate is replaced with the (rate-limited) speed reference, <span class="math notranslate nohighlight">\(\hatomegam = \omegamref\)</span>, see <a class="reference internal" href="vhz_ctrl.html"><span class="doc">V/Hz Control</span></a>. Note that the derivative of the stator current in <a class="reference internal" href="#equation-im-eo">(5)</a> is integrated, i.e., the noise is not amplified. The torque estimate is given by</p>
 <div class="math notranslate nohighlight" id="equation-im-obs-taum">
 <span class="eqno">(6)<a class="headerlink" href="#equation-im-obs-taum" title="Link to this equation">#</a></span>\[    \hattauM = \frac{3\np}{2}\IM\left\{\is \hatpsis^* \right\}\]</div>
 <p>The magnetic saturation <span class="math notranslate nohighlight">\(\hatLs = \hatLs(\hatabspsis)\)</span> can be taken into account using the <a class="reference internal" href="../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachinePars" title="motulator.drive.model.InductionMachinePars"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.model.InductionMachinePars</span></code></a> class.</p>
@@ -832,12 +833,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="flux_vector_ctrl.html"
+       href="vhz_ctrl.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Flux-Vector Control</p>
+        <p class="prev-next-title">V/Hz Control</p>
       </div>
     </a>
     <a class="right-next"

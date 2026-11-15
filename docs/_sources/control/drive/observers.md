@@ -75,7 +75,7 @@ label: im_eo
     \eo = \hatLsgm\frac{\D \is}{\D t} - \us + \left(\hatRsgm + \jj\omegac\hatLsgm\right)\is - \left(\hatalpha - \jj\hatomegam\right)\hatpsiR
 ```
 
-where $\hatomegam = \np\hatomegaM$ represents the filtered rotor speed in sensored drives and estimated rotor speed in sensorless drives. In observer-based V/Hz control {cite}`Tii2025b`, the speed estimate is replaced with the (rate-limited) speed reference, $\hatomegam = \omegamref$. Note that the derivative of the stator current in {eq}`im_eo` is integrated, i.e., the noise is not amplified. The torque estimate is given by
+where $\hatomegam = \np\hatomegaM$ represents the filtered rotor speed in sensored drives and estimated rotor speed in sensorless drives. In observer-based V/Hz control {cite}`Tii2025b`, the speed estimate is replaced with the (rate-limited) speed reference, $\hatomegam = \omegamref$, see {doc}`/control/drive/vhz_ctrl`. Note that the derivative of the stator current in {eq}`im_eo` is integrated, i.e., the noise is not amplified. The torque estimate is given by
 
 ```{math}
 ---

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>motulator.drive.model &#8212; motulator 0.24.1 documentation</title>
+    <title>motulator.drive.model &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -186,7 +186,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -307,6 +307,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -1929,7 +1930,7 @@ leakage flux interaction in induction machines,” IEEE Trans. Ind. Appl., 2010,
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.model.SaturatedSynchronousMachinePars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">SaturatedSynchronousMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SaturatedSynchronousMachinePars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.BaseSynchronousMachinePars" title="motulator.drive.model.BaseSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.BaseSynchronousMachinePars" title="motulator.drive.model.BaseSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></p>
 <p>Parameters of a saturated synchronous machine.</p>
 <p>The saturation model is specified as a current map (current as a function of the
 flux linkage). Optionally, to be used only in control systems, a flux map (flux
@@ -2458,7 +2459,7 @@ the magnetic model, i.e., the core-loss current is excluded from the torque.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.model.SynchronousMachinePars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.model.</span></span><span class="sig-name descname"><span class="pre">SynchronousMachinePars</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SynchronousMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SynchronousMachinePars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.BaseSynchronousMachinePars" title="motulator.drive.model.BaseSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.model.BaseSynchronousMachinePars" title="motulator.drive.model.BaseSynchronousMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachinePars</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseSynchronousMachineControlPars</span></code></p>
 <p>Synchronous machine parameters, without saturation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

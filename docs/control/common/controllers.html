@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Controllers &#8212; motulator 0.24.1 documentation</title>
+    <title>Controllers &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -46,7 +46,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -188,7 +188,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -309,6 +309,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drive/vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/observers.html">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../drive/reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -610,7 +611,7 @@
 <p><span class="caption-text"><em>Figure 2:</em> 2DOF complex-vector PI controller with an optional feedforward term.</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>The discrete-time implementation of <a class="reference internal" href="#equation-complex-vector-2dof-pi">(5)</a> with the anti-windup is given in the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> class, which is the base class for the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentController" title="motulator.drive.control.sm.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentController</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.CurrentController</span></code></a> classes and is used directly by the <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentVectorController" title="motulator.drive.control.im.CurrentVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.CurrentVectorController</span></code></a> class. The algorithm is similar to the real-valued case given in <a class="reference internal" href="#equation-discrete-2dof-pi">(4)</a>.</p>
+<p>The discrete-time implementation of <a class="reference internal" href="#equation-complex-vector-2dof-pi">(5)</a> with the anti-windup is given in the <a class="reference internal" href="../../autoapi/motulator/common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a> class, which is the base class for the <a class="reference internal" href="../../autoapi/motulator/grid/control/index.html#motulator.grid.control.CurrentController" title="motulator.grid.control.CurrentController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.grid.control.CurrentController</span></code></a> class and is used directly by the <a class="reference internal" href="../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorController" title="motulator.drive.control.sm.CurrentVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.sm.CurrentVectorController</span></code></a> and <a class="reference internal" href="../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.CurrentVectorController" title="motulator.drive.control.im.CurrentVectorController"><code class="xref py py-class docutils literal notranslate"><span class="pre">motulator.drive.control.im.CurrentVectorController</span></code></a> classes. The algorithm is similar to the real-valued case given in <a class="reference internal" href="#equation-discrete-2dof-pi">(4)</a>.</p>
 <p>The converter voltage is limited by the DC-bus voltage, and the anti-windup uses the realized voltage obtained from the pulse-width modulation (PWM).</p>
 </section>
 <section id="pulse-width-modulation">

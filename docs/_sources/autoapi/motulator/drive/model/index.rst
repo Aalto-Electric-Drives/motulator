@@ -1897,7 +1897,7 @@ Package Contents
 
 .. py:class:: SaturatedSynchronousMachinePars
 
-   Bases: :py:obj:`BaseSynchronousMachinePars`
+   Bases: :py:obj:`BaseSynchronousMachinePars`, :py:obj:`BaseSynchronousMachineControlPars`
 
 
    
@@ -2752,7 +2752,7 @@ Package Contents
 
 .. py:class:: SynchronousMachinePars
 
-   Bases: :py:obj:`BaseSynchronousMachinePars`
+   Bases: :py:obj:`BaseSynchronousMachinePars`, :py:obj:`BaseSynchronousMachineControlPars`
 
 
    

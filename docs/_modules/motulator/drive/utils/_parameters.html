@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.utils._parameters &#8212; motulator 0.24.1 documentation</title>
+    <title>motulator.drive.utils._parameters &#8212; motulator 0.25.0 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=15e192ad"></script>
+    <script src="../../../../_static/documentation_options.js?v=52c7255c"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.24.1 documentation</p>
+    <p class="title logo__title">motulator 0.25.0 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -302,6 +302,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/speed_ctrl.html">Speed Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/current_ctrl.html">Current Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/flux_vector_ctrl.html">Flux-Vector Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/vhz_ctrl.html">V/Hz Control</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/observers.html">Observers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../control/drive/reference_gen.html">Reference Generation</a></li>
 </ul>
@@ -581,10 +582,50 @@
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="BaseSynchronousMachineControlPars">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.BaseSynchronousMachineControlPars">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseSynchronousMachineControlPars</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Base class for synchronous machine parameters, as used by the control systems.</span>
+
+<span class="sd">    The control systems use the flux linkage map of the machine in rotor coordinates.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="BaseSynchronousMachineControlPars.psi_s_dq">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.BaseSynchronousMachineControlPars.psi_s_dq">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">psi_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Flux linkage (Vs) as a function of the stator current (A)."""</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="BaseSynchronousMachineControlPars.incr_ind_mat">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.BaseSynchronousMachineControlPars.incr_ind_mat">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">incr_ind_mat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Incremental inductance matrix (H) as a function of the stator current (A)."""</span>
+        <span class="o">...</span></div>
+
+
+<div class="viewcode-block" id="BaseSynchronousMachineControlPars.iterate_i_s_dq">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.BaseSynchronousMachineControlPars.iterate_i_s_dq">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_i_s_dq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Stator current (A) as a function of the flux linkage (Vs)."""</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
+<span class="c1"># %%</span>
 <div class="viewcode-block" id="SynchronousMachinePars">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SynchronousMachinePars</span><span class="p">(</span><span class="n">BaseSynchronousMachinePars</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SynchronousMachinePars</span><span class="p">(</span>
+    <span class="n">BaseSynchronousMachinePars</span><span class="p">,</span> <span class="n">BaseSynchronousMachineControlPars</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Synchronous machine parameters, without saturation.</span>
 
@@ -665,7 +706,9 @@
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SaturatedSynchronousMachinePars</span><span class="p">(</span><span class="n">BaseSynchronousMachinePars</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SaturatedSynchronousMachinePars</span><span class="p">(</span>
+    <span class="n">BaseSynchronousMachinePars</span><span class="p">,</span> <span class="n">BaseSynchronousMachineControlPars</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parameters of a saturated synchronous machine.</span>
 
