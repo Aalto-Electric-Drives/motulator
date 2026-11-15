@@ -249,7 +249,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 16.276 seconds)
+   **Total running time of the script:** (0 minutes 40.515 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:
