@@ -479,14 +479,14 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">States</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThreePhaseSourceStates</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""State variables."""</span>
 
     <span class="n">theta_g</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Angle (rad), imaginary part always zero</span>
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Outputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThreePhaseSourceOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Output variables."""</span>
 
     <span class="n">e_g_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -537,8 +537,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">e_g_neg</span> <span class="o">=</span> <span class="n">e_g_neg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">phi_neg</span> <span class="o">=</span> <span class="n">phi_neg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">States</span> <span class="o">=</span> <span class="n">States</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">ThreePhaseSourceStates</span> <span class="o">=</span> <span class="n">ThreePhaseSourceStates</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">ThreePhaseSourceOutputs</span> <span class="o">=</span> <span class="n">ThreePhaseSourceOutputs</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ThreePhaseSource.generate_space_vector">
 <a class="viewcode-back" href="../../../../autoapi/motulator/grid/model/index.html#motulator.common.model.ThreePhaseSource.generate_space_vector">[docs]</a>

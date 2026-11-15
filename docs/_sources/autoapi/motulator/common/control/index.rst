@@ -34,6 +34,7 @@ Classes
 
    motulator.common.control.ComplexPIController
    motulator.common.control.ControlSystem
+   motulator.common.control.ConverterControlSystem
    motulator.common.control.DiscreteComplexController
    motulator.common.control.InverterNonlinearity
    motulator.common.control.PIController
@@ -500,6 +501,103 @@ Package Contents
       
       Update controller internal states.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: ConverterControlSystem(pwm, k_comp)
+
+   Bases: :py:obj:`ControlSystem`
+
+
+   
+   Base class for control systems of voltage-source converters.
+
+   The observer of the inner controller gets the realized converter voltage of the
+   ongoing sampling period, while the feedback voltage for the control laws is the
+   realized voltage averaged over the previous and the ongoing sampling periods.
+   Before the modulation, the angle of the voltage reference is advanced by
+   `k_comp*T_s*w_c`, where `k_comp` is given by the inner controller. The value 1.5
+   compensates for the computational delay of one sampling period and the delay of
+   half a sampling period caused by the zero-order hold of the PWM [#Bae2003]_. The
+   value 0 means that the angle is not advanced, which is used if the controller takes
+   the delays into account itself, e.g., in a direct discrete-time design.
+
+   :param pwm: Pulse-width modulator.
+   :type pwm: PWM
+   :param k_comp: Angle-advance factor of the voltage reference.
+   :type k_comp: float
+
+   .. rubric:: References
+
+   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+      2003, https://doi.org/10.1109/TIA.2003.810660
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: get_command(ref)
+
+      
+      Extract the sampling period and the duty ratios from the references.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: modulate(T_s, u_ref, fbk)
+
+      
+      Compute the duty ratios from the voltage reference.
+
+      The reference is in the controller coordinates. Its angle is advanced by
+      `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an
+      output filter.
 
 
 

@@ -477,7 +477,7 @@
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Inputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LCFilterInputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Input variables."""</span>
 
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -485,7 +485,7 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Outputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LCFilterOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Output variables for interconnection."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
@@ -493,7 +493,7 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">States</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LCFilterStates</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""State variables."""</span>
 
     <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -521,9 +521,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">L_f</span> <span class="o">=</span> <span class="n">L_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C_f</span> <span class="o">=</span> <span class="n">C_f</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">R_f</span> <span class="o">=</span> <span class="n">R_f</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">States</span> <span class="o">=</span> <span class="n">States</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">LCFilterStates</span> <span class="o">=</span> <span class="n">LCFilterStates</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">LCFilterInputs</span> <span class="o">=</span> <span class="n">LCFilterInputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">LCFilterOutputs</span> <span class="o">=</span> <span class="n">LCFilterOutputs</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="LCFilter.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.LCFilter.set_outputs">[docs]</a>

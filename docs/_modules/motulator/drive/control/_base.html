@@ -473,7 +473,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Protocol</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlSystem</span><span class="p">,</span> <span class="n">TimeSeries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConverterControlSystem</span><span class="p">,</span>
+    <span class="n">ConverterFeedbacks</span><span class="p">,</span>
+    <span class="n">TimeSeries</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span><span class="p">,</span> <span class="n">RateLimiter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PWM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">abc2complex</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">wrap</span>
@@ -589,24 +593,14 @@
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="DriveControlSystem">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DriveControlSystem</span><span class="p">(</span><span class="n">ControlSystem</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DriveControlSystem</span><span class="p">(</span><span class="n">ConverterControlSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for drive control systems.</span>
 
-<span class="sd">    This class implements the parts common to the drive control systems: the feedback</span>
-<span class="sd">    voltages, the modulation, and the speed reference. Subclasses implement</span>
-<span class="sd">    `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`,</span>
-<span class="sd">    `_compute_inner_output`, and `_compute_inner_standby_output`.</span>
-
-<span class="sd">    The inner controller gets the realized voltage of the ongoing sampling period for</span>
-<span class="sd">    its observer, while the feedback voltage `u_s` for the control laws is the realized</span>
-<span class="sd">    voltage averaged over the previous and the ongoing sampling periods. Before the</span>
-<span class="sd">    modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,</span>
-<span class="sd">    where `k_comp` is given by the inner controller. The value 1.5 compensates for the</span>
-<span class="sd">    computational delay of one sampling period and the delay of half a sampling period</span>
-<span class="sd">    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the</span>
-<span class="sd">    angle is not advanced, which is used if the controller takes the delays into account</span>
-<span class="sd">    itself, e.g., in a direct discrete-time design.</span>
+<span class="sd">    This class extends `ConverterControlSystem` with the parts common to the drive</span>
+<span class="sd">    control systems: the feedback signals, the speed reference, and the standby.</span>
+<span class="sd">    Subclasses implement `get_measurement`, `update`, `post_process`, and the hooks</span>
+<span class="sd">    `_get_inner_feedback`, `_compute_inner_output`, and `_compute_inner_standby_output`.</span>
 
 <span class="sd">    While the gates are blocked (see `set_enable`), the control system is in standby:</span>
 <span class="sd">    the observers run on their open-circuit model, since the converter voltage is</span>
@@ -620,18 +614,10 @@
 <span class="sd">    k_comp : float</span>
 <span class="sd">        Angle-advance factor of the voltage reference.</span>
 
-<span class="sd">    References</span>
-<span class="sd">    ----------</span>
-<span class="sd">    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital</span>
-<span class="sd">       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,</span>
-<span class="sd">       2003, https://doi.org/10.1109/TIA.2003.810660</span>
-
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pwm</span><span class="p">:</span> <span class="n">PWM</span><span class="p">,</span> <span class="n">k_comp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span> <span class="o">=</span> <span class="n">pwm</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">=</span> <span class="n">k_comp</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pwm</span><span class="p">,</span> <span class="n">k_comp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ext_ref</span> <span class="o">=</span> <span class="n">ExternalReferences</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DriveControlSystem.set_speed_ref">
@@ -671,15 +657,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.get_feedback">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Feedbacks</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals."""</span>
-        <span class="c1"># The observers use the voltage of the ongoing sampling period, while the</span>
-        <span class="c1"># control laws use the voltage averaged over the previous and ongoing periods.</span>
-        <span class="c1"># The realized voltage is computed also with blocked gates, since it passes</span>
-        <span class="c1"># the measured currents to the PWM for the feedforward compensation of the</span>
-        <span class="c1"># duty ratios applied after the release.</span>
-        <span class="n">u_c_ab_zoh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span>
-            <span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span>
-        <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">get_realized_voltage</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
+        <span class="n">u_c_ab_zoh</span><span class="p">,</span> <span class="n">u_c_ab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_realized_voltages</span><span class="p">(</span><span class="n">meas</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="n">meas</span><span class="o">.</span><span class="n">u_dc</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standby</span><span class="p">():</span>
             <span class="c1"># The voltage is unknown with blocked gates, so the observers run on their</span>
             <span class="c1"># open-circuit model, whose voltage is used for the control laws too</span>
@@ -706,35 +684,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_inner_standby_output</span><span class="p">(</span><span class="n">fbk</span><span class="p">),</span> <span class="n">fbk</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DriveControlSystem.get_command">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.get_command">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">"""Extract the sampling period and the duty ratios from the references."""</span>
-        <span class="k">return</span> <span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span></div>
-
-
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_duty_ratios</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref</span><span class="p">:</span> <span class="n">References</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the duty ratios and the limited voltage reference."""</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">ref</span><span class="o">.</span><span class="n">T_s</span><span class="p">,</span> <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_s_lim</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="o">.</span><span class="n">limited_voltage</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span>
-        <span class="k">return</span> <span class="n">ref</span>
-
-<div class="viewcode-block" id="DriveControlSystem.modulate">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.DriveControlSystem.modulate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Compute the duty ratios from the stator voltage reference.</span>
-
-<span class="sd">        The reference is in the controller coordinates. Its angle is advanced by</span>
-<span class="sd">        `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an</span>
-<span class="sd">        output filter between the converter and the machine.</span>
-
-<span class="sd">        """</span>
-        <span class="n">u_s_ab_ref</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">theta_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">u_s_ref</span>
-        <span class="n">u_s_ab_ref</span> <span class="o">*=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_comp</span> <span class="o">*</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pwm</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ab_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">u_dc</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span></div>
-</div>
+        <span class="k">return</span> <span class="n">ref</span></div>
 
 
 
@@ -868,11 +823,13 @@
 
 <div class="viewcode-block" id="VectorControlSystem.modulate">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.VectorControlSystem.modulate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_ref</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ConverterFeedbacks</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Compute the duty ratios, the zero vector in standby if sensorless."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vector_ctrl</span><span class="o">.</span><span class="n">sensorless</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_standby</span><span class="p">():</span>
-            <span class="n">u_s_ref</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_s_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span></div>
+            <span class="n">u_ref</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">u_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="VectorControlSystem.update">

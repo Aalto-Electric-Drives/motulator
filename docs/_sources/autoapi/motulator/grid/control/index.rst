@@ -660,7 +660,7 @@ Package Contents
 
 .. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None, pwm = None)
 
-   Bases: :py:obj:`motulator.common.control._base.ControlSystem`
+   Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`
 
 
    
@@ -668,17 +668,8 @@ Package Contents
 
    This class defines the interface for control systems of grid converters. It is a
    generic class that can be used with different models, measurements, feedback
-   signals, and reference signals.
-
-   The inner controller gets the realized voltage of the ongoing sampling period for
-   its observer, while the feedback voltage `u_c` for the control laws is the realized
-   voltage averaged over the previous and the ongoing sampling periods. Before the
-   modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
-   where `k_comp` is given by the inner controller. The value 1.5 compensates for the
-   computational delay of one sampling period and the delay of half a sampling period
-   caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
-   angle is not advanced, which is used if the controller takes the delays into account
-   itself.
+   signals, and reference signals. The feedback voltages and the modulation are
+   described in `ConverterControlSystem`.
 
    :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference and a
                       grid-following controller the reactive power reference. A DC-bus-forming
@@ -691,12 +682,6 @@ Package Contents
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
    :type pwm: PWM, optional
-
-   .. rubric:: References
-
-   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-      2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 
@@ -743,30 +728,6 @@ Package Contents
 
       
       Compute controller output while the gates are blocked.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: get_command(ref)
-
-      
-      Extract the sampling period and the duty ratios from the references.
 
 
 

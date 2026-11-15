@@ -450,26 +450,16 @@ Module Contents
 
 .. py:class:: DriveControlSystem(pwm, k_comp)
 
-   Bases: :py:obj:`motulator.common.control._base.ControlSystem`
+   Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`
 
 
    
    Base class for drive control systems.
 
-   This class implements the parts common to the drive control systems: the feedback
-   voltages, the modulation, and the speed reference. Subclasses implement
-   `get_measurement`, `update`, `post_process`, and the hooks `_get_inner_feedback`,
-   `_compute_inner_output`, and `_compute_inner_standby_output`.
-
-   The inner controller gets the realized voltage of the ongoing sampling period for
-   its observer, while the feedback voltage `u_s` for the control laws is the realized
-   voltage averaged over the previous and the ongoing sampling periods. Before the
-   modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
-   where `k_comp` is given by the inner controller. The value 1.5 compensates for the
-   computational delay of one sampling period and the delay of half a sampling period
-   caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
-   angle is not advanced, which is used if the controller takes the delays into account
-   itself, e.g., in a direct discrete-time design.
+   This class extends `ConverterControlSystem` with the parts common to the drive
+   control systems: the feedback signals, the speed reference, and the standby.
+   Subclasses implement `get_measurement`, `update`, `post_process`, and the hooks
+   `_get_inner_feedback`, `_compute_inner_output`, and `_compute_inner_standby_output`.
 
    While the gates are blocked (see `set_enable`), the control system is in standby:
    the observers run on their open-circuit model, since the converter voltage is
@@ -480,12 +470,6 @@ Module Contents
    :type pwm: PWM
    :param k_comp: Angle-advance factor of the voltage reference.
    :type k_comp: float
-
-   .. rubric:: References
-
-   .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-      synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-      2003, https://doi.org/10.1109/TIA.2003.810660
 
 
 
@@ -552,62 +536,11 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_command(ref)
-
-      
-      Extract the sampling period and the duty ratios from the references.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: get_feedback(meas)
 
       
       Get feedback signals.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: modulate(T_s, u_s_ref, fbk)
-
-      
-      Compute the duty ratios from the stator voltage reference.
-
-      The reference is in the controller coordinates. Its angle is advanced by
-      `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an
-      output filter between the converter and the machine.
 
 
 
@@ -2569,7 +2502,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: modulate(T_s, u_s_ref, fbk)
+   .. py:method:: modulate(T_s, u_ref, fbk)
 
       
       Compute the duty ratios, the zero vector in standby if sensorless.

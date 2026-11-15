@@ -485,7 +485,7 @@
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Inputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ACFilterInputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""AC filter inputs."""</span>
 
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -544,7 +544,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">R_g</span> <span class="o">=</span> <span class="n">R_g</span>
         <span class="c1"># The inputs are needed for the initial PCC voltage, which has direct</span>
         <span class="c1"># feedthrough</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">ACFilterInputs</span> <span class="o">=</span> <span class="n">ACFilterInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">LFilterStates</span> <span class="o">=</span> <span class="n">LFilterStates</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">LFilterOutputs</span> <span class="o">=</span> <span class="n">LFilterOutputs</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pcc_voltage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">)</span>
@@ -697,7 +697,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">LCLFilterStates</span> <span class="o">=</span> <span class="n">LCLFilterStates</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_f0_ab</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
         <span class="c1"># The inputs, consistent with the initial capacitor voltage, are needed for the</span>
         <span class="c1"># initial PCC voltage, which has direct feedthrough</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">(</span><span class="n">u_f0_ab</span><span class="p">,</span> <span class="n">u_f0_ab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">ACFilterInputs</span> <span class="o">=</span> <span class="n">ACFilterInputs</span><span class="p">(</span><span class="n">u_f0_ab</span><span class="p">,</span> <span class="n">u_f0_ab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">LCLFilterOutputs</span> <span class="o">=</span> <span class="n">LCLFilterOutputs</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">i_c_ab</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">u_f_ab</span><span class="p">,</span>

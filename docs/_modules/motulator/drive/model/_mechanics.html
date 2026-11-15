@@ -479,7 +479,7 @@
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Inputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MechanicsInputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Input variables."""</span>
 
     <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -487,7 +487,7 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Outputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MechanicsOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Output variables for interconnection."""</span>
 
     <span class="n">theta_M</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Mechanical rotor angle (rad)</span>
@@ -495,8 +495,8 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">States</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""State variables for mechanical systems."""</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MechanicalSystemStates</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""State variables."""</span>
 
     <span class="n">theta_M</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Imaginary part always zero</span>
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -521,9 +521,9 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">B_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">States</span> <span class="o">=</span> <span class="n">States</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MechanicsInputs</span> <span class="o">=</span> <span class="n">MechanicsInputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">MechanicalSystemStates</span> <span class="o">=</span> <span class="n">MechanicalSystemStates</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">MechanicsOutputs</span> <span class="o">=</span> <span class="n">MechanicsOutputs</span><span class="p">(</span>
             <span class="n">theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">J</span> <span class="o">=</span> <span class="n">J</span>
@@ -670,8 +670,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span> <span class="o">=</span> <span class="n">C_S</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">B_L</span> <span class="o">=</span> <span class="n">B_L</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">TwoMassMechanicalSystemStates</span> <span class="o">=</span> <span class="n">TwoMassMechanicalSystemStates</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MechanicsInputs</span> <span class="o">=</span> <span class="n">MechanicsInputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">MechanicsOutputs</span> <span class="o">=</span> <span class="n">MechanicsOutputs</span><span class="p">(</span>
             <span class="n">theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">w_M</span><span class="o">.</span><span class="n">real</span>
         <span class="p">)</span>
 
@@ -800,9 +800,11 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">Inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MechanicsInputs</span> <span class="o">=</span> <span class="n">MechanicsInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">ExternalRotorSpeedStates</span> <span class="o">=</span> <span class="n">ExternalRotorSpeedStates</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">MechanicsOutputs</span> <span class="o">=</span> <span class="n">MechanicsOutputs</span><span class="p">(</span>
+            <span class="n">theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># External input</span>
 
 <div class="viewcode-block" id="ExternalRotorSpeed.set_external_rotor_speed">

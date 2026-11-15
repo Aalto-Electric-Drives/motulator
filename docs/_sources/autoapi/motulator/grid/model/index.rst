@@ -712,7 +712,7 @@ Package Contents
    :type u_g: Sensor, optional
    :param u_dc: DC-bus voltage sensor.
    :type u_dc: Sensor, optional
-   :param i_dc: Current sensor of the DC load, which measures its output `i_dc`, i.e., the
+   :param i_dc: Current sensor of the DC-bus load, which measures its output `i_dc`, i.e., the
                 current fed to the DC bus. Defaults to None, i.e., no sensor.
    :type i_dc: Sensor, optional
 
@@ -733,7 +733,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, dc_load = None, sensors = None)
+.. py:class:: GridConverterSystem(converter, ac_filter, ac_source, dc_bus = None, dc_bus_load = None, sensors = None)
 
    Bases: :py:obj:`motulator.common.model._base.Model`\ [\ :py:obj:`C`\ ]
 
@@ -753,11 +753,11 @@ Package Contents
                   a drive), see `CompositeModel`. Defaults to None, in which case the converter
                   has a constant DC-bus voltage.
    :type dc_bus: DCBus, optional
-   :param dc_load: Load connected to the DC bus, e.g., a battery or an electrolyzer, named
-                   `dc_load` in the results. Its input `u_dc` is the DC-bus voltage and its output
-                   `i_dc` the current fed to the DC bus (negative when drawn), which replaces the
-                   external current of the DC bus. Defaults to None.
-   :type dc_load: Subsystem, optional
+   :param dc_bus_load: Load connected to the DC bus, e.g., a battery or an electrolyzer, named
+                       `dc_bus_load` in the results. Its input `u_dc` is the DC-bus voltage and its
+                       output `i_dc` the current fed to the DC bus (negative when drawn), which
+                       replaces the external current of the DC bus. Defaults to None.
+   :type dc_bus_load: Subsystem, optional
    :param sensors: Sensors, which the control system samples, defaults to ideal sensors. They are
                    the subsystems `i_c_sensor`, `u_g_sensor`, `u_dc_sensor`, and, if given,
                    `i_dc_sensor` of the model, connected to the signals they measure.

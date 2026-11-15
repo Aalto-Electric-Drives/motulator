@@ -520,7 +520,7 @@
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Outputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DiodeBridgeOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Output variables for interconnection."""</span>
 
     <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span>
@@ -567,7 +567,9 @@
         <span class="c1"># The inputs are extended by `VoltageSourceConverter`, so their type is not</span>
         <span class="c1"># declared here</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span> <span class="o">=</span> <span class="n">DiodeBridgeInputs</span><span class="p">(</span><span class="n">u_dc</span><span class="o">=</span><span class="n">u_dc</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Outputs</span><span class="p">(</span><span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="n">u_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u_dc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">DiodeBridgeOutputs</span> <span class="o">=</span> <span class="n">DiodeBridgeOutputs</span><span class="p">(</span>
+            <span class="n">u_c_ab</span><span class="o">=</span><span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="n">u_dc</span><span class="o">=</span><span class="mf">0.0</span> <span class="k">if</span> <span class="n">u_dc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">u_dc</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ac_load</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Set by the model</span>
         <span class="c1"># DC load of a current-fed bridge, set by the model</span>
