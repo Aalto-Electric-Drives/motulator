@@ -9,8 +9,7 @@ import numpy as np
 from scipy.optimize import root_scalar
 
 from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
+    BaseSynchronousMachineControlPars,
     aux_current,
     aux_flux,
 )
@@ -65,8 +64,7 @@ class ControlLoci:
 
     Parameters
     ----------
-    par : ~motulator.drive.model.SynchronousMachinePars \
-        | ~motulator.drive.model.SaturatedSynchronousMachinePars
+    par : ~motulator.drive.control.sm.BaseSynchronousMachineControlPars
         Machine model parameters.
 
     Notes
@@ -92,9 +90,7 @@ class ControlLoci:
 
     """
 
-    def __init__(
-        self, par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-    ) -> None:
+    def __init__(self, par: BaseSynchronousMachineControlPars) -> None:
         self.par = par
 
     def compute_mtpa_current_angle(self, i_s_abs: float) -> float:

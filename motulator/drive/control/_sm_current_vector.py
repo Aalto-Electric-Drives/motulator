@@ -16,94 +16,7 @@ from motulator.drive.control._sm_reference_gen import (
     ReferenceGenerator,
     ReferenceGeneratorOnline,
 )
-from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
-)
-
-
-# %%
-class CurrentController(ComplexPIController):
-    """
-    Current controller for synchronous machines.
-
-    This provides an interface of a current controller for synchronous machines
-    [#Awa2019a]_. The gains are initialized based on the desired closed-loop bandwidth
-    and the inductances (or nonlinear flux linkage maps).
-
-    Parameters
-    ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
-        Machine model parameters.
-    alpha_c : float
-        Reference-tracking bandwidth (rad/s).
-    alpha_i : float, optional
-        Integral-action bandwidth (rad/s), defaults to `alpha_c`.
-
-    References
-    ----------
-    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
-       saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
-       https://doi.org/10.1109/TIA.2019.2919258
-
-    """
-
-    def __init__(
-        self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-        alpha_c: float,
-        alpha_i: float | None = None,
-    ) -> None:
-        self.par = par
-        alpha_i = alpha_c if alpha_i is None else alpha_i
-        k_t = alpha_c
-        k_i = alpha_c * alpha_i
-        k_p = alpha_c + alpha_i
-        super().__init__(k_p, k_i, k_t)
-
-    def compute_output(self, i_ref: complex, i: complex, u_ff: complex = 0j) -> complex:
-        # Extends the base class method by mapping the currents to the flux linkages,
-        # which is a simple way to take saliency and magnetic saturation into account.
-        psi_ref = complex(self.par.psi_s_dq(i_ref)) - self.par.psi_f
-        psi = complex(self.par.psi_s_dq(i)) - self.par.psi_f
-        return super().compute_output(psi_ref, psi, u_ff)
-
-
-# %%
-class DiscreteCurrentController(DiscreteComplexController):
-    """
-    Direct discrete-time current controller for synchronous machines.
-
-    This implements the flux-linkage-based current controller designed directly in
-    discrete time [#Awa2019a]_. As in `CurrentController`, the currents are mapped to
-    the flux linkages. Since the design includes the delays, the angle of the voltage
-    reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
-
-    Parameters
-    ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
-        Machine model parameters.
-    alpha_c : float
-        Reference-tracking bandwidth (rad/s).
-    T_s : float
-        Sampling period (s).
-
-    """
-
-    def __init__(
-        self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-        alpha_c: float,
-        T_s: float,
-    ) -> None:
-        self.par = par
-        super().__init__(alpha_c, T_s)
-
-    def compute_output(self, i_ref: complex, i: complex) -> complex:
-        # Extends the base class method by mapping the currents to the flux linkages
-        psi_ref = complex(self.par.psi_s_dq(i_ref)) - self.par.psi_f
-        psi = complex(self.par.psi_s_dq(i)) - self.par.psi_f
-        return super().compute_output(psi_ref, psi)
+from motulator.drive.utils._parameters import BaseSynchronousMachineControlPars
 
 
 # %%
@@ -182,19 +95,28 @@ class CurrentVectorController:
     """
     Current vector controller for synchronous machine drives.
 
+    The currents are mapped to the flux linkages by the flux linkage map, and the flux
+    linkages are controlled by the 2DOF PI controller or, if `discrete` is True, by the
+    direct discrete-time controller. The saliency and the magnetic saturation are thus
+    taken into account [#Awa2019a]_.
+
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector control configuration.
 
+    References
+    ----------
+    .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+       saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
+       https://doi.org/10.1109/TIA.2019.2919258
+
     """
 
     def __init__(
-        self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-        cfg: CurrentVectorControllerCfg,
+        self, par: BaseSynchronousMachineControlPars, cfg: CurrentVectorControllerCfg
     ) -> None:
         reference_generator = (
             ReferenceGeneratorOnline if cfg.online_ref else ReferenceGenerator
@@ -208,11 +130,15 @@ class CurrentVectorController:
             cfg.k_mtpv,
             cfg.alpha_ref,
         )
-        self.current_ctrl: CurrentController | DiscreteCurrentController
+        # Controllers of the flux linkages
+        self.current_ctrl: ComplexPIController | DiscreteComplexController
         if cfg.discrete:
-            self.current_ctrl = DiscreteCurrentController(par, cfg.alpha_c, cfg.T_s)
+            self.current_ctrl = DiscreteComplexController(cfg.alpha_c, cfg.T_s)
         else:
-            self.current_ctrl = CurrentController(par, cfg.alpha_c, cfg.alpha_i)
+            alpha_i = cfg.alpha_c if cfg.alpha_i is None else cfg.alpha_i
+            self.current_ctrl = ComplexPIController(
+                k_p=cfg.alpha_c + alpha_i, k_i=cfg.alpha_c * alpha_i, k_t=cfg.alpha_c
+            )
         self.observer = create_speed_flux_observer(
             par, cfg.alpha_o, cfg.T_s, cfg.k_o, cfg.k_f, cfg.sensorless, cfg.J
         )
@@ -249,7 +175,10 @@ class CurrentVectorController:
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
         ref.i_s = self.reference_gen.compute_current_ref(ref.tau_M)
-        ref.u_s = self.current_ctrl.compute_output(ref.i_s, fbk.i_s)
+        # Map the currents to the flux linkages
+        psi_s_ref = complex(self.par.psi_s_dq(ref.i_s)) - self.par.psi_f
+        psi_s = complex(self.par.psi_s_dq(fbk.i_s)) - self.par.psi_f
+        ref.u_s = self.current_ctrl.compute_output(psi_s_ref, psi_s)
         return ref
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:

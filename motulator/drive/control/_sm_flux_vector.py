@@ -21,8 +21,7 @@ from motulator.drive.control._sm_reference_gen import (
     ReferenceGeneratorOnline,
 )
 from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
+    BaseSynchronousMachineControlPars,
     aux_current,
 )
 
@@ -34,7 +33,7 @@ class FluxTorqueController(FluxTorqueControllerBase):
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     alpha_psi : float
         Flux-control bandwidth (rad/s).
@@ -47,7 +46,7 @@ class FluxTorqueController(FluxTorqueControllerBase):
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         alpha_psi: float,
         alpha_tau: float,
         alpha_i: float = 0.0,
@@ -154,7 +153,7 @@ class FluxVectorController:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : FluxVectorControllerCfg
         Flux-vector control configuration.
@@ -179,9 +178,7 @@ class FluxVectorController:
     k_comp = 1.5
 
     def __init__(
-        self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-        cfg: FluxVectorControllerCfg,
+        self, par: BaseSynchronousMachineControlPars, cfg: FluxVectorControllerCfg
     ) -> None:
         reference_generator = (
             ReferenceGeneratorOnline if cfg.online_ref else ReferenceGenerator
@@ -207,6 +204,7 @@ class FluxVectorController:
         self.par = par
         self.sensorless = cfg.sensorless
         self.online_ref = cfg.online_ref
+        self.T_s = cfg.T_s
 
     def get_feedback(
         self,
@@ -222,7 +220,7 @@ class FluxVectorController:
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
         """Compute references."""
-        ref = References(T_s=self.cfg.T_s, tau_M=tau_M_ref)
+        ref = References(T_s=self.T_s, tau_M=tau_M_ref)
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             ref.tau_M, fbk.w_m, fbk.u_dc
         )
@@ -298,7 +296,7 @@ class ObserverBasedVHzController:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : ObserverBasedVHzControllerCfg
         Observer-based V/Hz control configuration.
@@ -308,10 +306,9 @@ class ObserverBasedVHzController:
     k_comp = 1.5
 
     def __init__(
-        self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
-        cfg: ObserverBasedVHzControllerCfg,
+        self, par: BaseSynchronousMachineControlPars, cfg: ObserverBasedVHzControllerCfg
     ) -> None:
+        self.par = par
         self.cfg = cfg
         self.reference_gen = ReferenceGenerator(
             par, cfg.i_s_max, cfg.psi_s_min, cfg.psi_s_max, cfg.k_u, cfg.k_mtpv, 0.0
@@ -331,7 +328,7 @@ class ObserverBasedVHzController:
 
     def compute_output(self, fbk: ObserverOutputs) -> References:
         """Calculate references."""
-        ref = References(T_s=self.cfg.T_s)
+        ref = References(T_s=self.T_s)
         ref.psi_s, ref.tau_M = self.reference_gen.compute_flux_and_torque_refs(
             self.tau_M_lpf, fbk.w_m, fbk.u_dc
         )
@@ -341,7 +338,7 @@ class ObserverBasedVHzController:
     def compute_standby_output(self, fbk: ObserverOutputs) -> References:
         """Compute references while the gates are blocked."""
         # The flux and torque controller tracks the estimated flux and torque
-        ref = References(T_s=self.cfg.T_s, tau_M=fbk.tau_M, psi_s=abs(fbk.psi_s))
+        ref = References(T_s=self.T_s, tau_M=fbk.tau_M, psi_s=abs(fbk.psi_s))
         ref.u_s = self.flux_torque_ctrl.compute_output(ref.psi_s, ref.tau_M, fbk)
         return ref
 

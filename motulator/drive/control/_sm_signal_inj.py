@@ -10,10 +10,7 @@ from motulator.drive.control._sm_current_vector import (
     CurrentVectorControllerCfg,
 )
 from motulator.drive.control._sm_observers import ObserverOutputs, default_alpha_o
-from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
-)
+from motulator.drive.utils._parameters import BaseSynchronousMachineControlPars
 
 
 # %%
@@ -28,7 +25,7 @@ class SquareWaveInjection:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     U_inj : float
         Injected voltage amplitude (V).
@@ -41,7 +38,7 @@ class SquareWaveInjection:
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         U_inj: float,
         T_s: float,
         N_inj: int = 1,
@@ -111,7 +108,7 @@ class SignalInjectionObserver:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     alpha_o : float
         Pole location (rad/s).
@@ -129,7 +126,7 @@ class SignalInjectionObserver:
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         alpha_o: float,
         U_inj: float,
         T_s: float,
@@ -215,7 +212,7 @@ class SignalInjectionController(CurrentVectorController):
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
         Current-vector control configuration. The drive is always sensorless, and the
@@ -250,7 +247,7 @@ class SignalInjectionController(CurrentVectorController):
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         cfg: CurrentVectorControllerCfg,
         U_inj: float = 250,
         N_inj: int = 1,
