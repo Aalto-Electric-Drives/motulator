@@ -10,6 +10,7 @@ maxdepth: 2
 speed_ctrl
 current_ctrl
 flux_vector_ctrl
+vhz_ctrl
 observers
 reference_gen
 ```
