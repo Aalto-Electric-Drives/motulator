@@ -18,7 +18,7 @@ from motulator.common.utils._utils import empty_array
 
 # %%
 @dataclass
-class Inputs:
+class ACFilterInputs:
     """AC filter inputs."""
 
     u_c_ab: complex = 0j
@@ -75,7 +75,7 @@ class LFilter(Subsystem):
         self.R_g = R_g
         # The inputs are needed for the initial PCC voltage, which has direct
         # feedthrough
-        self.inp: Inputs = Inputs()
+        self.inp: ACFilterInputs = ACFilterInputs()
         self.state: LFilterStates = LFilterStates()
         self.out: LFilterOutputs = LFilterOutputs(
             self.state.i_c_ab, self._pcc_voltage(self.state, self.inp)
@@ -213,7 +213,7 @@ class LCLFilter(Subsystem):
         self.state: LCLFilterStates = LCLFilterStates(0j, u_f0_ab, 0j)
         # The inputs, consistent with the initial capacitor voltage, are needed for the
         # initial PCC voltage, which has direct feedthrough
-        self.inp: Inputs = Inputs(u_f0_ab, u_f0_ab)
+        self.inp: ACFilterInputs = ACFilterInputs(u_f0_ab, u_f0_ab)
         self.out: LCLFilterOutputs = LCLFilterOutputs(
             self.state.i_c_ab,
             self.state.u_f_ab,

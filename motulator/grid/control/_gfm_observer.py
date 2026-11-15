@@ -124,7 +124,7 @@ class Observer:
 
 
 # %%
-@dataclass
+@dataclass(kw_only=True)
 class ObserverBasedGridFormingControllerCfg:
     """
     Disturbance-observer-based grid-forming controller configuration.

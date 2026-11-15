@@ -12,7 +12,7 @@ from motulator.common.utils._utils import empty_array, get_value, wrap
 
 # %%
 @dataclass
-class Inputs:
+class MechanicsInputs:
     """Input variables."""
 
     tau_M: float = 0.0
@@ -20,7 +20,7 @@ class Inputs:
 
 
 @dataclass
-class Outputs:
+class MechanicsOutputs:
     """Output variables for interconnection."""
 
     theta_M: float  # Mechanical rotor angle (rad)
@@ -28,8 +28,8 @@ class Outputs:
 
 
 @dataclass
-class States:
-    """State variables for mechanical systems."""
+class MechanicalSystemStates:
+    """State variables."""
 
     theta_M: complex = 0j  # Imaginary part always zero
     w_M: complex = 0j
@@ -52,9 +52,9 @@ class MechanicalSystem(Subsystem):
     """
 
     def __init__(self, J: float, B_L: float | Callable[[float], float] = 0.0) -> None:
-        self.inp: Inputs = Inputs()
-        self.state: States = States()
-        self.out: Outputs = Outputs(
+        self.inp: MechanicsInputs = MechanicsInputs()
+        self.state: MechanicalSystemStates = MechanicalSystemStates()
+        self.out: MechanicsOutputs = MechanicsOutputs(
             theta_M=self.state.theta_M.real, w_M=self.state.w_M.real
         )
         self.J = J
@@ -180,8 +180,8 @@ class TwoMassMechanicalSystem(Subsystem):
         self.C_S = C_S
         self.B_L = B_L
         self.state: TwoMassMechanicalSystemStates = TwoMassMechanicalSystemStates()
-        self.inp: Inputs = Inputs()
-        self.out: Outputs = Outputs(
+        self.inp: MechanicsInputs = MechanicsInputs()
+        self.out: MechanicsOutputs = MechanicsOutputs(
             theta_M=self.state.theta_M.real, w_M=self.state.w_M.real
         )
 
@@ -289,9 +289,11 @@ class ExternalRotorSpeed(Subsystem):
     """
 
     def __init__(self) -> None:
-        self.inp: Inputs = Inputs()
+        self.inp: MechanicsInputs = MechanicsInputs()
         self.state: ExternalRotorSpeedStates = ExternalRotorSpeedStates()
-        self.out: Outputs = Outputs(theta_M=self.state.theta_M.real, w_M=0.0)
+        self.out: MechanicsOutputs = MechanicsOutputs(
+            theta_M=self.state.theta_M.real, w_M=0.0
+        )
         self.w_M: float | Callable[[float], float] = 0.0  # External input
 
     def set_external_rotor_speed(self, w_M: float | Callable[[float], float]) -> None:

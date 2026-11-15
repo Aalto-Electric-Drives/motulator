@@ -12,14 +12,14 @@ from motulator.common.utils._utils import empty_array, get_value, wrap
 
 
 @dataclass
-class States:
+class ThreePhaseSourceStates:
     """State variables."""
 
     theta_g: complex = 0j  # Angle (rad), imaginary part always zero
 
 
 @dataclass
-class Outputs:
+class ThreePhaseSourceOutputs:
     """Output variables."""
 
     e_g_ab: complex = complex(1)
@@ -68,8 +68,8 @@ class ThreePhaseSource(Subsystem):
         self.e_g_neg = e_g_neg
         self.phi_neg = phi_neg
         self.inp = None
-        self.state: States = States()
-        self.out: Outputs = Outputs()
+        self.state: ThreePhaseSourceStates = ThreePhaseSourceStates()
+        self.out: ThreePhaseSourceOutputs = ThreePhaseSourceOutputs()
 
     def generate_space_vector(self, t: Any, exp_j_theta_g: Any) -> Any:
         """Generate the space vector in stationary coordinates."""

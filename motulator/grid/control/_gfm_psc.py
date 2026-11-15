@@ -23,7 +23,7 @@ class Feedbacks:
     u_dc: float = 0.0  # DC-bus voltage (set by the control system)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class PowerSynchronizationControllerCfg:
     """
     Configuration for the reference-feedforward power-synchronization controller.

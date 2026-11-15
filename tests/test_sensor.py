@@ -203,18 +203,18 @@ class ResistiveLoad(Subsystem):
         raise NotImplementedError  # Not simulated
 
 
-def test_dc_load_current_sensor() -> None:
-    """The current sensor of the DC load measures the current that the load feeds to
-    the DC bus, and it requires a DC load."""
+def test_dc_bus_load_current_sensor() -> None:
+    """The current sensor of the DC-bus load measures the current that the load feeds
+    to the DC bus, and it requires the load."""
     sensor = Sensor(gain=2.0)
 
-    def system(dc_load: Subsystem | None) -> GridConverterSystem:
+    def system(dc_bus_load: Subsystem | None) -> GridConverterSystem:
         return GridConverterSystem(
             VoltageSourceConverter(),
             LFilter(L_f=1e-3),
             ThreePhaseSource(w_g=2 * pi * 50, e_g=325.0),
             dc_bus=DCBus(C_dc=1e-3, u_dc=600.0),
-            dc_load=dc_load,
+            dc_bus_load=dc_bus_load,
             sensors=GridConverterSensors(i_dc=sensor),
         )
 
