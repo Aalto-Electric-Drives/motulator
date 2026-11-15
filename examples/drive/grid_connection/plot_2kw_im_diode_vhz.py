@@ -2,8 +2,8 @@
 2.2-kW IM, diode bridge, V/Hz control
 =====================================
 
-This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM)
-drive, fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid
+This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive,
+fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid
 through an AC choke.
 
 """

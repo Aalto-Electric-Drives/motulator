@@ -53,7 +53,7 @@ class VectorController[Ref, Fbk](Protocol):
     """Protocol defining the interface for vector controllers."""
 
     sensorless: bool
-    k_comp: float  # Angle-advance factor, see DriveControlSystem
+    k_comp: float  # Angle-advance factor, see ConverterControlSystem
 
     def get_feedback(
         self,
@@ -90,7 +90,7 @@ class VHzController[Ref, Fbk](Protocol):
     """Protocol defining the interface for V/Hz controllers."""
 
     T_s: float
-    k_comp: float  # Angle-advance factor, see DriveControlSystem
+    k_comp: float  # Angle-advance factor, see ConverterControlSystem
 
     def get_feedback(
         self, u_s_ab: complex | None, i_s_ab: complex, w_M_ref: float

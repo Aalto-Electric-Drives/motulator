@@ -51,7 +51,7 @@ class InnerController[Ref: References, Fbk](Protocol):
     # True: the controller takes the DC-bus voltage reference. False: it takes the
     # active power reference.
     dc_bus_forming: bool
-    k_comp: float  # Angle-advance factor, see GridConverterControlSystem
+    k_comp: float  # Angle-advance factor, see ConverterControlSystem
 
     def get_feedback(self, u_c_ab: complex, meas: Measurements) -> Fbk:
         """Get feedback signals, `u_c_ab` being the voltage of the ongoing period."""
