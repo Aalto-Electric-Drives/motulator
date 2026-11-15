@@ -9,10 +9,7 @@ from cycler import cycler
 
 from motulator.common.utils._plotting import save_and_show, set_style
 from motulator.common.utils._utils import BaseValues
-from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
-)
+from motulator.drive.utils._parameters import BaseSynchronousMachineControlPars
 from motulator.drive.utils._sm_control_loci import ControlLoci
 
 
@@ -41,15 +38,12 @@ class MachineCharacteristics:
 
     Parameters
     ----------
-    par : ~motulator.drive.model.SynchronousMachinePars \
-        | ~motulator.drive.model.SaturatedSynchronousMachinePars
+    par : ~motulator.drive.control.sm.BaseSynchronousMachineControlPars
         Machine parameters.
 
     """
 
-    def __init__(
-        self, par: SynchronousMachinePars | SaturatedSynchronousMachinePars
-    ) -> None:
+    def __init__(self, par: BaseSynchronousMachineControlPars) -> None:
         self.par = par
         self._loci = ControlLoci(par)
 

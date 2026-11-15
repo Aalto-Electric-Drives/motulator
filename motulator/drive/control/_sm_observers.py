@@ -10,8 +10,7 @@ from math import pi, sqrt
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
+    BaseSynchronousMachineControlPars,
     aux_flux,
 )
 
@@ -86,7 +85,7 @@ class FluxObserver:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     k_theta : float
         Rotor angle estimation gain (rad/s).
@@ -109,7 +108,7 @@ class FluxObserver:
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         k_theta: float,
         k_o: Callable[[float], float],
         k_f: Callable[[float], float],
@@ -244,7 +243,7 @@ class SpeedFluxObserver:
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     alpha_o : float
         Speed-estimation pole (rad/s).
@@ -263,7 +262,7 @@ class SpeedFluxObserver:
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         alpha_o: float,
         T_s: float,
         k_o: Callable[[float], float],
@@ -444,7 +443,7 @@ def _zero_k_f(w_m: float) -> float:
 
 
 def default_sensorless_k_o(
-    par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+    par: BaseSynchronousMachineControlPars,
 ) -> Callable[[float], float]:
     """Default observer gain for sensorless drives."""
     # Poles at zero speed are located at s = 0 and s = -2*sigma0
@@ -461,7 +460,7 @@ def default_alpha_o(sensorless: bool, J: float | None) -> float:
 
 
 def create_speed_flux_observer(
-    par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+    par: BaseSynchronousMachineControlPars,
     alpha_o: float | None,
     T_s: float,
     k_o: Callable[[float], float] | None = None,
@@ -477,7 +476,7 @@ def create_speed_flux_observer(
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     alpha_o : float | None
         Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless` is
@@ -516,7 +515,7 @@ def create_speed_flux_observer(
 
 
 def create_vhz_observer(
-    par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+    par: BaseSynchronousMachineControlPars,
     k_theta: float,
     k_o: Callable[[float], float] | None = None,
 ) -> FluxObserver:
@@ -525,7 +524,7 @@ def create_vhz_observer(
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     k_theta : float
         Angle estimation gain (rad/s).

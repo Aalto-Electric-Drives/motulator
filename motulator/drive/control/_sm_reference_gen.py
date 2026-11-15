@@ -7,8 +7,7 @@ from scipy.optimize import root_scalar
 
 from motulator.common.utils._utils import clip, sign
 from motulator.drive.utils._parameters import (
-    SaturatedSynchronousMachinePars,
-    SynchronousMachinePars,
+    BaseSynchronousMachineControlPars,
     aux_current,
     aux_flux,
     mat_vec,
@@ -24,7 +23,7 @@ class _ReferenceGeneratorBase:
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         psi_s_min: float | None,
         psi_s_max: float,
         k_u: float,
@@ -88,7 +87,7 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     i_s_max : float
         Maximum stator current (A).
@@ -124,7 +123,7 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         i_s_max: float,
         psi_s_min: float | None,
         psi_s_max: float,
@@ -246,7 +245,7 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
 
     Parameters
     ----------
-    par : SynchronousMachinePars | SaturatedSynchronousMachinePars
+    par : BaseSynchronousMachineControlPars
         Machine model parameters.
     i_s_max : float
         Maximum stator current (A).
@@ -266,7 +265,7 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
 
     def __init__(
         self,
-        par: SynchronousMachinePars | SaturatedSynchronousMachinePars,
+        par: BaseSynchronousMachineControlPars,
         i_s_max: float,
         psi_s_min: float | None,
         psi_s_max: float,

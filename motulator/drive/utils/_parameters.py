@@ -108,8 +108,36 @@ class BaseSynchronousMachinePars(Protocol):
 
 
 # %%
+class BaseSynchronousMachineControlPars(Protocol):
+    """
+    Base class for synchronous machine parameters, as used by the control systems.
+
+    The control systems use the flux linkage map of the machine in rotor coordinates.
+
+    """
+
+    n_p: int
+    R_s: float
+    psi_f: float
+
+    def psi_s_dq(self, i_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+        """Flux linkage (Vs) as a function of the stator current (A)."""
+        ...
+
+    def incr_ind_mat(self, i_s_dq: complex | np.ndarray) -> np.ndarray:
+        """Incremental inductance matrix (H) as a function of the stator current (A)."""
+        ...
+
+    def iterate_i_s_dq(self, psi_s_dq: complex) -> complex:
+        """Stator current (A) as a function of the flux linkage (Vs)."""
+        ...
+
+
+# %%
 @dataclass
-class SynchronousMachinePars(BaseSynchronousMachinePars):
+class SynchronousMachinePars(
+    BaseSynchronousMachinePars, BaseSynchronousMachineControlPars
+):
     """
     Synchronous machine parameters, without saturation.
 
@@ -172,7 +200,9 @@ class SynchronousMachinePars(BaseSynchronousMachinePars):
 
 # %%
 @dataclass
-class SaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
+class SaturatedSynchronousMachinePars(
+    BaseSynchronousMachinePars, BaseSynchronousMachineControlPars
+):
     """
     Parameters of a saturated synchronous machine.
 

@@ -13,10 +13,8 @@ from motulator.drive.control._common import (
     SpeedObserver,
 )
 from motulator.drive.control._sm_current_vector import (
-    CurrentController,
     CurrentVectorController,
     CurrentVectorControllerCfg,
-    DiscreteCurrentController,
 )
 from motulator.drive.control._sm_flux_vector import (
     FluxVectorController,
@@ -35,11 +33,13 @@ from motulator.drive.control._sm_reference_gen import (
 )
 from motulator.drive.control._sm_signal_inj import SignalInjectionController
 from motulator.drive.utils._parameters import (
+    BaseSynchronousMachineControlPars,
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
 
 __all__ = [
+    "BaseSynchronousMachineControlPars",
     "DriveControlSystem",
     "PWM",
     "InverterNonlinearity",
@@ -49,9 +49,7 @@ __all__ = [
     "VectorControlSystem",
     "FluxObserver",
     "SpeedFluxObserver",
-    "CurrentController",
     "CurrentVectorController",
-    "DiscreteCurrentController",
     "FluxVectorController",
     "FluxVectorControllerCfg",
     "ObserverBasedVHzController",

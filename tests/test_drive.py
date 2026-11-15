@@ -17,7 +17,7 @@ import pytest
 
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
-from motulator.common.control import InverterNonlinearity
+from motulator.common.control import DiscreteComplexController, InverterNonlinearity
 from motulator.drive import model
 from motulator.drive.control import _sm_flux_vector
 from motulator.drive.utils import ControlLoci, MagneticModel
@@ -464,8 +464,7 @@ def test_rotor_angle_with_long_solver_steps() -> None:
 def test_discrete_current_control(w: float) -> None:
     """Designed dynamics in the linear range and recovery from voltage limitation."""
     T_s, L, alpha_c = 200e-6, 0.01, 2 * pi * 500
-    par = sm_control.SynchronousMachinePars(n_p=1, R_s=0, L_d=L, L_q=L, psi_f=0)
-    ctrl = sm_control.DiscreteCurrentController(par, alpha_c, T_s)
+    ctrl = DiscreteComplexController(alpha_c, T_s)  # Controls the flux linkage L*i
     ctrl.w_c = w  # Initial angular speed of the coordinates
     pwm = sm_control.PWM()
     psi_ab, u_ab, theta = 0j, 0j, 0.0
@@ -476,7 +475,7 @@ def test_discrete_current_control(w: float) -> None:
         i = np.zeros(n, complex)
         for k in range(n):
             i[k] = np.exp(-1j * theta) * psi_ab / L
-            u_ref = ctrl.compute_output(i_ref, i[k])
+            u_ref = ctrl.compute_output(L * i_ref, L * i[k])
             _, u_lim_ab = pwm.compute_output(T_s, np.exp(1j * theta) * u_ref, u_dc, w)
             ctrl.update(T_s, np.exp(-1j * theta) * u_lim_ab, w)
             psi_ab, theta = psi_ab + T_s * u_ab, theta + w * T_s
