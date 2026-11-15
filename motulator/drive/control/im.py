@@ -26,6 +26,7 @@ from motulator.drive.control._im_observers import (
     ObserverOutputs,
     SpeedFluxObserver,
 )
+from motulator.drive.control._im_open_loop_vhz import OpenLoopVHzController
 from motulator.drive.utils._parameters import (
     InductionMachineInvGammaPars,
     InductionMachinePars,
@@ -49,6 +50,7 @@ __all__ = [
     "ObserverBasedVHzController",
     "ObserverBasedVHzControllerCfg",
     "ObserverOutputs",
+    "OpenLoopVHzController",
     "PIController",
     "ReferenceGenerator",
     "SpeedController",
