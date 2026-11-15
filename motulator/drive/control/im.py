@@ -6,7 +6,12 @@ from motulator.drive.control._base import (
     VectorControlSystem,
     VHzControlSystem,
 )
-from motulator.drive.control._common import PIController, SpeedController, SpeedObserver
+from motulator.drive.control._common import (
+    PIController,
+    References,
+    SpeedController,
+    SpeedObserver,
+)
 from motulator.drive.control._im_current_vector import (
     CurrentController,
     CurrentReferenceGenerator,
@@ -55,6 +60,7 @@ __all__ = [
     "OpenLoopVHzController",
     "PIController",
     "ReferenceGenerator",
+    "References",
     "SpeedController",
     "SpeedObserver",
     "VectorControlSystem",

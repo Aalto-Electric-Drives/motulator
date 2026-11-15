@@ -6,7 +6,12 @@ from motulator.drive.control._base import (
     VectorControlSystem,
     VHzControlSystem,
 )
-from motulator.drive.control._common import PIController, SpeedController, SpeedObserver
+from motulator.drive.control._common import (
+    PIController,
+    References,
+    SpeedController,
+    SpeedObserver,
+)
 from motulator.drive.control._sm_current_vector import (
     CurrentController,
     CurrentVectorController,
@@ -53,6 +58,7 @@ __all__ = [
     "ObserverBasedVHzControllerCfg",
     "ObserverOutputs",
     "ReferenceGenerator",
+    "References",
     "ReferenceGeneratorOnline",
     "SaturatedSynchronousMachinePars",
     "SignalInjectionController",

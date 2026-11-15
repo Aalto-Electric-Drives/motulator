@@ -22,7 +22,9 @@ from motulator.common.model._converter import DCBus, DiodeBridge, VoltageSourceC
 from motulator.common.model._pwm import (
     ZOH,
     CarrierComparison,
+    GateStates,
     Modulator,
+    SwitchingTimes,
     TwoLevelModulator,
 )
 from motulator.common.model._sensor import Sensor
@@ -38,6 +40,7 @@ __all__ = [
     "DCBus",
     "DCPort",
     "DiodeBridge",
+    "GateStates",
     "Model",
     "ModelTimeSeries",
     "Modulator",
@@ -47,6 +50,7 @@ __all__ = [
     "SimulationResults",
     "Subsystem",
     "SubsystemTimeSeries",
+    "SwitchingTimes",
     "ThreePhaseSource",
     "TwoLevelModulator",
     "VoltageSourceConverter",
