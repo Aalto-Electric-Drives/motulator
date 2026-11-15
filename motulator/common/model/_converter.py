@@ -442,7 +442,7 @@ class DCBusOutputs:
 class DCBusStates:
     """State variables."""
 
-    u_dc: float
+    u_dc: complex  # Imaginary part always zero
 
 
 class DCBus(Subsystem):

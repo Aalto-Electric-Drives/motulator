@@ -120,9 +120,7 @@ class PowerSynchronizationController:
     def compute_standby_output(self, fbk: Feedbacks) -> References:
         """Compute references while the gates are blocked."""
         # The controller has no means to synchronize with the grid without the power
-        raise NotImplementedError(
-            "Power-synchronization control does not support gate blocking"
-        )
+        raise TypeError(f"{type(self).__name__} does not support gate blocking")
 
     def update(self, ref: References, fbk: Feedbacks) -> None:
         """Update states."""

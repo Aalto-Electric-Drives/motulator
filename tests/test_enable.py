@@ -466,5 +466,5 @@ def test_unsupported_controllers() -> None:
         grid_model.LFilter(L_f=10e-3),
         grid_model.ThreePhaseSource(w_g=2 * pi * 50, e_g=np.sqrt(2 / 3) * 400),
     )
-    with pytest.raises(NotImplementedError):
+    with pytest.raises(TypeError):
         Simulation(mdl, ctrl, show_progress=False).simulate(0.001)
