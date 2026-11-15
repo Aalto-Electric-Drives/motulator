@@ -3,7 +3,6 @@
 from cmath import exp
 from collections.abc import Callable
 from dataclasses import dataclass
-from functools import partial
 from math import pi
 
 import numpy as np
@@ -12,8 +11,8 @@ from motulator.common.control._base import TimeSeries, rotate_coordinates
 from motulator.common.utils._utils import wrap
 from motulator.drive.control._common import SpeedObserver, hold_equivalent, matched_pole
 from motulator.drive.utils._parameters import (
+    BaseInductionMachineControlPars,
     InductionMachineInvGammaPars,
-    InductionMachinePars,
 )
 
 
@@ -56,8 +55,9 @@ class FluxObserver:
     external signal, given to `compute_output`, selects between these: `h = 0` gives
     purely model-based (sensorless) operation, `h = 1` relies on the external signal
     alone, and intermediate values blend the two. The conjugate-error observer gain
-    follows the same weight. The main-flux saturation can be taken into account by
-    providing the saturation model via `InductionMachinePars`.
+    follows the same weight. The machine parameters are evaluated at the stator flux
+    estimate at the beginning of each sampling period (see `op_par`), which takes,
+    e.g., the main-flux saturation modeled by `InductionMachinePars` into account.
 
     The flux estimate is corrected and predicted using a hold-equivalent discrete-time
     model, and the estimation error is the difference between the rotor flux predictions
@@ -65,16 +65,17 @@ class FluxObserver:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
+    par : BaseInductionMachineControlPars
         Machine model parameters.
-    k_o : Callable[[float], complex]
-        Observer gain as a function of the electrical angular speed of the rotor.
+    k_o : Callable[[float, InductionMachineInvGammaPars], complex]
+        Observer gain as a function of the electrical angular speed of the rotor and the
+        inverse-Γ model parameters at the operating point.
 
     Notes
     -----
-    The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in the
-    marginally stable estimation-error dynamics. The current model is obtained by
-    setting ``k_o = lambda w_m: 1`` together with `h = 1`.
+    The pure voltage model corresponds to ``k_o = lambda w_m, par: 0``, resulting in
+    the marginally stable estimation-error dynamics. The current model is obtained by
+    setting ``k_o = lambda w_m, par: 1`` together with `h = 1`.
 
     References
     ----------
@@ -94,8 +95,8 @@ class FluxObserver:
 
     def __init__(
         self,
-        par: InductionMachinePars | InductionMachineInvGammaPars,
-        k_o: Callable[[float], complex],
+        par: BaseInductionMachineControlPars,
+        k_o: Callable[[float, InductionMachineInvGammaPars], complex],
     ) -> None:
         self.par = par
         self.k_o = k_o
@@ -105,6 +106,12 @@ class FluxObserver:
         # Other memory variables
         self._T_s: float = 0.0
         self._psi_R_pred: complex = 0j  # Rotor flux predicted by the current model
+        self._op_par = par.inv_gamma_pars(0.0)
+
+    @property
+    def op_par(self) -> InductionMachineInvGammaPars:
+        """Inverse-Γ model parameters at the operating point of the sampling period."""
+        return self._op_par
 
     def compute_output(
         self,
@@ -140,8 +147,8 @@ class FluxObserver:
             Estimated feedback signals for the control system.
 
         """
-        # Unpack
-        par = self.par
+        # Machine parameters at the flux estimate of this sampling period
+        par = self._op_par = self.par.inv_gamma_pars(abs(self.psi_s))
 
         # Initialize the output signals
         out = ObserverOutputs(psi_s=self.psi_s, theta_c=self.theta_c, h=h)
@@ -194,11 +201,11 @@ class FluxObserver:
 
     def update(self, T_s: float, out: ObserverOutputs) -> None:
         """Update the state estimates."""
-        par = self.par
+        par = self._op_par
 
         # Observer gains. The conjugate-error gain decouples the speed estimation error,
         # so it is faded out together with the model-based error signal.
-        k_o1 = self.k_o(out.w_m)
+        k_o1 = self.k_o(out.w_m, par)
         proj = out.psi_R / out.psi_R.conjugate() if abs(out.psi_R) > 0.0 else 0.0
         k_o2 = (1 - out.h) * k_o1 * proj
 
@@ -216,9 +223,6 @@ class FluxObserver:
         Phi, Gamma = hold_equivalent(T_s, out.w_c - out.w_m)
         self._psi_R_pred = Phi * psi_R + Gamma * (par.R_R * out.i_s - par.alpha * psi_R)
         self.theta_c = wrap(self.theta_c + T_s * out.w_c)
-
-        # Update the saturation model for the next sampling period
-        self.par.update_psi_s(abs(self.psi_s))
         self._T_s = T_s
 
 
@@ -234,15 +238,15 @@ class SpeedFluxObserver:
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
+    par : BaseInductionMachineControlPars
         Machine model parameters.
     alpha_o : float
         Speed estimation pole (rad/s).
     T_s : float
         Sampling period (s). The poles of the ideal sensored estimation-error dynamics
         are placed at ``exp(-alpha_o*T_s)``.
-    k_o : Callable[[float], complex]
-        Observer gain as a function of the electrical angular speed of the rotor.
+    k_o : Callable[[float, InductionMachineInvGammaPars], complex]
+        Observer gain, see :class:`FluxObserver`.
     J : float, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
@@ -251,10 +255,10 @@ class SpeedFluxObserver:
 
     def __init__(
         self,
-        par: InductionMachineInvGammaPars | InductionMachinePars,
+        par: BaseInductionMachineControlPars,
         alpha_o: float,
         T_s: float,
-        k_o: Callable[[float], complex],
+        k_o: Callable[[float, InductionMachineInvGammaPars], complex],
         J: float | None = None,
     ) -> None:
         # Configure observer gains for critically damped dynamics
@@ -277,6 +281,11 @@ class SpeedFluxObserver:
     @w_M.setter
     def w_M(self, value: float) -> None:
         self.speed_observer.w_M = value
+
+    @property
+    def op_par(self) -> InductionMachineInvGammaPars:
+        """Inverse-Γ model parameters at the operating point of the sampling period."""
+        return self.flux_observer.op_par
 
     def compute_output(
         self,
@@ -345,33 +354,21 @@ def to_rotor_flux_coordinates(ts: TimeSeries) -> None:
 
 
 # %%
-# The default gains are module-level functions, possibly with bound arguments, so that
-# the observers can be pickled (e.g., for parallel simulations)
-def _sensorless_k_o(
-    par: InductionMachineInvGammaPars | InductionMachinePars, w_m: float
-) -> complex:
+# The default gains are module-level functions, so that the observers can be pickled
+# (e.g., for parallel simulations)
+def _sensorless_k_o(w_m: float, par: InductionMachineInvGammaPars) -> complex:
     return (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
 
 
-def _sensored_k_o(
-    par: InductionMachineInvGammaPars | InductionMachinePars, w_m: float
-) -> complex:
+def _sensored_k_o(w_m: float, par: InductionMachineInvGammaPars) -> complex:
     return 1.0 + 0.2 * abs(w_m) / (par.alpha - 1j * w_m)
 
 
-def default_sensorless_k_o(
-    par: InductionMachineInvGammaPars | InductionMachinePars,
-) -> Callable[[float], complex]:
-    """Default observer gain for sensorless drives."""
-    # The machine parameters are read at each call, since saturation changes them
-    return partial(_sensorless_k_o, par)
-
-
 def create_speed_flux_observer(
-    par: InductionMachineInvGammaPars | InductionMachinePars,
+    par: BaseInductionMachineControlPars,
     alpha_o: float | None,
     T_s: float,
-    k_o: Callable[[float], complex] | None = None,
+    k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None = None,
     sensorless: bool = True,
     J: float | None = None,
 ) -> SpeedFluxObserver:
@@ -385,7 +382,7 @@ def create_speed_flux_observer(
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
+    par : BaseInductionMachineControlPars
         Machine model parameters.
     alpha_o : float | None
         Speed estimation poles (rad/s). If None, defaults to 2*pi*60 if `sensorless` is
@@ -393,11 +390,11 @@ def create_speed_flux_observer(
         the speed estimation gain approximately the same.
     T_s : float
         Sampling period (s), see :class:`SpeedFluxObserver`.
-    k_o : Callable[[float], complex], optional
-        Observer gain as a function of the electrical angular rotor speed. If `None`, it
-        defaults to ``lambda w_m: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``
-        in sensorless mode, and to ``lambda w_m: 1.0 + 0.2*abs(w_m)/(par.alpha
-        - 1j*w_m)`` in sensored mode.
+    k_o : Callable[[float, InductionMachineInvGammaPars], complex], optional
+        Observer gain, see :class:`FluxObserver`. If `None`, it defaults to ``lambda
+        w_m, par: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)`` in sensorless
+        mode, and to ``lambda w_m, par: 1.0 + 0.2*abs(w_m)/(par.alpha - 1j*w_m)`` in
+        sensored mode.
     sensorless : bool, optional
         If True, sensorless control is used, defaults to True.
     J : float, optional
@@ -415,25 +412,25 @@ def create_speed_flux_observer(
         # With J, the double pole at alpha_o/2 keeps the speed gain about the same
         alpha_o = alpha_o if J is None else 0.5 * alpha_o
     if k_o is None:
-        k_o = default_sensorless_k_o(par) if sensorless else partial(_sensored_k_o, par)
+        k_o = _sensorless_k_o if sensorless else _sensored_k_o
 
     return SpeedFluxObserver(par, alpha_o, T_s, k_o, J)
 
 
 def create_vhz_observer(
-    par: InductionMachineInvGammaPars | InductionMachinePars,
-    k_o: Callable[[float], complex] | None = None,
+    par: BaseInductionMachineControlPars,
+    k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None = None,
 ) -> FluxObserver:
     """
     Create a sensorless flux observer without speed estimation.
 
     Parameters
     ----------
-    par : InductionMachineInvGammaPars | InductionMachinePars
+    par : BaseInductionMachineControlPars
         Machine model parameters.
-    k_o : Callable[[float], complex], optional
-        Observer gain as a function of the electrical angular speed of the rotor,
-        defaults to ``lambda w_m: (0.5*R_R/L_M + 0.2*abs(w_m))/(R_R/L_M - 1j*w_m)``.
+    k_o : Callable[[float, InductionMachineInvGammaPars], complex], optional
+        Observer gain, see :class:`FluxObserver`. Defaults to ``lambda w_m, par:
+        (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``.
 
     Returns
     -------
@@ -441,6 +438,6 @@ def create_vhz_observer(
         Sensorless flux observer without speed estimation.
 
     """
-    k_o = default_sensorless_k_o(par) if k_o is None else k_o
+    k_o = _sensorless_k_o if k_o is None else k_o
 
     return FluxObserver(par, k_o)

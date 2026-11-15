@@ -69,26 +69,24 @@ def assert_ac_port(machine: model.InductionMachine) -> None:
 
 
 def test_im_gamma_and_inverse_gamma_models() -> None:
-    """The Γ and inverse-Γ parameters of the same machine give the same machine model,
+    """The Γ parameters and their inverse-Γ parameters give the same machine model,
     whose rotor quantities are scaled as in the parameters."""
     par = model.InductionMachinePars(
         n_p=2, R_s=3.7, R_r=2.5, L_ell=0.023, L_s=0.245, G_c=0.02
     )
-    par_inv = model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=par.R_R, L_sgm=par.L_sgm, L_M=par.L_M, G_c=0.02
-    )
-    assert (par_inv.alpha, par_inv.w_rb) == pytest.approx((par.alpha, par.w_rb))
+    par_inv = par.inv_gamma_pars(0.0)
+    gamma = par_inv.L_M / 0.245  # Magnetic coupling factor
     machines = [model.InductionMachine(par), model.InductionMachine(par_inv)]
-    for machine, gamma in zip(machines, [1, par.gamma], strict=True):
+    for machine, k in zip(machines, [1, gamma], strict=True):
         set_im_operating_point(machine)
-        machine.state.psi_r_dq *= gamma
+        machine.state.psi_r_dq *= k
         machine.set_outputs(0.0)
     ref, mdl = machines
     assert mdl.out.i_s_ab == pytest.approx(ref.out.i_s_ab)
     assert mdl.out.tau_M == pytest.approx(ref.out.tau_M)
-    assert mdl.out.i_r_dq * par.gamma == pytest.approx(ref.out.i_r_dq)
+    assert mdl.out.i_r_dq * gamma == pytest.approx(ref.out.i_r_dq)
     d_psi_s, d_psi_r, d_theta_m = ref.rhs(0.0)
-    assert mdl.rhs(0.0) == pytest.approx([d_psi_s, par.gamma * d_psi_r, d_theta_m])
+    assert mdl.rhs(0.0) == pytest.approx([d_psi_s, gamma * d_psi_r, d_theta_m])
 
 
 def test_im_current_map_of_scalar_inductances() -> None:
@@ -236,8 +234,9 @@ def test_im_deep_bars() -> None:
     par_dc = model.InductionMachinePars(
         n_p=2, R_s=R_s, R_r=0.16, L_ell=L_ell + 6e-3, L_s=L_s
     )
+    inv_gamma, inv_dc = par_gamma.inv_gamma_pars(0.0), par_dc.inv_gamma_pars(0.0)
     for attr in ("R_R", "L_sgm", "L_M", "alpha", "w_rb"):
-        assert getattr(par_gamma, attr) == pytest.approx(getattr(par_dc, attr))
+        assert getattr(inv_gamma, attr) == pytest.approx(getattr(inv_dc, attr))
     machine_gamma = model.InductionMachine(par_gamma)
     state = [0.9 + 0.5j, 0.6 + 0.7j, 0.4, 1e-3 - 2e-3j, 3e-3 + 1e-3j]
     for m in (machine, machine_gamma):

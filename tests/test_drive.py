@@ -639,12 +639,56 @@ def test_im_flux_observer_at_low_sampling_rate() -> None:
     assert abs(res.ctrl.fbk.psi_s[end]) == pytest.approx(psi_s[end], rel=5e-3)
 
 
+@pytest.mark.parametrize("w_M_ref", [100.0, 300.0], ids=["nominal", "weakened"])
+@pytest.mark.parametrize("controller", ["fvc", "cvc", "cvc_discrete"])
+def test_im_vector_control_with_saturation(controller: str, w_M_ref: float) -> None:
+    """With the main-flux saturation in the control parameters, sensorless vector
+    control estimates the speed of the saturated machine without a steady-state error,
+    both at the nominal flux and in field weakening."""
+    # The 2.2-kW machine of examples/drive/flux_vector/plot_2kw_im_sat_fvc.py
+    par = model.InductionMachinePars(
+        n_p=2,
+        R_s=3.7,
+        R_r=2.5,
+        L_ell=0.023,
+        L_s=lambda psi: 0.34 / (1 + (0.84 * psi) ** 7),
+    )
+    mdl = model.Drive(
+        model.InductionMachine(par),
+        model.MechanicalSystem(J=0.015),
+        model.VoltageSourceConverter(u_dc=540),
+    )
+    vector_ctrl: im_control.FluxVectorController | im_control.CurrentVectorController
+    if controller == "fvc":
+        cfg = im_control.FluxVectorControllerCfg(
+            psi_s_nom=0.99, i_s_max=10.6, J=0.015, alpha_i=0
+        )
+        vector_ctrl = im_control.FluxVectorController(par, cfg)
+    else:
+        cfg = im_control.CurrentVectorControllerCfg(
+            psi_s_nom=0.99, i_s_max=10.6, J=0.015, discrete=controller == "cvc_discrete"
+        )
+        vector_ctrl = im_control.CurrentVectorController(par, cfg)
+    ctrl = im_control.VectorControlSystem(
+        vector_ctrl, im_control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
+    )
+    ctrl.set_speed_ref(lambda t: (t > 0.05) * w_M_ref)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > T_LOAD) * 3.5)
+    res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=T_STOP)
+
+    end = res.mdl.t > T_STOP - 0.05
+    w_M = np.mean(res.mdl.machine.w_M[end])
+    w_M_est = np.mean(res.ctrl.fbk.w_M[res.ctrl.t > T_STOP - 0.05])
+    assert w_M == pytest.approx(w_M_ref, rel=0.01)
+    assert w_M_est == pytest.approx(w_M, abs=0.1)
+
+
 def test_im_flux_observer_current_model() -> None:
     """The gain k_o = 1 with h = 1 gives the current model, also if T_s varies."""
     par = im_control.InductionMachineInvGammaPars(
         n_p=2, R_s=0, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
-    observer = im_control.FluxObserver(par, lambda w_m: 1)
+    observer = im_control.FluxObserver(par, lambda w_m, par: 1)
     T_s, i_s = [1e-3, 2e-3, 0.5e-3, 1e-3] * 5, 5.0
     psi_R = []
     for T in T_s:
@@ -665,7 +709,7 @@ def test_speed_observer_poles(machine: str, J: float | None) -> None:
     T_s, alpha_o = 1e-3, 2 * pi * 400
     if machine == "im":
         observer = im_control.SpeedFluxObserver(
-            im_par(), alpha_o, T_s, lambda w_m: 1, J
+            im_par(), alpha_o, T_s, lambda w_m, par: 1, J
         )
         k_w, k_tau = observer.speed_observer.k_w, observer.speed_observer.k_tau
         # States: speed and load-torque estimation errors

@@ -16,7 +16,7 @@ import sys
 import tomllib
 
 sys.path.insert(0, os.path.abspath("../.."))
-sys.path.insert(0, os.path.abspath("."))  # For gallery_sort
+sys.path.insert(0, os.path.abspath("."))  # For gallery_sort and api_paths
 
 os.environ["BUILDING_DOCS"] = "1"
 
@@ -305,6 +305,7 @@ source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
 intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}
 
 extensions.append("autoapi.extension")
+extensions.append("api_paths")  # Public paths in the API reference
 autoapi_type = "python"
 autoapi_dirs = ["../../motulator"]
 autodoc_typehints = "description"

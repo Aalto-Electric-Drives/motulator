@@ -3,6 +3,8 @@
 from motulator.common.control._base import (
     ControlSystem,
     ConverterControlSystem,
+    ConverterFeedbacks,
+    ConverterReferences,
     TimeSeries,
 )
 from motulator.common.control._controllers import (
@@ -17,6 +19,8 @@ __all__ = [
     "ComplexPIController",
     "ControlSystem",
     "ConverterControlSystem",
+    "ConverterFeedbacks",
+    "ConverterReferences",
     "DiscreteComplexController",
     "InverterNonlinearity",
     "PIController",

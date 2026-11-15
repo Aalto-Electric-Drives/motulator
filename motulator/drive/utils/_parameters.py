@@ -532,8 +532,41 @@ def _dc_inductance(R_r: float | CageImpedance) -> float:
 
 
 # %%
+class BaseInductionMachineControlPars(Protocol):
+    """
+    Base class for induction machine parameters, as used by the control systems.
+
+    The control systems use the inverse-Γ model, whose parameters may depend on the
+    operating point, e.g., due to the magnetic saturation.
+
+    """
+
+    n_p: int
+    R_s: float
+
+    def inv_gamma_pars(self, psi_s: float) -> "InductionMachineInvGammaPars":
+        """
+        Inverse-Γ model parameters at the operating point.
+
+        Parameters
+        ----------
+        psi_s : float
+            Stator flux linkage magnitude (Vs).
+
+        Returns
+        -------
+        InductionMachineInvGammaPars
+            Inverse-Γ model parameters.
+
+        """
+        ...
+
+
+# %%
 @dataclass
-class InductionMachineInvGammaPars(BaseInductionMachinePars):
+class InductionMachineInvGammaPars(
+    BaseInductionMachinePars, BaseInductionMachineControlPars
+):
     """
     Inverse-Γ model parameters of an induction machine.
 
@@ -578,8 +611,9 @@ class InductionMachineInvGammaPars(BaseInductionMachinePars):
     L_M: float
     G_c: float = 0.0
 
-    def update_psi_s(self, psi_s: float) -> None:
-        """Update the stator flux linkage magnitude, without effect here."""
+    def inv_gamma_pars(self, psi_s: float) -> "InductionMachineInvGammaPars":
+        """Inverse-Γ model parameters, independent of the operating point."""
+        return self
 
     @property
     def alpha(self) -> float:
@@ -608,7 +642,7 @@ class InductionMachineInvGammaPars(BaseInductionMachinePars):
 
 # %%
 @dataclass
-class InductionMachinePars(BaseInductionMachinePars):
+class InductionMachinePars(BaseInductionMachinePars, BaseInductionMachineControlPars):
     """
     Γ-model parameters of an induction machine, with optional main-flux saturation and
     deep-bar effect.
@@ -621,10 +655,10 @@ class InductionMachinePars(BaseInductionMachinePars):
 
     The main-flux saturation is modeled by providing a callable `L_s` and the deep-bar
     effect by providing the cage impedance as `R_r`. For control systems, the class
-    provides the corresponding inverse-Γ model parameters, which then depend on the
-    stator flux linkage magnitude given to `update_psi_s`. With the cage impedance, they
-    are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
-    series with its DC inductance, which adds to the leakage inductance.
+    provides the corresponding inverse-Γ model parameters at a given stator flux linkage
+    magnitude, see `inv_gamma_pars`. With the cage impedance, they are those of its
+    low-frequency equivalent, i.e., the DC resistance of the cage in series with its DC
+    inductance, which adds to the leakage inductance.
 
     Parameters
     ----------
@@ -642,24 +676,6 @@ class InductionMachinePars(BaseInductionMachinePars):
     G_c : float, optional
         Core-loss conductance (S), connected between the stator resistance and the
         magnetic model, defaults to 0 (no core losses).
-    psi_s : float, optional
-        Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
-        evaluated, defaults to 0.
-
-    Attributes
-    ----------
-    gamma : float
-        Magnetic coupling factor.
-    L_M : float
-        Inverse-Γ magnetizing inductance (H).
-    L_sgm : float
-        Inverse-Γ leakage inductance (H).
-    R_R : float
-        Inverse-Γ rotor resistance (Ω).
-    alpha : float
-        Inverse rotor time constant (rad/s).
-    w_rb : float
-        Breakdown slip angular frequency (rad/s).
 
     References
     ----------
@@ -674,42 +690,34 @@ class InductionMachinePars(BaseInductionMachinePars):
     L_ell: float
     L_s: float | Callable[[float], float]
     G_c: float = 0.0
-    psi_s: float = 0.0
 
-    def update_psi_s(self, psi_s: float) -> None:
-        """Update the stator flux linkage magnitude."""
-        self.psi_s = psi_s
+    def inv_gamma_pars(self, psi_s: float) -> InductionMachineInvGammaPars:
+        """
+        Inverse-Γ model parameters at the operating point.
 
-    @property
-    def _L_ell_dc(self) -> float:
-        """Leakage inductance (H) including the DC inductance of the cage."""
-        return self.L_ell + _dc_inductance(self.R_r)
+        Parameters
+        ----------
+        psi_s : float
+            Stator flux linkage magnitude (Vs), at which the stator inductance `L_s` is
+            evaluated.
 
-    @property
-    def gamma(self) -> float:
-        L_s = get_value(self.L_s, self.psi_s)
-        return L_s / (L_s + self._L_ell_dc)
+        Returns
+        -------
+        InductionMachineInvGammaPars
+            Inverse-Γ model parameters.
 
-    @property
-    def L_M(self) -> float:
-        return self.gamma * get_value(self.L_s, self.psi_s)
-
-    @property
-    def L_sgm(self) -> float:
-        return self.gamma * self._L_ell_dc
-
-    @property
-    def R_R(self) -> float:
-        return self.gamma**2 * _dc_resistance(self.R_r)
-
-    @property
-    def alpha(self) -> float:
-        return self.R_R / self.L_M
-
-    @property
-    def w_rb(self) -> float:
-        L_ell = self._L_ell_dc
-        return _dc_resistance(self.R_r) / L_ell if L_ell > 0 else 0.0
+        """
+        L_s = get_value(self.L_s, psi_s)
+        L_ell = self.L_ell + _dc_inductance(self.R_r)
+        gamma = L_s / (L_s + L_ell)  # Magnetic coupling factor
+        return InductionMachineInvGammaPars(
+            n_p=self.n_p,
+            R_s=self.R_s,
+            R_R=gamma**2 * _dc_resistance(self.R_r),
+            L_sgm=gamma * L_ell,
+            L_M=gamma * L_s,
+            G_c=self.G_c,
+        )
 
     @property
     def cage(self) -> CageImpedance:

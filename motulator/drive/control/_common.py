@@ -10,8 +10,7 @@ import numpy as np
 
 from motulator.common.control._controllers import PIController
 from motulator.drive.utils._parameters import (
-    InductionMachineInvGammaPars,
-    InductionMachinePars,
+    BaseInductionMachineControlPars,
     SaturatedSynchronousMachinePars,
     SynchronousMachinePars,
 )
@@ -63,8 +62,8 @@ class FluxTorqueControllerBase:
     Parameters
     ----------
     par : SynchronousMachinePars | SaturatedSynchronousMachinePars | \
-        InductionMachineInvGammaPars | InductionMachinePars
-        Machine model parameters.
+        BaseInductionMachineControlPars
+        Machine model parameters, of which `n_p` and `R_s` are used here.
     alpha_psi : float
         Flux-control bandwidth (rad/s).
     alpha_tau : float
@@ -78,8 +77,7 @@ class FluxTorqueControllerBase:
         self,
         par: SynchronousMachinePars
         | SaturatedSynchronousMachinePars
-        | InductionMachineInvGammaPars
-        | InductionMachinePars,
+        | BaseInductionMachineControlPars,
         alpha_psi: float,
         alpha_tau: float,
         alpha_i: float = 0.0,

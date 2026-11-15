@@ -6,13 +6,16 @@ from motulator.drive.control._base import (
     VectorControlSystem,
     VHzControlSystem,
 )
-from motulator.drive.control._common import PIController, SpeedController, SpeedObserver
+from motulator.drive.control._common import (
+    PIController,
+    References,
+    SpeedController,
+    SpeedObserver,
+)
 from motulator.drive.control._im_current_vector import (
-    CurrentController,
     CurrentReferenceGenerator,
     CurrentVectorController,
     CurrentVectorControllerCfg,
-    DiscreteCurrentController,
 )
 from motulator.drive.control._im_flux_vector import (
     FluxVectorController,
@@ -28,19 +31,19 @@ from motulator.drive.control._im_observers import (
 )
 from motulator.drive.control._im_open_loop_vhz import OpenLoopVHzController
 from motulator.drive.utils._parameters import (
+    BaseInductionMachineControlPars,
     InductionMachineInvGammaPars,
     InductionMachinePars,
 )
 
 __all__ = [
+    "BaseInductionMachineControlPars",
     "DriveControlSystem",
     "PWM",
     "InverterNonlinearity",
-    "CurrentController",
     "CurrentReferenceGenerator",
     "CurrentVectorController",
     "CurrentVectorControllerCfg",
-    "DiscreteCurrentController",
     "FluxObserver",
     "SpeedFluxObserver",
     "FluxVectorController",
@@ -53,6 +56,7 @@ __all__ = [
     "OpenLoopVHzController",
     "PIController",
     "ReferenceGenerator",
+    "References",
     "SpeedController",
     "SpeedObserver",
     "VectorControlSystem",

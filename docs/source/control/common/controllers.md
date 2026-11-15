@@ -124,7 +124,7 @@ alt: 2DOF complex-vector PI controller with feedforward
 *Figure 2:* 2DOF complex-vector PI controller with an optional feedforward term.
 ```
 
-The discrete-time implementation of {eq}`complex_vector_2dof_pi` with the anti-windup is given in the {class}`motulator.common.control.ComplexPIController` class, which is the base class for {class}`motulator.drive.control.sm.CurrentController`, {class}`motulator.drive.control.im.CurrentController`, and {class}`motulator.grid.control.CurrentController` classes. The algorithm is similar to the real-valued case given in {eq}`discrete_2dof_pi`.
+The discrete-time implementation of {eq}`complex_vector_2dof_pi` with the anti-windup is given in the {class}`motulator.common.control.ComplexPIController` class, which is the base class for the {class}`motulator.drive.control.sm.CurrentController` and {class}`motulator.grid.control.CurrentController` classes and is used directly by the {class}`motulator.drive.control.im.CurrentVectorController` class. The algorithm is similar to the real-valued case given in {eq}`discrete_2dof_pi`.
 
 The converter voltage is limited by the DC-bus voltage, and the anti-windup uses the realized voltage obtained from the pulse-width modulation (PWM).
 
