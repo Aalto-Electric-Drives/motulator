@@ -477,14 +477,15 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.control._controllers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PIController</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">InductionMachineInvGammaPars</span><span class="p">,</span>
-    <span class="n">InductionMachinePars</span><span class="p">,</span>
+    <span class="n">BaseInductionMachineControlPars</span><span class="p">,</span>
     <span class="n">SaturatedSynchronousMachinePars</span><span class="p">,</span>
     <span class="n">SynchronousMachinePars</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="References">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.im.References">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">References</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Reference signals of the drive controllers."""</span>
@@ -497,7 +498,8 @@
     <span class="n">u_s_lim</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>  <span class="c1"># Limited voltage reference (set by the control system)</span>
     <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Speed reference (set by the control system)</span>
     <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Duty ratios (set by the control system)</span>
-    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Gate enable (set by the control system)</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Gate enable (set by the control system)</span></div>
+
 
 
 <span class="c1"># %%</span>
@@ -530,8 +532,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : SynchronousMachinePars | SaturatedSynchronousMachinePars | \</span>
-<span class="sd">        InductionMachineInvGammaPars | InductionMachinePars</span>
-<span class="sd">        Machine model parameters.</span>
+<span class="sd">        BaseInductionMachineControlPars</span>
+<span class="sd">        Machine model parameters, of which `n_p` and `R_s` are used here.</span>
 <span class="sd">    alpha_psi : float</span>
 <span class="sd">        Flux-control bandwidth (rad/s).</span>
 <span class="sd">    alpha_tau : float</span>
@@ -545,8 +547,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">par</span><span class="p">:</span> <span class="n">SynchronousMachinePars</span>
         <span class="o">|</span> <span class="n">SaturatedSynchronousMachinePars</span>
-        <span class="o">|</span> <span class="n">InductionMachineInvGammaPars</span>
-        <span class="o">|</span> <span class="n">InductionMachinePars</span><span class="p">,</span>
+        <span class="o">|</span> <span class="n">BaseInductionMachineControlPars</span><span class="p">,</span>
         <span class="n">alpha_psi</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">alpha_tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">alpha_i</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>

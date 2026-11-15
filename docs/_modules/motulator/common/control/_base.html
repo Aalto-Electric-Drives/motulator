@@ -486,18 +486,24 @@
     <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Sampling period for next control cycle</span>
 
 
+<div class="viewcode-block" id="ConverterReferences">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ConverterReferences">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConverterReferences</span><span class="p">(</span><span class="n">References</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol defining the reference signals of converter control systems."""</span>
 
-    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Duty ratios</span>
+    <span class="n">d_abc</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>  <span class="c1"># Duty ratios</span></div>
 
 
+
+<div class="viewcode-block" id="ConverterFeedbacks">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/control/index.html#motulator.common.control.ConverterFeedbacks">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConverterFeedbacks</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Protocol defining the feedback signals used in the modulation."""</span>
 
     <span class="n">w_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular speed of the coordinate system</span>
     <span class="n">theta_c</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angular position of the coordinate system</span>
-    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage</span>
+    <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># DC-bus voltage</span></div>
+
 
 
 <div class="viewcode-block" id="TimeSeries">

@@ -878,7 +878,7 @@ conduct.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.CompositeModel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">CompositeModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_composite.html#CompositeModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.CompositeModel" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Model</span></code>[<a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.Model" title="motulator.common.model.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Model</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 <p>Composite of models sharing subsystems.</p>
 <p>The models are coupled through shared subsystem objects, e.g., a DC bus given to the
 models of a grid converter and a drive. Each model keeps its converter, whose
@@ -947,7 +947,7 @@ supported.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[motulator.common.model._pwm.SwitchingTimes, motulator.common.model._pwm.GateStates]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[motulator.common.model.SwitchingTimes, motulator.common.model.GateStates]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1083,7 +1083,7 @@ capabilities it has.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.DCBus">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">DCBus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DCBus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DCBus" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
 <p>Capacitive DC bus feeding converters.</p>
 <p>The DC bus feeds the converters of the models it is given to, see <cite>Model</cite>. The model
 connects its converter to the DC bus through <cite>connect</cite>, which registers the
@@ -1198,7 +1198,7 @@ load.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.DiodeBridge">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">DiodeBridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#DiodeBridge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.DiodeBridge" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Converter</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.Converter" title="motulator.common.model.Converter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Converter</span></code></a></p>
 <p>Three-phase six-pulse diode bridge.</p>
 <p>The diodes conduct according to the currents of the load <cite>ac_load</cite>: a leg carrying
 current is clamped to a rail, and a leg without current floats at the voltage
@@ -1579,7 +1579,7 @@ method.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.Sensor">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.Sensor" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
 <p>Sensor with a bandwidth, a gain error, an offset, and additive Gaussian noise.</p>
 <p>A sensor is a subsystem that the model connects to the signal <cite>x</cite> it measures, e.g.,
 the stator current of a machine or the DC-bus voltage of a converter, see <cite>Drive</cite>
@@ -1827,7 +1827,7 @@ the history as well, under other keys, as a converter does (see <cite>Converter<
 <dd><p>Compute the AC port for a blocked converter, see <cite>ACPort</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>motulator.common.model._ac_port.ACPort | None</p>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.common.model.ACPort" title="motulator.common.model.ACPort">motulator.common.model.ACPort</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1838,7 +1838,7 @@ the history as well, under other keys, as a converter does (see <cite>Converter<
 <dd><p>Compute the DC port for a current-fed converter, see <cite>DCPort</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>motulator.common.model._ac_port.DCPort | None</p>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.common.model.DCPort" title="motulator.common.model.DCPort">motulator.common.model.DCPort</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1990,7 +1990,7 @@ are not passed to other subsystems.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.ThreePhaseSource">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">ThreePhaseSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">pi</span> <span class="pre">*</span> <span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_g</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">sqrt(2</span> <span class="pre">/</span> <span class="pre">3)</span> <span class="pre">*</span> <span class="pre">400</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e_g_neg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi_neg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_ac_source.html#ThreePhaseSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.ThreePhaseSource" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.Subsystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.Subsystem" title="motulator.common.model.Subsystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.Subsystem</span></code></a></p>
 <p>Three-phase source model.</p>
 <p>The frequency, phase shift, and magnitude can be given either as constants or
 functions of time. An unbalanced source can be modeled by specifying a negative-
@@ -2105,7 +2105,7 @@ they are the on-time fractions of the upper switches and the blanking fractions.
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.model.VoltageSourceConverter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.model.</span></span><span class="sig-name descname"><span class="pre">VoltageSourceConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_dc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modulator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/model/_converter.html#VoltageSourceConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.model.VoltageSourceConverter" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model._base.ControlledConverter</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.model.DiodeBridge" title="motulator.common.model.DiodeBridge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiodeBridge</span></code></a>, <a class="reference internal" href="#motulator.common.model.ControlledConverter" title="motulator.common.model.ControlledConverter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.model.ControlledConverter</span></code></a></p>
 <p>Three-phase voltage-source converter.</p>
 <p>The modulator converts the duty ratios of the control system into the gate states of
 the legs, i.e., the gate signals of the upper switches and the blanking signals,
@@ -2229,7 +2229,7 @@ the gate states are then zero for the whole sampling period.</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[motulator.common.model._pwm.SwitchingTimes, motulator.common.model._pwm.GateStates]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[motulator.common.model.SwitchingTimes, motulator.common.model.GateStates]</p>
 </dd>
 </dl>
 </dd></dl>

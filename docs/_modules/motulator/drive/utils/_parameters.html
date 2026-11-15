@@ -1065,10 +1065,49 @@
 
 
 <span class="c1"># %%</span>
+<div class="viewcode-block" id="BaseInductionMachineControlPars">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.BaseInductionMachineControlPars">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseInductionMachineControlPars</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Base class for induction machine parameters, as used by the control systems.</span>
+
+<span class="sd">    The control systems use the inverse-Γ model, whose parameters may depend on the</span>
+<span class="sd">    operating point, e.g., due to the magnetic saturation.</span>
+
+<span class="sd">    """</span>
+
+    <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">R_s</span><span class="p">:</span> <span class="nb">float</span>
+
+<div class="viewcode-block" id="BaseInductionMachineControlPars.inv_gamma_pars">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/im/index.html#motulator.drive.control.im.BaseInductionMachineControlPars.inv_gamma_pars">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inv_gamma_pars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InductionMachineInvGammaPars"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Inverse-Γ model parameters at the operating point.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : float</span>
+<span class="sd">            Stator flux linkage magnitude (Vs).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InductionMachineInvGammaPars</span>
+<span class="sd">            Inverse-Γ model parameters.</span>
+
+<span class="sd">        """</span>
+        <span class="o">...</span></div>
+</div>
+
+
+
+<span class="c1"># %%</span>
 <div class="viewcode-block" id="InductionMachineInvGammaPars">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachineInvGammaPars">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InductionMachineInvGammaPars</span><span class="p">(</span><span class="n">BaseInductionMachinePars</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InductionMachineInvGammaPars</span><span class="p">(</span>
+    <span class="n">BaseInductionMachinePars</span><span class="p">,</span> <span class="n">BaseInductionMachineControlPars</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Inverse-Γ model parameters of an induction machine.</span>
 
@@ -1113,10 +1152,11 @@
     <span class="n">L_M</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-<div class="viewcode-block" id="InductionMachineInvGammaPars.update_psi_s">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_psi_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Update the stator flux linkage magnitude, without effect here."""</span></div>
+<div class="viewcode-block" id="InductionMachineInvGammaPars.inv_gamma_pars">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachineInvGammaPars.inv_gamma_pars">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inv_gamma_pars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InductionMachineInvGammaPars"</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Inverse-Γ model parameters, independent of the operating point."""</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
 
     <span class="nd">@property</span>
@@ -1152,7 +1192,7 @@
 <div class="viewcode-block" id="InductionMachinePars">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachinePars">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InductionMachinePars</span><span class="p">(</span><span class="n">BaseInductionMachinePars</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InductionMachinePars</span><span class="p">(</span><span class="n">BaseInductionMachinePars</span><span class="p">,</span> <span class="n">BaseInductionMachineControlPars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Γ-model parameters of an induction machine, with optional main-flux saturation and</span>
 <span class="sd">    deep-bar effect.</span>
@@ -1165,10 +1205,10 @@
 
 <span class="sd">    The main-flux saturation is modeled by providing a callable `L_s` and the deep-bar</span>
 <span class="sd">    effect by providing the cage impedance as `R_r`. For control systems, the class</span>
-<span class="sd">    provides the corresponding inverse-Γ model parameters, which then depend on the</span>
-<span class="sd">    stator flux linkage magnitude given to `update_psi_s`. With the cage impedance, they</span>
-<span class="sd">    are those of its low-frequency equivalent, i.e., the DC resistance of the cage in</span>
-<span class="sd">    series with its DC inductance, which adds to the leakage inductance.</span>
+<span class="sd">    provides the corresponding inverse-Γ model parameters at a given stator flux linkage</span>
+<span class="sd">    magnitude, see `inv_gamma_pars`. With the cage impedance, they are those of its</span>
+<span class="sd">    low-frequency equivalent, i.e., the DC resistance of the cage in series with its DC</span>
+<span class="sd">    inductance, which adds to the leakage inductance.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1186,24 +1226,6 @@
 <span class="sd">    G_c : float, optional</span>
 <span class="sd">        Core-loss conductance (S), connected between the stator resistance and the</span>
 <span class="sd">        magnetic model, defaults to 0 (no core losses).</span>
-<span class="sd">    psi_s : float, optional</span>
-<span class="sd">        Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are</span>
-<span class="sd">        evaluated, defaults to 0.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    gamma : float</span>
-<span class="sd">        Magnetic coupling factor.</span>
-<span class="sd">    L_M : float</span>
-<span class="sd">        Inverse-Γ magnetizing inductance (H).</span>
-<span class="sd">    L_sgm : float</span>
-<span class="sd">        Inverse-Γ leakage inductance (H).</span>
-<span class="sd">    R_R : float</span>
-<span class="sd">        Inverse-Γ rotor resistance (Ω).</span>
-<span class="sd">    alpha : float</span>
-<span class="sd">        Inverse rotor time constant (rad/s).</span>
-<span class="sd">    w_rb : float</span>
-<span class="sd">        Breakdown slip angular frequency (rad/s).</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -1218,45 +1240,37 @@
     <span class="n">L_ell</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">L_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span>
     <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-<div class="viewcode-block" id="InductionMachinePars.update_psi_s">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachinePars.update_psi_s">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_psi_s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Update the stator flux linkage magnitude."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">psi_s</span></div>
+<div class="viewcode-block" id="InductionMachinePars.inv_gamma_pars">
+<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.InductionMachinePars.inv_gamma_pars">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inv_gamma_pars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Inverse-Γ model parameters at the operating point.</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        psi_s : float</span>
+<span class="sd">            Stator flux linkage magnitude (Vs), at which the stator inductance `L_s` is</span>
+<span class="sd">            evaluated.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_L_ell_dc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Leakage inductance (H) including the DC inductance of the cage."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span> <span class="o">+</span> <span class="n">_dc_inductance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="p">)</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        InductionMachineInvGammaPars</span>
+<span class="sd">            Inverse-Γ model parameters.</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">gamma</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="n">L_s</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">L_s</span> <span class="o">/</span> <span class="p">(</span><span class="n">L_s</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_L_ell_dc</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">L_s</span> <span class="o">=</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_s</span><span class="p">,</span> <span class="n">psi_s</span><span class="p">)</span>
+        <span class="n">L_ell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span> <span class="o">+</span> <span class="n">_dc_inductance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="p">)</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">L_s</span> <span class="o">/</span> <span class="p">(</span><span class="n">L_s</span> <span class="o">+</span> <span class="n">L_ell</span><span class="p">)</span>  <span class="c1"># Magnetic coupling factor</span>
+        <span class="k">return</span> <span class="n">InductionMachineInvGammaPars</span><span class="p">(</span>
+            <span class="n">n_p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_p</span><span class="p">,</span>
+            <span class="n">R_s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">R_s</span><span class="p">,</span>
+            <span class="n">R_R</span><span class="o">=</span><span class="n">gamma</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">_dc_resistance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="p">),</span>
+            <span class="n">L_sgm</span><span class="o">=</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">L_ell</span><span class="p">,</span>
+            <span class="n">L_M</span><span class="o">=</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">L_s</span><span class="p">,</span>
+            <span class="n">G_c</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">G_c</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">L_M</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">L_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">L_sgm</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_L_ell_dc</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">R_R</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">_dc_resistance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_R</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_M</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">w_rb</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="n">L_ell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_L_ell_dc</span>
-        <span class="k">return</span> <span class="n">_dc_resistance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">R_r</span><span class="p">)</span> <span class="o">/</span> <span class="n">L_ell</span> <span class="k">if</span> <span class="n">L_ell</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.0</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">cage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CageImpedance</span><span class="p">:</span>

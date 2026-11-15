@@ -1177,7 +1177,7 @@ Package Contents
 
 .. py:class:: InductionMachineInvGammaPars
 
-   Bases: :py:obj:`BaseInductionMachinePars`
+   Bases: :py:obj:`BaseInductionMachinePars`, :py:obj:`BaseInductionMachineControlPars`
 
 
    
@@ -1261,6 +1261,30 @@ Package Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: inv_gamma_pars(psi_s)
+
+      
+      Inverse-Γ model parameters, independent of the operating point.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
 
       
@@ -1285,33 +1309,9 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update_psi_s(psi_s)
-
-      
-      Update the stator flux linkage magnitude, without effect here.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: InductionMachinePars
 
-   Bases: :py:obj:`BaseInductionMachinePars`
+   Bases: :py:obj:`BaseInductionMachinePars`, :py:obj:`BaseInductionMachineControlPars`
 
 
    
@@ -1326,10 +1326,10 @@ Package Contents
 
    The main-flux saturation is modeled by providing a callable `L_s` and the deep-bar
    effect by providing the cage impedance as `R_r`. For control systems, the class
-   provides the corresponding inverse-Γ model parameters, which then depend on the
-   stator flux linkage magnitude given to `update_psi_s`. With the cage impedance, they
-   are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
-   series with its DC inductance, which adds to the leakage inductance.
+   provides the corresponding inverse-Γ model parameters at a given stator flux linkage
+   magnitude, see `inv_gamma_pars`. With the cage impedance, they are those of its
+   low-frequency equivalent, i.e., the DC resistance of the cage in series with its DC
+   inductance, which adds to the leakage inductance.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -1345,45 +1345,6 @@ Package Contents
    :param G_c: Core-loss conductance (S), connected between the stator resistance and the
                magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
-   :param psi_s: Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
-                 evaluated, defaults to 0.
-   :type psi_s: float, optional
-
-   .. attribute:: gamma
-
-      Magnetic coupling factor.
-
-      :type: float
-
-   .. attribute:: L_M
-
-      Inverse-Γ magnetizing inductance (H).
-
-      :type: float
-
-   .. attribute:: L_sgm
-
-      Inverse-Γ leakage inductance (H).
-
-      :type: float
-
-   .. attribute:: R_R
-
-      Inverse-Γ rotor resistance (Ω).
-
-      :type: float
-
-   .. attribute:: alpha
-
-      Inverse rotor time constant (rad/s).
-
-      :type: float
-
-   .. attribute:: w_rb
-
-      Breakdown slip angular frequency (rad/s).
-
-      :type: float
 
    .. rubric:: References
 
@@ -1433,11 +1394,17 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: inv_gamma_pars(psi_s)
 
       
-      Magnetic map.
+      Inverse-Γ model parameters at the operating point.
 
+      :param psi_s: Stator flux linkage magnitude (Vs), at which the stator inductance `L_s` is
+                    evaluated.
+      :type psi_s: float
+
+      :returns: Inverse-Γ model parameters.
+      :rtype: InductionMachineInvGammaPars
 
 
 
@@ -1457,10 +1424,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update_psi_s(psi_s)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
 
       
-      Update the stator flux linkage magnitude.
+      Magnetic map.
 
 
 

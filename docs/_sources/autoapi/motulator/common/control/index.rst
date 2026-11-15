@@ -35,6 +35,8 @@ Classes
    motulator.common.control.ComplexPIController
    motulator.common.control.ControlSystem
    motulator.common.control.ConverterControlSystem
+   motulator.common.control.ConverterFeedbacks
+   motulator.common.control.ConverterReferences
    motulator.common.control.DiscreteComplexController
    motulator.common.control.InverterNonlinearity
    motulator.common.control.PIController
@@ -616,6 +618,58 @@ Package Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: ConverterFeedbacks
+
+   Bases: :py:obj:`Protocol`
+
+
+   
+   Protocol defining the feedback signals used in the modulation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: ConverterReferences
+
+   Bases: :py:obj:`References`, :py:obj:`Protocol`
+
+
+   
+   Protocol defining the reference signals of converter control systems.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: DiscreteComplexController(alpha_c, T_s)
 

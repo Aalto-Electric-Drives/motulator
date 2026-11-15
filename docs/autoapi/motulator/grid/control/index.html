@@ -702,7 +702,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.CurrentController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">CurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfl_current_vector.html#CurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.CurrentController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._controllers.ComplexPIController</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a></p>
 <p>2DOF PI current controller for grid converters.</p>
 <p>This class provides an interface for a current controller for grid converters. The
 gains are initialized based on the desired closed-loop bandwidth and the filter
@@ -757,7 +757,7 @@ inductance.</p>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -771,7 +771,7 @@ inductance.</p>
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><em>PLLOutputs</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -784,7 +784,7 @@ inductance.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
-<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+<li><p><strong>meas</strong> (<a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><em>motulator.grid.control.Measurements</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -799,7 +799,7 @@ inductance.</p>
 <dd><p>Post-process controller signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -814,7 +814,7 @@ inductance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References"><em>motulator.grid.control.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.PLLOutputs" title="motulator.grid.control.PLLOutputs"><em>PLLOutputs</em></a>)</p></li>
 </ul>
 </dd>
@@ -849,7 +849,7 @@ inductance.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.DCBusVoltageController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DCBusVoltageController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">C_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_common.html#DCBusVoltageController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DCBusVoltageController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._controllers.PIController</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.PIController</span></code></a></p>
 <p>DC-bus voltage PI controller.</p>
 <p>This controller regulates the energy stored in the DC-bus capacitor (scaled square
 of the DC-bus voltage) in order to have a linear closed-loop system <a class="footnote-reference brackets" href="#hur2001" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>.</p>
@@ -941,7 +941,7 @@ IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://d
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -955,7 +955,7 @@ IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://d
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs"><em>DualVoltageFormingOutputs</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -968,7 +968,7 @@ IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://d
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
-<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+<li><p><strong>meas</strong> (<a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><em>motulator.grid.control.Measurements</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -983,7 +983,7 @@ IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://d
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -998,7 +998,7 @@ IEEE Trans. Power Electron., 2025, <a class="reference external" href="https://d
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References"><em>motulator.grid.control.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.DualVoltageFormingOutputs" title="motulator.grid.control.DualVoltageFormingOutputs"><em>DualVoltageFormingOutputs</em></a>)</p></li>
 </ul>
 </dd>
@@ -1042,7 +1042,7 @@ to 2*pi*7.5.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.DualVoltageFormingOutputs">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">DualVoltageFormingOutputs</span></span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_gfm_dual_voltage.html#DualVoltageFormingOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.DualVoltageFormingOutputs" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control._gfm_observer.ObserverOutputs</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.grid.control.ObserverOutputs</span></code></a></p>
 <p>Feedback signals for the control system.</p>
 </dd></dl>
 
@@ -1056,7 +1056,7 @@ to 2*pi*7.5.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.grid.control.GridConverterControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.grid.control.</span></span><span class="sig-name descname"><span class="pre">GridConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_bus_voltage_ctrl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/grid/control/_base.html#GridConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.grid.control.GridConverterControlSystem" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._base.ConverterControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="../../common/control/index.html#motulator.common.control.ConverterControlSystem" title="motulator.common.control.ConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ConverterControlSystem</span></code></a></p>
 <p>Grid converter control system.</p>
 <p>This class defines the interface for control systems of grid converters. It is a
 generic class that can be used with different models, measurements, feedback
@@ -1085,7 +1085,7 @@ DC-bus forming.</p></li>
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1099,7 +1099,7 @@ DC-bus forming.</p></li>
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1138,7 +1138,7 @@ DC-bus forming.</p></li>
 <dd><p>Extend the post-process method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>motulator.common.control._base.TimeSeries</p>
+<dd class="field-odd"><p><a class="reference internal" href="../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries">motulator.common.control.TimeSeries</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1206,7 +1206,7 @@ DC-bus forming.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References"><em>motulator.grid.control.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
@@ -1302,7 +1302,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1316,7 +1316,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1329,7 +1329,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
-<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+<li><p><strong>meas</strong> (<a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><em>motulator.grid.control.Measurements</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1344,7 +1344,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1359,7 +1359,7 @@ converter control based on a disturbance observer,” IEEE Trans. Power Electron
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References"><em>motulator.grid.control.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.ObserverOutputs" title="motulator.grid.control.ObserverOutputs"><em>ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
@@ -1698,7 +1698,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1712,7 +1712,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.grid.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References">motulator.grid.control.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1725,7 +1725,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
-<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+<li><p><strong>meas</strong> (<a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><em>motulator.grid.control.Measurements</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1740,7 +1740,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1755,7 +1755,7 @@ power-synchronization control,” IEEE Trans. Power Electron., 2020,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.grid.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.grid.control.References" title="motulator.grid.control.References"><em>motulator.grid.control.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
@@ -1857,7 +1857,7 @@ voltage reference (<cite>k_comp = 0</cite>).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
-<li><p><strong>meas</strong> (<em>motulator.grid.control._base.Measurements</em>)</p></li>
+<li><p><strong>meas</strong> (<a class="reference internal" href="#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements"><em>motulator.grid.control.Measurements</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1872,7 +1872,7 @@ voltage reference (<cite>k_comp = 0</cite>).</p>
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>

@@ -32,6 +32,7 @@ Classes
    motulator.drive.control.sm.PWM
    motulator.drive.control.sm.ReferenceGenerator
    motulator.drive.control.sm.ReferenceGeneratorOnline
+   motulator.drive.control.sm.References
    motulator.drive.control.sm.SaturatedSynchronousMachinePars
    motulator.drive.control.sm.SignalInjectionController
    motulator.drive.control.sm.SpeedController
@@ -1753,6 +1754,29 @@ Module Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: References
+
+   
+   Reference signals of the drive controllers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: SaturatedSynchronousMachinePars
 

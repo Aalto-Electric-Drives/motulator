@@ -152,7 +152,7 @@ label: gamma_to_inv_gamma
 
 where $\gamma$ is defined in {eq}`gamma_factor`.
 
-While the inverse-Γ model is convenient for control, incorporating magnetic saturation directly into it is challenging. A more practical approach is to map the saturation effects from the Γ model using the factor $\gamma$ in {eq}`gamma_factor`. As a result, the inverse-Γ model parameters become flux-dependent: $\Lsgm(\abspsis)$, $\RR(\abspsis)$, and $\LM(\abspsis)$. The {class}`motulator.drive.model.InductionMachinePars` class provides these inverse-Γ parameters, enabling saturation-aware control methods (see example {doc}`/drive_examples/flux_vector/plot_2kw_im_sat_fvc`).
+While the inverse-Γ model is convenient for control, incorporating magnetic saturation directly into it is challenging. A more practical approach is to map the saturation effects from the Γ model using the factor $\gamma$ in {eq}`gamma_factor`. As a result, the inverse-Γ model parameters become flux-dependent: $\Lsgm(\abspsis)$, $\RR(\abspsis)$, and $\LM(\abspsis)$. The {class}`motulator.drive.model.InductionMachinePars` class provides these inverse-Γ parameters at a given stator flux linkage magnitude through its method `inv_gamma_pars`, which the control systems evaluate at the estimated flux in each sampling period. This enables saturation-aware control methods (see example {doc}`/drive_examples/flux_vector/plot_2kw_im_sat_fvc`).
 
 Using the stator flux linkage and the stator current as state variables, the nonlinear state-space form becomes
 

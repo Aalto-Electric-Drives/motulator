@@ -517,7 +517,10 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.BaseInductionMachineControlPars"><code class="docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.BaseInductionMachineControlPars.inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars.inv_gamma_pars()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentReferenceGenerator"><code class="docutils literal notranslate"><span class="pre">CurrentReferenceGenerator</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentReferenceGenerator.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentReferenceGenerator.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentReferenceGenerator.update"><code class="docutils literal notranslate"><span class="pre">CurrentReferenceGenerator.update()</span></code></a></li>
@@ -531,10 +534,6 @@
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorControllerCfg"><code class="docutils literal notranslate"><span class="pre">CurrentVectorControllerCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DiscreteCurrentController"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DiscreteCurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController.compute_output()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DriveControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_standby_output()</span></code></a></li>
@@ -544,6 +543,7 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxObserver.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver.op_par"><code class="docutils literal notranslate"><span class="pre">FluxObserver.op_par</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
 </ul>
 </li>
@@ -559,20 +559,14 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.alpha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.w_rb</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.inv_gamma_pars()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.magnetic_map()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.gamma"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.gamma</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_M"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_M</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_sgm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.R_R"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.R_R</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.alpha</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.w_rb</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.inv_gamma_pars()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.magnetic_map()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
@@ -610,9 +604,11 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ReferenceGenerator.compute_output"><code class="docutils literal notranslate"><span class="pre">ReferenceGenerator.compute_output()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.References"><code class="docutils literal notranslate"><span class="pre">References</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedController"><code class="docutils literal notranslate"><span class="pre">SpeedController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.op_par"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.op_par</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.w_M"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.w_M</span></code></a></li>
 </ul>
@@ -658,8 +654,8 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.CurrentController" title="motulator.drive.control.im.CurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentController</span></code></a></p></td>
-<td><p>Current controller for induction machines.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars</span></code></a></p></td>
+<td><p>Base class for induction machine parameters, as used by the control systems.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.CurrentReferenceGenerator" title="motulator.drive.control.im.CurrentReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentReferenceGenerator</span></code></a></p></td>
 <td><p>Current reference generator.</p></td>
@@ -670,50 +666,50 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.CurrentVectorControllerCfg" title="motulator.drive.control.im.CurrentVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentVectorControllerCfg</span></code></a></p></td>
 <td><p>Current vector controller configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.DiscreteCurrentController" title="motulator.drive.control.im.DiscreteCurrentController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a></p></td>
-<td><p>Direct discrete-time current controller for induction machines.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.DriveControlSystem" title="motulator.drive.control.im.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.DriveControlSystem" title="motulator.drive.control.im.DriveControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a></p></td>
 <td><p>Base class for drive control systems.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxObserver" title="motulator.drive.control.im.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxObserver" title="motulator.drive.control.im.FluxObserver"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxObserver</span></code></a></p></td>
 <td><p>Reduced-order flux observer.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxVectorController" title="motulator.drive.control.im.FluxVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxVectorController" title="motulator.drive.control.im.FluxVectorController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorController</span></code></a></p></td>
 <td><p>Flux-vector controller for induction machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxVectorControllerCfg" title="motulator.drive.control.im.FluxVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.FluxVectorControllerCfg" title="motulator.drive.control.im.FluxVectorControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxVectorControllerCfg</span></code></a></p></td>
 <td><p>Flux-vector controller configuration.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars</span></code></a></p></td>
 <td><p>Inverse-Γ model parameters of an induction machine.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a></p></td>
 <td><p>Γ-model parameters of an induction machine, with optional main-flux saturation and</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.InverterNonlinearity" title="motulator.drive.control.im.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.InverterNonlinearity" title="motulator.drive.control.im.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
 <td><p>Duty-ratio error due to the dead time and the threshold voltages.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.ObserverBasedVHzController" title="motulator.drive.control.im.ObserverBasedVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.ObserverBasedVHzController" title="motulator.drive.control.im.ObserverBasedVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzController</span></code></a></p></td>
 <td><p>Observer-based V/Hz controller for induction machine drives.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.ObserverBasedVHzControllerCfg" title="motulator.drive.control.im.ObserverBasedVHzControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzControllerCfg</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.ObserverBasedVHzControllerCfg" title="motulator.drive.control.im.ObserverBasedVHzControllerCfg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverBasedVHzControllerCfg</span></code></a></p></td>
 <td><p>Observer-based V/Hz controller configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ObserverOutputs</span></code></a></p></td>
 <td><p>Feedback signals for the control system.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.OpenLoopVHzController" title="motulator.drive.control.im.OpenLoopVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OpenLoopVHzController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.OpenLoopVHzController" title="motulator.drive.control.im.OpenLoopVHzController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OpenLoopVHzController</span></code></a></p></td>
 <td><p>Open-loop V/Hz controller for induction machine drives.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.PIController" title="motulator.drive.control.im.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.PIController" title="motulator.drive.control.im.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.PWM" title="motulator.drive.control.im.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.PWM" title="motulator.drive.control.im.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase carrier-based PWM.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.ReferenceGenerator" title="motulator.drive.control.im.ReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.ReferenceGenerator" title="motulator.drive.control.im.ReferenceGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReferenceGenerator</span></code></a></p></td>
 <td><p>Reference generator for flux-vector control.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code></a></p></td>
+<td><p>Reference signals of the drive controllers.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.control.im.SpeedController" title="motulator.drive.control.im.SpeedController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpeedController</span></code></a></p></td>
 <td><p>2DOF PI speed controller.</p></td>
@@ -737,19 +733,29 @@
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.control.im.CurrentController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">CurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.ComplexPIController" title="motulator.common.control.ComplexPIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ComplexPIController</span></code></a></p>
-<p>Current controller for induction machines.</p>
+<dt class="sig sig-object py" id="motulator.drive.control.im.BaseInductionMachineControlPars">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">BaseInductionMachineControlPars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#BaseInductionMachineControlPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Base class for induction machine parameters, as used by the control systems.</p>
+<p>The control systems use the inverse-Γ model, whose parameters may depend on the
+operating point, e.g., due to the magnetic saturation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.BaseInductionMachineControlPars.inv_gamma_pars">
+<span class="sig-name descname"><span class="pre">inv_gamma_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#BaseInductionMachineControlPars.inv_gamma_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.BaseInductionMachineControlPars.inv_gamma_pars" title="Link to this definition">#</a></dt>
+<dd><p>Inverse-Γ model parameters at the operating point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Reference-tracking bandwidth (rad/s).</p></li>
-<li><p><strong>alpha_i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Integral action bandwidth (rad/s), defaults to <cite>alpha_c</cite>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Stator flux linkage magnitude (Vs).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Inverse-Γ model parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars">InductionMachineInvGammaPars</a></p>
 </dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -779,12 +785,13 @@ current and the breakdown slip.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><em>BaseInductionMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>psi_s_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Nominal stator flux linkage (Vs).</p></li>
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Maximum stator current (A).</p></li>
 <li><p><strong>w_s_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Nominal stator angular frequency (rad/s).</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Voltage utilization factor.</p></li>
-<li><p><strong>k_fw</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>) – Field-weakening gain (1/H). If None, <code class="docutils literal notranslate"><span class="pre">2*R_R/(w_s_nom*L_sgm**2)</span></code> is used.</p></li>
+<li><p><strong>k_fw</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em>) – Field-weakening gain (1/H). If None, <code class="docutils literal notranslate"><span class="pre">2*R_R/(w_s_nom*L_sgm**2)</span></code> is used, with
+the parameters at the operating point.</p></li>
 </ul>
 </dd>
 </dl>
@@ -799,13 +806,14 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 </aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentReferenceGenerator.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_R</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentReferenceGenerator.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentReferenceGenerator.compute_output" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentReferenceGenerator.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentReferenceGenerator.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute the stator current reference.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau_M_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Torque reference (Nm).</p></li>
 <li><p><strong>psi_R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Estimated rotor flux magnitude (Vs).</p></li>
+<li><p><strong>op_par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Inverse-Γ model parameters at the operating point.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -819,7 +827,7 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentReferenceGenerator.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentReferenceGenerator.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentReferenceGenerator.update" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_s_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentReferenceGenerator.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentReferenceGenerator.update" title="Link to this definition">#</a></dt>
 <dd><p>Field-weakening based on the unlimited reference voltage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -827,6 +835,7 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling time (s).</p></li>
 <li><p><strong>u_s_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Unlimited stator voltage reference (V).</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – DC-link voltage (V).</p></li>
+<li><p><strong>op_par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a>) – Inverse-Γ model parameters at the operating point.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -841,14 +850,28 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">CurrentVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController" title="Link to this definition">#</a></dt>
 <dd><p>Current-vector controller for induction machine drives.</p>
+<p>The currents are mapped to the leakage flux linkages <code class="docutils literal notranslate"><span class="pre">L_sgm*i_s</span></code>, where <cite>L_sgm</cite>
+is evaluated at the operating point, and the flux linkages are controlled by the
+2DOF PI controller or, if <cite>discrete</cite> is True, by the direct discrete-time
+controller. The magnetic saturation is thus taken into account as in the
+flux-linkage-based current control of synchronous machines <a class="footnote-reference brackets" href="#awa2019a" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><em>BaseInductionMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.CurrentVectorControllerCfg" title="motulator.drive.control.im.CurrentVectorControllerCfg"><em>CurrentVectorControllerCfg</em></a>) – Current-vector controller configuration.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="awa2019a" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Awan, Saarakkala, Hinkkanen, “Flux-linkage-based current control of
+saturated synchronous motors,” IEEE Trans. Ind. Appl., 2019,
+<a class="reference external" href="https://doi.org/10.1109/TIA.2019.2919258">https://doi.org/10.1109/TIA.2019.2919258</a></p>
+</aside>
+</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.CurrentVectorController.compute_output">
 <span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#CurrentVectorController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.CurrentVectorController.compute_output" title="Link to this definition">#</a></dt>
@@ -857,11 +880,11 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau_M_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -880,7 +903,7 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._im_observers.ObserverOutputs</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs">motulator.drive.control.im.ObserverOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -891,7 +914,7 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -906,8 +929,8 @@ Ind. Appl., 2006, <a class="reference external" href="https://doi.org/10.1109/TI
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><em>motulator.drive.control.im.References</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -933,10 +956,11 @@ used if <cite>discrete</cite> is True.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Speed estimation poles (rad/s). Defaults to 2*pi*60 if <cite>sensorless</cite> is True,
 otherwise 2*pi*400. If <cite>J</cite> is given, the default is halved, which keeps the
 speed estimation gain approximately the same.</p></li>
-<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed. If None,
-defaults to <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">(0.5*alpha</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(alpha</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code> if
-<cite>sensorless</cite> is True, otherwise <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)/(alpha</span> <span class="pre">-</span>
-<span class="pre">1j*w_m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">=</span> <span class="pre">R_R/L_M</span></code>.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed and the
+inverse-Γ model parameters at the operating point. If None, defaults to
+<code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">(0.5*par.alpha</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(par.alpha</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code> if
+<cite>sensorless</cite> is True, otherwise <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)/(par.alpha</span>
+<span class="pre">-</span> <span class="pre">1j*w_m)</span></code>.</p></li>
 <li><p><strong>w_s_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Nominal stator angular frequency (rad/s), defaults to 2*pi*50.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.95.</p></li>
 <li><p><strong>k_fw</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Field-weakening gain (1/H), defaults to <cite>2*R_R/(w_s_nom*L_sgm**2)</cite>.</p></li>
@@ -952,49 +976,9 @@ continuous-time design, defaults to False.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="motulator.drive.control.im.DiscreteCurrentController">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">DiscreteCurrentController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#DiscreteCurrentController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.DiscreteCurrentController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.DiscreteComplexController" title="motulator.common.control.DiscreteComplexController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.DiscreteComplexController</span></code></a></p>
-<p>Direct discrete-time current controller for induction machines.</p>
-<p>The currents are mapped to the leakage flux linkages, <code class="docutils literal notranslate"><span class="pre">psi</span> <span class="pre">=</span> <span class="pre">L_sgm*i</span></code>. The
-resistive voltage drop and the back-emf are disturbances, which the integral action
-compensates for. Since the design includes the delays, the angle of the voltage
-reference is not advanced (<cite>k_comp = 0</cite> in <cite>CurrentVectorController</cite>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>alpha_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Reference-tracking bandwidth (rad/s).</p></li>
-<li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s).</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.DiscreteCurrentController.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_current_vector.html#DiscreteCurrentController.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.DiscreteCurrentController.compute_output" title="Link to this definition">#</a></dt>
-<dd><p>Compute the controller output.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>i_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Reference signal.</p></li>
-<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Feedback signal.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>u</strong> – Controller output.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.DriveControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">DriveControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_comp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_base.html#DriveControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.DriveControlSystem" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._base.ConverterControlSystem</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="../../../common/control/index.html#motulator.common.control.ConverterControlSystem" title="motulator.common.control.ConverterControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control.ConverterControlSystem</span></code></a></p>
 <p>Base class for drive control systems.</p>
 <p>This class extends <cite>ConverterControlSystem</cite> with the parts common to the drive
 control systems: the feedback signals, the speed reference, and the standby.
@@ -1021,7 +1005,7 @@ controller is not updated.</p>
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1035,7 +1019,7 @@ controller is not updated.</p>
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1075,46 +1059,48 @@ controller is not updated.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">FluxObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_o</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver" title="Link to this definition">#</a></dt>
 <dd><p>Reduced-order flux observer.</p>
 <p>This class implements a reduced-order flux observer for induction machines. The
-observer structure is similar to <a class="footnote-reference brackets" href="#hin2010" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The observer operates in synchronous
+observer structure is similar to <a class="footnote-reference brackets" href="#hin2010" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>. The observer operates in synchronous
 coordinates rotating at <cite>w_c</cite> (but not locked to any particular vector). The rotor
 speed error signal is either computed internally from the flux estimation error or
 supplied externally, e.g., from the speed measurement. The weight <cite>h</cite> of the
 external signal, given to <cite>compute_output</cite>, selects between these: <cite>h = 0</cite> gives
 purely model-based (sensorless) operation, <cite>h = 1</cite> relies on the external signal
 alone, and intermediate values blend the two. The conjugate-error observer gain
-follows the same weight. The main-flux saturation can be taken into account by
-providing the saturation model via <cite>InductionMachinePars</cite>.</p>
+follows the same weight. The machine parameters are evaluated at the stator flux
+estimate at the beginning of each sampling period (see <cite>op_par</cite>), which takes,
+e.g., the main-flux saturation modeled by <cite>InductionMachinePars</cite> into account.</p>
 <p>The flux estimate is corrected and predicted using a hold-equivalent discrete-time
 model, and the estimation error is the difference between the rotor flux predictions
-of the current model and the voltage model, cf. <a class="footnote-reference brackets" href="#bot1993" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hin2018" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>.</p>
+of the current model and the voltage model, cf. <a class="footnote-reference brackets" href="#bot1993" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, <a class="footnote-reference brackets" href="#hin2018" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
-<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>) – Observer gain as a function of the electrical angular speed of the rotor.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><em>BaseInductionMachineControlPars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>) – Observer gain as a function of the electrical angular speed of the rotor and the
+inverse-Γ model parameters at the operating point.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The pure voltage model corresponds to <code class="docutils literal notranslate"><span class="pre">k_o</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">0</span></code>, resulting in the
-marginally stable estimation-error dynamics. The current model is obtained by
-setting <code class="docutils literal notranslate"><span class="pre">k_o</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">1</span></code> together with <cite>h = 1</cite>.</p>
+<p>The pure voltage model corresponds to <code class="docutils literal notranslate"><span class="pre">k_o</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">0</span></code>, resulting in
+the marginally stable estimation-error dynamics. The current model is obtained by
+setting <code class="docutils literal notranslate"><span class="pre">k_o</span> <span class="pre">=</span> <span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">1</span></code> together with <cite>h = 1</cite>.</p>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hin2010" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
 <p>Hinkkanen, Harnefors, Luomi, “Reduced-order flux observers with
 stator-resistance adaptation for speed-sensorless induction motor drives,” IEEE
 Trans. Power Electron., 2010, <a class="reference external" href="https://doi.org/10.1109/TPEL.2009.2039650">https://doi.org/10.1109/TPEL.2009.2039650</a></p>
 </aside>
 <aside class="footnote brackets" id="bot1993" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
 <p>Bottura, Silvino, de Resende, “A flux observer for induction machines
 based on a time-variant discrete model,” IEEE Trans. Ind. Appl., 1993,
 <a class="reference external" href="https://doi.org/10.1109/28.216543">https://doi.org/10.1109/28.216543</a></p>
 </aside>
 <aside class="footnote brackets" id="hin2018" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
 <p>Hinkkanen, Saarakkala, Awan, Mölsä, Tuovinen, “Observers for
 sensorless synchronous motor drives: Framework for design and analysis,” IEEE
 Trans. Ind. Appl., 2018, <a class="reference external" href="https://doi.org/10.1109/TIA.2018.2858753">https://doi.org/10.1109/TIA.2018.2858753</a></p>
@@ -1147,6 +1133,17 @@ based error signal is used exclusively.</p></li>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.control.im.FluxObserver.op_par">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">op_par</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><span class="pre">motulator.drive.control.im.InductionMachineInvGammaPars</span></a></span><a class="headerlink" href="#motulator.drive.control.im.FluxObserver.op_par" title="Link to this definition">#</a></dt>
+<dd><p>Inverse-Γ model parameters at the operating point of the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars">motulator.drive.control.im.InductionMachineInvGammaPars</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.FluxObserver.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_observers.html#FluxObserver.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxObserver.update" title="Link to this definition">#</a></dt>
@@ -1171,11 +1168,11 @@ based error signal is used exclusively.</p></li>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">FluxVectorController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#FluxVectorController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.FluxVectorController" title="Link to this definition">#</a></dt>
 <dd><p>Flux-vector controller for induction machine drives.</p>
 <p>This class implements a variant of flux-vector control. Decoupling between the
-stator flux and torque channels is used <a class="footnote-reference brackets" href="#tii2025b" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
+stator flux and torque channels is used <a class="footnote-reference brackets" href="#tii2025b" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><em>BaseInductionMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.FluxVectorControllerCfg" title="motulator.drive.control.im.FluxVectorControllerCfg"><em>FluxVectorControllerCfg</em></a>) – Flux-vector control configuration.</p></li>
 </ul>
 </dd>
@@ -1183,8 +1180,8 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="tii2025b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
-<span class="backrefs">(<a role="doc-backlink" href="#id5">1</a>,<a role="doc-backlink" href="#id7">2</a>)</span>
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id6">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
 <p>Tiitinen, Hinkkanen, Harnefors, “Sensorless flux-vector control
 framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 2025, <a class="reference external" href="https://doi.org/10.1109/TIE.2025.3559958">https://doi.org/10.1109/TIE.2025.3559958</a></p>
@@ -1198,11 +1195,11 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tau_M_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1221,7 +1218,7 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._im_observers.ObserverOutputs</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs">motulator.drive.control.im.ObserverOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1232,7 +1229,7 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1247,8 +1244,8 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><em>motulator.drive.control.im.References</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1274,10 +1271,11 @@ framework: An extension for induction machines,” IEEE Trans. Ind. Electron.,
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – Speed estimation poles (rad/s). Defaults to 2*pi*60 if <cite>sensorless</cite> is True,
 otherwise 2*pi*400. If <cite>J</cite> is given, the default is halved, which keeps the
 speed estimation gain approximately the same.</p></li>
-<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed. If None,
-defaults to <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">(0.5*alpha</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(alpha</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code> if
-<cite>sensorless</cite> is True, otherwise <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)/(alpha</span> <span class="pre">-</span>
-<span class="pre">1j*w_m)</span></code>, where <code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">=</span> <span class="pre">R_R/L_M</span></code>.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed and the
+inverse-Γ model parameters at the operating point. If None, defaults to
+<code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">(0.5*par.alpha</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(par.alpha</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code> if
+<cite>sensorless</cite> is True, otherwise <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m)/(par.alpha</span>
+<span class="pre">-</span> <span class="pre">1j*w_m)</span></code>.</p></li>
 <li><p><strong>tau_M_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Maximum torque reference (Nm), defaults to <cite>inf</cite>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Breakdown torque margin, defaults to 0.9.</p></li>
@@ -1293,7 +1291,7 @@ used in speed estimation.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">InductionMachineInvGammaPars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachinePars</span></code></p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachinePars</span></code>, <a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars</span></code></a></p>
 <p>Inverse-Γ model parameters of an induction machine.</p>
 <p>These constant parameters can be used both in control systems and in the machine
 model. The magnetic model is:</p>
@@ -1356,6 +1354,20 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.inv_gamma_pars">
+<span class="sig-name descname"><span class="pre">inv_gamma_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars.inv_gamma_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.inv_gamma_pars" title="Link to this definition">#</a></dt>
+<dd><p>Inverse-Γ model parameters, independent of the operating point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars">InductionMachineInvGammaPars</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map">
 <span class="sig-name descname"><span class="pre">magnetic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_r_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars.magnetic_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map" title="Link to this definition">#</a></dt>
 <dd><p>Magnetic map, the rotor quantities being <cite>psi_R</cite> and <cite>i_R</cite>.</p>
@@ -1373,40 +1385,26 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s">
-<span class="sig-name descname"><span class="pre">update_psi_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachineInvGammaPars.update_psi_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s" title="Link to this definition">#</a></dt>
-<dd><p>Update the stator flux linkage magnitude, without effect here.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">InductionMachinePars</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachinePars</span></code></p>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachinePars</span></code>, <a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars</span></code></a></p>
 <p>Γ-model parameters of an induction machine, with optional main-flux saturation and
 deep-bar effect.</p>
 <p>These parameters can be used both in control systems and in the machine model. The
-magnetic model is <a class="footnote-reference brackets" href="#sle1989" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>:</p>
+magnetic model is <a class="footnote-reference brackets" href="#sle1989" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">L_s</span><span class="o">*</span><span class="p">(</span><span class="n">i_s</span> <span class="o">+</span> <span class="n">i_r</span><span class="p">)</span>
 <span class="n">psi_r</span> <span class="o">=</span> <span class="n">psi_s</span> <span class="o">+</span> <span class="n">L_ell</span><span class="o">*</span><span class="n">i_r</span>
 </pre></div>
 </div>
 <p>The main-flux saturation is modeled by providing a callable <cite>L_s</cite> and the deep-bar
 effect by providing the cage impedance as <cite>R_r</cite>. For control systems, the class
-provides the corresponding inverse-Γ model parameters, which then depend on the
-stator flux linkage magnitude given to <cite>update_psi_s</cite>. With the cage impedance, they
-are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
-series with its DC inductance, which adds to the leakage inductance.</p>
+provides the corresponding inverse-Γ model parameters at a given stator flux linkage
+magnitude, see <cite>inv_gamma_pars</cite>. With the cage impedance, they are those of its
+low-frequency equivalent, i.e., the DC resistance of the cage in series with its DC
+inductance, which adds to the leakage inductance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1418,99 +1416,13 @@ series with its DC inductance, which adds to the leakage inductance.</p>
 linkage magnitude (Vs).</p></li>
 <li><p><strong>G_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Core-loss conductance (S), connected between the stator resistance and the
 magnetic model, defaults to 0 (no core losses).</p></li>
-<li><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
-evaluated, defaults to 0.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.gamma">
-<span class="sig-name descname"><span class="pre">gamma</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.gamma" title="Link to this definition">#</a></dt>
-<dd><p>Magnetic coupling factor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.L_M">
-<span class="sig-name descname"><span class="pre">L_M</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.L_M" title="Link to this definition">#</a></dt>
-<dd><p>Inverse-Γ magnetizing inductance (H).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.L_sgm">
-<span class="sig-name descname"><span class="pre">L_sgm</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.L_sgm" title="Link to this definition">#</a></dt>
-<dd><p>Inverse-Γ leakage inductance (H).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.R_R">
-<span class="sig-name descname"><span class="pre">R_R</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.R_R" title="Link to this definition">#</a></dt>
-<dd><p>Inverse-Γ rotor resistance (Ω).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.alpha">
-<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.alpha" title="Link to this definition">#</a></dt>
-<dd><p>Inverse rotor time constant (rad/s).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.w_rb">
-<span class="sig-name descname"><span class="pre">w_rb</span></span><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.w_rb" title="Link to this definition">#</a></dt>
-<dd><p>Breakdown slip angular frequency (rad/s).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="sle1989" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">6</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">7</a><span class="fn-bracket">]</span></span>
 <p>Slemon, “Modelling of induction machines for electric drives,” IEEE
 Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.1109/28.44251">https://doi.org/10.1109/28.44251</a></p>
 </aside>
@@ -1522,6 +1434,24 @@ Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="../../model/index.html#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance">CageImpedance</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.inv_gamma_pars">
+<span class="sig-name descname"><span class="pre">inv_gamma_pars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars.inv_gamma_pars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.inv_gamma_pars" title="Link to this definition">#</a></dt>
+<dd><p>Inverse-Γ model parameters at the operating point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Stator flux linkage magnitude (Vs), at which the stator inductance <cite>L_s</cite> is
+evaluated.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Inverse-Γ model parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars">InductionMachineInvGammaPars</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1540,20 +1470,6 @@ Trans. Ind. Appl., 1989, <a class="reference external" href="https://doi.org/10.
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a> | numpy.ndarray, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a> | numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="motulator.drive.control.im.InductionMachinePars.update_psi_s">
-<span class="sig-name descname"><span class="pre">update_psi_s</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#InductionMachinePars.update_psi_s"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.InductionMachinePars.update_psi_s" title="Link to this definition">#</a></dt>
-<dd><p>Update the stator flux linkage magnitude.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>psi_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1594,11 +1510,11 @@ commands.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">ObserverBasedVHzController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ObserverBasedVHzController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ObserverBasedVHzController" title="Link to this definition">#</a></dt>
 <dd><p>Observer-based V/Hz controller for induction machine drives.</p>
 <p>This class implements sensorless observer-based V/Hz control. Decoupling between the
-stator flux and torque channels is used <a class="footnote-reference brackets" href="#tii2025b" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
+stator flux and torque channels is used <a class="footnote-reference brackets" href="#tii2025b" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><em>BaseInductionMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>cfg</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverBasedVHzControllerCfg" title="motulator.drive.control.im.ObserverBasedVHzControllerCfg"><em>ObserverBasedVHzControllerCfg</em></a>) – Observer-based V/Hz controller configuration.</p></li>
 </ul>
 </dd>
@@ -1609,10 +1525,10 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <dd><p>Compute references.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p>
+<dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1623,10 +1539,10 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <dd><p>Compute references while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p>
+<dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1644,7 +1560,7 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._im_observers.ObserverOutputs</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs">motulator.drive.control.im.ObserverOutputs</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1655,7 +1571,7 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <dd><p>Post-process controller time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1670,8 +1586,8 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
-<li><p><strong>fbk</strong> (<em>motulator.drive.control._im_observers.ObserverOutputs</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><em>motulator.drive.control.im.References</em></a>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs"><em>motulator.drive.control.im.ObserverOutputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -1694,9 +1610,9 @@ stator flux and torque channels is used <a class="footnote-reference brackets" h
 <li><p><strong>alpha_psi</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Flux-control bandwidth (rad/s), defaults to 2*pi*100.</p></li>
 <li><p><strong>alpha_tau</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Torque-control bandwidth (rad/s), defaults to 2*pi*20.</p></li>
 <li><p><strong>alpha_f</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Low-pass-filter bandwidth (rad/s), defaults to 2*pi*1.</p></li>
-<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed. If None,
-defaults to <code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m:</span> <span class="pre">(0.5*alpha</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(alpha</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code>, where
-<code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">=</span> <span class="pre">R_R/L_M</span></code>.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>] </em><em>| </em><em>None</em><em>, </em><em>optional</em>) – Observer gain as a function of the electrical rotor angular speed and the
+inverse-Γ model parameters at the operating point. If None, defaults to
+<code class="docutils literal notranslate"><span class="pre">lambda</span> <span class="pre">w_m,</span> <span class="pre">par:</span> <span class="pre">(0.5*par.alpha</span> <span class="pre">+</span> <span class="pre">0.2*abs(w_m))/(par.alpha</span> <span class="pre">-</span> <span class="pre">1j*w_m)</span></code>.</p></li>
 <li><p><strong>k_u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Voltage utilization factor, defaults to 0.9.</p></li>
 <li><p><strong>k_b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Breakdown torque margin, defaults to 0.9.</p></li>
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Sampling period (s), defaults to 250e-6.</p></li>
@@ -1741,7 +1657,7 @@ angular frequency (rad/s).</p></li>
 <dd class="field-odd"><p><strong>fbk</strong> (<em>OpenLoopVHzFeedbacks</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1755,7 +1671,7 @@ angular frequency (rad/s).</p></li>
 <dd class="field-odd"><p><strong>fbk</strong> (<em>OpenLoopVHzFeedbacks</em>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1784,7 +1700,7 @@ angular frequency (rad/s).</p></li>
 <dd><p>Post-process controller time series, without changes here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ts</strong> (<em>motulator.common.control._base.TimeSeries</em>)</p>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="../../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>motulator.common.control.TimeSeries</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -1799,7 +1715,7 @@ angular frequency (rad/s).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><em>motulator.drive.control.im.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<em>OpenLoopVHzFeedbacks</em>)</p></li>
 </ul>
 </dd>
@@ -1883,7 +1799,7 @@ corresponds to the rotor angular speed <cite>w_M</cite> and <cite>u</cite> to th
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">PWM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SVPWM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overmodulation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MPE'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedforward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">single_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM" title="Link to this definition">#</a></dt>
 <dd><p>Duty ratios and realized voltage for three-phase carrier-based PWM.</p>
 <p>This computes the duty ratios for space-vector PWM or discontinuous PWM (DPWM)
-<a class="footnote-reference brackets" href="#hav1999" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>, including the overmodulation <a class="footnote-reference brackets" href="#hav1999b" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>. The realized voltage is
+<a class="footnote-reference brackets" href="#hav1999" id="id9" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>, including the overmodulation <a class="footnote-reference brackets" href="#hav1999b" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>. The realized voltage is
 reconstructed from the duty ratios and the measured DC-bus voltage, taking into
 account the computational delay of one sampling period.</p>
 <p>In DPWM, one leg at a time is clamped to the positive or negative DC rail, so that
@@ -1894,7 +1810,7 @@ space-vector PWM. The switching losses are minimized if the clamped leg conducts
 largest current: DPWM1 suits a current in phase with the voltage, DPWM2 a current
 lagging by about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly
 reactive current. At the same average switching frequency, DPWM gives a lower
-current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a>.</p>
+current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>.</p>
 <p>Optionally, the duty-ratio error <cite>d_err</cite> caused by the inverter nonlinearities, such
 as the dead time and the threshold voltages of the power devices, is taken into
 account. The realized voltage is corrected for the error using the measured
@@ -1902,7 +1818,7 @@ currents. By default, the error is also compensated for by feedforward using the
 predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
 compensated for by shifting the other legs.</p>
 <p>Optionally, the duty ratio of a switching leg is limited to the range
-<cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></a>. A duty ratio in the
+<cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>. A duty ratio in the
 range <cite>(0, d_min)</cite> is rounded to 0 or <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to
 <cite>1 - d_min</cite> or 1, whichever gives the realized duty ratio nearer to that of the
 voltage reference. The limited voltage reference and the realized voltage include
@@ -1949,24 +1865,24 @@ is <cite>T_s</cite>). Must match the system model.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="hav1999" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">7</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
 <p>Hava, Kerkman, Lipo, “Simple analytical and graphical methods for
 carrier-based PWM-VSI drives,” IEEE Trans. Power Electron., 1999,
 <a class="reference external" href="https://doi.org/10.1109/63.737592">https://doi.org/10.1109/63.737592</a></p>
 </aside>
 <aside class="footnote brackets" id="hav1999b" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">8</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
 <p>Hava, Sul, Kerkman, Lipo, “Dynamic overmodulation characteristics of
 triangle intersection PWM methods,” IEEE Trans. Ind. Appl., 1999,
 <a class="reference external" href="https://doi.org/10.1109/28.777199">https://doi.org/10.1109/28.777199</a></p>
 </aside>
 <aside class="footnote brackets" id="hav1998" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">9</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">10</a><span class="fn-bracket">]</span></span>
 <p>Hava, Kerkman, Lipo, “A high-performance generalized discontinuous PWM
 algorithm,” IEEE Trans. Ind. Appl., 1998, <a class="reference external" href="https://doi.org/10.1109/28.720446">https://doi.org/10.1109/28.720446</a></p>
 </aside>
 <aside class="footnote brackets" id="wel2006" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">10</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">11</a><span class="fn-bracket">]</span></span>
 <p>Welchko, Schulz, Hiti, “Effects and compensation of dead-time and
 minimum pulse-width limitations in two-level PWM voltage source inverters,” Proc.
 IEEE IAS Annu. Meeting, 2006, <a class="reference external" href="https://doi.org/10.1109/IAS.2006.256630">https://doi.org/10.1109/IAS.2006.256630</a></p>
@@ -2038,7 +1954,7 @@ given, the voltage is corrected for it using the measured currents.</p>
 <span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">six_step_overmodulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u_c_ref_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/common/control/_pwm.html#PWM.six_step_overmodulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.PWM.six_step_overmodulation" title="Link to this definition">#</a></dt>
 <dd><p>Overmodulation up to six-step operation.</p>
 <p>This method modifies the angle of the voltage reference vector in the
-overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></a>.</p>
+overmodulation region such that the six-step operation is reached <a class="footnote-reference brackets" href="#bol1997" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2056,7 +1972,7 @@ overmodulation region such that the six-step operation is reached <a class="foot
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="bol1997" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">11</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">12</a><span class="fn-bracket">]</span></span>
 <p>Bolognani, Zigliotto, “Novel digital continuous control of SVM
 inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <a class="reference external" href="https://doi.org/10.1109/28.568019">https://doi.org/10.1109/28.568019</a></p>
@@ -2085,12 +2001,11 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.ReferenceGenerator">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">par</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_s_nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ReferenceGenerator" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">ReferenceGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_nom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_s_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ReferenceGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ReferenceGenerator" title="Link to this definition">#</a></dt>
 <dd><p>Reference generator for flux-vector control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>psi_s_nom</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Nominal stator flux linkage (Vs).</p></li>
 <li><p><strong>i_s_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Maximum stator current (A).</p></li>
 <li><p><strong>tau_M_max</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Maximum torque reference (Nm).</p></li>
@@ -2101,8 +2016,8 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.im.ReferenceGenerator.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ReferenceGenerator.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ReferenceGenerator.compute_output" title="Link to this definition">#</a></dt>
-<dd><p>Simple field-weakening strategy.</p>
+<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tau_M_ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi_R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op_par</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_im_flux_vector.html#ReferenceGenerator.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.ReferenceGenerator.compute_output" title="Link to this definition">#</a></dt>
+<dd><p>Simple field-weakening strategy, with the parameters <cite>op_par</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2110,6 +2025,7 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li><p><strong>w_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>psi_R</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
+<li><p><strong>op_par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>motulator.drive.control.im.InductionMachineInvGammaPars</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2121,9 +2037,15 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.drive.control.im.References">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">References</span></span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_common.html#References"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.References" title="Link to this definition">#</a></dt>
+<dd><p>Reference signals of the drive controllers.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.control.im.SpeedController">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.control.im.</span></span><span class="sig-name descname"><span class="pre">SpeedController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">J</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau_M_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/control/_common.html#SpeedController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.im.SpeedController" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.common.control._controllers.PIController</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.drive.control.im.PIController" title="motulator.drive.control.im.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.control.im.PIController</span></code></a></p>
 <p>2DOF PI speed controller.</p>
 <p>This is an interface for a speed controller. The gains are initialized based on the
 desired closed-loop bandwidth and the rotor inertia estimate.</p>
@@ -2150,11 +2072,11 @@ speed error signal is defined in <a class="reference internal" href="#motulator.
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em> | </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachinePars" title="motulator.drive.control.im.InductionMachinePars"><em>InductionMachinePars</em></a>) – Machine model parameters.</p></li>
+<li><p><strong>par</strong> (<a class="reference internal" href="#motulator.drive.control.im.BaseInductionMachineControlPars" title="motulator.drive.control.im.BaseInductionMachineControlPars"><em>BaseInductionMachineControlPars</em></a>) – Machine model parameters.</p></li>
 <li><p><strong>alpha_o</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Speed estimation pole (rad/s).</p></li>
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s). The poles of the ideal sensored estimation-error dynamics
 are placed at <code class="docutils literal notranslate"><span class="pre">exp(-alpha_o*T_s)</span></code>.</p></li>
-<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>) – Observer gain as a function of the electrical angular speed of the rotor.</p></li>
+<li><p><strong>k_o</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><em>InductionMachineInvGammaPars</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a><em>]</em>) – Observer gain, see <a class="reference internal" href="#motulator.drive.control.im.FluxObserver" title="motulator.drive.control.im.FluxObserver"><code class="xref py py-class docutils literal notranslate"><span class="pre">FluxObserver</span></code></a>.</p></li>
 <li><p><strong>J</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Inertia of the mechanical system (kgm²). Defaults to None, which means the
 mechanical system model is not used.</p></li>
 </ul>
@@ -2180,6 +2102,17 @@ based error signal is used exclusively.</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.ObserverOutputs" title="motulator.drive.control.im.ObserverOutputs">ObserverOutputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="motulator.drive.control.im.SpeedFluxObserver.op_par">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">op_par</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars"><span class="pre">motulator.drive.control.im.InductionMachineInvGammaPars</span></a></span><a class="headerlink" href="#motulator.drive.control.im.SpeedFluxObserver.op_par" title="Link to this definition">#</a></dt>
+<dd><p>Inverse-Γ model parameters at the operating point of the sampling period.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.control.im.InductionMachineInvGammaPars" title="motulator.drive.control.im.InductionMachineInvGammaPars">motulator.drive.control.im.InductionMachineInvGammaPars</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2220,7 +2153,7 @@ based error signal is used exclusively.</p></li>
 <dd><p>Speed observer.</p>
 <p>This observer estimates the mechanical rotor speed based on the mechanical system
 model and the error signal. If the inertia of the mechanical system is provided, the
-load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></a>.</p>
+load torque is also estimated, avoiding lag in the speed estimate <a class="footnote-reference brackets" href="#lor1991" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -2236,7 +2169,7 @@ not used.</p></li>
 <p class="rubric">References</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="lor1991" role="doc-footnote">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">12</a><span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">13</a><span class="fn-bracket">]</span></span>
 <p>Lorenz, Van Patten, “High-resolution velocity estimation for
 all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <a class="reference external" href="https://doi.org/10.1109/28.85485">https://doi.org/10.1109/28.85485</a></p>
@@ -2294,7 +2227,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <dd><p>Sample the sensors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mdl</strong> (<em>motulator.drive.model._drive.Drive</em>)</p>
+<dd class="field-odd"><p><strong>mdl</strong> (<a class="reference internal" href="../../model/index.html#motulator.drive.model.Drive" title="motulator.drive.model.Drive"><em>motulator.drive.model.Drive</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements">Measurements</a></p>
@@ -2308,7 +2241,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <dd><p>Extend the post-process method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>motulator.common.control._base.TimeSeries</p>
+<dd class="field-odd"><p><a class="reference internal" href="../../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries">motulator.common.control.TimeSeries</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2320,7 +2253,7 @@ all-digital, AC servo drives,” IEEE Trans. Ind. Appl., 1991,
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><em>motulator.drive.control.im.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
@@ -2363,7 +2296,7 @@ first one (a flying start).</p>
 <dd class="field-odd"><p><strong>fbk</strong> (<a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>motulator.drive.control._common.References</p>
+<dd class="field-even"><p><a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References">motulator.drive.control.im.References</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2374,7 +2307,7 @@ first one (a flying start).</p>
 <dd><p>Sample the sensors, the speed and position sensors if the drive has them.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mdl</strong> (<em>motulator.drive.model._drive.Drive</em>)</p>
+<dd class="field-odd"><p><strong>mdl</strong> (<a class="reference internal" href="../../model/index.html#motulator.drive.model.Drive" title="motulator.drive.model.Drive"><em>motulator.drive.model.Drive</em></a>)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Measurements" title="motulator.grid.control.Measurements">Measurements</a></p>
@@ -2391,7 +2324,7 @@ first one (a flying start).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>)</p></li>
 <li><p><strong>u_ref</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>)</p></li>
-<li><p><strong>fbk</strong> (<em>motulator.common.control._base.ConverterFeedbacks</em>)</p></li>
+<li><p><strong>fbk</strong> (<a class="reference internal" href="../../../common/control/index.html#motulator.common.control.ConverterFeedbacks" title="motulator.common.control.ConverterFeedbacks"><em>motulator.common.control.ConverterFeedbacks</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -2406,7 +2339,7 @@ first one (a flying start).</p>
 <dd><p>Extend the post-process method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>motulator.common.control._base.TimeSeries</p>
+<dd class="field-odd"><p><a class="reference internal" href="../../../common/control/index.html#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries">motulator.common.control.TimeSeries</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2446,7 +2379,7 @@ first one (a flying start).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ref</strong> (<em>motulator.drive.control._common.References</em>)</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#motulator.drive.control.im.References" title="motulator.drive.control.im.References"><em>motulator.drive.control.im.References</em></a>)</p></li>
 <li><p><strong>fbk</strong> (<a class="reference internal" href="../../../grid/control/index.html#motulator.grid.control.Feedbacks" title="motulator.grid.control.Feedbacks"><em>Feedbacks</em></a>)</p></li>
 </ul>
 </dd>
@@ -2510,7 +2443,10 @@ first one (a flying start).</p>
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentController"><code class="docutils literal notranslate"><span class="pre">CurrentController</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.BaseInductionMachineControlPars"><code class="docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.BaseInductionMachineControlPars.inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">BaseInductionMachineControlPars.inv_gamma_pars()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentReferenceGenerator"><code class="docutils literal notranslate"><span class="pre">CurrentReferenceGenerator</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentReferenceGenerator.compute_output"><code class="docutils literal notranslate"><span class="pre">CurrentReferenceGenerator.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentReferenceGenerator.update"><code class="docutils literal notranslate"><span class="pre">CurrentReferenceGenerator.update()</span></code></a></li>
@@ -2524,10 +2460,6 @@ first one (a flying start).</p>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.CurrentVectorControllerCfg"><code class="docutils literal notranslate"><span class="pre">CurrentVectorControllerCfg</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DiscreteCurrentController"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DiscreteCurrentController.compute_output"><code class="docutils literal notranslate"><span class="pre">DiscreteCurrentController.compute_output()</span></code></a></li>
-</ul>
-</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DriveControlSystem"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DriveControlSystem.compute_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_output()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.DriveControlSystem.compute_standby_output"><code class="docutils literal notranslate"><span class="pre">DriveControlSystem.compute_standby_output()</span></code></a></li>
@@ -2537,6 +2469,7 @@ first one (a flying start).</p>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver"><code class="docutils literal notranslate"><span class="pre">FluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">FluxObserver.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver.op_par"><code class="docutils literal notranslate"><span class="pre">FluxObserver.op_par</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.FluxObserver.update"><code class="docutils literal notranslate"><span class="pre">FluxObserver.update()</span></code></a></li>
 </ul>
 </li>
@@ -2552,20 +2485,14 @@ first one (a flying start).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.alpha</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.w_rb</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.inv_gamma_pars()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.magnetic_map()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachineInvGammaPars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachineInvGammaPars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.gamma"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.gamma</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_M"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_M</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.L_sgm"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.L_sgm</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.R_R"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.R_R</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.alpha"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.alpha</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.w_rb"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.w_rb</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.cage"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.cage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.inv_gamma_pars"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.inv_gamma_pars()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.magnetic_map"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.magnetic_map()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InductionMachinePars.update_psi_s"><code class="docutils literal notranslate"><span class="pre">InductionMachinePars.update_psi_s()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
@@ -2603,9 +2530,11 @@ first one (a flying start).</p>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.ReferenceGenerator.compute_output"><code class="docutils literal notranslate"><span class="pre">ReferenceGenerator.compute_output()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.References"><code class="docutils literal notranslate"><span class="pre">References</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedController"><code class="docutils literal notranslate"><span class="pre">SpeedController</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.compute_output"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.compute_output()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.op_par"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.op_par</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.update"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.update()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.drive.control.im.SpeedFluxObserver.w_M"><code class="docutils literal notranslate"><span class="pre">SpeedFluxObserver.w_M</span></code></a></li>
 </ul>

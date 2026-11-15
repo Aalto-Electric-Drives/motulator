@@ -16,11 +16,10 @@ Classes
 
 .. autoapisummary::
 
-   motulator.drive.control.im.CurrentController
+   motulator.drive.control.im.BaseInductionMachineControlPars
    motulator.drive.control.im.CurrentReferenceGenerator
    motulator.drive.control.im.CurrentVectorController
    motulator.drive.control.im.CurrentVectorControllerCfg
-   motulator.drive.control.im.DiscreteCurrentController
    motulator.drive.control.im.DriveControlSystem
    motulator.drive.control.im.FluxObserver
    motulator.drive.control.im.FluxVectorController
@@ -35,6 +34,7 @@ Classes
    motulator.drive.control.im.PIController
    motulator.drive.control.im.PWM
    motulator.drive.control.im.ReferenceGenerator
+   motulator.drive.control.im.References
    motulator.drive.control.im.SpeedController
    motulator.drive.control.im.SpeedFluxObserver
    motulator.drive.control.im.SpeedObserver
@@ -45,20 +45,16 @@ Classes
 Module Contents
 ---------------
 
-.. py:class:: CurrentController(par, alpha_c, alpha_i = None)
+.. py:class:: BaseInductionMachineControlPars
 
-   Bases: :py:obj:`motulator.common.control.ComplexPIController`
+   Bases: :py:obj:`Protocol`
 
 
    
-   Current controller for induction machines.
+   Base class for induction machine parameters, as used by the control systems.
 
-   :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
-   :param alpha_c: Reference-tracking bandwidth (rad/s).
-   :type alpha_c: float
-   :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_c`.
-   :type alpha_i: float, optional
+   The control systems use the inverse-Γ model, whose parameters may depend on the
+   operating point, e.g., due to the magnetic saturation.
 
 
 
@@ -76,6 +72,35 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
+
+   .. py:method:: inv_gamma_pars(psi_s)
+
+      
+      Inverse-Γ model parameters at the operating point.
+
+      :param psi_s: Stator flux linkage magnitude (Vs).
+      :type psi_s: float
+
+      :returns: Inverse-Γ model parameters.
+      :rtype: InductionMachineInvGammaPars
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
 
 .. py:class:: CurrentReferenceGenerator(par, psi_s_nom, i_s_max, w_s_nom, k_u, k_fw)
 
@@ -104,7 +129,7 @@ Module Contents
    current and the breakdown slip.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :type par: BaseInductionMachineControlPars
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
    :param i_s_max: Maximum stator current (A).
@@ -113,7 +138,8 @@ Module Contents
    :type w_s_nom: float
    :param k_u: Voltage utilization factor.
    :type k_u: float
-   :param k_fw: Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used.
+   :param k_fw: Field-weakening gain (1/H). If None, ``2*R_R/(w_s_nom*L_sgm**2)`` is used, with
+                the parameters at the operating point.
    :type k_fw: float | None
 
    .. rubric:: References
@@ -139,7 +165,7 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(tau_M_ref, psi_R)
+   .. py:method:: compute_output(tau_M_ref, psi_R, op_par)
 
       
       Compute the stator current reference.
@@ -148,6 +174,8 @@ Module Contents
       :type tau_M_ref: float
       :param psi_R: Estimated rotor flux magnitude (Vs).
       :type psi_R: float
+      :param op_par: Inverse-Γ model parameters at the operating point.
+      :type op_par: InductionMachineInvGammaPars
 
       :returns: Stator current reference (A) and limited torque reference (Nm).
       :rtype: tuple[complex, float]
@@ -170,7 +198,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(T_s, u_s_ref, u_dc)
+   .. py:method:: update(T_s, u_s_ref, u_dc, op_par)
 
       
       Field-weakening based on the unlimited reference voltage.
@@ -181,6 +209,8 @@ Module Contents
       :type u_s_ref: complex
       :param u_dc: DC-link voltage (V).
       :type u_dc: float
+      :param op_par: Inverse-Γ model parameters at the operating point.
+      :type op_par: InductionMachineInvGammaPars
 
 
 
@@ -205,10 +235,22 @@ Module Contents
    
    Current-vector controller for induction machine drives.
 
+   The currents are mapped to the leakage flux linkages ``L_sgm*i_s``, where `L_sgm`
+   is evaluated at the operating point, and the flux linkages are controlled by the
+   2DOF PI controller or, if `discrete` is True, by the direct discrete-time
+   controller. The magnetic saturation is thus taken into account as in the
+   flux-linkage-based current control of synchronous machines [#Awa2019a]_.
+
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :type par: BaseInductionMachineControlPars
    :param cfg: Current-vector controller configuration.
    :type cfg: CurrentVectorControllerCfg
+
+   .. rubric:: References
+
+   .. [#Awa2019a] Awan, Saarakkala, Hinkkanen, "Flux-linkage-based current control of
+      saturated synchronous motors," IEEE Trans. Ind. Appl., 2019,
+      https://doi.org/10.1109/TIA.2019.2919258
 
 
 
@@ -341,11 +383,12 @@ Module Contents
                    otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
                    speed estimation gain approximately the same.
    :type alpha_o: float | None, optional
-   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
-               defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)`` if
-               `sensorless` is True, otherwise ``lambda w_m: 1 + 0.2*abs(w_m)/(alpha -
-               1j*w_m)``, where ``alpha = R_R/L_M``.
-   :type k_o: Callable[[float], complex] | None, optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed and the
+               inverse-Γ model parameters at the operating point. If None, defaults to
+               ``lambda w_m, par: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)`` if
+               `sensorless` is True, otherwise ``lambda w_m, par: 1 + 0.2*abs(w_m)/(par.alpha
+               - 1j*w_m)``.
+   :type k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None, optional
    :param w_s_nom: Nominal stator angular frequency (rad/s), defaults to 2*pi*50.
    :type w_s_nom: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.95.
@@ -379,74 +422,6 @@ Module Contents
 
    ..
        !! processed by numpydoc !!
-
-.. py:class:: DiscreteCurrentController(par, alpha_c, T_s)
-
-   Bases: :py:obj:`motulator.common.control.DiscreteComplexController`
-
-
-   
-   Direct discrete-time current controller for induction machines.
-
-   The currents are mapped to the leakage flux linkages, ``psi = L_sgm*i``. The
-   resistive voltage drop and the back-emf are disturbances, which the integral action
-   compensates for. Since the design includes the delays, the angle of the voltage
-   reference is not advanced (`k_comp = 0` in `CurrentVectorController`).
-
-   :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
-   :param alpha_c: Reference-tracking bandwidth (rad/s).
-   :type alpha_c: float
-   :param T_s: Sampling period (s).
-   :type T_s: float
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   ..
-       !! processed by numpydoc !!
-
-   .. py:method:: compute_output(i_ref, i)
-
-      
-      Compute the controller output.
-
-      :param i_ref: Reference signal.
-      :type i_ref: complex
-      :param i: Feedback signal.
-      :type i: complex
-
-      :returns: **u** -- Controller output.
-      :rtype: complex
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
 
 .. py:class:: DriveControlSystem(pwm, k_comp)
 
@@ -599,23 +574,25 @@ Module Contents
    external signal, given to `compute_output`, selects between these: `h = 0` gives
    purely model-based (sensorless) operation, `h = 1` relies on the external signal
    alone, and intermediate values blend the two. The conjugate-error observer gain
-   follows the same weight. The main-flux saturation can be taken into account by
-   providing the saturation model via `InductionMachinePars`.
+   follows the same weight. The machine parameters are evaluated at the stator flux
+   estimate at the beginning of each sampling period (see `op_par`), which takes,
+   e.g., the main-flux saturation modeled by `InductionMachinePars` into account.
 
    The flux estimate is corrected and predicted using a hold-equivalent discrete-time
    model, and the estimation error is the difference between the rotor flux predictions
    of the current model and the voltage model, cf. [#Bot1993]_, [#Hin2018]_.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
-   :param k_o: Observer gain as a function of the electrical angular speed of the rotor.
-   :type k_o: Callable[[float], complex]
+   :type par: BaseInductionMachineControlPars
+   :param k_o: Observer gain as a function of the electrical angular speed of the rotor and the
+               inverse-Γ model parameters at the operating point.
+   :type k_o: Callable[[float, InductionMachineInvGammaPars], complex]
 
    .. rubric:: Notes
 
-   The pure voltage model corresponds to ``k_o = lambda w_m: 0``, resulting in the
-   marginally stable estimation-error dynamics. The current model is obtained by
-   setting ``k_o = lambda w_m: 1`` together with `h = 1`.
+   The pure voltage model corresponds to ``k_o = lambda w_m, par: 0``, resulting in
+   the marginally stable estimation-error dynamics. The current model is obtained by
+   setting ``k_o = lambda w_m, par: 1`` together with `h = 1`.
 
    .. rubric:: References
 
@@ -689,6 +666,32 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:property:: op_par
+      :type: motulator.drive.utils._parameters.InductionMachineInvGammaPars
+
+
+      
+      Inverse-Γ model parameters at the operating point of the sampling period.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: update(T_s, out)
 
       
@@ -722,7 +725,7 @@ Module Contents
    stator flux and torque channels is used [#Tii2025b]_.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :type par: BaseInductionMachineControlPars
    :param cfg: Flux-vector control configuration.
    :type cfg: FluxVectorControllerCfg
 
@@ -864,11 +867,12 @@ Module Contents
                    otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
                    speed estimation gain approximately the same.
    :type alpha_o: float | None, optional
-   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
-               defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)`` if
-               `sensorless` is True, otherwise ``lambda w_m: 1 + 0.2*abs(w_m)/(alpha -
-               1j*w_m)``, where ``alpha = R_R/L_M``.
-   :type k_o: Callable[[float], complex] | None, optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed and the
+               inverse-Γ model parameters at the operating point. If None, defaults to
+               ``lambda w_m, par: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)`` if
+               `sensorless` is True, otherwise ``lambda w_m, par: 1 + 0.2*abs(w_m)/(par.alpha
+               - 1j*w_m)``.
+   :type k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None, optional
    :param tau_M_max: Maximum torque reference (Nm), defaults to `inf`.
    :type tau_M_max: float, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
@@ -902,7 +906,7 @@ Module Contents
 
 .. py:class:: InductionMachineInvGammaPars
 
-   Bases: :py:obj:`BaseInductionMachinePars`
+   Bases: :py:obj:`BaseInductionMachinePars`, :py:obj:`BaseInductionMachineControlPars`
 
 
    
@@ -986,6 +990,30 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: inv_gamma_pars(psi_s)
+
+      
+      Inverse-Γ model parameters, independent of the operating point.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
 
       
@@ -1010,33 +1038,9 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update_psi_s(psi_s)
-
-      
-      Update the stator flux linkage magnitude, without effect here.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: InductionMachinePars
 
-   Bases: :py:obj:`BaseInductionMachinePars`
+   Bases: :py:obj:`BaseInductionMachinePars`, :py:obj:`BaseInductionMachineControlPars`
 
 
    
@@ -1051,10 +1055,10 @@ Module Contents
 
    The main-flux saturation is modeled by providing a callable `L_s` and the deep-bar
    effect by providing the cage impedance as `R_r`. For control systems, the class
-   provides the corresponding inverse-Γ model parameters, which then depend on the
-   stator flux linkage magnitude given to `update_psi_s`. With the cage impedance, they
-   are those of its low-frequency equivalent, i.e., the DC resistance of the cage in
-   series with its DC inductance, which adds to the leakage inductance.
+   provides the corresponding inverse-Γ model parameters at a given stator flux linkage
+   magnitude, see `inv_gamma_pars`. With the cage impedance, they are those of its
+   low-frequency equivalent, i.e., the DC resistance of the cage in series with its DC
+   inductance, which adds to the leakage inductance.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -1070,45 +1074,6 @@ Module Contents
    :param G_c: Core-loss conductance (S), connected between the stator resistance and the
                magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
-   :param psi_s: Stator flux linkage magnitude (Vs), at which the inverse-Γ model parameters are
-                 evaluated, defaults to 0.
-   :type psi_s: float, optional
-
-   .. attribute:: gamma
-
-      Magnetic coupling factor.
-
-      :type: float
-
-   .. attribute:: L_M
-
-      Inverse-Γ magnetizing inductance (H).
-
-      :type: float
-
-   .. attribute:: L_sgm
-
-      Inverse-Γ leakage inductance (H).
-
-      :type: float
-
-   .. attribute:: R_R
-
-      Inverse-Γ rotor resistance (Ω).
-
-      :type: float
-
-   .. attribute:: alpha
-
-      Inverse rotor time constant (rad/s).
-
-      :type: float
-
-   .. attribute:: w_rb
-
-      Breakdown slip angular frequency (rad/s).
-
-      :type: float
 
    .. rubric:: References
 
@@ -1158,11 +1123,17 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: inv_gamma_pars(psi_s)
 
       
-      Magnetic map.
+      Inverse-Γ model parameters at the operating point.
 
+      :param psi_s: Stator flux linkage magnitude (Vs), at which the stator inductance `L_s` is
+                    evaluated.
+      :type psi_s: float
+
+      :returns: Inverse-Γ model parameters.
+      :rtype: InductionMachineInvGammaPars
 
 
 
@@ -1182,10 +1153,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update_psi_s(psi_s)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
 
       
-      Update the stator flux linkage magnitude.
+      Magnetic map.
 
 
 
@@ -1261,7 +1232,7 @@ Module Contents
    stator flux and torque channels is used [#Tii2025b]_.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :type par: BaseInductionMachineControlPars
    :param cfg: Observer-based V/Hz controller configuration.
    :type cfg: ObserverBasedVHzControllerCfg
 
@@ -1417,10 +1388,10 @@ Module Contents
    :type alpha_tau: float, optional
    :param alpha_f: Low-pass-filter bandwidth (rad/s), defaults to 2*pi*1.
    :type alpha_f: float, optional
-   :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
-               defaults to ``lambda w_m: (0.5*alpha + 0.2*abs(w_m))/(alpha - 1j*w_m)``, where
-               ``alpha = R_R/L_M``.
-   :type k_o: Callable[[float], complex] | None, optional
+   :param k_o: Observer gain as a function of the electrical rotor angular speed and the
+               inverse-Γ model parameters at the operating point. If None, defaults to
+               ``lambda w_m, par: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``.
+   :type k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None, optional
    :param k_u: Voltage utilization factor, defaults to 0.9.
    :type k_u: float, optional
    :param k_b: Breakdown torque margin, defaults to 0.9.
@@ -1988,13 +1959,11 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ReferenceGenerator(par, psi_s_nom, i_s_max, tau_M_max, k_u, k_b)
+.. py:class:: ReferenceGenerator(psi_s_nom, i_s_max, tau_M_max, k_u, k_b)
 
    
    Reference generator for flux-vector control.
 
-   :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
    :param psi_s_nom: Nominal stator flux linkage (Vs).
    :type psi_s_nom: float
    :param i_s_max: Maximum stator current (A).
@@ -2023,10 +1992,10 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_output(tau_M_ref, w_s, psi_R, u_dc)
+   .. py:method:: compute_output(tau_M_ref, w_s, psi_R, u_dc, op_par)
 
       
-      Simple field-weakening strategy.
+      Simple field-weakening strategy, with the parameters `op_par`.
 
 
 
@@ -2046,6 +2015,29 @@ Module Contents
       ..
           !! processed by numpydoc !!
 
+
+.. py:class:: References
+
+   
+   Reference signals of the drive controllers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
 
 .. py:class:: SpeedController(J, alpha_s, alpha_i = None, tau_M_max = inf)
 
@@ -2095,14 +2087,14 @@ Module Contents
    speed error signal is defined in :class:`FluxObserver`.
 
    :param par: Machine model parameters.
-   :type par: InductionMachineInvGammaPars | InductionMachinePars
+   :type par: BaseInductionMachineControlPars
    :param alpha_o: Speed estimation pole (rad/s).
    :type alpha_o: float
    :param T_s: Sampling period (s). The poles of the ideal sensored estimation-error dynamics
                are placed at ``exp(-alpha_o*T_s)``.
    :type T_s: float
-   :param k_o: Observer gain as a function of the electrical angular speed of the rotor.
-   :type k_o: Callable[[float], complex]
+   :param k_o: Observer gain, see :class:`FluxObserver`.
+   :type k_o: Callable[[float, InductionMachineInvGammaPars], complex]
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
    :type J: float, optional
@@ -2142,6 +2134,32 @@ Module Contents
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:property:: op_par
+      :type: motulator.drive.utils._parameters.InductionMachineInvGammaPars
+
+
+      
+      Inverse-Γ model parameters at the operating point of the sampling period.
+
 
 
 
