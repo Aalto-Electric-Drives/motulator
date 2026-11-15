@@ -21,8 +21,8 @@
 2.2-kW IM, diode bridge, V/Hz control
 =====================================
 
-This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM)
-drive, fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid
+This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive,
+fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid
 through an AC choke.
 
 .. GENERATED FROM PYTHON SOURCE LINES 12-23
@@ -245,7 +245,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 19.129 seconds)
+   **Total running time of the script:** (0 minutes 24.075 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:

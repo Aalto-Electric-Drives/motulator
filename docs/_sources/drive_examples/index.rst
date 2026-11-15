@@ -653,7 +653,7 @@ These examples demonstrate machines and drives connected to the grid. The exampl
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates pure open-loop V/Hz control of a 2.2-kW induction machine (IM) drive, fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid through an AC choke.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates open-loop V/Hz control of a 2.2-kW induction machine (IM) drive, fed from a six-pulse diode bridge. The diode bridge is supplied from a stiff grid through an AC choke.">
 
 .. only:: html
 

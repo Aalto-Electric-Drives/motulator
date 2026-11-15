@@ -524,7 +524,7 @@
     <span class="c1"># True: the controller takes the DC-bus voltage reference. False: it takes the</span>
     <span class="c1"># active power reference.</span>
     <span class="n">dc_bus_forming</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">k_comp</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angle-advance factor, see GridConverterControlSystem</span>
+    <span class="n">k_comp</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># Angle-advance factor, see ConverterControlSystem</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">u_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">meas</span><span class="p">:</span> <span class="n">Measurements</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fbk</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Get feedback signals, `u_c_ab` being the voltage of the ongoing period."""</span>

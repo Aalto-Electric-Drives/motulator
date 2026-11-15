@@ -600,9 +600,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_standby_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">Feedbacks</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute references while the gates are blocked."""</span>
         <span class="c1"># The controller has no means to synchronize with the grid without the power</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="s2">"Power-synchronization control does not support gate blocking"</span>
-        <span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> does not support gate blocking"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PowerSynchronizationController.update">

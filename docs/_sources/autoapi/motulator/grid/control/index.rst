@@ -1673,8 +1673,6 @@ Package Contents
 
 
    .. py:method:: compute_standby_output(fbk)
-      :abstractmethod:
-
 
       
       Compute references while the gates are blocked.
