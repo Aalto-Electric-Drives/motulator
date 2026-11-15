@@ -1,12 +1,14 @@
 """Base classes for controls."""
 
-from collections.abc import Callable
+from cmath import exp
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any, Protocol
 
 import numpy as np
 
+from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import get_value, wrap
 
 
@@ -15,6 +17,20 @@ class References(Protocol):
     """Protocol defining the interface for reference signals."""
 
     T_s: float  # Sampling period for next control cycle
+
+
+class ConverterReferences(References, Protocol):
+    """Protocol defining the reference signals of converter control systems."""
+
+    d_abc: Sequence[float]  # Duty ratios
+
+
+class ConverterFeedbacks(Protocol):
+    """Protocol defining the feedback signals used in the modulation."""
+
+    w_c: float  # Angular speed of the coordinate system
+    theta_c: float  # Angular position of the coordinate system
+    u_dc: float  # DC-bus voltage
 
 
 @dataclass
@@ -187,3 +203,73 @@ class ControlSystem[Mdl, Meas, Ref: References, Fbk](Protocol):
         """Clear all stored data."""
         self._t.clear()
         self._history.clear()
+
+
+# %%
+class ConverterControlSystem(ControlSystem):
+    """
+    Base class for control systems of voltage-source converters.
+
+    The observer of the inner controller gets the realized converter voltage of the
+    ongoing sampling period, while the feedback voltage for the control laws is the
+    realized voltage averaged over the previous and the ongoing sampling periods.
+    Before the modulation, the angle of the voltage reference is advanced by
+    `k_comp*T_s*w_c`, where `k_comp` is given by the inner controller. The value 1.5
+    compensates for the computational delay of one sampling period and the delay of
+    half a sampling period caused by the zero-order hold of the PWM [#Bae2003]_. The
+    value 0 means that the angle is not advanced, which is used if the controller takes
+    the delays into account itself, e.g., in a direct discrete-time design.
+
+    Parameters
+    ----------
+    pwm : PWM
+        Pulse-width modulator.
+    k_comp : float
+        Angle-advance factor of the voltage reference.
+
+    References
+    ----------
+    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
+       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
+       2003, https://doi.org/10.1109/TIA.2003.810660
+
+    """
+
+    def __init__(self, pwm: PWM, k_comp: float) -> None:
+        super().__init__()
+        self.pwm = pwm
+        self.k_comp = k_comp
+
+    def _get_realized_voltages(
+        self, i_c_ab: complex, u_dc: float
+    ) -> tuple[complex, complex]:
+        """
+        Get the realized voltages of the ongoing sampling period and averaged over the
+        previous and ongoing periods (stationary coordinates).
+
+        The realized voltage is computed also with blocked gates, since it passes the
+        measured currents to the PWM for the feedforward compensation of the duty ratios
+        applied after the release.
+
+        """
+        u_c_ab_zoh = self.pwm.get_realized_voltage(i_c_ab, u_dc, average=False)
+        return u_c_ab_zoh, self.pwm.get_realized_voltage(i_c_ab, u_dc)
+
+    def modulate(
+        self, T_s: float, u_ref: complex, fbk: ConverterFeedbacks
+    ) -> Sequence[float]:
+        """
+        Compute the duty ratios from the voltage reference.
+
+        The reference is in the controller coordinates. Its angle is advanced by
+        `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an
+        output filter.
+
+        """
+        u_ab_ref = exp(1j * fbk.theta_c) * u_ref
+        u_ab_ref *= exp(1j * self.k_comp * T_s * fbk.w_c)
+        return self.pwm(T_s, u_ab_ref, fbk.u_dc, fbk.w_c)
+
+    def get_command(self, ref: ConverterReferences) -> tuple[float, Sequence[float]]:
+        """Extract the sampling period and the duty ratios from the references."""
+        return ref.T_s, ref.d_abc

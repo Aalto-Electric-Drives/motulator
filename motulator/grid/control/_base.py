@@ -1,11 +1,11 @@
 """Base control system for grid converters."""
 
 from cmath import exp
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Protocol
 
-from motulator.common.control._base import ControlSystem, TimeSeries
+from motulator.common.control._base import ConverterControlSystem, TimeSeries
 from motulator.common.control._pwm import PWM
 from motulator.common.utils._utils import abc2complex, get_value, line2complex
 from motulator.grid.control._common import DCBusVoltageController, References
@@ -88,23 +88,14 @@ class InnerController[Ref: References, Fbk](Protocol):
         ...
 
 
-class GridConverterControlSystem(ControlSystem):
+class GridConverterControlSystem(ConverterControlSystem):
     """
     Grid converter control system.
 
     This class defines the interface for control systems of grid converters. It is a
     generic class that can be used with different models, measurements, feedback
-    signals, and reference signals.
-
-    The inner controller gets the realized voltage of the ongoing sampling period for
-    its observer, while the feedback voltage `u_c` for the control laws is the realized
-    voltage averaged over the previous and the ongoing sampling periods. Before the
-    modulation, the angle of the voltage reference is advanced by `k_comp*T_s*w_c`,
-    where `k_comp` is given by the inner controller. The value 1.5 compensates for the
-    computational delay of one sampling period and the delay of half a sampling period
-    caused by the zero-order hold of the PWM [#Bae2003]_. The value 0 means that the
-    angle is not advanced, which is used if the controller takes the delays into account
-    itself.
+    signals, and reference signals. The feedback voltages and the modulation are
+    described in `ConverterControlSystem`.
 
     Parameters
     ----------
@@ -120,12 +111,6 @@ class GridConverterControlSystem(ControlSystem):
     pwm : PWM, optional
         Pulse-width modulator, defaults to `PWM()`.
 
-    References
-    ----------
-    .. [#Bae2003] Bae, Sul, "A compensation method for time delay of full-digital
-       synchronous frame current regulator of PWM AC drives," IEEE Trans. Ind. Appl.,
-       2003, https://doi.org/10.1109/TIA.2003.810660
-
     """
 
     def __init__(
@@ -134,12 +119,10 @@ class GridConverterControlSystem(ControlSystem):
         dc_bus_voltage_ctrl: DCBusVoltageController | None = None,
         pwm: PWM | None = None,
     ) -> None:
-        super().__init__()
         if inner_ctrl.dc_bus_forming and dc_bus_voltage_ctrl is not None:
             raise ValueError("The inner controller controls the DC-bus voltage")
-        self.pwm = pwm if pwm is not None else PWM()
+        super().__init__(pwm if pwm is not None else PWM(), inner_ctrl.k_comp)
         self.inner_ctrl = inner_ctrl
-        self.k_comp = inner_ctrl.k_comp
         self.dc_bus_voltage_ctrl = dc_bus_voltage_ctrl
         self.ext_ref: ExternalReferences = ExternalReferences()
 
@@ -214,17 +197,10 @@ class GridConverterControlSystem(ControlSystem):
 
     def get_feedback(self, meas: Measurements) -> Feedbacks:
         """Get feedback signals."""
-        # The observers use the voltage of the ongoing sampling period, while the
-        # control laws use the voltage averaged over the previous and ongoing periods.
+        u_c_ab_zoh, u_c_ab = self._get_realized_voltages(meas.i_c_ab, meas.u_dc)
         # With blocked gates, the converter voltage equals the measured PCC voltage
         # (the filter capacitor voltage with an LCL filter) once the current has
-        # decayed, so both are that voltage. The realized voltage is computed also
-        # then, since it passes the measured currents to the PWM for the feedforward
-        # compensation of the duty ratios applied after the release.
-        u_c_ab_zoh = self.pwm.get_realized_voltage(
-            meas.i_c_ab, meas.u_dc, average=False
-        )
-        u_c_ab = self.pwm.get_realized_voltage(meas.i_c_ab, meas.u_dc)
+        # decayed, so both are that voltage
         if not self.enabled:
             u_c_ab_zoh = u_c_ab = meas.u_g_ab
         fbk = self.inner_ctrl.get_feedback(u_c_ab_zoh, meas)
@@ -273,15 +249,9 @@ class GridConverterControlSystem(ControlSystem):
             ref.u_dc = get_value(self.ext_ref.u_dc, self.t)
         return self._add_duty_ratios(ref, fbk)
 
-    def get_command(self, ref: References) -> tuple[float, Sequence[float]]:
-        """Extract the sampling period and the duty ratios from the references."""
-        return ref.T_s, ref.d_abc
-
     def _add_duty_ratios(self, ref: References, fbk: Feedbacks) -> References:
         """Compute the duty ratios from the voltage reference."""
-        u_c_ab_ref = exp(1j * fbk.theta_c) * ref.u_c
-        u_c_ab_ref *= exp(1j * self.k_comp * ref.T_s * fbk.w_c)
-        ref.d_abc = self.pwm(ref.T_s, u_c_ab_ref, fbk.u_dc, fbk.w_c)
+        ref.d_abc = self.modulate(ref.T_s, ref.u_c, fbk)
         ref.enabled = self.enabled
         return ref
 
