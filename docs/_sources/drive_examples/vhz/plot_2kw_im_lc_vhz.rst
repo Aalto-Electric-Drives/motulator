@@ -202,7 +202,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 8.384 seconds)
+   **Total running time of the script:** (0 minutes 6.843 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_lc_vhz.py:
