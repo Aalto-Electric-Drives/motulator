@@ -409,6 +409,38 @@ def test_signal_injection_start() -> None:
     assert res.mdl.mechanics.w_M[-1] == pytest.approx(20, rel=0.05)
 
 
+def test_signal_injection_coast() -> None:
+    """The angle estimate of a signal-injection drive follows the speed estimate while
+    the gates are blocked."""
+    par = sm_pars()
+    mdl = drive_model.Drive(
+        drive_model.SynchronousMachine(par),
+        drive_model.MechanicalSystem(J=0.015),
+        drive_model.VoltageSourceConverter(u_dc=540),
+    )
+    cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, J=0.015)
+    ctrl = sm_control.VectorControlSystem(
+        sm_control.SignalInjectionController(par, cfg),
+        sm_control.SpeedController(J=0.015, alpha_s=2 * pi * 4),
+    )
+    ctrl.set_speed_ref(lambda t: (t > 0.02) * 2 * pi)  # Electrical 3 Hz
+    ctrl.set_enable(lambda t: t >= 0.02 and not 0.3 <= t < 0.33)
+    mdl.mechanics.set_external_load_torque(lambda t: (t > 0.15) * 5)
+    res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.7)
+    assert res.success
+    t = res.ctrl.t
+    w_M = np.interp(t, res.mdl.t, res.mdl.mechanics.w_M)
+    theta_m = np.interp(t, res.mdl.t, np.unwrap(res.mdl.machine.theta_m))
+    # The load reverses the coasting drive, which the speed estimate of the mechanical
+    # model follows
+    assert np.interp(0.33, t, w_M) < 0
+    blocked = (t >= 0.3) & (t < 0.33)
+    assert np.max(np.abs(res.ctrl.fbk.w_M[blocked] - w_M[blocked])) < 0.5
+    err = np.angle(np.exp(1j * (theta_m - res.ctrl.fbk.theta_m)))
+    assert np.max(np.abs(err)) < np.radians(2)
+    assert np.mean(w_M[t > 0.65]) == pytest.approx(2 * pi, rel=0.05)
+
+
 def test_grid_converter_startup() -> None:
     """The DC bus is charged through the diodes and the PLL locks with blocked gates."""
     U_NOM, W_NOM = np.sqrt(2 / 3) * 400, 2 * pi * 50

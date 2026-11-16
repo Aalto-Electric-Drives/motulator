@@ -106,6 +106,9 @@ class SignalInjectionObserver:
     """
     Signal injection observer for synchronous machine drives.
 
+    While the voltage is unknown (blocked gates), no voltage is injected and the error
+    signal is zero, so that the angle estimate follows the speed estimate.
+
     Parameters
     ----------
     par : BaseSynchronousMachineControlPars
@@ -149,6 +152,7 @@ class SignalInjectionObserver:
         self.injection = SquareWaveInjection(par, U_inj, T_s, N_inj)
         self.theta_m: float = 0.0  # State
         self.par = par
+        self._u_known: bool = True  # Voltage known at the latest sampling instant
 
     @property
     def w_M(self) -> float:
@@ -163,6 +167,7 @@ class SignalInjectionObserver:
         self, u_s_ab: complex | None, i_s_ab: complex
     ) -> ObserverOutputs:
         """Compute output, the open-circuit voltage used if `u_s_ab` is None."""
+        self._u_known = u_s_ab is not None
         # Unpack and initialize the output signals
         par = self.par
         out = ObserverOutputs()
@@ -180,8 +185,11 @@ class SignalInjectionObserver:
         else:
             out.u_s_zoh = 1j * out.w_m * psi_s + par.R_s * out.i_s
 
-        # Compute the mechanical position error signal
+        # Compute the mechanical position error signal, which is zero while the voltage
+        # is unknown, since no voltage is injected then
         out.eps = self.injection.compute_error(i_s_ab, out.theta_m)
+        if not self._u_known:
+            out.eps = 0.0
 
         # Coordinate system angular frequency
         out.w_c = out.w_m + self.k_theta * out.eps
@@ -195,7 +203,7 @@ class SignalInjectionObserver:
         """Update the states."""
         self.speed_observer.update(T_s, out.eps, out.tau_M)
         self.theta_m = wrap(self.theta_m + T_s * out.w_c)
-        self.injection.update(T_s)
+        self.injection.update(T_s, 1.0 if self._u_known else 0.0)
 
 
 # %%
