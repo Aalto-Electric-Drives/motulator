@@ -172,24 +172,24 @@ where $\Lsgm$, $\RR$, $\LM$, $\alpha = \RR/\LM$ are nonlinear functions of the s
 ---
 label: im_inv_gamma_eps
 ---
-    \boldsymbol{\upepsilon} = \frac{1}{2}\frac{\abspsis}{\gamma(\abspsis)}\frac{\partial\gamma(\abspsis)}{\partial\abspsis} \left[ \us - \Rs\is + \frac{\psis}{\psis^*}(\us^* - \Rs\is^*)\right]
+    \boldsymbol{\upepsilon} = \frac{1}{2}\frac{\abspsis}{\gamma(\abspsis)}\frac{\D\gamma(\abspsis)}{\D\abspsis} \left[ \us - \Rs\is + \frac{\psis}{\psis^*}(\us^* - \Rs\is^*)\right]
 ```
 
 This voltage term only appears during changes in the stator-flux magnitude. When the transient voltage term is included, the inverse-Γ model {eq}`im_inv_gamma_ss` is mathematically identical to the original nonlinear Γ model. However, in control methods, the transient voltage term can typically be neglected.
 
 ### General Magnetic Model
 
-In general, the magnetic model is a current map, i.e., a map from the flux linkages to the currents. The map is lossless, if the currents are the gradient of the field energy with respect to the flux linkages, i.e.,
+In general, the magnetic model is a current map, i.e., a map from the flux linkages to the currents. The map is lossless if the currents are the gradient of the field energy with respect to the flux linkages, i.e.,
 
 ```{math}
 ---
 label: im_energy
 ---
-    \is = \frac{\partial W}{\partial \psis} \qquad
-    \ir = \frac{\partial W}{\partial \psir}
+    \is &= \frac{\partial W}{\partial \psi_\mathrm{sd}} + \jj\frac{\partial W}{\partial \psi_\mathrm{sq}} \\
+    \ir &= \frac{\partial W}{\partial \psi_\mathrm{rd}} + \jj\frac{\partial W}{\partial \psi_\mathrm{rq}}
 ```
 
-where $W(\psis, \psir)$ is the field energy multiplied by 2/3 and the derivatives are taken with respect to the real and imaginary parts of the flux linkages. The Jacobian of the map is then symmetric, which is known as the reciprocity condition. Without spatial harmonics, $W$ is invariant under a common rotation of the flux linkages, which makes the torque {eq}`im_torque` equal to the torque $-(3\np/2)\IM\{\ir\psir^*\}$ computed from the rotor quantities. As an example, the Γ model with constant inductances corresponds to
+where $W$ is the field energy multiplied by 2/3 and the components of the flux linkages are defined by $\psis = \psi_\mathrm{sd} + \jj\psi_\mathrm{sq}$ and $\psir = \psi_\mathrm{rd} + \jj\psi_\mathrm{rq}$. Without spatial harmonics, $W$ depends only on the magnitudes of the flux linkages and on the angle between them. As an example, the Γ model with constant inductances corresponds to
 
 ```{math}
 ---
@@ -198,7 +198,7 @@ label: im_energy_gamma
     W = \frac{|\psis|^2}{2\Ls} + \frac{|\psir - \psis|^2}{2L_\ell}
 ```
 
-A current map can be given as a function using the {class}`motulator.drive.model.SaturatedInductionMachinePars` class, e.g., for modeling the saturation of the leakage flux or the mutual saturation between the main flux and the leakage flux {cite}`Tuo2010`. With spatial harmonics (e.g., due to the slots), the field energy $W(\psis, \psir, \thetam)$ in rotor coordinates also depends on the electrical rotor angle $\thetam$, and the torque is
+A current map can be given as a function using the {class}`motulator.drive.model.SaturatedInductionMachinePars` class, e.g., for modeling the saturation of the leakage flux or the mutual saturation between the main flux and the leakage flux {cite}`Tuo2010`. With spatial harmonics (e.g., due to the slots), $W$ in rotor coordinates also depends on the electrical rotor angle $\thetam$, and the torque is
 
 ```{math}
 ---
