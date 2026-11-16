@@ -574,6 +574,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Signal injection observer for synchronous machine drives.</span>
 
+<span class="sd">    While the voltage is unknown (blocked gates), no voltage is injected and the error</span>
+<span class="sd">    signal is zero, so that the angle estimate follows the speed estimate.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : BaseSynchronousMachineControlPars</span>
@@ -617,6 +620,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">injection</span> <span class="o">=</span> <span class="n">SquareWaveInjection</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">U_inj</span><span class="p">,</span> <span class="n">T_s</span><span class="p">,</span> <span class="n">N_inj</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># State</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_known</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Voltage known at the latest sampling instant</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">w_M</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -631,6 +635,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ObserverOutputs</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute output, the open-circuit voltage used if `u_s_ab` is None."""</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u_known</span> <span class="o">=</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="c1"># Unpack and initialize the output signals</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
         <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">()</span>
@@ -648,8 +653,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">out</span><span class="o">.</span><span class="n">u_s_zoh</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">*</span> <span class="n">psi_s</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s</span>
 
-        <span class="c1"># Compute the mechanical position error signal</span>
+        <span class="c1"># Compute the mechanical position error signal, which is zero while the voltage</span>
+        <span class="c1"># is unknown, since no voltage is injected then</span>
         <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">injection</span><span class="o">.</span><span class="n">compute_error</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_known</span><span class="p">:</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="mf">0.0</span>
 
         <span class="c1"># Coordinate system angular frequency</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_c</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_theta</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span>
@@ -663,7 +671,7 @@
 <span class="w">        </span><span class="sd">"""Update the states."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">injection</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">injection</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">T_s</span><span class="p">,</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u_known</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">)</span>
 
 
 <span class="c1"># %%</span>
