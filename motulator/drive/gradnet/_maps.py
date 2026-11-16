@@ -311,7 +311,7 @@ class CurrentMapWithHarmonics:
     def _torque(
         self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
     ) -> np.ndarray:
-        """Torque (p.u.) from the flux linkage x, current y, and the magnetic energy."""
+        """Torque (p.u.) from the flux linkage x, current y, and the field energy."""
         return np.imag(y * x.conj()) - dW_dtheta
 
     def __call__(

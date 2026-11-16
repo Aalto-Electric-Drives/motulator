@@ -229,6 +229,15 @@ class SaturatedSynchronousMachinePars(
         Core-loss conductance (S), connected between the stator resistance and the
         magnetic model, defaults to 0 (no core losses).
 
+    Notes
+    -----
+    The magnetic model is lossless if the current is the gradient of `W` with respect to
+    the real and imaginary parts of the flux linkage, where `W` is the field energy
+    multiplied by 2/3. The current map then fulfills the reciprocity condition
+    ``di_d/dpsi_q = di_q/dpsi_d``. Similarly, the flux map is the gradient of the
+    co-energy with respect to the real and imaginary parts of the current. These
+    conditions are not checked. The maps in `motulator.drive.gradnet` fulfill them.
+
     """
 
     n_p: int
@@ -346,6 +355,17 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     G_c : float, optional
         Core-loss conductance (S), connected between the stator resistance and the
         magnetic model, defaults to 0 (no core losses).
+
+    Notes
+    -----
+    The magnetic model is lossless if the current is the gradient of `W` with respect to
+    the real and imaginary parts of the flux linkage and the torque per pole pair is::
+
+        tau_m = 3/2*(imag(i_s*conj(psi_s)) - dW/dtheta_m)
+
+    where `W` is the field energy multiplied by 2/3, as a function of the flux linkage
+    and the electrical rotor angle `theta_m`. These conditions are not checked. The maps
+    with harmonics in `motulator.drive.gradnet` fulfill them.
 
     """
 
@@ -797,14 +817,13 @@ class SaturatedInductionMachinePars(BaseInductionMachinePars):
 
     Notes
     -----
-    The magnetic model is lossless, if the currents are the gradient of a scalar
-    function `W` of the flux linkages (the field energy multiplied by 2/3) with respect
-    to their real and imaginary parts. The Jacobian of the map is then symmetric
-    (reciprocity condition). Furthermore, `W` should be invariant under a common
-    rotation of the flux linkages, in which case the torque computed from the stator
-    quantities equals the torque computed from the rotor quantities. These conditions
-    are not checked. As an example, the map of the Γ model with constant inductances is
-    the gradient of::
+    The magnetic model is lossless if the stator and rotor currents are the gradients of
+    `W` with respect to the real and imaginary parts of the stator and rotor flux
+    linkages, respectively, where `W` is the field energy multiplied by 2/3.
+    Furthermore, `W` should depend only on the magnitudes of the flux linkages and on
+    the angle between them, so that the map is the same in any coordinates. These
+    conditions are not checked. As an example, the Γ model with constant inductances
+    corresponds to::
 
         W = abs(psi_s)**2/(2*L_s) + abs(psi_r - psi_s)**2/(2*L_ell)
 
@@ -898,14 +917,14 @@ class SpatialSaturatedInductionMachinePars(BaseInductionMachinePars):
 
     Notes
     -----
-    The magnetic model is lossless, if the currents are the gradient of a scalar
-    function `W` of the flux linkages and the electrical rotor angle `theta_m` (the
-    field energy multiplied by 2/3) with respect to the real and imaginary parts of the
-    flux linkages, and the torque per pole pair is::
+    The magnetic model is lossless if the stator and rotor currents are the gradients of
+    `W` with respect to the real and imaginary parts of the stator and rotor flux
+    linkages, respectively, and the torque per pole pair is::
 
         tau_m = 3/2*(imag(i_s*conj(psi_s)) - dW/dtheta_m)
 
-    These conditions are not checked.
+    where `W` is the field energy multiplied by 2/3, as a function of the flux linkages
+    and the electrical rotor angle `theta_m`. These conditions are not checked.
 
     """
 
