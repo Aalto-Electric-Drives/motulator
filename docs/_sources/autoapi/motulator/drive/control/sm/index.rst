@@ -1773,6 +1773,15 @@ Module Contents
                magnetic model, defaults to 0 (no core losses).
    :type G_c: float, optional
 
+   .. rubric:: Notes
+
+   The magnetic model is lossless if the current is the gradient of `W` with respect to
+   the real and imaginary parts of the flux linkage, where `W` is the field energy
+   multiplied by 2/3. The current map then fulfills the reciprocity condition
+   ``di_d/dpsi_q = di_q/dpsi_d``. Similarly, the flux map is the gradient of the
+   co-energy with respect to the real and imaginary parts of the current. These
+   conditions are not checked. The maps in `motulator.drive.gradnet` fulfill them.
+
 
 
 

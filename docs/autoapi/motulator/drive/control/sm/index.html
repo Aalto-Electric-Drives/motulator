@@ -1867,6 +1867,13 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The magnetic model is lossless if the current is the gradient of <cite>W</cite> with respect to
+the real and imaginary parts of the flux linkage, where <cite>W</cite> is the field energy
+multiplied by 2/3. The current map then fulfills the reciprocity condition
+<code class="docutils literal notranslate"><span class="pre">di_d/dpsi_q</span> <span class="pre">=</span> <span class="pre">di_q/dpsi_d</span></code>. Similarly, the flux map is the gradient of the
+co-energy with respect to the real and imaginary parts of the current. These
+conditions are not checked. The maps in <cite>motulator.drive.gradnet</cite> fulfill them.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq">
 <span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.control.sm.SaturatedSynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>

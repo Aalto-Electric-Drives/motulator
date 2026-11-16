@@ -1852,14 +1852,13 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The magnetic model is lossless, if the currents are the gradient of a scalar
-function <cite>W</cite> of the flux linkages (the field energy multiplied by 2/3) with respect
-to their real and imaginary parts. The Jacobian of the map is then symmetric
-(reciprocity condition). Furthermore, <cite>W</cite> should be invariant under a common
-rotation of the flux linkages, in which case the torque computed from the stator
-quantities equals the torque computed from the rotor quantities. These conditions
-are not checked. As an example, the map of the Γ model with constant inductances is
-the gradient of:</p>
+<p>The magnetic model is lossless if the stator and rotor currents are the gradients of
+<cite>W</cite> with respect to the real and imaginary parts of the stator and rotor flux
+linkages, respectively, where <cite>W</cite> is the field energy multiplied by 2/3.
+Furthermore, <cite>W</cite> should depend only on the magnitudes of the flux linkages and on
+the angle between them, so that the map is the same in any coordinates. These
+conditions are not checked. As an example, the Γ model with constant inductances
+corresponds to:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">W</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_s</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">L_s</span><span class="p">)</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">psi_r</span> <span class="o">-</span> <span class="n">psi_s</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">L_ell</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1952,6 +1951,13 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The magnetic model is lossless if the current is the gradient of <cite>W</cite> with respect to
+the real and imaginary parts of the flux linkage, where <cite>W</cite> is the field energy
+multiplied by 2/3. The current map then fulfills the reciprocity condition
+<code class="docutils literal notranslate"><span class="pre">di_d/dpsi_q</span> <span class="pre">=</span> <span class="pre">di_q/dpsi_d</span></code>. Similarly, the flux map is the gradient of the
+co-energy with respect to the real and imaginary parts of the current. These
+conditions are not checked. The maps in <cite>motulator.drive.gradnet</cite> fulfill them.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SaturatedSynchronousMachinePars.i_s_dq">
 <span class="sig-name descname"><span class="pre">i_s_dq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SaturatedSynchronousMachinePars.i_s_dq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SaturatedSynchronousMachinePars.i_s_dq" title="Link to this definition">#</a></dt>
@@ -2281,14 +2287,14 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The magnetic model is lossless, if the currents are the gradient of a scalar
-function <cite>W</cite> of the flux linkages and the electrical rotor angle <cite>theta_m</cite> (the
-field energy multiplied by 2/3) with respect to the real and imaginary parts of the
-flux linkages, and the torque per pole pair is:</p>
+<p>The magnetic model is lossless if the stator and rotor currents are the gradients of
+<cite>W</cite> with respect to the real and imaginary parts of the stator and rotor flux
+linkages, respectively, and the torque per pole pair is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tau_m</span> <span class="o">=</span> <span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span> <span class="o">-</span> <span class="n">dW</span><span class="o">/</span><span class="n">dtheta_m</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>These conditions are not checked.</p>
+<p>where <cite>W</cite> is the field energy multiplied by 2/3, as a function of the flux linkages
+and the electrical rotor angle <cite>theta_m</cite>. These conditions are not checked.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedInductionMachinePars.cage">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cage</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#motulator.drive.model.CageImpedance" title="motulator.drive.model.CageImpedance"><span class="pre">CageImpedance</span></a></span><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedInductionMachinePars.cage" title="Link to this definition">#</a></dt>
@@ -2341,6 +2347,15 @@ magnetic model, defaults to 0 (no core losses).</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>The magnetic model is lossless if the current is the gradient of <cite>W</cite> with respect to
+the real and imaginary parts of the flux linkage and the torque per pole pair is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tau_m</span> <span class="o">=</span> <span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s</span><span class="o">*</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s</span><span class="p">))</span> <span class="o">-</span> <span class="n">dW</span><span class="o">/</span><span class="n">dtheta_m</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>where <cite>W</cite> is the field energy multiplied by 2/3, as a function of the flux linkage
+and the electrical rotor angle <cite>theta_m</cite>. These conditions are not checked. The maps
+with harmonics in <cite>motulator.drive.gradnet</cite> fulfill them.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map">
 <span class="sig-name descname"><span class="pre">magnetic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">psi_s_dq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_j_theta_m</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/utils/_parameters.html#SpatialSaturatedSynchronousMachinePars.magnetic_map"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.model.SpatialSaturatedSynchronousMachinePars.magnetic_map" title="Link to this definition">#</a></dt>

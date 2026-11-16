@@ -735,6 +735,15 @@
 <span class="sd">        Core-loss conductance (S), connected between the stator resistance and the</span>
 <span class="sd">        magnetic model, defaults to 0 (no core losses).</span>
 
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The magnetic model is lossless if the current is the gradient of `W` with respect to</span>
+<span class="sd">    the real and imaginary parts of the flux linkage, where `W` is the field energy</span>
+<span class="sd">    multiplied by 2/3. The current map then fulfills the reciprocity condition</span>
+<span class="sd">    ``di_d/dpsi_q = di_q/dpsi_d``. Similarly, the flux map is the gradient of the</span>
+<span class="sd">    co-energy with respect to the real and imaginary parts of the current. These</span>
+<span class="sd">    conditions are not checked. The maps in `motulator.drive.gradnet` fulfill them.</span>
+
 <span class="sd">    """</span>
 
     <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span>
@@ -870,6 +879,17 @@
 <span class="sd">    G_c : float, optional</span>
 <span class="sd">        Core-loss conductance (S), connected between the stator resistance and the</span>
 <span class="sd">        magnetic model, defaults to 0 (no core losses).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The magnetic model is lossless if the current is the gradient of `W` with respect to</span>
+<span class="sd">    the real and imaginary parts of the flux linkage and the torque per pole pair is::</span>
+
+<span class="sd">        tau_m = 3/2*(imag(i_s*conj(psi_s)) - dW/dtheta_m)</span>
+
+<span class="sd">    where `W` is the field energy multiplied by 2/3, as a function of the flux linkage</span>
+<span class="sd">    and the electrical rotor angle `theta_m`. These conditions are not checked. The maps</span>
+<span class="sd">    with harmonics in `motulator.drive.gradnet` fulfill them.</span>
 
 <span class="sd">    """</span>
 
@@ -1369,14 +1389,13 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The magnetic model is lossless, if the currents are the gradient of a scalar</span>
-<span class="sd">    function `W` of the flux linkages (the field energy multiplied by 2/3) with respect</span>
-<span class="sd">    to their real and imaginary parts. The Jacobian of the map is then symmetric</span>
-<span class="sd">    (reciprocity condition). Furthermore, `W` should be invariant under a common</span>
-<span class="sd">    rotation of the flux linkages, in which case the torque computed from the stator</span>
-<span class="sd">    quantities equals the torque computed from the rotor quantities. These conditions</span>
-<span class="sd">    are not checked. As an example, the map of the Γ model with constant inductances is</span>
-<span class="sd">    the gradient of::</span>
+<span class="sd">    The magnetic model is lossless if the stator and rotor currents are the gradients of</span>
+<span class="sd">    `W` with respect to the real and imaginary parts of the stator and rotor flux</span>
+<span class="sd">    linkages, respectively, where `W` is the field energy multiplied by 2/3.</span>
+<span class="sd">    Furthermore, `W` should depend only on the magnitudes of the flux linkages and on</span>
+<span class="sd">    the angle between them, so that the map is the same in any coordinates. These</span>
+<span class="sd">    conditions are not checked. As an example, the Γ model with constant inductances</span>
+<span class="sd">    corresponds to::</span>
 
 <span class="sd">        W = abs(psi_s)**2/(2*L_s) + abs(psi_r - psi_s)**2/(2*L_ell)</span>
 
@@ -1476,14 +1495,14 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    The magnetic model is lossless, if the currents are the gradient of a scalar</span>
-<span class="sd">    function `W` of the flux linkages and the electrical rotor angle `theta_m` (the</span>
-<span class="sd">    field energy multiplied by 2/3) with respect to the real and imaginary parts of the</span>
-<span class="sd">    flux linkages, and the torque per pole pair is::</span>
+<span class="sd">    The magnetic model is lossless if the stator and rotor currents are the gradients of</span>
+<span class="sd">    `W` with respect to the real and imaginary parts of the stator and rotor flux</span>
+<span class="sd">    linkages, respectively, and the torque per pole pair is::</span>
 
 <span class="sd">        tau_m = 3/2*(imag(i_s*conj(psi_s)) - dW/dtheta_m)</span>
 
-<span class="sd">    These conditions are not checked.</span>
+<span class="sd">    where `W` is the field energy multiplied by 2/3, as a function of the flux linkages</span>
+<span class="sd">    and the electrical rotor angle `theta_m`. These conditions are not checked.</span>
 
 <span class="sd">    """</span>
 
