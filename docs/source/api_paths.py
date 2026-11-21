@@ -18,13 +18,11 @@ from functools import cache
 from types import ModuleType
 from typing import TYPE_CHECKING, Any
 
-from sphinx.domains.python import PythonDomain
-from sphinx.util.nodes import make_refnode
-
 import motulator
 
 if TYPE_CHECKING:
-    from docutils.nodes import Element, TextElement, reference
+    from docutils.nodes import TextElement, reference
+    from sphinx.addnodes import pending_xref
     from sphinx.application import Sphinx
     from sphinx.environment import BuildEnvironment
 
@@ -127,28 +125,27 @@ def _replace_in_type_hints(app: "Sphinx") -> None:
 
 
 def _resolve_bare_name(
-    app: "Sphinx", env: "BuildEnvironment", node: "Element", contnode: "TextElement"
+    app: "Sphinx",
+    env: "BuildEnvironment",
+    node: "pending_xref",
+    contnode: "TextElement",
 ) -> "reference | None":
     """Resolve a bare name to the closest module-level object of that name."""
-    name, domain = node["reftarget"], env.get_domain("py")
+    name = node["reftarget"]
     if node.get("refdomain") != "py" or "." in name:
         return None
-    if not isinstance(domain, PythonDomain):
-        return None
-    objects = domain.objects
+    domain = env.get_domain("py")
     paths = [
         path
-        for path, obj in objects.items()
-        if path.rsplit(".", 1)[-1] == name
-        and obj.objtype in ("class", "function", "data")
+        for path, _, objtype, *_ in domain.get_objects()
+        if path.rsplit(".", 1)[-1] == name and objtype in ("class", "function", "data")
     ]
     if not paths:
         return None
     context = node.get("py:module") or ""
     path = max(paths, key=lambda p: _common_parts(p, context))
-    obj = objects[path]
-    return make_refnode(
-        app.builder, node["refdoc"], obj.docname, obj.node_id, contnode, path
+    return domain.resolve_xref(
+        env, node["refdoc"], app.builder, "obj", path, node, contnode
     )
 
 
