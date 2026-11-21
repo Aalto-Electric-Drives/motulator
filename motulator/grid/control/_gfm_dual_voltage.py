@@ -31,10 +31,10 @@ class DisturbancePowerObserver:
     DC bus minus the grid power and the resistive losses, from the energy balance of the
     DC-bus capacitor and the inductor [#Mou2025]_. The estimate is
     `p_dis = x + alpha_o_dc*(W_dc + 0.75*L*|i_c|**2)`, where the auxiliary state `x` is
-    updated by `dx/dt = -(1.5/L)*Re{u_g*conj(e_c)} - alpha_o_dc*p_dis` and `e_c` is the
-    realized feedback correction, i.e., the realized converter voltage minus the
-    quasi-static converter voltage. The derivatives of the energies are thus integrated
-    directly. On the first call, the disturbance power is assumed to be zero.
+    updated by `dx/dt = -(1.5/L)*Re{u_g*conj(e_c)} - alpha_o_dc*p_dis` and the realized
+    feedback correction `e_c` is the realized converter voltage minus the quasi-static
+    converter voltage and the resistive voltage drop. Hence, the energies need not be
+    differentiated. On the first call, the disturbance power is assumed to be zero.
 
     Parameters
     ----------
@@ -82,8 +82,7 @@ class DualVoltageFormingControllerCfg:
     R : float, optional
         Total series resistance estimate (Ω), defaults to 0.
     k_d : float | None, optional
-        DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the base
-        power `1.5*u_nom*i_max`.
+        DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`.
     alpha_dc : float, optional
         Approximate closed-loop bandwidth of the DC-bus energy control (rad/s), defaults
         to 2*pi*7.5.
@@ -95,7 +94,7 @@ class DualVoltageFormingControllerCfg:
     k_v : float | None, optional
         Voltage control gain, defaults to `alpha_o/w_nom`.
     alpha_c : float, optional
-        Current control bandwidth (rad/s), defaults to 2*pi*400.
+        Current-control bandwidth (rad/s), defaults to 2*pi*400.
     u_nom : float, optional
         Nominal grid voltage (V), line-to-neutral peak value, defaults to
         `sqrt(2/3)*400`.
@@ -196,7 +195,7 @@ class DualVoltageFormingController:
         self, u_dc_ref: float, v_c_ref: float, fbk: DualVoltageFormingOutputs
     ) -> References:
         """Compute references."""
-        ref = References(T_s=self.T_s, v_c=v_c_ref, u_dc=u_dc_ref)
+        ref = References(T_s=self.T_s, v_c=v_c_ref)
         W_dc_ref = 0.5 * self.C_dc * u_dc_ref**2
         # Equivalent active-power reference, for logging only
         ref.p_g = fbk.p_g + fbk.p_dis - self.alpha_dc * (W_dc_ref - fbk.W_dc)
@@ -234,8 +233,8 @@ class DualVoltageFormingController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         # The realized feedback correction, including the current and voltage
-        # limitations. The realized voltage is averaged over the ongoing sampling
-        # period in the observer coordinates, i.e., rotated by half a sampling period.
+        # limitations. The realized voltage is averaged over the ongoing sampling period
+        # in the observer coordinates, i.e., rotated by half a sampling period.
         u_c = fbk.u_c_zoh * exp(-0.5j * fbk.w_c * ref.T_s)
         e_c = u_c - fbk.v_c - self.observer.R * fbk.i_c
         self.power_observer.update(ref.T_s, fbk.u_g, e_c, fbk.p_dis)

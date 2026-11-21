@@ -2,7 +2,6 @@
 
 from cmath import exp, phase
 from collections.abc import Callable
-from copy import copy
 from dataclasses import dataclass
 from functools import partial
 from math import pi, sqrt
@@ -21,8 +20,8 @@ class ObserverOutputs:
 
     u_dc: float = 0.0  # DC-bus voltage
     i_s: complex = 0j  # Stator current
-    # Stator voltage averaged over the previous and ongoing sampling periods, set by
-    # the control system for the control laws
+    # Stator voltage averaged over the previous and ongoing sampling periods, set by the
+    # control system for the control laws
     u_s: complex = 0j
     u_s_zoh: complex = 0j  # Stator voltage averaged over the ongoing sampling period
     psi_s: complex = 0j  # Stator flux linkage estimate
@@ -43,29 +42,6 @@ class ObserverOutputs:
 
 
 # %%
-def position_error(n_p: int, theta_M_meas: float, theta_m: float) -> float:
-    """
-    Compute the position error signal from the measured rotor angle.
-
-    Parameters
-    ----------
-    n_p : int
-        Number of pole pairs.
-    theta_M_meas : float
-        Measured mechanical rotor angle (rad).
-    theta_m : float
-        Estimated electrical rotor angle (rad).
-
-    Returns
-    -------
-    float
-        Mechanical position error signal (rad).
-
-    """
-    return wrap(n_p * theta_M_meas - theta_m) / n_p
-
-
-# %%
 class FluxObserver:
     """
     Observer for synchronous machines in estimated rotor coordinates.
@@ -80,8 +56,10 @@ class FluxObserver:
     `compute_output`, selects between these: `h = 0` gives purely model-based
     (sensorless) operation, `h = 1` relies on the external signal alone, and
     intermediate values blend the two. The magnetic saturation is taken into account
-    based on the provided machine model. The flux estimate is corrected and predicted
-    using a hold-equivalent discrete-time model, cf. [#Hin2018]_.
+    based on the provided machine model. The PM-flux estimate shifts the flux map of the
+    model along the d axis by its deviation from `par.psi_f`. The flux estimate is
+    corrected and predicted using a hold-equivalent discrete-time model, cf.
+    [#Hin2018]_.
 
     Parameters
     ----------
@@ -90,9 +68,9 @@ class FluxObserver:
     k_theta : float
         Rotor angle estimation gain (rad/s).
     k_o : Callable[[float], float]
-        Observer gain as a function of the rotor angular speed.
+        Observer gain (1/s) as a function of the electrical rotor angular speed (rad/s).
     k_f : Callable[[float], float]
-        PM-flux estimation gain (V) as a function of the rotor angular speed.
+        PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
 
     References
     ----------
@@ -113,15 +91,20 @@ class FluxObserver:
         k_o: Callable[[float], float],
         k_f: Callable[[float], float],
     ) -> None:
-        self.par = copy(par)  # PM-flux estimation updates psi_f of this copy
+        self.par = par
         self.k_theta = k_theta
         self.k_o = k_o
         self.k_f = k_f
         # States
         self.theta_m: float = 0.0
         self.psi_s: complex = complex(par.psi_f)
+        self.psi_f: float = par.psi_f
         # Other memory variables
         self._T_s: float = 0.0  # Length of the previous sampling period
+
+    def psi_s_dq(self, i_s: complex) -> complex:
+        """Flux map of the model, shifted by the PM-flux estimate."""
+        return complex(self.par.psi_s_dq(i_s)) + (self.psi_f - self.par.psi_f)
 
     def compute_output(
         self,
@@ -148,8 +131,8 @@ class FluxObserver:
         eps_ext : float, optional
             External mechanical position error signal (rad), defaults to 0.
         h : float, optional
-            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
-            based error signal is used exclusively.
+            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the
+            model-based error signal is used exclusively.
 
         Returns
         -------
@@ -159,7 +142,7 @@ class FluxObserver:
         """
         # Unpack and initialize the output signals
         par = self.par
-        out = ObserverOutputs(psi_s=self.psi_s, psi_f=par.psi_f, h=h)
+        out = ObserverOutputs(psi_s=self.psi_s, psi_f=self.psi_f, h=h)
 
         # Get the rotor speed
         out.w_M = w_M
@@ -173,7 +156,7 @@ class FluxObserver:
 
         # Flux estimation error. If the voltage is unknown, the flux estimate follows
         # the current model alone, so the error is zero.
-        psi_s_dq = complex(self.par.psi_s_dq(out.i_s))
+        psi_s_dq = self.psi_s_dq(out.i_s)
         if u_s_ab is None:
             out.psi_s = psi_s_dq
         out.e_o = psi_s_dq - out.psi_s
@@ -225,7 +208,7 @@ class FluxObserver:
         Phi, Gamma = hold_equivalent(T_s, out.w_c)
         self.psi_s = Phi * (psi_s + T_s * out.u_s_zoh) - Gamma * par.R_s * out.i_s
         self.theta_m = wrap(self.theta_m + T_s * out.w_c)
-        self.par.psi_f += T_s * self.k_f(out.w_m) * out.eps_f
+        self.psi_f += T_s * self.k_f(out.w_m) * out.eps_f
         self._T_s = T_s
 
 
@@ -234,27 +217,26 @@ class SpeedFluxObserver:
     """
     Flux observer with speed estimation.
 
-    This observer estimates the stator flux linkage, rotor angle, and rotor speed. The
-    observer gain decouples the electrical and mechanical dynamics and allows placing
-    the poles of the corresponding linearized estimation error dynamics. If the inertia
+    This observer estimates the stator flux linkage, the rotor angle, and the rotor
+    speed. The flux linkage and the rotor angle are estimated as in
+    :class:`FluxObserver`, and the rotor speed by :class:`SpeedObserver`. If the inertia
     of the mechanical system is provided, the observer also estimates the load torque,
-    to avoid the lag in the speed estimate. The rotor angle is tracked using a position
-    error signal, see :class:`FluxObserver`.
+    to avoid the lag in the speed estimate.
 
     Parameters
     ----------
     par : BaseSynchronousMachineControlPars
         Machine model parameters.
     alpha_o : float
-        Speed-estimation pole (rad/s).
+        Speed estimation pole (rad/s).
     T_s : float
         Sampling period (s). The poles of the ideal sensored estimation-error dynamics
         are placed at ``exp(-alpha_o*T_s)``.
     k_o : Callable[[float], float]
-        Observer gain as a function of the rotor angular speed.
+        Observer gain (1/s) as a function of the electrical rotor angular speed (rad/s).
     k_f : Callable[[float], float]
-        PM-flux estimation gain (V) as a function of the rotor angular speed.
-    J : float, optional
+        PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
+    J : float | None, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
 
@@ -295,11 +277,6 @@ class SpeedFluxObserver:
     def w_M(self, value: float) -> None:
         self.speed_observer.w_M = value
 
-    @property
-    def theta_m(self) -> float:
-        """Electrical rotor angle estimate (rad)."""
-        return self.flux_observer.theta_m
-
     def compute_output(
         self,
         u_s_ab: complex | None,
@@ -321,8 +298,8 @@ class SpeedFluxObserver:
         eps_ext : float, optional
             External mechanical position error signal (rad), defaults to 0.
         h : float, optional
-            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
-            based error signal is used exclusively.
+            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the
+            model-based error signal is used exclusively.
 
         Returns
         -------
@@ -385,23 +362,24 @@ class SpeedFluxObserver:
            Trans. Ind. Appl., 2009, https://doi.org/10.1109/TIA.2008.2009496
 
         """
-        par = self.flux_observer.par
+        fo = self.flux_observer
+        par = fo.par
         L = par.incr_ind_mat(0j)
         L_d, L_q = L[0, 0], L[1, 1]
         e_s_ab = -L_q * delta_i_s_ab / T_s  # Back-EMF
         # The resistive decay of a residual current (the d-axis current through L_d)
         # must not be taken for the back-EMF
         i_max = max(abs(i_s_ab), abs(i_s_ab - delta_i_s_ab))
-        if abs(e_s_ab) <= par.R_s * i_max * max(L_q / L_d, 1) or par.psi_f == 0:
+        if abs(e_s_ab) <= par.R_s * i_max * max(L_q / L_d, 1) or fo.psi_f <= 0:
             return False
         sign = 1.0 if self.w_M >= 0 else -1.0
-        w_m = sign * abs(e_s_ab) / par.psi_f
-        # The response lags the rotor angle at the end of the period, since the
-        # back-EMF rotates during the period
+        w_m = sign * abs(e_s_ab) / fo.psi_f
+        # The response lags the rotor angle at the end of the period, since the back-EMF
+        # rotates during the period
         theta_m = wrap(phase(e_s_ab) - sign * pi / 2 + w_m * T_s * L_q / (2 * L_d))
         self.w_M = w_m / par.n_p
-        self.flux_observer.theta_m = theta_m
-        self.flux_observer.psi_s = complex(par.psi_s_dq(exp(-1j * theta_m) * i_s_ab))
+        fo.theta_m = theta_m
+        fo.psi_s = fo.psi_s_dq(exp(-1j * theta_m) * i_s_ab)
         return True
 
 
@@ -423,8 +401,8 @@ def compute_feedback(
         return observer.compute_output(u_s_ab, i_s_ab)
     if theta_M_meas is None:
         raise ValueError("Rotor angle must be provided in sensored mode")
-    n_p = observer.flux_observer.par.n_p
-    eps = position_error(n_p, theta_M_meas, observer.theta_m)
+    fo = observer.flux_observer
+    eps = wrap(fo.par.n_p * theta_M_meas - fo.theta_m) / fo.par.n_p
     return observer.compute_output(u_s_ab, i_s_ab, eps, 1.0)
 
 
@@ -438,7 +416,7 @@ def _sensored_k_o(w_m: float) -> float:
     return 2 * pi * 15
 
 
-def _zero_k_f(w_m: float) -> float:
+def zero_k_f(w_m: float) -> float:
     return 0.0
 
 
@@ -463,82 +441,15 @@ def create_speed_flux_observer(
     par: BaseSynchronousMachineControlPars,
     alpha_o: float | None,
     T_s: float,
-    k_o: Callable[[float], float] | None = None,
-    k_f: Callable[[float], float] | None = None,
-    sensorless: bool = True,
-    J: float | None = None,
+    k_o: Callable[[float], float] | None,
+    k_f: Callable[[float], float] | None,
+    sensorless: bool,
+    J: float | None,
 ) -> SpeedFluxObserver:
-    """
-    Create a flux observer with speed estimation.
-
-    In sensored mode, the rotor speed is estimated based on the rotor angle measurement.
-    In sensorless mode, it is estimated based on the stator voltage and current.
-
-    Parameters
-    ----------
-    par : BaseSynchronousMachineControlPars
-        Machine model parameters.
-    alpha_o : float | None
-        Speed estimation poles (rad/s). If None, defaults to 2*pi*50 if `sensorless` is
-        True, otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3),
-        which keeps the speed estimation gain approximately the same.
-    T_s : float
-        Sampling period (s), see :class:`SpeedFluxObserver`.
-    k_o : Callable[[float], float], optional
-        Observer gain as a function of the rotor speed, defaults to ``lambda w_m:
-        0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if `sensorless` else ``lambda w_m:
-        2*pi*15``. The inductances are the incremental inductances at zero current.
-    k_f : Callable[[float], float], optional
-        PM-flux estimation gain (V) as a function of the rotor speed, defaults to zero,
-        ``lambda w_m: 0``. A typical nonzero gain is of the form ``lambda w_m:
-        max(k*(abs(w_m) - w_min), 0)``, i.e., zero below the speed `w_min` (rad/s) and
-        linearly increasing above that with the slope `k` (Vs).
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
-    J : float, optional
-        Inertia of the mechanical system (kgm²). Defaults to None, which means the
-        mechanical system model is not used.
-
-    Returns
-    -------
-    SpeedFluxObserver
-        Flux observer with speed estimation.
-
-    """
+    """Create the observer, with the defaults of the controller configurations."""
     if alpha_o is None:
         alpha_o = default_alpha_o(sensorless, J)
     if k_o is None:
         k_o = default_sensorless_k_o(par) if sensorless else _sensored_k_o
-    k_f = _zero_k_f if k_f is None else k_f
-
+    k_f = zero_k_f if k_f is None else k_f
     return SpeedFluxObserver(par, alpha_o, T_s, k_o, k_f, J)
-
-
-def create_vhz_observer(
-    par: BaseSynchronousMachineControlPars,
-    k_theta: float,
-    k_o: Callable[[float], float] | None = None,
-) -> FluxObserver:
-    """
-    Create a sensorless flux observer without speed estimation.
-
-    Parameters
-    ----------
-    par : BaseSynchronousMachineControlPars
-        Machine model parameters.
-    k_theta : float
-        Angle estimation gain (rad/s).
-    k_o : Callable[[float], float], optional
-        Observer gain as a function of the rotor angular speed, defaults to ``lambda
-        w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)``. The inductances are the
-        incremental inductances at zero current.
-
-    Returns
-    -------
-    FluxObserver
-        Sensorless observer without speed estimation.
-
-    """
-    k_o = default_sensorless_k_o(par) if k_o is None else k_o
-
-    return FluxObserver(par, k_theta, k_o, _zero_k_f)

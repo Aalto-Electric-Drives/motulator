@@ -38,7 +38,7 @@ label: speed_ctrl_closed_loop_system
     \omegaM(s) = \frac{\kt s + \ki}{J s^2 + \kp s + \ki} \omegaMref(s) - \frac{s}{J s^2 + \kp s + \ki} \tauL(s)
 ```
 
-where it can be seen that the gain $\kt$ allows to place the reference-tracking zero.
+where it can be seen that the gain $\kt$ allows placing the reference-tracking zero.
 
 ## Gain Selection
 
@@ -62,4 +62,4 @@ label: speed_ctrl_closed_loop_system2
     \omegaM(s) = \frac{\alphas}{s + \alphas} \omegaMref(s) - \frac{s}{J (s + \alphas)(s + \alphai)} \tauL(s)
 ```
 
-where $\alphas$ is the closed-loop reference-tracking bandwidth and $\alphai$ is the integral action bandwidth. An accurate inertia estimate $\hat{J} = J$ is assumed in the above closed-loop system.
+where $\alphas$ is the closed-loop reference-tracking bandwidth and $\alphai$ is the integral-action bandwidth. An accurate inertia estimate $\hat{J} = J$ is assumed in the above closed-loop system.

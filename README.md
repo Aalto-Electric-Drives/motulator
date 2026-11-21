@@ -26,7 +26,7 @@
 - **Grid converter models:** L and LCL filters, inductive-resistive grids, DC-bus dynamics, and diode bridges
 - **Drive control:** V/Hz control, current-vector and flux-vector control, sensorless observers, and signal injection
 - **Grid converter control:** grid-following and grid-forming control, including disturbance-observer-based and power-synchronization methods
-- **Ready-to-run examples** as Python scripts and Jupyter notebooks, including neural-network-based flux maps learned from measured data
+- **Ready-to-run examples** as Python scripts and Jupyter notebooks, including gradient-network magnetic models learned from measured and finite-element data
 
 ## Installation
 
@@ -40,7 +40,7 @@ pip install motulator
 
 On Windows, the environment is created and activated with `py -m venv .venv` and `.venv\Scripts\activate`.
 
-For development, clone the repository and install the package with `pip install -e ".[dev]"`, as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
+For development, clone the repository and install the package with `pip install -e ".[dev,doc]"`, as described in the [installation guide](https://aalto-electric-drives.github.io/motulator/installation.html).
 
 ## Quick start
 

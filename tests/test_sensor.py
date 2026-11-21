@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
+from helpers import im_par, ipmsm_par
 
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
@@ -26,8 +27,8 @@ from motulator.grid.model import GridConverterSensors, GridConverterSystem, LFil
 
 def test_bandwidth() -> None:
     """A sensor with a bandwidth follows a sinusoidal signal according to the
-    first-order frequency response, wherever it is listed, and a sensor without
-    dynamics passes the signal through."""
+    first-order frequency response, wherever it is listed, and a sensor without dynamics
+    passes the signal through."""
     w_g, alpha, e_g = 2 * pi * 50, 2 * pi * 500, 100.0
     subsystems = {
         "filtered": Sensor(alpha=alpha),
@@ -53,9 +54,7 @@ def test_invalid_sensors() -> None:
     for alpha in (0.0, -100.0, float("nan")):
         with pytest.raises(ValueError):
             Sensor(alpha=alpha)
-    par = model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     with pytest.raises(ValueError):
         model.Drive(
             model.SynchronousMachine(par),
@@ -68,9 +67,7 @@ def test_invalid_sensors() -> None:
 def test_converter_current_is_measured_with_lc_filter() -> None:
     """With an LC filter, the current sensors of both control systems measure the
     converter current, not the stator current."""
-    par = model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    par = im_par()
     lc_filter = model.LCFilter(L_f=8e-3, C_f=9.9e-6, R_f=0.1)
     lc_filter.state.i_c_ab = 2 + 0j
     mdl = model.Drive(
@@ -114,8 +111,7 @@ def test_sample() -> None:
 
 def test_real_signal_stays_real() -> None:
     """A filtered real signal is real, also through a cascade of sensors."""
-    speed = model.ExternalRotorSpeed()
-    speed.set_external_rotor_speed(10.0)
+    speed = model.ExternalRotorSpeed(10.0)
     subsystems = {
         "speed": speed,
         "first": Sensor(alpha=1e3, y0=10.0),
@@ -133,9 +129,7 @@ def test_drive_sensors() -> None:
     """The control system measures the filtered currents with their offset and the
     filtered DC-bus voltage from its initial value, and the sampled speed and position
     are those of the sensors."""
-    par = model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     offset, gain, u_dc = [0.1, 0.0, 0.0], 1.05, 540.0
     sensors = model.DriveSensors(
         i_c=Sensor(alpha=2 * pi * 9e3, offset=offset),
@@ -149,9 +143,7 @@ def test_drive_sensors() -> None:
         model.VoltageSourceConverter(u_dc=u_dc),
         sensors=sensors,
     )
-    est_par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    est_par = ipmsm_par()
     cfg = sm_control.FluxVectorControllerCfg(i_s_max=6.5, sensorless=False)
     ctrl = sm_control.VectorControlSystem(
         sm_control.FluxVectorController(est_par, cfg),
@@ -196,16 +188,13 @@ class ResistiveLoad(Subsystem):
     def set_outputs(self, t: float) -> None:
         self.out.i_dc = -self.inp.u_dc / self.R
 
-    def rhs(self, t: float) -> list[complex]:
-        return []
-
     def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         raise NotImplementedError  # Not simulated
 
 
 def test_dc_bus_load_current_sensor() -> None:
-    """The current sensor of the DC-bus load measures the current that the load feeds
-    to the DC bus, and it requires the load."""
+    """The current sensor of the DC-bus load measures the current that the load feeds to
+    the DC bus, and it requires the load."""
     sensor = Sensor(gain=2.0)
 
     def system(dc_bus_load: Subsystem | None) -> GridConverterSystem:

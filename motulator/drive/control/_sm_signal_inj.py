@@ -19,9 +19,9 @@ class SquareWaveInjection:
     Square-wave signal injection with demodulation.
 
     This injects a square-wave voltage in the estimated d-axis direction and computes
-    the mechanical position error signal by demodulating the current response. Cross-
-    saturation errors are compensated for using flux maps. The computational delay of
-    one sampling period is taken into account in the demodulation.
+    the mechanical position error signal by demodulating the current response.
+    Cross-saturation errors are compensated for using flux maps. The computational delay
+    of one sampling period is taken into account in the demodulation.
 
     Parameters
     ----------
@@ -114,7 +114,7 @@ class SignalInjectionObserver:
     par : BaseSynchronousMachineControlPars
         Machine model parameters.
     alpha_o : float
-        Pole location (rad/s).
+        Speed estimation pole (rad/s).
     U_inj : float
         Injected voltage amplitude (V).
     T_s : float
@@ -170,14 +170,14 @@ class SignalInjectionObserver:
         self._u_known = u_s_ab is not None
         # Unpack and initialize the output signals
         par = self.par
-        out = ObserverOutputs()
+        out = ObserverOutputs(psi_f=par.psi_f)
         out.w_M, out.tau_L = self.speed_observer.compute_output()
         out.theta_m = out.theta_c = self.theta_m
         out.w_m = par.n_p * out.w_M
 
         # Current vector in (estimated) rotor coordinates and the flux map
         out.i_s = exp(-1j * out.theta_m) * i_s_ab
-        psi_s = complex(par.psi_s_dq(out.i_s))
+        out.psi_s = psi_s = complex(par.psi_s_dq(out.i_s))
 
         # Voltage vector, or the open-circuit voltage if unknown (blocked gates)
         if u_s_ab is not None:
@@ -215,22 +215,22 @@ class SignalInjectionController(CurrentVectorController):
     according to [#Kim2012]_. Cross-saturation errors are compensated for using flux
     maps [#You2018]_. A related adjustable-frequency method is presented in [#Yu2022]_.
     If the inertia of the mechanical system is provided, the speed is estimated using
-    the speed observer based on the mechanical model [#Kim2003]_, otherwise the phase-
-    locked loop is used.
+    the speed observer based on the mechanical model [#Kim2003]_, otherwise the
+    phase-locked loop is used.
 
     Parameters
     ----------
     par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
-        Current-vector control configuration. The drive is always sensorless, and the
-        fields `sensorless`, `k_o`, and `k_f` are not used.
+        Current-vector controller configuration, with `discrete` False. The drive is
+        always sensorless, and the fields `sensorless`, `k_o`, and `k_f` are not used.
     U_inj : float, optional
         Injected voltage amplitude (V), defaults to 250.
     N_inj : int, optional
         Number of sampling periods per injection voltage half-period, defaults to 1. The
-        injection frequency is `1 / (2 * N_inj * cfg.T_s)`. Reducing this frequency
-        requires reducing `cfg.alpha_o` accordingly.
+        injection frequency is ``1/(2*N_inj*cfg.T_s)``. Reducing this frequency requires
+        reducing `cfg.alpha_o` accordingly.
 
     References
     ----------
@@ -270,6 +270,7 @@ class SignalInjectionController(CurrentVectorController):
         )
 
     def compute_output(self, tau_M_ref: float, fbk: ObserverOutputs) -> References:
+        """Compute the references, including the injected d-axis voltage."""
         ref = super().compute_output(tau_M_ref, fbk)
         ref.u_s += self.observer.injection.u_sd_inj
         return ref

@@ -1,10 +1,9 @@
 """
-Trained GradNets as numpy functions and the magnetic maps based on them.
+Trained GradNets as NumPy functions and the magnetic maps based on them.
 
-A trained network is evaluated in double precision with numpy, so the maps need no
-PyTorch. The function `GradNetFunction` holds the parameters of the network, and it is
-saved to and loaded from an npz file. The networks are trained with the related package
-motulator-gradnet.
+A trained network is evaluated in double precision with NumPy. The class
+`GradNetFunction` holds the parameters of the network, and it is saved to and loaded
+from an npz file. The networks are trained with the related package motulator-gradnet.
 
 """
 
@@ -90,12 +89,12 @@ ACTIVATIONS: dict[str, Activation] = {
 @dataclass
 class GradNetFunction:
     """
-    Trained GradNet as a numpy function in double precision.
+    Trained GradNet as a NumPy function in double precision.
 
-    The function maps the per-unit input, shape (..., in_dim), to the per-unit output of
-    the same shape, which is the gradient of the scalar state function of the network.
-    It is created from a trained model by the related package motulator-gradnet, saved
-    to an npz file by `save`, and loaded by `load_gradnet`.
+    The function maps the normalized input, shape (..., in_dim), to the normalized
+    output of the same shape, which is the gradient of the scalar state function of the
+    network. It is created from a trained model by the related package
+    motulator-gradnet, saved to an npz file by `save`, and loaded by `load_gradnet`.
 
     Parameters
     ----------
@@ -148,14 +147,14 @@ class GradNetFunction:
         Parameters
         ----------
         x : ndarray, shape (..., in_dim)
-            Per-unit input.
+            Normalized input.
         jacobian : bool, optional
             Compute also the Jacobian matrix, defaults to False.
 
         Returns
         -------
         y : ndarray, shape (..., in_dim)
-            Per-unit output.
+            Normalized output.
         jac : ndarray, shape (..., in_dim, in_dim) | None
             Jacobian matrix of the output with respect to the input (the Hessian of the
             underlying scalar state function), if requested.
@@ -183,7 +182,7 @@ def load_gradnet(model_path: Path | str) -> GradNetFunction:
     Returns
     -------
     GradNetFunction
-        Trained network as a numpy function.
+        Trained network as a NumPy function.
 
     """
     with np.load(model_path) as data:
@@ -199,8 +198,9 @@ class CurrentMap(SaturationModelBase):
     """
     Callable wrapper for GradNet current map models.
 
-    The map is symmetrized about the d-axis to ensure physical consistency. The map can
-    be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.
+    The map returns the stator current (A) at the given stator flux linkage (Vs). It is
+    symmetrized about the d axis. The map can be sampled on a grid by
+    `as_magnetic_model()`, e.g., for plotting.
 
     Parameters
     ----------
@@ -210,14 +210,13 @@ class CurrentMap(SaturationModelBase):
     """
 
     def __init__(self, model: GradNetFunction) -> None:
-        super().__init__(map_type="current_map")
         self.fcn = model
         self.in_base, self.out_base = self.fcn.psi_base, self.fcn.i_base
 
     def _evaluate(
         self, x_dq: complex | np.ndarray, jacobian: bool
     ) -> tuple[np.ndarray, np.ndarray | None]:
-        """Symmetrized value and Jacobian of the map in per-unit quantities."""
+        """Symmetrized value and Jacobian of the map in normalized quantities."""
         x = np.asarray(x_dq) / self.in_base
         xy = np.stack([x.real, x.imag], axis=-1)
         # Evaluate at the input and its conjugate
@@ -227,23 +226,23 @@ class CurrentMap(SaturationModelBase):
             jac = 0.5 * (jac[0] + _CONJ[:, None] * jac[1] * _CONJ[None, :])
         return y[..., 0] + 1j * y[..., 1], jac
 
-    def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
+    def __call__(self, x_dq: complex | np.ndarray) -> complex | np.ndarray:
         """
-        Evaluate the stator current at given stator flux linkage.
+        Evaluate the symmetrized map.
 
         Parameters
         ----------
-        psi_s_dq : complex | np.ndarray
-            Stator flux linkage (Vs).
+        x_dq : complex | np.ndarray
+            Input of the map (flux linkage in Vs or current in A).
 
         Returns
         -------
         complex | np.ndarray
-            Stator current (A).
+            Output of the map (current in A or flux linkage in Vs).
 
         """
-        i_s_dq = self.out_base * self._evaluate(psi_s_dq, jacobian=False)[0]
-        return i_s_dq.item() if i_s_dq.size == 1 else i_s_dq
+        y_dq = self.out_base * self._evaluate(x_dq, jacobian=False)[0]
+        return y_dq.item() if np.ndim(x_dq) == 0 else y_dq
 
     def jacobian(self, x_dq: complex | np.ndarray) -> np.ndarray:
         """
@@ -268,21 +267,22 @@ class CurrentMap(SaturationModelBase):
 # %%
 class FluxMap(CurrentMap):
     """
-    Callable wrapper for GradNet flux-linkage map models.
+    Callable wrapper for GradNet flux map models.
 
     The map returns the stator flux linkage (Vs) at the given stator current (A). It is
-    symmetrized about the d-axis to ensure physical consistency.
+    symmetrized about the d axis.
 
     Parameters
     ----------
     model : GradNetFunction
-        Trained GradNet for the flux-linkage map, see `load_gradnet`.
+        Trained GradNet for the flux map, see `load_gradnet`.
 
     """
 
+    map_type = "flux_map"
+
     def __init__(self, model: GradNetFunction) -> None:
         super().__init__(model)
-        self._type = "flux_map"
         self.in_base, self.out_base = self.fcn.i_base, self.fcn.psi_base
 
 
@@ -290,6 +290,10 @@ class FluxMap(CurrentMap):
 class CurrentMapWithHarmonics:
     """
     Callable wrapper for GradNet current maps with spatial harmonics.
+
+    The map returns the stator current (A) and the electromagnetic torque (Nm) per pole
+    pair at the given stator flux linkage (Vs) and electrical rotor angle, as needed by
+    `SpatialSaturatedSynchronousMachinePars`. It is symmetrized about the d axis.
 
     Parameters
     ----------
@@ -311,32 +315,33 @@ class CurrentMapWithHarmonics:
     def _torque(
         self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
     ) -> np.ndarray:
-        """Torque (p.u.) from the flux linkage x, current y, and the field energy."""
+        """Normalized torque from the flux linkage x, current y, and field energy."""
         return np.imag(y * x.conj()) - dW_dtheta
 
     def __call__(
-        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
+        self, x_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
     ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """
-        Evaluate the current and torque at given flux linkage and rotor position.
+        Evaluate the symmetrized map and the torque at the given rotor position.
 
         Parameters
         ----------
-        psi_s_dq : complex | np.ndarray
-            Stator flux linkage (Vs).
+        x_dq : complex | np.ndarray
+            Input of the map (flux linkage in Vs or current in A).
         exp_j_theta_m : complex | np.ndarray
-            Exponential of the rotor electrical angle.
+            Complex exponential of the electrical rotor angle.
 
         Returns
         -------
         tuple[complex | np.ndarray, float | np.ndarray]
-            Stator current (A) and electromagnetic torque (Nm) per pole pair.
+            Output of the map (current in A or flux linkage in Vs) and electromagnetic
+            torque (Nm) per pole pair.
 
         """
         # Per-unit input and the rotor-position input exp(j*k*theta_m) as (d, q, cos,
         # sin), evaluated together with their conjugates
         x, exp_j_k_theta = np.broadcast_arrays(
-            np.asarray(psi_s_dq) / self.in_base, np.asarray(exp_j_theta_m) ** self.k
+            np.asarray(x_dq) / self.in_base, np.asarray(exp_j_theta_m) ** self.k
         )
         xy = np.stack(
             [np.real(x), np.imag(x), np.real(exp_j_k_theta), np.imag(exp_j_k_theta)],
@@ -348,20 +353,24 @@ class CurrentMapWithHarmonics:
         y = 0.5 * (y[0] + y[1] * _CONJ2)
         y, dW = y[..., 0] + 1j * y[..., 1], y[..., 2] + 1j * y[..., 3]
 
-        # Torque in per-unit
+        # Normalized torque
         dW_dtheta = self.k * (exp_j_k_theta.conj() * dW).imag
         tau_m = self._torque(x, y, dW_dtheta)
 
         # Scale back to physical units
         y = self.out_base * y
         tau_m = self.tau_base * tau_m
-        return (y.item(), tau_m.item()) if y.size == 1 else (y, tau_m)
+        return (y.item(), tau_m.item()) if x.ndim == 0 else (y, tau_m)
 
 
 # %%
 class FluxMapWithHarmonics(CurrentMapWithHarmonics):
     """
     Callable wrapper for GradNet flux maps with spatial harmonics.
+
+    The map returns the stator flux linkage (Vs) and the electromagnetic torque (Nm) per
+    pole pair at the given stator current (A) and electrical rotor angle. It is
+    symmetrized about the d axis.
 
     Parameters
     ----------
@@ -379,26 +388,5 @@ class FluxMapWithHarmonics(CurrentMapWithHarmonics):
     def _torque(
         self, x: np.ndarray, y: np.ndarray, dW_dtheta: np.ndarray
     ) -> np.ndarray:
-        """Torque (p.u.) from the current x, flux linkage y, and the co-energy."""
+        """Normalized torque from the current x, flux linkage y, and the co-energy."""
         return np.imag(x * y.conj()) + dW_dtheta
-
-    def __call__(
-        self, i_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
-    ) -> tuple[complex | np.ndarray, float | np.ndarray]:
-        """
-        Evaluate the flux linkage and torque at given current and rotor position.
-
-        Parameters
-        ----------
-        i_s_dq : complex | np.ndarray
-            Stator current (A).
-        exp_j_theta_m : complex | np.ndarray
-            Exponential of the rotor electrical angle.
-
-        Returns
-        -------
-        tuple[complex | np.ndarray, float | np.ndarray]
-            Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.
-
-        """
-        return super().__call__(i_s_dq, exp_j_theta_m)

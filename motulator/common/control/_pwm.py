@@ -29,18 +29,18 @@ class InverterNonlinearity:
     direction determines the leg state during the blanking. Away from the duty-ratio
     limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the half
     carrier period. Pulses shorter than the dead time are suppressed, and clamped legs
-    have no dead-time error. The threshold voltage `u_th` of the power devices, assumed
-    equal for the switches and the diodes, causes the voltage drop `sign(i)*u_th` in
-    each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also in the clamped
-    legs. The realized duty ratios are `d_abc - d_err`. This model is consistent with
-    `motulator.common.model.VoltageSourceConverter`.
+    have no dead-time error. The threshold voltage `u_th` of the power semiconductor
+    devices, assumed equal for the switches and the diodes, causes the voltage drop
+    `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also
+    in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model is
+    consistent with `motulator.common.model.VoltageSourceConverter`.
 
     Parameters
     ----------
     t_d : float, optional
         Dead time (s), defaults to 0.
     u_th : float, optional
-        Threshold voltage (V) of the power devices, defaults to 0.
+        Threshold voltage (V) of the power semiconductor devices, defaults to 0.
     sign : Callable[[np.ndarray], np.ndarray], optional
         Current-direction function, defaults to `np.sign`. A smooth approximation may be
         used, matching the converter model.
@@ -112,11 +112,11 @@ class PWM:
     current ripple than space-vector PWM only in the high modulation range [#Hav1998]_.
 
     Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such
-    as the dead time and the threshold voltages of the power devices, is taken into
-    account. The realized voltage is corrected for the error using the measured
-    currents. By default, the error is also compensated for by feedforward using the
-    predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
-    compensated for by shifting the other legs.
+    as the dead time and the threshold voltages of the power semiconductor devices, is
+    taken into account. The realized voltage is corrected for the error using the
+    measured currents. By default, the error is also compensated for by feedforward
+    using the predicted currents. In DPWM, the clamped leg stays at the rail, and its
+    error is compensated for by shifting the other legs.
 
     Optionally, the duty ratio of a switching leg is limited to the range
     `[d_min, 1 - d_min]`, e.g., due to the gate drivers [#Wel2006]_. A duty ratio in the
@@ -396,15 +396,8 @@ class PWM:
         d_ref: np.ndarray,
         d_err: Callable[[np.ndarray], np.ndarray] | None = None,
     ) -> tuple[list[float], np.ndarray]:
-        """
-        Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`.
-
-        Returns the limited duty ratios and the realized duty ratios, which are `d_ref`
-        for the unchanged legs. If the error is compensated for, the realized duty
-        ratios of the limited legs are `d_abc - d_err(d_abc)` with the bound error
-        `d_err`.
-
-        """
+        """Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`,
+        returning the limited and the realized duty ratios."""
         d = np.array(d_abc, dtype=float)
         d_realized = np.array(d_ref, dtype=float)
         for k in range(3):
@@ -426,19 +419,19 @@ class PWM:
             d[k], d_realized[k] = candidates[j], realized[j]
         return list(d), d_realized
 
-    def get_realized_voltage(
-        self, i_c_ab: complex, u_dc: float, *, average: bool = True
-    ) -> complex:
+    def get_realized_voltages(
+        self, i_c_ab: complex, u_dc: float
+    ) -> tuple[complex, complex]:
         """
-        Get the realized voltage.
+        Get the realized voltages.
 
         This method is to be called at the sampling instant before the next duty ratios
         are computed, and a computational delay of one sampling period is assumed. The
-        voltage is reconstructed from the duty ratios of the previous and the ongoing
+        voltages are reconstructed from the duty ratios of the previous and the ongoing
         sampling periods and the measured DC-bus voltage, i.e., the variations of the
         DC-bus voltage and of the currents within the periods are not known. The
         measured currents are also stored for the feedforward compensation of the next
-        duty ratios.
+        duty ratios, so this method is called also while the gates are blocked.
 
         Parameters
         ----------
@@ -446,26 +439,26 @@ class PWM:
             Measured converter current (A) in stationary coordinates.
         u_dc : float
             Measured DC-bus voltage (V).
-        average : bool, optional
-            If True, the average voltage of the previous and the ongoing sampling
-            periods is returned. If False, the voltage of the ongoing sampling period is
-            returned. Defaults to True.
 
         Returns
         -------
-        complex
-            Realized converter voltage (V) in stationary coordinates. If `d_err` is
-            given, the voltage is corrected for it using the measured currents.
+        u_c_ab_zoh : complex
+            Realized converter voltage (V) of the ongoing sampling period in stationary
+            coordinates.
+        u_c_ab : complex
+            Realized converter voltage (V) averaged over the previous and the ongoing
+            sampling periods in stationary coordinates.
 
         """
         self._i_c_ab = i_c_ab
         if u_dc <= 0:  # A discharged DC bus, e.g., with blocked gates
-            return 0j
-        d_abc = self._d_abc[0 if average else 1 :]
+            return 0j, 0j
+        d_abc = self._d_abc
         if self.d_err is not None:
             i_abc = complex2abc(i_c_ab)
             d_abc = [d - self.d_err(i_abc, d, u_dc, self._T_half) for d in d_abc]
-        return u_dc * sum(abc2complex(d) for d in d_abc) / len(d_abc)
+        u_prev, u_ongoing = (abc2complex(d) for d in d_abc)
+        return u_dc * u_ongoing, u_dc * (u_prev + u_ongoing) / 2
 
     def update(self, T_s: float, d_abc: list[float]) -> None:
         """Store the next duty ratios and the ongoing half carrier period."""

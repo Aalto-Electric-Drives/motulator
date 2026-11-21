@@ -22,10 +22,11 @@ class References:
 
     T_s: float = 0.0  # Sampling period for the next control step
     tau_M: float = 0.0  # Torque reference
-    psi_s: float = 0.0  # Stator flux magnitude reference (not used in IM CVC)
-    i_s: complex = 0j  # Stator current reference (only used in CVC)
+    psi_s: float = 0.0  # Stator flux magnitude reference (zero if not used)
+    i_s: complex = 0j  # Stator current reference (current-vector control)
     u_s: complex = 0j  # Stator voltage reference
-    u_s_lim: complex = 0j  # Limited voltage reference (set by the control system)
+    # Limited voltage reference without the angle advance (set by the control system)
+    u_s_lim: complex = 0j
     w_M: float | None = None  # Speed reference (set by the control system)
     d_abc: Sequence[float] = (0.0, 0.0, 0.0)  # Duty ratios (set by the control system)
     enabled: bool = True  # Gate enable (set by the control system)
@@ -39,15 +40,6 @@ class FluxTorqueFeedbacks(Protocol):
     u_s: complex  # Stator voltage
     psi_s: complex  # Stator flux linkage estimate
     tau_M: float  # Electromagnetic torque estimate
-
-
-@dataclass
-class Gains:
-    """Control gains of the flux and torque controller."""
-
-    alpha_psi: float
-    alpha_tau: float
-    alpha_i: float
 
 
 class FluxTorqueControllerBase:
@@ -67,7 +59,7 @@ class FluxTorqueControllerBase:
     alpha_tau : float
         Torque-control bandwidth (rad/s).
     alpha_i : float, optional
-        Integral action bandwidth (rad/s), defaults to 0.
+        Integral-action bandwidth (rad/s), defaults to 0.
 
     """
 
@@ -79,7 +71,9 @@ class FluxTorqueControllerBase:
         alpha_i: float = 0.0,
     ) -> None:
         self.par = par
-        self.gain = Gains(alpha_psi, alpha_tau, alpha_i)
+        self.alpha_psi = alpha_psi
+        self.alpha_tau = alpha_tau
+        self.alpha_i = alpha_i
         # Integral states
         self.x_psi: float = 0.0
         self.x_tau: float = 0.0
@@ -95,41 +89,26 @@ class FluxTorqueControllerBase:
         i_a: complex,
         w: float,
     ) -> complex:
-        """
-        Compute the voltage reference.
+        """Voltage reference for the control directions given by the auxiliary current
+        `i_a` (flux control only if zero), with the back-EMF term ``1j*w*psi_s``."""
+        par = self.par
 
-        Parameters
-        ----------
-        psi_s_ref : float
-            Stator flux magnitude reference (Vs).
-        tau_M_ref : float
-            Torque reference (Nm).
-        fbk : FluxTorqueFeedbacks
-            Feedback signals.
-        i_a : complex
-            Auxiliary current (A). If zero, only the flux is controlled.
-        w : float
-            Angular speed (rad/s) of the back-emf term ``1j*w*psi_s``.
-
-        Returns
-        -------
-        complex
-            Voltage reference (V).
-
-        """
-        par, gain = self.par, self.gain
-
-        # Torque-production factor and directions
+        # Torque-production factor and directions. If the torque cannot be controlled,
+        # the flux magnitude is controlled in the direction of the flux.
         c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
-        t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau if c_tau > 0 else 1.0
-        t_tau = 1j * fbk.psi_s / c_tau if c_tau > 0 else 0j
+        if c_tau > 0:
+            t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau
+            t_tau = 1j * fbk.psi_s / c_tau
+        else:
+            t_psi = fbk.psi_s / abs(fbk.psi_s) if fbk.psi_s != 0 else 1.0
+            t_tau = 0j
 
         # Error signals
         e_psi = psi_s_ref - abs(fbk.psi_s)
         e_tau = tau_M_ref - fbk.tau_M
-        e_u = gain.alpha_psi * e_psi * t_psi + gain.alpha_tau * e_tau * t_tau
+        e_u = self.alpha_psi * e_psi * t_psi + self.alpha_tau * e_tau * t_tau
         u_i = self.x_psi * t_psi + self.x_tau * t_tau
-        e_v = u_i - gain.alpha_i * (abs(fbk.psi_s) * t_psi + fbk.tau_M * t_tau)
+        e_v = u_i - self.alpha_i * (abs(fbk.psi_s) * t_psi + fbk.tau_M * t_tau)
 
         # Voltage reference, consisting of the feedforward and integral action (u_ff)
         # and the proportional action (e_u)
@@ -139,11 +118,10 @@ class FluxTorqueControllerBase:
 
     def update(self, T_s: float, fbk: FluxTorqueFeedbacks) -> None:
         """Update the integral states."""
-        par, gain = self.par, self.gain
         # Error signal and gains
         u_err = fbk.u_s - self._u_ff
-        k_psi = gain.alpha_i / abs(fbk.psi_s) if abs(fbk.psi_s) > 0 else 0.0
-        k_tau = 1.5 * par.n_p * gain.alpha_i
+        k_psi = self.alpha_i / abs(fbk.psi_s) if abs(fbk.psi_s) > 0 else 0.0
+        k_tau = 1.5 * self.par.n_p * self.alpha_i
         # Update the integral states
         self.x_psi += T_s * k_psi * (fbk.psi_s * u_err.conjugate()).real
         self.x_tau += T_s * k_tau * (1j * self._i_a * u_err.conjugate()).real
@@ -154,17 +132,17 @@ class SpeedController(PIController):
     """
     2DOF PI speed controller.
 
-    This is an interface for a speed controller. The gains are initialized based on the
-    desired closed-loop bandwidth and the rotor inertia estimate.
+    The gains are computed from the reference-tracking bandwidth and the inertia
+    estimate.
 
     Parameters
     ----------
     J : float
-        Total inertia of the rotor (kgm²).
+        Inertia estimate of the mechanical system (kgm²).
     alpha_s : float
         Reference-tracking bandwidth (rad/s).
     alpha_i : float, optional
-        Integral action bandwidth (rad/s), defaults to `alpha_s`.
+        Integral-action bandwidth (rad/s), defaults to `alpha_s`.
     tau_M_max : float, optional
         Maximum motor torque (Nm), defaults to `inf`.
 
@@ -191,9 +169,10 @@ class SpeedObserver:
     """
     Speed observer.
 
-    This observer estimates the mechanical rotor speed based on the mechanical system
-    model and the error signal. If the inertia of the mechanical system is provided, the
-    load torque is also estimated, avoiding lag in the speed estimate [#Lor1991]_.
+    This observer estimates the mechanical rotor speed from an error signal. If the
+    inertia of the mechanical system is provided, the observer also uses the mechanical
+    model and estimates the load torque, which avoids the lag in the speed estimate
+    [#Lor1991]_.
 
     Parameters
     ----------
@@ -233,12 +212,12 @@ class SpeedObserver:
         Parameters
         ----------
         T_s : float
-            Sample time (s).
+            Sampling period (s).
         eps : float
             Estimation error signal: mechanical speed (rad/s) or mechanical position
             (rad) for induction machines or synchronous machines, respectively.
         tau_M : float, optional
-            Electromagnetic torque estimate (Nm).
+            Electromagnetic torque estimate (Nm), defaults to 0.
 
         """
         if self.J is None:
@@ -275,7 +254,8 @@ def hold_equivalent(T_s: float, w_c: float) -> tuple[complex, complex]:
     Phi : complex
         Rotation over the sampling period, ``exp(-1j*w_c*T_s)``.
     Gamma : complex
-        Input gain of the rotating-coordinate input, ``(1 - Phi)/(1j*w_c)``.
+        Input gain of the rotating-coordinate input, ``(1 - Phi)/(1j*w_c)``, whose
+        limit is `T_s` as `w_c` approaches zero.
 
     """
     # Half-angle form, requiring a single sine-cosine pair
@@ -296,7 +276,7 @@ def matched_pole(alpha: float, T_s: float) -> float:
     Parameters
     ----------
     alpha : float
-        Continuous-time pole (rad/s).
+        Bandwidth (rad/s) of the continuous-time design with the pole at ``s = -alpha``.
     T_s : float
         Sampling period (s).
 

@@ -102,9 +102,9 @@ class ComplexPIController:
 
     where `u` is the controller output, `i_ref` is the reference signal, `i` is the
     feedback signal, `w_c` is the angular speed of synchronous coordinates, `u_ff` is
-    the feedforward signal, and `1/s` refers to integration. The 1DOF version is
-    obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented based
-    on the realized controller output.
+    the feedforward signal, and `1/s` refers to integration. The standard PI controller
+    is obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented
+    based on the realized controller output.
 
     Parameters
     ----------
@@ -169,7 +169,7 @@ class ComplexPIController:
         u : complex
             Realized (limited) controller output.
         w_c : float
-            Angular speed of the reference frame (rad/s).
+            Angular speed (rad/s) of the coordinates.
 
         """
         self.u_i += T_s * (self.alpha_i + 1j * w_c) * (u - self.v)
@@ -186,7 +186,7 @@ class ComplexPIController:
         u : complex
             Controller output.
         w_c : float
-            Angular speed of the reference frame (rad/s), not needed in this design.
+            Angular speed (rad/s) of the coordinates, not needed in this design.
 
         """
         self.u_i = u
@@ -319,7 +319,8 @@ class RateLimiter:
     Parameters
     ----------
     rate_limit : float, optional
-        Rate limit, defaults to `inf`.
+        Rate limit (unit of the signal per second), defaults to `inf`. The output starts
+        from zero.
 
     """
 
@@ -328,22 +329,7 @@ class RateLimiter:
         self._old_y = 0.0
 
     def __call__(self, T_s: float, u: float) -> float:
-        """Limit the input signal."""
-        # In this implementation, the falling rate limit equals the (negative) rising
-        # rate limit. If needed, these limits can be separated with minor modifications
-        # in the class.
-        rate = (u - self._old_y) / T_s
-
-        if rate > self.rate_limit:
-            # Limit rising rate
-            y = self._old_y + T_s * self.rate_limit
-        elif rate < -self.rate_limit:
-            # Limit falling rate
-            y = self._old_y - T_s * self.rate_limit
-        else:
-            y = u
-
-        # Store the limited output
-        self._old_y = y
-
-        return y
+        """Limit the rate of change of the input signal, equally in both directions."""
+        du_max = T_s * self.rate_limit
+        self._old_y = clip(u, self._old_y - du_max, self._old_y + du_max)
+        return self._old_y

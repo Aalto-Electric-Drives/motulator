@@ -2,7 +2,7 @@
 
 from cmath import exp
 from dataclasses import dataclass
-from math import pi, sqrt
+from math import copysign, pi, sqrt
 
 from motulator.common.control._base import TimeSeries
 from motulator.common.control._controllers import ComplexPIController
@@ -40,10 +40,11 @@ class PLLOutputs:
 
 class PLL:
     """
-    Phase-locked loop including the voltage-magnitude filtering.
+    Phase-locked loop including the PCC voltage filtering.
 
-    This class provides a simple frequency-tracking phase-locked loop. The magnitude of
-    the measured PCC voltage is also filtered.
+    The PLL operates in the estimated PCC voltage coordinates. It also low-pass filters
+    the d component of the measured PCC voltage, which equals the voltage magnitude when
+    the PLL is locked, with the bandwidth `2*alpha_pll`.
 
     Parameters
     ----------
@@ -62,13 +63,13 @@ class PLL:
         self.state = PLLStates(w_g=w_nom, u_g=u_nom)
 
     def compute_output(self, i_c_ab: complex, u_g_meas_ab: complex) -> PLLOutputs:
-        """Output estimates and coordinate transformed quantities."""
+        """Compute the estimates and the feedback signals in the PLL coordinates."""
         out = PLLOutputs(theta_c=self.state.theta_c, w_g=self.state.w_g)
 
         # Coordinate transformations
         out.i_c = exp(-1j * out.theta_c) * i_c_ab
         out.u_g_meas = exp(-1j * out.theta_c) * u_g_meas_ab
-        # Filtered voltage magnitude
+        # Filtered d component of the PCC voltage
         out.u_g = self.state.u_g
 
         # Error signal
@@ -97,9 +98,8 @@ class CurrentController(ComplexPIController):
     """
     2DOF PI current controller for grid converters.
 
-    This class provides an interface for a current controller for grid converters. The
-    gains are initialized based on the desired closed-loop bandwidth and the filter
-    inductance.
+    The gains are selected such that the reference tracking has first-order dynamics
+    with the bandwidth `alpha_c` if the inductance `L` is accurate.
 
     Parameters
     ----------
@@ -188,11 +188,12 @@ class CurrentVectorController:
         """Compute references."""
         ref = References(T_s=self.cfg.T_s, p_g=p_g_ref, q_g=q_g_ref)
 
-        # Compute the reference current
-        ref.i_c = (ref.p_g - 1j * ref.q_g) / (1.5 * fbk.u_g)
+        # Compute the reference current, with the voltage bounded away from zero
+        u_g = copysign(max(abs(fbk.u_g), 1e-6), fbk.u_g)
+        ref.i_c = (ref.p_g - 1j * ref.q_g) / (1.5 * u_g)
         ref.i_c = self.current_limiter(ref.i_c)
-        # Power references corresponding to the limited current, which are also used
-        # for the anti-windup of the DC-bus voltage controller
+        # Power references corresponding to the limited current, which are also used for
+        # the anti-windup of the DC-bus voltage controller
         s_g_ref = 1.5 * fbk.u_g * ref.i_c.conjugate()
         ref.p_g, ref.q_g = s_g_ref.real, s_g_ref.imag
 
@@ -213,4 +214,4 @@ class CurrentVectorController:
         self.pll.update(ref.T_s, fbk)
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller signals."""
+        """Keep the time series in the controller coordinates."""

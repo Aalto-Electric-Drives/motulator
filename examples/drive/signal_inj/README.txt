@@ -1,7 +1,7 @@
 Signal Injection
 ----------------
 
-These examples demonstrate a square-wave signal injection for low-speed operation based on [#Kim2012]_. Cross-saturation errors are compensated for using flux maps [#You2018]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined to a model-based observer.
+These examples demonstrate square-wave signal injection for low-speed operation based on [#Kim2012]_. Cross-saturation errors are compensated for using flux maps [#You2018]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined with a model-based observer.
 
 .. rubric:: References
 

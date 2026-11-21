@@ -9,57 +9,6 @@ from numpy.typing import ArrayLike
 
 
 # %%
-def set_screen_style() -> None:
-    """Configure matplotlib for screen viewing."""
-    plt.style.use("default")
-    plt.rcParams.update(
-        {
-            "axes.prop_cycle": cycler("color", ["b", "r", "m", "c"]),
-            "lines.linewidth": 1,
-            "axes.grid": True,
-            "text.usetex": False,
-            "axes3d.grid": True,
-            "figure.constrained_layout.use": True,
-        }
-    )
-
-
-# %%
-def set_latex_style() -> None:
-    """Configure matplotlib for LaTeX documents."""
-    plt.style.use("default")
-    plt.rcParams.update(
-        {
-            "axes.prop_cycle": cycler("color", ["b", "r", "m", "c"]),
-            "lines.linewidth": 1,
-            "axes.grid": True,
-            # "axes.autolimit_mode": "round_numbers",
-            "text.usetex": True,
-            "text.latex.preamble": (r"\usepackage{newtxtext}\usepackage{newtxmath}"),
-            "font.family": "serif",
-            "font.serif": ["Liberation Serif"],
-            "mathtext.fontset": "dejavuserif",
-            "font.size": 8,
-            "axes.labelsize": 8,
-            "legend.fontsize": 8,
-            "xtick.labelsize": 8,
-            "ytick.labelsize": 8,
-            "axes3d.grid": True,
-            "figure.figsize": [3.5, 2.5],
-            # "figure.constrained_layout.use": True,
-            # "savefig.bbox": "tight",
-            # "savefig.pad_inches": 0.01,
-            # Disable automatic adjustment
-            "figure.constrained_layout.use": False,
-            "figure.subplot.left": 0.18,  # Fixed margins
-            "figure.subplot.right": 0.95,
-            "figure.subplot.bottom": 0.18,
-            "figure.subplot.top": 0.95,
-        }
-    )
-
-
-# %%
 def set_style(latex: bool = False) -> None:
     """
     Configure matplotlib for screen viewing or for LaTeX documents.
@@ -74,10 +23,37 @@ def set_style(latex: bool = False) -> None:
         defaults to False.
 
     """
+    plt.style.use("default")
+    plt.rcParams.update(
+        {
+            "axes.prop_cycle": cycler("color", ["b", "r", "m", "c"]),
+            "lines.linewidth": 1,
+            "axes.grid": True,
+            "axes3d.grid": True,
+            "text.usetex": latex,
+            "figure.constrained_layout.use": not latex,
+        }
+    )
     if latex:
-        set_latex_style()
-    else:
-        set_screen_style()
+        plt.rcParams.update(
+            {
+                "text.latex.preamble": r"\usepackage{newtxtext}\usepackage{newtxmath}",
+                "font.family": "serif",
+                "font.serif": ["Liberation Serif"],
+                "mathtext.fontset": "dejavuserif",
+                "font.size": 8,
+                "axes.labelsize": 8,
+                "legend.fontsize": 8,
+                "xtick.labelsize": 8,
+                "ytick.labelsize": 8,
+                "figure.figsize": [3.5, 2.5],
+                # Fixed margins
+                "figure.subplot.left": 0.18,
+                "figure.subplot.right": 0.95,
+                "figure.subplot.bottom": 0.18,
+                "figure.subplot.top": 0.95,
+            }
+        )
 
 
 def setup_time_series_plot(latex: bool) -> tuple[float, float]:
@@ -160,7 +136,5 @@ def save_and_show(save_path: str | Path | None = None, **savefig_kwargs) -> None
     if save_path is not None:
         save_path = Path(save_path)
         save_path.parent.mkdir(parents=True, exist_ok=True)
-        default_kwargs = {"bbox_inches": "tight"}
-        default_kwargs.update(savefig_kwargs)
-        plt.savefig(save_path, **default_kwargs)
+        plt.savefig(save_path, **{"bbox_inches": "tight", **savefig_kwargs})
     plt.show()

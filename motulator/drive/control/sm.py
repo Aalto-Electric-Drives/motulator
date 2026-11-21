@@ -3,7 +3,11 @@
 from motulator.common.control._pwm import PWM, InverterNonlinearity
 from motulator.drive.control._base import (
     DriveControlSystem,
+    Feedbacks,
+    Measurements,
+    VectorController,
     VectorControlSystem,
+    VHzController,
     VHzControlSystem,
 )
 from motulator.drive.control._common import (
@@ -29,6 +33,7 @@ from motulator.drive.control._sm_observers import (
 )
 from motulator.drive.control._sm_reference_gen import (
     ReferenceGenerator,
+    ReferenceGeneratorBase,
     ReferenceGeneratorOnline,
 )
 from motulator.drive.control._sm_signal_inj import SignalInjectionController
@@ -41,12 +46,16 @@ from motulator.drive.utils._parameters import (
 __all__ = [
     "BaseSynchronousMachineControlPars",
     "DriveControlSystem",
+    "Feedbacks",
+    "Measurements",
     "PWM",
     "InverterNonlinearity",
     "PIController",
     "CurrentVectorControllerCfg",
     "VHzControlSystem",
+    "VHzController",
     "VectorControlSystem",
+    "VectorController",
     "FluxObserver",
     "SpeedFluxObserver",
     "CurrentVectorController",
@@ -56,6 +65,7 @@ __all__ = [
     "ObserverBasedVHzControllerCfg",
     "ObserverOutputs",
     "ReferenceGenerator",
+    "ReferenceGeneratorBase",
     "References",
     "ReferenceGeneratorOnline",
     "SaturatedSynchronousMachinePars",

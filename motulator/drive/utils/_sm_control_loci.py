@@ -1,8 +1,6 @@
 """Computation of optimal control loci for synchronous machines."""
 
-from collections.abc import Callable
 from dataclasses import dataclass
-from functools import partial
 from typing import Any
 
 import numpy as np
@@ -19,48 +17,35 @@ NUM = 16
 
 # %%
 @dataclass
-class MTPALocus:
-    """Maximum-torque-per-ampere (MTPA) locus data."""
+class Locus:
+    """
+    Control locus of a synchronous machine.
 
-    i_s_dq: Any
-    psi_s_dq: Any
-    tau_M: Any
-    i_s_dq_vs_tau_M: Callable[[float], complex]
-    psi_s_abs_vs_tau_M: Callable[[float], float]
+    Parameters
+    ----------
+    i_s_dq : ndarray
+        Stator current (A) in rotor coordinates.
+    psi_s_dq : ndarray
+        Stator flux linkage (Vs) in rotor coordinates.
+    tau_M : ndarray
+        Electromagnetic torque (Nm).
 
+    """
 
-@dataclass
-class MTPVLocus:
-    """Maximum-torque-per-volt (MTPV) locus data."""
-
-    psi_s_dq: Any
-    i_s_dq: Any
-    tau_M: Any
-    tau_M_vs_psi_s_abs: Callable[[float], float]
-    i_s_dq_vs_psi_s_abs: Callable[[float], complex]
-
-
-@dataclass
-class CurrentLimitLocus:
-    """Constant current limit locus data."""
-
-    psi_s_dq: Any
-    i_s_dq: Any
-    tau_M: Any
-    i_s_dq_vs_psi_s_abs: Callable[[float], complex]
-    tau_M_vs_psi_s_abs: Callable[[float], float]
+    i_s_dq: np.ndarray
+    psi_s_dq: np.ndarray
+    tau_M: np.ndarray
 
 
 # %%
 class ControlLoci:
     """
-    Compute MTPA and MTPV loci based on the machine parameters.
+    Compute the control loci of a synchronous machine.
 
-    This class computes optimal control loci for synchronous machines, including the
-    maximum-torque-per-ampere (MTPA), maximum-torque-per-volt (MTPV), and current limit
-    loci [#Mor1994]_. The magnetic saturation is taken into account. The methods can be
-    used to precompute lookup tables for control and to analyze the machine
-    characteristics.
+    The class computes the maximum-torque-per-ampere (MTPA), maximum-torque-per-volt
+    (MTPV), and constant-current loci [#Mor1994]_, taking the magnetic saturation into
+    account. The loci can be used to precompute lookup tables for control and to analyze
+    the machine characteristics.
 
     Parameters
     ----------
@@ -71,8 +56,7 @@ class ControlLoci:
     -----
     The MTPA and MTPV conditions are expressed in terms of the auxiliary flux and the
     auxiliary current, respectively [#Var2022]_, allowing a compact representation of
-    the conditions. Notice that we define these auxiliary vectors 90 degrees rotated as
-    compared to [#Var2022]_, but otherwise the concepts are equivalent.
+    the conditions. The auxiliary vectors are rotated by 90° compared to [#Var2022]_.
 
     The d axis is assumed to be aligned with the PM flux, in which case `L_q >= L_d`,
     or, in machines without PMs, with the maximum inductance, i.e., `L_d > L_q`.
@@ -92,6 +76,13 @@ class ControlLoci:
 
     def __init__(self, par: BaseSynchronousMachineControlPars) -> None:
         self.par = par
+        # Range of the current and flux angles (rad) containing the loci
+        self._angles = (0, 0.5 * np.pi) if par.psi_f == 0 else (0.5 * np.pi, np.pi)
+
+    def _locus(self, i_s_dq: Any, psi_s_dq: Any) -> Locus:
+        """Locus with the torque computed from the current and the flux linkage."""
+        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
+        return Locus(i_s_dq, psi_s_dq, tau_M)
 
     def compute_mtpa_current_angle(self, i_s_abs: float) -> float:
         """MTPA current angle (rad) at given current magnitude (A)."""
@@ -103,32 +94,27 @@ class ControlLoci:
             psi_a_dq = aux_flux(complex(i_s_dq), complex(psi_s_dq), L_s)
             return np.real(psi_a_dq * np.conj(i_s_dq))
 
-        if self.par.psi_f == 0:
-            gamma_range = (0, 0.5 * np.pi)
-        else:
-            gamma_range = (0.5 * np.pi, np.pi)
-
-        if mtpa_cond(gamma_range[0]) * mtpa_cond(gamma_range[1]) > 0:
+        if mtpa_cond(self._angles[0]) * mtpa_cond(self._angles[1]) > 0:
             raise ValueError(
                 "No MTPA solution found. Check the alignment of the d axis, see Notes."
             )
-        return root_scalar(mtpa_cond, bracket=gamma_range, method="brentq").root
+        return root_scalar(mtpa_cond, bracket=self._angles, method="brentq").root
 
-    def compute_mtpa_locus(self, i_s_max: float, num: int = NUM) -> MTPALocus:
+    def compute_mtpa_locus(self, i_s_max: float, num: int = NUM) -> Locus:
         """
         Compute the MTPA locus.
 
         Parameters
         ----------
         i_s_max : float
-            Maximum current magnitude (A) at which the locus is computed.
+            Maximum current magnitude (A), up to which the locus is computed.
         num : int, optional
-            Number of points.
+            Number of points, defaults to 16.
 
         Returns
         -------
-        MTPALocus
-            MTPA locus data.
+        Locus
+            MTPA locus.
 
         """
         current_magnitudes = np.linspace(0, i_s_max, num)
@@ -138,56 +124,44 @@ class ControlLoci:
         for idx, i_s_abs in enumerate(current_magnitudes):
             gamma[idx] = self.compute_mtpa_current_angle(float(i_s_abs))
 
-        # MTPA locus expressed with different quantities
         i_s_dq = current_magnitudes * np.exp(1j * gamma)
-        psi_s_dq = self.par.psi_s_dq(i_s_dq)
-        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
-
-        return MTPALocus(
-            i_s_dq=i_s_dq,
-            psi_s_dq=psi_s_dq,
-            tau_M=tau_M,
-            i_s_dq_vs_tau_M=partial(np.interp, xp=tau_M, fp=i_s_dq),
-            psi_s_abs_vs_tau_M=partial(np.interp, xp=tau_M, fp=abs(psi_s_dq)),
-        )
+        return self._locus(i_s_dq, self.par.psi_s_dq(i_s_dq))
 
     def compute_mtpv_flux_angle(self, psi_s_abs: float) -> tuple[float, complex]:
-        """MTPV flux angle (rad) and the corresponding current (A)."""
-        i_s_dq = np.nan  # Updated to the converged current as a side effect
+        """
+        MTPV flux angle (rad) and current (A) at given flux linkage magnitude (Vs).
+
+        NaN values are returned if no MTPV exists in the range of the flux angle.
+
+        """
 
         def mtpv_cond(delta: float) -> float:
-            nonlocal i_s_dq
             psi_s_dq = psi_s_abs * np.exp(1j * delta)
             i_s_dq = self.par.iterate_i_s_dq(psi_s_dq)
             L_s = self.par.incr_ind_mat(i_s_dq)
             i_a_dq = aux_current(complex(psi_s_dq), complex(i_s_dq), L_s)
             return np.real(i_a_dq * np.conj(psi_s_dq))
 
-        if self.par.psi_f == 0:
-            delta_range = (0, 0.5 * np.pi)
-        else:
-            delta_range = (0.5 * np.pi, np.pi)
-
-        if mtpv_cond(delta_range[0]) * mtpv_cond(delta_range[1]) > 0:
+        if mtpv_cond(self._angles[0]) * mtpv_cond(self._angles[1]) > 0:
             return np.nan, np.nan  # No root in the range
-        delta = root_scalar(mtpv_cond, bracket=delta_range, method="brentq").root
-        return delta, i_s_dq
+        delta = root_scalar(mtpv_cond, bracket=self._angles, method="brentq").root
+        return delta, self.par.iterate_i_s_dq(psi_s_abs * np.exp(1j * delta))
 
-    def compute_mtpv_locus(self, psi_s_max: float, num: int = NUM) -> MTPVLocus:
+    def compute_mtpv_locus(self, psi_s_max: float, num: int = NUM) -> Locus:
         """
         Compute the MTPV locus.
 
         Parameters
         ----------
         psi_s_max : float
-            Maximum flux linkage (Vs) at which the locus is computed.
+            Maximum flux linkage magnitude (Vs), up to which the locus is computed.
         num : int, optional
-            Number of points.
+            Number of points, defaults to 16.
 
         Returns
         -------
-        MTPVLocus
-            MTPV locus data.
+        Locus
+            MTPV locus.
 
         """
         # Calculate MTPV points iteratively for each flux magnitude
@@ -197,23 +171,13 @@ class ControlLoci:
         for idx, psi_s_abs in enumerate(flux_magnitudes):
             delta[idx], i_s_dq[idx] = self.compute_mtpv_flux_angle(float(psi_s_abs))
 
-        # MTPV locus expressed with different quantities
-        psi_s_dq = flux_magnitudes * np.exp(1j * delta)
-        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
-
-        return MTPVLocus(
-            psi_s_dq=psi_s_dq,
-            i_s_dq=i_s_dq,
-            tau_M=tau_M,
-            tau_M_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=tau_M),
-            i_s_dq_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=i_s_dq),
-        )
+        return self._locus(i_s_dq, flux_magnitudes * np.exp(1j * delta))
 
     def compute_const_current_locus(
         self, i_s_max: float, gamma_range: tuple[Any, Any] | None = None, num: int = NUM
-    ) -> CurrentLimitLocus:
+    ) -> Locus:
         """
-        Compute the constant current locus.
+        Compute the constant-current locus.
 
         Parameters
         ----------
@@ -224,34 +188,20 @@ class ControlLoci:
             machines and (pi/2, 0) for machines without PMs. If the first element is NaN
             (no MTPV), the range starts from pi or pi/2, respectively.
         num : int, optional
-            Number of points.
+            Number of points, defaults to 16.
 
         Returns
         -------
-        CurrentLimitLocus
-            Constant current locus data.
+        Locus
+            Constant-current locus.
 
         """
-        gamma_start = 0.5 * np.pi if self.par.psi_f == 0 else np.pi
         if gamma_range is None:
-            gamma_range = (gamma_start, gamma_start - 0.5 * np.pi)
+            gamma_range = (self._angles[1], self._angles[0])
         elif np.isnan(gamma_range[0]):  # No MTPV
-            gamma_range = (gamma_start, gamma_range[-1])
-
-        gamma = np.linspace(*gamma_range, num)
-
-        # Current limit expressed with different quantities
-        i_s_dq = i_s_max * np.exp(1j * gamma)
-        psi_s_dq = self.par.psi_s_dq(i_s_dq)
-        tau_M = 1.5 * self.par.n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
-
-        return CurrentLimitLocus(
-            psi_s_dq=psi_s_dq,
-            i_s_dq=i_s_dq,
-            tau_M=tau_M,
-            i_s_dq_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=i_s_dq),
-            tau_M_vs_psi_s_abs=partial(np.interp, xp=abs(psi_s_dq), fp=tau_M),
-        )
+            gamma_range = (self._angles[1], gamma_range[-1])
+        i_s_dq = i_s_max * np.exp(1j * np.linspace(*gamma_range, num))
+        return self._locus(i_s_dq, self.par.psi_s_dq(i_s_dq))
 
     def compute_mtpv_current(self, i_s_abs: float) -> complex:
         """
@@ -276,14 +226,7 @@ class ControlLoci:
             i_a_dq = aux_current(complex(psi_s_dq), complex(i_s_dq), L_s)
             return float(np.real(i_a_dq * np.conj(psi_s_dq)))
 
-        if self.par.psi_f == 0:
-            gamma_range = (0, 0.5 * np.pi)
-        else:
-            gamma_range = (0.5 * np.pi, np.pi)
-
-        if mtpv_cond(gamma_range[0]) * mtpv_cond(gamma_range[1]) >= 0:
+        if mtpv_cond(self._angles[0]) * mtpv_cond(self._angles[1]) >= 0:
             return np.nan  # No MTPV for this current
-
-        gamma = root_scalar(mtpv_cond, bracket=gamma_range, method="brentq").root
-
+        gamma = root_scalar(mtpv_cond, bracket=self._angles, method="brentq").root
         return complex(i_s_abs * np.exp(1j * gamma))

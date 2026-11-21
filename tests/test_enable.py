@@ -11,6 +11,7 @@ from math import pi
 
 import numpy as np
 import pytest
+from helpers import im_par, ipmsm_par
 
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
@@ -20,13 +21,6 @@ from motulator.common.utils import abc2complex
 from motulator.drive import model as drive_model
 from motulator.grid import control as grid_control
 from motulator.grid import model as grid_model
-
-
-def sm_pars() -> drive_model.SynchronousMachinePars:
-    """Parameters of the 2.2-kW IPMSM."""
-    return drive_model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
 
 
 def position_sensor() -> drive_model.DriveSensors:
@@ -43,9 +37,8 @@ def spinning_pmsm(
     dc_bus = None
     if u_dc is None:
         dc_bus = drive_model.DCBus(C_dc=2e-3, u_dc=540)
-    mechanics = drive_model.ExternalRotorSpeed()
-    mechanics.set_external_rotor_speed(w_M)
-    par = sm_pars()
+    mechanics = drive_model.ExternalRotorSpeed(w_M)
+    par = ipmsm_par()
     machine = drive_model.SynchronousMachine(par)
     return drive_model.Drive(
         machine, mechanics, converter, dc_bus=dc_bus, sensors=position_sensor()
@@ -56,7 +49,7 @@ def pmsm_cvc(
     sensorless: bool = True, discrete: bool = False, T_s: float = 125e-6
 ) -> sm_control.VectorControlSystem:
     """Current-vector control with a speed controller."""
-    par = sm_pars()
+    par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(
         i_s_max=6.5, sensorless=sensorless, discrete=discrete, T_s=T_s
     )
@@ -90,8 +83,8 @@ def test_open_circuit(pwm: bool, discrete: bool) -> None:
     assert res.ctrl.ref.u_s[-1] == pytest.approx(res.ctrl.fbk.u_s[-1], abs=1)
 
 
-# The long sampling period with a single evaluation point per period gives
-# integration intervals with several diode transitions and no solution points
+# The long sampling period with a single evaluation point per period gives integration
+# intervals with several diode transitions and no solution points
 @pytest.mark.parametrize("N_eval, T_s", [(0, 125e-6), (1, 1e-3)])
 def test_passive_rectification(N_eval: int, T_s: float) -> None:
     """Above the diode turn-on, the machine charges the DC bus through the diodes."""
@@ -119,9 +112,8 @@ def test_two_blocked_converters() -> None:
     for name, converter, w_M in zip(
         ["gen", "idle"], converters, [400, 100], strict=True
     ):
-        mechanics = drive_model.ExternalRotorSpeed()
-        mechanics.set_external_rotor_speed(w_M)
-        machine = drive_model.SynchronousMachine(sm_pars())
+        mechanics = drive_model.ExternalRotorSpeed(w_M)
+        machine = drive_model.SynchronousMachine(ipmsm_par())
         models[name] = drive_model.Drive(
             machine, mechanics, converter, dc_bus=dc_bus, sensors=position_sensor()
         )
@@ -142,9 +134,8 @@ def test_discharged_dc_bus(system: str) -> None:
     dc_bus = drive_model.DCBus(C_dc=1e-3, u_dc=0)
     d_err = sm_control.InverterNonlinearity(t_d=1e-6, u_th=1.5)
     if system == "drive":
-        mechanics = drive_model.ExternalRotorSpeed()
-        mechanics.set_external_rotor_speed(100)
-        machine = drive_model.SynchronousMachine(sm_pars())
+        mechanics = drive_model.ExternalRotorSpeed(100)
+        machine = drive_model.SynchronousMachine(ipmsm_par())
         mdl = drive_model.Drive(
             machine, mechanics, converter, dc_bus=dc_bus, sensors=position_sensor()
         )
@@ -178,7 +169,7 @@ def test_standby_feedforward_current() -> None:
         return np.tanh(i / 0.1)  # Smooth, insensitive to numerical residuals
 
     mdl = drive_model.Drive(
-        drive_model.SynchronousMachine(sm_pars()),
+        drive_model.SynchronousMachine(ipmsm_par()),
         drive_model.MechanicalSystem(J=0.015),
         drive_model.VoltageSourceConverter(540, drive_model.ZOH(t_d=2e-6), sign=sign),
         sensors=position_sensor(),
@@ -194,16 +185,18 @@ def test_standby_feedforward_current() -> None:
     standby = res.ctrl.t > 0.105
     ref, fbk = res.ctrl.ref, res.ctrl.fbk
     assert np.max(np.abs(fbk.i_s[standby])) < 1e-6
-    # The duty ratios equal those of the limited voltage reference
+    # The duty ratios equal those of the limited voltage reference, whose angle is
+    # advanced in the modulation
     u_c_ab = 540 * abc2complex(ref.d_abc[standby].T)
-    u_c_ab_lim = np.exp(1j * fbk.theta_c[standby]) * ref.u_s_lim[standby]
+    theta = fbk.theta_c + ctrl.inner_ctrl.k_comp * ref.T_s * fbk.w_c
+    u_c_ab_lim = np.exp(1j * theta[standby]) * ref.u_s_lim[standby]
     assert u_c_ab == pytest.approx(u_c_ab_lim, abs=1e-6)
 
 
 @pytest.mark.parametrize("sensorless", [True, False])
 def test_drive_restart(sensorless: bool) -> None:
     """The drive starts from standby and restarts after coasting with blocked gates."""
-    par = sm_pars()
+    par = ipmsm_par()
     mechanics = drive_model.MechanicalSystem(J=0.015)
     mdl = drive_model.Drive(
         drive_model.SynchronousMachine(par),
@@ -219,8 +212,8 @@ def test_drive_restart(sensorless: bool) -> None:
     assert res.success
     t, w_M = res.mdl.t, res.mdl.mechanics.w_M
     i_s = np.abs(res.mdl.machine.i_s_ab)
-    # Standby before the start and coasting with the gates blocked, the current
-    # having decayed through the diodes
+    # Standby before the start and coasting with the gates blocked, the current having
+    # decayed through the diodes
     assert np.max(i_s[t < 0.02]) < 1e-6
     assert np.max(i_s[(t > 0.31) & (t < 0.35)]) < 1e-6
     assert np.interp(0.35, t, w_M) < 0.95 * np.interp(0.3, t, w_M)
@@ -244,7 +237,7 @@ def test_drive_restart(sensorless: bool) -> None:
 def test_flying_start_zero_torque(ctrl_type: str) -> None:
     """A sensorless drive released with zero torque after a decelerating coast draws no
     current beyond the short-circuit pulse of the zero-voltage periods."""
-    par = sm_pars()
+    par = ipmsm_par()
     mechanics = drive_model.MechanicalSystem(J=0.015)
     mdl = drive_model.Drive(
         drive_model.SynchronousMachine(par),
@@ -267,8 +260,8 @@ def test_flying_start_zero_torque(ctrl_type: str) -> None:
     res = Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.48)
     assert res.success
     t, w_M = res.mdl.t, res.mdl.mechanics.w_M
-    # The machine decelerates while coasting, so the open-circuit model of the
-    # observer and the integral state of the current controller are off at the release
+    # The machine decelerates while coasting, so the open-circuit model of the observer
+    # and the integral state of the current controller are off at the release
     w_M_rel = np.interp(0.43, t, w_M)
     assert w_M_rel < 0.5 * np.interp(0.3, t, w_M)
     # The catch at the second sampling instant after the release
@@ -286,11 +279,10 @@ def test_flying_start_zero_torque(ctrl_type: str) -> None:
 def test_catch_with_residual_current() -> None:
     """The flying start leaves the estimates if the current has not decayed, since the
     resistive decay of the current would be taken for the back-EMF."""
-    par = sm_pars()
+    par = ipmsm_par()
     machine = drive_model.SynchronousMachine(par)
     machine.state.psi_s_dq = complex(par.psi_s_dq(5 + 0j))  # Residual d-axis current
-    mechanics = drive_model.ExternalRotorSpeed()
-    mechanics.set_external_rotor_speed(0)
+    mechanics = drive_model.ExternalRotorSpeed(0)
     mdl = drive_model.Drive(
         machine, mechanics, drive_model.VoltageSourceConverter(u_dc=540)
     )
@@ -349,9 +341,7 @@ def test_induction_machine_restart(ctrl_type: str, sensorless: bool) -> None:
     the current limit, the flux estimate decaying with it (the speed estimate of a
     sensorless drive holds, which suffices here, since the unloaded machine keeps its
     speed)."""
-    par = drive_model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    par = im_par()
     mechanics = drive_model.MechanicalSystem(J=0.015)
     sensors = None if sensorless else drive_model.DriveSensors(w_M=drive_model.Sensor())
     mdl = drive_model.Drive(
@@ -391,7 +381,7 @@ def test_induction_machine_restart(ctrl_type: str, sensorless: bool) -> None:
 
 def test_signal_injection_start() -> None:
     """A signal-injection drive starts from standby."""
-    par = sm_pars()
+    par = ipmsm_par()
     mdl = drive_model.Drive(
         drive_model.SynchronousMachine(par),
         drive_model.MechanicalSystem(J=0.015),
@@ -412,7 +402,7 @@ def test_signal_injection_start() -> None:
 def test_signal_injection_coast() -> None:
     """The angle estimate of a signal-injection drive follows the speed estimate while
     the gates are blocked."""
-    par = sm_pars()
+    par = ipmsm_par()
     mdl = drive_model.Drive(
         drive_model.SynchronousMachine(par),
         drive_model.MechanicalSystem(J=0.015),
@@ -471,8 +461,8 @@ def test_grid_converter_startup() -> None:
     res = Simulation(mdl, ctrl, show_progress=False, cfg=cfg_solver).simulate(0.12)
     assert res.success
     t = res.mdl.t
-    # Charging through the diodes at least to the peak line-to-line voltage (the
-    # filter rings, so the DC-bus voltage overshoots), then no current
+    # Charging through the diodes at least to the peak line-to-line voltage (the filter
+    # rings, so the DC-bus voltage overshoots), then no current
     u_dc = np.interp(0.039, t, res.mdl.dc_bus.u_dc)
     assert np.sqrt(2) * 400 < u_dc < 1.2 * np.sqrt(2) * 400
     assert np.max(np.abs(res.mdl.ac_filter.i_c_ab[(t > 0.035) & (t < 0.04)])) < 1e-6

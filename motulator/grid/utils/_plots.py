@@ -1,4 +1,4 @@
-"""Example plotting scripts for grid converters."""
+"""Plotting functions for grid converters."""
 
 from collections.abc import Sequence
 from pathlib import Path
@@ -137,6 +137,9 @@ def plot_control_signals(
     """
     Plot control signals and converter voltages.
 
+    The powers, the converter current components in the controller coordinates, and the
+    voltage magnitudes are plotted. A control system is required.
+
     Parameters
     ----------
     res : ~motulator.common.model.SimulationResults
@@ -161,44 +164,21 @@ def plot_control_signals(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Setup plot style and dimensions
     width, height = setup_time_series_plot(latex)
-
-    # Process base values
-    if base is None:
-        pu_vals = False
-        base = BaseValues.unity()
-    else:
-        pu_vals = True
-
-    # Set time limits
+    pu = base is not None
+    base = base if base is not None else BaseValues.unity()
+    fig, axes = plt.subplots(3, 1, figsize=(width, height), sharex=True)
+    _plot_powers(axes[0], res.ctrl, res.mdl, base)
+    _plot_currents(axes[1], res.ctrl, base)
+    _plot_voltages(axes[2], res.ctrl, res.mdl, base)
+    axes[0].set_ylabel(f"Power ({'p.u.' if pu else 'W'})")
+    axes[1].set_ylabel(f"Current ({'p.u.' if pu else 'A'})")
+    axes[2].set_ylabel(f"Voltage ({'p.u.' if pu else 'V'})")
     if t_lims is None:
         t_lims = (0, res.mdl.t[-1])
-
-    # Create figure
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(width, height), sharex=True)
-    axes = [ax1, ax2, ax3]
-
-    # Plot subplots
-    _plot_powers(ax1, res.ctrl, res.mdl, base)
-    _plot_currents(ax2, res.ctrl, base)
-    _plot_voltages(ax3, res.ctrl, res.mdl, base)
-
-    # Configure all axes
-    configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
-    # Add axis labels
-    if pu_vals:
-        ax1.set_ylabel("Power (p.u.)")
-        ax2.set_ylabel("Current (p.u.)")
-        ax3.set_ylabel("Voltage (p.u.)")
-    else:
-        ax1.set_ylabel("Power (W)")
-        ax2.set_ylabel("Current (A)")
-        ax3.set_ylabel("Voltage (V)")
+    configure_axes(list(axes), t_lims, t_ticks, y_lims, y_ticks)
     fig.align_ylabels()
     axes[-1].set_xlabel("Time (s)")
-
     save_and_show(save_path, **savefig_kwargs)
 
 
@@ -298,43 +278,24 @@ def plot_grid_waveforms(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Setup plot style and dimensions
     width, height = setup_time_series_plot(latex)
-
-    # Process base values
-    if base is None:
-        pu_vals = False
-        base = BaseValues.unity()
-    else:
-        pu_vals = True
-
-    # Set time limits
-    if t_lims is None:
-        t_lims = (0, res.mdl.t[-1])
-
-    # Create figure, without the phase angles if there is no control system
+    pu = base is not None
+    base = base if base is not None else BaseValues.unity()
+    # Without a control system, the phase angles are not plotted
     n_axes = 2 if res.ctrl is None else 3
-    height *= n_axes / 3
-    fig, axes = plt.subplots(n_axes, 1, figsize=(width, height), sharex=True)
-
-    # Plot subplots
+    fig, axes = plt.subplots(
+        n_axes, 1, figsize=(width, height * (n_axes / 3)), sharex=True
+    )
     _plot_three_phase_voltages(axes[0], res.mdl, base, plot_pcc_voltage)
     _plot_three_phase_currents(axes[1], res.mdl, base)
+    axes[0].set_ylabel(f"Voltage ({'p.u.' if pu else 'V'})")
+    axes[1].set_ylabel(f"Current ({'p.u.' if pu else 'A'})")
     if res.ctrl is not None:
         _plot_phase_angles(axes[2], res.mdl, res.ctrl)
         axes[2].set_ylabel("Angle (deg)")
-
-    # Configure all axes
-    configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
-    # Add axis labels
-    if pu_vals:
-        axes[0].set_ylabel("Voltage (p.u.)")
-        axes[1].set_ylabel("Current (p.u.)")
-    else:
-        axes[0].set_ylabel("Voltage (V)")
-        axes[1].set_ylabel("Current (A)")
+    if t_lims is None:
+        t_lims = (0, res.mdl.t[-1])
+    configure_axes(list(axes), t_lims, t_ticks, y_lims, y_ticks)
     fig.align_ylabels()
     axes[-1].set_xlabel("Time (s)")
-
     save_and_show(save_path, **savefig_kwargs)

@@ -56,9 +56,6 @@ class _RampTorque(Subsystem):
     def set_outputs(self, t: float) -> None:
         self.out.tau_L = K * t
 
-    def rhs(self, t: float) -> list[complex]:
-        return []
-
     def create_time_series(self, t: np.ndarray) -> _TimeSeries:
         return _TimeSeries(t, K * t)
 
@@ -107,7 +104,7 @@ def test_shared_subsystem_under_different_names() -> None:
     model."""
     mech = mechanics(two_mass=False)
     mdl = CompositeModel({"a": loaded(mech), "b": Model(None, {"rotor": mech}, {})})
-    assert len(mdl.get_initial_values()) == 2
+    assert len(mdl.get_states()) == 2
     res = Simulation(mdl, show_progress=False).simulate(0.05)
     assert res.mdl.b.rotor is res.mdl.a.mechanics
     ts = res.mdl.b.rotor
@@ -148,9 +145,6 @@ class _Gain(Subsystem):
 
     def set_outputs(self, t: float) -> None:
         self.out.x = self.inp.x
-
-    def rhs(self, t: float) -> list[complex]:
-        return []
 
     def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         raise NotImplementedError

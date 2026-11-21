@@ -41,7 +41,7 @@ _spec.loader.exec_module(api_paths)
             "motulator.common.control.PIController",
         ),
         (  # Not public
-            "motulator.common.model._pwm.Delay",
+            "motulator.common.model._pwm._split",
             "motulator.common.model",
             None,
         ),

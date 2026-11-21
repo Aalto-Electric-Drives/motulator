@@ -22,6 +22,7 @@ from typing import Any
 
 import numpy as np
 import pytest
+from helpers import im_par
 
 import motulator.drive.control.im as im_control
 from motulator.drive import model
@@ -143,9 +144,7 @@ def test_im_current_map_with_mutual_saturation() -> None:
         model.MechanicalSystem(J=0.015),
         model.VoltageSourceConverter(u_dc=540),
     )
-    est_par = im_control.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    est_par = im_par()
     cfg = im_control.ObserverBasedVHzControllerCfg(psi_s_nom=1.04, i_s_max=10.6)
     ctrl = im_control.VHzControlSystem(
         im_control.ObserverBasedVHzController(est_par, cfg), slew_rate=2 * pi * 120

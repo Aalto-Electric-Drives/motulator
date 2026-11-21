@@ -3,11 +3,12 @@
 =============================
 
 This example simulates sensorless current-vector control (CVC) of the same 5.6-kW
-permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux-
-vector control example. See :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
-for the machine model, flux-map data, and saturation-model description. This example
-demonstrates online reference generation in current-vector control, which allows the
-optimal current references to be generated in real time [#Sar2026]_.
+permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding
+flux-vector control example. See
+:doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc` for the machine model,
+flux-map data, and saturation-model description. This example demonstrates online
+reference generation in current-vector control, which allows the optimal current
+references to be generated in real time [#Sar2026]_.
 
 """
 # %%
@@ -29,8 +30,8 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Configure the system model.
 
 # Load the measured flux map data used to parametrize the machine model
-p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
-meas_data = np.load(p / "baldor_400rpm_map.npz")
+p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+meas_data = np.load(p.parent / "data" / "baldor_400rpm_map.npz")
 i_s_dq_map = meas_data["i_s_dq"]
 psi_s_dq_map = meas_data["psi_s_dq"]
 

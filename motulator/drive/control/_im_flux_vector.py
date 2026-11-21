@@ -8,10 +8,11 @@ from motulator.common.control._base import TimeSeries
 from motulator.common.utils._utils import sign
 from motulator.drive.control._common import FluxTorqueControllerBase, References
 from motulator.drive.control._im_observers import (
+    FluxObserver,
     ObserverOutputs,
     compute_feedback,
     create_speed_flux_observer,
-    create_vhz_observer,
+    sensorless_k_o,
     to_rotor_flux_coordinates,
 )
 from motulator.drive.utils._parameters import (
@@ -34,18 +35,9 @@ class FluxTorqueController(FluxTorqueControllerBase):
     alpha_tau : float
         Torque-control bandwidth (rad/s).
     alpha_i : float, optional
-        Integral action bandwidth (rad/s), defaults to 0.
+        Integral-action bandwidth (rad/s), defaults to 0.
 
     """
-
-    def __init__(
-        self,
-        par: BaseInductionMachineControlPars,
-        alpha_psi: float,
-        alpha_tau: float,
-        alpha_i: float = 0.0,
-    ) -> None:
-        super().__init__(par, alpha_psi, alpha_tau, alpha_i)
 
     def compute_output(
         self,
@@ -81,7 +73,7 @@ class FluxTorqueController(FluxTorqueControllerBase):
 # %%
 class ReferenceGenerator:
     """
-    Reference generator for flux-vector control.
+    Reference generator for flux-vector control and observer-based V/Hz control.
 
     Parameters
     ----------
@@ -115,7 +107,28 @@ class ReferenceGenerator:
         u_dc: float,
         op_par: InductionMachineInvGammaPars,
     ) -> tuple[float, float]:
-        """Simple field-weakening strategy, with the parameters `op_par`."""
+        """
+        Compute the stator flux and limited torque references.
+
+        Parameters
+        ----------
+        tau_M_ref : float
+            Torque reference (Nm).
+        w_s : float
+            Stator angular frequency estimate (rad/s).
+        psi_R : float
+            Rotor flux magnitude estimate (Vs).
+        u_dc : float
+            DC-bus voltage (V).
+        op_par : InductionMachineInvGammaPars
+            Inverse-Γ model parameters at the operating point.
+
+        Returns
+        -------
+        tuple[float, float]
+            Stator flux magnitude reference (Vs) and limited torque reference (Nm).
+
+        """
         # Field-weakening
         u_s_max = self.k_u * u_dc / sqrt(3)
         psi_s_max = u_s_max / abs(w_s) if w_s != 0 else inf
@@ -128,9 +141,9 @@ class ReferenceGenerator:
         # Breakdown torque limit
         k = self.k_b * op_par.L_M / (op_par.L_M + op_par.L_sgm)
         tau_b = 0.75 * op_par.n_p * k * psi_s_ref**2 / op_par.L_sgm
-        # Current limit: the stator flux on the circle psi_s_ref stays within the
-        # circle L_sgm*i_s_max around the rotor flux, which gives the maximum
-        # q-component of the stator flux in rotor flux coordinates
+        # Current limit: the stator flux on the circle psi_s_ref stays within the circle
+        # L_sgm*i_s_max around the rotor flux, which gives the maximum q-component of
+        # the stator flux in rotor flux coordinates
         tau_M_cl = 0.0
         if psi_R > 0:
             psi_sd = (psi_s_ref**2 + psi_R**2 - (op_par.L_sgm * self.i_s_max) ** 2) / (
@@ -159,10 +172,10 @@ class FluxVectorControllerCfg:
         Maximum stator current (A).
     alpha_tau : float, optional
         Torque-control bandwidth (rad/s), defaults to 2*pi*100.
-    alpha_psi : float, optional
+    alpha_psi : float | None, optional
         Flux-control bandwidth (rad/s), defaults to `alpha_tau`.
-    alpha_i : float, optional
-        Integral action bandwidth (rad/s), defaults to `alpha_tau`.
+    alpha_i : float | None, optional
+        Integral-action bandwidth (rad/s), defaults to `alpha_tau`.
     alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
         otherwise 2*pi*400. If `J` is given, the default is halved, which keeps the
@@ -179,7 +192,7 @@ class FluxVectorControllerCfg:
         Voltage utilization factor, defaults to 0.9.
     k_b : float, optional
         Breakdown torque margin, defaults to 0.9.
-    J : float, optional
+    J : float | None, optional
         Inertia (kgm²). Defaults to None, meaning the mechanical system model is not
         used in speed estimation.
     sensorless : bool, optional
@@ -217,7 +230,7 @@ class FluxVectorController:
     par : BaseInductionMachineControlPars
         Machine model parameters.
     cfg : FluxVectorControllerCfg
-        Flux-vector control configuration.
+        Flux-vector controller configuration.
 
     References
     ----------
@@ -299,7 +312,8 @@ class ObserverBasedVHzControllerCfg:
     alpha_tau : float, optional
         Torque-control bandwidth (rad/s), defaults to 2*pi*20.
     alpha_f : float, optional
-        Low-pass-filter bandwidth (rad/s), defaults to 2*pi*1.
+        Bandwidth of the low-pass filter of the torque estimate (rad/s), defaults to
+        2*pi*1.
     k_o : Callable[[float, InductionMachineInvGammaPars], complex] | None, optional
         Observer gain as a function of the electrical rotor angular speed and the
         inverse-Γ model parameters at the operating point. If None, defaults to
@@ -351,8 +365,8 @@ class ObserverBasedVHzController:
             cfg.psi_s_nom, cfg.i_s_max, inf, cfg.k_u, cfg.k_b
         )
         self.flux_torque_ctrl = FluxTorqueController(par, cfg.alpha_psi, cfg.alpha_tau)
-        self.observer = create_vhz_observer(par, cfg.k_o)
-        self.alpha_f: float = cfg.alpha_f
+        k_o = sensorless_k_o if cfg.k_o is None else cfg.k_o
+        self.observer = FluxObserver(par, k_o)
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.T_s = cfg.T_s
 
@@ -385,7 +399,7 @@ class ObserverBasedVHzController:
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
+        self.tau_M_lpf += ref.T_s * self.cfg.alpha_f * (fbk.tau_M - self.tau_M_lpf)
         self.observer.update(ref.T_s, fbk)
 
     def post_process(self, ts: TimeSeries) -> None:

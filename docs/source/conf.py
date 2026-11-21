@@ -91,6 +91,7 @@ mathjax3_config = {
             "uss": "\\mathbf{u}_\\mathrm{s}^\\mathrm{s}",
             "usref": "\\mathbf{u}_\\mathrm{s}^\\mathrm{ref}",
             "usreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{ref}",
+            "ussreflim": "\\bar{\\mathbf{u}}_\\mathrm{s}^\\mathrm{s,ref}",
             "is": "\\mathbf{i}_\\mathrm{s}",
             "isp": "\\mathbf{i}_\\mathrm{s}'",
             "isref": "\\mathbf{i}_\\mathrm{s}^\\mathrm{ref}",

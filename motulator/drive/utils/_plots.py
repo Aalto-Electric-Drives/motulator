@@ -1,6 +1,7 @@
-"""Example plotting scripts for machine drives."""
+"""Plotting functions for machine drives."""
 
 from collections.abc import Sequence
+from functools import partial
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -168,7 +169,7 @@ def plot(
     **savefig_kwargs,
 ) -> None:
     """
-    Plot example figures with selectable subplots.
+    Plot the drive signals in selectable subplots.
 
     Parameters
     ----------
@@ -198,61 +199,40 @@ def plot(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Process base values and set the LaTeX subscript of mechanical quantities
-    if base is None:
-        pu_vals = False
-        base = BaseValues.unity()
-        M = r"\mathrm{M}"
-    else:
-        pu_vals = True
-        M = r"\mathrm{m}"
-
-    # Setup plot style and dimensions
+    pu = base is not None
+    base = base if base is not None else BaseValues.unity()
+    M = r"\mathrm{m}" if pu else r"\mathrm{M}"  # Subscript of mechanical quantities
     width, height = setup_time_series_plot(latex)
 
-    # Set time limits
-    if t_lims is None:
-        t_lims = (0, res.mdl.t[-1])
-
-    # Subplot mapping: name -> (function, SI label, p.u. label)
+    # Subplot mapping: name -> (function, quantity, SI unit)
     subplot_map = {
-        "speed": (_plot_speeds, "Speed (rad/s)", "Speed (p.u.)"),
-        "torque": (_plot_torques, "Torque (Nm)", "Torque (p.u.)"),
-        "current": (_plot_currents, "Current (A)", "Current (p.u.)"),
-        "voltage": (_plot_voltages, "Voltage (V)", "Voltage (p.u.)"),
-        "flux": (_plot_flux_linkages, "Flux linkage (Vs)", "Flux linkage (p.u.)"),
+        "speed": (partial(_plot_speeds, M=M), "Speed", "rad/s"),
+        "torque": (partial(_plot_torques, M=M), "Torque", "Nm"),
+        "current": (_plot_currents, "Current", "A"),
+        "voltage": (_plot_voltages, "Voltage", "V"),
+        "flux": (_plot_flux_linkages, "Flux linkage", "Vs"),
     }
-
     if subplots is None:
-        subplots = ["speed", "torque", "current", "voltage", "flux"]
-
-    # Validate subplot names
+        subplots = list(subplot_map)
     for name in subplots:
         if name not in subplot_map:
             raise ValueError(f"Unknown subplot name: {name}")
 
     n_subplots = len(subplots)
-    base_height = height
-    height = base_height * n_subplots / 5
-    fig, axes = plt.subplots(n_subplots, 1, figsize=(width, height), sharex=True)
-    if n_subplots == 1:
-        axes = [axes]
-
-    # Plot selected subplots
+    fig, axes = plt.subplots(
+        n_subplots, 1, figsize=(width, height * n_subplots / 5), sharex=True
+    )
+    axes = [axes] if n_subplots == 1 else list(axes)
     for ax, name in zip(axes, subplots, strict=True):
-        plot_func, label_si, label_pu = subplot_map[name]
-        if name in ["speed", "torque"]:
-            plot_func(ax, res.ctrl, res.mdl, base, M)
-        else:
-            plot_func(ax, res.ctrl, res.mdl, base)
-        ax.set_ylabel(label_pu if pu_vals else label_si)
+        plot_func, quantity, unit = subplot_map[name]
+        plot_func(ax, res.ctrl, res.mdl, base)
+        ax.set_ylabel(f"{quantity} ({'p.u.' if pu else unit})")
 
-    # Configure all axes
+    if t_lims is None:
+        t_lims = (0, res.mdl.t[-1])
     configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
     fig.align_ylabels()
     axes[-1].set_xlabel("Time (s)")
-
     save_and_show(save_path, **savefig_kwargs)
 
 
@@ -303,9 +283,10 @@ def plot_stator_waveforms(
     Parameters
     ----------
     res : ~motulator.common.model.SimulationResults
-        Should contain the simulated data.
+        Simulation results.
     base : BaseValues, optional
-        Base values for scaling the waveforms.
+        Base values for scaling the waveforms. If not given, the waveforms are plotted
+        in SI units.
     t_lims : tuple[float, float], optional
         Time axis limits. If None, uses full time range.
     t_ticks : ArrayLike, optional
@@ -315,46 +296,25 @@ def plot_stator_waveforms(
     y_ticks : Sequence[ArrayLike | None], optional
         y-axis tick locations for each subplot.
     latex : bool, optional
-        Use LaTeX fonts for the labels, requires a working LaTeX installation.
+        Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
+        installation, defaults to False.
     save_path : str | Path, optional
         Path to save the figure. If None, the figure is not saved.
     **savefig_kwargs
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Setup plot style
     set_style(latex)
-
-    # Process base values
-    if base is None:
-        pu_vals = False
-        base = BaseValues.unity()
-    else:
-        pu_vals = True
-
-    # Set time limits
-    if t_lims is None:
-        t_lims = (0, res.mdl.t[-1])
-
-    # Create figure
+    pu = base is not None
+    base = base if base is not None else BaseValues.unity()
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    axes = [ax1, ax2]
-
-    # Plot subplots
     _plot_phase_voltages(ax1, res.mdl, res.ctrl, base)
     _plot_phase_currents(ax2, res.mdl, res.ctrl, base)
-
-    # Configure all axes
-    configure_axes(axes, t_lims, t_ticks, y_lims, y_ticks)
-
-    # Add axis labels
-    if pu_vals:
-        ax1.set_ylabel("Voltage (p.u.)")
-        ax2.set_ylabel("Current (p.u.)")
-    else:
-        ax1.set_ylabel("Voltage (V)")
-        ax2.set_ylabel("Current (A)")
+    ax1.set_ylabel(f"Voltage ({'p.u.' if pu else 'V'})")
+    ax2.set_ylabel(f"Current ({'p.u.' if pu else 'A'})")
+    if t_lims is None:
+        t_lims = (0, res.mdl.t[-1])
+    configure_axes([ax1, ax2], t_lims, t_ticks, y_lims, y_ticks)
     fig.align_ylabels()
-    axes[-1].set_xlabel("Time (s)")
-
+    ax2.set_xlabel("Time (s)")
     save_and_show(save_path, **savefig_kwargs)

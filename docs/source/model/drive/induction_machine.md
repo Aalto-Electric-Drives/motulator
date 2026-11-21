@@ -299,7 +299,7 @@ label: im_flux_torque
 
 ```
 
-where $\abspsis = |\psis|$ is the flux magnitude, $\omegarb = \Rr/L_\ell$ is the breakdown angular slip frequency, and $\omegar$ is the slip angular frequency. These dynamics are valid also for saturated machines where $\Ls = \Ls(\abspsis)$, and they are also independent of the coordinate system. In this documentation, the sum of the electrical angular speed and the slip angular frequency
+where $\abspsis = |\psis|$ is the flux magnitude, $\omegarb = \Rr/L_\ell$ is the breakdown slip angular frequency, and $\omegar$ is the slip angular frequency. These dynamics are valid also for saturated machines where $\Ls = \Ls(\abspsis)$, and they are also independent of the coordinate system. In this documentation, the sum of the electrical angular speed and the slip angular frequency
 
 ```{math}
 ---
@@ -309,7 +309,7 @@ label: im_omegas
 
 ```
 
-is referred to as the stator angular frequency, with this definition being agnostic to the coordinate system and defined also in transient states.
+is referred to as the stator angular frequency. This definition does not depend on the coordinate system, and it also holds in transient states.
 
 The flux and torque dynamics can be easily transformed to the inverse-Γ form by substituting $\psir = \psiR/\gamma$, $L_\ell = \Lsgm/\gamma$, and $\Rr = \RR/\gamma^2$. Compare also to {eq}`sm_flux_torque` in the {ref}`synchronous_machine` document.
 

@@ -5,7 +5,9 @@ AutoAPI writes the bases and the type hints as the paths of the objects in the p
 modules (e.g., ``motulator.common.control._base.TimeSeries``). This extension replaces
 each of them by a public path of the same object, preferring the module of the page and
 then the module closest to the private one. A path without a public counterpart stops
-the build, since the object should then be exported.
+the build, since the object should then be exported. A bare name that is not found on
+its page (e.g., a class referred to in a docstring) is resolved to the object of that
+name documented on another page, the one closest to the page.
 
 """
 
@@ -19,7 +21,10 @@ from typing import TYPE_CHECKING, Any
 import motulator
 
 if TYPE_CHECKING:
+    from docutils.nodes import TextElement, reference
+    from sphinx.addnodes import pending_xref
     from sphinx.application import Sphinx
+    from sphinx.environment import BuildEnvironment
 
 # Path through a private module, e.g., motulator.common.control._base.TimeSeries
 PRIVATE_PATH = re.compile(r"\bmotulator(?:\.\w+)*\._\w+(?:\.\w+)+")
@@ -119,8 +124,35 @@ def _replace_in_type_hints(app: "Sphinx") -> None:
             hints[name] = _replace(hint, obj_id, obj_id)
 
 
+def _resolve_bare_name(
+    app: "Sphinx",
+    env: "BuildEnvironment",
+    node: "pending_xref",
+    contnode: "TextElement",
+) -> "reference | None":
+    """Resolve a bare name to the closest module-level object of that name."""
+    name = node["reftarget"]
+    if node.get("refdomain") != "py" or "." in name:
+        return None
+    domain = env.get_domain("py")
+    paths = [
+        path
+        for path, _, objtype, *_ in domain.get_objects()
+        if path.rsplit(".", 1)[-1] == name and objtype in ("class", "function", "data")
+    ]
+    if not paths:
+        return None
+    context = node.get("py:module") or ""
+    path = max(paths, key=lambda p: _common_parts(p, context))
+    return domain.resolve_xref(
+        env, node["refdoc"], app.builder, "obj", path, node, contnode
+    )
+
+
 def setup(app: "Sphinx") -> dict[str, Any]:
-    """Connect the replacements, the type hints after AutoAPI has recorded them."""
+    """Connect the replacements, the type hints after AutoAPI has recorded them, and the
+    resolution of the bare names."""
     app.connect("builder-inited", _replace_in_type_hints, priority=600)
     app.connect("source-read", _replace_in_source)
+    app.connect("missing-reference", _resolve_bare_name)
     return {"parallel_read_safe": True, "parallel_write_safe": True}

@@ -3,6 +3,7 @@
 from motulator.common.control._pwm import PWM, InverterNonlinearity
 from motulator.grid.control._base import (
     Feedbacks,
+    GridController,
     GridConverterControlSystem,
     Measurements,
     References,
@@ -28,11 +29,13 @@ from motulator.grid.control._gfm_observer import (
 from motulator.grid.control._gfm_psc import (
     PowerSynchronizationController,
     PowerSynchronizationControllerCfg,
+    PowerSynchronizationFeedbacks,
 )
 from motulator.grid.control._gfm_sequence_observer import (
     SequenceObserverBasedGridFormingController,
     SequenceObserverBasedGridFormingControllerCfg,
     SequenceObserverOutputs,
+    SequenceReferences,
 )
 
 __all__ = [
@@ -47,6 +50,7 @@ __all__ = [
     "DualVoltageFormingControllerCfg",
     "DualVoltageFormingOutputs",
     "Feedbacks",
+    "GridController",
     "GridConverterControlSystem",
     "Measurements",
     "ObserverBasedGridFormingController",
@@ -56,8 +60,10 @@ __all__ = [
     "PLLOutputs",
     "PowerSynchronizationController",
     "PowerSynchronizationControllerCfg",
+    "PowerSynchronizationFeedbacks",
     "References",
     "SequenceObserverBasedGridFormingController",
     "SequenceObserverBasedGridFormingControllerCfg",
     "SequenceObserverOutputs",
+    "SequenceReferences",
 ]

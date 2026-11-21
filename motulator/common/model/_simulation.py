@@ -3,7 +3,7 @@
 import os
 import warnings
 from collections.abc import Callable, Mapping
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from types import SimpleNamespace
 from typing import Any
 
@@ -21,8 +21,8 @@ from motulator.common.model._base import (
 from motulator.common.model._composite import CompositeModel, CompositeModelTimeSeries
 from motulator.common.model._converter import DCBus
 
-# Tolerance (s) for treating the sampling and switching instants of different
-# converters as simultaneous, and diode transitions as stuck
+# Tolerance (s) for treating the sampling and switching instants of different converters
+# as simultaneous, and diode transitions as stuck
 _T_TOL = 1e-12
 # Maximum number of consecutive diode transitions at the same instant
 _MAX_STUCK = 10
@@ -59,16 +59,6 @@ class SolverCfg:
     rtol: float = 1e-3
     atol: float = 1e-6
 
-    @property
-    def solver(self) -> dict[str, Any]:
-        """Return the solver configuration."""
-        return {
-            "max_step": self.max_step,
-            "method": self.method,
-            "rtol": self.rtol,
-            "atol": self.atol,
-        }
-
 
 # %%
 @dataclass
@@ -82,8 +72,8 @@ class SimulationResults:
         Results from the continuous-time model. For a composite model, the time series
         of each model is an attribute by the model name.
     ctrl : Any
-        Results from the digital control system, None for a model without a control
-        system. For a composite model, the results of each control system are an
+        Results from the discrete-time control system, None for a model without a
+        control system. For a composite model, the results of each control system are an
         attribute by the model name (None for a model without a control system).
     success : bool
         False if the simulation stopped before the stop time due to a numerical failure,
@@ -117,13 +107,13 @@ class Simulation:
     show_progress : bool, optional
         Show progress during simulation, defaults to True.
     cfg : SolverCfg, optional
-        Solver configuration parameters.
+        Solver configuration parameters, defaults to `SolverCfg()`.
     t_start : float | Mapping[str, float], optional
         First sampling instant (s) of the control system or, for a composite model, of
         the control systems by the model names. The time `ctrl.t` of the control system
-        is set to this value. Defaults to the initial time of the model, as do the
-        control systems not included in the mapping, in which case `ctrl.t` is not
-        changed.
+        is set to this value. Defaults to None, in which case the control systems, also
+        those not included in the mapping, start at the initial time of the model, and
+        their time `ctrl.t` is not changed.
 
     """
 
@@ -198,13 +188,18 @@ class Simulation:
         Parameters
         ----------
         t_stop : float, optional
-            Simulation stop time, defaults to 1.
+            Simulation stop time (s), defaults to 1.
         N_eval : int, optional
             Number of evenly spaced data points to be returned by the solver for each
             integration interval, i.e., for each interval between the sampling and
             switching instants, or for the whole simulation without control systems.
             Defaults to 0, in which case the number and spacing of points is selected by
             the solver.
+
+        Returns
+        -------
+        SimulationResults
+            Results from the beginning of the simulation, including the earlier calls.
 
         """
         progress_bar = None
@@ -262,14 +257,17 @@ class Simulation:
             for k, (mdl, ctrl) in enumerate(self._pairs):
                 # Control and modulation
                 if k in due:
-                    # The gate enable takes effect at the sampling instant, so that
-                    # the control system measures the converter with blocked gates
+                    # The gates are blocked before the measurement, so that the control
+                    # system measures the blocked converter, and released after it,
+                    # since the released gates follow the command computed now
                     enabled = ctrl.get_enable()
-                    if enabled != self._enabled[k]:
-                        self._enabled[k] = enabled
-                        mdl.converter.set_enable(enabled)
+                    if not enabled and self._enabled[k]:
+                        mdl.converter.set_enable(False)
                         self.mdl.set_outputs(t0)
                     T_s, command = ctrl(mdl)
+                    if enabled and not self._enabled[k]:
+                        mdl.converter.set_enable(True)
+                    self._enabled[k] = enabled
                     if T_s <= _T_TOL:
                         raise ValueError("The sampling period must be positive")
                     t_steps, gates = mdl.converter.modulate(T_s, command)
@@ -293,9 +291,7 @@ class Simulation:
 
     def _integrate(self, t_span: tuple[float, float], N_eval: int) -> None:
         """Integrate over the time span and save the solution."""
-        t0, t1 = t_span
-        if t1 <= t0:
-            return
+        t0, t1 = t_span  # The scheduling guarantees t1 > t0
 
         # Create array of evaluation times if N_eval is given, including the end point
         # for the final state
@@ -305,23 +301,20 @@ class Simulation:
         # events, at which the integration is restarted
         blocked = [c for c in self.mdl.converters if c.blocked]
         events = [_DiodeEvent(self.mdl, c) for c in blocked]
-        solver = self.cfg.solver
+        solver = asdict(self.cfg)
         if solver["max_step"] is None:
             solver["max_step"] = _MAX_STEP if blocked or not self._pairs else np.inf
+        # Explicit Runge-Kutta methods try the whole interval as the first step, which
+        # skips the estimation of the initial step size
+        explicit = self.cfg.method in ("RK23", "RK45", "DOP853")
 
         n_stuck = 0  # Consecutive transitions at the same instant
         while True:
-            state0 = self.mdl.get_initial_values()
-
-            # Explicit Runge-Kutta methods try the whole interval as the first step,
-            # which skips the estimation of the initial step size
-            explicit = self.cfg.method in ("RK23", "RK45", "DOP853")
             first_step = min(t1 - t0, solver["max_step"]) if explicit else None
-
             sol = solve_ivp(
                 self.mdl.rhs,
                 (t0, t1),
-                state0,
+                np.asarray(self.mdl.get_states(), dtype=complex),
                 t_eval=None if t_eval is None else t_eval[t_eval >= t0],
                 events=events if events else None,
                 first_step=first_step,
@@ -340,8 +333,8 @@ class Simulation:
                 t0 = t_e
             else:
                 t0, state = t1, sol.y[:, -1]
-            # The models of a composite model have their own clocks, which advance
-            # with the integration, regardless of the saved points
+            # The models of a composite model have their own clocks, which advance with
+            # the integration, regardless of the saved points
             self.mdl.t0 = t0
             for mdl in self._models.values():
                 mdl.t0 = t0
@@ -350,7 +343,7 @@ class Simulation:
 
             # Save the solution (excluding the end point if N_eval is given). With
             # t_eval, the solution may contain no points before the event.
-            if sol.status != 1 and N_eval != 0:
+            if N_eval != 0 and len(sol.t) > 0 and sol.t[-1] >= t1:
                 sol.t, sol.y = sol.t[:-1], sol.y[:, :-1]
             if len(sol.t) > 0:
                 self.mdl.save(sol)
@@ -360,6 +353,9 @@ class Simulation:
                 raise FloatingPointError(f"Diode transitions stuck at {t0} s")
             for converter in blocked:
                 converter.update_diodes()
+            if t0 >= t1:  # Transition at the end of the interval
+                self.mdl.set_outputs(t0)
+                return
 
 
 class _DiodeEvent:

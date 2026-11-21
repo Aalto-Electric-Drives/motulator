@@ -17,10 +17,7 @@ def _solve_pm_flux(i_d: Callable[[float], float]) -> float:
     """
     Solve the PM-flux linkage from i_d(psi_f) = 0.
 
-    The d-axis current is a monotonically increasing function of the d-axis flux
-    linkage. The root is bracketed by doubling the upper bound and then found using
-    Brent's method. No derivatives are needed, so the solution does not depend on the
-    numerical precision of the map (e.g., single-precision neural networks).
+    The root is bracketed by doubling the upper bound and found by Brent's method.
 
     """
     i_lo = i_d(0.0)
@@ -29,8 +26,8 @@ def _solve_pm_flux(i_d: Callable[[float], float]) -> float:
     psi_lo, psi_hi = 0.0, EPS
     while (i_hi := i_d(psi_hi)) < 0 and psi_hi < 1e3:
         psi_lo, psi_hi = psi_hi, 2 * psi_hi
-    # Accept only a converged root within a finite bracket, e.g., not NaN values
-    # outside the domain of the map
+    # Accept only a converged root within a finite bracket, e.g., not NaN values outside
+    # the domain of the map
     if np.isfinite(i_lo) and i_hi >= 0:
         sol = root_scalar(i_d, bracket=(psi_lo, psi_hi), method="brentq")
         if sol.converged:
@@ -83,9 +80,7 @@ class BaseSynchronousMachinePars(Protocol):
     psi_f: float
 
     def magnetic_map(
-        self,
-        psi_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
     ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """
         Magnetic map as a function of flux linkage and electrical rotor angle.
@@ -94,7 +89,7 @@ class BaseSynchronousMachinePars(Protocol):
         ----------
         psi_s_dq : complex | ndarray
             Stator flux linkage (Vs) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray, optional
+        exp_j_theta_m : complex | ndarray
             Complex exponential of the electrical rotor angle.
 
         Returns
@@ -112,7 +107,7 @@ class BaseSynchronousMachineControlPars(Protocol):
     """
     Base class for synchronous machine parameters, as used by the control systems.
 
-    The control systems use the flux linkage map of the machine in rotor coordinates.
+    The control systems use the flux map of the machine in rotor coordinates.
 
     """
 
@@ -189,9 +184,7 @@ class SynchronousMachinePars(
         return complex(self.i_s_dq(psi_s_dq))
 
     def magnetic_map(
-        self,
-        psi_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
     ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """Magnetic map."""
         i_s_dq = self.i_s_dq(psi_s_dq)
@@ -206,11 +199,11 @@ class SaturatedSynchronousMachinePars(
     """
     Parameters of a saturated synchronous machine.
 
-    The saturation model is specified as a current map (current as a function of the
-    flux linkage). Optionally, to be used only in control systems, a flux map (flux
-    linkage as a function of the current) can be provided. For convenience, this class
-    also provides the incremental inductance matrix, which can be used in control and
-    optimal reference generation.
+    The magnetic model is given as a current map (current as a function of the flux
+    linkage), as a flux map (flux linkage as a function of the current), or as both. The
+    machine model uses the current map, and the control methods use the flux map. The
+    class also provides the incremental inductance matrix, which can be used in control
+    and optimal reference generation.
 
     Parameters
     ----------
@@ -219,12 +212,12 @@ class SaturatedSynchronousMachinePars(
     R_s : float
         Stator resistance (Ω).
     i_s_dq_fcn : Callable[[complex], complex], optional
-        Stator current (A) as a function of the stator flux linkage (Vs). Needed in the
-        system model and in some control methods.
+        Stator current (A) as a function of the stator flux linkage (Vs), needed in the
+        machine model.
     psi_s_dq_fcn : Callable[[complex], complex], optional
-        Stator flux linkage (Vs) as a function of the stator current (A). This function
-        should be differentiable, if incremental inductances are used. Needed only for
-        control methods and optimal reference loci, not used in the system model.
+        Stator flux linkage (Vs) as a function of the stator current (A), needed in the
+        control methods and for the control loci. It should be differentiable if
+        incremental inductances are used.
     G_c : float, optional
         Core-loss conductance (S), connected between the stator resistance and the
         magnetic model, defaults to 0 (no core losses).
@@ -246,8 +239,6 @@ class SaturatedSynchronousMachinePars(
     psi_s_dq_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None
     G_c: float = 0.0
     psi_f: float = field(init=False, default=0.0)
-    L_d0: float = field(init=False, default=np.nan)
-    L_q0: float = field(init=False, default=np.nan)
 
     def __post_init__(self) -> None:
         if self.i_s_dq_fcn is not None:
@@ -256,9 +247,6 @@ class SaturatedSynchronousMachinePars(
             )
         elif self.psi_s_dq_fcn is not None:
             self.psi_f = complex(self.psi_s_dq_fcn(0j)).real
-            # Following are needed only for iterative current computation, if used
-            self.L_d0 = self.incr_ind_mat(0j)[0, 0]
-            self.L_q0 = self.incr_ind_mat(0j)[1, 1]
         else:
             raise ValueError("Either i_s_dq_fcn or psi_s_dq_fcn must be provided")
         if self.psi_f < EPS:  # No permanent magnets
@@ -314,7 +302,9 @@ class SaturatedSynchronousMachinePars(
         def jac(x: list[float]) -> np.ndarray:
             return self.incr_ind_mat(x[0] + 1j * x[1])
 
-        i_s0 = (psi_s_dq.real - self.psi_f) / self.L_d0 + 1j * psi_s_dq.imag / self.L_q0
+        # Initial guess from the incremental inductances at zero current
+        L = self.incr_ind_mat(0j)
+        i_s0 = (psi_s_dq.real - self.psi_f) / L[0, 0] + 1j * psi_s_dq.imag / L[1, 1]
         sol = root(error, [i_s0.real, i_s0.imag], jac=jac, method="hybr")
         # The residual is checked instead of sol.success, since the solver reports no
         # progress at the rounding error, e.g., of single-precision maps
@@ -323,9 +313,7 @@ class SaturatedSynchronousMachinePars(
         return sol.x[0] + 1j * sol.x[1]
 
     def magnetic_map(
-        self,
-        psi_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
     ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """Magnetic map."""
         i_s_dq = self.i_s_dq(psi_s_dq)
@@ -338,9 +326,9 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
     """
     Parameters of a saturated synchronous machine with spatial harmonics.
 
-    This saturation model contains spatial harmonics in addition to the saturation
-    effects. This version is intended to parametrize high-fidelity machine models for
-    simulation purposes, while control methods do not support spatial harmonics.
+    The magnetic model contains spatial harmonics in addition to the saturation effects.
+    The class parametrizes the machine model only, since the control methods do not
+    support spatial harmonics.
 
     Parameters
     ----------
@@ -386,13 +374,9 @@ class SpatialSaturatedSynchronousMachinePars(BaseSynchronousMachinePars):
             self.psi_f = 0.0
 
     def magnetic_map(
-        self,
-        psi_s_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        self, psi_s_dq: complex | np.ndarray, exp_j_theta_m: complex | np.ndarray
     ) -> tuple[complex | np.ndarray, float | np.ndarray]:
         """Magnetic map."""
-        if exp_j_theta_m is None:
-            raise ValueError("exp_j_theta_m must be provided")
         return self.magnetic_map_fcn(psi_s_dq, exp_j_theta_m)
 
 
@@ -405,12 +389,12 @@ class CageImpedance:
 
         Z(s) = R[0] + 1/(1/(s*L[0]) + 1/(R[1] + 1/(1/(s*L[1]) + ...)))
 
-    i.e., a ladder of series resistances and shunt inductances, terminated with the
-    last resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is
-    the DC inductance of the cage. The ladder models the deep-bar effect, i.e., the
-    rotor resistance increasing and the rotor leakage inductance decreasing with the
-    frequency of the rotor current. Without inductances, the impedance is the
-    resistance ``R[0]``. The flux linkages of the inductances are the states.
+    i.e., a ladder of series resistances and shunt inductances, terminated with the last
+    resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is the DC
+    inductance of the cage. The ladder models the deep-bar effect, i.e., the rotor
+    resistance increasing and the rotor leakage inductance decreasing with the frequency
+    of the rotor current. Without inductances, the impedance is the resistance ``R[0]``.
+    The flux linkages of the inductances are the states.
 
     Parameters
     ----------
@@ -418,7 +402,7 @@ class CageImpedance:
         Series resistances (Ω), one more than the inductances. The first one is
         nonnegative and the others are positive.
     L : Sequence[float], optional
-        Shunt inductances (H), positive, defaults to none.
+        Shunt inductances (H), positive, defaults to no inductances.
 
     References
     ----------
@@ -542,7 +526,7 @@ class BaseInductionMachinePars(Protocol):
         self,
         psi_s_dq: complex | np.ndarray,
         psi_r_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        exp_j_theta_m: complex | np.ndarray,
     ) -> tuple[complex | np.ndarray, complex | np.ndarray, float | np.ndarray]:
         """
         Magnetic map as a function of flux linkages and electrical rotor angle.
@@ -553,7 +537,7 @@ class BaseInductionMachinePars(Protocol):
             Stator flux linkage (Vs) in rotor coordinates.
         psi_r_dq : complex | ndarray
             Rotor flux linkage (Vs) in rotor coordinates.
-        exp_j_theta_m : complex | ndarray, optional
+        exp_j_theta_m : complex | ndarray
             Complex exponential of the electrical rotor angle.
 
         Returns
@@ -682,7 +666,7 @@ class InductionMachineInvGammaPars(
         self,
         psi_s_dq: complex | np.ndarray,
         psi_r_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        exp_j_theta_m: complex | np.ndarray,
     ) -> tuple[complex | np.ndarray, complex | np.ndarray, float | np.ndarray]:
         """Magnetic map, the rotor quantities being `psi_R` and `i_R`."""
         i_s_dq = (psi_s_dq - psi_r_dq) / self.L_sgm
@@ -694,8 +678,7 @@ class InductionMachineInvGammaPars(
 @dataclass
 class InductionMachinePars(BaseInductionMachinePars, BaseInductionMachineControlPars):
     """
-    Γ-model parameters of an induction machine, with optional main-flux saturation and
-    deep-bar effect.
+    Γ-model parameters of an induction machine.
 
     These parameters can be used both in control systems and in the machine model. The
     magnetic model is [#Sle1989]_::
@@ -778,7 +761,7 @@ class InductionMachinePars(BaseInductionMachinePars, BaseInductionMachineControl
         self,
         psi_s_dq: complex | np.ndarray,
         psi_r_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        exp_j_theta_m: complex | np.ndarray,
     ) -> tuple[complex | np.ndarray, complex | np.ndarray, float | np.ndarray]:
         """Magnetic map."""
         i_r_dq = (psi_r_dq - psi_s_dq) / self.L_ell
@@ -794,9 +777,9 @@ class SaturatedInductionMachinePars(BaseInductionMachinePars):
 
     The magnetic model is specified as a current map (stator and rotor currents as
     functions of the stator and rotor flux linkages), which can include the saturation
-    of the main flux and of the leakage flux as well as their mutual effects. This
-    version is intended to parametrize machine models for simulation purposes, while
-    control methods do not support it.
+    of the main flux and of the leakage flux as well as their mutual effects. The class
+    parametrizes the machine model only, since the control methods do not support
+    general magnetic models.
 
     Parameters
     ----------
@@ -878,7 +861,7 @@ class SaturatedInductionMachinePars(BaseInductionMachinePars):
         self,
         psi_s_dq: complex | np.ndarray,
         psi_r_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        exp_j_theta_m: complex | np.ndarray,
     ) -> tuple[complex | np.ndarray, complex | np.ndarray, float | np.ndarray]:
         """Magnetic map."""
         i_s_dq, i_r_dq = self.current_map_fcn(psi_s_dq, psi_r_dq)
@@ -892,9 +875,9 @@ class SpatialSaturatedInductionMachinePars(BaseInductionMachinePars):
     Parameters of a saturated induction machine with spatial harmonics.
 
     The magnetic model contains spatial harmonics (e.g., due to the slots) in addition
-    to the saturation effects, i.e., it depends on the rotor angle. This version is
-    intended to parametrize high-fidelity machine models for simulation purposes, while
-    control methods do not support spatial harmonics.
+    to the saturation effects, i.e., it depends on the rotor angle. The class
+    parametrizes the machine model only, since the control methods do not support
+    spatial harmonics.
 
     Parameters
     ----------
@@ -946,9 +929,7 @@ class SpatialSaturatedInductionMachinePars(BaseInductionMachinePars):
         self,
         psi_s_dq: complex | np.ndarray,
         psi_r_dq: complex | np.ndarray,
-        exp_j_theta_m: complex | np.ndarray | None = None,
+        exp_j_theta_m: complex | np.ndarray,
     ) -> tuple[complex | np.ndarray, complex | np.ndarray, float | np.ndarray]:
         """Magnetic map."""
-        if exp_j_theta_m is None:
-            raise ValueError("exp_j_theta_m must be provided")
         return self.magnetic_map_fcn(psi_s_dq, psi_r_dq, exp_j_theta_m)

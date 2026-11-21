@@ -23,8 +23,8 @@ class ObserverOutputs:
 
     u_dc: float = 0.0  # DC-bus voltage
     i_s: complex = 0j  # Stator current
-    # Stator voltage averaged over the previous and ongoing sampling periods, set by
-    # the control system for the control laws
+    # Stator voltage averaged over the previous and ongoing sampling periods, set by the
+    # control system for the control laws
     u_s: complex = 0j
     u_s_zoh: complex = 0j  # Stator voltage averaged over the ongoing sampling period
     psi_s: complex = 0j  # Stator flux estimate
@@ -32,7 +32,7 @@ class ObserverOutputs:
     tau_M: float = 0.0  # Electromagnetic torque estimate
     tau_L: float = 0.0  # Load torque estimate
     w_c: float = 0.0  # Angular speed of the coordinate system
-    w_s: float = 0.0  # Synchronous angular frequency, w_s = w_m + w_r
+    w_s: float = 0.0  # Stator angular frequency, w_s = w_m + w_r
     w_r: float = 0.0  # Slip angular frequency estimate
     w_m: float = 0.0  # Electrical angular rotor speed estimate
     w_M: float = 0.0  # Mechanical angular rotor speed estimate
@@ -56,8 +56,8 @@ class FluxObserver:
     purely model-based (sensorless) operation, `h = 1` relies on the external signal
     alone, and intermediate values blend the two. The conjugate-error observer gain
     follows the same weight. The machine parameters are evaluated at the stator flux
-    estimate at the beginning of each sampling period (see `op_par`), which takes,
-    e.g., the main-flux saturation modeled by `InductionMachinePars` into account.
+    estimate at the beginning of each sampling period (see `op_par`), which takes, e.g.,
+    the main-flux saturation modeled by `InductionMachinePars` into account.
 
     The flux estimate is corrected and predicted using a hold-equivalent discrete-time
     model, and the estimation error is the difference between the rotor flux predictions
@@ -73,8 +73,8 @@ class FluxObserver:
 
     Notes
     -----
-    The pure voltage model corresponds to ``k_o = lambda w_m, par: 0``, resulting in
-    the marginally stable estimation-error dynamics. The current model is obtained by
+    The pure voltage model corresponds to ``k_o = lambda w_m, par: 0``, resulting in the
+    marginally stable estimation-error dynamics. The current model is obtained by
     setting ``k_o = lambda w_m, par: 1`` together with `h = 1`.
 
     References
@@ -138,8 +138,8 @@ class FluxObserver:
         eps_ext : float, optional
             External rotor speed error signal (mechanical rad/s), defaults to 0.
         h : float, optional
-            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
-            based error signal is used exclusively.
+            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the
+            model-based error signal is used exclusively.
 
         Returns
         -------
@@ -170,12 +170,12 @@ class FluxObserver:
         prod = out.psi_s * out.psi_R.conjugate()
         out.w_r = par.w_rb * prod.imag / prod.real if prod.real > 0 else 0.0
 
-        # Angular speed of the coordinate system equals synchronous angular frequency
+        # Angular speed of the coordinate system equals the stator angular frequency
         out.w_c = out.w_s = out.w_m + out.w_r
 
         # Voltage vector in the observer coordinates, or the open-circuit voltage if
-        # unknown, averaged over a period of the length of the previous one. The
-        # rotor flux decays as in the current model below, so their predictions match.
+        # unknown, averaged over a period of the length of the previous one. The rotor
+        # flux decays as in the current model below, so their predictions match.
         if u_s_ab is not None:
             out.u_s_zoh = exp(-1j * out.theta_c) * u_s_ab
         elif self._T_s > 0:
@@ -247,7 +247,7 @@ class SpeedFluxObserver:
         are placed at ``exp(-alpha_o*T_s)``.
     k_o : Callable[[float, InductionMachineInvGammaPars], complex]
         Observer gain, see :class:`FluxObserver`.
-    J : float, optional
+    J : float | None, optional
         Inertia of the mechanical system (kgm²). Defaults to None, which means the
         mechanical system model is not used.
 
@@ -307,8 +307,8 @@ class SpeedFluxObserver:
         eps_ext : float, optional
             External rotor speed error signal (mechanical rad/s), defaults to 0.
         h : float, optional
-            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
-            based error signal is used exclusively.
+            Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the
+            model-based error signal is used exclusively.
 
         Returns
         -------
@@ -356,7 +356,7 @@ def to_rotor_flux_coordinates(ts: TimeSeries) -> None:
 # %%
 # The default gains are module-level functions, so that the observers can be pickled
 # (e.g., for parallel simulations)
-def _sensorless_k_o(w_m: float, par: InductionMachineInvGammaPars) -> complex:
+def sensorless_k_o(w_m: float, par: InductionMachineInvGammaPars) -> complex:
     return (0.5 * par.alpha + 0.2 * abs(w_m)) / (par.alpha - 1j * w_m)
 
 
@@ -368,76 +368,15 @@ def create_speed_flux_observer(
     par: BaseInductionMachineControlPars,
     alpha_o: float | None,
     T_s: float,
-    k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None = None,
-    sensorless: bool = True,
-    J: float | None = None,
+    k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None,
+    sensorless: bool,
+    J: float | None,
 ) -> SpeedFluxObserver:
-    """
-    Create a flux observer with speed estimation.
-
-    In sensored mode, the measured rotor speed is filtered. In sensorless mode, the
-    rotor speed is estimated based on the stator voltage and current. The sensored mode
-    corresponds to the weight `h = 1` and the sensorless mode to `h = 0`, see
-    :class:`FluxObserver`.
-
-    Parameters
-    ----------
-    par : BaseInductionMachineControlPars
-        Machine model parameters.
-    alpha_o : float | None
-        Speed estimation poles (rad/s). If None, defaults to 2*pi*60 if `sensorless` is
-        True, otherwise 2*pi*400. If `J` is given, the default is halved, which keeps
-        the speed estimation gain approximately the same.
-    T_s : float
-        Sampling period (s), see :class:`SpeedFluxObserver`.
-    k_o : Callable[[float, InductionMachineInvGammaPars], complex], optional
-        Observer gain, see :class:`FluxObserver`. If `None`, it defaults to ``lambda
-        w_m, par: (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)`` in sensorless
-        mode, and to ``lambda w_m, par: 1.0 + 0.2*abs(w_m)/(par.alpha - 1j*w_m)`` in
-        sensored mode.
-    sensorless : bool, optional
-        If True, sensorless control is used, defaults to True.
-    J : float, optional
-        Inertia of the mechanical system (kgm²). Defaults to None, which means the
-        mechanical system model is not used.
-
-    Returns
-    -------
-    SpeedFluxObserver
-        Flux observer with speed estimation.
-
-    """
+    """Create the observer, with the defaults of the controller configurations."""
     if alpha_o is None:
         alpha_o = 2 * pi * 60 if sensorless else 2 * pi * 400
         # With J, the double pole at alpha_o/2 keeps the speed gain about the same
         alpha_o = alpha_o if J is None else 0.5 * alpha_o
     if k_o is None:
-        k_o = _sensorless_k_o if sensorless else _sensored_k_o
-
+        k_o = sensorless_k_o if sensorless else _sensored_k_o
     return SpeedFluxObserver(par, alpha_o, T_s, k_o, J)
-
-
-def create_vhz_observer(
-    par: BaseInductionMachineControlPars,
-    k_o: Callable[[float, InductionMachineInvGammaPars], complex] | None = None,
-) -> FluxObserver:
-    """
-    Create a sensorless flux observer without speed estimation.
-
-    Parameters
-    ----------
-    par : BaseInductionMachineControlPars
-        Machine model parameters.
-    k_o : Callable[[float, InductionMachineInvGammaPars], complex], optional
-        Observer gain, see :class:`FluxObserver`. Defaults to ``lambda w_m, par:
-        (0.5*par.alpha + 0.2*abs(w_m))/(par.alpha - 1j*w_m)``.
-
-    Returns
-    -------
-    FluxObserver
-        Sensorless flux observer without speed estimation.
-
-    """
-    k_o = _sensorless_k_o if k_o is None else k_o
-
-    return FluxObserver(par, k_o)

@@ -1,6 +1,6 @@
 # Disturbance-Observer-Based Grid-Forming Control
 
-In these notes, disturbance-observer-based grid-forming control is discussed {cite}`Nur2024`. This control method is available in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class. As can be realized by comparing examples {doc}`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm` and {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm`, the observer-based grid-forming control can be configured to behave practically identically with reference-feedforward power-synchronization control (PSC) {cite}`Har2020`. Compared to reference-feedforward PSC, disturbance-observer-based grid-forming control is easier to analyze and extend with different operating modes (including grid-following and transparent current-control modes). The order of these two control methods is the same and their computational complexity is comparable.
+In these notes, disturbance-observer-based grid-forming control is discussed {cite}`Nur2024`. This control method is available in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class. As can be realized by comparing examples {doc}`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm` and {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm`, the observer-based grid-forming control can be configured to behave practically identically to reference-feedforward power-synchronization control (PSC) {cite}`Har2020`. Compared to reference-feedforward PSC, disturbance-observer-based grid-forming control is easier to analyze and extend with different operating modes (including grid-following and transparent current-control modes). The order of these two control methods is the same and their computational complexity is comparable.
 
 ## System Model
 
@@ -32,11 +32,11 @@ label: quasi_static_converter_voltage
 \vc = \ug + \jj\omegag L \ic
 ```
 
-This voltage is controllable (unlike the grid voltage which is the disturbance) and it equals the converter output voltage $\uc$ in the steady state. The disturbance-observer-based PSC regulates the voltage magnitude $|\vc|$ and the power $p_\mathrm{g}$ fed to grid.
+This voltage is controllable (unlike the grid voltage which is the disturbance) and it equals the converter output voltage $\uc$ in the steady state. The disturbance-observer-based grid-forming control regulates the voltage magnitude $|\vc|$ and the power $p_\mathrm{g}$ fed to the grid.
 
 ## Control System
 
-The control system consists of a disturbance observer and a control law, see [Figure 1](fig:do_gfm_ctrl). The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated grid voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes {cite}`Nur2024`. For simplicity, only the grid-forming mode is considered in the following.
+The control system consists of a disturbance observer and a control law, see [Figure 1](fig:do_gfm_ctrl). The disturbance observer estimates the quasi-static converter voltage and the power fed to the grid. The control law generates the converter voltage reference based on the estimated quasi-static converter voltage and power. The disturbance observer also provides the integral action for the control law. This control structure allows seamless switching between grid-forming and grid-following modes {cite}`Nur2024`. For simplicity, only the grid-forming mode is considered in the following.
 
 ```{figure} ../figs/do_gfm_ctrl.svg
 ---
@@ -89,7 +89,7 @@ label: control_law_gfm
 \ucref = \hatvc + \kP (\pgref - \hatpg) + \kV (\vcref - \hatabsvc)
 ```
 
-where $\pgref$ is the active power reference, $\vcref$ is the converter voltage magnitude reference, and $\hatabsvc = |\hatvc|$ is the magnitude. The complex gains for the active-power and converter-voltage-magnitude channels, respectively, are selected as
+where $\pgref$ is the active-power reference, $\vcref$ is the converter voltage magnitude reference, and $\hatabsvc = |\hatvc|$ is the magnitude. The complex gains for the active-power and converter-voltage-magnitude channels, respectively, are selected as
 
 ```{math}
 ---
@@ -135,7 +135,7 @@ label: disturbance_observer_discrete_gfm
 
 where the gain $k_\mathrm{o} = (1 - \e^{-\alphao\Ts})/\gamma_\mathrm{g}$ places the pole of the estimation-error dynamics at $\e^{-\alphao\Ts}$, corresponding to the pole $-\alphao$ of {eq}`disturbance_observer_gfm`. The estimates $\hatvc$ and $\hatpg$ are obtained from {eq}`disturbance_observer_gfm`, and the control law {eq}`control_law_gfm` is used as such. Various control modes could be easily incorporated into the control system, simply by changing the feedback correction terms of the control law {cite}`Nur2024`. The switching between the modes is seamless since the control law does not have memory, but the integral action is provided by the disturbance observer (in addition to synchronization).
 
-The control system implemented in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class consists of the disturbance observer {eq}`disturbance_observer_discrete_gfm` and the control law {eq}`control_law_gfm`. In the example implementation, a transparent current-control mode is implemented. The implementation also includes an optional series-resistance estimate $\hat R$ (zero by default), which adds the voltage drop $\hat R\ic(k)$ to the grid-voltage estimate in the current prediction and the term $\hat R\ic$ to the control law. In the grid-forming mode, the observer bandwidth $\alphao = 1$ p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., $\hat L = 0.15$ p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.
+The control system implemented in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class consists of the disturbance observer {eq}`disturbance_observer_discrete_gfm` and the control law {eq}`control_law_gfm`. The class implements the transparent current-control mode. The implementation also includes an optional series-resistance estimate $\hat R$ (zero by default), which adds the voltage drop $\hat R\ic(k)$ to the grid-voltage estimate in the current prediction and the term $\hat R\ic$ to the control law. In the grid-forming mode, the observer bandwidth $\alphao = 1$ p.u. can be used. Furthermore, the inductance estimate can be set close to the lowest expected inductance value, e.g., $\hat L = 0.15$ p.u. Using this configuration, the robust performance from strong grids to very weak grids can be achieved. This grid-forming control method can also be used with LCL filters, similarly to reference-feedforward PSC.
 
 ## Active-Power Reference Limitation
 
@@ -147,10 +147,10 @@ label: power_limitation_gfm
 ---
 i_\mathrm{q} &= \frac{\IM\{\ucref\ic^*\}}{|\ucref|} \\
 i_\mathrm{d,lim}^2 &= i_\mathrm{d,max}^2 - i_\mathrm{q}^2 \\
-p_\mathrm{max} &= \frac{\alpha_\mathrm{l}}{s + \alpha_\mathrm{l}} \frac{3}{2} |\ucref| \sqrt{\min\left[\max\left(i_\mathrm{d,lim}^2,\, 0\right),\, i_\mathrm{d,max}^2\right]}
+p_\mathrm{max} &= \frac{\alpha_\mathrm{l}}{s + \alpha_\mathrm{l}} \frac{3}{2} |\ucref| \sqrt{\max\left(i_\mathrm{d,lim}^2,\, 0\right)}
 ```
 
-where $i_\mathrm{d,max}$ is the maximum active current and $\alpha_\mathrm{l}$ is the power-limitation bandwidth. The limited active-power reference is $\bar p_\mathrm{g}^\mathrm{ref} = \mathrm{sign}(\pgref) \min(|\pgref|, p_\mathrm{max})$. The maximum active current should be chosen somewhat below the current limit $i_\mathrm{max}$, e.g., $i_\mathrm{d,max} = 1.1$ p.u. when $i_\mathrm{max} = 1.3$ p.u. {cite}`Maa2026`. This limitation is enabled in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class by setting the parameter `i_d_max`. Its effect is demonstrated in the example {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
+where $i_\mathrm{d,max}$ is the maximum active current and $\alpha_\mathrm{l}$ is the power-limitation bandwidth. The limited active-power reference is $\bar p_\mathrm{g}^\mathrm{ref} = \mathrm{sign}(\pgref) \min(|\pgref|, p_\mathrm{max})$. The maximum active current should be chosen somewhat below the current limit $i_\mathrm{max}$, e.g., $i_\mathrm{d,max} = 1.1$ p.u. when $i_\mathrm{max} = 1.3$ p.u. {cite}`Maa2026`. This limitation is enabled in the {class}`motulator.grid.control.ObserverBasedGridFormingController` class by setting `i_d_max` in {class}`motulator.grid.control.ObserverBasedGridFormingControllerCfg`. Its effect is demonstrated in the example {doc}`/grid_examples/grid_forming/plot_13kva_do_gfm_sag`.
 
 ## Unbalanced Grids
 
@@ -195,16 +195,16 @@ The disturbance-observer-based control can be extended to regulate the DC-bus vo
 label: disturbance_power_observer
 ---
 \hat p_\mathrm{dis} = x + \alpha_\mathrm{o,dc}\left(\hatWdc + \frac{3}{4}\hat L |\ic|^2\right) \qquad
-\frac{\D x}{\D t} = -\frac{3}{2\hat L}\RE\{\hatug \boldsymbol{e}_\mathrm{c}^*\} - \alpha_\mathrm{o,dc}\hat p_\mathrm{dis}
+\frac{\D x}{\D t} = -\frac{3}{2\hat L}\RE\{\hatug \bar{\mathbf{e}}_\mathrm{c}^*\} - \alpha_\mathrm{o,dc}\hat p_\mathrm{dis}
 ```
 
-where $x$ is an auxiliary state, $\alpha_\mathrm{o,dc}$ is the observer bandwidth, $\hatWdc = \hatCdc\udc^2/2$ is the DC-bus energy, and $\boldsymbol{e}_\mathrm{c} = \uc - \hatvc$ is the realized feedback correction, computed from the realized converter voltage $\uc$ of the ongoing sampling period (averaged over the period in the observer coordinates). The feedback correction in the dual-voltage-forming mode is
+where $x$ is an auxiliary state, $\alpha_\mathrm{o,dc}$ is the observer bandwidth, $\hatWdc = \hatCdc\udc^2/2$ is the DC-bus energy, and $\bar{\mathbf{e}}_\mathrm{c} = \uc - \hatvc - \hat R\ic$ is the realized feedback correction, computed from the realized converter voltage $\uc$ of the ongoing sampling period (averaged over the period in the observer coordinates). The feedback correction in the dual-voltage-forming mode is
 
 ```{math}
 ---
 label: control_law_dvf
 ---
-\boldsymbol{e}_\mathrm{c} = \boldsymbol{k}_\mathrm{d}\hat p_\mathrm{dis} - \boldsymbol{k}_\mathrm{w}\left(\Wdcref - \hatWdc\right) + \boldsymbol{k}_\mathrm{v}\left(v_\mathrm{c}^\mathrm{ref} - \hat v_\mathrm{c}\right)
+\mathbf{e}_\mathrm{c} = \mathbf{k}_\mathrm{d}\hat p_\mathrm{dis} - \mathbf{k}_\mathrm{w}\left(\Wdcref - \hatWdc\right) + \kV\left(\vcref - \hatabsvc\right)
 ```
 
-where the complex gains $\boldsymbol{k}_\mathrm{d} = k_\mathrm{d}\hatvc/\hat v_\mathrm{c}$, $\boldsymbol{k}_\mathrm{w} = k_\mathrm{w}\hatvc/\hat v_\mathrm{c}$, and $\boldsymbol{k}_\mathrm{v} = (1 - \mathrm{j}k_\mathrm{v})\hatvc/\hat v_\mathrm{c}$ are aligned with the quasi-static converter voltage. The approximate closed-loop bandwidth of the DC-bus energy is $\alpha_\mathrm{dc} = k_\mathrm{w}/k_\mathrm{d}$, and the DC-bus power gain $k_\mathrm{d} = 1$ p.u. can be used. The control law {eq}`control_law_dvf` equals the grid-forming mode with the power control gain $R_\mathrm{a}/(3 v_\mathrm{c}^\mathrm{ref}/2) = k_\mathrm{d}$ and the active-power reference $\pgref = \hat p_\mathrm{dis} + \hatpg - \alpha_\mathrm{dc}(\Wdcref - \hatWdc)$, where $\hat p_\mathrm{dis} + \hatpg$ is the estimated external power excluding the resistive losses: the disturbance observer provides the feedforward of the external power and the integral action. Since the active power is not controlled in a cascade, the DC-bus voltage control does not depend on the power-control dynamics, which vary with the grid strength. This method is implemented in the {class}`motulator.grid.control.DualVoltageFormingController` class and demonstrated in {doc}`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc`, where the external power is fed by a motor drive.
+where the complex gains $\mathbf{k}_\mathrm{d} = k_\mathrm{d}\hatvc/\hatabsvc$ and $\mathbf{k}_\mathrm{w} = k_\mathrm{w}\hatvc/\hatabsvc$, as well as $\kV$ in {eq}`gain_selection_gfm`, are aligned with the quasi-static converter voltage. The approximate closed-loop bandwidth of the DC-bus energy is $\alpha_\mathrm{dc} = k_\mathrm{w}/k_\mathrm{d}$, and the DC-bus power gain $k_\mathrm{d} = 1$ p.u. can be used. The control law {eq}`control_law_dvf` equals the grid-forming mode with the power control gain $R_\mathrm{a}/(3 v_\mathrm{c}^\mathrm{ref}/2) = k_\mathrm{d}$ and the active-power reference $\pgref = \hat p_\mathrm{dis} + \hatpg - \alpha_\mathrm{dc}(\Wdcref - \hatWdc)$, where $\hat p_\mathrm{dis} + \hatpg$ is the estimated external power excluding the resistive losses: the disturbance observer provides the feedforward of the external power and the integral action. Since the active power is not controlled in a cascade, the DC-bus voltage control does not depend on the power-control dynamics, which vary with the grid strength. This method is implemented in the {class}`motulator.grid.control.DualVoltageFormingController` class and demonstrated in {doc}`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_dvf_cvc`, where the external power is fed by a motor drive.

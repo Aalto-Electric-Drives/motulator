@@ -27,7 +27,7 @@ where $\kp$ is the proportional gain and $\ki$ is the integral gain. The negativ
 
 ## Closed-Loop System Analysis
 
-For simplicity, the capacitance estimate being accurate, $\hatCdc = \Cdc$. Furthermore, the converter is assumed to be lossless and its output power control ideal. The DC-bus energy balance is
+For simplicity, the capacitance estimate is assumed to be accurate, $\hatCdc = \Cdc$. Furthermore, the converter is assumed to be lossless and its output power control ideal. The DC-bus energy balance is
 
 ```{math}
 ---
@@ -47,7 +47,7 @@ label: dc_voltage_ctrl_closed_loop
 \Wdc(s) = \frac{\kp s + \ki}{s^2 + \kp s + \ki} \Wdcref(s) + \frac{s}{s^2 + \kp s + \ki} p_\mathrm{dc}(s)
 ```
 
-where it can be seen that $\Wdc = \Wdcref$ holds in the steady state. Furthermore, it can be shown that also $\udc = \udcref$ holds in the steady state (independently of the errors in the capacitance estimate $\hat{C}$, since both reference and measured values in {eq}`dc_cap_energy` are scaled by the same estimate).
+where it can be seen that $\Wdc = \Wdcref$ holds in the steady state. Furthermore, it can be shown that also $\udc = \udcref$ holds in the steady state (independently of the errors in the capacitance estimate $\hatCdc$, since both reference and measured values in {eq}`dc_cap_energy` are scaled by the same estimate).
 
 ## Gain Selection
 

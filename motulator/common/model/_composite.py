@@ -1,6 +1,5 @@
 """Composite of models sharing subsystems."""
 
-from dataclasses import InitVar, dataclass, field
 from typing import Any
 
 import numpy as np
@@ -69,7 +68,6 @@ class CompositeModel(Model[None]):
 
 
 # %%
-@dataclass
 class CompositeModelTimeSeries:
     """
     Time series of the simulation results of a composite model.
@@ -79,18 +77,21 @@ class CompositeModelTimeSeries:
     composite, so a subsystem shared by the models has the same time series in each of
     them.
 
+    Parameters
+    ----------
+    mdl : CompositeModel
+        Composite model whose models the time series cover.
+
     """
 
-    mdl: InitVar[CompositeModel]
-    t: np.ndarray = field(default_factory=lambda: np.array([]), init=False)
-
-    def __post_init__(self, mdl: CompositeModel) -> None:
+    def __init__(self, mdl: CompositeModel) -> None:
         self.t = np.array(mdl._t)
         ts = mdl.time_series(self.t)
         for name, sub_mdl in mdl.models.items():
             setattr(self, name, ModelTimeSeries(sub_mdl, ts))
 
     def __getattr__(self, name: str) -> Any:
-        """Support type checking for dynamic attributes."""
-        error_msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
-        raise AttributeError(error_msg)
+        """Declare the time series of the models for type checkers."""
+        raise AttributeError(
+            f"{type(self).__name__!r} object has no attribute {name!r}"
+        )

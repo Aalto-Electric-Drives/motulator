@@ -16,8 +16,8 @@ class OpenLoopVHzFeedbacks:
 
     u_dc: float = 0.0  # DC-bus voltage
     i_s: complex = 0j  # Stator current
-    # Stator voltage averaged over the previous and ongoing sampling periods, set by
-    # the control system
+    # Stator voltage averaged over the previous and ongoing sampling periods, set by the
+    # control system
     u_s: complex = 0j
     u_s_zoh: complex = 0j  # Stator voltage averaged over the ongoing sampling period
     w_M: float = 0.0  # Rate-limited speed reference (mechanical rad/s)
@@ -31,13 +31,13 @@ class OpenLoopVHzController:
     """
     Open-loop V/Hz controller for induction machine drives.
 
-    The stator voltage reference is given by a V/Hz curve `u_s_ref` as a function of the
-    stator angular frequency ``w_s = n_p*w_M_ref``, where `w_M_ref` is the rate-limited
-    speed reference, in coordinates rotating at `w_s`. The slip is not compensated for.
-    The linear curve ``1j*w_s*psi_s_nom`` gives the stator flux linkage `psi_s_nom` if
-    the resistive voltage drop is negligible. With the stator inductance `L_s`, the
-    curve ``(R_s/L_s + 1j*w_s)*psi_s_nom`` also includes the resistive voltage drop at
-    no load.
+    The stator voltage reference, in coordinates rotating at the stator angular
+    frequency ``w_s = n_p*w_M_ref``, is given by a V/Hz curve `u_s_ref` as a function of
+    `w_s`, where `w_M_ref` is the rate-limited speed reference. The slip is not
+    compensated for. The linear curve ``1j*w_s*psi_s_nom`` gives the stator flux linkage
+    `psi_s_nom` if the resistive voltage drop is negligible. With the stator inductance
+    `L_s`, the curve ``(R_s/L_s + 1j*w_s)*psi_s_nom`` also includes the resistive
+    voltage drop at no load.
 
     Parameters
     ----------
@@ -85,4 +85,4 @@ class OpenLoopVHzController:
         self.theta_c = wrap(self.theta_c + ref.T_s * fbk.w_c)
 
     def post_process(self, ts: TimeSeries) -> None:
-        """Post-process controller time series, without changes here."""
+        """Keep the time series in the controller coordinates."""

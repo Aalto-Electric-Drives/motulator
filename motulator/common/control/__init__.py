@@ -5,6 +5,8 @@ from motulator.common.control._base import (
     ConverterControlSystem,
     ConverterFeedbacks,
     ConverterReferences,
+    InnerController,
+    References,
     TimeSeries,
 )
 from motulator.common.control._controllers import (
@@ -13,7 +15,12 @@ from motulator.common.control._controllers import (
     PIController,
     RateLimiter,
 )
-from motulator.common.control._pwm import PWM, InverterNonlinearity
+from motulator.common.control._pwm import (
+    PWM,
+    DutyRatioError,
+    InverterNonlinearity,
+    Method,
+)
 
 __all__ = [
     "ComplexPIController",
@@ -22,9 +29,13 @@ __all__ = [
     "ConverterFeedbacks",
     "ConverterReferences",
     "DiscreteComplexController",
+    "DutyRatioError",
+    "InnerController",
     "InverterNonlinearity",
+    "Method",
     "PIController",
     "PWM",
     "RateLimiter",
+    "References",
     "TimeSeries",
 ]

@@ -8,7 +8,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model._base import Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import empty_array, get_value, wrap
+from motulator.common.utils._utils import empty_array, get_value
 
 
 @dataclass
@@ -31,19 +31,21 @@ class ThreePhaseSource(Subsystem):
     Three-phase source model.
 
     The frequency, phase shift, and magnitude can be given either as constants or
-    functions of time. An unbalanced source can be modeled by specifying a negative-
-    sequence component. The zero-sequence component is not included in this model.
+    functions of time. An unbalanced source can be modeled by specifying a
+    negative-sequence component. The zero-sequence component is not included in this
+    model.
 
     Parameters
     ----------
     w_g : float | Callable[[float], float], optional
         Angular frequency (rad/s), defaults to 2*pi*50.
     e_g : float | Callable[[float], float], optional
-        Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.
+        Peak-valued magnitude (V) of the positive-sequence component, defaults to
+        sqrt(2/3)*400.
     phi : float | Callable[[float], float], optional
         Phase shift (rad) of positive-sequence component, defaults to 0.
     e_g_neg : float | Callable[[float], float], optional
-        Peak-valued magnitude of negative-sequence component, defaults to 0.
+        Peak-valued magnitude (V) of the negative-sequence component, defaults to 0.
     phi_neg : float | Callable[[float], float], optional
         Phase shift (rad) of negative-sequence component, defaults to 0.
 
@@ -53,6 +55,8 @@ class ThreePhaseSource(Subsystem):
     to represent, e.g., a current source as well.
 
     """
+
+    angles = frozenset({"theta_g"})
 
     def __init__(
         self,
@@ -83,14 +87,6 @@ class ThreePhaseSource(Subsystem):
         e_g_ab += e_g_neg * np.conj(exp_j_theta_g * np.exp(1j * phi_neg))
         return e_g_ab
 
-    def set_states(self, state_list: list[complex], index: int) -> int:
-        """Set the state, keeping the angle within [-pi, pi)."""
-        # The angle is wrapped only in the state of the model, which the next
-        # integration interval starts from, so the solver sees no discontinuity
-        index = super().set_states(state_list, index)
-        self.state.theta_g = wrap(self.state.theta_g.real)
-        return index
-
     def set_outputs(self, t) -> None:
         """Set output variables."""
         exp_j_theta_g = np.exp(1j * self.state.theta_g.real)
@@ -101,7 +97,7 @@ class ThreePhaseSource(Subsystem):
         """Compute the state derivative."""
         return [get_value(self.w_g, t)]
 
-    def create_time_series(self, t: np.ndarray) -> "ThreePhaseSourceTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return ThreePhaseSourceTimeSeries(t, self)
 

@@ -1,11 +1,13 @@
 """Feedforward reference generation methods for synchronous machine drives."""
 
 from cmath import exp, phase
+from functools import partial
 from math import inf, pi, sqrt
 
+import numpy as np
 from scipy.optimize import root_scalar
 
-from motulator.common.utils._utils import clip, sign
+from motulator.common.utils._utils import clip, sign, wrap
 from motulator.drive.utils._parameters import (
     BaseSynchronousMachineControlPars,
     aux_current,
@@ -18,8 +20,16 @@ EPS = 1e-4
 
 
 # %%
-class _ReferenceGeneratorBase:
-    """Flux limits and current-reference tracking of the reference generators."""
+class ReferenceGeneratorBase:
+    """
+    Base class for the reference generators of synchronous machines.
+
+    The base class holds the flux limits and the current reference, which is a state
+    driven toward the flux and torque references by a tracking law [#Sar2026]_. The
+    current reference is needed only for current-vector control. The parameters are
+    described in `ReferenceGenerator`.
+
+    """
 
     def __init__(
         self,
@@ -55,10 +65,34 @@ class _ReferenceGeneratorBase:
         u_s_max = self.k_u * u_dc / sqrt(3)
         return u_s_max / abs(w_m) if w_m != 0 else inf
 
-    def _update_current_tracking(self, T_s: float) -> None:
-        """Update the current-reference state."""
-        # The current reference is a state, driven toward the stored flux and torque
-        # references by the tracking law [#Sar2026]_.
+    def compute_current_ref(self, tau_M_ref: float) -> complex:
+        """
+        Get the current reference, needed only for current-vector control.
+
+        Parameters
+        ----------
+        tau_M_ref : float
+            Limited torque reference (Nm), whose sign gives the sign of the q-axis
+            current.
+
+        Returns
+        -------
+        complex
+            Stator current reference (A) in rotor coordinates.
+
+        """
+        return self.i_s_ref if tau_M_ref >= 0 else self.i_s_ref.conjugate()
+
+    def update(self, T_s: float) -> None:
+        """
+        Update the current-reference state.
+
+        Parameters
+        ----------
+        T_s : float
+            Sampling period (s).
+
+        """
         psi_s, tau_M = self._evaluate(self.i_s_ref)
         psi_s_abs = abs(psi_s)
         if psi_s_abs > 0:
@@ -74,14 +108,14 @@ class _ReferenceGeneratorBase:
 
 
 # %%
-class ReferenceGenerator(_ReferenceGeneratorBase):
+class ReferenceGenerator(ReferenceGeneratorBase):
     """
     Optimal feedforward reference generator for synchronous machines.
 
     This class computes the optimal flux, limited torque, and current references from a
-    given torque reference. The MTPA locus as well as the current, voltage and MTPV
+    given torque reference. The MTPA locus as well as the current, voltage, and MTPV
     limits are taken into account. This class can be used also for a saturated machine
-    model. The flux and torque references are computed using pre-computed lookup tables
+    model. The flux and torque references are computed using precomputed lookup tables
     [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically using a
     tracking law [#Sar2026]_, needed only for current-vector control.
 
@@ -139,25 +173,28 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
 
         # MTPA locus
         mtpa = loci.compute_mtpa_locus(i_s_max)
-        self.i_s_mtpa = mtpa.i_s_dq_vs_tau_M
-        self.psi_s_mtpa = mtpa.psi_s_abs_vs_tau_M
+        self.psi_s_mtpa = partial(np.interp, xp=mtpa.tau_M, fp=abs(mtpa.psi_s_dq))
 
-        # MTPV limit
+        # MTPV limit at the flux linkages where the MTPV exists, no limit elsewhere
         mtpv = loci.compute_mtpv_locus(abs(mtpa.psi_s_dq[-1]))
-        self.tau_M_mtpv = mtpv.tau_M_vs_psi_s_abs
+        valid = ~np.isnan(mtpv.tau_M)
+        psi_mtpv, tau_mtpv = abs(mtpv.psi_s_dq[valid]), mtpv.tau_M[valid]
+        if not valid.any():
+            psi_mtpv, tau_mtpv = np.zeros(1), np.full(1, inf)
+        self.tau_M_mtpv = partial(np.interp, xp=psi_mtpv, fp=tau_mtpv, right=inf)
 
         # Current limit
         gamma1 = phase(loci.compute_mtpv_current(i_s_max))
         gamma2 = phase(mtpa.i_s_dq[-1])
         cl = loci.compute_const_current_locus(i_s_max, (gamma1, gamma2))
-        self.tau_M_cl = cl.tau_M_vs_psi_s_abs
+        self.tau_M_cl = partial(np.interp, xp=abs(cl.psi_s_dq), fp=cl.tau_M)
 
         # Current-reference state, initialized at the zero-torque operating point of the
         # minimum flux
         if par.psi_f == 0:
             self.i_s_ref = complex(psi_s_min / par.incr_ind_mat(0j)[0, 0])
         else:
-            self.i_s_ref = complex(self.i_s_mtpa(0.0))
+            self.i_s_ref = complex(np.interp(0.0, mtpa.tau_M, mtpa.i_s_dq))
 
     def compute_flux_and_torque_refs(
         self, tau_M_ref: float, w_m: float, u_dc: float
@@ -172,7 +209,7 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
         w_m : float
             Electrical angular speed (rad/s).
         u_dc : float
-            DC-link voltage (V).
+            DC-bus voltage (V).
 
         Returns
         -------
@@ -199,41 +236,9 @@ class ReferenceGenerator(_ReferenceGeneratorBase):
         self.tau_M_ref = tau_M_ref
         return psi_s_abs_ref, tau_M_ref
 
-    def compute_current_ref(self, tau_M_ref: float) -> complex:
-        """
-        Compute the current reference.
-
-        This method is needed only for current-vector control. It returns the current
-        reference state. The state is updated in the `update` method.
-
-        Parameters
-        ----------
-        tau_M_ref : float
-            Torque reference (Nm).
-
-        Returns
-        -------
-        complex
-            Stator current reference (A) in rotor coordinates.
-
-        """
-        return self.i_s_ref if tau_M_ref >= 0 else self.i_s_ref.conjugate()
-
-    def update(self, T_s: float) -> None:
-        """
-        Update the current-reference state.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period (s).
-
-        """
-        self._update_current_tracking(T_s)
-
 
 # %%
-class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
+class ReferenceGeneratorOnline(ReferenceGeneratorBase):
     """
     Optimal feedforward online reference generator for synchronous machines.
 
@@ -294,35 +299,34 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
             return (i_a * psi_s.conjugate()).real
 
         f0, f1 = mtpv_cond(self.gamma_limits[0]), mtpv_cond(self.gamma_limits[1])
-        if f0 * f1 >= 0:
-            # No MTPV for this current, fallback
-            self.has_mtpv = False
-            self.i_s_mtpv = -i_s_max if self.par.psi_f > 0 else EPS * (1 + 1j) * i_s_max
-        else:
-            self.has_mtpv = True
+        self.has_mtpv = f0 * f1 < 0  # MTPV within the current limit
+        self.i_s_mtpv = 0j  # MTPV tracker state, used only with the MTPV
+        if self.has_mtpv:
             res = root_scalar(mtpv_cond, bracket=self.gamma_limits, method="brentq")
             self.i_s_mtpv = complex(i_s_max * exp(1j * res.root))
 
-        # Add small imaginary part to avoid singularity if exactly on d-axis
-        if self.i_s_mtpv.imag == 0:
-            self.i_s_mtpv += 1j * EPS * i_s_max
-
-        exp_j_gamma_mid = exp(0.5j * sum(self.gamma_limits))
         self.i_s_mtpa = self.i_s_limits[0] * exp(1j * self.gamma_limits[0])
-        self.i_s_cl = self.i_s_limits[1] * exp_j_gamma_mid
+        self.gamma_cl = 0.5 * sum(self.gamma_limits)  # Angle on the current limit
         # Zero torque at the minimum flux corresponds to pure d-axis current
         self.i_s_ref = complex(self.i_s_limits[0])
 
         # Cached from compute_flux_and_torque_refs, reused by the tracker updates
         self._mtpa_state = self._evaluate(self.i_s_mtpa)
         self._mtpv_state = self._evaluate(self.i_s_mtpv)
+        self._cl_state = self._evaluate(self._i_s_cl)
 
-    def _clip_state(self, i_s: complex, max_angle: float | None = None) -> complex:
-        """Constrain current magnitude and angle to allowable limits."""
-        i_s_mag = clip(abs(i_s), self.i_s_limits[0], inf)
-        angle_upper_limit = max_angle if max_angle is not None else self.gamma_limits[1]
-        gamma = clip(phase(i_s), self.gamma_limits[0], angle_upper_limit)
-        return i_s_mag * exp(1j * gamma)
+    @property
+    def _i_s_cl(self) -> complex:
+        """Current on the current limit at the tracked angle."""
+        return self.i_s_limits[1] * exp(1j * self.gamma_cl)
+
+    def _clip_state(self, i_s: complex, max_angle: float) -> complex:
+        """Constrain the current magnitude and angle to the limits."""
+        # The angle is measured from the middle of the range, so that an angle beyond
+        # the range is clipped to the nearest limit also across the negative real axis
+        mid = 0.5 * (self.gamma_limits[0] + max_angle)
+        gamma = clip(mid + wrap(phase(i_s) - mid), self.gamma_limits[0], max_angle)
+        return max(abs(i_s), self.i_s_limits[0]) * exp(1j * gamma)
 
     def compute_flux_and_torque_refs(
         self, tau_M_ref: float, w_m: float, u_dc: float
@@ -337,7 +341,7 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
         w_m : float
             Electrical angular speed (rad/s).
         u_dc : float
-            DC-link voltage (V).
+            DC-bus voltage (V).
 
         Returns
         -------
@@ -352,8 +356,9 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
         # Maximum flux (field weakening)
         psi_s_abs_ref = min(psi_s_abs_ref, self._get_max_flux(w_m, u_dc))
 
-        # Current limit
-        tau_M_cl = abs(self._evaluate(self.i_s_cl)[1])
+        # Current limit, cached for reuse in the current-limit tracker update
+        self._cl_state = self._evaluate(self._i_s_cl)
+        tau_M_cl = abs(self._cl_state[1])
         tau_M_ref = min(tau_M_cl, abs(tau_M_ref)) * sign(tau_M_ref)
 
         # MTPV limit, cached for reuse in the MTPV tracker update
@@ -368,10 +373,6 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
         self.psi_s_ref = psi_s_abs_ref
         self.tau_M_ref = tau_M_ref
         return psi_s_abs_ref, tau_M_ref
-
-    def compute_current_ref(self, tau_M_ref: float) -> complex:
-        """Compute current reference."""
-        return self.i_s_ref if tau_M_ref >= 0 else self.i_s_ref.conjugate()
 
     def _update_mtpa(self, T_s: float) -> None:
         """Update the MTPA tracker state."""
@@ -412,39 +413,30 @@ class ReferenceGeneratorOnline(_ReferenceGeneratorBase):
                 self.i_s_mtpv += T_s * self.alpha * err
 
     def _update_lim(self, T_s: float) -> None:
-        """Update the current limit tracker state."""
-        # Tracks the point on the current limit circle that provides the requested flux
-        i_s_cl_abs = abs(self.i_s_cl)
-        if i_s_cl_abs > 0:
-            self.i_s_cl = self.i_s_cl / i_s_cl_abs * self.i_s_limits[1]
-        psi_s, _ = self._evaluate(self.i_s_cl)
+        """Update the current-limit tracker state."""
+        # Tracks the angle on the current limit that provides the requested flux, with
+        # the Newton step limited to one radian. The flux magnitude decreases with the
+        # angle in the tracked range. Its derivative vanishes on the d axis (on the q
+        # axis for machines without PMs), so it is bounded away from zero.
+        psi_s, _ = self._cl_state
         psi_s_abs = abs(psi_s)
         if psi_s_abs > 0:
-            L_s = self.par.incr_ind_mat(self.i_s_cl)
+            i_s = self._i_s_cl
+            L_s = self.par.incr_ind_mat(i_s)
             ell = mat_vec(L_s, psi_s) / psi_s_abs
-            den = (ell * self.i_s_cl.conjugate()).imag
-            if den != 0:
-                err = 1j * self.i_s_cl * (self.psi_s_ref - psi_s_abs) / den
-                self.i_s_cl += T_s * self.alpha * err
+            den = min((ell * i_s.conjugate()).imag, -EPS * psi_s_abs)
+            err = clip((self.psi_s_ref - psi_s_abs) / den, -1.0, 1.0)
+            self.gamma_cl += T_s * self.alpha * err
 
     def update(self, T_s: float) -> None:
-        """
-        Update all tracking states.
-
-        Parameters
-        ----------
-        T_s : float
-            Sampling period.
-
-        """
+        """Update the tracking states."""
+        max_angle = self.gamma_limits[1]
         self._update_mtpa(T_s)
-        self.i_s_mtpa = self._clip_state(self.i_s_mtpa)
+        self.i_s_mtpa = self._clip_state(self.i_s_mtpa, max_angle)
         if self.has_mtpv:
             self._update_mtpv(T_s)
-            self.i_s_mtpv = self._clip_state(self.i_s_mtpv)
+            self.i_s_mtpv = self._clip_state(self.i_s_mtpv, max_angle)
             max_angle = phase(self.i_s_mtpv)
-        else:
-            max_angle = None
         self._update_lim(T_s)
-        self.i_s_cl = self._clip_state(self.i_s_cl, max_angle=max_angle)
-        self._update_current_tracking(T_s)
+        self.gamma_cl = clip(self.gamma_cl, self.gamma_limits[0], max_angle)
+        super().update(T_s)

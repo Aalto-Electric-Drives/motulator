@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 
 from motulator.common.model import Subsystem, SubsystemTimeSeries
-from motulator.common.utils._utils import empty_array, get_value, wrap
+from motulator.common.utils._utils import empty_array, get_value
 
 
 # %%
@@ -46,10 +46,12 @@ class MechanicalSystem(Subsystem):
     B_L : float | Callable[[float], float], optional
         Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
         friction, or an arbitrary function of the rotor speed. For example, choosing
-        ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.
-        Defaults to 0.
+        ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque
+        ``k*abs(w_M)*w_M``. Defaults to 0.
 
     """
+
+    angles = frozenset({"theta_M"})
 
     def __init__(self, J: float, B_L: float | Callable[[float], float] = 0.0) -> None:
         self.inp: MechanicsInputs = MechanicsInputs()
@@ -64,19 +66,9 @@ class MechanicalSystem(Subsystem):
         """Set external load torque (Nm), constant or a function of time."""
         self.inp.tau_L = tau_L
 
-    def set_external_rotor_speed(self, _) -> None:
-        """Set external rotor speed (rad/s), constant or a function of time."""
-        raise NotImplementedError
-
     def _compute_total_load_torque(self, w_M: Any, tau_L: Any) -> Any:
         """Total load torque (Nm), including the friction."""
         return get_value(self.B_L, w_M) * w_M + tau_L
-
-    def set_states(self, state_list: list[complex], index: int) -> int:
-        """Set states, keeping the rotor angle within [-pi, pi)."""
-        index = super().set_states(state_list, index)
-        self.state.theta_M = wrap(self.state.theta_M.real)
-        return index
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -92,7 +84,7 @@ class MechanicalSystem(Subsystem):
         d_w_M = (inp.tau_M - tau_L_tot) / self.J
         return [d_theta_M, d_w_M]
 
-    def create_time_series(self, t: np.ndarray) -> "MechanicalSystemTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return MechanicalSystemTimeSeries(t, self)
 
@@ -111,13 +103,11 @@ class MechanicalSystemTimeSeries(SubsystemTimeSeries):
     tau_L: np.ndarray = field(default_factory=empty_array)
     # Derived
     tau_L_tot: np.ndarray = field(default_factory=empty_array)
-    exp_j_theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: MechanicalSystem) -> None:
         self.w_M = np.real(np.array(subsystem._history["w_M"]))
         theta_M = np.real(np.array(subsystem._history["theta_M"]))
-        self.exp_j_theta_M = np.exp(1j * theta_M)
-        self.theta_M = np.angle(self.exp_j_theta_M)
+        self.theta_M = np.angle(np.exp(1j * theta_M))
         # External load torque, replaced by the connected one if any
         self.tau_L = np.array([get_value(subsystem.inp.tau_L, t_k) for t_k in t])
 
@@ -146,7 +136,7 @@ class TwoMassMechanicalSystemStates:
 
 class TwoMassMechanicalSystem(Subsystem):
     """
-    Two-mass mechanical subsystem.
+    Two-mass mechanical system.
 
     Parameters
     ----------
@@ -161,10 +151,12 @@ class TwoMassMechanicalSystem(Subsystem):
     B_L : float | Callable[[float], float], optional
         Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
         friction, or an arbitrary function of the load speed. For example, choosing
-        ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.
-        Defaults to 0.
+        ``B_L = lambda w_L: k*abs(w_L)`` gives the quadratic load torque
+        ``k*abs(w_L)*w_L``. Defaults to 0.
 
     """
+
+    angles = frozenset({"theta_M"})
 
     def __init__(
         self,
@@ -189,10 +181,6 @@ class TwoMassMechanicalSystem(Subsystem):
         """Set external load torque (Nm), constant or a function of time."""
         self.inp.tau_L = tau_L
 
-    def set_external_rotor_speed(self, _) -> None:
-        """Set external rotor speed (rad/s), constant or a function of time."""
-        raise NotImplementedError
-
     def _compute_shaft_torque(self, theta_ML: Any, w_M: Any, w_L: Any) -> Any:
         """Shaft torque (Nm)."""
         return self.K_S * theta_ML + self.C_S * (w_M - w_L)
@@ -200,12 +188,6 @@ class TwoMassMechanicalSystem(Subsystem):
     def _compute_total_load_torque(self, w_L: Any, tau_L: Any) -> Any:
         """Total load torque (Nm), including the friction."""
         return get_value(self.B_L, w_L) * w_L + tau_L
-
-    def set_states(self, state_list: list[complex], index: int) -> int:
-        """Set states, keeping the rotor angle within [-pi, pi)."""
-        index = super().set_states(state_list, index)
-        self.state.theta_M = wrap(self.state.theta_M.real)
-        return index
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -224,7 +206,7 @@ class TwoMassMechanicalSystem(Subsystem):
         d_theta_ML = state.w_M - state.w_L
         return [d_theta_M, d_w_M, d_w_L, d_theta_ML]
 
-    def create_time_series(self, t: np.ndarray) -> "TwoMassMechanicalSystemTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return TwoMassMechanicalSystemTimeSeries(t, self)
 
@@ -246,13 +228,11 @@ class TwoMassMechanicalSystemTimeSeries(SubsystemTimeSeries):
     # Derived
     tau_S: np.ndarray = field(default_factory=empty_array)
     tau_L_tot: np.ndarray = field(default_factory=empty_array)
-    exp_j_theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: TwoMassMechanicalSystem) -> None:
         self.w_M = np.real(np.array(subsystem._history["w_M"]))
         theta_M = np.real(np.array(subsystem._history["theta_M"]))
-        self.exp_j_theta_M = np.exp(1j * theta_M)
-        self.theta_M = np.angle(self.exp_j_theta_M)
+        self.theta_M = np.angle(np.exp(1j * theta_M))
         self.w_L = np.real(np.array(subsystem._history["w_L"]))
         self.theta_ML = np.real(np.array(subsystem._history["theta_ML"]))
         self.tau_S = subsystem._compute_shaft_torque(self.theta_ML, self.w_M, self.w_L)
@@ -281,34 +261,28 @@ class ExternalRotorSpeedStates:
 
 class ExternalRotorSpeed(Subsystem):
     """
-    Integrate rotor angle from externally given rotor speed.
+    Externally given rotor speed.
 
-    This class maintains the same interface as other mechanical systems but the speed is
-    determined by an external function rather than by torque dynamics.
+    The speed is given externally instead of being determined by the torque dynamics,
+    and the rotor angle is integrated from the speed. The electromagnetic torque is an
+    input, as in the other mechanical systems, but it does not affect the speed.
+
+    Parameters
+    ----------
+    w_M : float | Callable[[float], float], optional
+        Rotor speed (rad/s), constant or a function of time, defaults to 0. It can be
+        changed later through the attribute `w_M`.
 
     """
 
-    def __init__(self) -> None:
+    angles = frozenset({"theta_M"})
+
+    def __init__(self, w_M: float | Callable[[float], float] = 0.0) -> None:
         self.inp: MechanicsInputs = MechanicsInputs()
         self.state: ExternalRotorSpeedStates = ExternalRotorSpeedStates()
-        self.out: MechanicsOutputs = MechanicsOutputs(
-            theta_M=self.state.theta_M.real, w_M=0.0
-        )
-        self.w_M: float | Callable[[float], float] = 0.0  # External input
-
-    def set_external_rotor_speed(self, w_M: float | Callable[[float], float]) -> None:
-        """Set external rotor speed (rad/s), constant or a function of time."""
+        self.out: MechanicsOutputs = MechanicsOutputs(theta_M=0.0, w_M=0.0)
         self.w_M = w_M
-
-    def set_external_load_torque(self, tau_L: float | Callable[[float], float]) -> None:
-        """Set external load torque (Nm), constant or a function of time."""
-        raise NotImplementedError
-
-    def set_states(self, state_list: list[complex], index: int) -> int:
-        """Set states, keeping the rotor angle within [-pi, pi)."""
-        index = super().set_states(state_list, index)
-        self.state.theta_M = wrap(self.state.theta_M.real)
-        return index
+        self.set_outputs(0.0)
 
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
@@ -318,10 +292,9 @@ class ExternalRotorSpeed(Subsystem):
 
     def rhs(self, t: float) -> list[complex]:
         """Compute state derivatives."""
-        d_theta_M = self.out.w_M
-        return [d_theta_M]
+        return [get_value(self.w_M, t)]
 
-    def create_time_series(self, t: np.ndarray) -> "ExternalRotorSpeedTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return ExternalRotorSpeedTimeSeries(t, self)
 
@@ -338,11 +311,8 @@ class ExternalRotorSpeedTimeSeries(SubsystemTimeSeries):
     w_M: np.ndarray = field(default_factory=empty_array)
     # Input
     tau_M: np.ndarray = field(default_factory=empty_array)
-    # Derived
-    exp_j_theta_M: np.ndarray = field(default_factory=empty_array)
 
     def __post_init__(self, t: np.ndarray, subsystem: ExternalRotorSpeed) -> None:
         self.w_M = np.array([get_value(subsystem.w_M, t_k) for t_k in t])
         theta_M = np.real(np.array(subsystem._history["theta_M"]))
-        self.exp_j_theta_M = np.exp(1j * theta_M)
-        self.theta_M = np.angle(self.exp_j_theta_M)
+        self.theta_M = np.angle(np.exp(1j * theta_M))

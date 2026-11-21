@@ -9,8 +9,9 @@ its output voltage magnitude without a cascaded DC-bus voltage controller: the e
 power fed to the DC bus by the drive is estimated by a disturbance observer and fed
 forward. The machine-side converter uses sensorless current-vector control (CVC). The
 two control systems are independent: they have different sampling periods, and their
-carriers are not synchronized. The system model is otherwise the same as in
-:doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc`, except for the weak grid.
+carriers are not synchronized. The system model is the same as in
+:doc:`/drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc`, except for the weak grid
+and the L filter.
 
 """
 
