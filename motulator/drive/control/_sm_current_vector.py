@@ -31,7 +31,7 @@ class CurrentVectorControllerCfg:
         Maximum stator current (A).
     alpha_c : float, optional
         Current-control bandwidth (rad/s), defaults to 2*pi*200.
-    alpha_i : float, optional
+    alpha_i : float | None, optional
         Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
         used if `discrete` is True.
     alpha_o : float | None, optional
@@ -46,8 +46,8 @@ class CurrentVectorControllerCfg:
         `sensorless` is True (incremental inductances at zero current), otherwise
         ``lambda w_m: 2*pi*15``.
     k_f : Callable[[float], float] | None, optional
-        PM-flux estimation gain as a function of the electrical rotor angular speed. If
-        None, the gain is zero, i.e., the PM-flux linkage is not estimated.
+        PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
+        If None, the gain is zero, i.e., the PM-flux linkage is not estimated.
     psi_s_min : float | None, optional
         Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
         machines without PMs.
@@ -93,19 +93,19 @@ class CurrentVectorControllerCfg:
 # %%
 class CurrentVectorController:
     """
-    Current vector controller for synchronous machine drives.
+    Current-vector controller for synchronous machine drives.
 
-    The currents are mapped to the flux linkages by the flux linkage map, and the flux
-    linkages are controlled by the 2DOF PI controller or, if `discrete` is True, by the
-    direct discrete-time controller. The saliency and the magnetic saturation are thus
-    taken into account [#Awa2019a]_.
+    The currents are mapped to the flux linkages by the flux map, and the flux linkages
+    are controlled by the 2DOF PI controller or, if `discrete` is True, by the direct
+    discrete-time controller. The saliency and the magnetic saturation are thus taken
+    into account [#Awa2019a]_.
 
     Parameters
     ----------
     par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : CurrentVectorControllerCfg
-        Current-vector control configuration.
+        Current-vector controller configuration.
 
     References
     ----------
@@ -161,8 +161,8 @@ class CurrentVectorController:
             self.observer, self.sensorless, u_s_ab, i_s_ab, theta_M_meas
         )
         if fbk.caught:
-            # In standby, the states tracked the speed estimate held by the observer,
-            # so they restart from the zero-torque operating point of the caught speed
+            # In standby, the states tracked the speed estimate held by the observer, so
+            # they restart from the zero-torque operating point of the caught speed
             # (zero current, since the catch requires magnets)
             self.reference_gen.i_s_ref = 0j
             self.current_ctrl.preset(1j * fbk.w_m * fbk.psi_f, fbk.w_c)

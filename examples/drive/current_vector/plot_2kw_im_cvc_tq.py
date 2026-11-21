@@ -27,7 +27,8 @@ par = model.InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
 )
 machine = model.InductionMachine(par)
-mechanics = model.ExternalRotorSpeed()
+# Actual speed varies sinusoidally
+mechanics = model.ExternalRotorSpeed(lambda t: 0.5 * base.w_M * sin(2 * pi * 1 * t))
 converter = model.VoltageSourceConverter(u_dc=540)
 mdl = model.Drive(machine, mechanics, converter)
 
@@ -42,12 +43,9 @@ vector_ctrl = control.CurrentVectorController(est_par, cfg)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl=None)
 
 # %%
-# Set the torque reference and the actual speed.
+# Set the torque reference.
 
-# Torque reference steps
 ctrl.set_torque_ref(lambda t: (t > 0.25) * nom.tau - (t > 1.25) * 2 * nom.tau)
-# Actual speed varies sinusoidally
-mdl.mechanics.set_external_rotor_speed(lambda t: 0.5 * base.w_M * sin(2 * pi * 1 * t))
 
 # %%
 # Create the simulation object, simulate, and plot the results in per-unit values.

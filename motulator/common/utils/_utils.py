@@ -134,17 +134,14 @@ class SequenceGenerator:
     values : ndarray
         Output values.
     periodic : bool, optional
-        Enables periodicity, defaults to False.
+        Repeat the sequence with the period ``times[-1] - times[0]``, defaults to False.
 
     """
 
     def __init__(self, times: Any, values: Any, periodic: bool = False) -> None:
         self.times = times
         self.values = values
-        if periodic is True:
-            self._period = times[-1] - times[0]
-        else:
-            self._period = None
+        self._period = times[-1] - times[0] if periodic else None
 
     def __call__(self, t: float) -> Any:
         """Interpolate the output."""
@@ -180,7 +177,7 @@ class NominalValues:
     Parameters
     ----------
     U : float
-        Voltage (V, rms, line-line).
+        Voltage (V, rms, line-to-line).
     I : float
         Current (A, rms).
     f : float
@@ -208,7 +205,7 @@ class BaseValues:
     Parameters
     ----------
     u : float
-        Voltage (V, peak, line-neutral).
+        Voltage (V, peak, line-to-neutral).
     i : float
         Current (A, peak).
     w : float
@@ -252,15 +249,10 @@ class BaseValues:
         Parameters
         ----------
         nom : NominalValues
-            Nominal values containing the following fields:
-                U : float
-                    Voltage (V, rms, line-line).
-                I : float
-                    Current (A, rms).
-                f : float
-                    Frequency (Hz).
-        n_p : int | None, optional
-            Number of pole pairs, defaults to None.
+            Nominal values.
+        n_p : int, optional
+            Number of pole pairs. Defaults to None, in which case the mechanical base
+            values are not computed.
 
         Returns
         -------

@@ -70,7 +70,7 @@ class Observer:
     T_s : float
         Sampling period (s).
     R : float, optional
-        Total series resistance (Ω), defaults to 0.
+        Total series resistance estimate (Ω), defaults to 0.
 
     """
 
@@ -144,7 +144,7 @@ class ObserverBasedGridFormingControllerCfg:
     alpha_o : float, optional
         Observer bandwidth (rad/s), defaults to 2*pi*50.
     alpha_c : float, optional
-        Current control bandwidth (rad/s), defaults to 2*pi*400.
+        Current-control bandwidth (rad/s), defaults to 2*pi*400.
     u_nom : float, optional
         Nominal grid voltage (V), line-to-neutral peak value, defaults to
         `sqrt(2/3)*400`.
@@ -152,7 +152,7 @@ class ObserverBasedGridFormingControllerCfg:
         Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
     T_s : float, optional
         Sampling period (s), defaults to 125e-6.
-    i_d_max : float, optional
+    i_d_max : float | None, optional
         Maximum active current (A), peak value, for the active-power reference
         limitation. If not given, the active-power reference is not limited. A value
         somewhat below `i_max` is recommended, e.g., `i_d_max = 0.85*i_max`.
@@ -179,11 +179,13 @@ class ObserverBasedGridFormingController:
     """
     Disturbance-observer-based grid-forming controller.
 
-    This implements the RFPSC-type grid-forming mode of the control method described in
-    [#Nur2024]_. Transparent current control is also implemented. Optionally, the
-    active-power reference is limited to a realizable level, prioritizing the reactive
-    current, as described in [#Maa2026]_ (here reduced to balanced conditions). This
-    limitation helps to maintain synchronism during grid-voltage sags in weak grids.
+    This implements the grid-forming mode of the control method described in
+    [#Nur2024]_, which is of the reference-feedforward power-synchronization type, see
+    `PowerSynchronizationController`. Transparent current control is also implemented.
+    Optionally, the active-power reference is limited to a realizable level,
+    prioritizing the reactive current, as described in [#Maa2026]_ (here reduced to
+    balanced conditions). This limitation helps to maintain synchronism during
+    grid-voltage sags in weak grids.
 
     Parameters
     ----------
@@ -192,10 +194,9 @@ class ObserverBasedGridFormingController:
 
     Notes
     -----
-    In this implementation, the control system operates in synchronous coordinates
-    rotating at the nominal grid angular frequency, and the disturbance observer is
-    designed directly in discrete time. For other implementation options, see
-    [#Nur2024]_.
+    In this implementation, the controller operates in synchronous coordinates rotating
+    at the nominal grid angular frequency, and the disturbance observer is designed
+    directly in discrete time. For other implementation options, see [#Nur2024]_.
 
     References
     ----------

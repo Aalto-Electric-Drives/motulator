@@ -13,8 +13,8 @@ class References:
     """Reference signals of the grid converter controllers."""
 
     T_s: float = 0.0  # Sampling period for the next control step
-    p_g: float = 0.0  # Active power reference
-    q_g: float = 0.0  # Reactive power reference (not used in grid-forming control)
+    p_g: float = 0.0  # Active-power reference
+    q_g: float = 0.0  # Reactive-power reference (not used in grid-forming control)
     v_c: float = 0.0  # Converter voltage magnitude reference (grid-forming control)
     u_c: complex = 0j  # Converter voltage reference
     i_c: complex = 0j  # Converter current reference
@@ -34,7 +34,7 @@ class DCBusVoltageController(PIController):
     Parameters
     ----------
     C_dc : float
-        DC-bus capacitance (F).
+        DC-bus capacitance estimate (F).
     alpha_dc : float
         Approximate closed-loop bandwidth (rad/s).
     p_max : float, optional
@@ -49,13 +49,28 @@ class DCBusVoltageController(PIController):
     """
 
     def __init__(self, C_dc: float, alpha_dc: float, p_max: float = inf) -> None:
-        k_p = -2 * alpha_dc
-        k_i = -(alpha_dc**2)
-        k_t = k_p
-        super().__init__(k_p, k_i, k_t, p_max)
+        super().__init__(k_p=-2 * alpha_dc, k_i=-(alpha_dc**2), u_max=p_max)
         self.C_dc = C_dc
 
     def compute_output(self, y_ref: float, y: float, u_ff: float = 0.0) -> float:
+        """
+        Compute the active-power reference.
+
+        Parameters
+        ----------
+        y_ref : float
+            DC-bus voltage reference (V).
+        y : float
+            DC-bus voltage (V).
+        u_ff : float, optional
+            Feedforward power (W), defaults to 0.
+
+        Returns
+        -------
+        float
+            Active-power reference (W).
+
+        """
         W_dc_ref = 0.5 * self.C_dc * y_ref**2  # y_ref = u_dc_ref
         W_dc = 0.5 * self.C_dc * y**2  # y = u_dc
         return super().compute_output(W_dc_ref, W_dc, u_ff)
@@ -64,17 +79,12 @@ class DCBusVoltageController(PIController):
 # %%
 class CurrentLimiter:
     """
-    Limit the amplitude of the input signal.
+    Limit the magnitude of the current, keeping its direction.
 
     Parameters
     ----------
     i_max : float
-        Maximum current (A).
-
-    Returns
-    -------
-    complex
-        Limited signal.
+        Maximum current (A), peak value.
 
     """
 
@@ -82,6 +92,7 @@ class CurrentLimiter:
         self.i_max = i_max
 
     def __call__(self, i: complex) -> complex:
+        """Limit the current (A) to `i_max`, keeping its direction."""
         if abs(i) > self.i_max:
             i = self.i_max * i / abs(i)
         return i

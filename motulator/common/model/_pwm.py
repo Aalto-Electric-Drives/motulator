@@ -12,7 +12,7 @@ then resolves the leg state from the current direction. In the averaged model, `
 
 """
 
-from collections.abc import Callable, Sequence
+from collections.abc import Sequence
 from typing import Any
 
 import numpy as np
@@ -21,41 +21,11 @@ from motulator.common.utils._dead_time import averaged_gate_signals
 
 # %%
 SwitchingTimes = np.ndarray
+"""Durations (s) of the intervals within the sampling period, shape (N,)."""
+
 GateStates = np.ndarray
-
-
-class Delay:
-    """
-    Computational delay modeled as a ring buffer.
-
-    Parameters
-    ----------
-    length : int, optional
-        Length of the buffer, i.e., the delay in calls, defaults to 1.
-    zeros : Callable[[Any], Any], optional
-        Function giving the initial content of the buffer from the first input, defaults
-        to `np.zeros_like`.
-
-    """
-
-    def __init__(
-        self, length: int = 1, zeros: Callable[[Any], Any] = np.zeros_like
-    ) -> None:
-        self.length = length
-        self.zeros = zeros
-        self.data: list[Any] | None = None  # Filled at the first push
-
-    def push(self, u: Any) -> None:
-        """Add the latest value to the end of the buffer."""
-        if self.data is None:
-            self.data = [self.zeros(u) for _ in range(self.length)]
-        self.data.append(u)
-
-    def pop(self) -> Any:
-        """Remove and return the oldest value of the buffer."""
-        if not self.data:
-            raise ValueError("The buffer is empty")
-        return self.data.pop(0)
+"""Gate states in the intervals, specific to the converter type, e.g., shape (N, 2, 3)
+for the gate and blanking signals of a three-phase voltage-source converter."""
 
 
 def _concatenate(
@@ -110,8 +80,8 @@ class Modulator[Cmd]:
         Delay (s) of the sampling instant from the carrier extremum, defaults to 0. The
         command is loaded at the carrier extrema as without the delay, so the gate
         states returned at a sampling instant consist of the rest of the half carrier
-        period started at the preceding extremum and the beginning of the next one.
-        This models, e.g., sampling after the anti-aliasing filters of the current
+        period started at the preceding extremum and the beginning of the next one. This
+        models, e.g., sampling after the anti-aliasing filters of the current
         measurement have settled, while the control systems assume sampling at the
         extrema. The delay must be shorter than a half carrier period and requires a
         computational delay, and the sampling period must be constant.
@@ -131,9 +101,10 @@ class Modulator[Cmd]:
                 "The sampling delay must be nonnegative and requires a computational "
                 "delay"
             )
-        self.delay = Delay(delay, self.initial_command)
+        self.delay = delay
         self.single_update = single_update
         self.sampling_delay = sampling_delay
+        self.buffer: list[Any] | None = None  # Delayed commands, oldest first
         # With a sampling delay, the first half carrier period of the next sampling
         # period is scheduled ahead, and the sampling period must stay the same
         self._next: tuple[SwitchingTimes, GateStates] | None = None
@@ -196,22 +167,23 @@ class Modulator[Cmd]:
                     "The sampling period must be constant with a sampling delay"
                 )
             self._T_s = T_s
+        if self.buffer is None:  # The delay starts with the initial command
+            self.buffer = [self.initial_command(command) for _ in range(self.delay)]
         parts: list[tuple[SwitchingTimes, GateStates]] = []
         for j in range(n):
-            self.delay.push(command)
+            self.buffer.append(command)
             if j == 0 and self._next is not None:
                 parts.append(self._next)  # Scheduled at the previous sampling instant
             else:
-                parts.append(self.schedule(T_half, self.delay.pop()))
+                parts.append(self.schedule(T_half, self.buffer.pop(0)))
         if self.sampling_delay == 0:
             return _concatenate(parts)
-        # The command loaded at the next extremum is already in the buffer, so the
-        # half carrier period following it is scheduled now
-        self._next = self.schedule(T_half, self.delay.pop())
-        _, (t_rest, gates_rest) = _split(*_concatenate(parts), self.sampling_delay)
-        (t_first, gates_first), _ = _split(*self._next, self.sampling_delay)
-        t_steps = np.concatenate([t_rest, t_first])
-        return t_steps, np.concatenate([gates_rest, gates_first])
+        # The command loaded at the next extremum is already in the buffer, so the half
+        # carrier period following it is scheduled now
+        self._next = self.schedule(T_half, self.buffer.pop(0))
+        _, rest = _split(*_concatenate(parts), self.sampling_delay)
+        first, _ = _split(*self._next, self.sampling_delay)
+        return _concatenate([rest, first])
 
     def schedule(
         self, T_half: float, command: Cmd
@@ -335,11 +307,11 @@ class CarrierComparison(TwoLevelModulator[Sequence[float]]):
     single_update : bool, optional
         Sample and update the duty ratios once per carrier period, defaults to False,
         see `Modulator`.
-    N : int, optional
-        Amount of the counter quantization levels, defaults to 2**12.
     sampling_delay : float, optional
         Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
         `Modulator`.
+    N : int, optional
+        Number of the counter quantization levels, defaults to 2**12.
 
     Examples
     --------
@@ -389,8 +361,8 @@ class CarrierComparison(TwoLevelModulator[Sequence[float]]):
         t_d: float = 0.0,
         delay: int | None = None,
         single_update: bool = False,
-        N: int = 2**12,
         sampling_delay: float = 0.0,
+        N: int = 2**12,
     ) -> None:
         super().__init__(delay, single_update, sampling_delay)
         self.t_d = t_d

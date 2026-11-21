@@ -53,7 +53,7 @@ width: 100%
 align: center
 alt: Observer-based V/Hz control
 ---
-*Figure 1:* Observer-based V/Hz control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ from the observer instead of $\omegamref$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+*Figure 1:* Observer-based V/Hz control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ from the observer instead of $\omegamref$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The PWM realizes the limited voltage reference $\ussreflim$ in stationary coordinates, which the observer gets with the computational delay of one sampling period.
 ```
 
 ```{figure} ../figs/vhz_ctrl.svg
@@ -63,7 +63,7 @@ width: 100%
 align: center
 alt: Observer-based V/Hz control
 ---
-*Figure 1:* Observer-based V/Hz control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ from the observer instead of $\omegamref$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+*Figure 1:* Observer-based V/Hz control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ from the observer instead of $\omegamref$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The PWM realizes the limited voltage reference $\ussreflim$ in stationary coordinates, which the observer gets with the computational delay of one sampling period.
 ```
 
 See the examples in {doc}`/drive_examples/vhz/index`.

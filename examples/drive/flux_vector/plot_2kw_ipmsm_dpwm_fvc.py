@@ -37,12 +37,11 @@ par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0
 # fundamental period, so its average switching frequency is about 2/3 of the carrier
 # frequency. DPWM1 clamps the legs in the segments centered at the peaks of the phase
 # voltage and DPWM2 in the segments following the peaks, which suit the current lagging
-# the voltage in the motoring mode. The methods are compared at the same nominal
-# average switching frequency of 2 kHz: the sampling period of SVPWM is 250 µs, and
-# that of DPWM is 2/3 of it. The duty ratios are updated twice per carrier period,
-# i.e., the carrier frequency is 2 kHz in SVPWM and 3 kHz in DPWM. The rotor speed is
-# constant, and the measured rotor angle is used, so that the results depend only on
-# the modulation.
+# the voltage in the motoring mode. The methods are compared at the same nominal average
+# switching frequency of 2 kHz: the sampling period of SVPWM is 250 µs, and that of DPWM
+# is 2/3 of it. The duty ratios are updated twice per carrier period, i.e., the carrier
+# frequency is 2 kHz in SVPWM and 3 kHz in DPWM. The rotor speed is constant, and the
+# measured rotor angle is used, so that the results depend only on the modulation.
 
 METHODS = ["SVPWM", "DPWM1", "DPWM2"]
 
@@ -51,11 +50,10 @@ def simulate(method, w_M, t_stop):
     """Simulate the drive at the nominal torque and the constant speed `w_M`."""
     mdl = model.Drive(
         model.SynchronousMachine(par),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(w_M),
         model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
         sensors=model.DriveSensors(theta_M=model.Sensor()),  # Sensored control
     )
-    mdl.mechanics.set_external_rotor_speed(w_M)
     T_s = 250e-6 if method == "SVPWM" else 2 / 3 * 250e-6
     cfg = control.FluxVectorControllerCfg(
         i_s_max=1.5 * base.i, sensorless=False, T_s=T_s
@@ -67,12 +65,11 @@ def simulate(method, w_M, t_stop):
 
 
 # %%
-# The results are evaluated over an integer number of fundamental periods in the
-# steady state. The switching instants are obtained by replaying the duty ratios
-# through the carrier comparison, and the switching losses are approximated to be
-# proportional to the switched current. The current ripple is the RMS value of the
-# phase currents after removing the fundamental component, which is constant in rotor
-# coordinates.
+# The results are evaluated over an integer number of fundamental periods in the steady
+# state. The switching instants are obtained by replaying the duty ratios through the
+# carrier comparison, and the switching losses are approximated to be proportional to
+# the switched current. The current ripple is the RMS value of the phase currents after
+# removing the fundamental component, which is constant in rotor coordinates.
 
 
 def evaluate(res, t_start, t_end):
@@ -114,8 +111,8 @@ def evaluate(res, t_start, t_end):
 # Simulate the methods at a low and a high modulation index, i.e., the ratio of the
 # fundamental voltage to its maximum `u_dc/sqrt(3)` in the linear modulation range.
 # Print the realized switching frequency, the switching losses relative to SVPWM, and
-# the current ripple. At the boundaries of the clamped segments, a leg may switch at
-# the start of a half carrier period, so the realized switching frequency of DPWM is
+# the current ripple. At the boundaries of the clamped segments, a leg may switch at the
+# start of a half carrier period, so the realized switching frequency of DPWM is
 # slightly higher than the nominal one.
 
 T_SETTLE = 0.05
@@ -166,7 +163,7 @@ plt.show()
 # %%
 # At the same nominal average switching frequency, DPWM gives a lower current ripple
 # than SVPWM only at the high modulation index. DPWM1 and DPWM2 reduce the switching
-# losses by 15–20 %. At the nominal speed, DPWM2 reduces them slightly more, since its
+# losses by 16–21%. At the nominal speed, DPWM2 reduces them slightly more, since its
 # clamped segments are closer to the current peaks.
 
 # %%

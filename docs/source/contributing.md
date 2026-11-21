@@ -2,8 +2,7 @@
 
 ## Style Guide
 
-We follow the [Style Guide for Python Code PEP8](https://peps.python.org/pep-0008/). Furthermore, we use the [Ruff code formatter](https://github.com/astral-sh/ruff) and [Pyright static type checker](https://github.com/microsoft/pyright), both configured in the [pyproject.toml](https://github.com/Aalto-Electric-Drives/motulator/blob/main/pyproject.toml) file.
-Public methods and classes should have proper [docstrings](https://peps.python.org/pep-0257/), formatted according to the [NumPy docstring guide](https://numpydoc.readthedocs.io/en/latest/format.html).
+We follow the [Style Guide for Python Code PEP8](https://peps.python.org/pep-0008/). Furthermore, we use the [Ruff code formatter](https://github.com/astral-sh/ruff) and [Pyright static type checker](https://github.com/microsoft/pyright), both configured in the [pyproject.toml](https://github.com/Aalto-Electric-Drives/motulator/blob/main/pyproject.toml) file. Public methods and classes should have proper [docstrings](https://peps.python.org/pep-0257/), formatted according to the [NumPy docstring guide](https://numpydoc.readthedocs.io/en/latest/format.html).
 
 [Sphinx](https://www.sphinx-doc.org) is used to auto-generate documentation. We use [Sphinx-Gallery](https://sphinx-gallery.github.io/stable/index.html) to automatically generate the {ref}`examples` from the scripts in the [examples](https://github.com/Aalto-Electric-Drives/motulator/tree/main/examples) folder. The format of the example scripts is essential for their proper rendering in the documentation (see the existing example scripts).
 

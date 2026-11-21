@@ -11,7 +11,7 @@ fitted to the measured data. For comparison, the measured data is plotted togeth
 the model predictions.
 
 This example also demonstrates the mechanical-model-based speed observer [#Lor1991]_.
-The lag of the speed estimate in accelerations is avoided, allowing to increase the
+The lag of the speed estimate in accelerations is avoided, which allows a higher
 speed-control bandwidth. Using the mechanical-model-based speed observer is particularly
 useful in the case of PM-SyRMs, where the speed-estimation bandwidth otherwise would be
 limited due to the comparatively large q-axis inductance.
@@ -33,12 +33,11 @@ nom = utils.NominalValues(U=460, I=8.8, f=60, P=5.6e3, tau=29.7)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
-# Plot the saturation model (surfaces) and the measured flux map data (points). This
-# data is used to parametrize the machine model.
+# Load and plot the measured flux map data, which parametrizes the machine model.
 
 # Load the measured data
-p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
-meas_data = np.load(p / "baldor_400rpm_map.npz")
+p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+meas_data = np.load(p.parent / "data" / "baldor_400rpm_map.npz")
 i_s_dq_map = meas_data["i_s_dq"]
 psi_s_dq_map = meas_data["psi_s_dq"]
 
@@ -130,14 +129,14 @@ speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%
-# Visualize the control loci.
+# Plot the control loci.
 
 i_s_vals = [1, 2, 3]  # Current values for the plots
-mc = utils.MachineCharacteristics(est_par)
-mc.plot_flux_vs_torque(i_s_vals, base)
-mc.plot_current_vs_torque(i_s_vals, base)
-mc.plot_current_loci(i_s_vals, base)
-mc.plot_flux_loci(i_s_vals, base)
+mc = utils.MachineCharacteristics(est_par, i_s_vals, base)
+mc.plot_flux_vs_torque()
+mc.plot_current_vs_torque()
+mc.plot_current_loci()
+mc.plot_flux_loci()
 
 # %%
 # Set the speed reference and the external load torque.

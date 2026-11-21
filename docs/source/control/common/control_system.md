@@ -2,22 +2,22 @@
 
 ## Main Control Loop
 
-A protocol for discrete-time control systems is available in {class}`motulator.common.control.ControlSystem` class. The main control loop has the following steps:
+The base class {class}`motulator.common.control.ControlSystem` implements the main control loop of discrete-time control systems, which has the following steps:
 
-1. Get the measurement signals `meas` from the outputs of the continuous-time system model `mdl`.
+1. Sample the measurement signals `meas` from the sensors of the continuous-time system model `mdl`, see {class}`motulator.common.model.Sensor`.
 1. Get the feedback signals `fbk` for the controllers. The feedback signals `fbk` may contain the raw measurement signals `meas`. If the control system has an observer (or phase-locked loop etc.), the feedback signals `fbk` contain the observer output signal.
 1. Compute the reference signals `ref` based on the feedback signals `fbk`.
 1. Save the feedback signals `fbk` and the reference signals `ref` so they can be accessed after the simulation.
 1. Update the states of the control system for the next sampling instant.
 1. Return the sampling period `T_s` and the duty ratios `d_abc` for the modulator of the converter.
 
-Using this protocol is not compulsory, but it may simplify the implementation of new control systems.
+Using this base class is not compulsory, but it simplifies the implementation of new control systems.
 
 ## Gate Enable
 
-The control system can block the gates of the converter with `set_enable`, constantly or as a function of time, which is evaluated at the sampling instants. While the gates are blocked, the control loop runs as usual, but the reference signals are computed by `compute_standby_output` instead of `compute_output`, and the outer controllers (the speed controller and the DC-bus voltage controller) are not updated. The converter voltage is not measured. The grid converter control systems use the measured grid voltage in its place, which it equals once the current has decayed, so that the phase-locked loop keeps tracking the grid. The drive control systems run their observers on the open-circuit model and compute the output for zero torque. A sensorless synchronous machine drive catches the rotating machine after the release with a flying start, see {class}`motulator.drive.control.sm.VectorControlSystem`. The model of the converter with blocked gates is described in {doc}`/model/common/converters`.
+The control system can block the gates of the converter with `set_enable`, constantly or as a function of time, which is evaluated at the sampling instants. While the gates are blocked, the control loop runs as usual, but the reference signals are computed by `compute_standby_output` instead of `compute_output`, and the outer controllers (the speed controller and the DC-bus voltage controller) are not updated. The converter voltage is not measured. The grid converter control systems use the measured PCC voltage in its place, which it approximately equals once the current has decayed, so that the phase-locked loop or the observer keeps tracking the grid. In the drive control systems, the observers, if any, run on their open-circuit model, and the vector control systems compute the output for zero torque. A sensorless synchronous machine drive catches the rotating machine after the release with a flying start, see {class}`motulator.drive.control.sm.VectorControlSystem`. The model of the converter with blocked gates is described in {doc}`/model/common/converters`.
 
-The drive control systems and the grid-following and observer-based grid-forming control systems implement the standby output. A sensorless induction machine drive holds its speed estimate while the gates are blocked, and its decayed rotor flux does not allow a flying start, so a speed search, not included in this package, is needed if the speed changes. The power-synchronization controller cannot synchronize with the grid without power, so it does not support gate blocking.
+The drive control systems and the grid converter control systems implement the standby output, except with the power-synchronization controller, which cannot synchronize with the grid without power. A sensorless induction machine drive holds its speed estimate while the gates are blocked, and its decayed rotor flux does not allow a flying start, so a speed search, not included in this package, is needed if the speed changes.
 
 ## Data Flow and Storage
 
@@ -36,7 +36,7 @@ In discrete-time control systems, the signals are collected into these key objec
 
 The objects `fbk` and `ref` may propagate through multiple control blocks (implemented as classes), with each block potentially adding or modifying signals.
 
-The states and inputs of the continuous-time system model are saved at every solver time step.
+The states of the continuous-time system model and the switching states of the converters are saved at the solution points of the solver. The other signals, such as the inputs and outputs of the subsystems, are computed from them after the simulation.
 
 ```{figure} ../figs/overall_system.svg
 ---

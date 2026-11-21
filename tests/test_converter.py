@@ -60,9 +60,6 @@ class IdealConverter(Converter, ControlledConverter):
     def set_outputs(self, t: float) -> None:
         self.out.u_c_ab = self.inp.q_c_ab * self.out.u_dc
 
-    def rhs(self, t: float) -> list[complex]:
-        return []
-
     def init_state_history(self) -> None:
         super().init_state_history()
         self._history["q_c_ab"] = []

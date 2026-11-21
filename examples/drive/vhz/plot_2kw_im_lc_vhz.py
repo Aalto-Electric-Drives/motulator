@@ -22,7 +22,7 @@ nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
-# Create the system model, filter parameters correspond to [#Sal2006]_.
+# Configure the system model. The filter parameters correspond to [#Sal2006]_.
 
 par = model.InductionMachineInvGammaPars(
     n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224

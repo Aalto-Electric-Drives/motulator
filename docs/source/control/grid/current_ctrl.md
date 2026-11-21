@@ -1,6 +1,6 @@
 # Current Control
 
-Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control can be used in grid converters {cite}`Har2015`. This control structure allows to compensate for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection. A 2DOF PI current controller is available in the {class}`motulator.grid.control.CurrentController` class, whose base class is {class}`motulator.common.control.ComplexPIController`.
+Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control can be used in grid converters {cite}`Har2015`. This control structure allows compensating for the cross-coupling originating from rotating coordinates as well as improving disturbance rejection. A 2DOF PI current controller is available in the {class}`motulator.grid.control.CurrentController` class, whose base class is {class}`motulator.common.control.ComplexPIController`.
 
 ```{note}
 This controller design assumes an L filter, but it can also be applied with LCL filters (see the {doc}`/grid_examples/grid_following/plot_10kva_lcl_gfl` example). If LCL-resonance damping and very low sampling frequencies are needed, the controller could be designed directly in the discrete-time domain taking the LCL filter dynamics into account {cite}`Rah2021`.
@@ -41,7 +41,7 @@ label: grid_cc
     \ucref &= \kT\icref - \kP\ic + \mathbf{u}_\mathrm{i}
 ```
 
-where $\ucref$ is the output of the controller, i.e., the converter voltage reference, $\ic$ is the measured converter current, $\icref$ is the converter current reference, $\mathbf{u}_\mathrm{i}$ is the integral state, and $\omegac$ is the angular speed of the coordinate system, obtained from the PLL (equal to $\hatomegag$ in the steady state). Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain.
+where $\ucref$ is the output of the controller, i.e., the converter voltage reference, $\ic$ is the measured converter current, $\icref$ is the converter current reference, $\mathbf{u}_\mathrm{i}$ is the integral state, and $\omegac$ is the angular speed of the coordinate system, obtained from the PLL (equal to $\hatomegag$ in the steady state). Furthermore, $\kT$ is the reference-feedforward gain, $\kP$ is the proportional gain, and $\kI$ is the integral gain. The feedforward of the PCC voltage estimate, see [Figure 1](fig:gfl_ctrl), is omitted here.
 
 ## Closed-Loop System Analysis
 
@@ -94,7 +94,7 @@ label: grid_cc_gain_selection
     \kT = \alphac \hat L
 ```
 
-where $\alphac$ is the closed-loop reference-tracking bandwidth, $\alphai$ is the integral action bandwidth, and $\hat L$ is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Gc_grid` and {eq}`Yc_grid` reduce to
+where $\alphac$ is the closed-loop reference-tracking bandwidth, $\alphai$ is the integral-action bandwidth, and $\hat L$ is the inductance estimate. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Gc_grid` and {eq}`Yc_grid` reduce to
 
 ```{math}
 ---

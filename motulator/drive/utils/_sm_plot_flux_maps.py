@@ -9,7 +9,12 @@ from contourpy import contour_generator
 from matplotlib.ticker import MaxNLocator
 from numpy.typing import ArrayLike
 
-from motulator.common.utils._plotting import save_and_show, set_style, setup_map_plot
+from motulator.common.utils._plotting import (
+    configure_axes,
+    save_and_show,
+    set_style,
+    setup_map_plot,
+)
 from motulator.common.utils._utils import BaseValues
 from motulator.drive.utils._sm_flux_maps import MagneticModel
 
@@ -35,7 +40,6 @@ def _filter_and_plot_raw_data(
     component: str,
     x_lims: tuple[float, float],
     y_lims: tuple[float, float],
-    marker: str,
     color: str,
 ) -> None:
     """Filter and plot raw data as scatter points."""
@@ -50,7 +54,7 @@ def _filter_and_plot_raw_data(
         component,
     )
     mask = (x >= x_lims[0]) & (x <= x_lims[1]) & (y >= y_lims[0]) & (y <= y_lims[1])
-    ax.scatter(x[mask], y[mask], z[mask], s=5, marker=marker, color=color)
+    ax.scatter(x[mask], y[mask], z[mask], s=5, marker=".", color=color)
 
 
 def _plot_current_loci(
@@ -88,79 +92,40 @@ def _plot_current_loci(
                 )
 
 
-def _get_labels(data_type: str, component: str, pu_vals: bool) -> tuple[str, str, str]:
-    """Get axis labels based on data type, component, and units."""
-    if data_type == "flux_map":
-        if pu_vals:
-            xlabel = r"$i_\mathrm{d}$ (p.u.)"
-            ylabel = r"$i_\mathrm{q}$ (p.u.)"
-            zlabel = rf"$\psi_\mathrm{{{component}}}$ (p.u.)"
-        else:
-            xlabel = r"$i_\mathrm{d}$ (A)"
-            ylabel = r"$i_\mathrm{q}$ (A)"
-            zlabel = rf"$\psi_\mathrm{{{component}}}$ (Vs)"
-    elif pu_vals:
-        xlabel = r"$\psi_\mathrm{d}$ (p.u.)"
-        ylabel = r"$\psi_\mathrm{q}$ (p.u.)"
-        zlabel = rf"$i_\mathrm{{{component}}}$ (p.u.)"
-    else:
-        xlabel = r"$\psi_\mathrm{d}$ (Vs)"
-        ylabel = r"$\psi_\mathrm{q}$ (Vs)"
-        zlabel = rf"$i_\mathrm{{{component}}}$ (A)"
-    return xlabel, ylabel, zlabel
+def _get_labels(data_type: str, component: str, pu: bool) -> tuple[str, str, str]:
+    """Get the axis labels of the map input (x, y) and the output component (z)."""
+    i, psi = ("i", "A"), (r"\psi", "Vs")
+    inp, out = (i, psi) if data_type == "flux_map" else (psi, i)
+
+    def label(quantity: tuple[str, str], subscript: str) -> str:
+        symbol, unit = quantity
+        return rf"${symbol}_\mathrm{{{subscript}}}$ ({'p.u.' if pu else unit})"
+
+    return label(inp, "d"), label(inp, "q"), label(out, component)
 
 
 def _configure_3d_axes(
     ax,
-    data_type: str,
-    i_s_dq: np.ndarray,
-    psi_s_dq: np.ndarray,
-    lims: dict[str, tuple[float, float]] | None = None,
-    ticks: dict[str, ArrayLike] | None = None,
+    x: np.ndarray,
+    y: np.ndarray,
+    lims: dict[str, tuple[float, float]] | None,
+    ticks: dict[str, ArrayLike] | None,
 ) -> tuple[tuple[float, float], tuple[float, float]]:
-    """Configure 3D axis limits and ticks."""
-    # Extract limits or determine from data
-    x_lims = lims.get("x") if lims else None
-    y_lims = lims.get("y") if lims else None
-    z_lims = lims.get("z") if lims else None
-
-    if x_lims is None:
-        if data_type == "flux_map":
-            i_d_vals = np.real(i_s_dq)
-            x_lims = (np.min(i_d_vals), np.max(i_d_vals))
-        else:
-            psi_d_vals = np.real(psi_s_dq)
-            x_lims = (np.min(psi_d_vals), np.max(psi_d_vals))
-
-    if y_lims is None:
-        if data_type == "flux_map":
-            i_q_vals = np.imag(i_s_dq)
-            y_lims = (np.min(i_q_vals), np.max(i_q_vals))
-        else:
-            psi_q_vals = np.imag(psi_s_dq)
-            y_lims = (np.min(psi_q_vals), np.max(psi_q_vals))
-
-    # Set axis limits
+    """Set the axis limits and ticks, the x and y limits from the data by default."""
+    lims, ticks = lims or {}, ticks or {}
+    x_lims = lims.get("x")
+    x_lims = (np.min(x), np.max(x)) if x_lims is None else x_lims
+    y_lims = lims.get("y")
+    y_lims = (np.min(y), np.max(y)) if y_lims is None else y_lims
     ax.set_xlim(x_lims)
     ax.set_ylim(y_lims)
-    if z_lims is not None:
-        ax.set_zlim(z_lims)  # type: ignore
-
-    # Set axis ticks, by default at most five intervals per axis
-    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+    if (z_lims := lims.get("z")) is not None:
+        ax.set_zlim(z_lims)
+    # By default, at most five intervals per axis
+    for name, axis in zip("xyz", (ax.xaxis, ax.yaxis, ax.zaxis), strict=True):
         axis.set_major_locator(MaxNLocator(nbins=5, steps=[1, 2, 2.5, 5, 10]))
-    if ticks is not None:
-        x_ticks = ticks.get("x")
-        y_ticks = ticks.get("y")
-        z_ticks = ticks.get("z")
-
-        if x_ticks is not None:
-            ax.set_xticks(x_ticks)
-        if y_ticks is not None:
-            ax.set_yticks(y_ticks)
-        if z_ticks is not None:
-            ax.set_zticks(z_ticks)  # type: ignore
-
+        if (axis_ticks := ticks.get(name)) is not None:
+            axis.set_ticks(axis_ticks)
     return x_lims, y_lims
 
 
@@ -174,11 +139,8 @@ def plot_map(
     | tuple[np.ndarray, ...]
     | list[MagneticModel | tuple[np.ndarray, ...]]
     | None = None,
-    raw_marker: str | list[str] | None = None,
-    raw_color: str | list[str] | None = None,
     current_loci: tuple[ArrayLike, ArrayLike] | None = None,
     axlim_clip: bool = True,
-    surface_cmap: str = "viridis",
     latex: bool = False,
     save_path: str | Path | None = None,
     **savefig_kwargs,
@@ -200,12 +162,9 @@ def plot_map(
     ticks : dict[str, ArrayLike], optional
         Axis tick locations. Keys should be 'x', 'y', 'z'.
     raw_data : MagneticModel | tuple | list[MagneticModel | tuple], optional
-        Raw data for comparison (shown as scatter points). A tuple of arrays is
-        interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units.
-    raw_marker : str | list[str], optional
-        Marker style for raw data.
-    raw_color : str | list[str], optional
-        Marker color for raw data.
+        Raw data for comparison, shown as scatter points (blue and red alternately for a
+        list). A tuple of arrays is interpreted as `(psi_s_dq, i_s_dq, ...)` in SI
+        units.
     current_loci : tuple[ArrayLike, ArrayLike], optional
         Levels `(i_d_levels, i_q_levels)` of the constant-current loci, in the units of
         the plot. If given, the loci are drawn on the surface instead of the wireframe.
@@ -215,8 +174,6 @@ def plot_map(
         limits, defaults to True. The grid is cropped to the x and y limits, and the
         flag is passed to the `axlim_clip` argument of matplotlib's 3D plotting
         functions.
-    surface_cmap : str, optional
-        Colormap for the surface plot, defaults to "viridis".
     latex : bool, optional
         Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX
         installation, defaults to False.
@@ -226,23 +183,13 @@ def plot_map(
         Additional keyword arguments passed to plt.savefig().
 
     """
-    # Setup style and base values
     size = setup_map_plot(latex)
-    pu_vals = base is not None
-    if base is None:
-        base = BaseValues.unity()
-
-    # Normalize data
-    i_s_dq = data.i_s_dq / base.i
-    psi_s_dq = data.psi_s_dq / base.psi
-
-    # Create figure and axis
-    fig, ax = plt.subplots(figsize=size, subplot_kw={"projection": "3d"})
-
+    pu = base is not None
+    base = base if base is not None else BaseValues.unity()
+    _, ax = plt.subplots(figsize=size, subplot_kw={"projection": "3d"})
+    i_s_dq, psi_s_dq = data.i_s_dq / base.i, data.psi_s_dq / base.psi
     x, y, z = _get_xyz(data.type, i_s_dq, psi_s_dq, component)
-
-    # Configure axes (this determines x_lims, y_lims internally)
-    x_lims, y_lims = _configure_3d_axes(ax, data.type, i_s_dq, psi_s_dq, lims, ticks)
+    x_lims, y_lims = _configure_3d_axes(ax, x, y, lims, ticks)
 
     # Crop the grid to the axis limits, since clipping cuts the surface at its polygons
     inside = (x >= x_lims[0]) & (x <= x_lims[1]) & (y >= y_lims[0]) & (y <= y_lims[1])
@@ -252,45 +199,16 @@ def plot_map(
         crop = np.s_[rows[0] : rows[-1] + 1, cols[0] : cols[-1] + 1]
         x, y, z = x[crop], y[crop], z[crop]
 
-    # Plot raw data if provided
     if raw_data is not None:
-        if isinstance(raw_data, list):
-            datas = raw_data
-            def_markers = [".", "."]
-            def_colors = ["b", "r"]
-        else:
-            datas = [raw_data]
-            def_markers = ["."]
-            def_colors = ["b"]
-
-        markers = raw_marker if raw_marker is not None else def_markers
-        colors = raw_color if raw_color is not None else def_colors
-
-        # Ensure markers and colors are lists
-        if isinstance(markers, str):
-            markers = [markers] * len(datas)
-        if isinstance(colors, str):
-            colors = [colors] * len(datas)
-
-        # Plot each raw dataset
-        for i, raw_d in enumerate(datas):
-            m = markers[i % len(markers)]
-            c = colors[i % len(colors)]
+        datas = raw_data if isinstance(raw_data, list) else [raw_data]
+        for k, raw in enumerate(datas):
             _filter_and_plot_raw_data(
-                ax,
-                raw_d,
-                base,
-                data.type,
-                component,
-                x_lims,
-                y_lims,
-                marker=str(m),
-                color=str(c),
+                ax, raw, base, data.type, component, x_lims, y_lims, "br"[k % 2]
             )
 
     # Plot a transparent surface
     ax.plot_surface(  # type: ignore
-        x, y, z, cmap=surface_cmap, alpha=0.5, axlim_clip=axlim_clip
+        x, y, z, cmap="viridis", alpha=0.5, axlim_clip=axlim_clip
     )
     # Add constant-current loci or wireframe on top
     if current_loci is not None:
@@ -300,18 +218,12 @@ def plot_map(
             x, y, z, color="black", linewidth=0.5, alpha=0.5, axlim_clip=axlim_clip
         )
 
-    xlabel, ylabel, zlabel = _get_labels(data.type, component, pu_vals)
+    xlabel, ylabel, zlabel = _get_labels(data.type, component, pu)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.zaxis.set_rotate_label(False)  # type: ignore
-
-    # Set view angle based on component
-    if component == "d":
-        ax.view_init(elev=15, azim=-135)  # type: ignore
-        ax.set_zlabel(zlabel, rotation=90)  # type: ignore
-    else:
-        ax.view_init(elev=15, azim=-45)  # type: ignore
-        ax.set_zlabel(zlabel, rotation=90)  # type: ignore
+    ax.set_zlabel(zlabel, rotation=90)  # type: ignore
+    ax.view_init(elev=15, azim=-135 if component == "d" else -45)  # type: ignore
 
     save_and_show(save_path, **savefig_kwargs)
 
@@ -339,7 +251,8 @@ def plot_flux_vs_current(
         Base values for scaling the maps. If not given, the maps are plotted in SI
         units.
     x_lims : tuple[float, float], optional
-        x-axis limits. If None, uses automatic scaling.
+        x-axis limits. The q-axis curves are plotted at the d-axis currents closest to
+        these limits, or at the extreme d-axis currents of the data if not given.
     x_ticks : ArrayLike, optional
         x-axis tick locations.
     y_lims : tuple[float, float], optional
@@ -356,15 +269,9 @@ def plot_flux_vs_current(
 
     """
     set_style(latex)
-
-    # Check if the base values were given
-    pu_vals = base is not None
-    if base is None:
-        base = BaseValues.unity()
-
-    # Normalize the data
-    i_s_dq = data.i_s_dq / base.i
-    psi_s_dq = data.psi_s_dq / base.psi
+    pu = base is not None
+    base = base if base is not None else BaseValues.unity()
+    i_s_dq, psi_s_dq = data.i_s_dq / base.i, data.psi_s_dq / base.psi
 
     # Indices corresponding to i_d = 0 and i_q = 0
     ind_d_0 = np.argmin(np.abs(i_s_dq.real[:, 0]))
@@ -415,24 +322,11 @@ def plot_flux_vs_current(
         label=r"$\psi_\mathrm{q}(i_\mathrm{d}^\mathrm{max}, i_\mathrm{q})$",
     )
 
-    # Set axis limits and ticks
-    if x_lims is not None:
-        ax.set_xlim(x_lims)
-    if x_ticks is not None:
-        ax.set_xticks(x_ticks)
-
-    if y_lims is not None:
-        ax.set_ylim(y_lims)
-    if y_ticks is not None:
-        ax.set_yticks(y_ticks)
-
-    # Set axis labels
-    if pu_vals:
-        ax.set_xlabel(r"$i_\mathrm{d}$, $i_\mathrm{q}$ (p.u.)")
-        ax.set_ylabel(r"$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (p.u.)")
-    else:
-        ax.set_xlabel(r"$i_\mathrm{d}$, $i_\mathrm{q}$ (A)")
-        ax.set_ylabel(r"$\psi_\mathrm{d}$, $\psi_\mathrm{q}$ (Vs)")
+    configure_axes([ax], x_lims, x_ticks, [y_lims], [y_ticks])
+    ax.set_xlabel(rf"$i_\mathrm{{d}}$, $i_\mathrm{{q}}$ ({'p.u.' if pu else 'A'})")
+    ax.set_ylabel(
+        rf"$\psi_\mathrm{{d}}$, $\psi_\mathrm{{q}}$ ({'p.u.' if pu else 'Vs'})"
+    )
     ax.legend()
 
     save_and_show(save_path, **savefig_kwargs)

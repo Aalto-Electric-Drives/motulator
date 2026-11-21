@@ -132,10 +132,10 @@ plt.show()
 # Plot the switched phase-a voltages of the two converters over one millisecond. The
 # switching periods differ, and the switching instants are not aligned.
 
-u_ga = complex2abc(res.mdl.grid.converter.u_c_ab)[0]
+u_ca = complex2abc(res.mdl.grid.converter.u_c_ab)[0]
 u_sa = complex2abc(res.mdl.drive.converter.u_c_ab)[0]
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, sharey=True)
-ax1.plot(res.mdl.t, u_ga, label=r"$u_\mathrm{ga}$")
+ax1.plot(res.mdl.t, u_ca, label=r"$u_\mathrm{ca}$")
 ax1.set_ylabel("Voltage (V)")
 ax1.legend(loc="lower right")
 ax2.plot(res.mdl.t, u_sa, label=r"$u_\mathrm{sa}$")

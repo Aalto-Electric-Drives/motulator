@@ -66,7 +66,7 @@ ctrl.set_speed_ref(lambda t: (t > 0.2) * base.w_M)
 mechanics.set_external_load_torque(lambda t: (t > 0.6) * nom.tau)
 
 # %%
-# Create the simulation object, with the control system of the drive by the model
+# Create the simulation object, passing the control system of the drive under its model
 # name, and simulate. Plot the drive results in per-unit values.
 
 sim = Simulation(mdl, {"drive": ctrl})

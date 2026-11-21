@@ -28,16 +28,15 @@ nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
 base = utils.BaseValues.from_nominal(nom, n_p=3)
 
 # %%
-# The currents are sampled twice per carrier period. At the carrier extrema, the
-# actual current is close to its average over the sampling period, so sampling at the
-# extrema removes most of the switching ripple from the feedback. The current sensors
-# with the bandwidth `alpha` delay the measured current by about the time constant
-# `1/alpha` and distort the sampled ripple. The sampling instants can be delayed from
-# the carrier extrema by `sampling_delay` of the modulator, while the duty ratios are
-# still loaded at the extrema. The drive is simulated without and with the sampling
-# delay equal to the time constant of the sensors. The rotor speed is constant, and
-# the measured rotor angle is used, so that the results depend only on the current
-# measurement.
+# The currents are sampled twice per carrier period. At the carrier extrema, the actual
+# current is close to its average over the sampling period, so sampling at the extrema
+# removes most of the switching ripple from the feedback. The current sensors with the
+# bandwidth `alpha` delay the measured current by about the time constant `1/alpha` and
+# distort the sampled ripple. The sampling instants can be delayed from the carrier
+# extrema by `sampling_delay` of the modulator, while the duty ratios are still loaded
+# at the extrema. The drive is simulated without and with the sampling delay equal to
+# the time constant of the sensors. The rotor speed is constant, and the measured rotor
+# angle is used, so that the results depend only on the current measurement.
 
 par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545)
 alpha = 2 * pi * 10e3  # Bandwidth of the current sensors
@@ -50,11 +49,10 @@ def simulate(sampling_delay):
     sensors = model.DriveSensors(i_c=model.Sensor(alpha=alpha), theta_M=model.Sensor())
     mdl = model.Drive(
         model.SynchronousMachine(par),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(base.w_M),
         model.VoltageSourceConverter(u_dc=540, modulator=modulator),
         sensors=sensors,
     )
-    mdl.mechanics.set_external_rotor_speed(base.w_M)
     cfg = control.FluxVectorControllerCfg(i_s_max=1.5 * base.i, sensorless=False)
     ctrl = control.VectorControlSystem(control.FluxVectorController(par, cfg))
     ctrl.set_torque_ref(nom.tau)
@@ -136,8 +134,8 @@ plt.show()
 
 # %%
 # Without the sampling delay, the samples follow the filtered current, which lags the
-# actual current. The sampling error also alternates between consecutive samples,
-# since the filter distorts the switching ripple. With the sampling delay, the samples
-# agree much better with the actual currents at the carrier extrema. In a real control
-# system, the sampling delay shortens the time available for computing the duty
-# ratios, since they are still loaded at the following carrier extremum.
+# actual current. The sampling error also alternates between consecutive samples, since
+# the filter distorts the switching ripple. With the sampling delay, the samples agree
+# much better with the actual currents at the carrier extrema. In a real control system,
+# the sampling delay shortens the time available for computing the duty ratios, since
+# they are still loaded at the following carrier extremum.

@@ -17,7 +17,7 @@ from typing import Any
 
 import numpy as np
 import pytest
-from scipy.integrate import trapezoid
+from helpers import im_par, time_average
 
 from motulator.common.model import (
     CompositeModel,
@@ -44,9 +44,7 @@ def grid() -> ThreePhaseSource:
 
 def test_direct_on_line_start() -> None:
     """The induction machine settles at the slip of its equivalent circuit."""
-    par = drive_model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    par = im_par()
     mechanics = drive_model.MechanicalSystem(J=0.015)
     mechanics.set_external_load_torque(10.0)
     mdl = drive_model.GridConnectedMachine(
@@ -72,9 +70,7 @@ def test_direct_on_line_start() -> None:
 def test_source_functions_of_time() -> None:
     """The functions of time of the source, here written for a scalar time, are also
     evaluated at each instant of the time series."""
-    par = drive_model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
-    )
+    par = im_par()
     e_g = sqrt(2 / 3) * U_G
     source = ThreePhaseSource(
         w_g=lambda t: W_G, e_g=lambda t: e_g if t < 0.05 else 0.5 * e_g
@@ -114,8 +110,7 @@ def test_diode_bridge_commutation() -> None:
     res = Simulation(mdl, show_progress=False).simulate(t_stop=0.2)
     assert res.success
     t, u_dc = res.mdl.t, res.mdl.dc_bus.u_dc
-    end = t > 0.1
-    u_dc = trapezoid(u_dc[end], t[end]) / (t[end][-1] - t[end][0])
+    u_dc = time_average(u_dc, t, 0.1)
     u_d0 = 3 * sqrt(2) / pi * U_G
     assert u_dc == pytest.approx(u_d0 - 3 / pi * W_G * L_f * I_d, rel=1e-3)
 
@@ -148,9 +143,6 @@ class EMFLoad(Subsystem):
 
     def set_outputs(self, t: float) -> None:
         self.out.u_o = self.e + self.R * self.inp.i_dc
-
-    def rhs(self, t: float) -> list[complex]:
-        return []
 
     def compute_dc_port(self) -> DCPort:
         return DCPort(self.e, self.R, self.L)
@@ -246,11 +238,7 @@ def test_current_fed_diode_bridge() -> None:
     assert res.success
     t, c = res.mdl.t, res.mdl.converter
     end = t > 0.2
-
-    def mean(x: np.ndarray) -> float:
-        return trapezoid(x[end], t[end]) / (t[end][-1] - t[end][0])
-
-    i_dc, u_dc = mean(-c.i_dc_int), mean(c.u_dc)
+    i_dc, u_dc = time_average(-c.i_dc_int, t, 0.2), time_average(c.u_dc, t, 0.2)
     assert i_dc > 10
     u_d0 = 3 * sqrt(2) / pi * U_G
     assert u_dc == pytest.approx(u_d0 - 3 / pi * W_G * L_f * i_dc, rel=2e-3)

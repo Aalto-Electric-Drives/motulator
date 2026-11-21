@@ -12,7 +12,7 @@ width: 100%
 align: center
 alt: Flux-vector control
 ---
-*Figure 1:* Flux-vector control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ instead of $\hatomegam$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+*Figure 1:* Flux-vector control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ instead of $\hatomegam$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The PWM realizes the limited voltage reference $\ussreflim$ in stationary coordinates, which the observer gets with the computational delay of one sampling period.
 ```
 
 ```{figure} ../figs/flux_vector_ctrl.svg
@@ -22,7 +22,7 @@ width: 100%
 align: center
 alt: Flux-vector control
 ---
-*Figure 1:* Flux-vector control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ instead of $\hatomegam$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+*Figure 1:* Flux-vector control. For induction machines, the reference generation uses the estimates $\hatomegas$ and $\hatabspsiR$ instead of $\hatomegam$. The flux and torque controller uses the stator flux linkage and torque estimates shown in the figure as well as other estimates from the observer, such as the stator current and the angular speed of the coordinate system. The PWM realizes the limited voltage reference $\ussreflim$ in stationary coordinates, which the observer gets with the computational delay of one sampling period.
 ```
 
 ## For Induction Machines
@@ -128,7 +128,7 @@ label: sm_flux_vector_control_dir
     \mathbf{t}_\uptau = \frac{2}{3 \np \RE\{\hatiaux\hatpsis^*\}}\jj\hatpsis
 ```
 
-Note that $\RE\{\hatiaux\hatpsis^*\} > 0$ holds in the whole feasible operating region. The closed-loop small-signal dynamics in {eq}`im_flux_vector_control_closed_lin` are valid also for synchronous machines (including saturated machines, if the flux observer takes the magnetic saturation into account). Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the {ref}`sm_obs_sensorless` document and {cite}`Tii2025a`.
+Note that $\RE\{\hatiaux\hatpsis^*\} > 0$ holds within the MTPV limit, except at a high flux and a small load angle in PM machines with weak PMs, where the controller reduces the flux until the torque becomes controllable. The closed-loop small-signal dynamics in {eq}`im_flux_vector_control_closed_lin` are valid also for synchronous machines (including saturated machines, if the flux observer takes the magnetic saturation into account). Furthermore, the dynamics hold also for sensorless drives, if the decoupling observer gains are used, see the {ref}`sm_obs_sensorless` document and {cite}`Tii2025a`.
 
 ## Inclusion of Integral Action
 
@@ -144,6 +144,6 @@ label: flux_vector_control_2dof
     e_\uptau &= \alpha_\uptau(\tauMref - \hattauM) + x_\uptau - \alphai \hattauM
 ```
 
-where $x_\uppsi$ and $x_\uptau$ are the integral states, $\alpha_\uppsi$ and $\alpha_\uptau$ are the reference-tracking bandwidths, and $\alphai$ is the integral action bandwidth. It can be shown that the resulting linearized closed-loop reference-following dynamics remain the same as with the proportional control law. However, in this case, both the flux and torque dynamics have additional pole at $s = -\alphai$ resulting from the integral action. The integral action pole is canceled from reference-tracking dynamics (see the {ref}`2dof-pi-controller` document).
+where $x_\uppsi$ and $x_\uptau$ are the integral states, $\alpha_\uppsi$ and $\alpha_\uptau$ are the reference-tracking bandwidths, and $\alphai$ is the integral-action bandwidth. It can be shown that the resulting linearized closed-loop reference-following dynamics remain the same as with the proportional control law. However, in this case, both the flux and torque dynamics have an additional pole at $s = -\alphai$ resulting from the integral action. The integral action pole is canceled from the reference-tracking dynamics (see the {ref}`2dof-pi-controller` document).
 
-This 2DOF PI control law is a variant of {cite}`Awa2019b`, having channel-specific reference-tracking bandwidths. It has been implemented in the {class}`motulator.drive.control.im.FluxVectorController` and {class}`motulator.drive.control.sm.FluxVectorController` classes for induction and synchronous machines, respectively. The disturbance observer structure is used in the implementation to avoid the need for anti-windup mechanism (see the {ref}`disturbance-observer-structure` document).
+This 2DOF PI control law is a variant of {cite}`Awa2019b`, having channel-specific reference-tracking bandwidths. It has been implemented in the {class}`motulator.drive.control.im.FluxVectorController` and {class}`motulator.drive.control.sm.FluxVectorController` classes for induction and synchronous machines, respectively. The disturbance observer structure is used in the implementation to avoid the need for an anti-windup mechanism (see the {ref}`disturbance-observer-structure` document).

@@ -15,7 +15,7 @@ import numpy as np
 
 from motulator.common.model import ACPort, Subsystem, SubsystemTimeSeries
 from motulator.common.model._ac_port import derivative, jacobian
-from motulator.common.utils._utils import empty_array, wrap
+from motulator.common.utils._utils import empty_array
 from motulator.drive.utils._parameters import (
     BaseInductionMachinePars,
     BaseSynchronousMachinePars,
@@ -35,9 +35,9 @@ def _compute_ac_port(
     """
     Compute the AC port of a machine model in rotor coordinates, see `ACPort`.
 
-    The stator current in rotor coordinates is ``current(psi_s_dq, exp_j_theta_m)``,
-    the other states being constant, and `d_i_s_dq` is its rate of change due to the
-    other states.
+    The stator current in rotor coordinates is ``current(psi_s_dq, exp_j_theta_m)``, the
+    other states being constant, and `d_i_s_dq` is its rate of change due to the other
+    states.
 
     """
     exp_j_theta_m = exp(1j * theta_m)
@@ -63,7 +63,7 @@ def _compute_ac_port(
 
 # %%
 @dataclass
-class InductionMachineInputs:
+class MachineInputs:
     """Machine inputs."""
 
     u_s_ab: complex = 0j
@@ -74,10 +74,10 @@ class InductionMachineInputs:
 class InductionMachineOutputs:
     """Machine outputs."""
 
-    i_s_ab: complex
-    i_s_dq: complex
-    i_r_dq: complex
-    tau_M: float
+    i_s_ab: complex = 0j
+    i_s_dq: complex = 0j
+    i_r_dq: complex = 0j
+    tau_M: float = 0.0
 
 
 @dataclass
@@ -114,7 +114,7 @@ class InductionMachine(Subsystem):
     Parameters
     ----------
     par : BaseInductionMachinePars
-        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
+        Machine parameters.
 
     Notes
     -----
@@ -131,50 +131,38 @@ class InductionMachine(Subsystem):
 
     # The stator current depends directly on the voltage through the core losses
     feedthrough = frozenset({"u_s_ab"})
+    angles = frozenset({"theta_m"})
 
     def __init__(self, par: BaseInductionMachinePars) -> None:
         self.par = par
         self.cage = par.cage
-        self.inp: InductionMachineInputs = InductionMachineInputs()
+        self.inp: MachineInputs = MachineInputs()
         self.state: InductionMachineStates = InductionMachineStates(self.cage)
-        i_s_dq, i_r_dq, i_s_ab, tau_M = self._compute_outputs(
-            self.state, self.inp, 1 + 0j
-        )
-        self.out: InductionMachineOutputs = InductionMachineOutputs(
-            i_s_ab=i_s_ab, i_s_dq=i_s_dq, i_r_dq=i_r_dq, tau_M=tau_M
-        )
+        self.out: InductionMachineOutputs = InductionMachineOutputs()
+        self.set_outputs(0.0)
 
     def _compute_outputs(
-        self, state: Any, inp: Any, exp_j_theta_m: Any
+        self, psi_s_dq: Any, psi_r_dq: Any, u_s_ab: Any, exp_j_theta_m: Any
     ) -> tuple[Any, Any, Any, Any]:
-        """Compute output variables."""
+        """Compute the currents and the torque."""
         par = self.par
         # Currents into the magnetic model, i.e., the core-loss current excluded
-        i_s_dq, i_r_dq, tau_m = par.magnetic_map(
-            state.psi_s_dq, state.psi_r_dq, exp_j_theta_m
-        )
+        i_s_dq, i_r_dq, tau_m = par.magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m)
         if par.G_c:
             # In rotor coordinates, the rotational EMF does not affect the core-loss
             # branch
-            u_s_dq = inp.u_s_ab * exp_j_theta_m.conjugate()
+            u_s_dq = u_s_ab * exp_j_theta_m.conjugate()
             i_s_dq = (i_s_dq + par.G_c * u_s_dq) / (1 + par.G_c * par.R_s)
         i_s_ab = i_s_dq * exp_j_theta_m
         tau_M = par.n_p * tau_m
         return i_s_dq, i_r_dq, i_s_ab, tau_M
 
-    def set_states(self, state_list: list[complex], index: int) -> int:
-        """Set states, keeping the rotor angle within [-pi, pi)."""
-        # The angle is wrapped only in the state of the model, which the next
-        # integration interval starts from, so the solver sees no discontinuity
-        index = super().set_states(state_list, index)
-        self.state.theta_m = wrap(self.state.theta_m.real)
-        return index
-
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         out, state = self.out, self.state
+        exp_j_theta_m = exp(1j * state.theta_m.real)
         out.i_s_dq, out.i_r_dq, out.i_s_ab, out.tau_M = self._compute_outputs(
-            state, self.inp, exp(1j * state.theta_m.real)
+            state.psi_s_dq, state.psi_r_dq, self.inp.u_s_ab, exp_j_theta_m
         )
 
     def rhs(self, t: float) -> list[complex]:
@@ -215,7 +203,7 @@ class InductionMachine(Subsystem):
             d_i_s_dq,
         )
 
-    def create_time_series(self, t: np.ndarray) -> "InductionMachineTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return InductionMachineTimeSeries(t, self)
 
@@ -258,7 +246,7 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
     def set_outputs(self, t: np.ndarray, subsystem: InductionMachine) -> None:
         """Compute the outputs, which depend on the voltage due to core losses."""
         i_s_dq, i_r_dq, i_s_ab, tau_M = subsystem._compute_outputs(
-            self, self, self.exp_j_theta_m
+            self.psi_s_dq, self.psi_r_dq, self.u_s_ab, self.exp_j_theta_m
         )
         self.i_s_dq = np.asarray(i_s_dq)
         self.i_r_dq = np.asarray(i_r_dq)
@@ -274,20 +262,12 @@ class InductionMachineTimeSeries(SubsystemTimeSeries):
 
 # %%
 @dataclass
-class SynchronousMachineInputs:
-    """Machine inputs."""
-
-    u_s_ab: complex = 0j
-    w_M: float = 0.0  # Mechanical rotor speed (rad/s)
-
-
-@dataclass
 class SynchronousMachineOutputs:
     """Machine outputs."""
 
-    i_s_ab: complex
-    i_s_dq: complex
-    tau_M: float
+    i_s_ab: complex = 0j
+    i_s_dq: complex = 0j
+    tau_M: float = 0.0
 
 
 @dataclass
@@ -319,7 +299,7 @@ class SynchronousMachine(Subsystem):
     Parameters
     ----------
     par : BaseSynchronousMachinePars
-        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
+        Machine parameters.
 
     Notes
     -----
@@ -332,45 +312,36 @@ class SynchronousMachine(Subsystem):
 
     # The stator current depends directly on the voltage through the core losses
     feedthrough = frozenset({"u_s_ab"})
+    angles = frozenset({"theta_m"})
 
     def __init__(self, par: BaseSynchronousMachinePars) -> None:
         self.par = par
-        self.inp: SynchronousMachineInputs = SynchronousMachineInputs()
+        self.inp: MachineInputs = MachineInputs()
         self.state: SynchronousMachineStates = SynchronousMachineStates(par)
-        i_s_dq, i_s_ab, tau_M = self._compute_outputs(self.state, self.inp, 1 + 0j)
-        self.out: SynchronousMachineOutputs = SynchronousMachineOutputs(
-            i_s_ab=i_s_ab, i_s_dq=i_s_dq, tau_M=tau_M
-        )
+        self.out: SynchronousMachineOutputs = SynchronousMachineOutputs()
+        self.set_outputs(0.0)
 
     def _compute_outputs(
-        self, state: Any, inp: Any, exp_j_theta_m: Any
+        self, psi_s_dq: Any, u_s_ab: Any, exp_j_theta_m: Any
     ) -> tuple[Any, Any, Any]:
-        """Compute output variables."""
+        """Compute the current and the torque."""
         par = self.par
         # Current into the magnetic model, i.e., the core-loss current excluded
-        i_s_dq, tau_m = par.magnetic_map(state.psi_s_dq, exp_j_theta_m)
+        i_s_dq, tau_m = par.magnetic_map(psi_s_dq, exp_j_theta_m)
         if par.G_c:
             # In rotor coordinates, the rotational EMF does not affect the core-loss
             # branch
-            u_s_dq = inp.u_s_ab * exp_j_theta_m.conjugate()
+            u_s_dq = u_s_ab * exp_j_theta_m.conjugate()
             i_s_dq = (i_s_dq + par.G_c * u_s_dq) / (1 + par.G_c * par.R_s)
         i_s_ab = i_s_dq * exp_j_theta_m
         tau_M = par.n_p * tau_m
         return i_s_dq, i_s_ab, tau_M
 
-    def set_states(self, state_list: list[complex], index: int) -> int:
-        """Set states, keeping the rotor angle within [-pi, pi)."""
-        # The angle is wrapped only in the state of the model, which the next
-        # integration interval starts from, so the solver sees no discontinuity
-        index = super().set_states(state_list, index)
-        self.state.theta_m = wrap(self.state.theta_m.real)
-        return index
-
     def set_outputs(self, t: float) -> None:
         """Set output variables."""
         out, state = self.out, self.state
         out.i_s_dq, out.i_s_ab, out.tau_M = self._compute_outputs(
-            state, self.inp, exp(1j * state.theta_m.real)
+            state.psi_s_dq, self.inp.u_s_ab, exp(1j * state.theta_m.real)
         )
 
     def rhs(self, t: float) -> list[complex]:
@@ -396,7 +367,7 @@ class SynchronousMachine(Subsystem):
             par.R_s,
         )
 
-    def create_time_series(self, t: np.ndarray) -> "SynchronousMachineTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return SynchronousMachineTimeSeries(t, self)
 
@@ -433,7 +404,7 @@ class SynchronousMachineTimeSeries(SubsystemTimeSeries):
     def set_outputs(self, t: np.ndarray, subsystem: SynchronousMachine) -> None:
         """Compute the outputs, which depend on the voltage due to core losses."""
         i_s_dq, i_s_ab, tau_M = subsystem._compute_outputs(
-            self, self, self.exp_j_theta_m
+            self.psi_s_dq, self.u_s_ab, self.exp_j_theta_m
         )
         self.i_s_dq = np.asarray(i_s_dq)
         self.i_s_ab = np.asarray(i_s_ab)

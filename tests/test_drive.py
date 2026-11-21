@@ -14,6 +14,7 @@ from typing import Any
 
 import numpy as np
 import pytest
+from helpers import im_par, ipmsm_par
 
 import motulator.drive.control.im as im_control
 import motulator.drive.control.sm as sm_control
@@ -24,20 +25,6 @@ from motulator.drive.utils import ControlLoci, MagneticModel
 
 T_STOP = 0.6
 T_LOAD = 0.3
-
-
-def ipmsm_par(G_c: float = 0.0) -> model.SynchronousMachinePars:
-    """Parameters of the 2.2-kW IPMSM."""
-    return model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545, G_c=G_c
-    )
-
-
-def im_par(G_c: float = 0.0) -> model.InductionMachineInvGammaPars:
-    """Inverse-Γ parameters of the 2.2-kW induction machine."""
-    return model.InductionMachineInvGammaPars(
-        n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224, G_c=G_c
-    )
 
 
 def ipmsm_drive(
@@ -298,8 +285,8 @@ def test_core_losses(machine: str) -> None:
     mdl.mechanics.set_external_load_torque(lambda t: (t > 0.15) * 7.0)
     res = model.Simulation(mdl, ctrl, show_progress=False).simulate(t_stop=0.2)
 
-    # Stator voltage equation in stationary coordinates, integrated with the
-    # trapezoidal rule. Without the core-loss current, the error would be about 0.01 Vs.
+    # Stator voltage equation in stationary coordinates, integrated with the trapezoidal
+    # rule. Without the core-loss current, the error would be about 0.01 Vs.
     ts = res.mdl
     e = ts.machine.u_s_ab - mdl.machine.par.R_s * ts.machine.i_s_ab
     psi_s_ab = ts.machine.psi_s_ab[0] + np.cumsum(
@@ -442,10 +429,9 @@ def test_scalar_mechanics_functions(two_mass: bool) -> None:
 def test_rotor_angle_with_long_solver_steps() -> None:
     """The rotor angles are exact also when a solver step spans a large angle."""
     par = ipmsm_par()
-    machine, mechanics = model.SynchronousMachine(par), model.ExternalRotorSpeed()
-    mdl = model.Drive(machine, mechanics, model.VoltageSourceConverter(u_dc=540))
     w_M = 300.0  # Electrical angle of 0.9 rad per sampling period
-    mechanics.set_external_rotor_speed(w_M)
+    machine, mechanics = model.SynchronousMachine(par), model.ExternalRotorSpeed(w_M)
+    mdl = model.Drive(machine, mechanics, model.VoltageSourceConverter(u_dc=540))
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, T_s=1e-3, discrete=True)
     ctrl = sm_control.VectorControlSystem(sm_control.CurrentVectorController(par, cfg))
     ctrl.set_torque_ref(3.0)
@@ -496,13 +482,12 @@ def test_discrete_current_control(w: float) -> None:
 
 def test_discrete_current_control_angle_estimate() -> None:
     """The discrete-time design does not disturb the rotor angle estimate."""
+    w_M = 300.0
     mdl = model.Drive(
         model.SynchronousMachine(ipmsm_par()),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(w_M),
         model.VoltageSourceConverter(u_dc=540),
     )
-    w_M = 300.0
-    mdl.mechanics.set_external_rotor_speed(w_M)
     par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=6.5, discrete=True)
     vector_ctrl = sm_control.CurrentVectorController(par, cfg)
@@ -523,10 +508,9 @@ def test_discrete_current_control_dead_time() -> None:
     T_s, t_d, u_th, w_M = 200e-6, 4e-6, 1.5, 75.0
     mdl = model.Drive(
         model.InductionMachine(im_par()),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(w_M),
         model.VoltageSourceConverter(540, model.CarrierComparison(t_d=t_d), u_th=u_th),
     )
-    mdl.mechanics.set_external_rotor_speed(w_M)
     cfg = im_control.CurrentVectorControllerCfg(
         psi_s_nom=1.04, i_s_max=10.6, T_s=T_s, discrete=True
     )
@@ -542,7 +526,8 @@ def test_discrete_current_control_dead_time() -> None:
     assert abs(err) == pytest.approx(0, abs=0.05)  # Below 1 % of the nominal current
     # The angle of the voltage reference of the discrete-time design is not advanced,
     # also with a PWM given by the user
-    assert res.ctrl.ref.u_s_lim[end] == pytest.approx(res.ctrl.ref.u_s[end])
+    u_s_ab_ref = np.exp(1j * res.ctrl.fbk.theta_c[-1]) * res.ctrl.ref.u_s[-1]
+    assert ctrl.pwm.limited_voltage == pytest.approx(u_s_ab_ref)
 
 
 @pytest.mark.parametrize("psi_f", [0.0, 0.05, 0.5])
@@ -622,10 +607,9 @@ def test_im_flux_observer_at_low_sampling_rate() -> None:
     par = im_par()
     mdl = model.Drive(
         model.InductionMachine(par),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(lambda t: w_M),
         model.VoltageSourceConverter(u_dc=540),
     )
-    mdl.mechanics.set_external_rotor_speed(lambda t: w_M)
     cfg = im_control.FluxVectorControllerCfg(psi_s_nom=1.04, i_s_max=10.6, T_s=1e-3)
     vector_ctrl = im_control.FluxVectorController(im_par(), cfg)
     vector_ctrl.observer.w_M = w_M
@@ -787,6 +771,26 @@ def test_reference_of_other_mode_is_rejected() -> None:
         sim = model.Simulation(ipmsm_drive(pwm=False), system, show_progress=False)
         with pytest.raises(ValueError, match="reference must be set"):
             sim.simulate(t_stop=0.001)
+
+
+def test_online_reference_after_deep_field_weakening() -> None:
+    """After deep field weakening, the online torque limit follows the lookup table."""
+    args = (ipmsm_par(), 6.5, None, inf, 0.9, 0.85, 2 * pi * 100)
+    ref_gen = sm_control.ReferenceGeneratorOnline(*args)
+    T_s, u_dc = 250e-6, 540.0
+    # The voltage limit leaves no torque at the current limit
+    for _ in range(100):
+        ref_gen.compute_flux_and_torque_refs(14.0, 2000.0, u_dc)
+        ref_gen.update(T_s)
+    assert ref_gen.tau_M_ref == pytest.approx(0, abs=1e-6)
+    tau_M = []
+    for _ in range(400):
+        tau_M.append(ref_gen.compute_flux_and_torque_refs(14.0, 890.0, u_dc)[1])
+        ref_gen.update(T_s)
+    lut = sm_control.ReferenceGenerator(*args)
+    tau_M_lut = lut.compute_flux_and_torque_refs(14.0, 890.0, u_dc)[1]
+    assert max(tau_M) < 2 * tau_M_lut
+    assert tau_M[-1] == pytest.approx(tau_M_lut, rel=0.1)
 
 
 def test_zero_field_weakening_gain() -> None:

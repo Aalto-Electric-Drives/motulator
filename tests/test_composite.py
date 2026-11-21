@@ -11,7 +11,7 @@ from math import pi
 
 import numpy as np
 import pytest
-from scipy.integrate import trapezoid
+from helpers import ipmsm_par, time_average
 
 import motulator.drive.control.sm as sm_control
 from motulator.common.model import CompositeModel, DCBus, Simulation, ThreePhaseSource
@@ -26,19 +26,11 @@ T_S_GRID, T_S_DRIVE, T_START_DRIVE = 100e-6, 125e-6, 40e-6
 T_STOP = 0.4
 
 
-def time_average(x: np.ndarray, t: np.ndarray, t_start: float) -> float:
-    """Average over the unevenly spaced samples after `t_start`."""
-    end = t > t_start
-    return float(trapezoid(x[end], t[end]) / (t[end][-1] - t[end][0]))
-
-
 def ipmsm_drive(
     converter: drive_model.VoltageSourceConverter, dc_bus: DCBus | None
 ) -> drive_model.Drive:
     """2.2-kW IPMSM drive."""
-    par = drive_model.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     return drive_model.Drive(
         drive_model.SynchronousMachine(par),
         drive_model.MechanicalSystem(J=0.015),
@@ -93,9 +85,7 @@ def ipmsm_cvc(
     T_s: float, t_change: float | None = None
 ) -> sm_control.VectorControlSystem:
     """Sensorless current-vector control of the IPMSM."""
-    par = sm_control.SynchronousMachinePars(
-        n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.545
-    )
+    par = ipmsm_par()
     cfg = sm_control.CurrentVectorControllerCfg(i_s_max=9.0, T_s=T_s)
     vector_ctrl = sm_control.CurrentVectorController(par, cfg)
     if t_change is not None:
@@ -189,8 +179,8 @@ def test_active_front_end_drive() -> None:
     res = sim.simulate(t_stop=T_STOP)
     assert res.success
 
-    # The control systems run at their own sampling instants, which are all included
-    # in the model time series
+    # The control systems run at their own sampling instants, which are all included in
+    # the model time series
     t_g, t_m = res.ctrl.grid.t, res.ctrl.drive.t
     assert np.allclose(np.diff(t_g), T_S_GRID) and t_g[0] == 0
     assert np.allclose(np.diff(t_m), T_S_DRIVE) and t_m[0] == 0
@@ -216,8 +206,8 @@ def test_simulation_continues_between_calls() -> None:
     """Two consecutive runs give the same result as a single run."""
 
     def simulate(t_stops: list[float]) -> np.ndarray:
-        # PWM with dead time on both sides, whose blanking state continues across
-        # the sampling periods
+        # PWM with dead time on both sides, whose blanking state continues across the
+        # sampling periods
         afe = grid_model.VoltageSourceConverter(
             U_DC, grid_model.CarrierComparison(t_d=2e-6)
         )

@@ -1,6 +1,6 @@
 # Current Control
 
-Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control is commonly used in three-phase AC machine drives {cite}`Har1998,Bri1999,Awa2019a`. This control structure allows compensating for the cross-coupling originating from rotating coordinates as well as to improve disturbance rejection.
+Synchronous-frame two-degrees-of-freedom (2DOF) proportional-integral (PI) current control is commonly used in three-phase AC machine drives {cite}`Har1998,Bri1999,Awa2019a`. This control structure allows compensating for the cross-coupling originating from rotating coordinates as well as improving disturbance rejection.
 
 [Figure 1](fig:current_vector_ctrl) shows current-vector control, implemented in the {class}`motulator.drive.control.im.CurrentVectorController` and {class}`motulator.drive.control.sm.CurrentVectorController` classes. The reference generation, see {doc}`/control/drive/reference_gen`, computes the current reference from the torque reference. The observer, see {doc}`/control/drive/observers`, provides the feedback signals for the current controller.
 
@@ -12,7 +12,7 @@ width: 100%
 align: center
 alt: Current-vector control
 ---
-*Figure 1:* Current-vector control. The observer transforms the measured current $\iss$ into the controller coordinates and estimates their angle $\thetac$ and angular speed $\omegac$. For synchronous machines, estimated rotor coordinates are used, $\thetac = \hatthetam$, while for induction machines the coordinates rotate at the estimated stator angular frequency, $\omegac = \hatomegas$. For induction machines, the reference generation uses the rotor flux magnitude estimate $\hatabspsiR$ and the unlimited voltage reference $\usref$ instead of $\hatomegam$. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+*Figure 1:* Current-vector control. The observer transforms the measured current $\iss$ into the controller coordinates and estimates their angle $\thetac$ and angular speed $\omegac$. For synchronous machines, estimated rotor coordinates are used, $\thetac = \hatthetam$, while for induction machines the coordinates rotate at the estimated stator angular frequency, $\omegac = \hatomegas$. For induction machines, the reference generation uses the rotor flux magnitude estimate $\hatabspsiR$ and the unlimited voltage reference $\usref$ instead of $\hatomegam$. The PWM realizes the limited voltage reference $\ussreflim$ in stationary coordinates, which the observer gets with the computational delay of one sampling period.
 ```
 
 ```{figure} ../figs/current_vector_ctrl.svg
@@ -22,7 +22,7 @@ width: 100%
 align: center
 alt: Current-vector control
 ---
-*Figure 1:* Current-vector control. The observer transforms the measured current $\iss$ into the controller coordinates and estimates their angle $\thetac$ and angular speed $\omegac$. For synchronous machines, estimated rotor coordinates are used, $\thetac = \hatthetam$, while for induction machines the coordinates rotate at the estimated stator angular frequency, $\omegac = \hatomegas$. For induction machines, the reference generation uses the rotor flux magnitude estimate $\hatabspsiR$ and the unlimited voltage reference $\usref$ instead of $\hatomegam$. The observer uses the realized voltage $\usreflim$ (in stationary coordinates) obtained from the PWM, taking into account the voltage limitation and the computational delay.
+*Figure 1:* Current-vector control. The observer transforms the measured current $\iss$ into the controller coordinates and estimates their angle $\thetac$ and angular speed $\omegac$. For synchronous machines, estimated rotor coordinates are used, $\thetac = \hatthetam$, while for induction machines the coordinates rotate at the estimated stator angular frequency, $\omegac = \hatomegas$. For induction machines, the reference generation uses the rotor flux magnitude estimate $\hatabspsiR$ and the unlimited voltage reference $\usref$ instead of $\hatomegam$. The PWM realizes the limited voltage reference $\ussreflim$ in stationary coordinates, which the observer gets with the computational delay of one sampling period.
 ```
 
 The 2DOF PI current controllers of machine drives are based on the {class}`motulator.common.control.ComplexPIController` class, which the {class}`motulator.drive.control.im.CurrentVectorController` class uses for induction machines and the {class}`motulator.drive.control.sm.CurrentVectorController` class for synchronous machines. In the following, current control of induction machines is first considered in detail. Then, the same principles are applied to synchronous machines.
@@ -40,11 +40,11 @@ label: im_current
     \Lsgm \frac{\D \is}{\D t} = \us - (\Rsgm + \jj \omegac\Lsgm)\is - \es
 ```
 
-where $\Rsgm = \Rs + \RR$ is the total resistance. The back-emf $\es$ is considered as a quasi-constant load disturbance. Here, the machine model is considered in the control system coordinates rotating at $\omegac = \hatomegas$.
+where $\Rsgm = \Rs + \RR$ is the total resistance. The back-EMF $\es$ is considered as a quasi-constant load disturbance. Here, the machine model is considered in the control system coordinates rotating at $\omegac = \hatomegas$.
 
 ### 2DOF PI Controller
 
-The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design {cite}`Har1998` and the complex-vector design {cite}`Bri1999`. Here, only the complex-vector design is considered, see {ref}`complex-vector-2dof-pi-controller`, which is compatible with the {class}`motulator.common.control.ComplexPIController` base class. The controller can be expressed in a state-space form as
+The design of synchronous-frame 2DOF PI current control is considered in the continuous-time domain, even though the actual implementation is discrete. Two typical gain selections for this control type are known as the internal-model-control (IMC) design {cite}`Har1998` and the complex-vector design {cite}`Bri1999`. Here, only the complex-vector design is considered, see {ref}`complex-vector-2dof-pi-controller`, which is implemented in the {class}`motulator.common.control.ComplexPIController` class. The controller can be expressed in a state-space form as
 
 ```{math}
 ---
@@ -65,7 +65,7 @@ label: limited_voltage
     \usreflim = \mathrm{sat}(\usref)
 ```
 
-where $\mathrm{sat}(\cdot)$ is the saturation function, containing digital delay compensation {cite}`Bae2003`. The {class}`motulator.common.control.ComplexPIController` base class implements the anti-windup of the integrator based on the realized voltage.
+where $\mathrm{sat}(\cdot)$ is the voltage limitation of the PWM. The angle advance compensating for the delays {cite}`Bae2003` is applied in the modulation, see {class}`motulator.common.control.ConverterControlSystem`, so $\usreflim$ is in the controller coordinates like $\usref$. The {class}`motulator.common.control.ComplexPIController` class implements the anti-windup of the integrator based on the realized voltage.
 
 ### Closed-Loop System Analysis
 
@@ -109,7 +109,7 @@ label: complex_vector_gains
     \kT = \alphac \hatLsgm
 ```
 
-where $\alphac$ is the closed-loop reference-tracking bandwidth and $\alphai$ is the integral action bandwidth. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Yc` and {eq}`Gc` reduce to
+where $\alphac$ is the closed-loop reference-tracking bandwidth and $\alphai$ is the integral-action bandwidth. Assuming accurate parameter estimates, the closed-loop transfer functions {eq}`Yc` and {eq}`Gc` reduce to
 
 ```{math}
 ---
@@ -135,11 +135,11 @@ label: sm_model
     \psis &= \psisfcn(\is)
 ```
 
-where $\psisfcn(\is)$ is the flux linkage map (see {ref}`synchronous_machine`). If the magnetic saturation is omitted, the flux linkage map is $\psis = \psif + \Ld\id + \jj\Lq\iq$.
+where $\psisfcn(\is)$ is the flux map (see {ref}`synchronous_machine`). If the magnetic saturation is omitted, the flux map is $\psis = \psif + \Ld\id + \jj\Lq\iq$.
 
 ### 2DOF PI Controller
 
-The 2DOF PI controller for synchronous machines is implemented in the {class}`motulator.drive.control.sm.CurrentVectorController` class. An internal change of the state variable from the stator current to the stator flux linkage is used {cite}`Awa2019a`. This choice of using the flux linkage as the internal controller state has several advantages: the gain expressions become simpler; the same control structure can be used for salient and non-salient machines; and the magnetic saturation is easy to take into account.
+The 2DOF PI controller for synchronous machines is implemented in the {class}`motulator.drive.control.sm.CurrentVectorController` class. An internal change of the state variable from the stator current to the stator flux linkage is used {cite}`Awa2019a`. This choice of using the flux linkage as the internal controller state has several advantages: the gain expressions become simpler, the same control structure can be used for salient and non-salient machines, and the magnetic saturation is easy to take into account.
 
 For simplicity, assume perfect alignment of the controller coordinate system with the rotor coordinate system (corresponding to sensored drives). The controller can be expressed in a state-space form as
 
@@ -151,7 +151,7 @@ label: sm_cc
     \usref &= \kT\hatpsisfcn(\isref) - \kP\hatpsisfcn(\is) + \uI
 ```
 
-where both reference and actual currents are transformed using the same flux linkage map $\hatpsisfcn$. Hence, $\isref = \is$ holds in the steady state even with flux map inaccuracies. If the magnetic saturation is omitted, this flux-linkage-based current controller becomes equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate).
+where both reference and actual currents are transformed using the same flux map $\hatpsisfcn$. Hence, $\isref = \is$ holds in the steady state even with flux map inaccuracies. If the magnetic saturation is omitted, this flux-linkage-based current controller becomes equivalent to a regular 2DOF PI current controller (even if inductance estimates are inaccurate).
 
 ```{note}
 The control law {eq}`sm_cc` omits the effect of the stator resistance for simplicity, i.e., $\hatRs = 0$ is assumed. This is a common and practical assumption. However, if needed, the resistive voltage drop term $\hatRs\is$ could be simply added to $\usref$ in {eq}`sm_cc`.
@@ -170,7 +170,7 @@ label: sm_gains
     \kT = \alphac
 ```
 
-Using {eq}`sm_model`--{eq}`sm_gains`, the closed-loop in the Laplace domain become
+Using {eq}`sm_model`--{eq}`sm_gains`, the closed-loop system in the Laplace domain becomes
 
 ```{math}
 ---
@@ -227,6 +227,6 @@ label: sm_discrete_closed_loop
     \Delta\psis(k) = \frac{1 - \beta}{z(z - \beta)}\Delta\psisref(k)
 ```
 
-where $z$ is the forward-shift operator. A constant rotor speed, an accurate flux linkage map, and no voltage limitation are assumed.
+where $z$ is the forward-shift operator. A constant rotor speed, an accurate flux map, and no voltage limitation are assumed.
 
-This design is implemented in the {class}`motulator.common.control.DiscreteComplexController` class, which the {class}`motulator.drive.control.sm.CurrentVectorController` class uses with the flux linkage map. It is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the design includes the delays, the control system does not advance the angle of the voltage reference: the controller sets $k_\mathrm{comp} = 0$. The same design is used for induction machines in the {class}`motulator.drive.control.im.CurrentVectorController` class, where the leakage flux linkage $\hatLsgm\is$, with $\hatLsgm$ evaluated at the operating point, replaces the flux linkage map. See the examples {doc}`/drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete` and {doc}`/drive_examples/current_vector/plot_2kw_im_cvc_discrete`.
+This design is implemented in the {class}`motulator.common.control.DiscreteComplexController` class, which the {class}`motulator.drive.control.sm.CurrentVectorController` class uses with the flux map. It is selected by `discrete=True` in {class}`motulator.drive.control.sm.CurrentVectorControllerCfg`. Since the design includes the delays, the control system does not advance the angle of the voltage reference: the controller sets $k_\mathrm{comp} = 0$. The same design is used for induction machines in the {class}`motulator.drive.control.im.CurrentVectorController` class, where the leakage flux linkage $\hatLsgm\is$, with $\hatLsgm$ evaluated at the operating point, replaces the flux map. See the examples {doc}`/drive_examples/current_vector/plot_6kw_pmsyrm_sat_cvc_discrete` and {doc}`/drive_examples/current_vector/plot_2kw_im_cvc_discrete`.

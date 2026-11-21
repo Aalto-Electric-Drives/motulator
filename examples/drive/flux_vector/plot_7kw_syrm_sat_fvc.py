@@ -58,15 +58,15 @@ speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%
-# Plot control characteristics.
+# Plot the control loci.
 
 # sphinx_gallery_thumbnail_number = 1
 i_s_vals = [1, 1.5, 2]  # Current values for the plots
-mc = utils.MachineCharacteristics(est_par)
-mc.plot_flux_vs_torque(i_s_vals, base)
-mc.plot_current_vs_torque(i_s_vals, base)
-mc.plot_current_loci(i_s_vals, base)
-mc.plot_flux_loci(i_s_vals, base)
+mc = utils.MachineCharacteristics(est_par, i_s_vals, base)
+mc.plot_flux_vs_torque()
+mc.plot_current_vs_torque()
+mc.plot_current_loci()
+mc.plot_flux_loci()
 
 # %%
 # Set the speed reference and the external load torque.

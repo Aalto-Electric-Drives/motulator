@@ -4,7 +4,7 @@ from bisect import bisect_right
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Literal
+from typing import ClassVar, Literal
 
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator, griddata
@@ -27,7 +27,8 @@ def _interp_bilinear(
     j = min(max(bisect_right(q_grid, y) - 1, 0), len(q_grid) - 2)
     t_d = (x - d_grid[i]) / (d_grid[i + 1] - d_grid[i])
     t_q = (y - q_grid[j]) / (q_grid[j + 1] - q_grid[j])
-    (v00, v01), (v10, v11) = values[i : i + 2, j : j + 2].tolist()
+    v00, v01 = values[i, j].item(), values[i, j + 1].item()
+    v10, v11 = values[i + 1, j].item(), values[i + 1, j + 1].item()
     v0 = v00 + t_q * (v01 - v00)
     v1 = v10 + t_q * (v11 - v10)
     return complex(v0 + t_d * (v1 - v0))
@@ -54,28 +55,15 @@ class _GridInterpolator:
         )
         self.values = values
         # Faster interpolation of single points on a strictly ascending grid
-        self.d_grid = np.asarray(d_range).tolist()
-        self.q_grid = np.asarray(q_range).tolist()
+        self.d_grid = [float(v) for v in np.asarray(d_range)]
+        self.q_grid = [float(v) for v in np.asarray(q_range)]
         self.fast = all(
             len(g) > 1 and np.all(np.diff(g) > 0) for g in (self.d_grid, self.q_grid)
         )
 
     def __call__(self, dq_input: complex | np.ndarray) -> complex | np.ndarray:
-        """
-        Interpolate at the input point(s).
-
-        Parameters
-        ----------
-        dq_input : complex | np.ndarray
-            Input values in complex form (d + j*q).
-
-        Returns
-        -------
-        complex | np.ndarray
-            Output value(s) corresponding to the input(s).
-
-        """
-        if np.isscalar(dq_input) or isinstance(dq_input, complex):
+        """Interpolate at the input point(s) given in complex form (d + j*q)."""
+        if np.isscalar(dq_input):
             # Handle scalar complex input
             x, y = dq_input.real, dq_input.imag  # type: ignore
             if self.fast:
@@ -92,7 +80,7 @@ class MagneticModel:
     """
     Store and manipulate flux linkage or current maps for synchronous machines.
 
-    Attributes
+    Parameters
     ----------
     i_s_dq : np.ndarray
         Complex array of stator current (A).
@@ -143,20 +131,6 @@ class MagneticModel:
             raise ValueError("Lookup table function is missing")
         return self.lookup_fcn(input_dq)
 
-    def is_flux_map(self) -> bool:
-        """Return True if this is a flux map (i_s → psi_s)."""
-        return self.type != "current_map"
-
-    def is_current_map(self) -> bool:
-        """Return True if this is a current map (psi_s → i_s)."""
-        return self.type == "current_map"
-
-    def _get_input_output(self) -> tuple[np.ndarray, np.ndarray]:
-        """Get input and output arrays based on map type."""
-        if self.is_flux_map():
-            return self.i_s_dq, self.psi_s_dq
-        return self.psi_s_dq, self.i_s_dq
-
     def create_interpolated_model(
         self,
         d_range: np.ndarray | None = None,
@@ -170,12 +144,12 @@ class MagneticModel:
         Parameters
         ----------
         d_range : np.ndarray | None, optional
-            Range for the d-axis. If None, the range is determined from the data,
+            Range for the d axis. If None, the range is determined from the data,
             defaults to None.
         q_range : np.ndarray | None, optional
-            Range for the q-axis. If None, the range is determined from the data,
+            Range for the q axis. If None, the range is determined from the data,
             defaults to None.
-        num : int, optional
+        num : int | None, optional
             Number of points in each axis. If None, uses the maximum dimension from the
             original map to preserve resolution, defaults to None.
         invert : bool, optional
@@ -187,13 +161,10 @@ class MagneticModel:
             Interpolated magnetic model.
 
         """
-
-        def create_grid(d_range: np.ndarray, q_range: np.ndarray) -> np.ndarray:
-            d_grid, q_grid = np.meshgrid(d_range, q_range, indexing="ij")
-            return d_grid + 1j * q_grid
-
-        # Get input/output arrays based on map type
-        inp, out = self._get_input_output()
+        if self.type == "flux_map":
+            inp, out = self.i_s_dq, self.psi_s_dq
+        else:
+            inp, out = self.psi_s_dq, self.i_s_dq
         new_type = self.type
 
         # Set default num value based on input data if not provided
@@ -202,7 +173,7 @@ class MagneticModel:
 
         if invert:
             inp, out = out, inp
-            new_type = "current_map" if self.is_flux_map() else "flux_map"
+            new_type = "current_map" if self.type == "flux_map" else "flux_map"
 
         # Auto-determine ranges if not provided
         if inp.ndim == 2:
@@ -216,13 +187,12 @@ class MagneticModel:
             q_min = np.min(np.imag(inp))
             q_max = np.max(np.imag(inp))
 
-        if d_range is None:
-            d_range = np.linspace(d_min, d_max, num)
-        if q_range is None:
-            q_range = np.linspace(q_min, q_max, num)
+        d_range = np.linspace(d_min, d_max, num) if d_range is None else d_range
+        q_range = np.linspace(q_min, q_max, num) if q_range is None else q_range
 
         # Interpolate the map
-        new_inp = create_grid(d_range, q_range)  # type: ignore
+        d_grid, q_grid = np.meshgrid(d_range, q_range, indexing="ij")
+        new_inp = d_grid + 1j * q_grid
         points = (np.real(inp).ravel(), np.imag(inp).ravel())
         new_out = griddata(points, out.ravel(), (np.real(new_inp), np.imag(new_inp)))
 
@@ -233,7 +203,7 @@ class MagneticModel:
                 points, self.tau_M.ravel(), (np.real(new_inp), np.imag(new_inp))
             )
 
-        lookup_fcn = _GridInterpolator(d_range, q_range, new_out)  # type: ignore
+        lookup_fcn = _GridInterpolator(d_range, q_range, new_out)
 
         # Arrange data based on map type
         if new_type == "flux_map":
@@ -261,20 +231,21 @@ class MagneticModel:
         Parameters
         ----------
         d_range : np.ndarray | None, optional
-            Range for the d-axis. If None, the range is determined from the data,
+            Range for the d axis. If None, the range is determined from the data,
             defaults to None.
         q_range : np.ndarray | None, optional
-            Range for the q-axis. If None, the range is determined from the data,
+            Range for the q axis. If None, the range is determined from the data,
             defaults to None.
-        num : int, optional
+        num : int | None, optional
             Number of points in each axis. If None, uses the maximum dimension from the
             original map to preserve resolution, defaults to None.
 
-        """
-        if num is None:
-            # Extract size from the shape of the original arrays
-            num = max(self.i_s_dq.shape)
+        Returns
+        -------
+        MagneticModel
+            Inverted magnetic model on a regular grid.
 
+        """
         return self.create_interpolated_model(d_range, q_range, num, invert=True)
 
 
@@ -283,49 +254,25 @@ class SaturationModelBase:
     """
     Base class for saturation models given as functions.
 
-    This class implements a callable interface, matching the interface of
-    MagneticModel.lookup_fcn. It can be used directly as a lookup function for a
-    MagneticModel, and `as_magnetic_model()` samples it on a grid.
+    A subclass implements `__call__`, which evaluates the map: the current as a function
+    of the flux linkage for a current map, or the flux linkage as a function of the
+    current for a flux map, as declared by `map_type`. The model can be used directly as
+    the lookup function of a `MagneticModel`, and `as_magnetic_model` samples it on a
+    grid.
 
     """
 
-    def __init__(
-        self,
-        map_fcn: Callable[[complex | np.ndarray], complex | np.ndarray] | None = None,
-        map_type: Literal["current_map", "flux_map"] = "current_map",
-    ) -> None:
-        """Initialize the saturation model wrapper.
+    map_type: ClassVar[Literal["current_map", "flux_map"]] = "current_map"
 
-        Parameters
-        ----------
-        map_fcn : Callable, optional
-            Callable implementing either a current map (psi_s -> i_s) or a flux map (i_s
-            -> psi_s). If not provided, subclasses are expected to override `__call__`.
-        map_type : {"current_map", "flux_map"}, optional
-            Declares what the model represents, defaults to "current_map".
-
-        """
-        self._map_fcn = map_fcn
-        self._type: Literal["current_map", "flux_map"] = map_type
-
-    def __call__(self, input_dq: complex | np.ndarray) -> complex | np.ndarray:
-        """Evaluate the underlying map.
-
-        For a current map, the input is flux linkage and the output is current. For a
-        flux map, the input is current and the output is flux linkage.
-
-        """
-        if self._map_fcn is None:
-            raise NotImplementedError(
-                "Provide map_fcn or override __call__ in subclass."
-            )
-        return self._map_fcn(input_dq)
+    def __call__(self, x_dq: complex | np.ndarray) -> complex | np.ndarray:
+        """Evaluate the map."""
+        raise NotImplementedError
 
     def as_magnetic_model(
         self, d_range: np.ndarray, q_range: np.ndarray, n_p: int | None = None
     ) -> MagneticModel:
         """
-        Create a magnetic model that uses this analytical model.
+        Sample the map on a grid as a magnetic model.
 
         Parameters
         ----------
@@ -344,31 +291,22 @@ class SaturationModelBase:
             Magnetic model using this object as its `lookup_fcn`.
 
         """
-        # Create grid of inputs and evaluate the map
         d_grid, q_grid = np.meshgrid(d_range, q_range, indexing="ij")
         inp_dq = d_grid + 1j * q_grid
-
-        if self._type == "current_map":
-            psi_s_dq = inp_dq
-            i_s_dq = np.asarray(self(psi_s_dq), dtype=complex)
-            model_type: Literal["current_map", "flux_map"] = "current_map"
+        out_dq = np.asarray(self(inp_dq), dtype=complex)
+        if self.map_type == "flux_map":
+            i_s_dq, psi_s_dq = inp_dq, out_dq
         else:
-            i_s_dq = inp_dq
-            psi_s_dq = np.asarray(self(i_s_dq), dtype=complex)
-            model_type = "flux_map"
-
-        # Calculate torque if needed
+            i_s_dq, psi_s_dq = out_dq, inp_dq
         tau_M = None
         if n_p is not None:
             tau_M = 1.5 * n_p * np.imag(i_s_dq * np.conj(psi_s_dq))
-
-        # Magnetic model with this model as the lookup function
         return MagneticModel(
             i_s_dq=i_s_dq,
             psi_s_dq=psi_s_dq,
-            lookup_fcn=self,  # Use the model's __call__ directly
+            lookup_fcn=self,
             tau_M=tau_M,
-            type=model_type,
+            type=self.map_type,
         )
 
 
@@ -377,25 +315,25 @@ class SaturationModelSyRM(SaturationModelBase):
     """
     Saturation model for synchronous reluctance machines.
 
-    This model takes into account the self- and cross-saturation effects of the d- and
-    q-axis [#Hin2017]_.
+    This model takes into account the self- and cross-saturation effects of the d and q
+    axes [#Hin2017]_.
 
-    Attributes
+    Parameters
     ----------
     a_d0 : float
-        Offset coefficient for d-axis inverse inductance.
+        Offset coefficient for the d-axis inverse inductance.
     a_dd : float
-        Self-saturation coefficient for d-axis.
+        Self-saturation coefficient for the d axis.
     a_q0 : float
-        Offset coefficient for q-axis inverse inductance.
+        Offset coefficient for the q-axis inverse inductance.
     a_qq : float
-        Self-saturation coefficient for q-axis.
+        Self-saturation coefficient for the q axis.
     a_dq : float
         Cross-saturation coefficient.
     S : float
-        Exponent for d-axis self-saturation.
+        Exponent for the d-axis self-saturation.
     T : float
-        Exponent for q-axis self-saturation.
+        Exponent for the q-axis self-saturation.
     U : float
         First exponent for cross-saturation.
     V : float
@@ -418,9 +356,6 @@ class SaturationModelSyRM(SaturationModelBase):
     T: float
     U: float
     V: float
-
-    def __post_init__(self) -> None:
-        super().__init__(map_type="current_map")
 
     def __call__(self, psi_s_dq: complex | np.ndarray) -> complex | np.ndarray:
         """Calculate the stator current for SyRMs."""
@@ -454,14 +389,16 @@ class SaturationModelPMSyRM(SaturationModelSyRM):
     Saturation model for PM synchronous reluctance machines.
 
     This model takes into account the bridge saturation in addition to the self- and
-    cross-saturation effects of the d- and q-axis [#Lel2024]_. The bridge saturation
-    model is based on a nonlinear reluctance element in parallel with the Norton-
-    equivalent PM model.
+    cross-saturation effects of the d and q axes [#Lel2024]_. The bridge saturation
+    model is based on a nonlinear reluctance element in parallel with the
+    Norton-equivalent PM model. The other parameters are those of `SaturationModelSyRM`.
 
-    Attributes
+    Parameters
     ----------
     psi_n : float
-        PM flux linkage (Vs).
+        Flux linkage (Vs) of the Norton-equivalent PM model, i.e., the d-axis flux
+        linkage at which the bridge current ``G_b*(psi_d - psi_n)`` vanishes. It is
+        higher than the PM flux linkage at zero current.
     a_b : float
         Coefficient for bridge inverse inductance.
     a_bp : float
@@ -533,15 +470,11 @@ def import_syre_data(
     licensed under the Apache License, Version 2.0.
 
     """
-    # Read the data from mat-file
-    mat = loadmat(fname)
-
-    # Use the PMSM convention in coordinates.
-    i_d = -mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Iq"]
-    i_q = mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Id"]
-    psi_d = -mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Fq"]
-    psi_q = mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["Fd"]
-    tau_M = mat["motorModel"][0, 0]["FluxMap_dq"][0, 0]["T"]
+    flux_map = loadmat(fname)["motorModel"][0, 0]["FluxMap_dq"][0, 0]
+    # Use the PMSM convention in coordinates
+    i_d, i_q = -flux_map["Iq"], flux_map["Id"]
+    psi_d, psi_q = -flux_map["Fq"], flux_map["Fd"]
+    tau_M = flux_map["T"]
 
     # Clip the negative q-axis values
     i_q = np.clip(i_q, 0, np.inf)

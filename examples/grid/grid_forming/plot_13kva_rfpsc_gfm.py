@@ -42,7 +42,7 @@ ctrl = control.GridConverterControlSystem(inner_ctrl)
 # Converter output voltage magnitude reference
 ctrl.set_ac_voltage_ref(base.u)
 
-# Active power reference
+# Active-power reference
 ctrl.set_power_ref(
     lambda t: ((t > 0.2) / 3 + (t > 0.5) / 3 + (t > 0.8) / 3 - (t > 1.2)) * nom.P
 )

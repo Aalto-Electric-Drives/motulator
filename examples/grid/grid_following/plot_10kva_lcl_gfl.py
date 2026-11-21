@@ -38,20 +38,15 @@ ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 
 # %%
-# Set external references.
+# Set the active and reactive power references.
 
-# Set the active and reactive power references
 ctrl.set_power_ref(lambda t: (t > 0.02) * 5e3)
 ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
 # %%
-# Create the simulation object and simulate it.
+# Create the simulation object, simulate, and plot the results in per-unit values.
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=0.08)
-
-# %%
-# Plot the results.
-
 utils.plot_control_signals(res, base)
 utils.plot_grid_waveforms(res, base)

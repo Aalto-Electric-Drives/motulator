@@ -46,8 +46,9 @@ class Sensor(Subsystem):
     samples the measurement by `sample`, which converts the output to the measured
     channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset
     + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn
-    independently for each channel at each sample. The parameters are scalars or arrays
-    with one element per channel, in the units of the measured signal.
+    independently for each channel at each sample. The gain, offset, and standard
+    deviation are scalars or arrays with one element per channel. The offset and the
+    standard deviation are in the units of the measured signal.
 
     Parameters
     ----------
@@ -67,11 +68,11 @@ class Sensor(Subsystem):
         results, pass the same seeded generator to all sensors. Sensors with separate
         generators of the same seed would produce identical noise.
     convert : Callable[[Any], Any], optional
-        Function converting the output to the measured channels, e.g., `complex2abc`
-        for the phase currents of a space vector or `complex2line` for the line-to-line
-        voltages. Defaults to None, i.e., the output is measured as such. The sensors
-        of a model default to the conversion of their measurement, see `DriveSensors`
-        and `GridConverterSensors`.
+        Function converting the output to the measured channels, e.g., `complex2abc` for
+        the phase currents of a space vector or `complex2line` for the line-to-line
+        voltages. Defaults to None, i.e., the output is measured as such. The sensors of
+        a model default to the conversion of their measurement, see `DriveSensors` and
+        `GridConverterSensors`.
 
     Examples
     --------
@@ -105,7 +106,7 @@ class Sensor(Subsystem):
         self.convert = convert
         # Without dynamics, the output depends directly on the measured signal
         self.feedthrough = frozenset() if alpha < inf else frozenset({"x"})
-        self.inp: SensorInputs = SensorInputs()
+        self.inp: SensorInputs = SensorInputs(y0)
         self.state: SensorStates | None = (
             SensorStates(complex(y0)) if alpha < inf else None
         )
@@ -136,7 +137,7 @@ class Sensor(Subsystem):
             y = y + np.multiply(self.std, self.rng.standard_normal(np.shape(y)))
         return y
 
-    def create_time_series(self, t: np.ndarray) -> "SensorTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return SensorTimeSeries(t, self)
 

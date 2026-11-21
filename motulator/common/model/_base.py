@@ -1,7 +1,6 @@
 """Base classes for models."""
 
-from collections.abc import Callable, Sequence
-from dataclasses import InitVar, dataclass, field
+from collections.abc import Sequence
 from math import inf
 from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
 
@@ -10,6 +9,7 @@ from scipy.integrate._ivp.ivp import OdeResult
 
 from motulator.common.model._ac_port import ACPort, DCPort
 from motulator.common.model._pwm import GateStates, SwitchingTimes
+from motulator.common.utils._utils import wrap
 
 if TYPE_CHECKING:
     from motulator.common.model._converter import DCBus
@@ -30,11 +30,13 @@ class Subsystem(Protocol):
     state history and creating the time-series representation of the subsystem, which
     the model names in the results (see `ModelTimeSeries`). A subsystem whose outputs
     depend directly on some of its inputs lists these inputs in `feedthrough`, from
-    which the model derives the evaluation order of the outputs. The state history is a
-    dict of lists, keyed by the names of the state fields, with one item (a number or a
-    nonempty array) per solution point. The model initializes it by `init_state_history`
-    and extends it by `extend_state_history`. A subclass can keep its other signals in
-    the history as well, under other keys, as a converter does (see `Converter`).
+    which the model derives the evaluation order of the outputs. The angle states listed
+    in `angles` are kept within [-pi, pi) in the subsystem, but not in the state vector
+    of the solver, which therefore sees no discontinuity. The state history is a dict of
+    lists, keyed by the names of the state fields, with one item (a number or a nonempty
+    array) per solution point. The model initializes it by `init_state_history` and
+    extends it by `extend_state_history`. A subclass can keep its other signals in the
+    history as well, under other keys, as a converter does (see `Converter`).
 
     """
 
@@ -42,6 +44,7 @@ class Subsystem(Protocol):
     out: Any
     state: Any  # None if the subsystem has no states
     feedthrough: frozenset[str] = frozenset()  # Inputs the outputs depend on directly
+    angles: frozenset[str] = frozenset()  # Angle states, kept within [-pi, pi)
     _history: dict[str, list[Any]]
 
     def get_states(self) -> list[complex]:
@@ -64,7 +67,9 @@ class Subsystem(Protocol):
                         value[:] = state_list[index : index + n]
                         index += n
                 else:
-                    setattr(self.state, attr, state_list[index])
+                    x = state_list[index]
+                    x = wrap(x.real) if attr in self.angles else x
+                    setattr(self.state, attr, x)
                     index += 1
         return index
 
@@ -73,8 +78,8 @@ class Subsystem(Protocol):
         ...
 
     def rhs(self, t: float) -> list[complex]:
-        """Compute state derivatives."""
-        ...
+        """Compute the state derivatives, none by default."""
+        return []
 
     def compute_ac_port(self) -> ACPort | None:
         """Compute the AC port for a blocked converter, see `ACPort`."""
@@ -175,10 +180,10 @@ class ControlledConverter(Protocol):
     period, see `Modulator`. The simulation sets the gate states at the switching
     instants, from which the converter resolves its switching state (e.g., from the gate
     signals and the phase currents during the blanking). The format of the command and
-    the gate states is up to the converter and its modulator. The control system can
-    block the gates through `set_enable` at its sampling instants, after which only the
-    diodes conduct (see `Converter.blocked`). By default, blocking the gates is not
-    supported.
+    the gate states is up to the converter and its modulator. The simulation applies the
+    gate enable of the control system through `set_enable` at its sampling instants (see
+    `ControlSystem.set_enable`), and only the diodes conduct while the gates are blocked
+    (see `Converter.blocked`). By default, blocking the gates is not supported.
 
     """
 
@@ -223,8 +228,8 @@ class Model[C: Converter | None]:
     connected to other subsystems, such as a sensor without dynamics, does not affect
     the integration, so its outputs are computed only when all the outputs are requested
     (`set_outputs`), e.g., at the sampling instants, and not at every evaluation of the
-    state derivatives (`rhs`). The names of the subsystems name their time series in
-    the results, see `ModelTimeSeries`.
+    state derivatives (`rhs`). The names of the subsystems name their time series in the
+    results, see `ModelTimeSeries`.
 
     A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a
     controlled one (see `ControlledConverter`), which is driven by a control system, see
@@ -329,8 +334,7 @@ class Model[C: Converter | None]:
         return self._plans[blocked]
 
     def _sort(self, blocked: list[Converter]) -> list[Subsystem]:
-        """Sort the subsystems by their direct dependencies, keeping their order
-        otherwise."""
+        """Order the subsystems by their direct dependencies, otherwise as given."""
         subsystems = list(self.subsystems.values())
         # Subsystems whose outputs each subsystem depends on directly
         deps: dict[Subsystem, set[Subsystem]] = {s: set() for s in subsystems}
@@ -353,12 +357,12 @@ class Model[C: Converter | None]:
             order.append(ready[0])
         return order
 
-    def get_initial_values(self) -> list[complex]:
-        """Get initial values of all subsystems before the solver."""
-        state0: list[complex] = []
+    def get_states(self) -> list[complex]:
+        """Get the states of all subsystems as a list."""
+        states: list[complex] = []
         for subsystem in self._stateful:
-            state0.extend(subsystem.get_states())
-        return state0
+            states.extend(subsystem.get_states())
+        return states
 
     def set_states(self, state_list: list[complex]) -> None:
         """Set states in all subsystems."""
@@ -395,11 +399,18 @@ class Model[C: Converter | None]:
         index = 0
         for subsystem in self._stateful:
             index = subsystem.extend_state_history(sol.y, index)
-        # The voltage of a blocked converter varies within the integration interval,
-        # so its samples are evaluated at the solution points
+        # The voltage of a blocked converter varies within the integration interval, so
+        # its samples are evaluated at the solution points
         samples: dict[Converter, Sequence[Any]] = {}
         if blocked := [c for c in self.converters if c.blocked]:
-            values = self._evaluate(sol, lambda: [c.sample() for c in blocked])
+            state = self.get_states()
+            values = []
+            for t, y in zip(sol.t, sol.y.T, strict=True):
+                self.set_states(y)
+                self.set_outputs(t)
+                values.append([c.sample() for c in blocked])
+            self.set_states(state)
+            self.set_outputs(self.t0)
             samples = dict(zip(blocked, zip(*values, strict=True), strict=True))
         for converter in self.converters:
             converter.extend_history(len(sol.t), samples.get(converter))
@@ -419,18 +430,6 @@ class Model[C: Converter | None]:
             ts[subsystem].compute_derived_signals(t, subsystem)
         return ts
 
-    def _evaluate[T](self, sol: OdeResult, fcn: Callable[[], T]) -> list[T]:
-        """Evaluate `fcn` at the solution points, restoring the final state after."""
-        state = self.get_initial_values()
-        values: list[T] = []
-        for t, y in zip(sol.t, sol.y.T, strict=True):
-            self.set_states(y)
-            self.set_outputs(t)
-            values.append(fcn())
-        self.set_states(state)
-        self.set_outputs(self.t0)
-        return values
-
 
 # %%
 class SubsystemTimeSeries[S: Subsystem](Protocol):
@@ -443,8 +442,6 @@ class SubsystemTimeSeries[S: Subsystem](Protocol):
 
     """
 
-    t: np.ndarray
-
     def set_outputs(self, t: np.ndarray, subsystem: S) -> None:
         """Compute the outputs that depend directly on the inputs."""
         pass
@@ -454,7 +451,6 @@ class SubsystemTimeSeries[S: Subsystem](Protocol):
         pass
 
 
-@dataclass
 class ModelTimeSeries:
     """
     Time series of the simulation results.
@@ -475,12 +471,8 @@ class ModelTimeSeries:
 
     """
 
-    mdl: InitVar[Model]
-    ts: InitVar[dict[Subsystem, SubsystemTimeSeries] | None] = None
-    t: np.ndarray = field(default_factory=lambda: np.array([]), init=False)
-
-    def __post_init__(
-        self, mdl: Model, ts: dict[Subsystem, SubsystemTimeSeries] | None
+    def __init__(
+        self, mdl: Model, ts: dict[Subsystem, SubsystemTimeSeries] | None = None
     ) -> None:
         self.t = np.array(mdl._t)
         if ts is None:
@@ -489,7 +481,7 @@ class ModelTimeSeries:
             setattr(self, name, ts[subsystem])
 
     def __getattr__(self, name: str) -> Any:
-        """Support type checking for dynamic attributes."""
-        # This helps type checkers understand dynamic attributes
-        error_msg = f"'{self.__class__.__name__}' has no attribute '{name}'"
-        raise AttributeError(error_msg)
+        """Declare the time series of the subsystems for type checkers."""
+        raise AttributeError(
+            f"{type(self).__name__!r} object has no attribute {name!r}"
+        )

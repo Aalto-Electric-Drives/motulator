@@ -2,10 +2,10 @@
 5.6-kW PM-SyRM, GradNet from measured data, FVC
 ===============================================
 
-This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
-machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
-spatial harmonics are used for both the machine model and the control system. The models
-are trained with the related package
+This example simulates flux-vector control (FVC) of a 5.6-kW permanent-magnet
+synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet models
+without spatial harmonics, trained on measured data, are used for both the machine model
+and the control system. The models are trained with the related package
 `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 """
@@ -65,14 +65,14 @@ speed_ctrl = control.SpeedController(J=0.05, alpha_s=2 * np.pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%
-# Visualize the control loci.
+# Plot the control loci.
 
 i_s_vals = [1, 2, 3]  # Current values for the plots
-mc = utils.MachineCharacteristics(est_par)
-mc.plot_flux_vs_torque(i_s_vals, base)
-mc.plot_current_vs_torque(i_s_vals, base)
-mc.plot_current_loci(i_s_vals, base)
-mc.plot_flux_loci(i_s_vals, base)
+mc = utils.MachineCharacteristics(est_par, i_s_vals, base)
+mc.plot_flux_vs_torque()
+mc.plot_current_vs_torque()
+mc.plot_current_loci()
+mc.plot_flux_loci()
 
 # %%
 # Set the speed reference and the external load torque.

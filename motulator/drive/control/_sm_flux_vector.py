@@ -11,10 +11,12 @@ from motulator.drive.control._common import (
     matched_pole,
 )
 from motulator.drive.control._sm_observers import (
+    FluxObserver,
     ObserverOutputs,
     compute_feedback,
     create_speed_flux_observer,
-    create_vhz_observer,
+    default_sensorless_k_o,
+    zero_k_f,
 )
 from motulator.drive.control._sm_reference_gen import (
     ReferenceGenerator,
@@ -40,7 +42,7 @@ class FluxTorqueController(FluxTorqueControllerBase):
     alpha_tau : float
         Torque-control bandwidth (rad/s).
     alpha_i : float, optional
-        Integral action bandwidth (rad/s), defaults to 0.
+        Integral-action bandwidth (rad/s), defaults to 0.
 
     """
 
@@ -92,15 +94,16 @@ class FluxVectorControllerCfg:
         otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
         keeps the speed estimation gain approximately the same.
     alpha_ref : float, optional
-        Reference generation bandwidth (rad/s), defaults to 2*pi*100.
+        Bandwidth of the online reference generation (rad/s), used if `online_ref` is
+        True, defaults to 2*pi*100.
     k_o : Callable[[float], float] | None, optional
         Observer gain as a function of the electrical rotor angular speed. If None,
         defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if
         `sensorless` is True (incremental inductances at zero current), otherwise
         ``lambda w_m: 2*pi*15``.
     k_f : Callable[[float], float] | None, optional
-        PM-flux estimation gain as a function of the electrical rotor angular speed. If
-        None, the gain is zero, i.e., the PM-flux linkage is not estimated.
+        PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
+        If None, the gain is zero, i.e., the PM-flux linkage is not estimated.
     psi_s_min : float | None, optional
         Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
         machines without PMs.
@@ -143,7 +146,7 @@ class FluxVectorControllerCfg:
 # %%
 class FluxVectorController:
     """
-    Flux-vector controller of synchronous machine drives.
+    Flux-vector controller for synchronous machine drives.
 
     This class implements a variant of flux-vector control. Rotor coordinates and
     decoupling between the stator flux and torque channels are used according to
@@ -156,7 +159,7 @@ class FluxVectorController:
     par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : FluxVectorControllerCfg
-        Flux-vector control configuration.
+        Flux-vector controller configuration.
 
     References
     ----------
@@ -203,7 +206,6 @@ class FluxVectorController:
         self.cfg = cfg
         self.par = par
         self.sensorless = cfg.sensorless
-        self.online_ref = cfg.online_ref
         self.T_s = cfg.T_s
 
     def get_feedback(
@@ -231,7 +233,8 @@ class FluxVectorController:
         """Update states."""
         self.observer.update(ref.T_s, fbk)
         self.flux_torque_ctrl.update(ref.T_s, fbk)
-        if self.online_ref:
+        # The lookup tables need no update, since the current reference is not used
+        if isinstance(self.reference_gen, ReferenceGeneratorOnline):
             self.reference_gen.update(ref.T_s)
 
     def post_process(self, ts: TimeSeries) -> None:
@@ -253,7 +256,8 @@ class ObserverBasedVHzControllerCfg:
     alpha_tau : float, optional
         Torque-control bandwidth (rad/s), defaults to 2*pi*20.
     alpha_f : float, optional
-        Filter bandwidth (rad/s), defaults to 2*pi*1.
+        Bandwidth of the low-pass filter of the torque estimate (rad/s), defaults to
+        2*pi*1.
     alpha_o : float, optional
         Angle estimation pole (rad/s), defaults to 2*pi*200.
     k_o : Callable[[float], float] | None, optional
@@ -299,7 +303,7 @@ class ObserverBasedVHzController:
     par : BaseSynchronousMachineControlPars
         Machine model parameters.
     cfg : ObserverBasedVHzControllerCfg
-        Observer-based V/Hz control configuration.
+        Observer-based V/Hz controller configuration.
 
     """
 
@@ -315,8 +319,8 @@ class ObserverBasedVHzController:
         )  # The current reference is not used, so its tracking bandwidth is zero
         self.flux_torque_ctrl = FluxTorqueController(par, cfg.alpha_psi, cfg.alpha_tau)
         k_theta = matched_pole(cfg.alpha_o, cfg.T_s)  # First-order angle estimation
-        self.observer = create_vhz_observer(par, k_theta, cfg.k_o)
-        self.alpha_f: float = cfg.alpha_f
+        k_o = default_sensorless_k_o(par) if cfg.k_o is None else cfg.k_o
+        self.observer = FluxObserver(par, k_theta, k_o, zero_k_f)
         self.tau_M_lpf: float = 0.0  # Low-pass-filtered torque estimate
         self.T_s = cfg.T_s
 
@@ -344,7 +348,7 @@ class ObserverBasedVHzController:
 
     def update(self, ref: References, fbk: ObserverOutputs) -> None:
         """Update states."""
-        self.tau_M_lpf += ref.T_s * self.alpha_f * (fbk.tau_M - self.tau_M_lpf)
+        self.tau_M_lpf += ref.T_s * self.cfg.alpha_f * (fbk.tau_M - self.tau_M_lpf)
         self.observer.update(ref.T_s, fbk)
 
     def post_process(self, ts: TimeSeries) -> None:

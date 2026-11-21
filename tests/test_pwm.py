@@ -5,15 +5,15 @@ from functools import partial
 import numpy as np
 import pytest
 
-from motulator.common.control import PWM, InverterNonlinearity
-from motulator.common.control._pwm import Method
+from motulator.common.control import PWM, InverterNonlinearity, Method
 from motulator.common.model import (
     ZOH,
     CarrierComparison,
+    GateStates,
+    SwitchingTimes,
     TwoLevelModulator,
     VoltageSourceConverter,
 )
-from motulator.common.model._pwm import GateStates, SwitchingTimes
 from motulator.common.utils import abc2complex, complex2abc
 
 
@@ -158,14 +158,14 @@ def test_realized_voltage(
     converter.inp.i_c_ab = i_c_ab
     realized, d_abc = [], []
     for u_ref in u_refs:
-        pwm.get_realized_voltage(i_c_ab, u_dc)
+        pwm.get_realized_voltages(i_c_ab, u_dc)
         d_abc = pwm(T_s, u_ref, u_dc, w=0)
         _, gates = ZOH(t_d=t_d, delay=0)(T_s, d_abc)
         converter.set_gates(gates[0])
         converter.set_outputs(0)
         realized.append(converter.out.u_c_ab)
     expected = np.mean(realized) if average else realized[-1]
-    u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=average)
+    u_c_ab = pwm.get_realized_voltages(i_c_ab, u_dc)[int(average)]
     assert u_c_ab == pytest.approx(expected)
     if feedforward and u_refs[0] == u_refs[1]:
         assert expected == pytest.approx(u_refs[0])
@@ -182,13 +182,13 @@ def test_realized_voltage_follows_dc_bus(average: bool) -> None:
     converter.inp.i_c_ab = i_c_ab
     realized = []
     for u_ref in (100, 50 + 80j):
-        pwm.get_realized_voltage(i_c_ab, 300)
+        pwm.get_realized_voltages(i_c_ab, 300)
         d_abc = pwm(T_s, u_ref, 300, w=0)
         _, gates = ZOH(delay=0)(T_s, d_abc)
         converter.set_gates(gates[0])
         realized.append(600 * converter.inp.q_c_ab)
     expected = np.mean(realized) if average else realized[-1]
-    u_c_ab = pwm.get_realized_voltage(i_c_ab, 600, average=average)
+    u_c_ab = pwm.get_realized_voltages(i_c_ab, 600)[int(average)]
     assert u_c_ab == pytest.approx(expected)
     assert realized[-1] == pytest.approx(2 * (50 + 80j))
 
@@ -205,7 +205,7 @@ def test_feedforward_current_prediction() -> None:
         return np.zeros(3)
 
     pwm = PWM(d_err=d_err)
-    pwm.get_realized_voltage(i_c_ab, 540)
+    pwm.get_realized_voltages(i_c_ab, 540)
     pwm(T_s, 100, 540, w)
     expected = complex2abc(np.exp(1.5j * w * T_s) * i_c_ab)
     assert currents[-1] == pytest.approx(expected)
@@ -228,7 +228,7 @@ def test_min_pulse(method: Method, t_d: float) -> None:
         u_ref = rng.uniform(0, 0.65 * u_dc) * np.exp(2j * np.pi * rng.uniform())
         i_c_ab = 5 * np.exp(2j * np.pi * rng.uniform())
         converter.inp.i_c_ab = i_c_ab
-        pwm.get_realized_voltage(i_c_ab, u_dc)
+        pwm.get_realized_voltages(i_c_ab, u_dc)
         d_ref = np.array(pwm._duty_ratios(u_ref, u_dc))
         d = np.array(pwm(T_s, u_ref, u_dc, w=0))
         switching = (d > 0) & (d < 1)
@@ -240,7 +240,7 @@ def test_min_pulse(method: Method, t_d: float) -> None:
             assert pwm.limited_voltage == pytest.approx(u_dc * abc2complex(d))
         _, gates = ZOH(t_d=t_d, delay=0)(T_s, list(d))
         converter.set_gates(gates[0])
-        u_c_ab = pwm.get_realized_voltage(i_c_ab, u_dc, average=False)
+        u_c_ab = pwm.get_realized_voltages(i_c_ab, u_dc)[0]
         assert u_c_ab == pytest.approx(u_dc * converter.inp.q_c_ab)
     assert limited > 50  # The limits were reached
 
@@ -256,7 +256,7 @@ def test_min_pulse_threshold_voltage(method: Method) -> None:
     converter.inp.i_c_ab = i_c_ab = 10 * np.exp(1j * np.pi / 4)
     # In DPWM2, phase a is clamped to the positive rail and phase b is near it
     u_ref = u_dc * abc2complex([1, 0.978, 0.45])
-    pwm.get_realized_voltage(i_c_ab, u_dc)
+    pwm.get_realized_voltages(i_c_ab, u_dc)
     d_abc = pwm(T_s, u_ref, u_dc, w=0)
     _, gates = ZOH(delay=0)(T_s, d_abc)
     converter.set_gates(gates[0])
@@ -353,7 +353,7 @@ def test_discontinuous_pwm(
             clamped = (d == 0) | (d == 1)
             assert np.sum(clamped) == 1
             # Current lagging the voltage by 30°
-            ff.get_realized_voltage(10 * np.exp(1j * np.deg2rad(theta - 30)), u_dc)
+            ff.get_realized_voltages(10 * np.exp(1j * np.deg2rad(theta - 30)), u_dc)
             d_ff = np.array(ff(T_s, u_c_ref_ab, u_dc, w=0))
             assert np.array_equal(d_ff[clamped], d[clamped])
 
@@ -382,8 +382,8 @@ def gate_states_at(
 def test_sampling_delay_shifts_gate_states(
     pwm_cls: type[ZOH | CarrierComparison], single_update: bool, delay: int
 ) -> None:
-    """With the sampling delayed from the carrier extremum, the gate states are those
-    of sampling at the extremum, for the same commands at the same instants."""
+    """With the sampling delayed from the carrier extremum, the gate states are those of
+    sampling at the extremum, for the same commands at the same instants."""
     T_s, sampling_delay = 125e-6, 17.7e-6
     commands = np.random.default_rng(1).uniform(0, 1, (20, 3))
     ref = pwm_cls(t_d=2e-6, delay=delay, single_update=single_update)

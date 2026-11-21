@@ -16,7 +16,7 @@ label: speed_obs
     \frac{\D\hattauL}{\D t} &= -\kotau\varepsilon
 ```
 
-where $\hatomegaM$ is the estimated (or filtered in sensored drives) speed, $\hattauM$ is the electromagnetic torque estimate, $\hattauL$ is the load torque estimate, and $\koomega$ and $\kotau$ are the observer gains. The error signal $\varepsilon$ depends on the machine type and on whether the drive is sensored or sensorless, as described below. In induction machines, it is based on the speed estimation error; in synchronous machines, it is based on the position estimation error.
+where $\hatomegaM$ is the estimated (or filtered in sensored drives) speed, $\hattauM$ is the electromagnetic torque estimate, $\hattauL$ is the load torque estimate, and $\koomega$ and $\kotau$ are the observer gains. The error signal $\varepsilon$ depends on the machine type and on whether the drive is sensored or sensorless, as described below. In induction machines, it is based on the speed estimation error, and in synchronous machines, on the position estimation error.
 
 As a special case, setting $\hat{J} = \infty$ and $\kotau = 0$ yields the commonly used reduced-order estimator {cite}`Har2001`
 
@@ -27,7 +27,7 @@ label: speed_obs_ro
     \frac{\D \hatomegaM}{\D t} = \koomega \varepsilon
 ```
 
-which corresponds to a first-order low-pass filter of the true speed. The full-order observer {eq}`speed_obs` uses the mechanical model to avoid the lag inherent in such filtering. Clearly, the inertia estimate $\hat{J}$ can be safely overestimated.
+which corresponds to a low-pass filter of the true speed. The full-order observer {eq}`speed_obs` uses the mechanical model to avoid the lag inherent in such filtering. Clearly, the inertia estimate $\hat{J}$ can be safely overestimated.
 
 The observer structure {eq}`speed_obs` was originally proposed for sensored servo drives {cite}`Lor1991` and for signal-injection methods {cite}`Kim2003`. We use it also in model-based sensorless control, where the error signal comes from the flux observer instead of a measured speed or position.
 
@@ -120,7 +120,7 @@ Notice that the rotor flux estimation error is $\Delta\tildepsiR = \Delta\tildep
 
 ##### Sensored Drives
 
-In sensored drives, $\Delta\tildeomegam$ decoupled from the flux estimation. Consequently, this external disturbance can be omitted in the analysis, $\Delta\tildeomegam = 0$. Thus, the gain $\kob = 0$ can be used. Under these assumptions, the estimation-error dynamics {eq}`tilde_psis` reduce to {cite}`Ver1988`
+In sensored drives, $\Delta\tildeomegam$ is decoupled from the flux estimation. Consequently, this external disturbance can be omitted in the analysis, $\Delta\tildeomegam = 0$. Thus, the gain $\kob = 0$ can be used. Under these assumptions, the estimation-error dynamics {eq}`tilde_psis` reduce to {cite}`Ver1988`
 
 ```{math}
 ---
@@ -178,7 +178,7 @@ label: k1_sensorless
     \koa = \frac{\sigma}{\hat \alpha - \jj\hatomegam}
 ```
 
-which results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds, $\zeta_\infty = 0.2$ by default. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -\alpha$, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
+which results in the characteristic polynomial $D(s) = s^2 + 2\sigma s + \omegaso^2$. In the default tuning, the attenuation is scheduled as $\sigma = \hat \alpha/2 + \zeta_\infty|\hatomegam|$, where $\zeta_\infty$ is the desired damping ratio at high speeds, $\zeta_\infty = 0.2$ by default. At zero stator frequency $\omegaso = 0$, the poles are located at $s = 0$ and $s = -2\sigma$, i.e., at $s = -\alpha$ at standstill, which allows stable magnetizing and starting the machine. [Figure 1](fig:poles) shows the corresponding pole placement example.
 
 ```{figure} ../figs/poles.svg
 ---
@@ -358,7 +358,7 @@ The analysis resembles that of induction machines, see {ref}`im_obs_analysis`. T
 
 ##### Sensored Drives
 
-In sensored case, the rotor position estimation error is decoupled from the flux estimation, i.e., it acts as an external disturbance in the flux estimation. Therefore, the gain $\kob = 0$ can be selected. Using {eq}`sm_model_obs` and {eq}`sm_obs`, the linearized estimation-error dynamics become
+In the sensored case, the rotor position estimation error is decoupled from the flux estimation, i.e., it acts as an external disturbance in the flux estimation. Therefore, the gain $\kob = 0$ can be selected. Using {eq}`sm_model_obs` and {eq}`sm_obs`, the linearized estimation-error dynamics become
 
 ```{math}
 ---
@@ -392,13 +392,13 @@ label: sigma_sensorless
     \sigma = \frac{\beta}{2} + \zeta_\infty |\hatomegam |
 ```
 
-where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed, one pole is placed at $s = 0$ and another at $s = -\beta$. Unstable double pole at $s = 0$ is avoided, enabling stable start of the machine. If the observer gain `k_o` is not given in the controller configuration, the default values $\zeta_\infty = 0.2$ and $\beta = (\hatRs/2)(1/\hat{L}_\mathrm{dd} + 1/\hat{L}_\mathrm{qq})$ are used, where the incremental inductances are evaluated at zero current.
+where $\zeta_\infty$ is the desired damping ratio at high speeds. At zero speed, one pole is placed at $s = 0$ and another at $s = -\beta$. An unstable double pole at $s = 0$ is avoided, which enables a stable start of the machine. If the observer gain `k_o` is not given in the controller configuration, the default values $\zeta_\infty = 0.2$ and $\beta = (\hatRs/2)(1/\hat{L}_\mathrm{dd} + 1/\hat{L}_\mathrm{qq})$ are used, where the incremental inductances are evaluated at zero current.
 
 ```{note}
-The choice of $\beta$ is a compromise. It damps the flux estimation error near zero speed, but it increases the sensitivity to parameter errors at low speeds. In the linearized steady state, the rotor-angle estimation error caused by an error in the flux map scales with $\sigma/|\omegamo| = \zeta_\infty + \beta/(2|\omegamo|)$, and the error caused by an error in the stator resistance with $\sigma/\omegamo^2$. In simulations of sensorless low-speed operation, a moderately underestimated d-axis flux linkage (e.g., the PM-flux linkage) was less harmful than an overestimated one.
+The choice of $\beta$ is a compromise. It damps the flux estimation error near zero speed, but it increases the sensitivity to parameter errors at low speeds. In the linearized steady state, the rotor-angle estimation error caused by an error in the flux map scales with $\sigma/|\omegamo| = \zeta_\infty + \beta/(2|\omegamo|)$, and the error caused by an error in the stator resistance with $\sigma/\omegamo^2$. At low speeds, an overestimated d-axis flux linkage (e.g., the PM-flux linkage) is more harmful than a moderately underestimated one.
 ```
 
-Since the gain $\kob$ decouples the flux estimation from the rotor angle only to the extent that the model-based error signal is used, it is scheduled with the same weight $h$ as in {eq}`sm_obs_eps`, i.e., $\kob = (1 - h)\sigma\hatpsiaux/\hatpsiaux^*$. This reduces to {eq}`k1k2_sensorless` for $h = 0$ and to $\kob = 0$ for $h = 1$ (the sensored case above), interpolating between them in between.
+Since the gain $\kob$ decouples the flux estimation from the rotor angle only to the extent that the model-based error signal is used, it is scheduled with the same weight $h$ as in {eq}`sm_obs_eps`, i.e., $\kob = (1 - h)\sigma\hatpsiaux/\hatpsiaux^*$. This reduces to {eq}`k1k2_sensorless` for $h = 0$ and to $\kob = 0$ for $h = 1$ (the sensored case above).
 
 ### Speed and Flux Observer
 
@@ -465,7 +465,7 @@ label: obs_discrete_coeff
     \Gamma = \frac{1 - \Phi}{\jj\omegac}
 ```
 
-All vectors are in the observer coordinates at the instant $k$ (in synchronous machines, $\is'$ and $\us'$ are used). The exact rotation avoids the discretization error in the coordinate transformation, which is particularly useful at high stator frequencies relative to the sampling frequency. In synchronous machines, the estimation error {eq}`sm_eo` is algebraic and needs no discretization.
+The limit $\Gamma = \Ts$ applies at $\omegac = 0$. All vectors are in the observer coordinates at the instant $k$ (in synchronous machines, $\is'$ and $\us'$ are used). The exact rotation avoids the discretization error in the coordinate transformation, which is particularly useful at high stator frequencies relative to the sampling frequency. In synchronous machines, the estimation error {eq}`sm_eo` is algebraic and needs no discretization.
 
 In induction machines, the current derivative in {eq}`im_eo` is avoided by predicting the rotor flux also with the current model $\D\psiR/\D t = \RR\is - [\alpha + \jj(\omegac - \omegam)]\psiR$, which follows from {eq}`im_model_obs`. Its hold-equivalent model, with the exact rotation at $\omegac - \hatomegam$, gives
 

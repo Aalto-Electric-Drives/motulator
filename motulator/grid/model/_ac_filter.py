@@ -46,9 +46,9 @@ class LFilter(Subsystem):
     Model of an L filter and an inductive-resistive grid.
 
     An L filter and an inductive-resistive grid, between the converter and grid voltage
-    sources, are modeled combining their inductances and series resistances. The point-
-    of-common-coupling (PCC) voltage between the L filter and the grid impedance is
-    calculated.
+    sources, are modeled by combining their inductances and series resistances. The
+    point-of-common-coupling (PCC) voltage between the L filter and the grid impedance
+    is calculated.
 
     Parameters
     ----------
@@ -110,7 +110,7 @@ class LFilter(Subsystem):
         e = inp.e_g_ab + (self.R_f + self.R_g) * state.i_c_ab
         return ACPort(state.i_c_ab, e, np.eye(2) / (self.L_f + self.L_g))
 
-    def create_time_series(self, t: np.ndarray) -> "LFilterTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return LFilterTimeSeries(t, self)
 
@@ -258,7 +258,7 @@ class LCLFilter(Subsystem):
         e = state.u_f_ab + self.R_fc * state.i_c_ab
         return ACPort(state.i_c_ab, e, np.eye(2) / self.L_fc)
 
-    def create_time_series(self, t: np.ndarray) -> "LCLFilterTimeSeries":
+    def create_time_series(self, t: np.ndarray) -> SubsystemTimeSeries:
         """Create the time series."""
         return LCLFilterTimeSeries(t, self)
 

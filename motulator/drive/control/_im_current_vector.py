@@ -43,9 +43,9 @@ class CurrentReferenceGenerator:
     where `1/s` refers to integration, ``u_s_max = k_u*u_dc/sqrt(3)`` is the maximum
     stator voltage in the linear modulation region, `u_s_ref` is the (unlimited) stator
     voltage reference, and `k_fw` is the field-weakening gain. The field-weakening
-    method and its tuning corresponds roughly to [#Hin2006]_. Furthermore, the torque-
-    producing current component `i_s_ref.imag` is limited based on the maximum stator
-    current and the breakdown slip.
+    method and its tuning correspond roughly to [#Hin2006]_. Furthermore, the
+    torque-producing current component `i_s_ref.imag` is limited based on the maximum
+    stator current and the breakdown slip.
 
     Parameters
     ----------
@@ -54,7 +54,7 @@ class CurrentReferenceGenerator:
     psi_s_nom : float
         Nominal stator flux linkage (Vs).
     i_s_max : float
-        Maximum stator current (A).
+        Maximum stator current (A), at least the magnetizing current at `psi_s_nom`.
     w_s_nom : float
         Nominal stator angular frequency (rad/s).
     k_u : float
@@ -87,6 +87,10 @@ class CurrentReferenceGenerator:
         # Magnetizing current at the nominal flux, taking the saturation into account
         par_nom = par.inv_gamma_pars(psi_s_nom)
         self.i_sd_nom = psi_s_nom / (par_nom.L_M + par_nom.L_sgm)
+        if i_s_max < self.i_sd_nom:
+            raise ValueError(
+                "i_s_max is less than the magnetizing current at psi_s_nom"
+            )
         self.i_sd_ref = self.i_sd_nom  # Integral state
 
     def compute_output(
@@ -110,26 +114,18 @@ class CurrentReferenceGenerator:
             Stator current reference (A) and limited torque reference (Nm).
 
         """
-        i_sd_ref = self.i_sd_ref  # Get the state
-
-        def q_axis_current_limit(i_sd_ref: float, psi_R: float) -> float:
-            # Priority given to the d component
-            max_i_sq1 = sqrt(self.i_s_max**2 - i_sd_ref**2)
-            # Breakdown torque limit
-            i_sq_max2 = psi_R / op_par.L_sgm + i_sd_ref
-            # q-axis current limit
-            i_sq_max = min(max_i_sq1, i_sq_max2)
-            return i_sq_max
-
-        # q-axis current reference
+        # q-axis current reference, limited by the maximum current (priority given to
+        # the d component) and by the breakdown torque
         i_sq_ref = tau_M_ref / (1.5 * op_par.n_p * psi_R) if psi_R > 0 else 0
-
-        # Limit the current
-        i_sq_max = q_axis_current_limit(i_sd_ref, psi_R)
+        i_sq_max = max(
+            min(
+                sqrt(self.i_s_max**2 - self.i_sd_ref**2),
+                psi_R / op_par.L_sgm + self.i_sd_ref,
+            ),
+            0.0,
+        )
         i_sq_ref = clip(i_sq_ref, -i_sq_max, i_sq_max)
-
-        # Current reference
-        i_s_ref = i_sd_ref + 1j * i_sq_ref
+        i_s_ref = self.i_sd_ref + 1j * i_sq_ref
 
         # Limited torque (for the speed controller)
         tau_M_ref = 1.5 * op_par.n_p * psi_R * i_sq_ref
@@ -149,11 +145,11 @@ class CurrentReferenceGenerator:
         Parameters
         ----------
         T_s : float
-            Sampling time (s).
+            Sampling period (s).
         u_s_ref : complex
             Unlimited stator voltage reference (V).
         u_dc : float
-            DC-link voltage (V).
+            DC-bus voltage (V).
         op_par : InductionMachineInvGammaPars
             Inverse-Γ model parameters at the operating point.
 
@@ -170,18 +166,18 @@ class CurrentReferenceGenerator:
 @dataclass(kw_only=True)
 class CurrentVectorControllerCfg:
     """
-    Current vector controller configuration.
+    Current-vector controller configuration.
 
     Parameters
     ----------
     psi_s_nom : float
         Nominal stator flux linkage (Vs).
     i_s_max : float
-        Maximum stator current (A).
+        Maximum stator current (A), at least the magnetizing current at `psi_s_nom`.
     alpha_c : float, optional
-        Current control reference-tracking bandwidth (rad/s), defaults to 2*pi*200.
-    alpha_i : float, optional
-        Current control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
+        Current-control bandwidth (rad/s), defaults to 2*pi*200.
+    alpha_i : float | None, optional
+        Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
         used if `discrete` is True.
     alpha_o : float | None, optional
         Speed estimation poles (rad/s). Defaults to 2*pi*60 if `sensorless` is True,
@@ -231,11 +227,11 @@ class CurrentVectorController:
     """
     Current-vector controller for induction machine drives.
 
-    The currents are mapped to the leakage flux linkages ``L_sgm*i_s``, where `L_sgm`
-    is evaluated at the operating point, and the flux linkages are controlled by the
-    2DOF PI controller or, if `discrete` is True, by the direct discrete-time
-    controller. The magnetic saturation is thus taken into account as in the
-    flux-linkage-based current control of synchronous machines [#Awa2019a]_.
+    The currents are mapped to the leakage flux linkages ``L_sgm*i_s``, where `L_sgm` is
+    evaluated at the operating point, and the flux linkages are controlled by the 2DOF
+    PI controller or, if `discrete` is True, by the direct discrete-time controller. The
+    magnetic saturation is thus taken into account as in the flux-linkage-based current
+    control of synchronous machines [#Awa2019a]_.
 
     Parameters
     ----------

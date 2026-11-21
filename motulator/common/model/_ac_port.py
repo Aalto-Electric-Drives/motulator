@@ -16,8 +16,8 @@ _TAU = 1e-4
 # so that the margin of the diode states is positive after a transition.
 _I_TOL = 1e-4
 _U_TOL = 1e-3
-# Transformations between the phase quantities and the real and imaginary parts of
-# the space vectors, as matrices
+# Transformations between the phase quantities and the real and imaginary parts of the
+# space vectors, as matrices
 _A = np.array([[1.0, 0.0], [-0.5, np.sqrt(3) / 2], [-0.5, -np.sqrt(3) / 2]])
 _B = 2 / 3 * _A.T
 
@@ -81,8 +81,8 @@ def derivative(
     """
     Derivative of a complex-valued function along a direction.
 
-    The derivative is computed by central differences with a step of the length `h`
-    in the direction of `v`, so the step is in the units of the argument.
+    The derivative is computed by central differences with a step of the length `h` in
+    the direction of `v`, so the step is in the units of the argument.
 
     Parameters
     ----------
@@ -167,8 +167,8 @@ def leg_voltages(port: ACPort, u_dc: float, diodes: np.ndarray) -> np.ndarray:
     u_abc = np.where(diodes < 0, u_dc, 0.0)
     if np.any(floating):
         # The current derivatives of the floating legs are affine in the leg voltages,
-        # A_f @ Y @ (B @ u_abc - e), from which their voltages are solved. They are
-        # zero in u_abc here, and usually only one leg floats.
+        # A_f @ Y @ (B @ u_abc - e), from which their voltages are solved. They are zero
+        # in u_abc here, and usually only one leg floats.
         AY = _A[floating] @ port.Y
         M = AY @ _B
         rhs = AY @ [port.e.real, port.e.imag] - M @ u_abc
@@ -178,15 +178,21 @@ def leg_voltages(port: ACPort, u_dc: float, diodes: np.ndarray) -> np.ndarray:
     return u_abc
 
 
+def rectified_current(i_ab: Any) -> Any:
+    """Current (A) rectified by the diodes from the phase currents."""
+    return 0.5 * np.sum(np.abs(complex2abc(i_ab)), axis=0)
+
+
 def dc_voltage(port: ACPort, dc: DCPort, diodes: np.ndarray) -> float:
     """
     Solve the voltage between the rails of a current-fed bridge.
 
-    The DC current of the bridge is the current of the legs clamped to the positive rail
-    (equally, the negative of the current of the legs clamped to the negative rail). Its
-    derivative follows from the AC port and the leg voltages, which depend on the rail
-    voltage, see `leg_voltages`. The rail voltage satisfying the DC port ``u_dc = e +
-    R*i_dc + L*di_dc/dt`` is solved from this linear relation.
+    The DC current of the bridge is the sum of the phase currents of the legs clamped to
+    the negative rail, which equals the negative of the sum of the phase currents of the
+    legs clamped to the positive rail. Its derivative follows from the AC port and the
+    leg voltages, which depend on the rail voltage, see `leg_voltages`. The rail voltage
+    satisfying the DC port ``u_dc = e + R*i_dc + L*di_dc/dt`` is solved from this linear
+    relation.
 
     Parameters
     ----------
@@ -203,9 +209,8 @@ def dc_voltage(port: ACPort, dc: DCPort, diodes: np.ndarray) -> float:
         Voltage (V) between the rails.
 
     """
-    # The DC current is half the sum of the absolute values of the phase currents,
-    # whose directions in the conducting legs equal the diode states
-    i_dc = 0.5 * np.sum(np.abs(complex2abc(port.i)))
+    # The directions of the phase currents in the conducting legs equal the diode states
+    i_dc = rectified_current(port.i)
     e = dc.e + dc.R * i_dc
     # The DC current changes only if legs are clamped to both rails
     if dc.L == 0 or not (np.any(diodes > 0) and np.any(diodes < 0)):
@@ -263,7 +268,7 @@ def diode_margin(
         i_abc = complex2abc(port.i)
         margin = np.min((diodes * i_abc)[conducting]) + _I_TOL
     if not np.all(conducting):
-        gate_up, gate_lo = (True, True) if gated is None else (gated[0], gated[1])
+        gate_up, gate_lo = (True, True) if gated is None else gated
         u_lo = np.where(gate_lo, u_abc, inf)
         u_up = np.where(gate_up, u_dc - u_abc, inf)
         u_margin = np.minimum(u_lo, u_up)[~conducting]
@@ -342,7 +347,7 @@ def update_diodes(
     # legs, so they float too.
     if not (np.any(diodes > 0) and np.any(diodes < 0)):
         diodes = np.zeros(3)
-    gate_up, gate_lo = (True, True) if gated is None else (gated[0], gated[1])
+    gate_up, gate_lo = (True, True) if gated is None else gated
     for _ in range(3):  # Each round clamps at least one leg
         u_dc = dc_voltage(port, dc, diodes) if isinstance(dc, DCPort) else dc
         u_abc = leg_voltages(port, u_dc, diodes)

@@ -9,11 +9,6 @@ from motulator.common.model._sensor import Sensor
 from motulator.common.utils._utils import complex2abc
 from motulator.drive.model._lc_filter import LCFilter
 from motulator.drive.model._machine import InductionMachine, SynchronousMachine
-from motulator.drive.model._mechanics import (
-    ExternalRotorSpeed,
-    MechanicalSystem,
-    TwoMassMechanicalSystem,
-)
 
 
 # %%
@@ -49,7 +44,7 @@ class DriveSensors:
 
 
 # %%
-class Drive(Model[VoltageSourceConverter]):
+class Drive[M: Subsystem](Model[VoltageSourceConverter]):
     """
     Continuous-time system model for a machine drive.
 
@@ -57,8 +52,11 @@ class Drive(Model[VoltageSourceConverter]):
     ----------
     machine : InductionMachine | SynchronousMachine
         Electric machine model.
-    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
-        Mechanical system model.
+    mechanics : Subsystem
+        Mechanical system model, e.g., `MechanicalSystem`. It can be any subsystem whose
+        input is the electromagnetic torque `tau_M` and whose outputs are the mechanical
+        angular speed `w_M` and, with a position sensor, the mechanical angle `theta_M`
+        of the rotor.
     converter : VoltageSourceConverter
         Converter model.
     lc_filter : LCFilter, optional
@@ -80,7 +78,7 @@ class Drive(Model[VoltageSourceConverter]):
     def __init__(
         self,
         machine: InductionMachine | SynchronousMachine,
-        mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
+        mechanics: M,
         converter: VoltageSourceConverter,
         lc_filter: LCFilter | None = None,
         dc_bus: DCBus | None = None,
@@ -131,7 +129,7 @@ class Drive(Model[VoltageSourceConverter]):
 
 
 # %%
-class GridConnectedMachine(Model[None]):
+class GridConnectedMachine[M: Subsystem](Model[None]):
     """
     Continuous-time system model for a machine connected directly to the grid.
 
@@ -145,8 +143,8 @@ class GridConnectedMachine(Model[None]):
     ----------
     machine : InductionMachine | SynchronousMachine
         Electric machine model.
-    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
-        Mechanical system model.
+    mechanics : Subsystem
+        Mechanical system model, see `Drive`.
     ac_source : ThreePhaseSource
         Three-phase voltage source.
 
@@ -155,7 +153,7 @@ class GridConnectedMachine(Model[None]):
     def __init__(
         self,
         machine: InductionMachine | SynchronousMachine,
-        mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed,
+        mechanics: M,
         ac_source: ThreePhaseSource,
     ) -> None:
         self.machine = machine

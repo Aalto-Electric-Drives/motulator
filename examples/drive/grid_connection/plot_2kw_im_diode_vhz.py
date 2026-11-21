@@ -64,7 +64,7 @@ ctrl.set_speed_ref(lambda t: (t > 0.2) * base.w_M)
 mechanics.set_external_load_torque(lambda t: (t > 1) * 0.2 * nom.tau)
 
 # %%
-# Create the simulation object, with the control system of the drive by the model
+# Create the simulation object, passing the control system of the drive under its model
 # name, and simulate. Plot the drive results in per-unit values.
 
 sim = Simulation(mdl, {"drive": ctrl})
@@ -98,15 +98,15 @@ plt.show()
 
 # %%
 # .. note::
-#    The DC link of this particular example is unstable at 1-p.u. speed at the rated
-#    load torque, since the inverter looks like a negative resistance to the DC link.
+#    The DC bus of this particular example is unstable at 1-p.u. speed at the nominal
+#    load torque, since the inverter looks like a negative resistance to the DC bus.
 #    After the speed has settled, an oscillation at about 150 Hz, half the frequency of
 #    the six-pulse ripple, grows in the DC-bus voltage. It is seen above as the unequal
 #    current pulses of the diode bridge. The oscillation does not grow without bound,
 #    but it settles into a limit cycle of about 73 V peak to peak at about 1.5 s,
 #    slightly after the end of this simulation. With twice the DC-bus capacitance, the
 #    oscillation does not occur, and only the six-pulse ripple remains. For analysis,
-#    see e.g., [#Hin2007]_.
+#    see, e.g., [#Hin2007]_.
 #
 # .. rubric:: References
 #

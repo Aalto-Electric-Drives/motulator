@@ -2,7 +2,7 @@
 
 ## Model
 
-[Figure 1](fig:inverter) shows a three-phase two-level voltage-source converter, where $\udc$ is the DC-bus voltage, $\idc$ is the external DC current, and $\Cdc$ is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. The model is provided in the {class}`motulator.common.model.VoltageSourceConverter` class. Without the transistors, the converter is a six-pulse diode bridge, see [Diode Bridge](sec:diode_bridge).
+[Figure 1](fig:inverter) shows a three-phase two-level voltage-source converter, where $\udc$ is the DC-bus voltage, $\idc$ is the external DC current, and $\Cdc$ is the DC-bus capacitance. The converter can operate both as an inverter and a rectifier, depending on the direction of the power flow. The model is provided in the {class}`motulator.common.model.VoltageSourceConverter` class. Without the switches, the converter is a six-pulse diode bridge, see [Diode Bridge](sec:diode_bridge).
 
 ```{figure} ../figs/inverter.svg
 ---
@@ -25,7 +25,7 @@ alt: Three-phase two-level voltage-source converter
 *Figure 1:* Three-phase two-level voltage-source converter. The negative potential of the DC bus is marked with N and the output terminals with a, b, and c.
 ```
 
-Assuming ideal transistors and diodes, the converter can be modeled with the equivalent circuit shown in [Figure 2](fig:pwm_inverter), in which the legs are modeled as bi-positional switches. Each changeover switch is connected to either negative or positive potential of the DC bus, and the switching phenomena are assumed to be infinitely fast. The state of each switch is defined using the switching state, which, using phase $a$ as an example, is $\qA = 0$ when the switch is connected to the negative potential and $\qA = 1$ when the switch is connected to the positive potential.
+Assuming ideal switches and diodes, the converter can be modeled with the equivalent circuit shown in [Figure 2](fig:pwm_inverter), in which the legs are modeled as changeover switches. Each changeover switch is connected to either negative or positive potential of the DC bus, and the switching phenomena are assumed to be infinitely fast. The state of each switch is defined using the switching state, which, using phase $a$ as an example, is $\qA = 0$ when the switch is connected to the negative potential and $\qA = 1$ when the switch is connected to the positive potential.
 
 ```{figure} ../figs/pwm_inverter.svg
 ---
@@ -76,7 +76,7 @@ The control system can block the gates of the converter, see `set_enable` of {cl
 ctrl.set_enable(lambda t: t >= 0.05)  # Gates blocked before 0.05 s
 ```
 
-While the gates are blocked, all the switches are open, and the antiparallel diodes conduct according to the instantaneous phase currents. A leg carrying current is clamped to the negative rail if the current flows out of the converter and to the positive rail otherwise. A leg without current floats at the voltage that keeps its current at zero, as long as this voltage is between the rails; otherwise, its diode starts to conduct. Hence, a spinning machine coasts at open circuit if its voltage is below the DC-bus voltage, and it feeds the DC bus through the diodes otherwise, as does the grid when the DC bus is charged at the start-up. The threshold voltage $u_\mathrm{th}$ is included in the diode drops. The floating leg voltages are computed from the AC port of the load, i.e., the relation $\mathrm{d}\boldsymbol{i}/\mathrm{d}t = \mathbf{Y}(\boldsymbol{u} - \boldsymbol{e})$ between the terminal current and voltage, which the machine and filter models provide, see {class}`motulator.common.model.ACPort`. The machine models with core losses do not provide the port.
+While the gates are blocked, all the switches are open, and the antiparallel diodes conduct according to the instantaneous phase currents. A leg carrying current is clamped to the negative rail if the current flows out of the converter and to the positive rail otherwise. A leg without current floats at the voltage that keeps its current at zero, as long as this voltage is between the rails. Otherwise, its diode starts to conduct. Hence, a spinning machine coasts at open circuit if its voltage is below the DC-bus voltage, and it feeds the DC bus through the diodes otherwise, as does the grid when the DC bus is charged at the start-up. Each conducting diode has the voltage drop $u_\mathrm{th}$. The floating leg voltages are computed from the AC port of the load, i.e., the current derivative of the load in terms of the terminal voltage, which the machine and filter models provide, see {class}`motulator.common.model.ACPort`. The machine models with core losses do not provide the port.
 
 The switching state `q_c_ab` is zero while the gates are blocked, and the converter voltage `u_c_ab` is saved at the solution points of the solver. The gate enable is available as `enabled` in the converter time series and in the reference signals of the control system. See {doc}`/drive_examples/current_vector/plot_2kw_ipmsm_blocked_cvc` and {doc}`/grid_examples/grid_following/plot_10kva_startup_gfl` for examples.
 
@@ -84,9 +84,9 @@ The switching state `q_c_ab` is zero while the gates are blocked, and the conver
 
 ## Diode Bridge
 
-A six-pulse diode bridge is a converter without the transistors, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class, see [Figure 3](fig:diode_bridge). The model can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
+A six-pulse diode bridge is a converter without the switches, i.e., with permanently blocked gates. It is modeled in the {class}`motulator.common.model.DiodeBridge` class. The diodes conduct as described above, so the commutation of the current between the legs, including the overlap of the conduction intervals, follows from the inductance of the load, e.g., of an AC filter and the grid. A diode bridge connected to the grid is modeled with the {class}`motulator.grid.model.GridConverterSystem` class, see [Figure 3](fig:diode_bridge). The model can share its DC bus with other models, e.g., with a drive, see {doc}`/drive_examples/grid_connection/plot_2kw_im_diode_vhz`.
 
-The bridge can also feed a DC load through a DC choke instead of a DC bus. The load then provides its DC port, i.e., the relation $u = e + Ri + L\,\mathrm{d}i/\mathrm{d}t$ between the DC current and the voltage, see {class}`motulator.common.model.DCPort`, and the bridge solves its DC voltage together with the leg voltages. Furthermore, the devices of the legs can be gated, which models thyristors: a floating leg is clamped to a rail only by a gated device, and a conducting device turns off when its current reverses. These capabilities are used by packages extending *motulator*, see {doc}`/related_packages`.
+The bridge can also feed a DC load through a DC choke instead of a DC bus. The load then provides its DC port, i.e., the relation $u = e + Ri + L\,\mathrm{d}i/\mathrm{d}t$ between the DC current and the voltage, see {class}`motulator.common.model.DCPort`, and the bridge solves its DC voltage together with the leg voltages. Furthermore, the devices of the legs can be gated, which models thyristors: a floating leg is clamped to a rail only by a gated device, and a conducting device turns off when its current reverses.
 
 ```{figure} ../figs/diode_bridge.svg
 ---
@@ -111,9 +111,9 @@ alt: Six-pulse diode bridge supplied from the grid through AC inductors
 
 ## Carrier Comparison
 
-In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals $\qA$, $\qB$, and $\qC$ from duty ratios $\dA$, $\dB$, and $\dC$. The duty ratios are continuous signals in the range [0, 1] while the switching states are either 0 or 1.
+In pulse-width modulation (PWM), carrier comparison is commonly used to generate instantaneous switching state signals $\qA$, $\qB$, and $\qC$ from duty ratios $\dA$, $\dB$, and $\dC$. The duty ratios can take any value in the range [0, 1], while the switching states are either 0 or 1.
 
-[Figure 4](fig:carrier_comparison) shows the principle of carrier comparison. The logic shown in the figure is implemented in the {class}`motulator.common.model.CarrierComparison` class, where the switching instants are explicitly computed in the beginning of each half carrier period (instead of searching for zero crossings), allowing faster simulations. The sampling period $\Ts$ is returned by the control method, and it does not need to be constant. The carrier comparison is given to the converter model as its modulator, e.g., `VoltageSourceConverter(u_dc, CarrierComparison())`. The modulator also includes the computational delay of the control system, one sampling period by default.
+[Figure 4](fig:carrier_comparison) shows the principle of carrier comparison. The logic shown in the figure is implemented in the {class}`motulator.common.model.CarrierComparison` class, where the switching instants are explicitly computed at the beginning of each half carrier period (instead of searching for zero crossings), allowing faster simulations. The sampling period $\Ts$ is returned by the control system, and it need not be constant, except with a sampling delay. The carrier comparison is given to the converter model as its modulator, e.g., `VoltageSourceConverter(u_dc, CarrierComparison())`. The modulator also includes the computational delay of the control system, one sampling period by default.
 
 ```{figure} ../figs/carrier_comparison.svg
 ---
@@ -136,7 +136,7 @@ alt: Carrier comparison
 *Figure 4:* Carrier comparison. The duty ratios $\dA$, $\dB$, and $\dC$ are constant over the sampling period $\Ts$. The carrier signal is the same for all three phases and varies between 0 and 1.
 ```
 
-The modulator parameter `t_d` delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time. The converter parameter `u_th` models the threshold voltage of the power devices, assumed equal for the switches and the diodes, which reduces each phase voltage by `u_th*sign(i)`, where the current direction is determined at the switching instants, as during the blanking.
+The modulator parameter `t_d` delays the turn-on of each switch. During this dead time, both switches of the leg are off, and the converter resolves the leg state from the phase-current direction. The blanking interval may continue to the next sampling period. If the switching command reverses before a delayed turn-on, the turn-on is canceled. Transitions between the clamped duty ratios 0 and 1 also include the dead time. The converter parameter `u_th` models the threshold voltage of the power semiconductor devices, assumed equal for the switches and the diodes, which reduces each phase voltage by `u_th*sign(i)`, where the current direction is determined at the switching instants, as during the blanking.
 
 The zero-sequence voltage does not affect the phase currents if the neutral of the load is not connected. Therefore, the reference potential of the phase voltages can be freely chosen when computing the space vector of the converter output voltage. The converter voltage vector in stationary coordinates is
 

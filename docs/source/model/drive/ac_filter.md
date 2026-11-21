@@ -33,6 +33,6 @@ label: LC_filter_model
     \Cf \frac{\D\us}{\D t} &= \ic - \is - \jj\omegac \Cf\us
 ```
 
-where $\Lf$ is the filter inductance, $\Rf$ is the series resistance of the filter inductor, and $\Cf$ the filter capacitance. Furthermore, $\ic$ is the converter current, $\is$ is the stator current, $\uc$ is the converter voltage, and $\us$ is the capacitor voltage (corresponding to the stator voltage).
+where $\Lf$ is the filter inductance, $\Rf$ is the series resistance of the filter inductor, and $\Cf$ is the filter capacitance. Furthermore, $\ic$ is the converter current, $\is$ is the stator current, $\uc$ is the converter voltage, and $\us$ is the capacitor voltage (corresponding to the stator voltage).
 
 See also the {doc}`/drive_examples/vhz/plot_2kw_im_lc_vhz` example.

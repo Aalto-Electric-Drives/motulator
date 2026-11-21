@@ -231,7 +231,7 @@ class SequenceObserverBasedGridFormingControllerCfg:
     k_n : float, optional
         Negative-sequence voltage gain, defaults to 2.
     alpha_c : float, optional
-        Current control bandwidth (rad/s), defaults to 2*pi*300.
+        Current-control bandwidth (rad/s), defaults to 2*pi*300.
     alpha_l : float, optional
         Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
     w_o : float, optional
@@ -284,13 +284,13 @@ class SequenceObserverBasedGridFormingController:
 
     Notes
     -----
-    The control system operates in synchronous coordinates rotating at the nominal grid
-    angular frequency. The controller compensates for the computational delay of one
-    sampling period and the zero-order-hold delay of half a sampling period itself: the
-    angle of the positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and
-    that of the negative sequence, which rotates in the opposite direction, is retarded
-    by the same angle. Therefore, the control system does not advance the angle of the
-    voltage reference (`k_comp = 0`).
+    The controller operates in synchronous coordinates rotating at the nominal grid
+    angular frequency. It compensates for the computational delay of one sampling period
+    and the zero-order-hold delay of half a sampling period itself: the angle of the
+    positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and that of the
+    negative sequence, which rotates in the opposite direction, is retarded by the same
+    angle. Therefore, the control system does not advance the angle of the voltage
+    reference (`k_comp = 0`).
 
     """
 
