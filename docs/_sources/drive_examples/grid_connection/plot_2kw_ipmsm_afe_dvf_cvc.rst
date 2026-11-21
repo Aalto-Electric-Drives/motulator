@@ -329,7 +329,7 @@ increases within a few milliseconds, as the estimated external power is fed forw
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 20.350 seconds)
+   **Total running time of the script:** (0 minutes 24.777 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_ipmsm_afe_dvf_cvc.py:
