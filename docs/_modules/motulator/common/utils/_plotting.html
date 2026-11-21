@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -477,57 +477,6 @@
 
 
 <span class="c1"># %%</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_screen_style</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Configure matplotlib for screen viewing."""</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"default"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">"axes.prop_cycle"</span><span class="p">:</span> <span class="n">cycler</span><span class="p">(</span><span class="s2">"color"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">]),</span>
-            <span class="s2">"lines.linewidth"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"axes.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">"text.usetex"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">"axes3d.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">"figure.constrained_layout.use"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
-
-
-<span class="c1"># %%</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_latex_style</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Configure matplotlib for LaTeX documents."""</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"default"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">"axes.prop_cycle"</span><span class="p">:</span> <span class="n">cycler</span><span class="p">(</span><span class="s2">"color"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">]),</span>
-            <span class="s2">"lines.linewidth"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">"axes.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="c1"># "axes.autolimit_mode": "round_numbers",</span>
-            <span class="s2">"text.usetex"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">"text.latex.preamble"</span><span class="p">:</span> <span class="p">(</span><span class="sa">r</span><span class="s2">"\usepackage</span><span class="si">{newtxtext}</span><span class="s2">\usepackage</span><span class="si">{newtxmath}</span><span class="s2">"</span><span class="p">),</span>
-            <span class="s2">"font.family"</span><span class="p">:</span> <span class="s2">"serif"</span><span class="p">,</span>
-            <span class="s2">"font.serif"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Liberation Serif"</span><span class="p">],</span>
-            <span class="s2">"mathtext.fontset"</span><span class="p">:</span> <span class="s2">"dejavuserif"</span><span class="p">,</span>
-            <span class="s2">"font.size"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">"axes.labelsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">"legend.fontsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">"xtick.labelsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">"ytick.labelsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
-            <span class="s2">"axes3d.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s2">"figure.figsize"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
-            <span class="c1"># "figure.constrained_layout.use": True,</span>
-            <span class="c1"># "savefig.bbox": "tight",</span>
-            <span class="c1"># "savefig.pad_inches": 0.01,</span>
-            <span class="c1"># Disable automatic adjustment</span>
-            <span class="s2">"figure.constrained_layout.use"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">"figure.subplot.left"</span><span class="p">:</span> <span class="mf">0.18</span><span class="p">,</span>  <span class="c1"># Fixed margins</span>
-            <span class="s2">"figure.subplot.right"</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
-            <span class="s2">"figure.subplot.bottom"</span><span class="p">:</span> <span class="mf">0.18</span><span class="p">,</span>
-            <span class="s2">"figure.subplot.top"</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
-
-
-<span class="c1"># %%</span>
 <div class="viewcode-block" id="set_style">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/utils/index.html#motulator.common.utils.set_style">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -544,10 +493,37 @@
 <span class="sd">        defaults to False.</span>
 
 <span class="sd">    """</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">"default"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"axes.prop_cycle"</span><span class="p">:</span> <span class="n">cycler</span><span class="p">(</span><span class="s2">"color"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"m"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">]),</span>
+            <span class="s2">"lines.linewidth"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">"axes.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"axes3d.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"text.usetex"</span><span class="p">:</span> <span class="n">latex</span><span class="p">,</span>
+            <span class="s2">"figure.constrained_layout.use"</span><span class="p">:</span> <span class="ow">not</span> <span class="n">latex</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-        <span class="n">set_latex_style</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">set_screen_style</span><span class="p">()</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"text.latex.preamble"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"\usepackage</span><span class="si">{newtxtext}</span><span class="s2">\usepackage</span><span class="si">{newtxmath}</span><span class="s2">"</span><span class="p">,</span>
+                <span class="s2">"font.family"</span><span class="p">:</span> <span class="s2">"serif"</span><span class="p">,</span>
+                <span class="s2">"font.serif"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Liberation Serif"</span><span class="p">],</span>
+                <span class="s2">"mathtext.fontset"</span><span class="p">:</span> <span class="s2">"dejavuserif"</span><span class="p">,</span>
+                <span class="s2">"font.size"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"axes.labelsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"legend.fontsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"xtick.labelsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"ytick.labelsize"</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+                <span class="s2">"figure.figsize"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span>
+                <span class="c1"># Fixed margins</span>
+                <span class="s2">"figure.subplot.left"</span><span class="p">:</span> <span class="mf">0.18</span><span class="p">,</span>
+                <span class="s2">"figure.subplot.right"</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+                <span class="s2">"figure.subplot.bottom"</span><span class="p">:</span> <span class="mf">0.18</span><span class="p">,</span>
+                <span class="s2">"figure.subplot.top"</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
 
 
 
@@ -631,9 +607,7 @@
     <span class="k">if</span> <span class="n">save_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">save_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
         <span class="n">save_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">default_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"bbox_inches"</span><span class="p">:</span> <span class="s2">"tight"</span><span class="p">}</span>
-        <span class="n">default_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">savefig_kwargs</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">default_kwargs</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s2">"bbox_inches"</span><span class="p">:</span> <span class="s2">"tight"</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">})</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 

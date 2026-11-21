@@ -31,8 +31,8 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 # Configure the machine parameters based on the measured flux map, see
 # :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`.
 
-p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
-data = np.load(p / "baldor_400rpm_map.npz")
+p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+data = np.load(p.parent / "data" / "baldor_400rpm_map.npz")
 flux_map = utils.MagneticModel(
     i_s_dq=data["i_s_dq"], psi_s_dq=data["psi_s_dq"], type="flux_map"
 )
@@ -41,8 +41,8 @@ par = model.SaturatedSynchronousMachinePars(
 )
 
 # %%
-# The control system uses an analytical saturation model fitted to the measured data,
-# so the model has small errors.
+# The control system uses an analytical saturation model fitted to the measured data, so
+# the model has small errors.
 
 est_current_map = utils.SaturationModelPMSyRM(
     a_d0=3.96,
@@ -69,17 +69,16 @@ est_par = control.SaturatedSynchronousMachinePars(
 
 # %%
 # Simulate the drive in torque-control mode at the constant speed of 1.5 p.u. The
-# discrete-time design includes the delays, so the control system does not advance
-# the angle of its voltage reference (`k_comp = 0`).
+# discrete-time design includes the delays, so the control system does not advance the
+# angle of its voltage reference (`k_comp = 0`).
 
 
 def simulate(discrete: bool):
     mdl = model.Drive(
         model.SynchronousMachine(par),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(1.5 * base.w_M),
         model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
     )
-    mdl.mechanics.set_external_rotor_speed(lambda t: 1.5 * base.w_M)
     cfg = control.CurrentVectorControllerCfg(
         i_s_max=2 * base.i,
         alpha_c=2 * pi * 500,

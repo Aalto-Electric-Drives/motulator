@@ -105,14 +105,13 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 41-42
 
-Set external references.
+Set the active and reactive power references.
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-47
+.. GENERATED FROM PYTHON SOURCE LINES 42-46
 
 .. code-block:: Python
 
 
-    # Set the active and reactive power references
     ctrl.set_power_ref(lambda t: (t > 0.02) * 5e3)
     ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
@@ -123,34 +122,17 @@ Set external references.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 47-48
 
-Create the simulation object and simulate it.
+Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-53
+.. GENERATED FROM PYTHON SOURCE LINES 48-53
 
 .. code-block:: Python
 
 
     sim = model.Simulation(mdl, ctrl)
     res = sim.simulate(t_stop=0.08)
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 54-55
-
-Plot the results.
-
-.. GENERATED FROM PYTHON SOURCE LINES 55-58
-
-.. code-block:: Python
-
-
     utils.plot_control_signals(res, base)
     utils.plot_grid_waveforms(res, base)
 
@@ -180,7 +162,7 @@ Plot the results.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.639 seconds)
+   **Total running time of the script:** (0 minutes 0.540 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_lcl_gfl.py:

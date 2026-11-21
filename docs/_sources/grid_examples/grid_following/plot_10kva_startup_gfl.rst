@@ -27,7 +27,7 @@ initial voltage of 500 V through the antiparallel diodes toward the peak line-to
 voltage of the grid, while the phase-locked loop synchronizes with the grid and the
 current controller tracks the measured grid voltage. The gates are released at 40 ms,
 after which the DC-bus voltage controller raises the voltage to 650 V, with the power
-limited to the nominal power. A reactive power reference step follows.
+limited to 1 p.u. A reactive-power reference step follows.
 
 .. GENERATED FROM PYTHON SOURCE LINES 16-21
 
@@ -169,9 +169,9 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 62-65
 
-Plot the DC-bus voltage and the DC current of the converter, the interval with
-blocked gates shaded. The diodes charge the DC bus toward the peak line-to-line
-voltage of the grid, the current pulses shrinking as the voltage approaches it.
+Plot the DC-bus voltage and the DC current of the converter, the interval with blocked
+gates shaded. The diodes charge the DC bus toward the peak line-to-line voltage of the
+grid, the current pulses shrinking as the voltage approaches it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 65-85
 
@@ -212,7 +212,7 @@ voltage of the grid, the current pulses shrinking as the voltage approaches it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.162 seconds)
+   **Total running time of the script:** (0 minutes 0.953 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_startup_gfl.py:

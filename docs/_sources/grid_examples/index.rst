@@ -26,7 +26,7 @@ A collection of example scripts for grid converters.
 Grid-Following Control
 ----------------------
 
-These examples demonstrate grid-following (GFL) control. The current controller uses 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass-filtered grid voltage.
+These examples demonstrate grid-following (GFL) control. The current controller uses a 2DOF synchronous-frame complex-vector PI controller, with an additional feedforward term from the low-pass-filtered grid voltage.
 
 
 .. raw:: html
@@ -93,7 +93,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates the start-up of a grid-following converter with DC-bus voltage control. The converter gates are blocked at first. The DC bus is charged from its initial voltage of 500 V through the antiparallel diodes toward the peak line-to-line voltage of the grid, while the phase-locked loop synchronizes with the grid and the current controller tracks the measured grid voltage. The gates are released at 40 ms, after which the DC-bus voltage controller raises the voltage to 650 V, with the power limited to the nominal power. A reactive power reference step follows.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates the start-up of a grid-following converter with DC-bus voltage control. The converter gates are blocked at first. The DC bus is charged from its initial voltage of 500 V through the antiparallel diodes toward the peak line-to-line voltage of the grid, while the phase-locked loop synchronizes with the grid and the current controller tracks the measured grid voltage. The gates are released at 40 ms, after which the DC-bus voltage controller raises the voltage to 650 V, with the power limited to 1 p.u. A reactive-power reference step follows.">
 
 .. only:: html
 
@@ -117,7 +117,7 @@ These examples demonstrate grid-following (GFL) control. The current controller 
 Grid-Forming Control
 --------------------
 
-These examples demonstrate grid-forming control. The example :doc:`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm` uses a power-synchronization loop for synchronizing with the grid [#Har2020]_. In :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`, disturbance-observer-based control is used [#Nur2024]_. The example :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_negseq` extends the disturbance-observer-based control method with the addition of negative sequence [#Maa2026]_. The example :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_sag` simulates a grid-voltage sag, during which the active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_.
+These examples demonstrate grid-forming control. The example :doc:`/grid_examples/grid_forming/plot_13kva_rfpsc_gfm` uses a power-synchronization loop for synchronizing with the grid [#Har2020]_. In :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`, disturbance-observer-based control is used [#Nur2024]_. The example :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_negseq` extends the disturbance-observer-based control to unbalanced grids by controlling the positive and negative sequences separately [#Maa2026]_. The example :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm_sag` simulates a grid-voltage sag, during which the active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_.
 
 .. rubric:: References
 
@@ -192,7 +192,7 @@ These examples demonstrate grid-forming control. The example :doc:`/grid_example
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter during a grid-voltage sag in a weak grid. Apart from the sag, the converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm. The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u. The active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM) converter during a grid-voltage sag in a weak grid. Apart from the sag, the converter and grid models are the same as in /grid_examples/grid_forming/plot_13kva_do_gfm. The grid voltage drops to 0.5 p.u. while the active-power reference is kept at the nominal power. The active-power reference is limited to a realizable level, prioritizing the reactive current [#Maa2026]_.">
 
 .. only:: html
 

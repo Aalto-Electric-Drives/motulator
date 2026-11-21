@@ -63,7 +63,7 @@ Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 25-26
 
-Create the system model, filter parameters correspond to [#Sal2006]_.
+Configure the system model. The filter parameters correspond to [#Sal2006]_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 26-37
 
@@ -202,7 +202,7 @@ Plot additional waveforms.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.307 seconds)
+   **Total running time of the script:** (0 minutes 3.433 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_im_lc_vhz.py:

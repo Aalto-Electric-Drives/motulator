@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -487,9 +487,9 @@
 <span class="sd">    Square-wave signal injection with demodulation.</span>
 
 <span class="sd">    This injects a square-wave voltage in the estimated d-axis direction and computes</span>
-<span class="sd">    the mechanical position error signal by demodulating the current response. Cross-</span>
-<span class="sd">    saturation errors are compensated for using flux maps. The computational delay of</span>
-<span class="sd">    one sampling period is taken into account in the demodulation.</span>
+<span class="sd">    the mechanical position error signal by demodulating the current response.</span>
+<span class="sd">    Cross-saturation errors are compensated for using flux maps. The computational delay</span>
+<span class="sd">    of one sampling period is taken into account in the demodulation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -582,7 +582,7 @@
 <span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    alpha_o : float</span>
-<span class="sd">        Pole location (rad/s).</span>
+<span class="sd">        Speed estimation pole (rad/s).</span>
 <span class="sd">    U_inj : float</span>
 <span class="sd">        Injected voltage amplitude (V).</span>
 <span class="sd">    T_s : float</span>
@@ -638,14 +638,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_u_known</span> <span class="o">=</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="c1"># Unpack and initialize the output signals</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">ObserverOutputs</span><span class="p">(</span><span class="n">psi_f</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_observer</span><span class="o">.</span><span class="n">compute_output</span><span class="p">()</span>
         <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta_m</span>
         <span class="n">out</span><span class="o">.</span><span class="n">w_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">w_M</span>
 
         <span class="c1"># Current vector in (estimated) rotor coordinates and the flux map</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">out</span><span class="o">.</span><span class="n">theta_m</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_s_ab</span>
-        <span class="n">psi_s</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">=</span> <span class="n">psi_s</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">i_s</span><span class="p">))</span>
 
         <span class="c1"># Voltage vector, or the open-circuit voltage if unknown (blocked gates)</span>
         <span class="k">if</span> <span class="n">u_s_ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -685,22 +685,22 @@
 <span class="sd">    according to [#Kim2012]_. Cross-saturation errors are compensated for using flux</span>
 <span class="sd">    maps [#You2018]_. A related adjustable-frequency method is presented in [#Yu2022]_.</span>
 <span class="sd">    If the inertia of the mechanical system is provided, the speed is estimated using</span>
-<span class="sd">    the speed observer based on the mechanical model [#Kim2003]_, otherwise the phase-</span>
-<span class="sd">    locked loop is used.</span>
+<span class="sd">    the speed observer based on the mechanical model [#Kim2003]_, otherwise the</span>
+<span class="sd">    phase-locked loop is used.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    cfg : CurrentVectorControllerCfg</span>
-<span class="sd">        Current-vector control configuration. The drive is always sensorless, and the</span>
-<span class="sd">        fields `sensorless`, `k_o`, and `k_f` are not used.</span>
+<span class="sd">        Current-vector controller configuration, with `discrete` False. The drive is</span>
+<span class="sd">        always sensorless, and the fields `sensorless`, `k_o`, and `k_f` are not used.</span>
 <span class="sd">    U_inj : float, optional</span>
 <span class="sd">        Injected voltage amplitude (V), defaults to 250.</span>
 <span class="sd">    N_inj : int, optional</span>
 <span class="sd">        Number of sampling periods per injection voltage half-period, defaults to 1. The</span>
-<span class="sd">        injection frequency is `1 / (2 * N_inj * cfg.T_s)`. Reducing this frequency</span>
-<span class="sd">        requires reducing `cfg.alpha_o` accordingly.</span>
+<span class="sd">        injection frequency is ``1/(2*N_inj*cfg.T_s)``. Reducing this frequency requires</span>
+<span class="sd">        reducing `cfg.alpha_o` accordingly.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -742,6 +742,7 @@
 <div class="viewcode-block" id="SignalInjectionController.compute_output">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.SignalInjectionController.compute_output">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_M_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fbk</span><span class="p">:</span> <span class="n">ObserverOutputs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">References</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Compute the references, including the injected d-axis voltage."""</span>
         <span class="n">ref</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compute_output</span><span class="p">(</span><span class="n">tau_M_ref</span><span class="p">,</span> <span class="n">fbk</span><span class="p">)</span>
         <span class="n">ref</span><span class="o">.</span><span class="n">u_s</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="o">.</span><span class="n">injection</span><span class="o">.</span><span class="n">u_sd_inj</span>
         <span class="k">return</span> <span class="n">ref</span></div>

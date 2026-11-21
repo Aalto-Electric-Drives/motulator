@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -501,7 +501,7 @@
 <span class="sd">        Maximum stator current (A).</span>
 <span class="sd">    alpha_c : float, optional</span>
 <span class="sd">        Current-control bandwidth (rad/s), defaults to 2*pi*200.</span>
-<span class="sd">    alpha_i : float, optional</span>
+<span class="sd">    alpha_i : float | None, optional</span>
 <span class="sd">        Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not</span>
 <span class="sd">        used if `discrete` is True.</span>
 <span class="sd">    alpha_o : float | None, optional</span>
@@ -516,8 +516,8 @@
 <span class="sd">        `sensorless` is True (incremental inductances at zero current), otherwise</span>
 <span class="sd">        ``lambda w_m: 2*pi*15``.</span>
 <span class="sd">    k_f : Callable[[float], float] | None, optional</span>
-<span class="sd">        PM-flux estimation gain as a function of the electrical rotor angular speed. If</span>
-<span class="sd">        None, the gain is zero, i.e., the PM-flux linkage is not estimated.</span>
+<span class="sd">        PM-flux estimation gain (V) as a function of the electrical rotor angular speed.</span>
+<span class="sd">        If None, the gain is zero, i.e., the PM-flux linkage is not estimated.</span>
 <span class="sd">    psi_s_min : float | None, optional</span>
 <span class="sd">        Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for</span>
 <span class="sd">        machines without PMs.</span>
@@ -566,19 +566,19 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/control/sm/index.html#motulator.drive.control.sm.CurrentVectorController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CurrentVectorController</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Current vector controller for synchronous machine drives.</span>
+<span class="sd">    Current-vector controller for synchronous machine drives.</span>
 
-<span class="sd">    The currents are mapped to the flux linkages by the flux linkage map, and the flux</span>
-<span class="sd">    linkages are controlled by the 2DOF PI controller or, if `discrete` is True, by the</span>
-<span class="sd">    direct discrete-time controller. The saliency and the magnetic saturation are thus</span>
-<span class="sd">    taken into account [#Awa2019a]_.</span>
+<span class="sd">    The currents are mapped to the flux linkages by the flux map, and the flux linkages</span>
+<span class="sd">    are controlled by the 2DOF PI controller or, if `discrete` is True, by the direct</span>
+<span class="sd">    discrete-time controller. The saliency and the magnetic saturation are thus taken</span>
+<span class="sd">    into account [#Awa2019a]_.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine model parameters.</span>
 <span class="sd">    cfg : CurrentVectorControllerCfg</span>
-<span class="sd">        Current-vector control configuration.</span>
+<span class="sd">        Current-vector controller configuration.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -636,8 +636,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">observer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensorless</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">theta_M_meas</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">fbk</span><span class="o">.</span><span class="n">caught</span><span class="p">:</span>
-            <span class="c1"># In standby, the states tracked the speed estimate held by the observer,</span>
-            <span class="c1"># so they restart from the zero-torque operating point of the caught speed</span>
+            <span class="c1"># In standby, the states tracked the speed estimate held by the observer, so</span>
+            <span class="c1"># they restart from the zero-torque operating point of the caught speed</span>
             <span class="c1"># (zero current, since the catch requires magnets)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reference_gen</span><span class="o">.</span><span class="n">i_s_ref</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_ctrl</span><span class="o">.</span><span class="n">preset</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_m</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_f</span><span class="p">,</span> <span class="n">fbk</span><span class="o">.</span><span class="n">w_c</span><span class="p">)</span>

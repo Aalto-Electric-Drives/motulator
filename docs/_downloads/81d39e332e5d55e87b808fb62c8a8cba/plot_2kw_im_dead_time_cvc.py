@@ -26,10 +26,10 @@ nom = utils.NominalValues(U=400, I=5, f=50, P=2.2e3, tau=14.6)
 base = utils.BaseValues.from_nominal(nom, n_p=2)
 
 # %%
-# The dead time and the threshold voltage of the power devices cause a duty-ratio error
-# that depends on the sign of the phase current. As in [#Hin2010]_, the signum function
-# is replaced with a smooth arctangent function, which approximates the effect of the
-# parasitic capacitances at low currents.
+# The dead time and the threshold voltage of the power semiconductor devices cause a
+# duty-ratio error that depends on the sign of the phase current. As in [#Hin2010]_, the
+# signum function is replaced with a smooth arctangent function, which approximates the
+# effect of the parasitic capacitances at low currents.
 
 t_d = 2e-6  # Dead time (s)
 u_th = 1.0  # Threshold voltage (V)
@@ -69,8 +69,8 @@ def create_model():
 
 # %%
 # Configure the control system. If the duty-ratio error is given, the PWM compensates
-# for it, and the realized voltage fed to the observer includes it. The speed
-# reference is reversed under the load torque, leading to the regenerating mode.
+# for it, and the realized voltage fed to the observer includes it. The speed reference
+# is reversed under the load torque, leading to the regenerating mode.
 
 
 def create_control_system(pwm=None):
@@ -95,9 +95,9 @@ res = sim.simulate(t_stop=2.4)
 utils.plot(res, base)
 
 # %%
-# Simulate with the compensation, using the same duty-ratio error model as in the
-# system model. The PWM of the control system is also configured for single update,
-# so that the dead-time error is evaluated per half carrier period, `T_s/2`.
+# Simulate with the compensation, using the same duty-ratio error model as in the system
+# model. The PWM of the control system is also configured for single update, so that the
+# dead-time error is evaluated per half carrier period, `T_s/2`.
 
 d_err = control.InverterNonlinearity(t_d, u_th, sign=smooth_sign)
 pwm = control.PWM(d_err=d_err, single_update=True)

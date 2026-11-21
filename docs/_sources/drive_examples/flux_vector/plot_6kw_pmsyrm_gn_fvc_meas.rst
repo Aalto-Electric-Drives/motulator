@@ -21,10 +21,10 @@
 5.6-kW PM-SyRM, GradNet from measured data, FVC
 ===============================================
 
-This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
-machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without
-spatial harmonics are used for both the machine model and the control system. The models
-are trained with the related package
+This example simulates flux-vector control (FVC) of a 5.6-kW permanent-magnet
+synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet models
+without spatial harmonics, trained on measured data, are used for both the machine model
+and the control system. The models are trained with the related package
 `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 14-22
@@ -145,7 +145,7 @@ trained on the measured dataset.
 
 .. GENERATED FROM PYTHON SOURCE LINES 68-69
 
-Visualize the control loci.
+Plot the control loci.
 
 .. GENERATED FROM PYTHON SOURCE LINES 69-77
 
@@ -153,11 +153,11 @@ Visualize the control loci.
 
 
     i_s_vals = [1, 2, 3]  # Current values for the plots
-    mc = utils.MachineCharacteristics(est_par)
-    mc.plot_flux_vs_torque(i_s_vals, base)
-    mc.plot_current_vs_torque(i_s_vals, base)
-    mc.plot_current_loci(i_s_vals, base)
-    mc.plot_flux_loci(i_s_vals, base)
+    mc = utils.MachineCharacteristics(est_par, i_s_vals, base)
+    mc.plot_flux_vs_torque()
+    mc.plot_current_vs_torque()
+    mc.plot_current_loci()
+    mc.plot_flux_loci()
 
 
 
@@ -243,7 +243,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 10.428 seconds)
+   **Total running time of the script:** (0 minutes 8.100 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_gn_fvc_meas.py:

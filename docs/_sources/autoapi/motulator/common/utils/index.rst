@@ -57,7 +57,7 @@ Package Contents
    
    Base values.
 
-   :param u: Voltage (V, peak, line-neutral).
+   :param u: Voltage (V, peak, line-to-neutral).
    :type u: float
    :param i: Current (A, peak).
    :type i: float
@@ -104,17 +104,11 @@ Package Contents
       
       Compute base values from nominal values.
 
-      :param nom:
-                  Nominal values containing the following fields:
-                      U : float
-                          Voltage (V, rms, line-line).
-                      I : float
-                          Current (A, rms).
-                      f : float
-                          Frequency (Hz).
+      :param nom: Nominal values.
       :type nom: NominalValues
-      :param n_p: Number of pole pairs, defaults to None.
-      :type n_p: int | None, optional
+      :param n_p: Number of pole pairs. Defaults to None, in which case the mechanical base
+                  values are not computed.
+      :type n_p: int, optional
 
       :returns: Base values.
       :rtype: BaseValues
@@ -174,7 +168,7 @@ Package Contents
    
    Nominal values.
 
-   :param U: Voltage (V, rms, line-line).
+   :param U: Voltage (V, rms, line-to-line).
    :type U: float
    :param I: Current (A, rms).
    :type I: float
@@ -214,7 +208,7 @@ Package Contents
    :type times: ndarray
    :param values: Output values.
    :type values: ndarray
-   :param periodic: Enables periodicity, defaults to False.
+   :param periodic: Repeat the sequence with the period ``times[-1] - times[0]``, defaults to False.
    :type periodic: bool, optional
 
 

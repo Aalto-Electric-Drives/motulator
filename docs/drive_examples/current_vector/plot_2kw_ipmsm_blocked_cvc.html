@@ -206,8 +206,8 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../index.html">Drives</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -217,8 +217,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Current-Vector Control</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -234,7 +234,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -526,14 +526,14 @@ permanent-magnet synchronous machine (IPMSM) drive, whose converter gates are bl
 before the start and during coasting. The converter output voltage is not measured.
 While the gates are blocked, the control system runs in standby: its observer runs on
 its open-circuit model, i.e., the flux estimate rotates at the estimated speed, and its
-current controller computes its output for zero torque. The gates are released at 0.05
-s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked again:
-the stator current decays through the diodes within a millisecond, after which the
-loaded machine coasts at open circuit, since its voltage is below the DC-bus voltage,
-and decelerates. At 0.8 s, the gates are released, and the control system catches the
-rotating machine with a flying start: it initializes its observer from the current
-response to a zero-voltage period (cf. <a class="footnote-reference brackets" href="#tan2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) and its current controller from the
-resulting back-EMF, after which the drive returns to the speed reference.</p>
+current controller computes its output for zero torque. The gates are released at
+0.05 s, and the drive accelerates under speed control. At 0.6 s, the gates are blocked
+again: the stator current decays through the diodes within a millisecond, after which
+the loaded machine coasts at open circuit, since its voltage is below the DC-bus
+voltage, and decelerates. At 0.8 s, the gates are released, and the control system
+catches the rotating machine with a flying start: it initializes its observer from the
+current response to a zero-voltage period (cf. <a class="footnote-reference brackets" href="#tan2009" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>) and its current controller
+from the resulting back-EMF, after which the drive returns to the speed reference.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">pi</span></a><span class="w">
 </span><span class="w">
 </span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="nn">.</span><span class="nn">pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span><span class="w">
@@ -572,8 +572,8 @@ resulting back-EMF, after which the drive returns to the speed reference.</p>
 </span></pre></div></div>
 <img src="../../_images/sphx_glr_plot_2kw_ipmsm_blocked_cvc_001.png" srcset="../../_images/sphx_glr_plot_2kw_ipmsm_blocked_cvc_001.png" alt="plot 2kw ipmsm blocked cvc" class = "sphx-glr-single-img"/><p>Plot the speed and its estimate, the stator current magnitude, and the DC current of
 the converter, the intervals with blocked gates shaded. The DC current is negative
-while the stator current decays through the diodes. The speed estimate holds while
-the machine coasts and catches the actual speed after the release.</p>
+while the stator current decays through the diodes. The speed estimate holds while the
+machine coasts and catches the actual speed after the release.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span class="n">t_ctrl</span><span class="p">,</span> <span class="n">enabled</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">ctrl</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">enabled</span><span class="w">
 </span><span class="n">w_M</span> <span class="o">=</span> <a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">mechanics</span><span class="o">.</span><span class="n">w_M</span> <span class="o">/</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="float"><span class="n">base</span><span class="o">.</span><span class="n">w_M</span></a><span class="w">
 </span><span class="n">i_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><a class="sphx-glr-backref-module-motulator-common-model sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/model/index.html#motulator.common.model.SimulationResults" title="motulator.common.model.SimulationResults"><span class="n">res</span></a><span class="o">.</span><span class="n">mdl</span><span class="o">.</span><span class="n">machine</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">)</span> <span class="o">/</span> <a class="sphx-glr-backref-module-motulator-common-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance reference internal" href="../../autoapi/motulator/common/utils/index.html#motulator.common.utils.BaseValues" title="motulator.common.utils.BaseValues"><span class="n">base</span></a><span class="o">.</span><span class="n">i</span><span class="w">
@@ -607,7 +607,7 @@ procedure of rotational sensorless PMSM in the rotating condition,” IEEE Trans
 Ind. Appl., 2009, <a class="reference external" href="https://doi.org/10.1109/TIA.2008.2009496">https://doi.org/10.1109/TIA.2008.2009496</a></p>
 </aside>
 </aside>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 6.069 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 4.838 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-drive-examples-current-vector-plot-2kw-ipmsm-blocked-cvc-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4d2d22bbe1d4dc0fe6730edde5b24d96/plot_2kw_ipmsm_blocked_cvc.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_2kw_ipmsm_blocked_cvc.ipynb</span></code></a></p>

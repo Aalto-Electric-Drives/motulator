@@ -108,3 +108,7 @@ It is also possible to omit the mechanical dynamics and directly specify the act
 See the example {doc}`/drive_examples/current_vector/plot_2kw_im_cvc_tq`.
 
 The externally specified rotor speed is also used for measuring the mechanical impedance $Z_\mathrm{M}(s) = -\Delta\tauM(s)/\Delta\omegaM(s)$, which describes the dynamics of the machine and its control system as seen from the shaft {cite}`Har2023`, see the package [motulator-impedance](https://github.com/Aalto-Electric-Drives/motulator-impedance).
+
+## Other Mechanical Models
+
+The mechanical system of the drive model {class}`motulator.drive.model.Drive` can be any subsystem with the interface given there, so other mechanical models can be implemented outside the package, see {class}`motulator.common.model.Subsystem`.

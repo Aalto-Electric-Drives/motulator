@@ -146,7 +146,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 69-71
 
-Create the simulation object, with the control system of the drive by the model
+Create the simulation object, passing the control system of the drive under its model
 name, and simulate. Plot the drive results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 71-80
@@ -212,7 +212,7 @@ DC-bus voltage is close to the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 15.275 seconds)
+   **Total running time of the script:** (0 minutes 12.237 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_ipmsm_diode_cvc.py:

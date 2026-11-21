@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -483,7 +483,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span><span class="p">,</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">derivative</span><span class="p">,</span> <span class="n">jacobian</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">wrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BaseInductionMachinePars</span><span class="p">,</span>
     <span class="n">BaseSynchronousMachinePars</span><span class="p">,</span>
@@ -503,9 +503,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the AC port of a machine model in rotor coordinates, see `ACPort`.</span>
 
-<span class="sd">    The stator current in rotor coordinates is ``current(psi_s_dq, exp_j_theta_m)``,</span>
-<span class="sd">    the other states being constant, and `d_i_s_dq` is its rate of change due to the</span>
-<span class="sd">    other states.</span>
+<span class="sd">    The stator current in rotor coordinates is ``current(psi_s_dq, exp_j_theta_m)``, the</span>
+<span class="sd">    other states being constant, and `d_i_s_dq` is its rate of change due to the other</span>
+<span class="sd">    states.</span>
 
 <span class="sd">    """</span>
     <span class="n">exp_j_theta_m</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_m</span><span class="p">)</span>
@@ -531,7 +531,7 @@
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InductionMachineInputs</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MachineInputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Machine inputs."""</span>
 
     <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
@@ -542,10 +542,10 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">InductionMachineOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Machine outputs."""</span>
 
-    <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span>
-    <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span>
-    <span class="n">i_r_dq</span><span class="p">:</span> <span class="nb">complex</span>
-    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">i_r_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 
 <span class="nd">@dataclass</span>
@@ -584,7 +584,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : BaseInductionMachinePars</span>
-<span class="sd">        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.</span>
+<span class="sd">        Machine parameters.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -601,55 +601,40 @@
 
     <span class="c1"># The stator current depends directly on the voltage through the core losses</span>
     <span class="n">feedthrough</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"u_s_ab"</span><span class="p">})</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"theta_m"</span><span class="p">})</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="n">BaseInductionMachinePars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cage</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">cage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">InductionMachineInputs</span> <span class="o">=</span> <span class="n">InductionMachineInputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MachineInputs</span> <span class="o">=</span> <span class="n">MachineInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">InductionMachineStates</span> <span class="o">=</span> <span class="n">InductionMachineStates</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cage</span><span class="p">)</span>
-        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_outputs</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">InductionMachineOutputs</span> <span class="o">=</span> <span class="n">InductionMachineOutputs</span><span class="p">(</span>
-            <span class="n">i_s_ab</span><span class="o">=</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="o">=</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span><span class="o">=</span><span class="n">i_r_dq</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">InductionMachineOutputs</span> <span class="o">=</span> <span class="n">InductionMachineOutputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_outputs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">psi_r_dq</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Compute output variables."""</span>
+<span class="w">        </span><span class="sd">"""Compute the currents and the torque."""</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
         <span class="c1"># Currents into the magnetic model, i.e., the core-loss current excluded</span>
-        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span><span class="p">,</span> <span class="n">tau_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">magnetic_map</span><span class="p">(</span>
-            <span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">psi_r_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span>
-        <span class="p">)</span>
+        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span><span class="p">,</span> <span class="n">tau_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">magnetic_map</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">psi_r_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">G_c</span><span class="p">:</span>
             <span class="c1"># In rotor coordinates, the rotational EMF does not affect the core-loss</span>
             <span class="c1"># branch</span>
-            <span class="n">u_s_dq</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">u_s_ab</span> <span class="o">*</span> <span class="n">exp_j_theta_m</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+            <span class="n">u_s_dq</span> <span class="o">=</span> <span class="n">u_s_ab</span> <span class="o">*</span> <span class="n">exp_j_theta_m</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
             <span class="n">i_s_dq</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">G_c</span> <span class="o">*</span> <span class="n">u_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">G_c</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">)</span>
         <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">exp_j_theta_m</span>
         <span class="n">tau_M</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">tau_m</span>
         <span class="k">return</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span>
-
-<div class="viewcode-block" id="InductionMachine.set_states">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.set_states">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set states, keeping the rotor angle within [-pi, pi)."""</span>
-        <span class="c1"># The angle is wrapped only in the state of the model, which the next</span>
-        <span class="c1"># integration interval starts from, so the solver sees no discontinuity</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">index</span></div>
-
 
 <div class="viewcode-block" id="InductionMachine.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.set_outputs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Set output variables."""</span>
         <span class="n">out</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">exp_j_theta_m</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">i_r_dq</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_outputs</span><span class="p">(</span>
-            <span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">psi_r_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">exp_j_theta_m</span>
         <span class="p">)</span></div>
 
 
@@ -699,7 +684,7 @@
 
 <div class="viewcode-block" id="InductionMachine.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.InductionMachine.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"InductionMachineTimeSeries"</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemTimeSeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create the time series."""</span>
         <span class="k">return</span> <span class="n">InductionMachineTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
@@ -744,7 +729,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">InductionMachine</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the outputs, which depend on the voltage due to core losses."""</span>
         <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">_compute_outputs</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_m</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_r_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_m</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_r_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">i_r_dq</span><span class="p">)</span>
@@ -760,20 +745,12 @@
 
 <span class="c1"># %%</span>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SynchronousMachineInputs</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Machine inputs."""</span>
-
-    <span class="n">u_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
-    <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Mechanical rotor speed (rad/s)</span>
-
-
-<span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SynchronousMachineOutputs</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Machine outputs."""</span>
 
-    <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span>
-    <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span>
-    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">i_s_ab</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+    <span class="n">tau_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
 
 
 <span class="nd">@dataclass</span>
@@ -807,7 +784,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : BaseSynchronousMachinePars</span>
-<span class="sd">        Machine parameters. Core losses are modeled if `par.G_c` is nonzero.</span>
+<span class="sd">        Machine parameters.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -820,42 +797,30 @@
 
     <span class="c1"># The stator current depends directly on the voltage through the core losses</span>
     <span class="n">feedthrough</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"u_s_ab"</span><span class="p">})</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"theta_m"</span><span class="p">})</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachinePars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">SynchronousMachineInputs</span> <span class="o">=</span> <span class="n">SynchronousMachineInputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MachineInputs</span> <span class="o">=</span> <span class="n">MachineInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">SynchronousMachineStates</span> <span class="o">=</span> <span class="n">SynchronousMachineStates</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
-        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">SynchronousMachineOutputs</span> <span class="o">=</span> <span class="n">SynchronousMachineOutputs</span><span class="p">(</span>
-            <span class="n">i_s_ab</span><span class="o">=</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="o">=</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span>
-        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">SynchronousMachineOutputs</span> <span class="o">=</span> <span class="n">SynchronousMachineOutputs</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_outputs</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">inp</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">u_s_ab</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="n">Any</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Compute output variables."""</span>
+<span class="w">        </span><span class="sd">"""Compute the current and the torque."""</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
         <span class="c1"># Current into the magnetic model, i.e., the core-loss current excluded</span>
-        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">tau_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">magnetic_map</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
+        <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">tau_m</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">magnetic_map</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">par</span><span class="o">.</span><span class="n">G_c</span><span class="p">:</span>
             <span class="c1"># In rotor coordinates, the rotational EMF does not affect the core-loss</span>
             <span class="c1"># branch</span>
-            <span class="n">u_s_dq</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">u_s_ab</span> <span class="o">*</span> <span class="n">exp_j_theta_m</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+            <span class="n">u_s_dq</span> <span class="o">=</span> <span class="n">u_s_ab</span> <span class="o">*</span> <span class="n">exp_j_theta_m</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
             <span class="n">i_s_dq</span> <span class="o">=</span> <span class="p">(</span><span class="n">i_s_dq</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">G_c</span> <span class="o">*</span> <span class="n">u_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">par</span><span class="o">.</span><span class="n">G_c</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">R_s</span><span class="p">)</span>
         <span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">exp_j_theta_m</span>
         <span class="n">tau_M</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="n">tau_m</span>
         <span class="k">return</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span>
-
-<div class="viewcode-block" id="SynchronousMachine.set_states">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.set_states">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set states, keeping the rotor angle within [-pi, pi)."""</span>
-        <span class="c1"># The angle is wrapped only in the state of the model, which the next</span>
-        <span class="c1"># integration interval starts from, so the solver sees no discontinuity</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">index</span></div>
-
 
 <div class="viewcode-block" id="SynchronousMachine.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.set_outputs">[docs]</a>
@@ -863,7 +828,7 @@
 <span class="w">        </span><span class="sd">"""Set output variables."""</span>
         <span class="n">out</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
         <span class="n">out</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">i_s_ab</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_outputs</span><span class="p">(</span>
-            <span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">theta_m</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
         <span class="p">)</span></div>
 
 
@@ -898,7 +863,7 @@
 
 <div class="viewcode-block" id="SynchronousMachine.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.SynchronousMachine.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"SynchronousMachineTimeSeries"</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemTimeSeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create the time series."""</span>
         <span class="k">return</span> <span class="n">SynchronousMachineTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
@@ -937,7 +902,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">SynchronousMachine</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Compute the outputs, which depend on the voltage due to core losses."""</span>
         <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_s_ab</span><span class="p">,</span> <span class="n">tau_M</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">_compute_outputs</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_m</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">u_s_ab</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_m</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">i_s_ab</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">i_s_ab</span><span class="p">)</span>

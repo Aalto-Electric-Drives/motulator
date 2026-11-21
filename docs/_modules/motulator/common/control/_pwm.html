@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -499,18 +499,18 @@
 <span class="sd">    direction determines the leg state during the blanking. Away from the duty-ratio</span>
 <span class="sd">    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the half</span>
 <span class="sd">    carrier period. Pulses shorter than the dead time are suppressed, and clamped legs</span>
-<span class="sd">    have no dead-time error. The threshold voltage `u_th` of the power devices, assumed</span>
-<span class="sd">    equal for the switches and the diodes, causes the voltage drop `sign(i)*u_th` in</span>
-<span class="sd">    each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also in the clamped</span>
-<span class="sd">    legs. The realized duty ratios are `d_abc - d_err`. This model is consistent with</span>
-<span class="sd">    `motulator.common.model.VoltageSourceConverter`.</span>
+<span class="sd">    have no dead-time error. The threshold voltage `u_th` of the power semiconductor</span>
+<span class="sd">    devices, assumed equal for the switches and the diodes, causes the voltage drop</span>
+<span class="sd">    `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also</span>
+<span class="sd">    in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model is</span>
+<span class="sd">    consistent with `motulator.common.model.VoltageSourceConverter`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    t_d : float, optional</span>
 <span class="sd">        Dead time (s), defaults to 0.</span>
 <span class="sd">    u_th : float, optional</span>
-<span class="sd">        Threshold voltage (V) of the power devices, defaults to 0.</span>
+<span class="sd">        Threshold voltage (V) of the power semiconductor devices, defaults to 0.</span>
 <span class="sd">    sign : Callable[[np.ndarray], np.ndarray], optional</span>
 <span class="sd">        Current-direction function, defaults to `np.sign`. A smooth approximation may be</span>
 <span class="sd">        used, matching the converter model.</span>
@@ -585,11 +585,11 @@
 <span class="sd">    current ripple than space-vector PWM only in the high modulation range [#Hav1998]_.</span>
 
 <span class="sd">    Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such</span>
-<span class="sd">    as the dead time and the threshold voltages of the power devices, is taken into</span>
-<span class="sd">    account. The realized voltage is corrected for the error using the measured</span>
-<span class="sd">    currents. By default, the error is also compensated for by feedforward using the</span>
-<span class="sd">    predicted currents. In DPWM, the clamped leg stays at the rail, and its error is</span>
-<span class="sd">    compensated for by shifting the other legs.</span>
+<span class="sd">    as the dead time and the threshold voltages of the power semiconductor devices, is</span>
+<span class="sd">    taken into account. The realized voltage is corrected for the error using the</span>
+<span class="sd">    measured currents. By default, the error is also compensated for by feedforward</span>
+<span class="sd">    using the predicted currents. In DPWM, the clamped leg stays at the rail, and its</span>
+<span class="sd">    error is compensated for by shifting the other legs.</span>
 
 <span class="sd">    Optionally, the duty ratio of a switching leg is limited to the range</span>
 <span class="sd">    `[d_min, 1 - d_min]`, e.g., due to the gate drivers [#Wel2006]_. A duty ratio in the</span>
@@ -875,15 +875,8 @@
         <span class="n">d_ref</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">d_err</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`.</span>
-
-<span class="sd">        Returns the limited duty ratios and the realized duty ratios, which are `d_ref`</span>
-<span class="sd">        for the unchanged legs. If the error is compensated for, the realized duty</span>
-<span class="sd">        ratios of the limited legs are `d_abc - d_err(d_abc)` with the bound error</span>
-<span class="sd">        `d_err`.</span>
-
-<span class="sd">        """</span>
+<span class="w">        </span><span class="sd">"""Limit the duty ratios of the switching legs to `[d_min, 1 - d_min]`,</span>
+<span class="sd">        returning the limited and the realized duty ratios."""</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d_abc</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="n">d_realized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">d_ref</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
@@ -905,21 +898,21 @@
             <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">d_realized</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">candidates</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">realized</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">d_realized</span>
 
-<div class="viewcode-block" id="PWM.get_realized_voltage">
-<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.common.control.PWM.get_realized_voltage">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_realized_voltage</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">average</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span><span class="p">:</span>
+<div class="viewcode-block" id="PWM.get_realized_voltages">
+<a class="viewcode-back" href="../../../../autoapi/motulator/grid/control/index.html#motulator.common.control.PWM.get_realized_voltages">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_realized_voltages</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">i_c_ab</span><span class="p">:</span> <span class="nb">complex</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span><span class="p">,</span> <span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Get the realized voltage.</span>
+<span class="sd">        Get the realized voltages.</span>
 
 <span class="sd">        This method is to be called at the sampling instant before the next duty ratios</span>
 <span class="sd">        are computed, and a computational delay of one sampling period is assumed. The</span>
-<span class="sd">        voltage is reconstructed from the duty ratios of the previous and the ongoing</span>
+<span class="sd">        voltages are reconstructed from the duty ratios of the previous and the ongoing</span>
 <span class="sd">        sampling periods and the measured DC-bus voltage, i.e., the variations of the</span>
 <span class="sd">        DC-bus voltage and of the currents within the periods are not known. The</span>
 <span class="sd">        measured currents are also stored for the feedforward compensation of the next</span>
-<span class="sd">        duty ratios.</span>
+<span class="sd">        duty ratios, so this method is called also while the gates are blocked.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -927,26 +920,26 @@
 <span class="sd">            Measured converter current (A) in stationary coordinates.</span>
 <span class="sd">        u_dc : float</span>
 <span class="sd">            Measured DC-bus voltage (V).</span>
-<span class="sd">        average : bool, optional</span>
-<span class="sd">            If True, the average voltage of the previous and the ongoing sampling</span>
-<span class="sd">            periods is returned. If False, the voltage of the ongoing sampling period is</span>
-<span class="sd">            returned. Defaults to True.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        complex</span>
-<span class="sd">            Realized converter voltage (V) in stationary coordinates. If `d_err` is</span>
-<span class="sd">            given, the voltage is corrected for it using the measured currents.</span>
+<span class="sd">        u_c_ab_zoh : complex</span>
+<span class="sd">            Realized converter voltage (V) of the ongoing sampling period in stationary</span>
+<span class="sd">            coordinates.</span>
+<span class="sd">        u_c_ab : complex</span>
+<span class="sd">            Realized converter voltage (V) averaged over the previous and the ongoing</span>
+<span class="sd">            sampling periods in stationary coordinates.</span>
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_i_c_ab</span> <span class="o">=</span> <span class="n">i_c_ab</span>
         <span class="k">if</span> <span class="n">u_dc</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># A discharged DC bus, e.g., with blocked gates</span>
-            <span class="k">return</span> <span class="mi">0</span><span class="n">j</span>
-        <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span><span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">average</span> <span class="k">else</span> <span class="mi">1</span> <span class="p">:]</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="n">j</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="n">d_abc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_d_abc</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">i_abc</span> <span class="o">=</span> <span class="n">complex2abc</span><span class="p">(</span><span class="n">i_c_ab</span><span class="p">)</span>
             <span class="n">d_abc</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_err</span><span class="p">(</span><span class="n">i_abc</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">u_dc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_T_half</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">d_abc</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="nb">sum</span><span class="p">(</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">d_abc</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">d_abc</span><span class="p">)</span></div>
+        <span class="n">u_prev</span><span class="p">,</span> <span class="n">u_ongoing</span> <span class="o">=</span> <span class="p">(</span><span class="n">abc2complex</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">d_abc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="n">u_ongoing</span><span class="p">,</span> <span class="n">u_dc</span> <span class="o">*</span> <span class="p">(</span><span class="n">u_prev</span> <span class="o">+</span> <span class="n">u_ongoing</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div>
 
 
 <div class="viewcode-block" id="PWM.update">

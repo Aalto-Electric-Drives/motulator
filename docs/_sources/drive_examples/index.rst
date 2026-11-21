@@ -26,7 +26,7 @@ A collection of example scripts for machine drives.
 Flux-Vector Control
 -------------------
 
-These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels are used according to [#Awa2019b]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control, except in the examples of the 2.2-kW IPMSM. The examples with GradNet magnetic models [#Li2026]_, based on gradient networks [#Cha2025]_, which model the current or flux linkage map as the gradient of the field energy or co-energy, use models trained from measured and FEM data with the related package `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
+These examples demonstrate flux-vector control (FVC) of electric machine drives [#Pel2009]_. In the implemented control system, decoupling between the stator flux and torque channels is used according to [#Awa2019b]_. Furthermore, the stator flux magnitude and the electromagnetic torque are selected as controllable variables. The implementations correspond to [#Tii2025a]_ for synchronous machines and [#Tii2025b]_ for induction machines. The magnetic saturation is modeled and taken into account in control, except in the examples of the 2.2-kW IPMSM. The examples with GradNet magnetic models [#Li2026]_, based on gradient networks [#Cha2025]_, which model the current or flux map as the gradient of the field energy or co-energy, use models trained from measured and FEM data with the related package `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 .. rubric:: References
 
@@ -73,23 +73,6 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive with nonideal current sensors. The phase currents are measured with offsets, gain errors, and noise. Apart from the sensors and the speed reference, the drive is the same as in /drive_examples/flux_vector/plot_2kw_ipmsm_fvc.">
-
-.. only:: html
-
-  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_sensor_errors_fvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, current-sensor errors, FVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW induction machine (IM) drive. The magnetic saturation is included in the machine model and taken into account in the control system. This example also applies the mechanical-model-based speed observer.">
 
 .. only:: html
@@ -107,7 +90,24 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics. The models are trained with the related package motulator-gradnet.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless flux-vector control (FVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive with nonideal current sensors. The phase currents are measured with offsets, gain errors, and noise. Apart from the sensors and the speed reference, the drive is the same as in /drive_examples/flux_vector/plot_2kw_ipmsm_fvc.">
+
+.. only:: html
+
+  .. image:: /drive_examples/flux_vector/images/thumb/sphx_glr_plot_2kw_ipmsm_sensor_errors_fvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, current-sensor errors, FVC</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for both the machine model and the control system. The machine model uses a GradNet current map with spatial harmonics, while the control system uses a GradNet flux map without spatial harmonics. The models are trained with the related package motulator-gradnet.">
 
 .. only:: html
 
@@ -124,7 +124,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on measured data without spatial harmonics are used for both the machine model and the control system. The models are trained with the related package motulator-gradnet.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates flux-vector control (FVC) of a 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet models without spatial harmonics, trained on measured data, are used for both the machine model and the control system. The models are trained with the related package motulator-gradnet.">
 
 .. only:: html
 
@@ -216,7 +216,7 @@ These examples demonstrate flux-vector control (FVC) of electric machine drives 
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`).
+These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`), as well as the use of flux maps from the SyR-e project (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`).
 
 
 .. raw:: html
@@ -232,23 +232,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 6.7-kW synchronous reluctance machine (SyRM) drive.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_7kw_syrm_cvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, CVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control (CVC) of a 2.2-kW induction machine (IM) drive in torque-control mode.">
 
 .. only:: html
@@ -261,6 +244,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW IM, CVC, torque-control mode</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 6.7-kW synchronous reluctance machine (SyRM) drive.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_7kw_syrm_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, CVC</div>
     </div>
 
 
@@ -300,7 +300,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial PM-flux estimate is about 27% smaller than the actual value.">
 
 .. only:: html
 
@@ -368,7 +368,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of the same 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux- vector control example. See /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc for the machine model, flux-map data, and saturation-model description. This example demonstrates online reference generation in current-vector control, which allows the optimal current references to be generated in real time [#Sar2026]_.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of the same 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux-vector control example. See /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc for the machine model, flux-map data, and saturation-model description. This example demonstrates online reference generation in current-vector control, which allows the optimal current references to be generated in real time [#Sar2026]_.">
 
 .. only:: html
 
@@ -510,7 +510,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</div>
     </div>
 
 
@@ -523,7 +523,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
 Signal Injection
 ----------------
 
-These examples demonstrate a square-wave signal injection for low-speed operation based on [#Kim2012]_. Cross-saturation errors are compensated for using flux maps [#You2018]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined to a model-based observer.
+These examples demonstrate square-wave signal injection for low-speed operation based on [#Kim2012]_. Cross-saturation errors are compensated for using flux maps [#You2018]_. A phase-locked loop is used to track the rotor position. For a wider speed range, signal injection could be combined with a model-based observer.
 
 .. rubric:: References
 
@@ -670,7 +670,7 @@ These examples demonstrate machines and drives connected to the grid. The exampl
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive whose active front end (AFE) uses dual-voltage-forming control [#Mou2025]_ and is connected to a weak grid. The grid-side converter regulates both the DC-bus voltage and its output voltage magnitude without a cascaded DC-bus voltage controller: the external power fed to the DC bus by the drive is estimated by a disturbance observer and fed forward. The machine-side converter uses sensorless current-vector control (CVC). The two control systems are independent: they have different sampling periods, and their carriers are not synchronized. The system model is otherwise the same as in /drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc, except for the weak grid.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive whose active front end (AFE) uses dual-voltage-forming control [#Mou2025]_ and is connected to a weak grid. The grid-side converter regulates both the DC-bus voltage and its output voltage magnitude without a cascaded DC-bus voltage controller: the external power fed to the DC bus by the drive is estimated by a disturbance observer and fed forward. The machine-side converter uses sensorless current-vector control (CVC). The two control systems are independent: they have different sampling periods, and their carriers are not synchronized. The system model is the same as in /drive_examples/grid_connection/plot_2kw_ipmsm_afe_cvc, except for the weak grid and the L filter.">
 
 .. only:: html
 

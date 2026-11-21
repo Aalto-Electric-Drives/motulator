@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -472,7 +472,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegularGridInterpolator</span><span class="p">,</span> <span class="n">griddata</span>
@@ -495,7 +495,8 @@
     <span class="n">j</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">bisect_right</span><span class="p">(</span><span class="n">q_grid</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">q_grid</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">t_d</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">d_grid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">d_grid</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">d_grid</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="n">t_q</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">q_grid</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">q_grid</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">q_grid</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-    <span class="p">(</span><span class="n">v00</span><span class="p">,</span> <span class="n">v01</span><span class="p">),</span> <span class="p">(</span><span class="n">v10</span><span class="p">,</span> <span class="n">v11</span><span class="p">)</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">j</span> <span class="p">:</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">v00</span><span class="p">,</span> <span class="n">v01</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">v10</span><span class="p">,</span> <span class="n">v11</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">values</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="n">v0</span> <span class="o">=</span> <span class="n">v00</span> <span class="o">+</span> <span class="n">t_q</span> <span class="o">*</span> <span class="p">(</span><span class="n">v01</span> <span class="o">-</span> <span class="n">v00</span><span class="p">)</span>
     <span class="n">v1</span> <span class="o">=</span> <span class="n">v10</span> <span class="o">+</span> <span class="n">t_q</span> <span class="o">*</span> <span class="p">(</span><span class="n">v11</span> <span class="o">-</span> <span class="n">v10</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">complex</span><span class="p">(</span><span class="n">v0</span> <span class="o">+</span> <span class="n">t_d</span> <span class="o">*</span> <span class="p">(</span><span class="n">v1</span> <span class="o">-</span> <span class="n">v0</span><span class="p">))</span>
@@ -522,28 +523,15 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
         <span class="c1"># Faster interpolation of single points on a strictly ascending grid</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">d_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q_range</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_grid</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">d_range</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">q_grid</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">q_range</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fast</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_grid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_grid</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dq_input</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Interpolate at the input point(s).</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        dq_input : complex | np.ndarray</span>
-<span class="sd">            Input values in complex form (d + j*q).</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        complex | np.ndarray</span>
-<span class="sd">            Output value(s) corresponding to the input(s).</span>
-
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dq_input</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dq_input</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Interpolate at the input point(s) given in complex form (d + j*q)."""</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isscalar</span><span class="p">(</span><span class="n">dq_input</span><span class="p">):</span>
             <span class="c1"># Handle scalar complex input</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">dq_input</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">dq_input</span><span class="o">.</span><span class="n">imag</span>  <span class="c1"># type: ignore</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fast</span><span class="p">:</span>
@@ -562,7 +550,7 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Store and manipulate flux linkage or current maps for synchronous machines.</span>
 
-<span class="sd">    Attributes</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    i_s_dq : np.ndarray</span>
 <span class="sd">        Complex array of stator current (A).</span>
@@ -613,26 +601,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Lookup table function is missing"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_fcn</span><span class="p">(</span><span class="n">input_dq</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MagneticModel.is_flux_map">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.is_flux_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_flux_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Return True if this is a flux map (i_s → psi_s)."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">"current_map"</span></div>
-
-
-<div class="viewcode-block" id="MagneticModel.is_current_map">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.is_current_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_current_map</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Return True if this is a current map (psi_s → i_s)."""</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"current_map"</span></div>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_input_output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Get input and output arrays based on map type."""</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_flux_map</span><span class="p">():</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span>
-
 <div class="viewcode-block" id="MagneticModel.create_interpolated_model">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MagneticModel.create_interpolated_model">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_interpolated_model</span><span class="p">(</span>
@@ -648,12 +616,12 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        d_range : np.ndarray | None, optional</span>
-<span class="sd">            Range for the d-axis. If None, the range is determined from the data,</span>
+<span class="sd">            Range for the d axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
 <span class="sd">        q_range : np.ndarray | None, optional</span>
-<span class="sd">            Range for the q-axis. If None, the range is determined from the data,</span>
+<span class="sd">            Range for the q axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
-<span class="sd">        num : int, optional</span>
+<span class="sd">        num : int | None, optional</span>
 <span class="sd">            Number of points in each axis. If None, uses the maximum dimension from the</span>
 <span class="sd">            original map to preserve resolution, defaults to None.</span>
 <span class="sd">        invert : bool, optional</span>
@@ -665,13 +633,10 @@
 <span class="sd">            Interpolated magnetic model.</span>
 
 <span class="sd">        """</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">create_grid</span><span class="p">(</span><span class="n">d_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-            <span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"ij"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">d_grid</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">q_grid</span>
-
-        <span class="c1"># Get input/output arrays based on map type</span>
-        <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_input_output</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
+            <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span>
         <span class="n">new_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
 
         <span class="c1"># Set default num value based on input data if not provided</span>
@@ -680,7 +645,7 @@
 
         <span class="k">if</span> <span class="n">invert</span><span class="p">:</span>
             <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">inp</span>
-            <span class="n">new_type</span> <span class="o">=</span> <span class="s2">"current_map"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_flux_map</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"flux_map"</span>
+            <span class="n">new_type</span> <span class="o">=</span> <span class="s2">"current_map"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">"flux_map"</span> <span class="k">else</span> <span class="s2">"flux_map"</span>
 
         <span class="c1"># Auto-determine ranges if not provided</span>
         <span class="k">if</span> <span class="n">inp</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -694,13 +659,12 @@
             <span class="n">q_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
             <span class="n">q_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">))</span>
 
-        <span class="k">if</span> <span class="n">d_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">d_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">d_min</span><span class="p">,</span> <span class="n">d_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">q_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">q_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">q_min</span><span class="p">,</span> <span class="n">q_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">d_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">d_min</span><span class="p">,</span> <span class="n">d_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span> <span class="k">if</span> <span class="n">d_range</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">d_range</span>
+        <span class="n">q_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">q_min</span><span class="p">,</span> <span class="n">q_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span> <span class="k">if</span> <span class="n">q_range</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">q_range</span>
 
         <span class="c1"># Interpolate the map</span>
-        <span class="n">new_inp</span> <span class="o">=</span> <span class="n">create_grid</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"ij"</span><span class="p">)</span>
+        <span class="n">new_inp</span> <span class="o">=</span> <span class="n">d_grid</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">q_grid</span>
         <span class="n">points</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
         <span class="n">new_out</span> <span class="o">=</span> <span class="n">griddata</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">out</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">new_inp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">new_inp</span><span class="p">)))</span>
 
@@ -711,7 +675,7 @@
                 <span class="n">points</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_M</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">new_inp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">new_inp</span><span class="p">))</span>
             <span class="p">)</span>
 
-        <span class="n">lookup_fcn</span> <span class="o">=</span> <span class="n">_GridInterpolator</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">new_out</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="n">lookup_fcn</span> <span class="o">=</span> <span class="n">_GridInterpolator</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">new_out</span><span class="p">)</span>
 
         <span class="c1"># Arrange data based on map type</span>
         <span class="k">if</span> <span class="n">new_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
@@ -742,20 +706,21 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        d_range : np.ndarray | None, optional</span>
-<span class="sd">            Range for the d-axis. If None, the range is determined from the data,</span>
+<span class="sd">            Range for the d axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
 <span class="sd">        q_range : np.ndarray | None, optional</span>
-<span class="sd">            Range for the q-axis. If None, the range is determined from the data,</span>
+<span class="sd">            Range for the q axis. If None, the range is determined from the data,</span>
 <span class="sd">            defaults to None.</span>
-<span class="sd">        num : int, optional</span>
+<span class="sd">        num : int | None, optional</span>
 <span class="sd">            Number of points in each axis. If None, uses the maximum dimension from the</span>
 <span class="sd">            original map to preserve resolution, defaults to None.</span>
 
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="n">num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Extract size from the shape of the original arrays</span>
-            <span class="n">num</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MagneticModel</span>
+<span class="sd">            Inverted magnetic model on a regular grid.</span>
 
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_interpolated_model</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 </div>
 
@@ -768,43 +733,19 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for saturation models given as functions.</span>
 
-<span class="sd">    This class implements a callable interface, matching the interface of</span>
-<span class="sd">    MagneticModel.lookup_fcn. It can be used directly as a lookup function for a</span>
-<span class="sd">    MagneticModel, and `as_magnetic_model()` samples it on a grid.</span>
+<span class="sd">    A subclass implements `__call__`, which evaluates the map: the current as a function</span>
+<span class="sd">    of the flux linkage for a current map, or the flux linkage as a function of the</span>
+<span class="sd">    current for a flux map, as declared by `map_type`. The model can be used directly as</span>
+<span class="sd">    the lookup function of a `MagneticModel`, and `as_magnetic_model` samples it on a</span>
+<span class="sd">    grid.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">map_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">map_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"current_map"</span><span class="p">,</span> <span class="s2">"flux_map"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"current_map"</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Initialize the saturation model wrapper.</span>
+    <span class="n">map_type</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">"current_map"</span><span class="p">,</span> <span class="s2">"flux_map"</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">"current_map"</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        map_fcn : Callable, optional</span>
-<span class="sd">            Callable implementing either a current map (psi_s -&gt; i_s) or a flux map (i_s</span>
-<span class="sd">            -&gt; psi_s). If not provided, subclasses are expected to override `__call__`.</span>
-<span class="sd">        map_type : {"current_map", "flux_map"}, optional</span>
-<span class="sd">            Declares what the model represents, defaults to "current_map".</span>
-
-<span class="sd">        """</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_map_fcn</span> <span class="o">=</span> <span class="n">map_fcn</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"current_map"</span><span class="p">,</span> <span class="s2">"flux_map"</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_type</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Evaluate the underlying map.</span>
-
-<span class="sd">        For a current map, the input is flux linkage and the output is current. For a</span>
-<span class="sd">        flux map, the input is current and the output is flux linkage.</span>
-
-<span class="sd">        """</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_fcn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-                <span class="s2">"Provide map_fcn or override __call__ in subclass."</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_fcn</span><span class="p">(</span><span class="n">input_dq</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Evaluate the map."""</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
 <div class="viewcode-block" id="SaturationModelBase.as_magnetic_model">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.SaturationModelBase.as_magnetic_model">[docs]</a>
@@ -812,7 +753,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">d_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">q_range</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_p</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MagneticModel</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Create a magnetic model that uses this analytical model.</span>
+<span class="sd">        Sample the map on a grid as a magnetic model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -831,31 +772,22 @@
 <span class="sd">            Magnetic model using this object as its `lookup_fcn`.</span>
 
 <span class="sd">        """</span>
-        <span class="c1"># Create grid of inputs and evaluate the map</span>
         <span class="n">d_grid</span><span class="p">,</span> <span class="n">q_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">d_range</span><span class="p">,</span> <span class="n">q_range</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"ij"</span><span class="p">)</span>
         <span class="n">inp_dq</span> <span class="o">=</span> <span class="n">d_grid</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">q_grid</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="s2">"current_map"</span><span class="p">:</span>
-            <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">inp_dq</span>
-            <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-            <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"current_map"</span><span class="p">,</span> <span class="s2">"flux_map"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"current_map"</span>
+        <span class="n">out_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="p">(</span><span class="n">inp_dq</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
+            <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">inp_dq</span><span class="p">,</span> <span class="n">out_dq</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">inp_dq</span>
-            <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="bp">self</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-            <span class="n">model_type</span> <span class="o">=</span> <span class="s2">"flux_map"</span>
-
-        <span class="c1"># Calculate torque if needed</span>
+            <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">out_dq</span><span class="p">,</span> <span class="n">inp_dq</span>
         <span class="n">tau_M</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">n_p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">tau_M</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">n_p</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">))</span>
-
-        <span class="c1"># Magnetic model with this model as the lookup function</span>
         <span class="k">return</span> <span class="n">MagneticModel</span><span class="p">(</span>
             <span class="n">i_s_dq</span><span class="o">=</span><span class="n">i_s_dq</span><span class="p">,</span>
             <span class="n">psi_s_dq</span><span class="o">=</span><span class="n">psi_s_dq</span><span class="p">,</span>
-            <span class="n">lookup_fcn</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>  <span class="c1"># Use the model's __call__ directly</span>
+            <span class="n">lookup_fcn</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
             <span class="n">tau_M</span><span class="o">=</span><span class="n">tau_M</span><span class="p">,</span>
-            <span class="nb">type</span><span class="o">=</span><span class="n">model_type</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">map_type</span><span class="p">,</span>
         <span class="p">)</span></div>
 </div>
 
@@ -868,25 +800,25 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Saturation model for synchronous reluctance machines.</span>
 
-<span class="sd">    This model takes into account the self- and cross-saturation effects of the d- and</span>
-<span class="sd">    q-axis [#Hin2017]_.</span>
+<span class="sd">    This model takes into account the self- and cross-saturation effects of the d and q</span>
+<span class="sd">    axes [#Hin2017]_.</span>
 
-<span class="sd">    Attributes</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    a_d0 : float</span>
-<span class="sd">        Offset coefficient for d-axis inverse inductance.</span>
+<span class="sd">        Offset coefficient for the d-axis inverse inductance.</span>
 <span class="sd">    a_dd : float</span>
-<span class="sd">        Self-saturation coefficient for d-axis.</span>
+<span class="sd">        Self-saturation coefficient for the d axis.</span>
 <span class="sd">    a_q0 : float</span>
-<span class="sd">        Offset coefficient for q-axis inverse inductance.</span>
+<span class="sd">        Offset coefficient for the q-axis inverse inductance.</span>
 <span class="sd">    a_qq : float</span>
-<span class="sd">        Self-saturation coefficient for q-axis.</span>
+<span class="sd">        Self-saturation coefficient for the q axis.</span>
 <span class="sd">    a_dq : float</span>
 <span class="sd">        Cross-saturation coefficient.</span>
 <span class="sd">    S : float</span>
-<span class="sd">        Exponent for d-axis self-saturation.</span>
+<span class="sd">        Exponent for the d-axis self-saturation.</span>
 <span class="sd">    T : float</span>
-<span class="sd">        Exponent for q-axis self-saturation.</span>
+<span class="sd">        Exponent for the q-axis self-saturation.</span>
 <span class="sd">    U : float</span>
 <span class="sd">        First exponent for cross-saturation.</span>
 <span class="sd">    V : float</span>
@@ -909,9 +841,6 @@
     <span class="n">T</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">U</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">V</span><span class="p">:</span> <span class="nb">float</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">map_type</span><span class="o">=</span><span class="s2">"current_map"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Calculate the stator current for SyRMs."""</span>
@@ -948,14 +877,16 @@
 <span class="sd">    Saturation model for PM synchronous reluctance machines.</span>
 
 <span class="sd">    This model takes into account the bridge saturation in addition to the self- and</span>
-<span class="sd">    cross-saturation effects of the d- and q-axis [#Lel2024]_. The bridge saturation</span>
-<span class="sd">    model is based on a nonlinear reluctance element in parallel with the Norton-</span>
-<span class="sd">    equivalent PM model.</span>
+<span class="sd">    cross-saturation effects of the d and q axes [#Lel2024]_. The bridge saturation</span>
+<span class="sd">    model is based on a nonlinear reluctance element in parallel with the</span>
+<span class="sd">    Norton-equivalent PM model. The other parameters are those of `SaturationModelSyRM`.</span>
 
-<span class="sd">    Attributes</span>
+<span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    psi_n : float</span>
-<span class="sd">        PM flux linkage (Vs).</span>
+<span class="sd">        Flux linkage (Vs) of the Norton-equivalent PM model, i.e., the d-axis flux</span>
+<span class="sd">        linkage at which the bridge current ``G_b*(psi_d - psi_n)`` vanishes. It is</span>
+<span class="sd">        higher than the PM flux linkage at zero current.</span>
 <span class="sd">    a_b : float</span>
 <span class="sd">        Coefficient for bridge inverse inductance.</span>
 <span class="sd">    a_bp : float</span>
@@ -1030,15 +961,11 @@
 <span class="sd">    licensed under the Apache License, Version 2.0.</span>
 
 <span class="sd">    """</span>
-    <span class="c1"># Read the data from mat-file</span>
-    <span class="n">mat</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-
-    <span class="c1"># Use the PMSM convention in coordinates.</span>
-    <span class="n">i_d</span> <span class="o">=</span> <span class="o">-</span><span class="n">mat</span><span class="p">[</span><span class="s2">"motorModel"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"FluxMap_dq"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"Iq"</span><span class="p">]</span>
-    <span class="n">i_q</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s2">"motorModel"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"FluxMap_dq"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"Id"</span><span class="p">]</span>
-    <span class="n">psi_d</span> <span class="o">=</span> <span class="o">-</span><span class="n">mat</span><span class="p">[</span><span class="s2">"motorModel"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"FluxMap_dq"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"Fq"</span><span class="p">]</span>
-    <span class="n">psi_q</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s2">"motorModel"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"FluxMap_dq"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"Fd"</span><span class="p">]</span>
-    <span class="n">tau_M</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="s2">"motorModel"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"FluxMap_dq"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"T"</span><span class="p">]</span>
+    <span class="n">flux_map</span> <span class="o">=</span> <span class="n">loadmat</span><span class="p">(</span><span class="n">fname</span><span class="p">)[</span><span class="s2">"motorModel"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="s2">"FluxMap_dq"</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Use the PMSM convention in coordinates</span>
+    <span class="n">i_d</span><span class="p">,</span> <span class="n">i_q</span> <span class="o">=</span> <span class="o">-</span><span class="n">flux_map</span><span class="p">[</span><span class="s2">"Iq"</span><span class="p">],</span> <span class="n">flux_map</span><span class="p">[</span><span class="s2">"Id"</span><span class="p">]</span>
+    <span class="n">psi_d</span><span class="p">,</span> <span class="n">psi_q</span> <span class="o">=</span> <span class="o">-</span><span class="n">flux_map</span><span class="p">[</span><span class="s2">"Fq"</span><span class="p">],</span> <span class="n">flux_map</span><span class="p">[</span><span class="s2">"Fd"</span><span class="p">]</span>
+    <span class="n">tau_M</span> <span class="o">=</span> <span class="n">flux_map</span><span class="p">[</span><span class="s2">"T"</span><span class="p">]</span>
 
     <span class="c1"># Clip the negative q-axis values</span>
     <span class="n">i_q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">i_q</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>

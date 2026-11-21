@@ -33,7 +33,7 @@ used in a similar manner.
 
 The control system takes the saturation into account. This example also demonstrates the
 mechanical-model-based speed observer [#Lor1991]_. The lag of the speed estimate in
-accelerations is avoided, allowing to increase the speed-control bandwidth.
+accelerations is avoided, which allows a higher speed-control bandwidth.
 
 .. GENERATED FROM PYTHON SOURCE LINES 22-28
 
@@ -81,8 +81,8 @@ Load and plot the flux maps.
 
 
     # Get the path of the MATLAB file and load the FEM data
-    p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
-    fem_flux_map = utils.import_syre_data(p / "thor.mat")
+    p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+    fem_flux_map = utils.import_syre_data(p.parent / "data" / "thor.mat")
     utils.plot_map(fem_flux_map, "d", base, lims={"x": (-2, 2), "y": (-2, 2)})
     utils.plot_map(fem_flux_map, "q", base, lims={"x": (-2, 2), "y": (-2, 2)})
 
@@ -165,7 +165,7 @@ Configure the control system. Since the inertia estimate `J` is provided in
 
 .. GENERATED FROM PYTHON SOURCE LINES 71-72
 
-Plot control characteristics.
+Plot the control loci.
 
 .. GENERATED FROM PYTHON SOURCE LINES 72-81
 
@@ -174,11 +174,11 @@ Plot control characteristics.
 
     # sphinx_gallery_thumbnail_number = 4
     i_s_vals = [1, 1.5, 2]  # Current values for the plots
-    mc = utils.MachineCharacteristics(est_par)
-    mc.plot_flux_vs_torque(i_s_vals, base)
-    mc.plot_current_vs_torque(i_s_vals, base)
-    mc.plot_current_loci(i_s_vals, base)
-    mc.plot_flux_loci(i_s_vals, base)
+    mc = utils.MachineCharacteristics(est_par, i_s_vals, base)
+    mc.plot_flux_vs_torque()
+    mc.plot_current_vs_torque()
+    mc.plot_current_loci()
+    mc.plot_flux_loci()
 
 
 
@@ -273,7 +273,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.381 seconds)
+   **Total running time of the script:** (0 minutes 11.009 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_5kw_pmsyrm_thor_sat_cvc.py:

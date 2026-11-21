@@ -67,20 +67,19 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-41
+.. GENERATED FROM PYTHON SOURCE LINES 31-40
 
-The currents are sampled twice per carrier period. At the carrier extrema, the
-actual current is close to its average over the sampling period, so sampling at the
-extrema removes most of the switching ripple from the feedback. The current sensors
-with the bandwidth `alpha` delay the measured current by about the time constant
-`1/alpha` and distort the sampled ripple. The sampling instants can be delayed from
-the carrier extrema by `sampling_delay` of the modulator, while the duty ratios are
-still loaded at the extrema. The drive is simulated without and with the sampling
-delay equal to the time constant of the sensors. The rotor speed is constant, and
-the measured rotor angle is used, so that the results depend only on the current
-measurement.
+The currents are sampled twice per carrier period. At the carrier extrema, the actual
+current is close to its average over the sampling period, so sampling at the extrema
+removes most of the switching ripple from the feedback. The current sensors with the
+bandwidth `alpha` delay the measured current by about the time constant `1/alpha` and
+distort the sampled ripple. The sampling instants can be delayed from the carrier
+extrema by `sampling_delay` of the modulator, while the duty ratios are still loaded
+at the extrema. The drive is simulated without and with the sampling delay equal to
+the time constant of the sensors. The rotor speed is constant, and the measured rotor
+angle is used, so that the results depend only on the current measurement.
 
-.. GENERATED FROM PYTHON SOURCE LINES 41-66
+.. GENERATED FROM PYTHON SOURCE LINES 40-64
 
 .. code-block:: Python
 
@@ -96,11 +95,10 @@ measurement.
         sensors = model.DriveSensors(i_c=model.Sensor(alpha=alpha), theta_M=model.Sensor())
         mdl = model.Drive(
             model.SynchronousMachine(par),
-            model.ExternalRotorSpeed(),
+            model.ExternalRotorSpeed(base.w_M),
             model.VoltageSourceConverter(u_dc=540, modulator=modulator),
             sensors=sensors,
         )
-        mdl.mechanics.set_external_rotor_speed(base.w_M)
         cfg = control.FluxVectorControllerCfg(i_s_max=1.5 * base.i, sensorless=False)
         ctrl = control.VectorControlSystem(control.FluxVectorController(par, cfg))
         ctrl.set_torque_ref(nom.tau)
@@ -116,13 +114,13 @@ measurement.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 67-70
+.. GENERATED FROM PYTHON SOURCE LINES 65-68
 
 Compare the sampled currents with the actual currents at the carrier extrema, which
 precede the sampling instants by the sampling delay. Print the RMS value of the
 sampling error in the steady state.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-90
+.. GENERATED FROM PYTHON SOURCE LINES 68-88
 
 .. code-block:: Python
 
@@ -160,7 +158,7 @@ sampling error in the steady state.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 91-96
+.. GENERATED FROM PYTHON SOURCE LINES 89-94
 
 Plot the sampling error of phase a over one fundamental period (c). Plot also the
 current of phase a over four sampling periods around the largest sampling error (a)
@@ -168,7 +166,7 @@ without and (b) with the sampling delay, shaded in (c). In (a) and (b), the time
 measured from a carrier extremum, and the ticks are at the carrier extrema. The
 samples are plotted at the carrier extrema, whose currents they should represent.
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-137
+.. GENERATED FROM PYTHON SOURCE LINES 94-135
 
 .. code-block:: Python
 
@@ -225,19 +223,19 @@ samples are plotted at the carrier extrema, whose currents they should represent
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 138-144
+.. GENERATED FROM PYTHON SOURCE LINES 136-142
 
 Without the sampling delay, the samples follow the filtered current, which lags the
-actual current. The sampling error also alternates between consecutive samples,
-since the filter distorts the switching ripple. With the sampling delay, the samples
-agree much better with the actual currents at the carrier extrema. In a real control
-system, the sampling delay shortens the time available for computing the duty
-ratios, since they are still loaded at the following carrier extremum.
+actual current. The sampling error also alternates between consecutive samples, since
+the filter distorts the switching ripple. With the sampling delay, the samples agree
+much better with the actual currents at the carrier extrema. In a real control system,
+the sampling delay shortens the time available for computing the duty ratios, since
+they are still loaded at the following carrier extremum.
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.985 seconds)
+   **Total running time of the script:** (0 minutes 1.577 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sampling_delay_fvc.py:

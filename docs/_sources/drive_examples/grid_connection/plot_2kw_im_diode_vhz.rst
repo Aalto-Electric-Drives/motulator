@@ -144,7 +144,7 @@ Set the speed reference and the external load torque.
 
 .. GENERATED FROM PYTHON SOURCE LINES 67-69
 
-Create the simulation object, with the control system of the drive by the model
+Create the simulation object, passing the control system of the drive under its model
 name, and simulate. Plot the drive results in per-unit values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 69-77
@@ -226,15 +226,15 @@ the peak of the line-to-line grid voltage.
 .. GENERATED FROM PYTHON SOURCE LINES 100-116
 
 .. note::
-   The DC link of this particular example is unstable at 1-p.u. speed at the rated
-   load torque, since the inverter looks like a negative resistance to the DC link.
+   The DC bus of this particular example is unstable at 1-p.u. speed at the nominal
+   load torque, since the inverter looks like a negative resistance to the DC bus.
    After the speed has settled, an oscillation at about 150 Hz, half the frequency of
    the six-pulse ripple, grows in the DC-bus voltage. It is seen above as the unequal
    current pulses of the diode bridge. The oscillation does not grow without bound,
    but it settles into a limit cycle of about 73 V peak to peak at about 1.5 s,
    slightly after the end of this simulation. With twice the DC-bus capacitance, the
    oscillation does not occur, and only the six-pulse ripple remains. For analysis,
-   see e.g., [#Hin2007]_.
+   see, e.g., [#Hin2007]_.
 
 .. rubric:: References
 
@@ -245,7 +245,7 @@ the peak of the line-to-line grid voltage.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 19.013 seconds)
+   **Total running time of the script:** (0 minutes 15.379 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_im_diode_vhz.py:

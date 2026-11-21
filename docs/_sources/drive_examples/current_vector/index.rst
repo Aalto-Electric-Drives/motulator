@@ -5,7 +5,7 @@
 Current-Vector Control
 ----------------------
 
-These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`) as well as computation of control lookup tables for synchronous machines (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`).
+These examples are for current-vector control (CVC) of induction and synchronous machines. The magnetic saturation model of an induction machine is also demonstrated (:doc:`/drive_examples/current_vector/plot_2kw_im_sat_cvc`), as well as the use of flux maps from the SyR-e project (:doc:`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`).
 
 
 .. raw:: html
@@ -21,23 +21,6 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 6.7-kW synchronous reluctance machine (SyRM) drive.">
-
-.. only:: html
-
-  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
-    :alt:
-
-  :doc:`/drive_examples/current_vector/plot_7kw_syrm_cvc`
-
-.. raw:: html
-
-      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, CVC</div>
-    </div>
-
-
-.. raw:: html
-
     <div class="sphx-glr-thumbcontainer" tooltip="This example simulates current-vector control (CVC) of a 2.2-kW induction machine (IM) drive in torque-control mode.">
 
 .. only:: html
@@ -50,6 +33,23 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">2.2-kW IM, CVC, torque-control mode</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 6.7-kW synchronous reluctance machine (SyRM) drive.">
+
+.. only:: html
+
+  .. image:: /drive_examples/current_vector/images/thumb/sphx_glr_plot_7kw_syrm_cvc_thumb.png
+    :alt:
+
+  :doc:`/drive_examples/current_vector/plot_7kw_syrm_cvc`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">6.7-kW SyRM, CVC</div>
     </div>
 
 
@@ -89,7 +89,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an error of 25%.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled [#Tuo2018]_. To demonstrate adaptation, the initial PM-flux estimate is about 27% smaller than the actual value.">
 
 .. only:: html
 
@@ -157,7 +157,7 @@ These examples are for current-vector control (CVC) of induction and synchronous
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of the same 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux- vector control example. See /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc for the machine model, flux-map data, and saturation-model description. This example demonstrates online reference generation in current-vector control, which allows the optimal current references to be generated in real time [#Sar2026]_.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example simulates sensorless current-vector control (CVC) of the same 5.6-kW permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux-vector control example. See /drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc for the machine model, flux-map data, and saturation-model description. This example demonstrates online reference generation in current-vector control, which allows the optimal current references to be generated in real time [#Sar2026]_.">
 
 .. only:: html
 
@@ -199,8 +199,8 @@ These examples are for current-vector control (CVC) of induction and synchronous
 .. toctree::
    :hidden:
 
-   /drive_examples/current_vector/plot_7kw_syrm_cvc
    /drive_examples/current_vector/plot_2kw_im_cvc_tq
+   /drive_examples/current_vector/plot_7kw_syrm_cvc
    /drive_examples/current_vector/plot_2kw_im_sat_cvc
    /drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc
    /drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt

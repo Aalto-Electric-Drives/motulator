@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -477,7 +477,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaxNLocator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_and_show</span><span class="p">,</span> <span class="n">set_style</span><span class="p">,</span> <span class="n">setup_map_plot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">configure_axes</span><span class="p">,</span>
+    <span class="n">save_and_show</span><span class="p">,</span>
+    <span class="n">set_style</span><span class="p">,</span>
+    <span class="n">setup_map_plot</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_flux_maps</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagneticModel</span>
 
@@ -503,7 +508,6 @@
     <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">x_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
     <span class="n">y_lims</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-    <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">color</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Filter and plot raw data as scatter points."""</span>
@@ -518,7 +522,7 @@
         <span class="n">component</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_plot_current_loci</span><span class="p">(</span>
@@ -556,79 +560,40 @@
                 <span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_get_labels</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Get axis labels based on data type, component, and units."""</span>
-    <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)"</span>
-            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span>
-            <span class="n">zlabel</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$\psi_\mathrm</span><span class="se">{{</span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="se">}}</span><span class="s2">$ (p.u.)"</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)"</span>
-            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)"</span>
-            <span class="n">zlabel</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$\psi_\mathrm</span><span class="se">{{</span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="se">}}</span><span class="s2">$ (Vs)"</span>
-    <span class="k">elif</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)"</span>
-        <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span>
-        <span class="n">zlabel</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="se">}}</span><span class="s2">$ (p.u.)"</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (Vs)"</span>
-        <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)"</span>
-        <span class="n">zlabel</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="se">}}</span><span class="s2">$ (A)"</span>
-    <span class="k">return</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">zlabel</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_labels</span><span class="p">(</span><span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">component</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pu</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Get the axis labels of the map input (x, y) and the output component (z)."""</span>
+    <span class="n">i</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"i"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">),</span> <span class="p">(</span><span class="sa">r</span><span class="s2">"\psi"</span><span class="p">,</span> <span class="s2">"Vs"</span><span class="p">)</span>
+    <span class="n">inp</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">psi</span><span class="p">)</span> <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span> <span class="k">else</span> <span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">label</span><span class="p">(</span><span class="n">quantity</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">subscript</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">symbol</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">quantity</span>
+        <span class="k">return</span> <span class="sa">rf</span><span class="s2">"$</span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s2">_\mathrm</span><span class="se">{{</span><span class="si">{</span><span class="n">subscript</span><span class="si">}</span><span class="se">}}</span><span class="s2">$ (</span><span class="si">{</span><span class="s1">'p.u.'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">pu</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">unit</span><span class="si">}</span><span class="s2">)"</span>
+
+    <span class="k">return</span> <span class="n">label</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">),</span> <span class="n">label</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s2">"q"</span><span class="p">),</span> <span class="n">label</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_configure_3d_axes</span><span class="p">(</span>
     <span class="n">ax</span><span class="p">,</span>
-    <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">i_s_dq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">psi_s_dq</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">lims</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">ticks</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">lims</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ticks</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">"""Configure 3D axis limits and ticks."""</span>
-    <span class="c1"># Extract limits or determine from data</span>
-    <span class="n">x_lims</span> <span class="o">=</span> <span class="n">lims</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span> <span class="k">if</span> <span class="n">lims</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">y_lims</span> <span class="o">=</span> <span class="n">lims</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span> <span class="k">if</span> <span class="n">lims</span> <span class="k">else</span> <span class="kc">None</span>
-    <span class="n">z_lims</span> <span class="o">=</span> <span class="n">lims</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span> <span class="k">if</span> <span class="n">lims</span> <span class="k">else</span> <span class="kc">None</span>
-
-    <span class="k">if</span> <span class="n">x_lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
-            <span class="n">i_d_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
-            <span class="n">x_lims</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">i_d_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">i_d_vals</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">psi_d_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-            <span class="n">x_lims</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">psi_d_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">psi_d_vals</span><span class="p">))</span>
-
-    <span class="k">if</span> <span class="n">y_lims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"flux_map"</span><span class="p">:</span>
-            <span class="n">i_q_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">)</span>
-            <span class="n">y_lims</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">i_q_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">i_q_vals</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">psi_q_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
-            <span class="n">y_lims</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">psi_q_vals</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">psi_q_vals</span><span class="p">))</span>
-
-    <span class="c1"># Set axis limits</span>
+<span class="w">    </span><span class="sd">"""Set the axis limits and ticks, the x and y limits from the data by default."""</span>
+    <span class="n">lims</span><span class="p">,</span> <span class="n">ticks</span> <span class="o">=</span> <span class="n">lims</span> <span class="ow">or</span> <span class="p">{},</span> <span class="n">ticks</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">x_lims</span> <span class="o">=</span> <span class="n">lims</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">x_lims</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">if</span> <span class="n">x_lims</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">x_lims</span>
+    <span class="n">y_lims</span> <span class="o">=</span> <span class="n">lims</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
+    <span class="n">y_lims</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="k">if</span> <span class="n">y_lims</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">y_lims</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_lims</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_lims</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">z_lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">z_lims</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-    <span class="c1"># Set axis ticks, by default at most five intervals per axis</span>
-    <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">zaxis</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">z_lims</span> <span class="o">:=</span> <span class="n">lims</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"z"</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">z_lims</span><span class="p">)</span>
+    <span class="c1"># By default, at most five intervals per axis</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">axis</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="s2">"xyz"</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">zaxis</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">axis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]))</span>
-    <span class="k">if</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">x_ticks</span> <span class="o">=</span> <span class="n">ticks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
-        <span class="n">y_ticks</span> <span class="o">=</span> <span class="n">ticks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
-        <span class="n">z_ticks</span> <span class="o">=</span> <span class="n">ticks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">x_ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x_ticks</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">y_ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">y_ticks</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">z_ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_zticks</span><span class="p">(</span><span class="n">z_ticks</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
+        <span class="k">if</span> <span class="p">(</span><span class="n">axis_ticks</span> <span class="o">:=</span> <span class="n">ticks</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">axis_ticks</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span>
 
 
@@ -644,11 +609,8 @@
     <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
     <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">MagneticModel</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span>
     <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">raw_marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">raw_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">current_loci</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">axlim_clip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">surface_cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"viridis"</span><span class="p">,</span>
     <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
@@ -670,12 +632,9 @@
 <span class="sd">    ticks : dict[str, ArrayLike], optional</span>
 <span class="sd">        Axis tick locations. Keys should be 'x', 'y', 'z'.</span>
 <span class="sd">    raw_data : MagneticModel | tuple | list[MagneticModel | tuple], optional</span>
-<span class="sd">        Raw data for comparison (shown as scatter points). A tuple of arrays is</span>
-<span class="sd">        interpreted as `(psi_s_dq, i_s_dq, ...)` in SI units.</span>
-<span class="sd">    raw_marker : str | list[str], optional</span>
-<span class="sd">        Marker style for raw data.</span>
-<span class="sd">    raw_color : str | list[str], optional</span>
-<span class="sd">        Marker color for raw data.</span>
+<span class="sd">        Raw data for comparison, shown as scatter points (blue and red alternately for a</span>
+<span class="sd">        list). A tuple of arrays is interpreted as `(psi_s_dq, i_s_dq, ...)` in SI</span>
+<span class="sd">        units.</span>
 <span class="sd">    current_loci : tuple[ArrayLike, ArrayLike], optional</span>
 <span class="sd">        Levels `(i_d_levels, i_q_levels)` of the constant-current loci, in the units of</span>
 <span class="sd">        the plot. If given, the loci are drawn on the surface instead of the wireframe.</span>
@@ -685,8 +644,6 @@
 <span class="sd">        limits, defaults to True. The grid is cropped to the x and y limits, and the</span>
 <span class="sd">        flag is passed to the `axlim_clip` argument of matplotlib's 3D plotting</span>
 <span class="sd">        functions.</span>
-<span class="sd">    surface_cmap : str, optional</span>
-<span class="sd">        Colormap for the surface plot, defaults to "viridis".</span>
 <span class="sd">    latex : bool, optional</span>
 <span class="sd">        Use LaTeX fonts for the labels. Enabling this option requires a working LaTeX</span>
 <span class="sd">        installation, defaults to False.</span>
@@ -696,23 +653,13 @@
 <span class="sd">        Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">    """</span>
-    <span class="c1"># Setup style and base values</span>
     <span class="n">size</span> <span class="o">=</span> <span class="n">setup_map_plot</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
-    <span class="n">pu_vals</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
-
-    <span class="c1"># Normalize data</span>
-    <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-    <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
-
-    <span class="c1"># Create figure and axis</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">"projection"</span><span class="p">:</span> <span class="s2">"3d"</span><span class="p">})</span>
-
+    <span class="n">pu</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">"projection"</span><span class="p">:</span> <span class="s2">"3d"</span><span class="p">})</span>
+    <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">_get_xyz</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
-
-    <span class="c1"># Configure axes (this determines x_lims, y_lims internally)</span>
-    <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span> <span class="o">=</span> <span class="n">_configure_3d_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">lims</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
+    <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span> <span class="o">=</span> <span class="n">_configure_3d_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">lims</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span>
 
     <span class="c1"># Crop the grid to the axis limits, since clipping cuts the surface at its polygons</span>
     <span class="n">inside</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">x_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">y_lims</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -722,45 +669,16 @@
         <span class="n">crop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">s_</span><span class="p">[</span><span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">rows</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">cols</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">crop</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">crop</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">crop</span><span class="p">]</span>
 
-    <span class="c1"># Plot raw data if provided</span>
     <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">datas</span> <span class="o">=</span> <span class="n">raw_data</span>
-            <span class="n">def_markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">,</span> <span class="s2">"."</span><span class="p">]</span>
-            <span class="n">def_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">datas</span> <span class="o">=</span> <span class="p">[</span><span class="n">raw_data</span><span class="p">]</span>
-            <span class="n">def_markers</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"."</span><span class="p">]</span>
-            <span class="n">def_colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"b"</span><span class="p">]</span>
-
-        <span class="n">markers</span> <span class="o">=</span> <span class="n">raw_marker</span> <span class="k">if</span> <span class="n">raw_marker</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">def_markers</span>
-        <span class="n">colors</span> <span class="o">=</span> <span class="n">raw_color</span> <span class="k">if</span> <span class="n">raw_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">def_colors</span>
-
-        <span class="c1"># Ensure markers and colors are lists</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">markers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="n">markers</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">datas</span><span class="p">)</span>
-
-        <span class="c1"># Plot each raw dataset</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">raw_d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datas</span><span class="p">):</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="n">markers</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">markers</span><span class="p">)]</span>
-            <span class="n">c</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)]</span>
+        <span class="n">datas</span> <span class="o">=</span> <span class="n">raw_data</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">[</span><span class="n">raw_data</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">raw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">datas</span><span class="p">):</span>
             <span class="n">_filter_and_plot_raw_data</span><span class="p">(</span>
-                <span class="n">ax</span><span class="p">,</span>
-                <span class="n">raw_d</span><span class="p">,</span>
-                <span class="n">base</span><span class="p">,</span>
-                <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
-                <span class="n">component</span><span class="p">,</span>
-                <span class="n">x_lims</span><span class="p">,</span>
-                <span class="n">y_lims</span><span class="p">,</span>
-                <span class="n">marker</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">m</span><span class="p">),</span>
-                <span class="n">color</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">),</span>
+                <span class="n">ax</span><span class="p">,</span> <span class="n">raw</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">x_lims</span><span class="p">,</span> <span class="n">y_lims</span><span class="p">,</span> <span class="s2">"br"</span><span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="mi">2</span><span class="p">]</span>
             <span class="p">)</span>
 
     <span class="c1"># Plot a transparent surface</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">surface_cmap</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
     <span class="p">)</span>
     <span class="c1"># Add constant-current loci or wireframe on top</span>
     <span class="k">if</span> <span class="n">current_loci</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -770,18 +688,12 @@
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">axlim_clip</span><span class="o">=</span><span class="n">axlim_clip</span>
         <span class="p">)</span>
 
-    <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">zlabel</span> <span class="o">=</span> <span class="n">_get_labels</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">zlabel</span> <span class="o">=</span> <span class="n">_get_labels</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">pu</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">zaxis</span><span class="o">.</span><span class="n">set_rotate_label</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-    <span class="c1"># Set view angle based on component</span>
-    <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">azim</span><span class="o">=-</span><span class="mi">135</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="n">zlabel</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">azim</span><span class="o">=-</span><span class="mi">45</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="n">zlabel</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="n">zlabel</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">azim</span><span class="o">=-</span><span class="mi">135</span> <span class="k">if</span> <span class="n">component</span> <span class="o">==</span> <span class="s2">"d"</span> <span class="k">else</span> <span class="o">-</span><span class="mi">45</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
     <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
@@ -812,7 +724,8 @@
 <span class="sd">        Base values for scaling the maps. If not given, the maps are plotted in SI</span>
 <span class="sd">        units.</span>
 <span class="sd">    x_lims : tuple[float, float], optional</span>
-<span class="sd">        x-axis limits. If None, uses automatic scaling.</span>
+<span class="sd">        x-axis limits. The q-axis curves are plotted at the d-axis currents closest to</span>
+<span class="sd">        these limits, or at the extreme d-axis currents of the data if not given.</span>
 <span class="sd">    x_ticks : ArrayLike, optional</span>
 <span class="sd">        x-axis tick locations.</span>
 <span class="sd">    y_lims : tuple[float, float], optional</span>
@@ -829,15 +742,9 @@
 
 <span class="sd">    """</span>
     <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
-
-    <span class="c1"># Check if the base values were given</span>
-    <span class="n">pu_vals</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
-
-    <span class="c1"># Normalize the data</span>
-    <span class="n">i_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-    <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+    <span class="n">pu</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
+    <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">psi_s_dq</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">i_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">psi_s_dq</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span>
 
     <span class="c1"># Indices corresponding to i_d = 0 and i_q = 0</span>
     <span class="n">ind_d_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
@@ -888,24 +795,11 @@
         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">(i_\mathrm</span><span class="si">{d}</span><span class="s2">^\mathrm</span><span class="si">{max}</span><span class="s2">, i_\mathrm</span><span class="si">{q}</span><span class="s2">)$"</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># Set axis limits and ticks</span>
-    <span class="k">if</span> <span class="n">x_lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_lims</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">x_ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x_ticks</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">y_lims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_lims</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">y_ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">y_ticks</span><span class="p">)</span>
-
-    <span class="c1"># Set axis labels</span>
-    <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$, $i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$, $\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$, $i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)"</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$, $\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)"</span><span class="p">)</span>
+    <span class="n">configure_axes</span><span class="p">([</span><span class="n">ax</span><span class="p">],</span> <span class="n">x_lims</span><span class="p">,</span> <span class="n">x_ticks</span><span class="p">,</span> <span class="p">[</span><span class="n">y_lims</span><span class="p">],</span> <span class="p">[</span><span class="n">y_ticks</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="s2">d</span><span class="se">}}</span><span class="s2">$, $i_\mathrm</span><span class="se">{{</span><span class="s2">q</span><span class="se">}}</span><span class="s2">$ (</span><span class="si">{</span><span class="s1">'p.u.'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">pu</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'A'</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
+        <span class="sa">rf</span><span class="s2">"$\psi_\mathrm</span><span class="se">{{</span><span class="s2">d</span><span class="se">}}</span><span class="s2">$, $\psi_\mathrm</span><span class="se">{{</span><span class="s2">q</span><span class="se">}}</span><span class="s2">$ (</span><span class="si">{</span><span class="s1">'p.u.'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">pu</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'Vs'</span><span class="si">}</span><span class="s2">)"</span>
+    <span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
     <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>

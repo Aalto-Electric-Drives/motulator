@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -468,32 +468,18 @@
   <h1>Source code for motulator.drive.utils._sm_plot_control_loci</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Visualize optimal control loci of synchronous machines."""</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cycler</span><span class="w"> </span><span class="kn">import</span> <span class="n">cycler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_and_show</span><span class="p">,</span> <span class="n">set_style</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseValues</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._parameters</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSynchronousMachineControlPars</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_control_loci</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlLoci</span>
-
-
-<span class="c1"># %%</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_setup_plot</span><span class="p">(</span>
-    <span class="n">i_s_vals</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">BaseValues</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""Setup common plot parameters."""</span>
-    <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
-    <span class="n">pu_vals</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-    <span class="c1"># Use SI units if no base values are given</span>
-    <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
-    <span class="c1"># Convert to SI units</span>
-    <span class="n">i_s_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-    <span class="k">return</span> <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.utils._sm_control_loci</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlLoci</span><span class="p">,</span> <span class="n">Locus</span>
 
 
 <span class="c1"># %%</span>
@@ -501,455 +487,240 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MachineCharacteristics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Analyze and visualize control loci for synchronous machines.</span>
+<span class="sd">    Visualize the optimal control loci of synchronous machines.</span>
 
-<span class="sd">    This class provides a unified interface for plotting different characteristics of</span>
-<span class="sd">    synchronous machines directly from machine parameters.</span>
+<span class="sd">    The MTPA locus and the MTPV locus (if it exists) are computed up to the largest</span>
+<span class="sd">    given current magnitude, and the constant-current loci between them at each given</span>
+<span class="sd">    current magnitude. The methods plot these loci in different planes.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    par : ~motulator.drive.control.sm.BaseSynchronousMachineControlPars</span>
 <span class="sd">        Machine parameters.</span>
+<span class="sd">    i_s_vals : float | Sequence[float]</span>
+<span class="sd">        Current magnitudes (A) of the constant-current loci, in ascending order. If</span>
+<span class="sd">        `base` is given, the values are per-unit values.</span>
+<span class="sd">    base : BaseValues, optional</span>
+<span class="sd">        Base values. If given, the loci are plotted in per-unit values, otherwise in SI</span>
+<span class="sd">        units.</span>
+<span class="sd">    num : int, optional</span>
+<span class="sd">        Number of points of each locus, defaults to 16.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">par</span><span class="p">:</span> <span class="n">BaseSynchronousMachineControlPars</span><span class="p">,</span>
+        <span class="n">i_s_vals</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
+        <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="n">par</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span> <span class="o">=</span> <span class="n">ControlLoci</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pu</span> <span class="o">=</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">BaseValues</span><span class="o">.</span><span class="n">unity</span><span class="p">()</span>
+        <span class="n">loci</span> <span class="o">=</span> <span class="n">ControlLoci</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># In the units of the plots</span>
+        <span class="n">i_s_max</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">i</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">i_s_mtpv</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_max</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtpv</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">i_s_mtpv</span><span class="p">):</span>  <span class="c1"># MTPV within the current range</span>
+            <span class="n">psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">i_s_mtpv</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mtpv</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
+        <span class="n">unit</span> <span class="o">=</span> <span class="s2">"p.u."</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pu</span> <span class="k">else</span> <span class="s2">"A"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_loci</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Locus</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="n">i_s_abs</span> <span class="o">=</span> <span class="n">value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">i</span>
+            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
+            <span class="n">gamma_max</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
+            <span class="n">locus</span> <span class="o">=</span> <span class="n">loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
+                <span class="n">i_s_abs</span><span class="p">,</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">),</span> <span class="n">num</span>
+            <span class="p">)</span>
+            <span class="n">label_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="s2">s</span><span class="se">}}</span><span class="s2">=$ </span><span class="si">{</span><span class="n">label_value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">unit</span><span class="si">}</span><span class="s2">"</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_loci</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">label</span><span class="p">,</span> <span class="n">locus</span><span class="p">))</span>
 
-    <span class="c1"># %%</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_loci</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Locus</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Locus</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Plot the loci in the plane given by the functions `x` and `y` of a locus."""</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">locus</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"MTPA"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="p">),</span> <span class="p">(</span><span class="s2">"MTPV"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpv</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">locus</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">locus</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">locus</span><span class="p">),</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
+            <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span>
+            <span class="o">+</span> <span class="n">cycler</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="p">[</span><span class="s2">"--"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">locus</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_loci</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="n">locus</span><span class="p">),</span> <span class="n">y</span><span class="p">(</span><span class="n">locus</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">symbol</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">si_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Axis label of the quantity in per-unit or SI units."""</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">symbol</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="s1">'p.u.'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">pu</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">si_unit</span><span class="si">}</span><span class="s2">)"</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_torque_label</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Axis label of the torque."""</span>
+        <span class="k">return</span> <span class="sa">r</span><span class="s2">"$\tau_\mathrm</span><span class="si">{m}</span><span class="s2">$ (p.u.)"</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pu</span> <span class="k">else</span> <span class="sa">r</span><span class="s2">"$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)"</span>
+
 <div class="viewcode-block" id="MachineCharacteristics.plot_flux_loci">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics.plot_flux_loci">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_flux_loci</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_vals</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Plot the flux linkage loci.</span>
+<span class="sd">        Plot the loci in the flux linkage plane.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        i_s_vals : float or list</span>
-<span class="sd">            Current magnitudes (A) at which the loci are evaluated. If `base` is given,</span>
-<span class="sd">            the values are interpreted as per-unit values.</span>
-<span class="sd">        base : BaseValues, optional</span>
-<span class="sd">            Base values for scaling the loci.</span>
-<span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
-<span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">            Use LaTeX fonts for the labels. Enabling this option requires a working</span>
+<span class="sd">            LaTeX installation, defaults to False.</span>
 <span class="sd">        save_path : str | Path, optional</span>
-<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">            Path to save the figure. If None, the figure is not saved.</span>
 <span class="sd">        **savefig_kwargs</span>
 <span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        """</span>
-        <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-        <span class="c1"># MTPA locus</span>
-        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">"MTPA"</span><span class="p">,</span>
+        <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_loci</span><span class="p">(</span>
+            <span class="n">ax</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">psi</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">psi</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>
-            <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s2">"MTPV"</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Constant current loci</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
-            <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span>
-            <span class="o">+</span> <span class="n">cycler</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="p">[</span><span class="s2">"--"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">])</span>
-        <span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
-            <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
-            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
-            <span class="n">current_lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
-                <span class="n">i_s_abs</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">,</span> <span class="n">num</span>
-            <span class="p">)</span>
-            <span class="n">label_unit</span> <span class="o">=</span> <span class="s2">"p.u."</span> <span class="k">if</span> <span class="n">pu_vals</span> <span class="k">else</span> <span class="s2">"A"</span>
-            <span class="n">i_pu</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_pu</span><span class="p">)</span> <span class="k">if</span> <span class="n">i_pu</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i_pu</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="s2">s</span><span class="se">}}</span><span class="s2">=$ </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">label_unit</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">current_lim</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-                <span class="n">current_lim</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-        <span class="c1"># Find centers and ranges</span>
-        <span class="n">x_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">())</span>
-        <span class="n">y_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">())</span>
-        <span class="n">x_center</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x_data</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x_data</span><span class="p">))</span>
-        <span class="n">x_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x_data</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x_data</span><span class="p">)</span>
-        <span class="n">y_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y_data</span><span class="p">)</span>
-        <span class="c1"># Use larger dimension for square plot</span>
-        <span class="n">plot_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_range</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
-        <span class="c1"># Set limits</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">plot_size</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_center</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">plot_size</span><span class="p">,</span> <span class="n">x_center</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">plot_size</span><span class="p">)</span>
+        <span class="c1"># Square plot containing the MTPA locus</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">psi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">psi</span>
+        <span class="n">x_center</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">x_center</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">size</span><span class="p">,</span> <span class="n">x_center</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">size</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$ (Vs)"</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$ (Vs)"</span><span class="p">)</span>
-
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{d}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"Vs"</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{q}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"Vs"</span><span class="p">))</span>
         <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
-    <span class="c1"># %%</span>
 <div class="viewcode-block" id="MachineCharacteristics.plot_current_loci">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics.plot_current_loci">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_current_loci</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_vals</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Plot the current loci.</span>
+<span class="sd">        Plot the loci in the current plane.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        i_s_vals : float or list</span>
-<span class="sd">            Current magnitudes (A) at which the loci are evaluated. If `base` is given,</span>
-<span class="sd">            the values are interpreted as per-unit values.</span>
-<span class="sd">        base : BaseValues, optional</span>
-<span class="sd">            Base values for scaling the loci.</span>
-<span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
-<span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">            Use LaTeX fonts for the labels. Enabling this option requires a working</span>
+<span class="sd">            LaTeX installation, defaults to False.</span>
 <span class="sd">        save_path : str | Path, optional</span>
-<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">            Path to save the figure. If None, the figure is not saved.</span>
 <span class="sd">        **savefig_kwargs</span>
 <span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        """</span>
-        <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-        <span class="c1"># MTPA locus</span>
-        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">"MTPA"</span><span class="p">,</span>
+        <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">i</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_loci</span><span class="p">(</span>
+            <span class="n">ax</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">i</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">i</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s2">"MTPV"</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Constant current loci</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
-            <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span>
-            <span class="o">+</span> <span class="n">cycler</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="p">[</span><span class="s2">"--"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">])</span>
-        <span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
-            <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
-            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
-            <span class="n">const_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
-                <span class="n">i_s_abs</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">,</span> <span class="n">num</span>
-            <span class="p">)</span>
-            <span class="n">label_unit</span> <span class="o">=</span> <span class="s2">"p.u."</span> <span class="k">if</span> <span class="n">pu_vals</span> <span class="k">else</span> <span class="s2">"A"</span>
-            <span class="n">i_pu</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_pu</span><span class="p">)</span> <span class="k">if</span> <span class="n">i_pu</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i_pu</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="s2">s</span><span class="se">}}</span><span class="s2">=$ </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">label_unit</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Labels and limits</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)"</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)"</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">((</span><span class="o">-</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">))</span>
-
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">))</span>
+        <span class="n">i_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_max</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="n">i_max</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_max</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
-
         <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
-    <span class="c1"># %%</span>
 <div class="viewcode-block" id="MachineCharacteristics.plot_flux_vs_torque">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics.plot_flux_vs_torque">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_flux_vs_torque</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_vals</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Plot flux magnitude vs. torque characteristics.</span>
+<span class="sd">        Plot the flux linkage magnitude as a function of the torque.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        i_s_vals : float or list</span>
-<span class="sd">            Current magnitudes (A) at which the loci are evaluated. If `base` is given,</span>
-<span class="sd">            the values are interpreted as per-unit values.</span>
-<span class="sd">        base : BaseValues, optional</span>
-<span class="sd">            Base values for scaling the loci.</span>
-<span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
-<span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">            Use LaTeX fonts for the labels. Enabling this option requires a working</span>
+<span class="sd">            LaTeX installation, defaults to False.</span>
 <span class="sd">        save_path : str | Path, optional</span>
-<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">            Path to save the figure. If None, the figure is not saved.</span>
 <span class="sd">        **savefig_kwargs</span>
 <span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        """</span>
-        <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-
-        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-
-        <span class="c1"># MTPA locus</span>
-        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">"MTPA"</span><span class="p">,</span>
+        <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">tau</span><span class="p">,</span> <span class="n">psi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">psi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_loci</span><span class="p">(</span>
+            <span class="n">ax</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">locus</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">tau</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">psi</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mtpv</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s2">"MTPV"</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Constant current loci</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span>
-            <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span>
-            <span class="o">+</span> <span class="n">cycler</span><span class="p">(</span><span class="n">linestyle</span><span class="o">=</span><span class="p">[</span><span class="s2">"--"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">])</span>
-        <span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
-            <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
-            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
-            <span class="n">const_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
-                <span class="n">i_s_abs</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">,</span> <span class="n">num</span>
-            <span class="p">)</span>
-            <span class="n">label_unit</span> <span class="o">=</span> <span class="s2">"p.u."</span> <span class="k">if</span> <span class="n">pu_vals</span> <span class="k">else</span> <span class="s2">"A"</span>
-            <span class="n">i_pu</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_pu</span><span class="p">)</span> <span class="k">if</span> <span class="n">i_pu</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i_pu</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="s2">s</span><span class="se">}}</span><span class="s2">=$ </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">label_unit</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">const_current</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\tau_\mathrm</span><span class="si">{m}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)"</span><span class="p">)</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$ (Vs)"</span><span class="p">)</span>
-
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">psi</span><span class="p">)</span>
-
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_torque_label</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\psi_\mathrm</span><span class="si">{s}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"Vs"</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">psi</span><span class="p">)</span>
         <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 
 
-    <span class="c1"># %%</span>
 <div class="viewcode-block" id="MachineCharacteristics.plot_current_vs_torque">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/utils/index.html#motulator.drive.utils.MachineCharacteristics.plot_current_vs_torque">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_current_vs_torque</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">i_s_vals</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">BaseValues</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
-        <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">latex</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Plot current vs. torque characteristics.</span>
+<span class="sd">        Plot the current components as functions of the torque.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        i_s_vals : float or list</span>
-<span class="sd">            Current magnitudes (A) at which the loci are evaluated. If `base` is given,</span>
-<span class="sd">            the values are interpreted as per-unit values.</span>
-<span class="sd">        base : BaseValues, optional</span>
-<span class="sd">            Base values for scaling the loci.</span>
-<span class="sd">        num : int, optional</span>
-<span class="sd">            Amount of points to be evaluated, defaults to 16.</span>
 <span class="sd">        latex : bool, optional</span>
-<span class="sd">            Use LaTeX fonts for the labels, requires a working LaTeX installation.</span>
+<span class="sd">            Use LaTeX fonts for the labels. Enabling this option requires a working</span>
+<span class="sd">            LaTeX installation, defaults to False.</span>
 <span class="sd">        save_path : str | Path, optional</span>
-<span class="sd">            If provided, save the figure to this path.</span>
+<span class="sd">            Path to save the figure. If None, the figure is not saved.</span>
 <span class="sd">        **savefig_kwargs</span>
 <span class="sd">            Additional keyword arguments passed to plt.savefig().</span>
 
 <span class="sd">        """</span>
-        <span class="n">i_s_vals</span><span class="p">,</span> <span class="n">pu_vals</span><span class="p">,</span> <span class="n">base</span> <span class="o">=</span> <span class="n">_setup_plot</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">latex</span><span class="p">:</span>
-            <span class="n">width</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">1.6</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="c1"># MTPA locus</span>
-        <span class="n">mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_locus</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">num</span><span class="p">)</span>
-
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-            <span class="s2">"b-"</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">"MTPA"</span><span class="p">,</span>
+        <span class="n">set_style</span><span class="p">(</span><span class="n">latex</span><span class="p">)</span>
+        <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"figure.figsize"</span><span class="p">]</span>
+        <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mf">1.6</span> <span class="o">*</span> <span class="n">height</span><span class="p">)</span> <span class="k">if</span> <span class="n">latex</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">tau</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">i</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_loci</span><span class="p">(</span>
+            <span class="n">ax1</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">locus</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">tau</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">i</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-            <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-            <span class="s2">"b-"</span><span class="p">,</span>
-            <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-            <span class="n">label</span><span class="o">=</span><span class="s2">"MTPA"</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_loci</span><span class="p">(</span>
+            <span class="n">ax2</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">locus</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">tau</span><span class="p">,</span>
+            <span class="k">lambda</span> <span class="n">locus</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">locus</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="n">i</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="c1"># MTPV locus</span>
-        <span class="n">mtpv_i_s_dq_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">):</span>  <span class="c1"># MTPV exists within the current range</span>
-            <span class="n">mtpv_psi_s_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_s_dq</span><span class="p">(</span><span class="n">mtpv_i_s_dq_max</span><span class="p">)))</span>
-            <span class="n">mtpv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_locus</span><span class="p">(</span><span class="n">mtpv_psi_s_max</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="s2">"r-"</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s2">"MTPV"</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-                <span class="n">mtpv</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="s2">"r-"</span><span class="p">,</span>
-                <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="s2">"MTPV"</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Constant current loci</span>
-        <span class="n">cycle</span> <span class="o">=</span> <span class="n">cycler</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">])</span> <span class="o">+</span> <span class="n">cycler</span><span class="p">(</span>
-            <span class="n">linestyle</span><span class="o">=</span><span class="p">[</span><span class="s2">"--"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">,</span> <span class="s2">"-."</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">i_s_abs</span> <span class="ow">in</span> <span class="n">i_s_vals</span><span class="p">:</span>
-            <span class="n">gamma_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpv_current</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">))</span>
-            <span class="n">gamma_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_mtpa_current_angle</span><span class="p">(</span><span class="n">i_s_abs</span><span class="p">)</span>
-            <span class="n">gamma_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_min</span><span class="p">,</span> <span class="n">gamma_max</span><span class="p">)</span>
-            <span class="n">const_current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loci</span><span class="o">.</span><span class="n">compute_const_current_locus</span><span class="p">(</span>
-                <span class="n">i_s_abs</span><span class="p">,</span> <span class="n">gamma_range</span><span class="p">,</span> <span class="n">num</span>
-            <span class="p">)</span>
-            <span class="n">label_unit</span> <span class="o">=</span> <span class="s2">"p.u."</span> <span class="k">if</span> <span class="n">pu_vals</span> <span class="k">else</span> <span class="s2">"A"</span>
-            <span class="n">i_pu</span> <span class="o">=</span> <span class="n">i_s_abs</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i_pu</span><span class="p">)</span> <span class="k">if</span> <span class="n">i_pu</span><span class="o">.</span><span class="n">is_integer</span><span class="p">()</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">i_pu</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">"$i_\mathrm</span><span class="se">{{</span><span class="s2">s</span><span class="se">}}</span><span class="s2">=$ </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">label_unit</span><span class="si">}</span><span class="s2">"</span>
-
-            <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">tau_M</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
-                <span class="n">const_current</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span>
-                <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-        <span class="c1"># Limits</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span>
-
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="o">.</span><span class="n">tau_M</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span>
+        <span class="n">i_s_mtpa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">i</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">real</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_mtpa</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">i_s_vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mtpa</span><span class="o">.</span><span class="n">i_s_dq</span><span class="o">.</span><span class="n">imag</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">base</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">pu_vals</span><span class="p">:</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\tau_\mathrm</span><span class="si">{m}</span><span class="s2">$ (p.u.)"</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$ (A)"</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$ (A)"</span><span class="p">)</span>
-            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\tau_\mathrm</span><span class="si">{M}</span><span class="s2">$ (Nm)"</span><span class="p">)</span>
-
+            <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">i_s_max</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i_s_mtpa</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{d}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">))</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_label</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$i_\mathrm</span><span class="si">{q}</span><span class="s2">$"</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">))</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_torque_label</span><span class="p">())</span>
         <span class="n">save_and_show</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="o">**</span><span class="n">savefig_kwargs</span><span class="p">)</span></div>
 </div>
 

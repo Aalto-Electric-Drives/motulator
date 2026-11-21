@@ -101,14 +101,13 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 37-38
 
-Set the time-dependent reference and disturbance signals.
+Set the active and reactive power references.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-49
+.. GENERATED FROM PYTHON SOURCE LINES 38-48
 
 .. code-block:: Python
 
 
-    # Set the active and reactive power references
     ctrl.set_power_ref(lambda t: (t > 0.02) * 5e3)
     ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 
@@ -125,11 +124,11 @@ Set the time-dependent reference and disturbance signals.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-51
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-56
+.. GENERATED FROM PYTHON SOURCE LINES 50-55
 
 .. code-block:: Python
 
@@ -165,7 +164,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 0.573 seconds)
+   **Total running time of the script:** (0 minutes 0.477 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_gfl.py:

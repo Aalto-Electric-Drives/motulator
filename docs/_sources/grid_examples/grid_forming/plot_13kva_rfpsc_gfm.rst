@@ -114,7 +114,7 @@ Set the references for converter output voltage magnitude and active power.
     # Converter output voltage magnitude reference
     ctrl.set_ac_voltage_ref(base.u)
 
-    # Active power reference
+    # Active-power reference
     ctrl.set_power_ref(
         lambda t: ((t > 0.2) / 3 + (t > 0.5) / 3 + (t > 0.8) / 3 - (t > 1.2)) * nom.P
     )
@@ -166,7 +166,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.257 seconds)
+   **Total running time of the script:** (0 minutes 2.651 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_rfpsc_gfm.py:

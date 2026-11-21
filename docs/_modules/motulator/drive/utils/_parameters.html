@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -485,10 +485,7 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Solve the PM-flux linkage from i_d(psi_f) = 0.</span>
 
-<span class="sd">    The d-axis current is a monotonically increasing function of the d-axis flux</span>
-<span class="sd">    linkage. The root is bracketed by doubling the upper bound and then found using</span>
-<span class="sd">    Brent's method. No derivatives are needed, so the solution does not depend on the</span>
-<span class="sd">    numerical precision of the map (e.g., single-precision neural networks).</span>
+<span class="sd">    The root is bracketed by doubling the upper bound and found by Brent's method.</span>
 
 <span class="sd">    """</span>
     <span class="n">i_lo</span> <span class="o">=</span> <span class="n">i_d</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
@@ -497,8 +494,8 @@
     <span class="n">psi_lo</span><span class="p">,</span> <span class="n">psi_hi</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">EPS</span>
     <span class="k">while</span> <span class="p">(</span><span class="n">i_hi</span> <span class="o">:=</span> <span class="n">i_d</span><span class="p">(</span><span class="n">psi_hi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">psi_hi</span> <span class="o">&lt;</span> <span class="mf">1e3</span><span class="p">:</span>
         <span class="n">psi_lo</span><span class="p">,</span> <span class="n">psi_hi</span> <span class="o">=</span> <span class="n">psi_hi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">psi_hi</span>
-    <span class="c1"># Accept only a converged root within a finite bracket, e.g., not NaN values</span>
-    <span class="c1"># outside the domain of the map</span>
+    <span class="c1"># Accept only a converged root within a finite bracket, e.g., not NaN values outside</span>
+    <span class="c1"># the domain of the map</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">i_lo</span><span class="p">)</span> <span class="ow">and</span> <span class="n">i_hi</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">sol</span> <span class="o">=</span> <span class="n">root_scalar</span><span class="p">(</span><span class="n">i_d</span><span class="p">,</span> <span class="n">bracket</span><span class="o">=</span><span class="p">(</span><span class="n">psi_lo</span><span class="p">,</span> <span class="n">psi_hi</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"brentq"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sol</span><span class="o">.</span><span class="n">converged</span><span class="p">:</span>
@@ -555,9 +552,7 @@
 <div class="viewcode-block" id="BaseSynchronousMachinePars.magnetic_map">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.BaseSynchronousMachinePars.magnetic_map">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">magnetic_map</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Magnetic map as a function of flux linkage and electrical rotor angle.</span>
@@ -566,7 +561,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        psi_s_dq : complex | ndarray</span>
 <span class="sd">            Stator flux linkage (Vs) in rotor coordinates.</span>
-<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray</span>
 <span class="sd">            Complex exponential of the electrical rotor angle.</span>
 
 <span class="sd">        Returns</span>
@@ -588,7 +583,7 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for synchronous machine parameters, as used by the control systems.</span>
 
-<span class="sd">    The control systems use the flux linkage map of the machine in rotor coordinates.</span>
+<span class="sd">    The control systems use the flux map of the machine in rotor coordinates.</span>
 
 <span class="sd">    """</span>
 
@@ -691,9 +686,7 @@
 <div class="viewcode-block" id="SynchronousMachinePars.magnetic_map">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SynchronousMachinePars.magnetic_map">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">magnetic_map</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map."""</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
@@ -712,11 +705,11 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parameters of a saturated synchronous machine.</span>
 
-<span class="sd">    The saturation model is specified as a current map (current as a function of the</span>
-<span class="sd">    flux linkage). Optionally, to be used only in control systems, a flux map (flux</span>
-<span class="sd">    linkage as a function of the current) can be provided. For convenience, this class</span>
-<span class="sd">    also provides the incremental inductance matrix, which can be used in control and</span>
-<span class="sd">    optimal reference generation.</span>
+<span class="sd">    The magnetic model is given as a current map (current as a function of the flux</span>
+<span class="sd">    linkage), as a flux map (flux linkage as a function of the current), or as both. The</span>
+<span class="sd">    machine model uses the current map, and the control methods use the flux map. The</span>
+<span class="sd">    class also provides the incremental inductance matrix, which can be used in control</span>
+<span class="sd">    and optimal reference generation.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -725,12 +718,12 @@
 <span class="sd">    R_s : float</span>
 <span class="sd">        Stator resistance (Ω).</span>
 <span class="sd">    i_s_dq_fcn : Callable[[complex], complex], optional</span>
-<span class="sd">        Stator current (A) as a function of the stator flux linkage (Vs). Needed in the</span>
-<span class="sd">        system model and in some control methods.</span>
+<span class="sd">        Stator current (A) as a function of the stator flux linkage (Vs), needed in the</span>
+<span class="sd">        machine model.</span>
 <span class="sd">    psi_s_dq_fcn : Callable[[complex], complex], optional</span>
-<span class="sd">        Stator flux linkage (Vs) as a function of the stator current (A). This function</span>
-<span class="sd">        should be differentiable, if incremental inductances are used. Needed only for</span>
-<span class="sd">        control methods and optimal reference loci, not used in the system model.</span>
+<span class="sd">        Stator flux linkage (Vs) as a function of the stator current (A), needed in the</span>
+<span class="sd">        control methods and for the control loci. It should be differentiable if</span>
+<span class="sd">        incremental inductances are used.</span>
 <span class="sd">    G_c : float, optional</span>
 <span class="sd">        Core-loss conductance (S), connected between the stator resistance and the</span>
 <span class="sd">        magnetic model, defaults to 0 (no core losses).</span>
@@ -752,8 +745,6 @@
     <span class="n">psi_s_dq_fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">G_c</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">psi_f</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="n">L_d0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-    <span class="n">L_q0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -762,9 +753,6 @@
             <span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">psi_s_dq_fcn</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
-            <span class="c1"># Following are needed only for iterative current computation, if used</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">L_d0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">L_q0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Either i_s_dq_fcn or psi_s_dq_fcn must be provided"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>  <span class="c1"># No permanent magnets</span>
@@ -831,7 +819,9 @@
         <span class="k">def</span><span class="w"> </span><span class="nf">jac</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">i_s0</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_d0</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_q0</span>
+        <span class="c1"># Initial guess from the incremental inductances at zero current</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incr_ind_mat</span><span class="p">(</span><span class="mi">0</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">i_s0</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s_dq</span><span class="o">.</span><span class="n">real</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">psi_f</span><span class="p">)</span> <span class="o">/</span> <span class="n">L</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">psi_s_dq</span><span class="o">.</span><span class="n">imag</span> <span class="o">/</span> <span class="n">L</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">sol</span> <span class="o">=</span> <span class="n">root</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="n">i_s0</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">i_s0</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span> <span class="n">jac</span><span class="o">=</span><span class="n">jac</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"hybr"</span><span class="p">)</span>
         <span class="c1"># The residual is checked instead of sol.success, since the solver reports no</span>
         <span class="c1"># progress at the rounding error, e.g., of single-precision maps</span>
@@ -843,9 +833,7 @@
 <div class="viewcode-block" id="SaturatedSynchronousMachinePars.magnetic_map">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SaturatedSynchronousMachinePars.magnetic_map">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">magnetic_map</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map."""</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_s_dq</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span>
@@ -862,9 +850,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Parameters of a saturated synchronous machine with spatial harmonics.</span>
 
-<span class="sd">    This saturation model contains spatial harmonics in addition to the saturation</span>
-<span class="sd">    effects. This version is intended to parametrize high-fidelity machine models for</span>
-<span class="sd">    simulation purposes, while control methods do not support spatial harmonics.</span>
+<span class="sd">    The magnetic model contains spatial harmonics in addition to the saturation effects.</span>
+<span class="sd">    The class parametrizes the machine model only, since the control methods do not</span>
+<span class="sd">    support spatial harmonics.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -912,13 +900,9 @@
 <div class="viewcode-block" id="SpatialSaturatedSynchronousMachinePars.magnetic_map">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.control.im.SpatialSaturatedSynchronousMachinePars.magnetic_map">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">magnetic_map</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map."""</span>
-        <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"exp_j_theta_m must be provided"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
 </div>
 
@@ -935,12 +919,12 @@
 
 <span class="sd">        Z(s) = R[0] + 1/(1/(s*L[0]) + 1/(R[1] + 1/(1/(s*L[1]) + ...)))</span>
 
-<span class="sd">    i.e., a ladder of series resistances and shunt inductances, terminated with the</span>
-<span class="sd">    last resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is</span>
-<span class="sd">    the DC inductance of the cage. The ladder models the deep-bar effect, i.e., the</span>
-<span class="sd">    rotor resistance increasing and the rotor leakage inductance decreasing with the</span>
-<span class="sd">    frequency of the rotor current. Without inductances, the impedance is the</span>
-<span class="sd">    resistance ``R[0]``. The flux linkages of the inductances are the states.</span>
+<span class="sd">    i.e., a ladder of series resistances and shunt inductances, terminated with the last</span>
+<span class="sd">    resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is the DC</span>
+<span class="sd">    inductance of the cage. The ladder models the deep-bar effect, i.e., the rotor</span>
+<span class="sd">    resistance increasing and the rotor leakage inductance decreasing with the frequency</span>
+<span class="sd">    of the rotor current. Without inductances, the impedance is the resistance ``R[0]``.</span>
+<span class="sd">    The flux linkages of the inductances are the states.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -948,7 +932,7 @@
 <span class="sd">        Series resistances (Ω), one more than the inductances. The first one is</span>
 <span class="sd">        nonnegative and the others are positive.</span>
 <span class="sd">    L : Sequence[float], optional</span>
-<span class="sd">        Shunt inductances (H), positive, defaults to none.</span>
+<span class="sd">        Shunt inductances (H), positive, defaults to no inductances.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -1086,7 +1070,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">psi_r_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Magnetic map as a function of flux linkages and electrical rotor angle.</span>
@@ -1097,7 +1081,7 @@
 <span class="sd">            Stator flux linkage (Vs) in rotor coordinates.</span>
 <span class="sd">        psi_r_dq : complex | ndarray</span>
 <span class="sd">            Rotor flux linkage (Vs) in rotor coordinates.</span>
-<span class="sd">        exp_j_theta_m : complex | ndarray, optional</span>
+<span class="sd">        exp_j_theta_m : complex | ndarray</span>
 <span class="sd">            Complex exponential of the electrical rotor angle.</span>
 
 <span class="sd">        Returns</span>
@@ -1241,7 +1225,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">psi_r_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map, the rotor quantities being `psi_R` and `i_R`."""</span>
         <span class="n">i_s_dq</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_s_dq</span> <span class="o">-</span> <span class="n">psi_r_dq</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_sgm</span>
@@ -1257,8 +1241,7 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">InductionMachinePars</span><span class="p">(</span><span class="n">BaseInductionMachinePars</span><span class="p">,</span> <span class="n">BaseInductionMachineControlPars</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Γ-model parameters of an induction machine, with optional main-flux saturation and</span>
-<span class="sd">    deep-bar effect.</span>
+<span class="sd">    Γ-model parameters of an induction machine.</span>
 
 <span class="sd">    These parameters can be used both in control systems and in the machine model. The</span>
 <span class="sd">    magnetic model is [#Sle1989]_::</span>
@@ -1346,7 +1329,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">psi_r_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map."""</span>
         <span class="n">i_r_dq</span> <span class="o">=</span> <span class="p">(</span><span class="n">psi_r_dq</span> <span class="o">-</span> <span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">L_ell</span>
@@ -1366,9 +1349,9 @@
 
 <span class="sd">    The magnetic model is specified as a current map (stator and rotor currents as</span>
 <span class="sd">    functions of the stator and rotor flux linkages), which can include the saturation</span>
-<span class="sd">    of the main flux and of the leakage flux as well as their mutual effects. This</span>
-<span class="sd">    version is intended to parametrize machine models for simulation purposes, while</span>
-<span class="sd">    control methods do not support it.</span>
+<span class="sd">    of the main flux and of the leakage flux as well as their mutual effects. The class</span>
+<span class="sd">    parametrizes the machine model only, since the control methods do not support</span>
+<span class="sd">    general magnetic models.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1452,7 +1435,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">psi_r_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map."""</span>
         <span class="n">i_s_dq</span><span class="p">,</span> <span class="n">i_r_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">psi_r_dq</span><span class="p">)</span>
@@ -1470,9 +1453,9 @@
 <span class="sd">    Parameters of a saturated induction machine with spatial harmonics.</span>
 
 <span class="sd">    The magnetic model contains spatial harmonics (e.g., due to the slots) in addition</span>
-<span class="sd">    to the saturation effects, i.e., it depends on the rotor angle. This version is</span>
-<span class="sd">    intended to parametrize high-fidelity machine models for simulation purposes, while</span>
-<span class="sd">    control methods do not support spatial harmonics.</span>
+<span class="sd">    to the saturation effects, i.e., it depends on the rotor angle. The class</span>
+<span class="sd">    parametrizes the machine model only, since the control methods do not support</span>
+<span class="sd">    spatial harmonics.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1526,11 +1509,9 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
         <span class="n">psi_r_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Magnetic map."""</span>
-        <span class="k">if</span> <span class="n">exp_j_theta_m</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"exp_j_theta_m must be provided"</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">magnetic_map_fcn</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">psi_r_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
 </div>
 

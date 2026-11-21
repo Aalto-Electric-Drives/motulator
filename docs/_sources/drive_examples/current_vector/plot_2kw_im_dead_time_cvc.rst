@@ -67,10 +67,10 @@ Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 29-33
 
-The dead time and the threshold voltage of the power devices cause a duty-ratio error
-that depends on the sign of the phase current. As in [#Hin2010]_, the signum function
-is replaced with a smooth arctangent function, which approximates the effect of the
-parasitic capacitances at low currents.
+The dead time and the threshold voltage of the power semiconductor devices cause a
+duty-ratio error that depends on the sign of the phase current. As in [#Hin2010]_, the
+signum function is replaced with a smooth arctangent function, which approximates the
+effect of the parasitic capacitances at low currents.
 
 .. GENERATED FROM PYTHON SOURCE LINES 33-44
 
@@ -136,8 +136,8 @@ the switching frequency is 8 kHz, and the computational delay of one sampling pe
 .. GENERATED FROM PYTHON SOURCE LINES 71-74
 
 Configure the control system. If the duty-ratio error is given, the PWM compensates
-for it, and the realized voltage fed to the observer includes it. The speed
-reference is reversed under the load torque, leading to the regenerating mode.
+for it, and the realized voltage fed to the observer includes it. The speed reference
+is reversed under the load torque, leading to the regenerating mode.
 
 .. GENERATED FROM PYTHON SOURCE LINES 74-88
 
@@ -193,9 +193,9 @@ drive fails in the regenerating mode.
 
 .. GENERATED FROM PYTHON SOURCE LINES 98-101
 
-Simulate with the compensation, using the same duty-ratio error model as in the
-system model. The PWM of the control system is also configured for single update,
-so that the dead-time error is evaluated per half carrier period, `T_s/2`.
+Simulate with the compensation, using the same duty-ratio error model as in the system
+model. The PWM of the control system is also configured for single update, so that the
+dead-time error is evaluated per half carrier period, `T_s/2`.
 
 .. GENERATED FROM PYTHON SOURCE LINES 101-110
 
@@ -237,7 +237,7 @@ so that the dead-time error is evaluated per half carrier period, `T_s/2`.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.118 seconds)
+   **Total running time of the script:** (0 minutes 17.329 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_dead_time_cvc.py:

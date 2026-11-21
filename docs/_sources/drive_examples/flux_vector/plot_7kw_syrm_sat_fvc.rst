@@ -142,7 +142,7 @@ Configure the control system, including the saturation model.
 
 .. GENERATED FROM PYTHON SOURCE LINES 61-62
 
-Plot control characteristics.
+Plot the control loci.
 
 .. GENERATED FROM PYTHON SOURCE LINES 62-71
 
@@ -151,11 +151,11 @@ Plot control characteristics.
 
     # sphinx_gallery_thumbnail_number = 1
     i_s_vals = [1, 1.5, 2]  # Current values for the plots
-    mc = utils.MachineCharacteristics(est_par)
-    mc.plot_flux_vs_torque(i_s_vals, base)
-    mc.plot_current_vs_torque(i_s_vals, base)
-    mc.plot_current_loci(i_s_vals, base)
-    mc.plot_flux_loci(i_s_vals, base)
+    mc = utils.MachineCharacteristics(est_par, i_s_vals, base)
+    mc.plot_flux_vs_torque()
+    mc.plot_current_vs_torque()
+    mc.plot_current_loci()
+    mc.plot_flux_loci()
 
 
 
@@ -241,7 +241,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 7.141 seconds)
+   **Total running time of the script:** (0 minutes 6.277 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_7kw_syrm_sat_fvc.py:

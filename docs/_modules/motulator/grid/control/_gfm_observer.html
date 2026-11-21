@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -541,7 +541,7 @@
 <span class="sd">    T_s : float</span>
 <span class="sd">        Sampling period (s).</span>
 <span class="sd">    R : float, optional</span>
-<span class="sd">        Total series resistance (Ω), defaults to 0.</span>
+<span class="sd">        Total series resistance estimate (Ω), defaults to 0.</span>
 
 <span class="sd">    """</span>
 
@@ -617,7 +617,7 @@
 <span class="sd">    alpha_o : float, optional</span>
 <span class="sd">        Observer bandwidth (rad/s), defaults to 2*pi*50.</span>
 <span class="sd">    alpha_c : float, optional</span>
-<span class="sd">        Current control bandwidth (rad/s), defaults to 2*pi*400.</span>
+<span class="sd">        Current-control bandwidth (rad/s), defaults to 2*pi*400.</span>
 <span class="sd">    u_nom : float, optional</span>
 <span class="sd">        Nominal grid voltage (V), line-to-neutral peak value, defaults to</span>
 <span class="sd">        `sqrt(2/3)*400`.</span>
@@ -625,7 +625,7 @@
 <span class="sd">        Nominal grid angular frequency (rad/s), defaults to 2*pi*50.</span>
 <span class="sd">    T_s : float, optional</span>
 <span class="sd">        Sampling period (s), defaults to 125e-6.</span>
-<span class="sd">    i_d_max : float, optional</span>
+<span class="sd">    i_d_max : float | None, optional</span>
 <span class="sd">        Maximum active current (A), peak value, for the active-power reference</span>
 <span class="sd">        limitation. If not given, the active-power reference is not limited. A value</span>
 <span class="sd">        somewhat below `i_max` is recommended, e.g., `i_d_max = 0.85*i_max`.</span>
@@ -655,11 +655,13 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Disturbance-observer-based grid-forming controller.</span>
 
-<span class="sd">    This implements the RFPSC-type grid-forming mode of the control method described in</span>
-<span class="sd">    [#Nur2024]_. Transparent current control is also implemented. Optionally, the</span>
-<span class="sd">    active-power reference is limited to a realizable level, prioritizing the reactive</span>
-<span class="sd">    current, as described in [#Maa2026]_ (here reduced to balanced conditions). This</span>
-<span class="sd">    limitation helps to maintain synchronism during grid-voltage sags in weak grids.</span>
+<span class="sd">    This implements the grid-forming mode of the control method described in</span>
+<span class="sd">    [#Nur2024]_, which is of the reference-feedforward power-synchronization type, see</span>
+<span class="sd">    `PowerSynchronizationController`. Transparent current control is also implemented.</span>
+<span class="sd">    Optionally, the active-power reference is limited to a realizable level,</span>
+<span class="sd">    prioritizing the reactive current, as described in [#Maa2026]_ (here reduced to</span>
+<span class="sd">    balanced conditions). This limitation helps to maintain synchronism during</span>
+<span class="sd">    grid-voltage sags in weak grids.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -668,10 +670,9 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    In this implementation, the control system operates in synchronous coordinates</span>
-<span class="sd">    rotating at the nominal grid angular frequency, and the disturbance observer is</span>
-<span class="sd">    designed directly in discrete time. For other implementation options, see</span>
-<span class="sd">    [#Nur2024]_.</span>
+<span class="sd">    In this implementation, the controller operates in synchronous coordinates rotating</span>
+<span class="sd">    at the nominal grid angular frequency, and the disturbance observer is designed</span>
+<span class="sd">    directly in discrete time. For other implementation options, see [#Nur2024]_.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>

@@ -18,8 +18,8 @@
 .. _sphx_glr_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py:
 
 
-2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control
-==============================================
+2.2-kW IPMSM, two-mass mechanics, O-V/Hz control
+================================================
 
 This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive. The mechanical subsystem is modeled
@@ -194,7 +194,7 @@ Plot the load speed and the twist angle.
 
 .. GENERATED FROM PYTHON SOURCE LINES 80-81
 
-Plot the frequency response from the torque tau_M to the rotor speed w_M.
+Plot the frequency response from the electromagnetic torque to the rotor speed.
 
 .. GENERATED FROM PYTHON SOURCE LINES 81-109
 
@@ -251,7 +251,7 @@ Plot the frequency response from the torque tau_M to the rotor speed w_M.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.077 seconds)
+   **Total running time of the script:** (0 minutes 1.685 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py:

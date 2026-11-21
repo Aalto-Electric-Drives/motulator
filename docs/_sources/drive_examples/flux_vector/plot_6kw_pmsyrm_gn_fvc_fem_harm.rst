@@ -21,14 +21,15 @@
 5.6-kW PM-SyRM, GradNet from FEM data, FVC
 ==========================================
 
-This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
-machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for
-both the machine model and the control system. The machine model uses a GradNet current
-map with spatial harmonics, while the control system uses a GradNet flux map without
-spatial harmonics. The models are trained with the related package
+This example simulates flux-vector control (FVC) of a 5.6-kW permanent-magnet
+synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet models
+trained on FEM data are used for both the machine model and the control system. The
+machine model uses a GradNet current map with spatial harmonics, while the control
+system uses a GradNet flux map without spatial harmonics. The models are trained with
+the related package
 `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-24
+.. GENERATED FROM PYTHON SOURCE LINES 16-25
 
 .. code-block:: Python
 
@@ -48,11 +49,11 @@ spatial harmonics. The models are trained with the related package
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-26
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-30
+.. GENERATED FROM PYTHON SOURCE LINES 27-31
 
 .. code-block:: Python
 
@@ -67,11 +68,11 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 31-32
+.. GENERATED FROM PYTHON SOURCE LINES 32-33
 
 Determine the path of the current script.
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-35
+.. GENERATED FROM PYTHON SOURCE LINES 33-36
 
 .. code-block:: Python
 
@@ -85,12 +86,12 @@ Determine the path of the current script.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-38
+.. GENERATED FROM PYTHON SOURCE LINES 37-39
 
-Configure the system model using the GradNet saturation model with spatial harmonics,
+Configure the system model using the GradNet current map with spatial harmonics,
 trained on the FEM data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-52
+.. GENERATED FROM PYTHON SOURCE LINES 39-53
 
 .. code-block:: Python
 
@@ -115,11 +116,11 @@ trained on the FEM data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 54-55
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-70
+.. GENERATED FROM PYTHON SOURCE LINES 55-71
 
 .. code-block:: Python
 
@@ -146,11 +147,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 71-72
+.. GENERATED FROM PYTHON SOURCE LINES 72-73
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 72-76
+.. GENERATED FROM PYTHON SOURCE LINES 73-77
 
 .. code-block:: Python
 
@@ -165,11 +166,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 78-79
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 79-83
 
 .. code-block:: Python
 
@@ -192,7 +193,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.216 seconds)
+   **Total running time of the script:** (0 minutes 8.833 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_6kw_pmsyrm_gn_fvc_fem_harm.py:

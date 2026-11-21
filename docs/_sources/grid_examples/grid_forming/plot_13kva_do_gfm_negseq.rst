@@ -67,8 +67,8 @@ Compute base values based on the nominal values.
 Configure the system model. An unbalanced fault is simulated, where the phase-a grid
 voltage drops to 0.5 p.u. at 0.4 s, rises to 0.75 p.u. at 0.5 s, and finally rises to
 1 p.u. at 0.6 s. The zero-sequence component of the fault is omitted, since it does
-not affect the three-wire system. Therefore, the phase-a voltage of the model drops
-to 2/3 p.u. and then rises to 5/6 p.u.
+not affect the three-wire system. Therefore, the phase-a voltage of the model drops to
+2/3 p.u. and then rises to 5/6 p.u.
 
 .. GENERATED FROM PYTHON SOURCE LINES 31-46
 
@@ -188,7 +188,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.809 seconds)
+   **Total running time of the script:** (0 minutes 3.953 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm_negseq.py:

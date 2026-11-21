@@ -22,13 +22,14 @@
 =============================
 
 This example simulates sensorless current-vector control (CVC) of the same 5.6-kW
-permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding flux-
-vector control example. See :doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`
-for the machine model, flux-map data, and saturation-model description. This example
-demonstrates online reference generation in current-vector control, which allows the
-optimal current references to be generated in real time [#Sar2026]_.
+permanent-magnet synchronous reluctance machine (PM-SyRM) as the corresponding
+flux-vector control example. See
+:doc:`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc` for the machine model,
+flux-map data, and saturation-model description. This example demonstrates online
+reference generation in current-vector control, which allows the optimal current
+references to be generated in real time [#Sar2026]_.
 
-.. GENERATED FROM PYTHON SOURCE LINES 14-22
+.. GENERATED FROM PYTHON SOURCE LINES 15-23
 
 .. code-block:: Python
 
@@ -47,11 +48,11 @@ optimal current references to be generated in real time [#Sar2026]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 23-24
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Compute base values based on the nominal values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-28
+.. GENERATED FROM PYTHON SOURCE LINES 25-29
 
 .. code-block:: Python
 
@@ -66,18 +67,18 @@ Compute base values based on the nominal values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-30
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 30-50
+.. GENERATED FROM PYTHON SOURCE LINES 31-51
 
 .. code-block:: Python
 
 
     # Load the measured flux map data used to parametrize the machine model
-    p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
-    meas_data = np.load(p / "baldor_400rpm_map.npz")
+    p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+    meas_data = np.load(p.parent / "data" / "baldor_400rpm_map.npz")
     i_s_dq_map = meas_data["i_s_dq"]
     psi_s_dq_map = meas_data["psi_s_dq"]
 
@@ -101,11 +102,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
+.. GENERATED FROM PYTHON SOURCE LINES 52-53
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-87
+.. GENERATED FROM PYTHON SOURCE LINES 53-88
 
 .. code-block:: Python
 
@@ -151,11 +152,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-89
+.. GENERATED FROM PYTHON SOURCE LINES 89-90
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 89-93
+.. GENERATED FROM PYTHON SOURCE LINES 90-94
 
 .. code-block:: Python
 
@@ -170,11 +171,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-95
+.. GENERATED FROM PYTHON SOURCE LINES 95-96
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 95-100
+.. GENERATED FROM PYTHON SOURCE LINES 96-101
 
 .. code-block:: Python
 
@@ -195,7 +196,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 101-106
+.. GENERATED FROM PYTHON SOURCE LINES 102-107
 
 .. rubric:: References
 
@@ -206,7 +207,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 9.434 seconds)
+   **Total running time of the script:** (0 minutes 7.774 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc.py:

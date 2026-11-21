@@ -34,17 +34,16 @@ est_par = par  # Assume accurate model parameter estimates
 
 # %%
 # Simulate the drive in torque-control mode at the constant speed of 0.5 p.u. The
-# discrete-time design includes the delays, so the control system does not advance
-# the angle of its voltage reference (`k_comp = 0`).
+# discrete-time design includes the delays, so the control system does not advance the
+# angle of its voltage reference (`k_comp = 0`).
 
 
 def simulate(discrete: bool):
     mdl = model.Drive(
         model.InductionMachine(par),
-        model.ExternalRotorSpeed(),
+        model.ExternalRotorSpeed(0.5 * base.w_M),
         model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
     )
-    mdl.mechanics.set_external_rotor_speed(lambda t: 0.5 * base.w_M)
     cfg = control.CurrentVectorControllerCfg(
         psi_s_nom=base.psi,
         i_s_max=2 * base.i,

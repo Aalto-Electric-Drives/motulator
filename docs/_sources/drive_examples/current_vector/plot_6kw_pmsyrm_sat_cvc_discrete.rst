@@ -78,8 +78,8 @@ Configure the machine parameters based on the measured flux map, see
 .. code-block:: Python
 
 
-    p = Path(utils.__file__).resolve().parents[3] / "examples/drive/data"
-    data = np.load(p / "baldor_400rpm_map.npz")
+    p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
+    data = np.load(p.parent / "data" / "baldor_400rpm_map.npz")
     flux_map = utils.MagneticModel(
         i_s_dq=data["i_s_dq"], psi_s_dq=data["psi_s_dq"], type="flux_map"
     )
@@ -96,8 +96,8 @@ Configure the machine parameters based on the measured flux map, see
 
 .. GENERATED FROM PYTHON SOURCE LINES 44-46
 
-The control system uses an analytical saturation model fitted to the measured data,
-so the model has small errors.
+The control system uses an analytical saturation model fitted to the measured data, so
+the model has small errors.
 
 .. GENERATED FROM PYTHON SOURCE LINES 46-70
 
@@ -137,10 +137,10 @@ so the model has small errors.
 .. GENERATED FROM PYTHON SOURCE LINES 71-74
 
 Simulate the drive in torque-control mode at the constant speed of 1.5 p.u. The
-discrete-time design includes the delays, so the control system does not advance
-the angle of its voltage reference (`k_comp = 0`).
+discrete-time design includes the delays, so the control system does not advance the
+angle of its voltage reference (`k_comp = 0`).
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-110
+.. GENERATED FROM PYTHON SOURCE LINES 74-109
 
 .. code-block:: Python
 
@@ -149,10 +149,9 @@ the angle of its voltage reference (`k_comp = 0`).
     def simulate(discrete: bool):
         mdl = model.Drive(
             model.SynchronousMachine(par),
-            model.ExternalRotorSpeed(),
+            model.ExternalRotorSpeed(1.5 * base.w_M),
             model.VoltageSourceConverter(u_dc=540, modulator=model.CarrierComparison()),
         )
-        mdl.mechanics.set_external_rotor_speed(lambda t: 1.5 * base.w_M)
         cfg = control.CurrentVectorControllerCfg(
             i_s_max=2 * base.i,
             alpha_c=2 * pi * 500,
@@ -187,11 +186,11 @@ the angle of its voltage reference (`k_comp = 0`).
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 111-112
+.. GENERATED FROM PYTHON SOURCE LINES 110-111
 
 Plot the speed estimates and the current responses in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 112-136
+.. GENERATED FROM PYTHON SOURCE LINES 111-135
 
 .. code-block:: Python
 
@@ -231,7 +230,7 @@ Plot the speed estimates and the current responses in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 137-146
+.. GENERATED FROM PYTHON SOURCE LINES 136-145
 
 At this bandwidth, the continuous-time design is sensitive to the errors in the flux
 linkage map, resulting in poorly damped oscillations, while the discrete-time design
@@ -246,7 +245,7 @@ remains well damped. In the largest steps, the voltage is limited.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.798 seconds)
+   **Total running time of the script:** (0 minutes 1.535 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_6kw_pmsyrm_sat_cvc_discrete.py:

@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -581,9 +581,9 @@
 
 <span class="sd">    where `u` is the controller output, `i_ref` is the reference signal, `i` is the</span>
 <span class="sd">    feedback signal, `w_c` is the angular speed of synchronous coordinates, `u_ff` is</span>
-<span class="sd">    the feedforward signal, and `1/s` refers to integration. The 1DOF version is</span>
-<span class="sd">    obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented based</span>
-<span class="sd">    on the realized controller output.</span>
+<span class="sd">    the feedforward signal, and `1/s` refers to integration. The standard PI controller</span>
+<span class="sd">    is obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented</span>
+<span class="sd">    based on the realized controller output.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -653,7 +653,7 @@
 <span class="sd">        u : complex</span>
 <span class="sd">            Realized (limited) controller output.</span>
 <span class="sd">        w_c : float</span>
-<span class="sd">            Angular speed of the reference frame (rad/s).</span>
+<span class="sd">            Angular speed (rad/s) of the coordinates.</span>
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">+=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_i</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">w_c</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">v</span><span class="p">)</span></div>
@@ -673,7 +673,7 @@
 <span class="sd">        u : complex</span>
 <span class="sd">            Controller output.</span>
 <span class="sd">        w_c : float</span>
-<span class="sd">            Angular speed of the reference frame (rad/s), not needed in this design.</span>
+<span class="sd">            Angular speed (rad/s) of the coordinates, not needed in this design.</span>
 
 <span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">u_i</span> <span class="o">=</span> <span class="n">u</span></div>
@@ -822,7 +822,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    rate_limit : float, optional</span>
-<span class="sd">        Rate limit, defaults to `inf`.</span>
+<span class="sd">        Rate limit (unit of the signal per second), defaults to `inf`. The output starts</span>
+<span class="sd">        from zero.</span>
 
 <span class="sd">    """</span>
 
@@ -831,25 +832,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Limit the input signal."""</span>
-        <span class="c1"># In this implementation, the falling rate limit equals the (negative) rising</span>
-        <span class="c1"># rate limit. If needed, these limits can be separated with minor modifications</span>
-        <span class="c1"># in the class.</span>
-        <span class="n">rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span><span class="p">)</span> <span class="o">/</span> <span class="n">T_s</span>
-
-        <span class="k">if</span> <span class="n">rate</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">:</span>
-            <span class="c1"># Limit rising rate</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">+</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit</span>
-        <span class="k">elif</span> <span class="n">rate</span> <span class="o">&lt;</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">rate_limit</span><span class="p">:</span>
-            <span class="c1"># Limit falling rate</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">-</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">y</span> <span class="o">=</span> <span class="n">u</span>
-
-        <span class="c1"># Store the limited output</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">=</span> <span class="n">y</span>
-
-        <span class="k">return</span> <span class="n">y</span></div>
+<span class="w">        </span><span class="sd">"""Limit the rate of change of the input signal, equally in both directions."""</span>
+        <span class="n">du_max</span> <span class="o">=</span> <span class="n">T_s</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate_limit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">=</span> <span class="n">clip</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">-</span> <span class="n">du_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span> <span class="o">+</span> <span class="n">du_max</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_old_y</span></div>
 
 </pre></div>
 

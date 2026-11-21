@@ -25,10 +25,10 @@ nom = utils.NominalValues(U=370, I=4.3, f=75, P=2.2e3, tau=14)
 base = utils.BaseValues.from_nominal(nom, n_p=3)
 
 # %%
-# Configure the current sensors. A sensor maps each sampled channel `x` to `gain*x +
-# offset + std*n`, where `n` is white Gaussian noise. The current sensors measure the
-# phase currents, so the parameters are given per phase. The random number generator
-# is seeded to make the results reproducible.
+# Configure the current sensors. A sensor maps each sampled channel `x` to
+# `gain*x + offset + std*n`, where `n` is white Gaussian noise. The current sensors
+# measure the phase currents, so the parameters are given per phase. The random number
+# generator is seeded to make the results reproducible.
 
 i_c_sensor = model.Sensor(
     gain=[1.0, 1.02, 0.99],
@@ -58,8 +58,8 @@ speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
 ctrl = control.VectorControlSystem(vector_ctrl, speed_ctrl)
 
 # %%
-# Set the speed reference and the external load torque. The speed is first increased
-# to 0.5 p.u. and then, under the load, decreased to 0.1 p.u.
+# Set the speed reference and the external load torque. The speed is first increased to
+# 0.5 p.u. and then, under the load, decreased to 0.1 p.u.
 
 ctrl.set_speed_ref(lambda t: ((t > 0.2) * 0.5 - (t > 1.2) * 0.4) * base.w_M)
 mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
@@ -67,7 +67,7 @@ mdl.mechanics.set_external_load_torque(lambda t: (t > 0.8) * 0.7 * nom.tau)
 # %%
 # Simulate the drive and plot the results. The offsets cause a torque ripple at the
 # stator frequency and the gain mismatch at twice the stator frequency. The plotted
-# currents are the measured ones, while the torque is the actual one.
+# currents and the torque estimate are based on the measured currents.
 
 sim = model.Simulation(mdl, ctrl)
 res = sim.simulate(t_stop=2)

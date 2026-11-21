@@ -106,7 +106,7 @@ These examples demonstrate observer-based V/Hz (O-V/Hz) control for synchronous 
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</div>
+      <div class="sphx-glr-thumbnail-title">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</div>
     </div>
 
 

@@ -2,11 +2,12 @@
 5.6-kW PM-SyRM, GradNet from FEM data, FVC
 ==========================================
 
-This example simulates flux-vector control (FVC) of a 5.6-kW PM synchronous reluctance
-machine (Baldor ECS101M0H7EF4) drive. GradNet models trained on FEM data are used for
-both the machine model and the control system. The machine model uses a GradNet current
-map with spatial harmonics, while the control system uses a GradNet flux map without
-spatial harmonics. The models are trained with the related package
+This example simulates flux-vector control (FVC) of a 5.6-kW permanent-magnet
+synchronous reluctance machine (PM-SyRM, Baldor ECS101M0H7EF4) drive. GradNet models
+trained on FEM data are used for both the machine model and the control system. The
+machine model uses a GradNet current map with spatial harmonics, while the control
+system uses a GradNet flux map without spatial harmonics. The models are trained with
+the related package
 `motulator-gradnet <https://aalto-electric-drives.github.io/motulator-gradnet/>`_.
 
 """
@@ -33,7 +34,7 @@ base = utils.BaseValues.from_nominal(nom, n_p=2)
 p = Path(__file__).resolve().parent if "__file__" in globals() else Path.cwd()
 
 # %%
-# Configure the system model using the GradNet saturation model with spatial harmonics,
+# Configure the system model using the GradNet current map with spatial harmonics,
 # trained on the FEM data.
 
 path = "trained_models/baldor_fem_curr_map_harm_softmax_d48_sub10.npz"

@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -477,11 +477,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">complex2abc</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._lc_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">LCFilter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">InductionMachine</span><span class="p">,</span> <span class="n">SynchronousMachine</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.drive.model._mechanics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">ExternalRotorSpeed</span><span class="p">,</span>
-    <span class="n">MechanicalSystem</span><span class="p">,</span>
-    <span class="n">TwoMassMechanicalSystem</span><span class="p">,</span>
-<span class="p">)</span>
 
 
 <span class="c1"># %%</span>
@@ -522,7 +517,7 @@
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="Drive">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.Drive">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Drive</span><span class="p">(</span><span class="n">Model</span><span class="p">[</span><span class="n">VoltageSourceConverter</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Drive</span><span class="p">[</span><span class="n">M</span><span class="p">:</span> <span class="n">Subsystem</span><span class="p">](</span><span class="n">Model</span><span class="p">[</span><span class="n">VoltageSourceConverter</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Continuous-time system model for a machine drive.</span>
 
@@ -530,8 +525,11 @@
 <span class="sd">    ----------</span>
 <span class="sd">    machine : InductionMachine | SynchronousMachine</span>
 <span class="sd">        Electric machine model.</span>
-<span class="sd">    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed</span>
-<span class="sd">        Mechanical system model.</span>
+<span class="sd">    mechanics : Subsystem</span>
+<span class="sd">        Mechanical system model, e.g., `MechanicalSystem`. It can be any subsystem whose</span>
+<span class="sd">        input is the electromagnetic torque `tau_M` and whose outputs are the mechanical</span>
+<span class="sd">        angular speed `w_M` and, with a position sensor, the mechanical angle `theta_M`</span>
+<span class="sd">        of the rotor.</span>
 <span class="sd">    converter : VoltageSourceConverter</span>
 <span class="sd">        Converter model.</span>
 <span class="sd">    lc_filter : LCFilter, optional</span>
@@ -553,7 +551,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">machine</span><span class="p">:</span> <span class="n">InductionMachine</span> <span class="o">|</span> <span class="n">SynchronousMachine</span><span class="p">,</span>
-        <span class="n">mechanics</span><span class="p">:</span> <span class="n">MechanicalSystem</span> <span class="o">|</span> <span class="n">TwoMassMechanicalSystem</span> <span class="o">|</span> <span class="n">ExternalRotorSpeed</span><span class="p">,</span>
+        <span class="n">mechanics</span><span class="p">:</span> <span class="n">M</span><span class="p">,</span>
         <span class="n">converter</span><span class="p">:</span> <span class="n">VoltageSourceConverter</span><span class="p">,</span>
         <span class="n">lc_filter</span><span class="p">:</span> <span class="n">LCFilter</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">dc_bus</span><span class="p">:</span> <span class="n">DCBus</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -607,7 +605,7 @@
 <span class="c1"># %%</span>
 <div class="viewcode-block" id="GridConnectedMachine">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.GridConnectedMachine">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">GridConnectedMachine</span><span class="p">(</span><span class="n">Model</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GridConnectedMachine</span><span class="p">[</span><span class="n">M</span><span class="p">:</span> <span class="n">Subsystem</span><span class="p">](</span><span class="n">Model</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Continuous-time system model for a machine connected directly to the grid.</span>
 
@@ -621,8 +619,8 @@
 <span class="sd">    ----------</span>
 <span class="sd">    machine : InductionMachine | SynchronousMachine</span>
 <span class="sd">        Electric machine model.</span>
-<span class="sd">    mechanics : MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed</span>
-<span class="sd">        Mechanical system model.</span>
+<span class="sd">    mechanics : Subsystem</span>
+<span class="sd">        Mechanical system model, see `Drive`.</span>
 <span class="sd">    ac_source : ThreePhaseSource</span>
 <span class="sd">        Three-phase voltage source.</span>
 
@@ -631,7 +629,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">machine</span><span class="p">:</span> <span class="n">InductionMachine</span> <span class="o">|</span> <span class="n">SynchronousMachine</span><span class="p">,</span>
-        <span class="n">mechanics</span><span class="p">:</span> <span class="n">MechanicalSystem</span> <span class="o">|</span> <span class="n">TwoMassMechanicalSystem</span> <span class="o">|</span> <span class="n">ExternalRotorSpeed</span><span class="p">,</span>
+        <span class="n">mechanics</span><span class="p">:</span> <span class="n">M</span><span class="p">,</span>
         <span class="n">ac_source</span><span class="p">:</span> <span class="n">ThreePhaseSource</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="n">machine</span>

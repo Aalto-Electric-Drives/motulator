@@ -123,7 +123,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m)
 
       
       Magnetic map as a function of flux linkages and electrical rotor angle.
@@ -133,7 +133,7 @@ Package Contents
       :param psi_r_dq: Rotor flux linkage (Vs) in rotor coordinates.
       :type psi_r_dq: complex | ndarray
       :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray, optional
+      :type exp_j_theta_m: complex | ndarray
 
       :returns: Stator current (A) and rotor current (A) in rotor coordinates, both positive
                 into the windings, and electromagnetic torque (Nm) per pole pair.
@@ -186,7 +186,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m)
 
       
       Magnetic map as a function of flux linkage and electrical rotor angle.
@@ -194,7 +194,7 @@ Package Contents
       :param psi_s_dq: Stator flux linkage (Vs) in rotor coordinates.
       :type psi_s_dq: complex | ndarray
       :param exp_j_theta_m: Complex exponential of the electrical rotor angle.
-      :type exp_j_theta_m: complex | ndarray, optional
+      :type exp_j_theta_m: complex | ndarray
 
       :returns: Stator current (A) in rotor coordinates and electromagnetic torque (Nm) per
                 pole pair.
@@ -227,17 +227,17 @@ Package Contents
 
        Z(s) = R[0] + 1/(1/(s*L[0]) + 1/(R[1] + 1/(1/(s*L[1]) + ...)))
 
-   i.e., a ladder of series resistances and shunt inductances, terminated with the
-   last resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is
-   the DC inductance of the cage. The ladder models the deep-bar effect, i.e., the
-   rotor resistance increasing and the rotor leakage inductance decreasing with the
-   frequency of the rotor current. Without inductances, the impedance is the
-   resistance ``R[0]``. The flux linkages of the inductances are the states.
+   i.e., a ladder of series resistances and shunt inductances, terminated with the last
+   resistance [#Mol2020]_. Hence, ``R[0]`` is the DC resistance and ``L[0]`` is the DC
+   inductance of the cage. The ladder models the deep-bar effect, i.e., the rotor
+   resistance increasing and the rotor leakage inductance decreasing with the frequency
+   of the rotor current. Without inductances, the impedance is the resistance ``R[0]``.
+   The flux linkages of the inductances are the states.
 
    :param R: Series resistances (Ω), one more than the inductances. The first one is
              nonnegative and the others are positive.
    :type R: Sequence[float]
-   :param L: Shunt inductances (H), positive, defaults to none.
+   :param L: Shunt inductances (H), positive, defaults to no inductances.
    :type L: Sequence[float], optional
 
    .. rubric:: References
@@ -361,7 +361,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12, sampling_delay = 0.0)
+.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, sampling_delay = 0.0, N = 2**12)
 
    Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
 
@@ -383,11 +383,11 @@ Package Contents
    :param single_update: Sample and update the duty ratios once per carrier period, defaults to False,
                          see `Modulator`.
    :type single_update: bool, optional
-   :param N: Amount of the counter quantization levels, defaults to 2**12.
-   :type N: int, optional
    :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
                           `Modulator`.
    :type sampling_delay: float, optional
+   :param N: Number of the counter quantization levels, defaults to 2**12.
+   :type N: int, optional
 
    .. rubric:: Examples
 
@@ -556,14 +556,10 @@ Package Contents
    
    Capacitive DC bus feeding converters.
 
-   The DC bus feeds the converters of the models it is given to, see `Model`. The model
-   connects its converter to the DC bus through `connect`, which registers the
-   converter in `converters` and gives the connections of its DC terminals, i.e., the
-   DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
-   currents of the registered converters, computed from their switching states and AC
-   currents. The DC bus can be shared by the converters of several models, see
-   `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
-   can also be fed to the DC bus.
+   The DC bus feeds the converters of the models it is given to, see `Model`, and draws
+   their DC currents, computed from their switching states and AC currents. The DC bus
+   can be shared by the converters of several models, see `CompositeModel`. An external
+   current, e.g., from a battery or a braking chopper, can also be fed to the DC bus.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
@@ -722,8 +718,11 @@ Package Contents
 
    :param machine: Electric machine model.
    :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical system model.
-   :type mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
+   :param mechanics: Mechanical system model, e.g., `MechanicalSystem`. It can be any subsystem whose
+                     input is the electromagnetic torque `tau_M` and whose outputs are the mechanical
+                     angular speed `w_M` and, with a position sensor, the mechanical angle `theta_M`
+                     of the rotor.
+   :type mechanics: Subsystem
    :param converter: Converter model.
    :type converter: VoltageSourceConverter
    :param lc_filter: LC filter model. If not given, a direct connection between the converter and
@@ -791,16 +790,21 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: ExternalRotorSpeed
+.. py:class:: ExternalRotorSpeed(w_M = 0.0)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
 
    
-   Integrate rotor angle from externally given rotor speed.
+   Externally given rotor speed.
 
-   This class maintains the same interface as other mechanical systems but the speed is
-   determined by an external function rather than by torque dynamics.
+   The speed is given externally instead of being determined by the torque dynamics,
+   and the rotor angle is integrated from the speed. The electromagnetic torque is an
+   input, as in the other mechanical systems, but it does not affect the speed.
+
+   :param w_M: Rotor speed (rad/s), constant or a function of time, defaults to 0. It can be
+               changed later through the attribute `w_M`.
+   :type w_M: float | Callable[[float], float], optional
 
 
 
@@ -867,84 +871,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_external_load_torque(tau_L)
-      :abstractmethod:
-
-
-      
-      Set external load torque (Nm), constant or a function of time.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_external_rotor_speed(w_M)
-
-      
-      Set external rotor speed (rad/s), constant or a function of time.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: set_outputs(t)
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set states, keeping the rotor angle within [-pi, pi).
 
 
 
@@ -981,8 +911,8 @@ Package Contents
 
    :param machine: Electric machine model.
    :type machine: InductionMachine | SynchronousMachine
-   :param mechanics: Mechanical system model.
-   :type mechanics: MechanicalSystem | TwoMassMechanicalSystem | ExternalRotorSpeed
+   :param mechanics: Mechanical system model, see `Drive`.
+   :type mechanics: Subsystem
    :param ac_source: Three-phase voltage source.
    :type ac_source: ThreePhaseSource
 
@@ -1024,7 +954,7 @@ Package Contents
    eddy-current core losses can be modeled by means of a constant core-loss conductance
    `G_c`, connected between the stator resistance and the magnetic model.
 
-   :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
+   :param par: Machine parameters.
    :type par: BaseInductionMachinePars
 
    .. rubric:: Notes
@@ -1131,30 +1061,6 @@ Package Contents
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set states, keeping the rotor angle within [-pi, pi).
 
 
 
@@ -1285,7 +1191,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m)
 
       
       Magnetic map, the rotor quantities being `psi_R` and `i_R`.
@@ -1315,8 +1221,7 @@ Package Contents
 
 
    
-   Γ-model parameters of an induction machine, with optional main-flux saturation and
-   deep-bar effect.
+   Γ-model parameters of an induction machine.
 
    These parameters can be used both in control systems and in the machine model. The
    magnetic model is [#Sle1989]_::
@@ -1424,7 +1329,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -1588,8 +1493,8 @@ Package Contents
    :type J: float
    :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
                friction, or an arbitrary function of the rotor speed. For example, choosing
-               ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.
-               Defaults to 0.
+               ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque
+               ``k*abs(w_M)*w_M``. Defaults to 0.
    :type B_L: float | Callable[[float], float], optional
 
 
@@ -1681,60 +1586,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_external_rotor_speed(_)
-      :abstractmethod:
-
-
-      
-      Set external rotor speed (rad/s), constant or a function of time.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: set_outputs(t)
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set states, keeping the rotor angle within [-pi, pi).
 
 
 
@@ -1765,9 +1620,9 @@ Package Contents
 
    The magnetic model is specified as a current map (stator and rotor currents as
    functions of the stator and rotor flux linkages), which can include the saturation
-   of the main flux and of the leakage flux as well as their mutual effects. This
-   version is intended to parametrize machine models for simulation purposes, while
-   control methods do not support it.
+   of the main flux and of the leakage flux as well as their mutual effects. The class
+   parametrizes the machine model only, since the control methods do not support
+   general magnetic models.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -1870,7 +1725,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -1902,22 +1757,22 @@ Package Contents
    
    Parameters of a saturated synchronous machine.
 
-   The saturation model is specified as a current map (current as a function of the
-   flux linkage). Optionally, to be used only in control systems, a flux map (flux
-   linkage as a function of the current) can be provided. For convenience, this class
-   also provides the incremental inductance matrix, which can be used in control and
-   optimal reference generation.
+   The magnetic model is given as a current map (current as a function of the flux
+   linkage), as a flux map (flux linkage as a function of the current), or as both. The
+   machine model uses the current map, and the control methods use the flux map. The
+   class also provides the incremental inductance matrix, which can be used in control
+   and optimal reference generation.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). Needed in the
-                      system model and in some control methods.
+   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs), needed in the
+                      machine model.
    :type i_s_dq_fcn: Callable[[complex], complex], optional
-   :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
-                        should be differentiable, if incremental inductances are used. Needed only for
-                        control methods and optimal reference loci, not used in the system model.
+   :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A), needed in the
+                        control methods and for the control loci. It should be differentiable if
+                        incremental inductances are used.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
    :param G_c: Core-loss conductance (S), connected between the stator resistance and the
                magnetic model, defaults to 0 (no core losses).
@@ -2024,7 +1879,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -2088,8 +1943,9 @@ Package Contents
    samples the measurement by `sample`, which converts the output to the measured
    channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset
    + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn
-   independently for each channel at each sample. The parameters are scalars or arrays
-   with one element per channel, in the units of the measured signal.
+   independently for each channel at each sample. The gain, offset, and standard
+   deviation are scalars or arrays with one element per channel. The offset and the
+   standard deviation are in the units of the measured signal.
 
    :param alpha: Bandwidth (rad/s), defaults to `inf`, i.e., no dynamics.
    :type alpha: float, optional
@@ -2106,11 +1962,11 @@ Package Contents
                results, pass the same seeded generator to all sensors. Sensors with separate
                generators of the same seed would produce identical noise.
    :type rng: numpy.random.Generator, optional
-   :param convert: Function converting the output to the measured channels, e.g., `complex2abc`
-                   for the phase currents of a space vector or `complex2line` for the line-to-line
-                   voltages. Defaults to None, i.e., the output is measured as such. The sensors
-                   of a model default to the conversion of their measurement, see `DriveSensors`
-                   and `GridConverterSensors`.
+   :param convert: Function converting the output to the measured channels, e.g., `complex2abc` for
+                   the phase currents of a space vector or `complex2line` for the line-to-line
+                   voltages. Defaults to None, i.e., the output is measured as such. The sensors of
+                   a model default to the conversion of their measurement, see `DriveSensors` and
+                   `GridConverterSensors`.
    :type convert: Callable[[Any], Any], optional
 
    .. rubric:: Examples
@@ -2255,13 +2111,13 @@ Package Contents
    :type ctrl: ControlSystem | Mapping[str, ControlSystem], optional
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
-   :param cfg: Solver configuration parameters.
+   :param cfg: Solver configuration parameters, defaults to `SolverCfg()`.
    :type cfg: SolverCfg, optional
    :param t_start: First sampling instant (s) of the control system or, for a composite model, of
                    the control systems by the model names. The time `ctrl.t` of the control system
-                   is set to this value. Defaults to the initial time of the model, as do the
-                   control systems not included in the mapping, in which case `ctrl.t` is not
-                   changed.
+                   is set to this value. Defaults to None, in which case the control systems, also
+                   those not included in the mapping, start at the initial time of the model, and
+                   their time `ctrl.t` is not changed.
    :type t_start: float | Mapping[str, float], optional
 
 
@@ -2289,7 +2145,7 @@ Package Contents
       The simulation runs until the first sampling instant after `t_stop`, or until
       `t_stop` without control systems. A subsequent call continues the simulation.
 
-      :param t_stop: Simulation stop time, defaults to 1.
+      :param t_stop: Simulation stop time (s), defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
                      integration interval, i.e., for each interval between the sampling and
@@ -2297,6 +2153,9 @@ Package Contents
                      Defaults to 0, in which case the number and spacing of points is selected by
                      the solver.
       :type N_eval: int, optional
+
+      :returns: Results from the beginning of the simulation, including the earlier calls.
+      :rtype: SimulationResults
 
 
 
@@ -2330,8 +2189,8 @@ Package Contents
 
    .. attribute:: ctrl
 
-      Results from the digital control system, None for a model without a control
-      system. For a composite model, the results of each control system are an
+      Results from the discrete-time control system, None for a model without a
+      control system. For a composite model, the results of each control system are an
       attribute by the model name (None for a model without a control system).
 
       :type: Any
@@ -2395,32 +2254,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: solver
-      :type: dict[str, Any]
-
-
-      
-      Return the solver configuration.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: SpatialSaturatedInductionMachinePars
 
    Bases: :py:obj:`BaseInductionMachinePars`
@@ -2430,9 +2263,9 @@ Package Contents
    Parameters of a saturated induction machine with spatial harmonics.
 
    The magnetic model contains spatial harmonics (e.g., due to the slots) in addition
-   to the saturation effects, i.e., it depends on the rotor angle. This version is
-   intended to parametrize high-fidelity machine models for simulation purposes, while
-   control methods do not support spatial harmonics.
+   to the saturation effects, i.e., it depends on the rotor angle. The class
+   parametrizes the machine model only, since the control methods do not support
+   spatial harmonics.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -2504,7 +2337,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, psi_r_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -2536,9 +2369,9 @@ Package Contents
    
    Parameters of a saturated synchronous machine with spatial harmonics.
 
-   This saturation model contains spatial harmonics in addition to the saturation
-   effects. This version is intended to parametrize high-fidelity machine models for
-   simulation purposes, while control methods do not support spatial harmonics.
+   The magnetic model contains spatial harmonics in addition to the saturation effects.
+   The class parametrizes the machine model only, since the control methods do not
+   support spatial harmonics.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
@@ -2580,7 +2413,7 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -2622,7 +2455,7 @@ Package Contents
    losses can be modeled by means of a constant core-loss conductance `G_c`, connected
    between the stator resistance and the magnetic model.
 
-   :param par: Machine parameters. Core losses are modeled if `par.G_c` is nonzero.
+   :param par: Machine parameters.
    :type par: BaseSynchronousMachinePars
 
    .. rubric:: Notes
@@ -2725,30 +2558,6 @@ Package Contents
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set states, keeping the rotor angle within [-pi, pi).
 
 
 
@@ -2880,7 +2689,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -2937,16 +2746,18 @@ Package Contents
    Three-phase source model.
 
    The frequency, phase shift, and magnitude can be given either as constants or
-   functions of time. An unbalanced source can be modeled by specifying a negative-
-   sequence component. The zero-sequence component is not included in this model.
+   functions of time. An unbalanced source can be modeled by specifying a
+   negative-sequence component. The zero-sequence component is not included in this
+   model.
 
    :param w_g: Angular frequency (rad/s), defaults to 2*pi*50.
    :type w_g: float | Callable[[float], float], optional
-   :param e_g: Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.
+   :param e_g: Peak-valued magnitude (V) of the positive-sequence component, defaults to
+               sqrt(2/3)*400.
    :type e_g: float | Callable[[float], float], optional
    :param phi: Phase shift (rad) of positive-sequence component, defaults to 0.
    :type phi: float | Callable[[float], float], optional
-   :param e_g_neg: Peak-valued magnitude of negative-sequence component, defaults to 0.
+   :param e_g_neg: Peak-valued magnitude (V) of the negative-sequence component, defaults to 0.
    :type e_g_neg: float | Callable[[float], float], optional
    :param phi_neg: Phase shift (rad) of negative-sequence component, defaults to 0.
    :type phi_neg: float | Callable[[float], float], optional
@@ -3069,37 +2880,13 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set the state, keeping the angle within [-pi, pi).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: TwoMassMechanicalSystem(J_M, J_L, K_S, C_S, B_L = 0.0)
 
    Bases: :py:obj:`motulator.common.model.Subsystem`
 
 
    
-   Two-mass mechanical subsystem.
+   Two-mass mechanical system.
 
    :param J_M: Motor moment of inertia (kgm²).
    :type J_M: float
@@ -3111,8 +2898,8 @@ Package Contents
    :type C_S: float
    :param B_L: Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous
                friction, or an arbitrary function of the load speed. For example, choosing
-               ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.
-               Defaults to 0.
+               ``B_L = lambda w_L: k*abs(w_L)`` gives the quadratic load torque
+               ``k*abs(w_L)*w_L``. Defaults to 0.
    :type B_L: float | Callable[[float], float], optional
 
 
@@ -3204,60 +2991,10 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_external_rotor_speed(_)
-      :abstractmethod:
-
-
-      
-      Set external rotor speed (rad/s), constant or a function of time.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: set_outputs(t)
 
       
       Set output variables.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set states, keeping the rotor angle within [-pi, pi).
 
 
 
@@ -3313,7 +3050,7 @@ Package Contents
                      of one sampling period. A modulator keeps its state, so each converter needs its
                      own.
    :type modulator: TwoLevelModulator, optional
-   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :param u_th: Threshold voltage (V) of the power semiconductor devices, defaults to 0.
    :type u_th: float, optional
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be

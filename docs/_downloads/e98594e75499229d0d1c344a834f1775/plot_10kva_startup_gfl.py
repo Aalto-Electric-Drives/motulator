@@ -8,7 +8,7 @@ initial voltage of 500 V through the antiparallel diodes toward the peak line-to
 voltage of the grid, while the phase-locked loop synchronizes with the grid and the
 current controller tracks the measured grid voltage. The gates are released at 40 ms,
 after which the DC-bus voltage controller raises the voltage to 650 V, with the power
-limited to the nominal power. A reactive power reference step follows.
+limited to 1 p.u. A reactive-power reference step follows.
 
 """
 
@@ -59,9 +59,9 @@ utils.plot_control_signals(res, base)
 utils.plot_grid_waveforms(res, base)
 
 # %%
-# Plot the DC-bus voltage and the DC current of the converter, the interval with
-# blocked gates shaded. The diodes charge the DC bus toward the peak line-to-line
-# voltage of the grid, the current pulses shrinking as the voltage approaches it.
+# Plot the DC-bus voltage and the DC current of the converter, the interval with blocked
+# gates shaded. The diodes charge the DC bus toward the peak line-to-line voltage of the
+# grid, the current pulses shrinking as the voltage approaches it.
 
 t_on = res.ctrl.t[np.flatnonzero(res.ctrl.ref.enabled)[0]]
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)

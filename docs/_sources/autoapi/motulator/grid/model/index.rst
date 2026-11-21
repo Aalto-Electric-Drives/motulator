@@ -53,7 +53,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, N = 2**12, sampling_delay = 0.0)
+.. py:class:: CarrierComparison(t_d = 0.0, delay = None, single_update = False, sampling_delay = 0.0, N = 2**12)
 
    Bases: :py:obj:`TwoLevelModulator`\ [\ :py:obj:`collections.abc.Sequence`\ [\ :py:obj:`float`\ ]\ ]
 
@@ -75,11 +75,11 @@ Package Contents
    :param single_update: Sample and update the duty ratios once per carrier period, defaults to False,
                          see `Modulator`.
    :type single_update: bool, optional
-   :param N: Amount of the counter quantization levels, defaults to 2**12.
-   :type N: int, optional
    :param sampling_delay: Delay (s) of the sampling instant from the carrier extremum, defaults to 0, see
                           `Modulator`.
    :type sampling_delay: float, optional
+   :param N: Number of the counter quantization levels, defaults to 2**12.
+   :type N: int, optional
 
    .. rubric:: Examples
 
@@ -248,14 +248,10 @@ Package Contents
    
    Capacitive DC bus feeding converters.
 
-   The DC bus feeds the converters of the models it is given to, see `Model`. The model
-   connects its converter to the DC bus through `connect`, which registers the
-   converter in `converters` and gives the connections of its DC terminals, i.e., the
-   DC-bus voltage to the input `u_dc` of the converter. The DC bus draws the DC
-   currents of the registered converters, computed from their switching states and AC
-   currents. The DC bus can be shared by the converters of several models, see
-   `CompositeModel`. An external current, e.g., from a battery or a braking chopper,
-   can also be fed to the DC bus.
+   The DC bus feeds the converters of the models it is given to, see `Model`, and draws
+   their DC currents, computed from their switching states and AC currents. The DC bus
+   can be shared by the converters of several models, see `CompositeModel`. An external
+   current, e.g., from a battery or a braking chopper, can also be fed to the DC bus.
 
    :param C_dc: DC-bus capacitance (F).
    :type C_dc: float
@@ -418,14 +414,14 @@ Package Contents
    see `ACPort`. The diode states are updated at their transitions, which the
    simulation locates as events, see `Simulation`. Hence, the commutation of the
    current between the legs follows from the inductance of the load, e.g., an AC filter
-   and the grid. The threshold voltage of the diodes is included in the diode drops.
-   The DC-bus voltage is the input `u_dc`, which is constant unless a DC-bus model is
-   connected to it (see `DCBus` and `Model`). Alternatively, the bridge feeds a DC load
-   `dc_load` (e.g., an EMF through a DC choke), whose DC port gives the relation
-   between the DC current and the voltage, see `DCPort`. The bridge then solves its DC
-   voltage together with the leg voltages, and the DC current is its output `i_dc`. The
-   devices of the legs can be gated through `gated`, which models thyristors: a
-   floating leg is clamped to a rail only by a gated device.
+   and the grid. Each conducting diode has the voltage drop `u_th`. The DC-bus voltage
+   is the input `u_dc`, which is constant unless a DC-bus model is connected to it (see
+   `DCBus` and `Model`). Alternatively, the bridge feeds a DC load `dc_load` (e.g., an
+   EMF through a DC choke), whose DC port gives the relation between the DC current and
+   the voltage, see `DCPort`. The bridge then solves its DC voltage together with the
+   leg voltages, and the DC current is its output `i_dc`. The devices of the legs can
+   be gated through `gated`, which models thyristors: a floating leg is clamped to a
+   rail only by a gated device.
 
    :param u_dc: Constant DC-bus voltage (V). Defaults to None, in which case the bridge must be
                 fed from a DC-bus model or feed a DC load.
@@ -584,30 +580,6 @@ Package Contents
 
       
       Margin of the diode states at the latest evaluation, see `diode_margin`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:method:: rhs(t)
-
-      
-      Default empty implementation.
 
 
 
@@ -931,9 +903,9 @@ Package Contents
    Model of an L filter and an inductive-resistive grid.
 
    An L filter and an inductive-resistive grid, between the converter and grid voltage
-   sources, are modeled combining their inductances and series resistances. The point-
-   of-common-coupling (PCC) voltage between the L filter and the grid impedance is
-   calculated.
+   sources, are modeled by combining their inductances and series resistances. The
+   point-of-common-coupling (PCC) voltage between the L filter and the grid impedance
+   is calculated.
 
    :param L_f: Filter inductance (H).
    :type L_f: float
@@ -1073,8 +1045,9 @@ Package Contents
    samples the measurement by `sample`, which converts the output to the measured
    channels (e.g., the phase currents of a space vector) and returns ``gain*y + offset
    + std*n``, where `n` is zero-mean white Gaussian noise with unit variance, drawn
-   independently for each channel at each sample. The parameters are scalars or arrays
-   with one element per channel, in the units of the measured signal.
+   independently for each channel at each sample. The gain, offset, and standard
+   deviation are scalars or arrays with one element per channel. The offset and the
+   standard deviation are in the units of the measured signal.
 
    :param alpha: Bandwidth (rad/s), defaults to `inf`, i.e., no dynamics.
    :type alpha: float, optional
@@ -1091,11 +1064,11 @@ Package Contents
                results, pass the same seeded generator to all sensors. Sensors with separate
                generators of the same seed would produce identical noise.
    :type rng: numpy.random.Generator, optional
-   :param convert: Function converting the output to the measured channels, e.g., `complex2abc`
-                   for the phase currents of a space vector or `complex2line` for the line-to-line
-                   voltages. Defaults to None, i.e., the output is measured as such. The sensors
-                   of a model default to the conversion of their measurement, see `DriveSensors`
-                   and `GridConverterSensors`.
+   :param convert: Function converting the output to the measured channels, e.g., `complex2abc` for
+                   the phase currents of a space vector or `complex2line` for the line-to-line
+                   voltages. Defaults to None, i.e., the output is measured as such. The sensors of
+                   a model default to the conversion of their measurement, see `DriveSensors` and
+                   `GridConverterSensors`.
    :type convert: Callable[[Any], Any], optional
 
    .. rubric:: Examples
@@ -1240,13 +1213,13 @@ Package Contents
    :type ctrl: ControlSystem | Mapping[str, ControlSystem], optional
    :param show_progress: Show progress during simulation, defaults to True.
    :type show_progress: bool, optional
-   :param cfg: Solver configuration parameters.
+   :param cfg: Solver configuration parameters, defaults to `SolverCfg()`.
    :type cfg: SolverCfg, optional
    :param t_start: First sampling instant (s) of the control system or, for a composite model, of
                    the control systems by the model names. The time `ctrl.t` of the control system
-                   is set to this value. Defaults to the initial time of the model, as do the
-                   control systems not included in the mapping, in which case `ctrl.t` is not
-                   changed.
+                   is set to this value. Defaults to None, in which case the control systems, also
+                   those not included in the mapping, start at the initial time of the model, and
+                   their time `ctrl.t` is not changed.
    :type t_start: float | Mapping[str, float], optional
 
 
@@ -1274,7 +1247,7 @@ Package Contents
       The simulation runs until the first sampling instant after `t_stop`, or until
       `t_stop` without control systems. A subsequent call continues the simulation.
 
-      :param t_stop: Simulation stop time, defaults to 1.
+      :param t_stop: Simulation stop time (s), defaults to 1.
       :type t_stop: float, optional
       :param N_eval: Number of evenly spaced data points to be returned by the solver for each
                      integration interval, i.e., for each interval between the sampling and
@@ -1282,6 +1255,9 @@ Package Contents
                      Defaults to 0, in which case the number and spacing of points is selected by
                      the solver.
       :type N_eval: int, optional
+
+      :returns: Results from the beginning of the simulation, including the earlier calls.
+      :rtype: SimulationResults
 
 
 
@@ -1315,8 +1291,8 @@ Package Contents
 
    .. attribute:: ctrl
 
-      Results from the digital control system, None for a model without a control
-      system. For a composite model, the results of each control system are an
+      Results from the discrete-time control system, None for a model without a
+      control system. For a composite model, the results of each control system are an
       attribute by the model name (None for a model without a control system).
 
       :type: Any
@@ -1380,32 +1356,6 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:property:: solver
-      :type: dict[str, Any]
-
-
-      
-      Return the solver configuration.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: ThreePhaseSource(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, e_g_neg = 0.0, phi_neg = 0.0)
 
    Bases: :py:obj:`motulator.common.model._base.Subsystem`
@@ -1415,16 +1365,18 @@ Package Contents
    Three-phase source model.
 
    The frequency, phase shift, and magnitude can be given either as constants or
-   functions of time. An unbalanced source can be modeled by specifying a negative-
-   sequence component. The zero-sequence component is not included in this model.
+   functions of time. An unbalanced source can be modeled by specifying a
+   negative-sequence component. The zero-sequence component is not included in this
+   model.
 
    :param w_g: Angular frequency (rad/s), defaults to 2*pi*50.
    :type w_g: float | Callable[[float], float], optional
-   :param e_g: Peak-valued magnitude of positive-sequence component, defaults to sqrt(2/3)*400.
+   :param e_g: Peak-valued magnitude (V) of the positive-sequence component, defaults to
+               sqrt(2/3)*400.
    :type e_g: float | Callable[[float], float], optional
    :param phi: Phase shift (rad) of positive-sequence component, defaults to 0.
    :type phi: float | Callable[[float], float], optional
-   :param e_g_neg: Peak-valued magnitude of negative-sequence component, defaults to 0.
+   :param e_g_neg: Peak-valued magnitude (V) of the negative-sequence component, defaults to 0.
    :type e_g_neg: float | Callable[[float], float], optional
    :param phi_neg: Phase shift (rad) of negative-sequence component, defaults to 0.
    :type phi_neg: float | Callable[[float], float], optional
@@ -1547,30 +1499,6 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: set_states(state_list, index)
-
-      
-      Set the state, keeping the angle within [-pi, pi).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
 .. py:class:: ThreePhaseSourceWithSignalInjection(w_g = 2 * pi * 50, e_g = sqrt(2 / 3) * 400, phi = 0.0, u_e = 0j, f_e = 0.0)
 
    Bases: :py:obj:`motulator.common.model.ThreePhaseSource`
@@ -1670,7 +1598,7 @@ Package Contents
                      of one sampling period. A modulator keeps its state, so each converter needs its
                      own.
    :type modulator: TwoLevelModulator, optional
-   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :param u_th: Threshold voltage (V) of the power semiconductor devices, defaults to 0.
    :type u_th: float, optional
    :param sign: Function of the phase currents (A) determining the leg states during blanking,
                 defaults to `np.sign`. A smooth function, such as `2/pi*arctan(i/i_d)`, can be

@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -468,8 +468,7 @@
   <h1>Source code for motulator.common.model._base</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""Base classes for models."""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitVar</span><span class="p">,</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">inf</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">runtime_checkable</span>
 
@@ -478,6 +477,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._ac_port</span><span class="w"> </span><span class="kn">import</span> <span class="n">ACPort</span><span class="p">,</span> <span class="n">DCPort</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._pwm</span><span class="w"> </span><span class="kn">import</span> <span class="n">GateStates</span><span class="p">,</span> <span class="n">SwitchingTimes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model._converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">DCBus</span>
@@ -500,11 +500,13 @@
 <span class="sd">    state history and creating the time-series representation of the subsystem, which</span>
 <span class="sd">    the model names in the results (see `ModelTimeSeries`). A subsystem whose outputs</span>
 <span class="sd">    depend directly on some of its inputs lists these inputs in `feedthrough`, from</span>
-<span class="sd">    which the model derives the evaluation order of the outputs. The state history is a</span>
-<span class="sd">    dict of lists, keyed by the names of the state fields, with one item (a number or a</span>
-<span class="sd">    nonempty array) per solution point. The model initializes it by `init_state_history`</span>
-<span class="sd">    and extends it by `extend_state_history`. A subclass can keep its other signals in</span>
-<span class="sd">    the history as well, under other keys, as a converter does (see `Converter`).</span>
+<span class="sd">    which the model derives the evaluation order of the outputs. The angle states listed</span>
+<span class="sd">    in `angles` are kept within [-pi, pi) in the subsystem, but not in the state vector</span>
+<span class="sd">    of the solver, which therefore sees no discontinuity. The state history is a dict of</span>
+<span class="sd">    lists, keyed by the names of the state fields, with one item (a number or a nonempty</span>
+<span class="sd">    array) per solution point. The model initializes it by `init_state_history` and</span>
+<span class="sd">    extends it by `extend_state_history`. A subclass can keep its other signals in the</span>
+<span class="sd">    history as well, under other keys, as a converter does (see `Converter`).</span>
 
 <span class="sd">    """</span>
 
@@ -512,6 +514,7 @@
     <span class="n">out</span><span class="p">:</span> <span class="n">Any</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">Any</span>  <span class="c1"># None if the subsystem has no states</span>
     <span class="n">feedthrough</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>  <span class="c1"># Inputs the outputs depend on directly</span>
+    <span class="n">angles</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>  <span class="c1"># Angle states, kept within [-pi, pi)</span>
     <span class="n">_history</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span>
 
 <div class="viewcode-block" id="Subsystem.get_states">
@@ -539,7 +542,9 @@
                         <span class="n">value</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">state_list</span><span class="p">[</span><span class="n">index</span> <span class="p">:</span> <span class="n">index</span> <span class="o">+</span> <span class="n">n</span><span class="p">]</span>
                         <span class="n">index</span> <span class="o">+=</span> <span class="n">n</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">state_list</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">state_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                    <span class="n">x</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">angles</span> <span class="k">else</span> <span class="n">x</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
                     <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">index</span></div>
 
@@ -554,8 +559,8 @@
 <div class="viewcode-block" id="Subsystem.rhs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Subsystem.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Compute state derivatives."""</span>
-        <span class="o">...</span></div>
+<span class="w">        </span><span class="sd">"""Compute the state derivatives, none by default."""</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
 
 
 <div class="viewcode-block" id="Subsystem.compute_ac_port">
@@ -690,10 +695,10 @@
 <span class="sd">    period, see `Modulator`. The simulation sets the gate states at the switching</span>
 <span class="sd">    instants, from which the converter resolves its switching state (e.g., from the gate</span>
 <span class="sd">    signals and the phase currents during the blanking). The format of the command and</span>
-<span class="sd">    the gate states is up to the converter and its modulator. The control system can</span>
-<span class="sd">    block the gates through `set_enable` at its sampling instants, after which only the</span>
-<span class="sd">    diodes conduct (see `Converter.blocked`). By default, blocking the gates is not</span>
-<span class="sd">    supported.</span>
+<span class="sd">    the gate states is up to the converter and its modulator. The simulation applies the</span>
+<span class="sd">    gate enable of the control system through `set_enable` at its sampling instants (see</span>
+<span class="sd">    `ControlSystem.set_enable`), and only the diodes conduct while the gates are blocked</span>
+<span class="sd">    (see `Converter.blocked`). By default, blocking the gates is not supported.</span>
 
 <span class="sd">    """</span>
 
@@ -750,8 +755,8 @@
 <span class="sd">    connected to other subsystems, such as a sensor without dynamics, does not affect</span>
 <span class="sd">    the integration, so its outputs are computed only when all the outputs are requested</span>
 <span class="sd">    (`set_outputs`), e.g., at the sampling instants, and not at every evaluation of the</span>
-<span class="sd">    state derivatives (`rhs`). The names of the subsystems name their time series in</span>
-<span class="sd">    the results, see `ModelTimeSeries`.</span>
+<span class="sd">    state derivatives (`rhs`). The names of the subsystems name their time series in the</span>
+<span class="sd">    results, see `ModelTimeSeries`.</span>
 
 <span class="sd">    A model can have a converter, either a passive one (e.g., `DiodeBridge`) or a</span>
 <span class="sd">    controlled one (see `ControlledConverter`), which is driven by a control system, see</span>
@@ -856,8 +861,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_plans</span><span class="p">[</span><span class="n">blocked</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocked</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Converter</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Sort the subsystems by their direct dependencies, keeping their order</span>
-<span class="sd">        otherwise."""</span>
+<span class="w">        </span><span class="sd">"""Order the subsystems by their direct dependencies, otherwise as given."""</span>
         <span class="n">subsystems</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="c1"># Subsystems whose outputs each subsystem depends on directly</span>
         <span class="n">deps</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subsystems</span><span class="p">}</span>
@@ -880,14 +884,14 @@
             <span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ready</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">order</span>
 
-<div class="viewcode-block" id="Model.get_initial_values">
-<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.get_initial_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Get initial values of all subsystems before the solver."""</span>
-        <span class="n">state0</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="Model.get_states">
+<a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.Model.get_states">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_states</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Get the states of all subsystems as a list."""</span>
+        <span class="n">states</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateful</span><span class="p">:</span>
-            <span class="n">state0</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">get_states</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">state0</span></div>
+            <span class="n">states</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">get_states</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">states</span></div>
 
 
 <div class="viewcode-block" id="Model.set_states">
@@ -936,11 +940,18 @@
         <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stateful</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">extend_state_history</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="c1"># The voltage of a blocked converter varies within the integration interval,</span>
-        <span class="c1"># so its samples are evaluated at the solution points</span>
+        <span class="c1"># The voltage of a blocked converter varies within the integration interval, so</span>
+        <span class="c1"># its samples are evaluated at the solution points</span>
         <span class="n">samples</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Converter</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">blocked</span> <span class="o">:=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">blocked</span><span class="p">]:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">])</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_states</span><span class="p">()</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">blocked</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span>
             <span class="n">samples</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">blocked</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">values</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">converter</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">converters</span><span class="p">:</span>
             <span class="n">converter</span><span class="o">.</span><span class="n">extend_history</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">),</span> <span class="n">samples</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">converter</span><span class="p">))</span></div>
@@ -962,19 +973,7 @@
         <span class="k">for</span> <span class="n">subsystem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subsystems</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">]</span><span class="o">.</span><span class="n">compute_derived_signals</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ts</span></div>
-
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">sol</span><span class="p">:</span> <span class="n">OdeResult</span><span class="p">,</span> <span class="n">fcn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="n">T</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Evaluate `fcn` at the solution points, restoring the final state after."""</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_initial_values</span><span class="p">()</span>
-        <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">sol</span><span class="o">.</span><span class="n">t</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fcn</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">values</span></div>
+</div>
 
 
 
@@ -990,8 +989,6 @@
 <span class="sd">    are not passed to other subsystems.</span>
 
 <span class="sd">    """</span>
-
-    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 
 <div class="viewcode-block" id="SubsystemTimeSeries.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.SubsystemTimeSeries.set_outputs">[docs]</a>
@@ -1011,7 +1008,6 @@
 
 <div class="viewcode-block" id="ModelTimeSeries">
 <a class="viewcode-back" href="../../../../autoapi/motulator/common/model/index.html#motulator.common.model.ModelTimeSeries">[docs]</a>
-<span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ModelTimeSeries</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Time series of the simulation results.</span>
@@ -1032,12 +1028,8 @@
 
 <span class="sd">    """</span>
 
-    <span class="n">mdl</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="n">Model</span><span class="p">]</span>
-    <span class="n">ts</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">ts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">_t</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1046,10 +1038,10 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ts</span><span class="p">[</span><span class="n">subsystem</span><span class="p">])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Support type checking for dynamic attributes."""</span>
-        <span class="c1"># This helps type checkers understand dynamic attributes</span>
-        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">' has no attribute '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">'"</span>
-        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Declare the time series of the subsystems for type checkers."""</span>
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> object has no attribute </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2">"</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 

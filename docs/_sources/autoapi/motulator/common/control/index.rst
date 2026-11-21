@@ -38,10 +38,12 @@ Classes
    motulator.common.control.ConverterFeedbacks
    motulator.common.control.ConverterReferences
    motulator.common.control.DiscreteComplexController
+   motulator.common.control.InnerController
    motulator.common.control.InverterNonlinearity
    motulator.common.control.PIController
    motulator.common.control.PWM
    motulator.common.control.RateLimiter
+   motulator.common.control.References
    motulator.common.control.TimeSeries
 
 
@@ -60,9 +62,9 @@ Package Contents
 
    where `u` is the controller output, `i_ref` is the reference signal, `i` is the
    feedback signal, `w_c` is the angular speed of synchronous coordinates, `u_ff` is
-   the feedforward signal, and `1/s` refers to integration. The 1DOF version is
-   obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented based
-   on the realized controller output.
+   the feedforward signal, and `1/s` refers to integration. The standard PI controller
+   is obtained by setting ``k_t = k_p``. The integrator anti-windup is implemented
+   based on the realized controller output.
 
    :param k_p: Proportional gain.
    :type k_p: float
@@ -141,7 +143,7 @@ Package Contents
 
       :param u: Controller output.
       :type u: complex
-      :param w_c: Angular speed of the reference frame (rad/s), not needed in this design.
+      :param w_c: Angular speed (rad/s) of the coordinates, not needed in this design.
       :type w_c: float
 
 
@@ -171,7 +173,7 @@ Package Contents
       :type T_s: float
       :param u: Realized (limited) controller output.
       :type u: complex
-      :param w_c: Angular speed of the reference frame (rad/s).
+      :param w_c: Angular speed (rad/s) of the coordinates.
       :type w_c: float
 
 
@@ -194,21 +196,18 @@ Package Contents
 
 .. py:class:: ControlSystem
 
-   Bases: :py:obj:`Protocol`
-
-
    
    Base class for control systems.
 
-   This class defines the interface for control systems. It is a generic class that can
-   be used with different models, measurements, feedback signals, and reference
-   signals. The class provides methods for saving, post-processing, and clearing data.
+   The type parameters are the types of the model, the measurements, the reference
+   signals, and the feedback signals. The control loop, see `run_control_loop`, returns
+   the sampling period and the command to the converter, see `get_command`. The signals
+   of each step are saved and converted into time series by `post_process`.
 
-   The control loop returns the sampling period and the command to the converter, see
-   `get_command`. The gates of the converter can be blocked with `set_enable`. While
-   the gates are blocked, the control system runs its control loop with
-   `compute_standby_output` in place of `compute_output`, so that its observers keep
-   running, and the model holds the switches open.
+   The gates of the converter can be blocked with `set_enable`. While the gates are
+   blocked, the control system runs its control loop with `compute_standby_output` in
+   place of `compute_output`, so that its observers keep running, and the model holds
+   the switches open.
 
 
 
@@ -252,6 +251,8 @@ Package Contents
 
 
    .. py:method:: compute_output(fbk)
+      :abstractmethod:
+
 
       
       Compute controller output based on feedback.
@@ -300,6 +301,8 @@ Package Contents
 
 
    .. py:method:: get_command(ref)
+      :abstractmethod:
+
 
       
       Extract the sampling period and the converter command from the references.
@@ -351,9 +354,11 @@ Package Contents
 
 
    .. py:method:: get_feedback(meas)
+      :abstractmethod:
+
 
       
-      Get feedback signals from the model.
+      Get the feedback signals from the measurements.
 
 
 
@@ -375,6 +380,8 @@ Package Contents
 
 
    .. py:method:: get_measurement(mdl)
+      :abstractmethod:
+
 
       
       Get measurements from the model.
@@ -476,8 +483,7 @@ Package Contents
       Set the gate enable.
 
       :param enable: Gate enable, constant or a function of time, evaluated at the sampling
-                     instants. While the gates are blocked (False), the control system computes
-                     its standby output, see `compute_standby_output`.
+                     instants.
       :type enable: bool | Callable[[float], bool]
 
 
@@ -501,7 +507,7 @@ Package Contents
    .. py:method:: update(ref, fbk)
 
       
-      Update controller internal states.
+      Advance the controller time by the sampling period.
 
 
 
@@ -522,7 +528,7 @@ Package Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: ConverterControlSystem(pwm, k_comp)
+.. py:class:: ConverterControlSystem(inner_ctrl, pwm)
 
    Bases: :py:obj:`ControlSystem`
 
@@ -530,20 +536,23 @@ Package Contents
    
    Base class for control systems of voltage-source converters.
 
-   The observer of the inner controller gets the realized converter voltage of the
-   ongoing sampling period, while the feedback voltage for the control laws is the
-   realized voltage averaged over the previous and the ongoing sampling periods.
-   Before the modulation, the angle of the voltage reference is advanced by
-   `k_comp*T_s*w_c`, where `k_comp` is given by the inner controller. The value 1.5
-   compensates for the computational delay of one sampling period and the delay of
-   half a sampling period caused by the zero-order hold of the PWM [#Bae2003]_. The
-   value 0 means that the angle is not advanced, which is used if the controller takes
-   the delays into account itself, e.g., in a direct discrete-time design.
+   The control system runs an inner controller (e.g., current-vector control of a
+   machine or grid-forming control), which it updates at every sampling instant and
+   whose post-processing it applies to the time series. The observer of the inner
+   controller gets the realized converter voltage of the ongoing sampling period, while
+   the feedback voltage for the control laws is the realized voltage averaged over the
+   previous and the ongoing sampling periods. Before the modulation, the angle of the
+   voltage reference is advanced by `k_comp*T_s*w_c`, where `k_comp` is given by the
+   inner controller. The value 1.5 compensates for the computational delay of one
+   sampling period and the delay of half a sampling period caused by the zero-order
+   hold of the PWM [#Bae2003]_. The value 0 means that the angle is not advanced, which
+   is used if the controller takes the delays into account itself, e.g., in a direct
+   discrete-time design.
 
+   :param inner_ctrl: Inner controller.
+   :type inner_ctrl: InnerController
    :param pwm: Pulse-width modulator.
    :type pwm: PWM
-   :param k_comp: Angle-advance factor of the voltage reference.
-   :type k_comp: float
 
    .. rubric:: References
 
@@ -600,6 +609,55 @@ Package Contents
       The reference is in the controller coordinates. Its angle is advanced by
       `k_comp*T_s*w_c`. Subclasses can override this method, e.g., to control an
       output filter.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: post_process()
+
+      
+      Convert the stored signals to time series, post-processed by the inner
+      controller.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update the controller states.
+
 
 
 
@@ -814,6 +872,84 @@ Package Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: InnerController
+
+   Bases: :py:obj:`Protocol`
+
+
+   
+   Protocol defining the interface shared by the inner controllers.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: post_process(ts)
+
+      
+      Post-process the controller time series.
+
+      If the signals are transformed to other coordinates, `fbk.theta_c` is updated to
+      the angle of these coordinates. The angular speed `fbk.w_c` is not updated,
+      i.e., it remains that of the controller coordinates, which equals that of the
+      new coordinates in steady state.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: update(ref, fbk)
+
+      
+      Update the controller states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: InverterNonlinearity(t_d = 0.0, u_th = 0.0, sign = np.sign)
 
    
@@ -823,15 +959,15 @@ Package Contents
    direction determines the leg state during the blanking. Away from the duty-ratio
    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the half
    carrier period. Pulses shorter than the dead time are suppressed, and clamped legs
-   have no dead-time error. The threshold voltage `u_th` of the power devices, assumed
-   equal for the switches and the diodes, causes the voltage drop `sign(i)*u_th` in
-   each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also in the clamped
-   legs. The realized duty ratios are `d_abc - d_err`. This model is consistent with
-   `motulator.common.model.VoltageSourceConverter`.
+   have no dead-time error. The threshold voltage `u_th` of the power semiconductor
+   devices, assumed equal for the switches and the diodes, causes the voltage drop
+   `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also
+   in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model is
+   consistent with `motulator.common.model.VoltageSourceConverter`.
 
    :param t_d: Dead time (s), defaults to 0.
    :type t_d: float, optional
-   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :param u_th: Threshold voltage (V) of the power semiconductor devices, defaults to 0.
    :type u_th: float, optional
    :param sign: Current-direction function, defaults to `np.sign`. A smooth approximation may be
                 used, matching the converter model.
@@ -989,11 +1125,11 @@ Package Contents
    current ripple than space-vector PWM only in the high modulation range [#Hav1998]_.
 
    Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such
-   as the dead time and the threshold voltages of the power devices, is taken into
-   account. The realized voltage is corrected for the error using the measured
-   currents. By default, the error is also compensated for by feedforward using the
-   predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
-   compensated for by shifting the other legs.
+   as the dead time and the threshold voltages of the power semiconductor devices, is
+   taken into account. The realized voltage is corrected for the error using the
+   measured currents. By default, the error is also compensated for by feedforward
+   using the predicted currents. In DPWM, the clamped leg stays at the rail, and its
+   error is compensated for by shifting the other legs.
 
    Optionally, the duty ratio of a switching leg is limited to the range
    `[d_min, 1 - d_min]`, e.g., due to the gate drivers [#Wel2006]_. A duty ratio in the
@@ -1112,31 +1248,28 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_realized_voltage(i_c_ab, u_dc, *, average = True)
+   .. py:method:: get_realized_voltages(i_c_ab, u_dc)
 
       
-      Get the realized voltage.
+      Get the realized voltages.
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      voltage is reconstructed from the duty ratios of the previous and the ongoing
+      voltages are reconstructed from the duty ratios of the previous and the ongoing
       sampling periods and the measured DC-bus voltage, i.e., the variations of the
       DC-bus voltage and of the currents within the periods are not known. The
       measured currents are also stored for the feedforward compensation of the next
-      duty ratios.
+      duty ratios, so this method is called also while the gates are blocked.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
-      :param average: If True, the average voltage of the previous and the ongoing sampling
-                      periods is returned. If False, the voltage of the ongoing sampling period is
-                      returned. Defaults to True.
-      :type average: bool, optional
 
-      :returns: Realized converter voltage (V) in stationary coordinates. If `d_err` is
-                given, the voltage is corrected for it using the measured currents.
-      :rtype: complex
+      :returns: * **u_c_ab_zoh** (*complex*) -- Realized converter voltage (V) of the ongoing sampling period in stationary
+                  coordinates.
+                * **u_c_ab** (*complex*) -- Realized converter voltage (V) averaged over the previous and the ongoing
+                  sampling periods in stationary coordinates.
 
 
 
@@ -1227,8 +1360,35 @@ Package Contents
    
    Rate limiter.
 
-   :param rate_limit: Rate limit, defaults to `inf`.
+   :param rate_limit: Rate limit (unit of the signal per second), defaults to `inf`. The output starts
+                      from zero.
    :type rate_limit: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: References
+
+   Bases: :py:obj:`Protocol`
+
+
+   
+   Protocol defining the interface for reference signals.
+
 
 
 

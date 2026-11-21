@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -467,12 +467,11 @@
                   
   <h1>Source code for motulator.drive.gradnet._maps</h1><div class="highlight"><pre>
 <span></span><span class="sd">"""</span>
-<span class="sd">Trained GradNets as numpy functions and the magnetic maps based on them.</span>
+<span class="sd">Trained GradNets as NumPy functions and the magnetic maps based on them.</span>
 
-<span class="sd">A trained network is evaluated in double precision with numpy, so the maps need no</span>
-<span class="sd">PyTorch. The function `GradNetFunction` holds the parameters of the network, and it is</span>
-<span class="sd">saved to and loaded from an npz file. The networks are trained with the related package</span>
-<span class="sd">motulator-gradnet.</span>
+<span class="sd">A trained network is evaluated in double precision with NumPy. The class</span>
+<span class="sd">`GradNetFunction` holds the parameters of the network, and it is saved to and loaded</span>
+<span class="sd">from an npz file. The networks are trained with the related package motulator-gradnet.</span>
 
 <span class="sd">"""</span>
 
@@ -560,12 +559,12 @@
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">GradNetFunction</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Trained GradNet as a numpy function in double precision.</span>
+<span class="sd">    Trained GradNet as a NumPy function in double precision.</span>
 
-<span class="sd">    The function maps the per-unit input, shape (..., in_dim), to the per-unit output of</span>
-<span class="sd">    the same shape, which is the gradient of the scalar state function of the network.</span>
-<span class="sd">    It is created from a trained model by the related package motulator-gradnet, saved</span>
-<span class="sd">    to an npz file by `save`, and loaded by `load_gradnet`.</span>
+<span class="sd">    The function maps the normalized input, shape (..., in_dim), to the normalized</span>
+<span class="sd">    output of the same shape, which is the gradient of the scalar state function of the</span>
+<span class="sd">    network. It is created from a trained model by the related package</span>
+<span class="sd">    motulator-gradnet, saved to an npz file by `save`, and loaded by `load_gradnet`.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -621,14 +620,14 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        x : ndarray, shape (..., in_dim)</span>
-<span class="sd">            Per-unit input.</span>
+<span class="sd">            Normalized input.</span>
 <span class="sd">        jacobian : bool, optional</span>
 <span class="sd">            Compute also the Jacobian matrix, defaults to False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        y : ndarray, shape (..., in_dim)</span>
-<span class="sd">            Per-unit output.</span>
+<span class="sd">            Normalized output.</span>
 <span class="sd">        jac : ndarray, shape (..., in_dim, in_dim) | None</span>
 <span class="sd">            Jacobian matrix of the output with respect to the input (the Hessian of the</span>
 <span class="sd">            underlying scalar state function), if requested.</span>
@@ -659,7 +658,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    GradNetFunction</span>
-<span class="sd">        Trained network as a numpy function.</span>
+<span class="sd">        Trained network as a NumPy function.</span>
 
 <span class="sd">    """</span>
     <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
@@ -678,8 +677,9 @@
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Callable wrapper for GradNet current map models.</span>
 
-<span class="sd">    The map is symmetrized about the d-axis to ensure physical consistency. The map can</span>
-<span class="sd">    be sampled on a grid by `as_magnetic_model()`, e.g., for plotting.</span>
+<span class="sd">    The map returns the stator current (A) at the given stator flux linkage (Vs). It is</span>
+<span class="sd">    symmetrized about the d axis. The map can be sampled on a grid by</span>
+<span class="sd">    `as_magnetic_model()`, e.g., for plotting.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -689,14 +689,13 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">GradNetFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">map_type</span><span class="o">=</span><span class="s2">"current_map"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fcn</span> <span class="o">=</span> <span class="n">model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcn</span><span class="o">.</span><span class="n">psi_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcn</span><span class="o">.</span><span class="n">i_base</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_evaluate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jacobian</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""Symmetrized value and Jacobian of the map in per-unit quantities."""</span>
+<span class="w">        </span><span class="sd">"""Symmetrized value and Jacobian of the map in normalized quantities."""</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_dq</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span>
         <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
         <span class="c1"># Evaluate at the input and its conjugate</span>
@@ -706,23 +705,23 @@
             <span class="n">jac</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">jac</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">_CONJ</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">jac</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">_CONJ</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span>
         <span class="k">return</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">jac</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Evaluate the stator current at given stator flux linkage.</span>
+<span class="sd">        Evaluate the symmetrized map.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        psi_s_dq : complex | np.ndarray</span>
-<span class="sd">            Stator flux linkage (Vs).</span>
+<span class="sd">        x_dq : complex | np.ndarray</span>
+<span class="sd">            Input of the map (flux linkage in Vs or current in A).</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        complex | np.ndarray</span>
-<span class="sd">            Stator current (A).</span>
+<span class="sd">            Output of the map (current in A or flux linkage in Vs).</span>
 
 <span class="sd">        """</span>
-        <span class="n">i_s_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">i_s_dq</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">i_s_dq</span>
+        <span class="n">y_dq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate</span><span class="p">(</span><span class="n">x_dq</span><span class="p">,</span> <span class="n">jacobian</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">y_dq</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">x_dq</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">y_dq</span>
 
 <div class="viewcode-block" id="CurrentMap.jacobian">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.CurrentMap.jacobian">[docs]</a>
@@ -753,21 +752,22 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/gradnet/index.html#motulator.drive.gradnet.FluxMap">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FluxMap</span><span class="p">(</span><span class="n">CurrentMap</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Callable wrapper for GradNet flux-linkage map models.</span>
+<span class="sd">    Callable wrapper for GradNet flux map models.</span>
 
 <span class="sd">    The map returns the stator flux linkage (Vs) at the given stator current (A). It is</span>
-<span class="sd">    symmetrized about the d-axis to ensure physical consistency.</span>
+<span class="sd">    symmetrized about the d axis.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model : GradNetFunction</span>
-<span class="sd">        Trained GradNet for the flux-linkage map, see `load_gradnet`.</span>
+<span class="sd">        Trained GradNet for the flux map, see `load_gradnet`.</span>
 
 <span class="sd">    """</span>
 
+    <span class="n">map_type</span> <span class="o">=</span> <span class="s2">"flux_map"</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">GradNetFunction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="s2">"flux_map"</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcn</span><span class="o">.</span><span class="n">i_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fcn</span><span class="o">.</span><span class="n">psi_base</span></div>
 
 
@@ -778,6 +778,10 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">CurrentMapWithHarmonics</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Callable wrapper for GradNet current maps with spatial harmonics.</span>
+
+<span class="sd">    The map returns the stator current (A) and the electromagnetic torque (Nm) per pole</span>
+<span class="sd">    pair at the given stator flux linkage (Vs) and electrical rotor angle, as needed by</span>
+<span class="sd">    `SpatialSaturatedSynchronousMachinePars`. It is symmetrized about the d axis.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -799,32 +803,33 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_torque</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dW_dtheta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Torque (p.u.) from the flux linkage x, current y, and the field energy."""</span>
+<span class="w">        </span><span class="sd">"""Normalized torque from the flux linkage x, current y, and field energy."""</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span> <span class="o">-</span> <span class="n">dW_dtheta</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">psi_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">x_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Evaluate the current and torque at given flux linkage and rotor position.</span>
+<span class="sd">        Evaluate the symmetrized map and the torque at the given rotor position.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        psi_s_dq : complex | np.ndarray</span>
-<span class="sd">            Stator flux linkage (Vs).</span>
+<span class="sd">        x_dq : complex | np.ndarray</span>
+<span class="sd">            Input of the map (flux linkage in Vs or current in A).</span>
 <span class="sd">        exp_j_theta_m : complex | np.ndarray</span>
-<span class="sd">            Exponential of the rotor electrical angle.</span>
+<span class="sd">            Complex exponential of the electrical rotor angle.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        tuple[complex | np.ndarray, float | np.ndarray]</span>
-<span class="sd">            Stator current (A) and electromagnetic torque (Nm) per pole pair.</span>
+<span class="sd">            Output of the map (current in A or flux linkage in Vs) and electromagnetic</span>
+<span class="sd">            torque (Nm) per pole pair.</span>
 
 <span class="sd">        """</span>
         <span class="c1"># Per-unit input and the rotor-position input exp(j*k*theta_m) as (d, q, cos,</span>
         <span class="c1"># sin), evaluated together with their conjugates</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">exp_j_k_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">psi_s_dq</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">exp_j_theta_m</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_dq</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_base</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">exp_j_theta_m</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span>
         <span class="p">)</span>
         <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
             <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">exp_j_k_theta</span><span class="p">)],</span>
@@ -836,14 +841,14 @@
         <span class="n">y</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">_CONJ2</span><span class="p">)</span>
         <span class="n">y</span><span class="p">,</span> <span class="n">dW</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 
-        <span class="c1"># Torque in per-unit</span>
+        <span class="c1"># Normalized torque</span>
         <span class="n">dW_dtheta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="n">exp_j_k_theta</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span> <span class="o">*</span> <span class="n">dW</span><span class="p">)</span><span class="o">.</span><span class="n">imag</span>
         <span class="n">tau_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_torque</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dW_dtheta</span><span class="p">)</span>
 
         <span class="c1"># Scale back to physical units</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_base</span> <span class="o">*</span> <span class="n">y</span>
         <span class="n">tau_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_base</span> <span class="o">*</span> <span class="n">tau_m</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">tau_m</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">tau_m</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">tau_m</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">tau_m</span><span class="p">)</span></div>
 
 
 
@@ -853,6 +858,10 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">FluxMapWithHarmonics</span><span class="p">(</span><span class="n">CurrentMapWithHarmonics</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Callable wrapper for GradNet flux maps with spatial harmonics.</span>
+
+<span class="sd">    The map returns the stator flux linkage (Vs) and the electromagnetic torque (Nm) per</span>
+<span class="sd">    pole pair at the given stator current (A) and electrical rotor angle. It is</span>
+<span class="sd">    symmetrized about the d axis.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -870,29 +879,8 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_torque</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dW_dtheta</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Torque (p.u.) from the current x, flux linkage y, and the co-energy."""</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span> <span class="o">+</span> <span class="n">dW_dtheta</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">i_s_dq</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">complex</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">"""</span>
-<span class="sd">        Evaluate the flux linkage and torque at given current and rotor position.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        i_s_dq : complex | np.ndarray</span>
-<span class="sd">            Stator current (A).</span>
-<span class="sd">        exp_j_theta_m : complex | np.ndarray</span>
-<span class="sd">            Exponential of the rotor electrical angle.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        tuple[complex | np.ndarray, float | np.ndarray]</span>
-<span class="sd">            Stator flux linkage (Vs) and electromagnetic torque (Nm) per pole pair.</span>
-
-<span class="sd">        """</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">i_s_dq</span><span class="p">,</span> <span class="n">exp_j_theta_m</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Normalized torque from the current x, flux linkage y, and the co-energy."""</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="o">.</span><span class="n">conj</span><span class="p">())</span> <span class="o">+</span> <span class="n">dW_dtheta</span></div>
 
 </pre></div>
 

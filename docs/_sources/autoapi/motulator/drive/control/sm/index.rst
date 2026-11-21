@@ -20,16 +20,19 @@ Classes
    motulator.drive.control.sm.CurrentVectorController
    motulator.drive.control.sm.CurrentVectorControllerCfg
    motulator.drive.control.sm.DriveControlSystem
+   motulator.drive.control.sm.Feedbacks
    motulator.drive.control.sm.FluxObserver
    motulator.drive.control.sm.FluxVectorController
    motulator.drive.control.sm.FluxVectorControllerCfg
    motulator.drive.control.sm.InverterNonlinearity
+   motulator.drive.control.sm.Measurements
    motulator.drive.control.sm.ObserverBasedVHzController
    motulator.drive.control.sm.ObserverBasedVHzControllerCfg
    motulator.drive.control.sm.ObserverOutputs
    motulator.drive.control.sm.PIController
    motulator.drive.control.sm.PWM
    motulator.drive.control.sm.ReferenceGenerator
+   motulator.drive.control.sm.ReferenceGeneratorBase
    motulator.drive.control.sm.ReferenceGeneratorOnline
    motulator.drive.control.sm.References
    motulator.drive.control.sm.SaturatedSynchronousMachinePars
@@ -39,7 +42,9 @@ Classes
    motulator.drive.control.sm.SpeedObserver
    motulator.drive.control.sm.SynchronousMachinePars
    motulator.drive.control.sm.VHzControlSystem
+   motulator.drive.control.sm.VHzController
    motulator.drive.control.sm.VectorControlSystem
+   motulator.drive.control.sm.VectorController
 
 
 Module Contents
@@ -53,7 +58,7 @@ Module Contents
    
    Base class for synchronous machine parameters, as used by the control systems.
 
-   The control systems use the flux linkage map of the machine in rotor coordinates.
+   The control systems use the flux map of the machine in rotor coordinates.
 
 
 
@@ -147,16 +152,16 @@ Module Contents
 .. py:class:: CurrentVectorController(par, cfg)
 
    
-   Current vector controller for synchronous machine drives.
+   Current-vector controller for synchronous machine drives.
 
-   The currents are mapped to the flux linkages by the flux linkage map, and the flux
-   linkages are controlled by the 2DOF PI controller or, if `discrete` is True, by the
-   direct discrete-time controller. The saliency and the magnetic saturation are thus
-   taken into account [#Awa2019a]_.
+   The currents are mapped to the flux linkages by the flux map, and the flux linkages
+   are controlled by the 2DOF PI controller or, if `discrete` is True, by the direct
+   discrete-time controller. The saliency and the magnetic saturation are thus taken
+   into account [#Awa2019a]_.
 
    :param par: Machine model parameters.
    :type par: BaseSynchronousMachineControlPars
-   :param cfg: Current-vector control configuration.
+   :param cfg: Current-vector controller configuration.
    :type cfg: CurrentVectorControllerCfg
 
    .. rubric:: References
@@ -289,7 +294,7 @@ Module Contents
    :type alpha_c: float, optional
    :param alpha_i: Current-control integral-action bandwidth (rad/s), defaults to `alpha_c`. Not
                    used if `discrete` is True.
-   :type alpha_i: float, optional
+   :type alpha_i: float | None, optional
    :param alpha_o: Speed estimation poles (rad/s). Defaults to 2*pi*50 if `sensorless` is True,
                    otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
                    keeps the speed estimation gain approximately the same.
@@ -301,8 +306,8 @@ Module Contents
                `sensorless` is True (incremental inductances at zero current), otherwise
                ``lambda w_m: 2*pi*15``.
    :type k_o: Callable[[float], float] | None, optional
-   :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
-               None, the gain is zero, i.e., the PM-flux linkage is not estimated.
+   :param k_f: PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
+               If None, the gain is zero, i.e., the PM-flux linkage is not estimated.
    :type k_f: Callable[[float], float] | None, optional
    :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
                      machines without PMs.
@@ -343,28 +348,27 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-.. py:class:: DriveControlSystem(pwm, k_comp)
+.. py:class:: DriveControlSystem(inner_ctrl, pwm)
 
-   Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`
+   Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`\ [\ :py:obj:`C`\ ]
 
 
    
    Base class for drive control systems.
 
    This class extends `ConverterControlSystem` with the parts common to the drive
-   control systems: the feedback signals, the speed reference, and the standby.
-   Subclasses implement `get_measurement`, `update`, `post_process`, and the hooks
-   `_get_inner_feedback`, `_compute_inner_output`, and `_compute_inner_standby_output`.
+   control systems: the measurements, the feedback signals, the speed reference, and
+   the standby. Subclasses implement the hooks `_get_inner_feedback`,
+   `_compute_inner_output`, and `_compute_inner_standby_output`.
 
-   While the gates are blocked (see `set_enable`), the control system is in standby:
-   the observers run on their open-circuit model, since the converter voltage is
-   unknown, the inner controller computes its output for zero torque, and the speed
-   controller is not updated.
+   While the gates are blocked (see `set_enable`), the control system is in standby.
+   Since the converter voltage is unknown, the inner controller gets no voltage, and
+   its observer, if any, runs on its open-circuit model.
 
+   :param inner_ctrl: Inner controller.
+   :type inner_ctrl: InnerController
    :param pwm: Pulse-width modulator.
    :type pwm: PWM
-   :param k_comp: Angle-advance factor of the voltage reference.
-   :type k_comp: float
 
 
 
@@ -455,6 +459,30 @@ Module Contents
           !! processed by numpydoc !!
 
 
+   .. py:method:: get_measurement(mdl)
+
+      
+      Sample the phase-current and DC-bus voltage sensors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
    .. py:method:: set_speed_ref(ref_fcn)
 
       
@@ -481,6 +509,32 @@ Module Contents
           !! processed by numpydoc !!
 
 
+.. py:class:: Feedbacks
+
+   Bases: :py:obj:`motulator.common.control._base.ConverterFeedbacks`, :py:obj:`Protocol`
+
+
+   
+   Protocol defining the required fields for feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: FluxObserver(par, k_theta, k_o, k_f)
 
    
@@ -496,16 +550,18 @@ Module Contents
    `compute_output`, selects between these: `h = 0` gives purely model-based
    (sensorless) operation, `h = 1` relies on the external signal alone, and
    intermediate values blend the two. The magnetic saturation is taken into account
-   based on the provided machine model. The flux estimate is corrected and predicted
-   using a hold-equivalent discrete-time model, cf. [#Hin2018]_.
+   based on the provided machine model. The PM-flux estimate shifts the flux map of the
+   model along the d axis by its deviation from `par.psi_f`. The flux estimate is
+   corrected and predicted using a hold-equivalent discrete-time model, cf.
+   [#Hin2018]_.
 
    :param par: Machine model parameters.
    :type par: BaseSynchronousMachineControlPars
    :param k_theta: Rotor angle estimation gain (rad/s).
    :type k_theta: float
-   :param k_o: Observer gain as a function of the rotor angular speed.
+   :param k_o: Observer gain (1/s) as a function of the electrical rotor angular speed (rad/s).
    :type k_o: Callable[[float], float]
-   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
+   :param k_f: PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
    :type k_f: Callable[[float], float]
 
    .. rubric:: References
@@ -551,12 +607,36 @@ Module Contents
       :type w_M: float
       :param eps_ext: External mechanical position error signal (rad), defaults to 0.
       :type eps_ext: float, optional
-      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
-                based error signal is used exclusively.
+      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the
+                model-based error signal is used exclusively.
       :type h: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: psi_s_dq(i_s)
+
+      
+      Flux map of the model, shifted by the PM-flux estimate.
+
 
 
 
@@ -603,7 +683,7 @@ Module Contents
 .. py:class:: FluxVectorController(par, cfg)
 
    
-   Flux-vector controller of synchronous machine drives.
+   Flux-vector controller for synchronous machine drives.
 
    This class implements a variant of flux-vector control. Rotor coordinates and
    decoupling between the stator flux and torque channels are used according to
@@ -613,7 +693,7 @@ Module Contents
 
    :param par: Machine model parameters.
    :type par: BaseSynchronousMachineControlPars
-   :param cfg: Flux-vector control configuration.
+   :param cfg: Flux-vector controller configuration.
    :type cfg: FluxVectorControllerCfg
 
    .. rubric:: References
@@ -761,15 +841,16 @@ Module Contents
                    otherwise 2*pi*400. If `J` is given, the default is divided by sqrt(3), which
                    keeps the speed estimation gain approximately the same.
    :type alpha_o: float | None, optional
-   :param alpha_ref: Reference generation bandwidth (rad/s), defaults to 2*pi*100.
+   :param alpha_ref: Bandwidth of the online reference generation (rad/s), used if `online_ref` is
+                     True, defaults to 2*pi*100.
    :type alpha_ref: float, optional
    :param k_o: Observer gain as a function of the electrical rotor angular speed. If None,
                defaults to ``lambda w_m: 0.25*R_s*(1/L_d + 1/L_q) + 0.2*abs(w_m)`` if
                `sensorless` is True (incremental inductances at zero current), otherwise
                ``lambda w_m: 2*pi*15``.
    :type k_o: Callable[[float], float] | None, optional
-   :param k_f: PM-flux estimation gain as a function of the electrical rotor angular speed. If
-               None, the gain is zero, i.e., the PM-flux linkage is not estimated.
+   :param k_f: PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
+               If None, the gain is zero, i.e., the PM-flux linkage is not estimated.
    :type k_f: Callable[[float], float] | None, optional
    :param psi_s_min: Minimum stator flux (Vs). If None, `par.psi_f` is used. It must be positive for
                      machines without PMs.
@@ -816,15 +897,15 @@ Module Contents
    direction determines the leg state during the blanking. Away from the duty-ratio
    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the half
    carrier period. Pulses shorter than the dead time are suppressed, and clamped legs
-   have no dead-time error. The threshold voltage `u_th` of the power devices, assumed
-   equal for the switches and the diodes, causes the voltage drop `sign(i)*u_th` in
-   each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also in the clamped
-   legs. The realized duty ratios are `d_abc - d_err`. This model is consistent with
-   `motulator.common.model.VoltageSourceConverter`.
+   have no dead-time error. The threshold voltage `u_th` of the power semiconductor
+   devices, assumed equal for the switches and the diodes, causes the voltage drop
+   `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also
+   in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model is
+   consistent with `motulator.common.model.VoltageSourceConverter`.
 
    :param t_d: Dead time (s), defaults to 0.
    :type t_d: float, optional
-   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :param u_th: Threshold voltage (V) of the power semiconductor devices, defaults to 0.
    :type u_th: float, optional
    :param sign: Current-direction function, defaults to `np.sign`. A smooth approximation may be
                 used, matching the converter model.
@@ -853,6 +934,29 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
+.. py:class:: Measurements
+
+   
+   Measured signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
 .. py:class:: ObserverBasedVHzController(par, cfg)
 
    
@@ -863,7 +967,7 @@ Module Contents
 
    :param par: Machine model parameters.
    :type par: BaseSynchronousMachineControlPars
-   :param cfg: Observer-based V/Hz control configuration.
+   :param cfg: Observer-based V/Hz controller configuration.
    :type cfg: ObserverBasedVHzControllerCfg
 
 
@@ -1014,7 +1118,8 @@ Module Contents
    :type alpha_psi: float, optional
    :param alpha_tau: Torque-control bandwidth (rad/s), defaults to 2*pi*20.
    :type alpha_tau: float, optional
-   :param alpha_f: Filter bandwidth (rad/s), defaults to 2*pi*1.
+   :param alpha_f: Bandwidth of the low-pass filter of the torque estimate (rad/s), defaults to
+                   2*pi*1.
    :type alpha_f: float, optional
    :param alpha_o: Angle estimation pole (rad/s), defaults to 2*pi*200.
    :type alpha_o: float, optional
@@ -1203,11 +1308,11 @@ Module Contents
    current ripple than space-vector PWM only in the high modulation range [#Hav1998]_.
 
    Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such
-   as the dead time and the threshold voltages of the power devices, is taken into
-   account. The realized voltage is corrected for the error using the measured
-   currents. By default, the error is also compensated for by feedforward using the
-   predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
-   compensated for by shifting the other legs.
+   as the dead time and the threshold voltages of the power semiconductor devices, is
+   taken into account. The realized voltage is corrected for the error using the
+   measured currents. By default, the error is also compensated for by feedforward
+   using the predicted currents. In DPWM, the clamped leg stays at the rail, and its
+   error is compensated for by shifting the other legs.
 
    Optionally, the duty ratio of a switching leg is limited to the range
    `[d_min, 1 - d_min]`, e.g., due to the gate drivers [#Wel2006]_. A duty ratio in the
@@ -1326,31 +1431,28 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_realized_voltage(i_c_ab, u_dc, *, average = True)
+   .. py:method:: get_realized_voltages(i_c_ab, u_dc)
 
       
-      Get the realized voltage.
+      Get the realized voltages.
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      voltage is reconstructed from the duty ratios of the previous and the ongoing
+      voltages are reconstructed from the duty ratios of the previous and the ongoing
       sampling periods and the measured DC-bus voltage, i.e., the variations of the
       DC-bus voltage and of the currents within the periods are not known. The
       measured currents are also stored for the feedforward compensation of the next
-      duty ratios.
+      duty ratios, so this method is called also while the gates are blocked.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
-      :param average: If True, the average voltage of the previous and the ongoing sampling
-                      periods is returned. If False, the voltage of the ongoing sampling period is
-                      returned. Defaults to True.
-      :type average: bool, optional
 
-      :returns: Realized converter voltage (V) in stationary coordinates. If `d_err` is
-                given, the voltage is corrected for it using the measured currents.
-      :rtype: complex
+      :returns: * **u_c_ab_zoh** (*complex*) -- Realized converter voltage (V) of the ongoing sampling period in stationary
+                  coordinates.
+                * **u_c_ab** (*complex*) -- Realized converter voltage (V) averaged over the previous and the ongoing
+                  sampling periods in stationary coordinates.
 
 
 
@@ -1438,16 +1540,16 @@ Module Contents
 
 .. py:class:: ReferenceGenerator(par, i_s_max, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
 
-   Bases: :py:obj:`_ReferenceGeneratorBase`
+   Bases: :py:obj:`ReferenceGeneratorBase`
 
 
    
    Optimal feedforward reference generator for synchronous machines.
 
    This class computes the optimal flux, limited torque, and current references from a
-   given torque reference. The MTPA locus as well as the current, voltage and MTPV
+   given torque reference. The MTPA locus as well as the current, voltage, and MTPV
    limits are taken into account. This class can be used also for a saturated machine
-   model. The flux and torque references are computed using pre-computed lookup tables
+   model. The flux and torque references are computed using precomputed lookup tables
    [#Mey2006]_, [#Awa2018]_. The current reference is generated dynamically using a
    tracking law [#Sar2026]_, needed only for current-vector control.
 
@@ -1500,19 +1602,20 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_current_ref(tau_M_ref)
+   .. py:method:: compute_flux_and_torque_refs(tau_M_ref, w_m, u_dc)
 
       
-      Compute the current reference.
-
-      This method is needed only for current-vector control. It returns the current
-      reference state. The state is updated in the `update` method.
+      Compute the flux and torque reference signals.
 
       :param tau_M_ref: Torque reference (Nm).
       :type tau_M_ref: float
+      :param w_m: Electrical angular speed (rad/s).
+      :type w_m: float
+      :param u_dc: DC-bus voltage (V).
+      :type u_dc: float
 
-      :returns: Stator current reference (A) in rotor coordinates.
-      :rtype: complex
+      :returns: Flux and torque reference signals.
+      :rtype: tuple[float, float]
 
 
 
@@ -1532,20 +1635,44 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: compute_flux_and_torque_refs(tau_M_ref, w_m, u_dc)
+.. py:class:: ReferenceGeneratorBase(par, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
+
+   
+   Base class for the reference generators of synchronous machines.
+
+   The base class holds the flux limits and the current reference, which is a state
+   driven toward the flux and torque references by a tracking law [#Sar2026]_. The
+   current reference is needed only for current-vector control. The parameters are
+   described in `ReferenceGenerator`.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_current_ref(tau_M_ref)
 
       
-      Compute the flux and torque reference signals.
+      Get the current reference, needed only for current-vector control.
 
-      :param tau_M_ref: Torque reference (Nm).
+      :param tau_M_ref: Limited torque reference (Nm), whose sign gives the sign of the q-axis
+                        current.
       :type tau_M_ref: float
-      :param w_m: Electrical angular speed (rad/s).
-      :type w_m: float
-      :param u_dc: DC-link voltage (V).
-      :type u_dc: float
 
-      :returns: Flux and torque reference signals.
-      :rtype: tuple[float, float]
+      :returns: Stator current reference (A) in rotor coordinates.
+      :rtype: complex
 
 
 
@@ -1593,7 +1720,7 @@ Module Contents
 
 .. py:class:: ReferenceGeneratorOnline(par, i_s_max, psi_s_min, psi_s_max, k_u, k_mtpv, alpha_ref)
 
-   Bases: :py:obj:`_ReferenceGeneratorBase`
+   Bases: :py:obj:`ReferenceGeneratorBase`
 
 
    
@@ -1638,30 +1765,6 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: compute_current_ref(tau_M_ref)
-
-      
-      Compute current reference.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: compute_flux_and_torque_refs(tau_M_ref, w_m, u_dc)
 
       
@@ -1671,7 +1774,7 @@ Module Contents
       :type tau_M_ref: float
       :param w_m: Electrical angular speed (rad/s).
       :type w_m: float
-      :param u_dc: DC-link voltage (V).
+      :param u_dc: DC-bus voltage (V).
       :type u_dc: float
 
       :returns: Flux and torque reference signals.
@@ -1698,10 +1801,8 @@ Module Contents
    .. py:method:: update(T_s)
 
       
-      Update all tracking states.
+      Update the tracking states.
 
-      :param T_s: Sampling period.
-      :type T_s: float
 
 
 
@@ -1752,22 +1853,22 @@ Module Contents
    
    Parameters of a saturated synchronous machine.
 
-   The saturation model is specified as a current map (current as a function of the
-   flux linkage). Optionally, to be used only in control systems, a flux map (flux
-   linkage as a function of the current) can be provided. For convenience, this class
-   also provides the incremental inductance matrix, which can be used in control and
-   optimal reference generation.
+   The magnetic model is given as a current map (current as a function of the flux
+   linkage), as a flux map (flux linkage as a function of the current), or as both. The
+   machine model uses the current map, and the control methods use the flux map. The
+   class also provides the incremental inductance matrix, which can be used in control
+   and optimal reference generation.
 
    :param n_p: Number of pole pairs.
    :type n_p: int
    :param R_s: Stator resistance (Ω).
    :type R_s: float
-   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs). Needed in the
-                      system model and in some control methods.
+   :param i_s_dq_fcn: Stator current (A) as a function of the stator flux linkage (Vs), needed in the
+                      machine model.
    :type i_s_dq_fcn: Callable[[complex], complex], optional
-   :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A). This function
-                        should be differentiable, if incremental inductances are used. Needed only for
-                        control methods and optimal reference loci, not used in the system model.
+   :param psi_s_dq_fcn: Stator flux linkage (Vs) as a function of the stator current (A), needed in the
+                        control methods and for the control loci. It should be differentiable if
+                        incremental inductances are used.
    :type psi_s_dq_fcn: Callable[[complex], complex], optional
    :param G_c: Core-loss conductance (S), connected between the stator resistance and the
                magnetic model, defaults to 0 (no core losses).
@@ -1874,7 +1975,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -1934,19 +2035,19 @@ Module Contents
    according to [#Kim2012]_. Cross-saturation errors are compensated for using flux
    maps [#You2018]_. A related adjustable-frequency method is presented in [#Yu2022]_.
    If the inertia of the mechanical system is provided, the speed is estimated using
-   the speed observer based on the mechanical model [#Kim2003]_, otherwise the phase-
-   locked loop is used.
+   the speed observer based on the mechanical model [#Kim2003]_, otherwise the
+   phase-locked loop is used.
 
    :param par: Machine model parameters.
    :type par: BaseSynchronousMachineControlPars
-   :param cfg: Current-vector control configuration. The drive is always sensorless, and the
-               fields `sensorless`, `k_o`, and `k_f` are not used.
+   :param cfg: Current-vector controller configuration, with `discrete` False. The drive is
+               always sensorless, and the fields `sensorless`, `k_o`, and `k_f` are not used.
    :type cfg: CurrentVectorControllerCfg
    :param U_inj: Injected voltage amplitude (V), defaults to 250.
    :type U_inj: float, optional
    :param N_inj: Number of sampling periods per injection voltage half-period, defaults to 1. The
-                 injection frequency is `1 / (2 * N_inj * cfg.T_s)`. Reducing this frequency
-                 requires reducing `cfg.alpha_o` accordingly.
+                 injection frequency is ``1/(2*N_inj*cfg.T_s)``. Reducing this frequency requires
+                 reducing `cfg.alpha_o` accordingly.
    :type N_inj: int, optional
 
    .. rubric:: References
@@ -1988,7 +2089,7 @@ Module Contents
    .. py:method:: compute_output(tau_M_ref, fbk)
 
       
-      Compute references.
+      Compute the references, including the injected d-axis voltage.
 
 
 
@@ -2017,14 +2118,14 @@ Module Contents
    
    2DOF PI speed controller.
 
-   This is an interface for a speed controller. The gains are initialized based on the
-   desired closed-loop bandwidth and the rotor inertia estimate.
+   The gains are computed from the reference-tracking bandwidth and the inertia
+   estimate.
 
-   :param J: Total inertia of the rotor (kgm²).
+   :param J: Inertia estimate of the mechanical system (kgm²).
    :type J: float
    :param alpha_s: Reference-tracking bandwidth (rad/s).
    :type alpha_s: float
-   :param alpha_i: Integral action bandwidth (rad/s), defaults to `alpha_s`.
+   :param alpha_i: Integral-action bandwidth (rad/s), defaults to `alpha_s`.
    :type alpha_i: float, optional
    :param tau_M_max: Maximum motor torque (Nm), defaults to `inf`.
    :type tau_M_max: float, optional
@@ -2051,27 +2152,26 @@ Module Contents
    
    Flux observer with speed estimation.
 
-   This observer estimates the stator flux linkage, rotor angle, and rotor speed. The
-   observer gain decouples the electrical and mechanical dynamics and allows placing
-   the poles of the corresponding linearized estimation error dynamics. If the inertia
+   This observer estimates the stator flux linkage, the rotor angle, and the rotor
+   speed. The flux linkage and the rotor angle are estimated as in
+   :class:`FluxObserver`, and the rotor speed by :class:`SpeedObserver`. If the inertia
    of the mechanical system is provided, the observer also estimates the load torque,
-   to avoid the lag in the speed estimate. The rotor angle is tracked using a position
-   error signal, see :class:`FluxObserver`.
+   to avoid the lag in the speed estimate.
 
    :param par: Machine model parameters.
    :type par: BaseSynchronousMachineControlPars
-   :param alpha_o: Speed-estimation pole (rad/s).
+   :param alpha_o: Speed estimation pole (rad/s).
    :type alpha_o: float
    :param T_s: Sampling period (s). The poles of the ideal sensored estimation-error dynamics
                are placed at ``exp(-alpha_o*T_s)``.
    :type T_s: float
-   :param k_o: Observer gain as a function of the rotor angular speed.
+   :param k_o: Observer gain (1/s) as a function of the electrical rotor angular speed (rad/s).
    :type k_o: Callable[[float], float]
-   :param k_f: PM-flux estimation gain (V) as a function of the rotor angular speed.
+   :param k_f: PM-flux estimation gain (V) as a function of the electrical rotor angular speed.
    :type k_f: Callable[[float], float]
    :param J: Inertia of the mechanical system (kgm²). Defaults to None, which means the
              mechanical system model is not used.
-   :type J: float, optional
+   :type J: float | None, optional
 
 
 
@@ -2154,38 +2254,12 @@ Module Contents
       :type i_s_ab: complex
       :param eps_ext: External mechanical position error signal (rad), defaults to 0.
       :type eps_ext: float, optional
-      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the model-
-                based error signal is used exclusively.
+      :param h: Weight of `eps_ext` in the range [0, 1], defaults to 0, i.e., the
+                model-based error signal is used exclusively.
       :type h: float, optional
 
       :returns: **out** -- Estimated feedback signals for the control system.
       :rtype: ObserverOutputs
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
-   .. py:property:: theta_m
-      :type: float
-
-
-      
-      Electrical rotor angle estimate (rad).
-
 
 
 
@@ -2260,9 +2334,10 @@ Module Contents
    
    Speed observer.
 
-   This observer estimates the mechanical rotor speed based on the mechanical system
-   model and the error signal. If the inertia of the mechanical system is provided, the
-   load torque is also estimated, avoiding lag in the speed estimate [#Lor1991]_.
+   This observer estimates the mechanical rotor speed from an error signal. If the
+   inertia of the mechanical system is provided, the observer also uses the mechanical
+   model and estimates the load torque, which avoids the lag in the speed estimate
+   [#Lor1991]_.
 
    :param k_w: Speed-estimation gain (rad/s or (rad/s)² for induction machines or for
                synchronous machines, respectively).
@@ -2326,12 +2401,12 @@ Module Contents
       
       Update mechanical state estimates.
 
-      :param T_s: Sample time (s).
+      :param T_s: Sampling period (s).
       :type T_s: float
       :param eps: Estimation error signal: mechanical speed (rad/s) or mechanical position
                   (rad) for induction machines or synchronous machines, respectively.
       :type eps: float
-      :param tau_M: Electromagnetic torque estimate (Nm).
+      :param tau_M: Electromagnetic torque estimate (Nm), defaults to 0.
       :type tau_M: float, optional
 
 
@@ -2463,7 +2538,7 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m = None)
+   .. py:method:: magnetic_map(psi_s_dq, exp_j_theta_m)
 
       
       Magnetic map.
@@ -2511,16 +2586,16 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VHzControlSystem(vhz_ctrl, slew_rate = inf, pwm = None)
+.. py:class:: VHzControlSystem(inner_ctrl, slew_rate = inf, pwm = None)
 
-   Bases: :py:obj:`DriveControlSystem`
+   Bases: :py:obj:`DriveControlSystem`\ [\ :py:obj:`VHzController`\ ]
 
 
    
    V/Hz control system.
 
-   :param vhz_ctrl: V/Hz controller to be used in the drive control system.
-   :type vhz_ctrl: VHzController
+   :param inner_ctrl: V/Hz controller.
+   :type inner_ctrl: VHzController
    :param slew_rate: Slew rate (mechanical rad/s**2) for the speed reference, defaults to `inf`.
    :type slew_rate: float, optional
    :param pwm: Pulse-width modulator, defaults to `PWM(overmodulation="MME")`.
@@ -2543,10 +2618,38 @@ Module Contents
    ..
        !! processed by numpydoc !!
 
-   .. py:method:: get_measurement(mdl)
+.. py:class:: VHzController
+
+   Bases: :py:obj:`motulator.common.control._base.InnerController`, :py:obj:`Protocol`
+
+
+   
+   Protocol defining the interface for V/Hz controllers.
+
+   The attribute `T_s` is the sampling period (s), which the rate limiter of the speed
+   reference uses.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(fbk)
 
       
-      Sample the sensors.
+      Compute control output from feedback signals.
 
 
 
@@ -2567,10 +2670,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process()
+   .. py:method:: compute_standby_output(fbk)
 
       
-      Extend the post-process method.
+      Compute control output while the gates are blocked.
 
 
 
@@ -2591,10 +2694,10 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: update(ref, fbk)
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_ref)
 
       
-      Update controller states.
+      Get feedback signals from measurements, `u_s_ab` None if unknown.
 
 
 
@@ -2615,26 +2718,26 @@ Module Contents
           !! processed by numpydoc !!
 
 
-.. py:class:: VectorControlSystem(vector_ctrl, speed_ctrl = None, pwm = None)
+.. py:class:: VectorControlSystem(inner_ctrl, speed_ctrl = None, pwm = None)
 
-   Bases: :py:obj:`DriveControlSystem`
+   Bases: :py:obj:`DriveControlSystem`\ [\ :py:obj:`VectorController`\ ]
 
 
    
    Vector control system.
 
-   This class defines the interface for drive control systems. It is a generic class
-   that can be used with different inner controllers (such as current-vector control
-   and flux-vector control).
+   The inner controller (e.g., current-vector or flux-vector control) gets the torque
+   reference, either directly or from the speed controller.
 
-   A sensorless drive stays in standby with the zero voltage vector also at the first
-   sampling instant after the release of the gates. Due to the computational delay, the
-   first two sampling periods are then zero-voltage periods, and the observer of a
-   synchronous machine catches the rotating machine from the current response to the
-   first one (a flying start).
+   In standby, the inner controller computes its output for zero torque, and the speed
+   controller is not updated. A sensorless drive stays in standby with the zero voltage
+   vector also at the first sampling instant after the release of the gates. Due to the
+   computational delay, the first two sampling periods are then zero-voltage periods,
+   and the observer of a synchronous machine catches the rotating machine from the
+   current response to the first one (a flying start).
 
-   :param vector_ctrl: Vector controller whose input is the torque reference.
-   :type vector_ctrl: VectorController
+   :param inner_ctrl: Vector controller whose input is the torque reference.
+   :type inner_ctrl: VectorController
    :param speed_ctrl: Speed controller. If None (default), torque-control mode is used.
    :type speed_ctrl: SpeedController | PIController | None, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
@@ -2729,30 +2832,6 @@ Module Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process()
-
-      
-      Extend the post-process method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: set_speed_ref(ref_fcn)
 
       
@@ -2809,6 +2888,82 @@ Module Contents
 
       
       Update controller states.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+.. py:class:: VectorController
+
+   Bases: :py:obj:`motulator.common.control._base.InnerController`, :py:obj:`Protocol`
+
+
+   
+   Protocol defining the interface for vector controllers.
+
+   The attribute `sensorless` is True if the rotor speed and angle are estimated
+   instead of measured.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(tau_M_ref, fbk)
+
+      
+      Compute control output from feedback signals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(u_s_ab, i_s_ab, w_M_meas, theta_M_meas)
+
+      
+      Get feedback signals from measurements, `u_s_ab` None if unknown.
 
 
 

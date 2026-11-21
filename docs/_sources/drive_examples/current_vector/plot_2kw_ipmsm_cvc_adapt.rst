@@ -23,8 +23,8 @@
 
 This example simulates sensorless current-vector control (CVC) of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive. The PM-flux adaptation is enabled
-[#Tuo2018]_. To demonstrate adaptation, the initial value of the PM-flux estimate has an
-error of 25%.
+[#Tuo2018]_. To demonstrate adaptation, the initial PM-flux estimate is about 27%
+smaller than the actual value.
 
 .. GENERATED FROM PYTHON SOURCE LINES 13-20
 
@@ -94,9 +94,9 @@ Configure the control system.
 .. code-block:: Python
 
 
-    # PM-flux estimate is about 75% of the actual value
+    # PM-flux estimate is about 73% of the actual value
     est_par = model.SynchronousMachinePars(n_p=3, R_s=3.6, L_d=0.036, L_q=0.051, psi_f=0.4)
-    # Gain `k_f` enables the PM-flux disturbance estimation at speeds above 0.2 p.u.
+    # Gain `k_f` enables the PM-flux estimation at speeds above 0.2 p.u.
     cfg = control.CurrentVectorControllerCfg(
         i_s_max=1.5 * base.i,
         k_f=lambda w_m: max(0.05 * (abs(w_m) - 0.2 * base.w), 0),
@@ -213,7 +213,7 @@ Plot the actual and estimated values for flux linkages.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.350 seconds)
+   **Total running time of the script:** (0 minutes 2.732 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_ipmsm_cvc_adapt.py:

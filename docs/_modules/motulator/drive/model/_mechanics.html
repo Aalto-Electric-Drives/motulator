@@ -205,8 +205,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -216,8 +216,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -233,7 +233,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -475,7 +475,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Subsystem</span><span class="p">,</span> <span class="n">SubsystemTimeSeries</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span><span class="p">,</span> <span class="n">wrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">motulator.common.utils._utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">empty_array</span><span class="p">,</span> <span class="n">get_value</span>
 
 
 <span class="c1"># %%</span>
@@ -516,10 +516,12 @@
 <span class="sd">    B_L : float | Callable[[float], float], optional</span>
 <span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous</span>
 <span class="sd">        friction, or an arbitrary function of the rotor speed. For example, choosing</span>
-<span class="sd">        ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque ``k*w_M**2``.</span>
-<span class="sd">        Defaults to 0.</span>
+<span class="sd">        ``B_L = lambda w_M: k*abs(w_M)`` gives the quadratic load torque</span>
+<span class="sd">        ``k*abs(w_M)*w_M``. Defaults to 0.</span>
 
 <span class="sd">    """</span>
+
+    <span class="n">angles</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"theta_M"</span><span class="p">})</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">J</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">B_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MechanicsInputs</span> <span class="o">=</span> <span class="n">MechanicsInputs</span><span class="p">()</span>
@@ -537,25 +539,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">tau_L</span></div>
 
 
-<div class="viewcode-block" id="MechanicalSystem.set_external_rotor_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_external_rotor_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_rotor_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set external rotor speed (rad/s), constant or a function of time."""</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_total_load_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tau_L</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Total load torque (Nm), including the friction."""</span>
         <span class="k">return</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B_L</span><span class="p">,</span> <span class="n">w_M</span><span class="p">)</span> <span class="o">*</span> <span class="n">w_M</span> <span class="o">+</span> <span class="n">tau_L</span>
-
-<div class="viewcode-block" id="MechanicalSystem.set_states">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_states">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set states, keeping the rotor angle within [-pi, pi)."""</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">index</span></div>
-
 
 <div class="viewcode-block" id="MechanicalSystem.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.set_outputs">[docs]</a>
@@ -579,7 +565,7 @@
 
 <div class="viewcode-block" id="MechanicalSystem.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.MechanicalSystem.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"MechanicalSystemTimeSeries"</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemTimeSeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create the time series."""</span>
         <span class="k">return</span> <span class="n">MechanicalSystemTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
@@ -600,13 +586,11 @@
     <span class="n">tau_L</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="c1"># Derived</span>
     <span class="n">tau_L_tot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
-    <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">MechanicalSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"w_M"</span><span class="p">]))</span>
         <span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"theta_M"</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_M</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_M</span><span class="p">))</span>
         <span class="c1"># External load torque, replaced by the connected one if any</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">get_value</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_L</span><span class="p">,</span> <span class="n">t_k</span><span class="p">)</span> <span class="k">for</span> <span class="n">t_k</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
 
@@ -637,7 +621,7 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TwoMassMechanicalSystem</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Two-mass mechanical subsystem.</span>
+<span class="sd">    Two-mass mechanical system.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -652,10 +636,12 @@
 <span class="sd">    B_L : float | Callable[[float], float], optional</span>
 <span class="sd">        Friction coefficient (Nm/(rad/s)) that can be constant, corresponding to viscous</span>
 <span class="sd">        friction, or an arbitrary function of the load speed. For example, choosing</span>
-<span class="sd">        ``B_L = lambda w_L: k*abs(w_L)`` leads to quadratic load torque ``k*w_L**2``.</span>
-<span class="sd">        Defaults to 0.</span>
+<span class="sd">        ``B_L = lambda w_L: k*abs(w_L)`` gives the quadratic load torque</span>
+<span class="sd">        ``k*abs(w_L)*w_L``. Defaults to 0.</span>
 
 <span class="sd">    """</span>
+
+    <span class="n">angles</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"theta_M"</span><span class="p">})</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -683,13 +669,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="o">.</span><span class="n">tau_L</span> <span class="o">=</span> <span class="n">tau_L</span></div>
 
 
-<div class="viewcode-block" id="TwoMassMechanicalSystem.set_external_rotor_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.set_external_rotor_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_rotor_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set external rotor speed (rad/s), constant or a function of time."""</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_shaft_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta_ML</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">w_M</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">w_L</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Shaft torque (Nm)."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">K_S</span> <span class="o">*</span> <span class="n">theta_ML</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_S</span> <span class="o">*</span> <span class="p">(</span><span class="n">w_M</span> <span class="o">-</span> <span class="n">w_L</span><span class="p">)</span>
@@ -697,15 +676,6 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_total_load_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_L</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">tau_L</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Total load torque (Nm), including the friction."""</span>
         <span class="k">return</span> <span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B_L</span><span class="p">,</span> <span class="n">w_L</span><span class="p">)</span> <span class="o">*</span> <span class="n">w_L</span> <span class="o">+</span> <span class="n">tau_L</span>
-
-<div class="viewcode-block" id="TwoMassMechanicalSystem.set_states">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.set_states">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set states, keeping the rotor angle within [-pi, pi)."""</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">index</span></div>
-
 
 <div class="viewcode-block" id="TwoMassMechanicalSystem.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.set_outputs">[docs]</a>
@@ -732,7 +702,7 @@
 
 <div class="viewcode-block" id="TwoMassMechanicalSystem.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.TwoMassMechanicalSystem.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"TwoMassMechanicalSystemTimeSeries"</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemTimeSeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create the time series."""</span>
         <span class="k">return</span> <span class="n">TwoMassMechanicalSystemTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
@@ -756,13 +726,11 @@
     <span class="c1"># Derived</span>
     <span class="n">tau_S</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="n">tau_L_tot</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
-    <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">TwoMassMechanicalSystem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"w_M"</span><span class="p">]))</span>
         <span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"theta_M"</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_M</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_M</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"w_L"</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta_ML</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"theta_ML"</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tau_S</span> <span class="o">=</span> <span class="n">subsystem</span><span class="o">.</span><span class="n">_compute_shaft_torque</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_ML</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_L</span><span class="p">)</span>
@@ -793,43 +761,28 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExternalRotorSpeed</span><span class="p">(</span><span class="n">Subsystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
-<span class="sd">    Integrate rotor angle from externally given rotor speed.</span>
+<span class="sd">    Externally given rotor speed.</span>
 
-<span class="sd">    This class maintains the same interface as other mechanical systems but the speed is</span>
-<span class="sd">    determined by an external function rather than by torque dynamics.</span>
+<span class="sd">    The speed is given externally instead of being determined by the torque dynamics,</span>
+<span class="sd">    and the rotor angle is integrated from the speed. The electromagnetic torque is an</span>
+<span class="sd">    input, as in the other mechanical systems, but it does not affect the speed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    w_M : float | Callable[[float], float], optional</span>
+<span class="sd">        Rotor speed (rad/s), constant or a function of time, defaults to 0. It can be</span>
+<span class="sd">        changed later through the attribute `w_M`.</span>
 
 <span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">angles</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"theta_M"</span><span class="p">})</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inp</span><span class="p">:</span> <span class="n">MechanicsInputs</span> <span class="o">=</span> <span class="n">MechanicsInputs</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">:</span> <span class="n">ExternalRotorSpeedStates</span> <span class="o">=</span> <span class="n">ExternalRotorSpeedStates</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">MechanicsOutputs</span> <span class="o">=</span> <span class="n">MechanicsOutputs</span><span class="p">(</span>
-            <span class="n">theta_M</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="mf">0.0</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># External input</span>
-
-<div class="viewcode-block" id="ExternalRotorSpeed.set_external_rotor_speed">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_external_rotor_speed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_rotor_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w_M</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set external rotor speed (rad/s), constant or a function of time."""</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M</span></div>
-
-
-<div class="viewcode-block" id="ExternalRotorSpeed.set_external_load_torque">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_external_load_torque">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_external_load_torque</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau_L</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set external load torque (Nm), constant or a function of time."""</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-
-<div class="viewcode-block" id="ExternalRotorSpeed.set_states">
-<a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_states">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">],</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""Set states, keeping the rotor angle within [-pi, pi)."""</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_states</span><span class="p">(</span><span class="n">state_list</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">theta_M</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">index</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">:</span> <span class="n">MechanicsOutputs</span> <span class="o">=</span> <span class="n">MechanicsOutputs</span><span class="p">(</span><span class="n">theta_M</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">w_M</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">w_M</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_outputs</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ExternalRotorSpeed.set_outputs">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.set_outputs">[docs]</a>
@@ -844,13 +797,12 @@
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.rhs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rhs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">complex</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""Compute state derivatives."""</span>
-        <span class="n">d_theta_M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">w_M</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">d_theta_M</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">[</span><span class="n">get_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">t</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="ExternalRotorSpeed.create_time_series">
 <a class="viewcode-back" href="../../../../autoapi/motulator/drive/model/index.html#motulator.drive.model.ExternalRotorSpeed.create_time_series">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"ExternalRotorSpeedTimeSeries"</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SubsystemTimeSeries</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Create the time series."""</span>
         <span class="k">return</span> <span class="n">ExternalRotorSpeedTimeSeries</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 </div>
@@ -869,14 +821,11 @@
     <span class="n">w_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
     <span class="c1"># Input</span>
     <span class="n">tau_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
-    <span class="c1"># Derived</span>
-    <span class="n">exp_j_theta_M</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">empty_array</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">:</span> <span class="n">ExternalRotorSpeed</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">get_value</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">w_M</span><span class="p">,</span> <span class="n">t_k</span><span class="p">)</span> <span class="k">for</span> <span class="n">t_k</span> <span class="ow">in</span> <span class="n">t</span><span class="p">])</span>
         <span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">subsystem</span><span class="o">.</span><span class="n">_history</span><span class="p">[</span><span class="s2">"theta_M"</span><span class="p">]))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_M</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exp_j_theta_M</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">theta_M</span><span class="p">))</span>
 </pre></div>
 
                 </article>

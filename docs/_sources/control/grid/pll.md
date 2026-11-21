@@ -1,6 +1,6 @@
 # Phase-Locked Loop
 
-A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid {cite}`Kau1997`. Here, we represent the PLL using the disturbance observer structure {cite}`Fra1998`, which may be simpler to extend than the classical PLL. Furthermore, this structure allows to see links to synchronization methods used in grid-forming converters, see {cite}`Nur2024`.
+A phase-locked loop (PLL) is commonly used in grid-following converters to synchronize the converter output with the grid {cite}`Kau1997`. Here, we represent the PLL using the disturbance observer structure {cite}`Fra1998`, which may be simpler to extend than the classical PLL. Furthermore, this structure shows the links to synchronization methods used in grid-forming converters, see {cite}`Nur2024`.
 
 ## Disturbance Model
 
@@ -13,7 +13,7 @@ label: disturbance
     \frac{\D\ug}{\D t} = \jj(\omegag - \omegac)\ug
 ```
 
-where $\omegag$ is the grid angular frequency. If needed, this disturbance model could be extended, e.g., with a negative-sequence component, allowing to design the PLL for unbalanced grids.
+where $\omegag$ is the grid angular frequency. If needed, this disturbance model could be extended, e.g., with a negative-sequence component, so that the PLL can be designed for unbalanced grids.
 
 ```{note}
 The disturbance model in {eq}`disturbance` can be equivalently expressed in polar form as
@@ -61,7 +61,7 @@ label: pll_polar
     \frac{\D \hatthetag}{\D t} &= \hatomegag + \frac{\alphao}{\hatabsug}\IM\{ \ugmeas \} = \omegac
 ```
 
-It can be seen that the first equation in {eq}`pll_polar` is low-pass filtering of the measured PCC voltage magnitude and the second equation is the conventional angle-tracking PLL. In these coordinates, the frequency tracking {eq}`frequency_tracking` reduces to
+It can be seen that the first equation in {eq}`pll_polar` low-pass filters the real part of the measured PCC voltage, which equals the voltage magnitude when the PLL is locked, and the second equation is the conventional angle-tracking PLL. In these coordinates, the frequency tracking {eq}`frequency_tracking` reduces to
 
 ```{math}
 ---
@@ -70,7 +70,7 @@ label: frequency_tracking_polar
     \frac{\D \hatomegag}{\D t} = \frac{k_\upomega}{\hatabsug } \IM\{ \ugmeas \}
 ```
 
-It can be noticed that the disturbance observer with the frequency tracking equals the conventional frequency-adaptive PLL {cite}`Kau1997`, with the additional feature of low-pass filtering the PCC voltage magnitude. The low-pass filtered PCC voltage can be used as a feedforward term in current control {cite}`Har2021`.
+It can be noticed that the disturbance observer with the frequency tracking equals the conventional frequency-adaptive PLL {cite}`Kau1997`, with the additional feature of low-pass filtering the PCC voltage. The low-pass filtered PCC voltage can be used as a feedforward term in current control {cite}`Har2021`.
 
 ## Closed-Loop System Analysis
 
@@ -81,7 +81,7 @@ The estimation-error dynamics are analyzed by means of linearization, assuming $
 label: linearized_model
 ---
     \frac{\D\Delta \tildeug}{\D t} &= -\alphao\Delta \tildeug + \jj\ugo (\Delta \omegag - \Delta \hatomegag) \\
-    \frac{\D\Delta \hatomegag}{\D t} &= k_\omega\IM\left\{ \frac{\Delta \tildeug}{\ugo} \right\}
+    \frac{\D\Delta \hatomegag}{\D t} &= k_\upomega\IM\left\{ \frac{\Delta \tildeug}{\ugo} \right\}
 ```
 
 where $\Delta \tildeug = \Delta\ug - \Delta \hatug$ is the estimation error.
@@ -103,9 +103,9 @@ Next, the frequency-tracking dynamics are also considered. From {eq}`linearized_
 ---
 label: closed_loop_pll_frequency_tracking
 ---
-    \frac{\Delta\hatomegag(s)}{\Delta\omegag(s)} = \frac{k_\upomega}{s^2 + \alphao s + k_\omega}
+    \frac{\Delta\hatomegag(s)}{\Delta\omegag(s)} = \frac{k_\upomega}{s^2 + \alphao s + k_\upomega}
 ```
 
 Choosing $k_\upomega = \alphapll^2$ and $\alphao = 2\alphapll$ yields the double pole at $s = -\alphapll$, where $\alphapll$ is the frequency-tracking bandwidth.
 
-This PLL in estimated PCC coordinates is implemented in the class {class}`motulator.grid.control.PLL`. The {doc}`/grid_examples/grid_following/index` examples use the PLL to synchronize with the grid.
+This PLL in estimated PCC voltage coordinates is implemented in the class {class}`motulator.grid.control.PLL`. The {doc}`/grid_examples/grid_following/index` examples use the PLL to synchronize with the grid.

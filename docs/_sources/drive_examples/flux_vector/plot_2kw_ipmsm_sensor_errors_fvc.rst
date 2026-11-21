@@ -66,10 +66,10 @@ Compute base values based on the nominal values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 28-32
 
-Configure the current sensors. A sensor maps each sampled channel `x` to `gain*x +
-offset + std*n`, where `n` is white Gaussian noise. The current sensors measure the
-phase currents, so the parameters are given per phase. The random number generator
-is seeded to make the results reproducible.
+Configure the current sensors. A sensor maps each sampled channel `x` to
+`gain*x + offset + std*n`, where `n` is white Gaussian noise. The current sensors
+measure the phase currents, so the parameters are given per phase. The random number
+generator is seeded to make the results reproducible.
 
 .. GENERATED FROM PYTHON SOURCE LINES 32-40
 
@@ -138,8 +138,8 @@ Configure the control system.
 
 .. GENERATED FROM PYTHON SOURCE LINES 61-63
 
-Set the speed reference and the external load torque. The speed is first increased
-to 0.5 p.u. and then, under the load, decreased to 0.1 p.u.
+Set the speed reference and the external load torque. The speed is first increased to
+0.5 p.u. and then, under the load, decreased to 0.1 p.u.
 
 .. GENERATED FROM PYTHON SOURCE LINES 63-67
 
@@ -160,7 +160,7 @@ to 0.5 p.u. and then, under the load, decreased to 0.1 p.u.
 
 Simulate the drive and plot the results. The offsets cause a torque ripple at the
 stator frequency and the gain mismatch at twice the stator frequency. The plotted
-currents are the measured ones, while the torque is the actual one.
+currents and the torque estimate are based on the measured currents.
 
 .. GENERATED FROM PYTHON SOURCE LINES 71-75
 
@@ -185,7 +185,7 @@ currents are the measured ones, while the torque is the actual one.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.115 seconds)
+   **Total running time of the script:** (0 minutes 4.204 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sensor_errors_fvc.py:

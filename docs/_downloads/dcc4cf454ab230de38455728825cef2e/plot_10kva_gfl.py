@@ -34,9 +34,8 @@ inner_ctrl = control.CurrentVectorController(cfg)
 ctrl = control.GridConverterControlSystem(inner_ctrl)
 
 # %%
-# Set the time-dependent reference and disturbance signals.
+# Set the active and reactive power references.
 
-# Set the active and reactive power references
 ctrl.set_power_ref(lambda t: (t > 0.02) * 5e3)
 ctrl.set_reactive_power_ref(lambda t: (t > 0.04) * 4e3)
 

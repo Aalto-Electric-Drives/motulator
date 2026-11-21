@@ -18,7 +18,7 @@ The packages listed on this page extend *motulator* with additional models, cont
 
 ## Listing a Package
 
-A package can be listed if it is open source, installable with `pip`, and has a README with at least one runnable example. To list it, open an [issue](https://github.com/Aalto-Electric-Drives/motulator/issues) or a pull request that adds a row to the table. The maintainers of a package keep the tested release up to date; packages that no longer work or are no longer maintained may be removed from the list.
+A package can be listed if it is open source, installable with `pip`, and has a README with at least one runnable example. To list it, open an [issue](https://github.com/Aalto-Electric-Drives/motulator/issues) or a pull request that adds a row to the table. The maintainers of a package keep the tested release up to date. Packages that no longer work or are no longer maintained may be removed from the list.
 
 ## Developing a Package
 

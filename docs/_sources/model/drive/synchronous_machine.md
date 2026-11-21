@@ -125,9 +125,7 @@ where $\Ld$ is the d-axis inductance, $\Lq$ is the q-axis inductance, and $\psif
 
 ### Saturation Models
 
-Nonlinear magnetic models are parametrized using the {class}`motulator.drive.model.SaturatedSynchronousMachinePars` class. The term _magnetic model_ refers to the complete magnetic characterization of the machine. This characterization can be represented in two equivalent ways: as current maps or as flux linkage maps. These two representations are mathematically inverse to each other but describe the same physical relationship.
-
-The magnetic model can be obtained through experimental measurements {cite}`Arm2013` or finite-element method analysis. Regardless of the source, these models can be implemented as the current map $\is = \isfcn(\psis)$ or as its inverse, the flux linkage map
+Nonlinear magnetic models are parametrized using the {class}`motulator.drive.model.SaturatedSynchronousMachinePars` class. The magnetic model, i.e., the complete magnetic characterization of the machine, can be obtained from experimental measurements {cite}`Arm2013` or finite-element analysis. It can be given as the current map $\is = \isfcn(\psis)$, which the machine model uses, or as its inverse, the flux map
 
 ```{math}
 ---
@@ -140,7 +138,7 @@ label: sm_flux_linkage_map
 
 In practice, these maps can be realized as lookup tables, explicit mathematical functions {cite}`Hin2017,Woo2023,Lel2024`, or neural networks {cite}`Lee2025,Li2026`.
 
-Methods for manipulating and plotting the magnetic models are provided in the classes {class}`motulator.drive.utils.MagneticModel`, {func}`motulator.drive.utils.plot_map`, and {func}`motulator.drive.utils.plot_flux_vs_current`. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the {func}`motulator.drive.utils.MagneticModel.invert` method.
+The class {class}`motulator.drive.utils.MagneticModel` and the functions {func}`motulator.drive.utils.plot_map` and {func}`motulator.drive.utils.plot_flux_vs_current` manipulate and plot the magnetic models. If the magnetic model is lossless and physically feasible, it can be numerically inverted between the two representations, see the method {meth}`motulator.drive.utils.MagneticModel.invert`.
 
 See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`, {doc}`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`, and {doc}`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`.
 
@@ -166,7 +164,7 @@ label: sm_energy_linear
     W = \frac{(\psid - \psif)^2}{2\Ld} + \frac{\psiq^2}{2\Lq}
 ```
 
-Similarly, the flux linkage map {eq}`sm_flux_linkage_map` is the gradient of the co-energy with respect to the current, i.e.,
+Similarly, the flux map {eq}`sm_flux_linkage_map` is the gradient of the co-energy with respect to the current, i.e.,
 
 ```{math}
 ---
@@ -186,9 +184,9 @@ label: sm_torque_harmonics
     \tauM = \frac{3\np}{2}\left(\IM \left\{\is \psis^* \right\} - \frac{\partial W}{\partial \thetam}\right)
 ```
 
-If the machine is symmetric about the d-axis, reversing the signs of $\psiq$ and $\thetam$ reverses the sign of $\iq$ and leaves $\id$ unchanged {cite}`Boj2026`.
+If the machine is symmetric about the d axis, reversing the signs of $\psiq$ and $\thetam$ reverses the sign of $\iq$ and leaves $\id$ unchanged {cite}`Boj2026`.
 
-GradNet magnetic models {cite}`Li2026` are based on gradient networks {cite}`Cha2025`, i.e., neural networks that model the current map or the flux linkage map directly as a gradient. Due to their structure, the maps are always lossless, invertible, and symmetric about the d-axis, regardless of the training data. With spatial harmonics, the same network also gives the torque {eq}`sm_torque_harmonics`. The networks are evaluated by the {mod}`motulator.drive.gradnet` package and trained from measured or finite-element data with the related package [motulator-gradnet](https://aalto-electric-drives.github.io/motulator-gradnet/), see the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas` and {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
+GradNet magnetic models {cite}`Li2026` are based on gradient networks {cite}`Cha2025`, i.e., neural networks that model the current map or the flux map directly as a gradient. Due to their structure, the maps are always lossless, invertible, and symmetric about the d axis, regardless of the training data. With spatial harmonics, the same network also gives the torque {eq}`sm_torque_harmonics`. The networks are evaluated by the {mod}`motulator.drive.gradnet` package and trained from measured or finite-element data with the related package [motulator-gradnet](https://aalto-electric-drives.github.io/motulator-gradnet/), see the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas` and {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm`.
 
 (sm_core_losses)=
 
@@ -253,9 +251,9 @@ label: sm_mtpa_aux
     \psiaux(\is) = \psis - \Lqq \id - \jj \Ldd \iq + \jj \Ldq \is^*
 ```
 
-The flux linkage $\psis$ as well as the incremental inductances $\Ldd = \partial \psid/\partial \id$, $\Lqq = \partial \psiq/\partial \iq$, and $\Ldq = \partial \psid/\partial \iq = \partial \psiq/\partial \id$ are obtained from the flux linkage map $\psisfcn(\is)$.
+The flux linkage $\psis$ as well as the incremental inductances $\Ldd = \partial \psid/\partial \id$, $\Lqq = \partial \psiq/\partial \iq$, and $\Ldq = \partial \psid/\partial \iq = \partial \psiq/\partial \id$ are obtained from the flux map $\psisfcn(\is)$.
 
-The conditions in {eq}`sm_mtpv` and {eq}`sm_mtpa` are realized in the class {class}`motulator.drive.utils.ControlLoci` that provides methods for computing the MTPA, MTPV, and constant current loci for magnetically linear as well as saturated machines. The class {class}`motulator.drive.utils.MachineCharacteristics` provides methods for visualizing these loci. See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`, {doc}`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`, and {doc}`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`.
+The conditions in {eq}`sm_mtpv` and {eq}`sm_mtpa` are realized in the class {class}`motulator.drive.utils.ControlLoci` that provides methods for computing the MTPA, MTPV, and constant-current loci for magnetically linear as well as saturated machines. The class {class}`motulator.drive.utils.MachineCharacteristics` provides methods for visualizing these loci. See also the examples {doc}`/drive_examples/flux_vector/plot_6kw_pmsyrm_sat_fvc`, {doc}`/drive_examples/flux_vector/plot_7kw_syrm_sat_fvc`, and {doc}`/drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc`.
 
 ```{note}
 The auxiliary vectors follow {cite}`Hin2018` conventions and are rotated 90° relative to {cite}`Var2022`.

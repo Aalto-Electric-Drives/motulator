@@ -1,6 +1,6 @@
 """
-2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control
-==============================================
+2.2-kW IPMSM, two-mass mechanics, O-V/Hz control
+================================================
 
 This example simulates observer-based V/Hz (O-V/Hz) control of a 2.2-kW interior
 permanent-magnet synchronous machine (IPMSM) drive. The mechanical subsystem is modeled
@@ -77,7 +77,7 @@ ax2.set_xlabel("Time (s)")
 plt.show()
 
 # %%
-# Plot the frequency response from the torque tau_M to the rotor speed w_M.
+# Plot the frequency response from the electromagnetic torque to the rotor speed.
 
 # Frequency range and number of points
 f_span = (5, 500)

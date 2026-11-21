@@ -24,9 +24,9 @@
 This example simulates a 12.5-kVA disturbance-observer-based grid-forming (DO-GFM)
 converter during a grid-voltage sag in a weak grid. Apart from the sag, the converter
 and grid models are the same as in :doc:`/grid_examples/grid_forming/plot_13kva_do_gfm`.
-The grid voltage drops to 0.5 p.u. while the active-power reference is kept at 1 p.u.
-The active-power reference is limited to a realizable level, prioritizing the reactive
-current [#Maa2026]_.
+The grid voltage drops to 0.5 p.u. while the active-power reference is kept at the
+nominal power. The active-power reference is limited to a realizable level, prioritizing
+the reactive current [#Maa2026]_.
 
 .. GENERATED FROM PYTHON SOURCE LINES 15-17
 
@@ -180,7 +180,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.754 seconds)
+   **Total running time of the script:** (0 minutes 3.078 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_forming_plot_13kva_do_gfm_sag.py:

@@ -210,8 +210,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -221,8 +221,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -238,7 +238,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -561,13 +561,13 @@ motulator-gradnet, <a class="github reference external" href="https://github.com
 <td><p>Callable wrapper for GradNet current maps with spatial harmonics.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.FluxMap" title="motulator.drive.gradnet.FluxMap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxMap</span></code></a></p></td>
-<td><p>Callable wrapper for GradNet flux-linkage map models.</p></td>
+<td><p>Callable wrapper for GradNet flux map models.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.drive.gradnet.FluxMapWithHarmonics" title="motulator.drive.gradnet.FluxMapWithHarmonics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FluxMapWithHarmonics</span></code></a></p></td>
 <td><p>Callable wrapper for GradNet flux maps with spatial harmonics.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.drive.gradnet.GradNetFunction" title="motulator.drive.gradnet.GradNetFunction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GradNetFunction</span></code></a></p></td>
-<td><p>Trained GradNet as a numpy function in double precision.</p></td>
+<td><p>Trained GradNet as a NumPy function in double precision.</p></td>
 </tr>
 </tbody>
 </table>
@@ -591,8 +591,9 @@ motulator-gradnet, <a class="github reference external" href="https://github.com
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">CurrentMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#CurrentMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.CurrentMap" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../utils/index.html#motulator.drive.utils.SaturationModelBase" title="motulator.drive.utils.SaturationModelBase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">motulator.drive.utils.SaturationModelBase</span></code></a></p>
 <p>Callable wrapper for GradNet current map models.</p>
-<p>The map is symmetrized about the d-axis to ensure physical consistency. The map can
-be sampled on a grid by <cite>as_magnetic_model()</cite>, e.g., for plotting.</p>
+<p>The map returns the stator current (A) at the given stator flux linkage (Vs). It is
+symmetrized about the d axis. The map can be sampled on a grid by
+<cite>as_magnetic_model()</cite>, e.g., for plotting.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="#motulator.drive.gradnet.GradNetFunction" title="motulator.drive.gradnet.GradNetFunction"><em>GradNetFunction</em></a>) – Trained GradNet for the current map, see <cite>load_gradnet</cite>.</p>
@@ -622,6 +623,9 @@ the output of the map, in SI units.</p>
 <dt class="sig sig-object py" id="motulator.drive.gradnet.CurrentMapWithHarmonics">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">CurrentMapWithHarmonics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#CurrentMapWithHarmonics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.CurrentMapWithHarmonics" title="Link to this definition">#</a></dt>
 <dd><p>Callable wrapper for GradNet current maps with spatial harmonics.</p>
+<p>The map returns the stator current (A) and the electromagnetic torque (Nm) per pole
+pair at the given stator flux linkage (Vs) and electrical rotor angle, as needed by
+<cite>SpatialSaturatedSynchronousMachinePars</cite>. It is symmetrized about the d axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -636,12 +640,12 @@ the output of the map, in SI units.</p>
 <dt class="sig sig-object py" id="motulator.drive.gradnet.FluxMap">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">FluxMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#FluxMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.FluxMap" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.gradnet.CurrentMap" title="motulator.drive.gradnet.CurrentMap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentMap</span></code></a></p>
-<p>Callable wrapper for GradNet flux-linkage map models.</p>
+<p>Callable wrapper for GradNet flux map models.</p>
 <p>The map returns the stator flux linkage (Vs) at the given stator current (A). It is
-symmetrized about the d-axis to ensure physical consistency.</p>
+symmetrized about the d axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="#motulator.drive.gradnet.GradNetFunction" title="motulator.drive.gradnet.GradNetFunction"><em>GradNetFunction</em></a>) – Trained GradNet for the flux-linkage map, see <cite>load_gradnet</cite>.</p>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="#motulator.drive.gradnet.GradNetFunction" title="motulator.drive.gradnet.GradNetFunction"><em>GradNetFunction</em></a>) – Trained GradNet for the flux map, see <cite>load_gradnet</cite>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -651,6 +655,9 @@ symmetrized about the d-axis to ensure physical consistency.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">FluxMapWithHarmonics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#FluxMapWithHarmonics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.FluxMapWithHarmonics" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.drive.gradnet.CurrentMapWithHarmonics" title="motulator.drive.gradnet.CurrentMapWithHarmonics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CurrentMapWithHarmonics</span></code></a></p>
 <p>Callable wrapper for GradNet flux maps with spatial harmonics.</p>
+<p>The map returns the stator flux linkage (Vs) and the electromagnetic torque (Nm) per
+pole pair at the given stator current (A) and electrical rotor angle. It is
+symmetrized about the d axis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -664,11 +671,11 @@ symmetrized about the d-axis to ensure physical consistency.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.drive.gradnet.GradNetFunction">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.drive.gradnet.</span></span><span class="sig-name descname"><span class="pre">GradNetFunction</span></span><a class="reference internal" href="../../../../_modules/motulator/drive/gradnet/_maps.html#GradNetFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.drive.gradnet.GradNetFunction" title="Link to this definition">#</a></dt>
-<dd><p>Trained GradNet as a numpy function in double precision.</p>
-<p>The function maps the per-unit input, shape (…, in_dim), to the per-unit output of
-the same shape, which is the gradient of the scalar state function of the network.
-It is created from a trained model by the related package motulator-gradnet, saved
-to an npz file by <cite>save</cite>, and loaded by <cite>load_gradnet</cite>.</p>
+<dd><p>Trained GradNet as a NumPy function in double precision.</p>
+<p>The function maps the normalized input, shape (…, in_dim), to the normalized
+output of the same shape, which is the gradient of the scalar state function of the
+network. It is created from a trained model by the related package
+motulator-gradnet, saved to an npz file by <cite>save</cite>, and loaded by <cite>load_gradnet</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -709,7 +716,7 @@ to an npz file by <cite>save</cite>, and loaded by <cite>load_gradnet</cite>.</p
 <dd class="field-odd"><p><strong>model_path</strong> (<em>Path</em><em> | </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – Path to the saved model file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Trained network as a numpy function.</p>
+<dd class="field-even"><p>Trained network as a NumPy function.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#motulator.drive.gradnet.GradNetFunction" title="motulator.drive.gradnet.GradNetFunction">GradNetFunction</a></p>

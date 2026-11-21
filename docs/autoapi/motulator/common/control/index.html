@@ -210,8 +210,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../drive_examples/index.html">Drives</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/flux_vector/index.html">Flux-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_fvc.html">2.2-kW IPMSM, FVC</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_im_sat_fvc.html">2.2-kW saturated IM, FVC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_2kw_ipmsm_sensor_errors_fvc.html">2.2-kW IPMSM, current-sensor errors, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_fem_harm.html">5.6-kW PM-SyRM, GradNet from FEM data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_6kw_pmsyrm_gn_fvc_meas.html">5.6-kW PM-SyRM, GradNet from measured data, FVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/flux_vector/plot_7kw_syrm_sat_fvc.html">6.7-kW saturated SyRM, FVC</a></li>
@@ -221,8 +221,8 @@
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/current_vector/index.html">Current-Vector Control</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_cvc_tq.html">2.2-kW IM, CVC, torque-control mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_7kw_syrm_cvc.html">6.7-kW SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_im_sat_cvc.html">2.2-kW saturated IM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_5kw_pmsyrm_thor_sat_cvc.html">5.1-kW saturated PM-SyRM, CVC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/current_vector/plot_2kw_ipmsm_cvc_adapt.html">2.2-kW IPMSM, CVC, PM-flux adaptation</a></li>
@@ -238,7 +238,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_ovhz.html">2.2-kW IPMSM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_7kw_syrm_sat_ovhz.html">6.7-kW saturated SyRM, O-V/Hz control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_im_lc_vhz.html">2.2-kW IM, LC filter, V/Hz control</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, 2-mass mechanics, O-V/Hz control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../drive_examples/vhz/plot_2kw_ipmsm_2mass_ovhz.html">2.2-kW IPMSM, two-mass mechanics, O-V/Hz control</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../drive_examples/signal_inj/index.html">Signal Injection</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -542,6 +542,8 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.get_command"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.get_command()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.modulate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterFeedbacks"><code class="docutils literal notranslate"><span class="pre">ConverterFeedbacks</span></code></a></li>
@@ -552,6 +554,11 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InnerController"><code class="docutils literal notranslate"><span class="pre">InnerController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InnerController.post_process"><code class="docutils literal notranslate"><span class="pre">InnerController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InnerController.update"><code class="docutils literal notranslate"><span class="pre">InnerController.update()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.compute_output"><code class="docutils literal notranslate"><span class="pre">PIController.compute_output()</span></code></a></li>
@@ -560,12 +567,13 @@
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM"><code class="docutils literal notranslate"><span class="pre">PWM</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.compute_output"><code class="docutils literal notranslate"><span class="pre">PWM.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.get_realized_voltage"><code class="docutils literal notranslate"><span class="pre">PWM.get_realized_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.get_realized_voltages"><code class="docutils literal notranslate"><span class="pre">PWM.get_realized_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.six_step_overmodulation"><code class="docutils literal notranslate"><span class="pre">PWM.six_step_overmodulation()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.update"><code class="docutils literal notranslate"><span class="pre">PWM.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.RateLimiter"><code class="docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.References"><code class="docutils literal notranslate"><span class="pre">References</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.TimeSeries"><code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></li>
 </ul>
 </li>
@@ -605,17 +613,23 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.DiscreteComplexController" title="motulator.common.control.DiscreteComplexController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DiscreteComplexController</span></code></a></p></td>
 <td><p>Direct discrete-time 2DOF complex-vector controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.InverterNonlinearity" title="motulator.common.control.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.InnerController" title="motulator.common.control.InnerController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InnerController</span></code></a></p></td>
+<td><p>Protocol defining the interface shared by the inner controllers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.InverterNonlinearity" title="motulator.common.control.InverterNonlinearity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></p></td>
 <td><p>Duty-ratio error due to the dead time and the threshold voltages.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PIController" title="motulator.common.control.PIController"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PIController</span></code></a></p></td>
 <td><p>2DOF PI controller.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PWM</span></code></a></p></td>
 <td><p>Duty ratios and realized voltage for three-phase carrier-based PWM.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.RateLimiter" title="motulator.common.control.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.RateLimiter" title="motulator.common.control.RateLimiter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></p></td>
 <td><p>Rate limiter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#motulator.common.control.References" title="motulator.common.control.References"><code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code></a></p></td>
+<td><p>Protocol defining the interface for reference signals.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></p></td>
 <td><p>Container for control system's discrete-time data.</p></td>
@@ -637,9 +651,9 @@
 </div>
 <p>where <cite>u</cite> is the controller output, <cite>i_ref</cite> is the reference signal, <cite>i</cite> is the
 feedback signal, <cite>w_c</cite> is the angular speed of synchronous coordinates, <cite>u_ff</cite> is
-the feedforward signal, and <cite>1/s</cite> refers to integration. The 1DOF version is
-obtained by setting <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator anti-windup is implemented based
-on the realized controller output.</p>
+the feedforward signal, and <cite>1/s</cite> refers to integration. The standard PI controller
+is obtained by setting <code class="docutils literal notranslate"><span class="pre">k_t</span> <span class="pre">=</span> <span class="pre">k_p</span></code>. The integrator anti-windup is implemented
+based on the realized controller output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -691,7 +705,7 @@ is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Controller output.</p></li>
-<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed of the reference frame (rad/s), not needed in this design.</p></li>
+<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed (rad/s) of the coordinates, not needed in this design.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -709,7 +723,7 @@ is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_s</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Sampling period (s).</p></li>
 <li><p><strong>u</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Realized (limited) controller output.</p></li>
-<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed of the reference frame (rad/s).</p></li>
+<li><p><strong>w_c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angular speed (rad/s) of the coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -723,16 +737,15 @@ is <cite>u</cite>, e.g., the back-EMF of a machine at zero current.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ControlSystem</span></span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
-<p>Base class for control systems.</p>
-<p>This class defines the interface for control systems. It is a generic class that can
-be used with different models, measurements, feedback signals, and reference
-signals. The class provides methods for saving, post-processing, and clearing data.</p>
-<p>The control loop returns the sampling period and the command to the converter, see
-<cite>get_command</cite>. The gates of the converter can be blocked with <cite>set_enable</cite>. While
-the gates are blocked, the control system runs its control loop with
-<cite>compute_standby_output</cite> in place of <cite>compute_output</cite>, so that its observers keep
-running, and the model holds the switches open.</p>
+<dd><p>Base class for control systems.</p>
+<p>The type parameters are the types of the model, the measurements, the reference
+signals, and the feedback signals. The control loop, see <cite>run_control_loop</cite>, returns
+the sampling period and the command to the converter, see <cite>get_command</cite>. The signals
+of each step are saved and converted into time series by <cite>post_process</cite>.</p>
+<p>The gates of the converter can be blocked with <cite>set_enable</cite>. While the gates are
+blocked, the control system runs its control loop with <cite>compute_standby_output</cite> in
+place of <cite>compute_output</cite>, so that its observers keep running, and the model holds
+the switches open.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.clear_data">
 <span class="sig-name descname"><span class="pre">clear_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.clear_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.clear_data" title="Link to this definition">#</a></dt>
@@ -746,7 +759,7 @@ running, and the model holds the switches open.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.compute_output">
-<span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.compute_output" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">compute_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.compute_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.compute_output" title="Link to this definition">#</a></dt>
 <dd><p>Compute controller output based on feedback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -774,7 +787,7 @@ running, and the model holds the switches open.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_command">
-<span class="sig-name descname"><span class="pre">get_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_command" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_command" title="Link to this definition">#</a></dt>
 <dd><p>Extract the sampling period and the converter command from the references.</p>
 <p>The modulator of the converter converts the command into the gate states, see
 <cite>motulator.common.model.ControlledConverter</cite>. The command of a voltage-source
@@ -802,8 +815,8 @@ converter consists of the duty ratios.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_feedback">
-<span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_feedback" title="Link to this definition">#</a></dt>
-<dd><p>Get feedback signals from the model.</p>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meas</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_feedback" title="Link to this definition">#</a></dt>
+<dd><p>Get the feedback signals from the measurements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>meas</strong> (<em>Meas</em>)</p>
@@ -816,7 +829,7 @@ converter consists of the duty ratios.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.get_measurement">
-<span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_measurement" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_measurement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mdl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.get_measurement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.get_measurement" title="Link to this definition">#</a></dt>
 <dd><p>Get measurements from the model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -877,8 +890,7 @@ converter consists of the duty ratios.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>enable</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em> | </em><em>Callable</em><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>]</em>) – Gate enable, constant or a function of time, evaluated at the sampling
-instants. While the gates are blocked (False), the control system computes
-its standby output, see <cite>compute_standby_output</cite>.</p>
+instants.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
@@ -889,7 +901,7 @@ its standby output, see <cite>compute_standby_output</cite>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="motulator.common.control.ControlSystem.update">
 <span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ControlSystem.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ControlSystem.update" title="Link to this definition">#</a></dt>
-<dd><p>Update controller internal states.</p>
+<dd><p>Advance the controller time by the sampling period.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -907,23 +919,26 @@ its standby output, see <cite>compute_standby_output</cite>.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.ConverterControlSystem">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_comp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ConverterControlSystem" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ConverterControlSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inner_ctrl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pwm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ConverterControlSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ConverterControlSystem" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#motulator.common.control.ControlSystem" title="motulator.common.control.ControlSystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ControlSystem</span></code></a></p>
 <p>Base class for control systems of voltage-source converters.</p>
-<p>The observer of the inner controller gets the realized converter voltage of the
-ongoing sampling period, while the feedback voltage for the control laws is the
-realized voltage averaged over the previous and the ongoing sampling periods.
-Before the modulation, the angle of the voltage reference is advanced by
-<cite>k_comp*T_s*w_c</cite>, where <cite>k_comp</cite> is given by the inner controller. The value 1.5
-compensates for the computational delay of one sampling period and the delay of
-half a sampling period caused by the zero-order hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The
-value 0 means that the angle is not advanced, which is used if the controller takes
-the delays into account itself, e.g., in a direct discrete-time design.</p>
+<p>The control system runs an inner controller (e.g., current-vector control of a
+machine or grid-forming control), which it updates at every sampling instant and
+whose post-processing it applies to the time series. The observer of the inner
+controller gets the realized converter voltage of the ongoing sampling period, while
+the feedback voltage for the control laws is the realized voltage averaged over the
+previous and the ongoing sampling periods. Before the modulation, the angle of the
+voltage reference is advanced by <cite>k_comp*T_s*w_c</cite>, where <cite>k_comp</cite> is given by the
+inner controller. The value 1.5 compensates for the computational delay of one
+sampling period and the delay of half a sampling period caused by the zero-order
+hold of the PWM <a class="footnote-reference brackets" href="#bae2003" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The value 0 means that the angle is not advanced, which
+is used if the controller takes the delays into account itself, e.g., in a direct
+discrete-time design.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>inner_ctrl</strong> (<a class="reference internal" href="#motulator.common.control.InnerController" title="motulator.common.control.InnerController"><em>InnerController</em></a>) – Inner controller.</p></li>
 <li><p><strong>pwm</strong> (<a class="reference internal" href="#motulator.common.control.PWM" title="motulator.common.control.PWM"><em>PWM</em></a>) – Pulse-width modulator.</p></li>
-<li><p><strong>k_comp</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Angle-advance factor of the voltage reference.</p></li>
 </ul>
 </dd>
 </dl>
@@ -971,6 +986,35 @@ output filter.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.ConverterControlSystem.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ConverterControlSystem.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ConverterControlSystem.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Convert the stored signals to time series, post-processed by the inner
+controller.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries">TimeSeries</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.ConverterControlSystem.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ConverterControlSystem.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ConverterControlSystem.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the controller states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>Any</em>)</p></li>
+<li><p><strong>fbk</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -983,7 +1027,7 @@ output filter.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.ConverterReferences">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">ConverterReferences</span></span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#ConverterReferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.ConverterReferences" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#motulator.common.control.References" title="motulator.common.control.References"><code class="xref py py-obj docutils literal notranslate"><span class="pre">References</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
 <p>Protocol defining the reference signals of converter control systems.</p>
 </dd></dl>
 
@@ -1085,6 +1129,48 @@ compensates for their difference.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.control.InnerController">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">InnerController</span></span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#InnerController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.InnerController" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol defining the interface shared by the inner controllers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.InnerController.post_process">
+<span class="sig-name descname"><span class="pre">post_process</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#InnerController.post_process"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.InnerController.post_process" title="Link to this definition">#</a></dt>
+<dd><p>Post-process the controller time series.</p>
+<p>If the signals are transformed to other coordinates, <cite>fbk.theta_c</cite> is updated to
+the angle of these coordinates. The angular speed <cite>fbk.w_c</cite> is not updated,
+i.e., it remains that of the controller coordinates, which equals that of the
+new coordinates in steady state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ts</strong> (<a class="reference internal" href="#motulator.common.control.TimeSeries" title="motulator.common.control.TimeSeries"><em>TimeSeries</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="motulator.common.control.InnerController.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fbk</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#InnerController.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.InnerController.update" title="Link to this definition">#</a></dt>
+<dd><p>Update the controller states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref</strong> (<em>Any</em>)</p></li>
+<li><p><strong>fbk</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="motulator.common.control.InverterNonlinearity">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">InverterNonlinearity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_th</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">np.sign</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#InverterNonlinearity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.InverterNonlinearity" title="Link to this definition">#</a></dt>
 <dd><p>Duty-ratio error due to the dead time and the threshold voltages.</p>
@@ -1092,16 +1178,16 @@ compensates for their difference.</p>
 direction determines the leg state during the blanking. Away from the duty-ratio
 limits, the resulting error is <cite>sign(i)*t_d/(2*T_half)</cite>, where <cite>T_half</cite> is the half
 carrier period. Pulses shorter than the dead time are suppressed, and clamped legs
-have no dead-time error. The threshold voltage <cite>u_th</cite> of the power devices, assumed
-equal for the switches and the diodes, causes the voltage drop <cite>sign(i)*u_th</cite> in
-each phase, i.e., the duty-ratio error <cite>sign(i)*u_th/u_dc</cite>, also in the clamped
-legs. The realized duty ratios are <cite>d_abc - d_err</cite>. This model is consistent with
-<cite>motulator.common.model.VoltageSourceConverter</cite>.</p>
+have no dead-time error. The threshold voltage <cite>u_th</cite> of the power semiconductor
+devices, assumed equal for the switches and the diodes, causes the voltage drop
+<cite>sign(i)*u_th</cite> in each phase, i.e., the duty-ratio error <cite>sign(i)*u_th/u_dc</cite>, also
+in the clamped legs. The realized duty ratios are <cite>d_abc - d_err</cite>. This model is
+consistent with <cite>motulator.common.model.VoltageSourceConverter</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>t_d</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Dead time (s), defaults to 0.</p></li>
-<li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the power devices, defaults to 0.</p></li>
+<li><p><strong>u_th</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Threshold voltage (V) of the power semiconductor devices, defaults to 0.</p></li>
 <li><p><strong>sign</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>]</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>optional</em>) – Current-direction function, defaults to <cite>np.sign</cite>. A smooth approximation may be
 used, matching the converter model.</p></li>
 </ul>
@@ -1198,11 +1284,11 @@ lagging by about 30°, DPWM0 a current leading by about 30°, and DPWM3 a nearly
 reactive current. At the same average switching frequency, DPWM gives a lower
 current ripple than space-vector PWM only in the high modulation range <a class="footnote-reference brackets" href="#hav1998" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>.</p>
 <p>Optionally, the duty-ratio error <cite>d_err</cite> caused by the inverter nonlinearities, such
-as the dead time and the threshold voltages of the power devices, is taken into
-account. The realized voltage is corrected for the error using the measured
-currents. By default, the error is also compensated for by feedforward using the
-predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
-compensated for by shifting the other legs.</p>
+as the dead time and the threshold voltages of the power semiconductor devices, is
+taken into account. The realized voltage is corrected for the error using the
+measured currents. By default, the error is also compensated for by feedforward
+using the predicted currents. In DPWM, the clamped leg stays at the rail, and its
+error is compensated for by shifting the other legs.</p>
 <p>Optionally, the duty ratio of a switching leg is limited to the range
 <cite>[d_min, 1 - d_min]</cite>, e.g., due to the gate drivers <a class="footnote-reference brackets" href="#wel2006" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>. A duty ratio in the
 range <cite>(0, d_min)</cite> is rounded to 0 or <cite>d_min</cite>, and in the range <cite>(1 - d_min, 1)</cite> to
@@ -1305,32 +1391,34 @@ compensation (if used) included.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="motulator.common.control.PWM.get_realized_voltage">
-<span class="sig-name descname"><span class="pre">get_realized_voltage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.get_realized_voltage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.get_realized_voltage" title="Link to this definition">#</a></dt>
-<dd><p>Get the realized voltage.</p>
+<dt class="sig sig-object py" id="motulator.common.control.PWM.get_realized_voltages">
+<span class="sig-name descname"><span class="pre">get_realized_voltages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_c_ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_dc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/motulator/common/control/_pwm.html#PWM.get_realized_voltages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.PWM.get_realized_voltages" title="Link to this definition">#</a></dt>
+<dd><p>Get the realized voltages.</p>
 <p>This method is to be called at the sampling instant before the next duty ratios
 are computed, and a computational delay of one sampling period is assumed. The
-voltage is reconstructed from the duty ratios of the previous and the ongoing
+voltages are reconstructed from the duty ratios of the previous and the ongoing
 sampling periods and the measured DC-bus voltage, i.e., the variations of the
 DC-bus voltage and of the currents within the periods are not known. The
 measured currents are also stored for the feedforward compensation of the next
-duty ratios.</p>
+duty ratios, so this method is called also while the gates are blocked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>i_c_ab</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)"><em>complex</em></a>) – Measured converter current (A) in stationary coordinates.</p></li>
 <li><p><strong>u_dc</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – Measured DC-bus voltage (V).</p></li>
-<li><p><strong>average</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, the average voltage of the previous and the ongoing sampling
-periods is returned. If False, the voltage of the ongoing sampling period is
-returned. Defaults to True.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Realized converter voltage (V) in stationary coordinates. If <cite>d_err</cite> is
-given, the voltage is corrected for it using the measured currents.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>u_c_ab_zoh</strong> (<em>complex</em>) – Realized converter voltage (V) of the ongoing sampling period in stationary
+coordinates.</p></li>
+<li><p><strong>u_c_ab</strong> (<em>complex</em>) – Realized converter voltage (V) averaged over the previous and the ongoing
+sampling periods in stationary coordinates.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#complex" title="(in Python v3.15)">complex</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1391,9 +1479,17 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <dd><p>Rate limiter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rate_limit</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Rate limit, defaults to <cite>inf</cite>.</p>
+<dd class="field-odd"><p><strong>rate_limit</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – Rate limit (unit of the signal per second), defaults to <cite>inf</cite>. The output starts
+from zero.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="motulator.common.control.References">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">motulator.common.control.</span></span><span class="sig-name descname"><span class="pre">References</span></span><a class="reference internal" href="../../../../_modules/motulator/common/control/_base.html#References"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#motulator.common.control.References" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Protocol defining the interface for reference signals.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1480,6 +1576,8 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.get_command"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.get_command()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.modulate"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.modulate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.post_process"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterControlSystem.update"><code class="docutils literal notranslate"><span class="pre">ConverterControlSystem.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.ConverterFeedbacks"><code class="docutils literal notranslate"><span class="pre">ConverterFeedbacks</span></code></a></li>
@@ -1490,6 +1588,11 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.DiscreteComplexController.update"><code class="docutils literal notranslate"><span class="pre">DiscreteComplexController.update()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InnerController"><code class="docutils literal notranslate"><span class="pre">InnerController</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InnerController.post_process"><code class="docutils literal notranslate"><span class="pre">InnerController.post_process()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InnerController.update"><code class="docutils literal notranslate"><span class="pre">InnerController.update()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.InverterNonlinearity"><code class="docutils literal notranslate"><span class="pre">InverterNonlinearity</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController"><code class="docutils literal notranslate"><span class="pre">PIController</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PIController.compute_output"><code class="docutils literal notranslate"><span class="pre">PIController.compute_output()</span></code></a></li>
@@ -1498,12 +1601,13 @@ inverters in the overmodulation range,” IEEE Trans. Ind. Appl., 1997,
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM"><code class="docutils literal notranslate"><span class="pre">PWM</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.compute_output"><code class="docutils literal notranslate"><span class="pre">PWM.compute_output()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.get_realized_voltage"><code class="docutils literal notranslate"><span class="pre">PWM.get_realized_voltage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.get_realized_voltages"><code class="docutils literal notranslate"><span class="pre">PWM.get_realized_voltages()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.six_step_overmodulation"><code class="docutils literal notranslate"><span class="pre">PWM.six_step_overmodulation()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.PWM.update"><code class="docutils literal notranslate"><span class="pre">PWM.update()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.RateLimiter"><code class="docutils literal notranslate"><span class="pre">RateLimiter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.References"><code class="docutils literal notranslate"><span class="pre">References</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#motulator.common.control.TimeSeries"><code class="docutils literal notranslate"><span class="pre">TimeSeries</span></code></a></li>
 </ul>
 </li>

@@ -87,25 +87,21 @@ parameters are based on the measured data of a 2.2-kW machine [#Qu2012]_.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 38-42
 
-Configure the control system.
+Configure the control system. Since the inertia estimate `J` is given, the
+mechanical-model-based speed observer is used, and the integral action of the flux and
+torque controller is not needed. Without `J` (or with `J=None`), the mechanical model
+is not used in the speed observer.
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-56
+.. GENERATED FROM PYTHON SOURCE LINES 42-52
 
 .. code-block:: Python
 
 
     est_par = par  # Assume the machine model is perfectly known
-    # Since the inertia estimate `J` is provided below, the mechanical-model-based speed
-    # observer is used. You can disable the mechanical-model-based speed observer by
-    # removing the `J` parameter or setting it to `None`.
     cfg = control.FluxVectorControllerCfg(
-        psi_s_nom=0.95 * base.psi,
-        i_s_max=1.5 * base.i,
-        J=0.015,  # Inertia estimate enables the speed observer
-        alpha_i=0,  # Integral action is not necessary with the speed observer
-        sensorless=True,
+        psi_s_nom=0.95 * base.psi, i_s_max=1.5 * base.i, J=0.015, alpha_i=0, sensorless=True
     )
     vector_ctrl = control.FluxVectorController(est_par, cfg)
     speed_ctrl = control.SpeedController(J=0.015, alpha_s=2 * pi * 4)
@@ -119,11 +115,11 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-58
+.. GENERATED FROM PYTHON SOURCE LINES 53-54
 
 Set the speed reference and the external load torque.
 
-.. GENERATED FROM PYTHON SOURCE LINES 58-62
+.. GENERATED FROM PYTHON SOURCE LINES 54-58
 
 .. code-block:: Python
 
@@ -138,11 +134,11 @@ Set the speed reference and the external load torque.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-64
+.. GENERATED FROM PYTHON SOURCE LINES 59-60
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-69
+.. GENERATED FROM PYTHON SOURCE LINES 60-65
 
 .. code-block:: Python
 
@@ -163,7 +159,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-75
+.. GENERATED FROM PYTHON SOURCE LINES 66-71
 
 .. rubric:: References
 
@@ -174,7 +170,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 3.817 seconds)
+   **Total running time of the script:** (0 minutes 3.111 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_im_sat_fvc.py:

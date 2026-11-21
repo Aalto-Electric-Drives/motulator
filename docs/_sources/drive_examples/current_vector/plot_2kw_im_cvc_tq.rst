@@ -63,7 +63,7 @@ Compute base values based on the nominal values.
 
 Configure the system model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 24-34
+.. GENERATED FROM PYTHON SOURCE LINES 24-35
 
 .. code-block:: Python
 
@@ -73,7 +73,8 @@ Configure the system model.
         n_p=2, R_s=3.7, R_R=2.1, L_sgm=0.021, L_M=0.224
     )
     machine = model.InductionMachine(par)
-    mechanics = model.ExternalRotorSpeed()
+    # Actual speed varies sinusoidally
+    mechanics = model.ExternalRotorSpeed(lambda t: 0.5 * base.w_M * sin(2 * pi * 1 * t))
     converter = model.VoltageSourceConverter(u_dc=540)
     mdl = model.Drive(machine, mechanics, converter)
 
@@ -84,11 +85,11 @@ Configure the system model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-36
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Configure the control system.
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-44
+.. GENERATED FROM PYTHON SOURCE LINES 37-45
 
 .. code-block:: Python
 
@@ -107,19 +108,16 @@ Configure the control system.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-46
+.. GENERATED FROM PYTHON SOURCE LINES 46-47
 
-Set the torque reference and the actual speed.
+Set the torque reference.
 
-.. GENERATED FROM PYTHON SOURCE LINES 46-52
+.. GENERATED FROM PYTHON SOURCE LINES 47-50
 
 .. code-block:: Python
 
 
-    # Torque reference steps
     ctrl.set_torque_ref(lambda t: (t > 0.25) * nom.tau - (t > 1.25) * 2 * nom.tau)
-    # Actual speed varies sinusoidally
-    mdl.mechanics.set_external_rotor_speed(lambda t: 0.5 * base.w_M * sin(2 * pi * 1 * t))
 
 
 
@@ -128,11 +126,11 @@ Set the torque reference and the actual speed.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-54
+.. GENERATED FROM PYTHON SOURCE LINES 51-52
 
 Create the simulation object, simulate, and plot the results in per-unit values.
 
-.. GENERATED FROM PYTHON SOURCE LINES 54-58
+.. GENERATED FROM PYTHON SOURCE LINES 52-56
 
 .. code-block:: Python
 
@@ -155,7 +153,7 @@ Create the simulation object, simulate, and plot the results in per-unit values.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 4.518 seconds)
+   **Total running time of the script:** (0 minutes 3.681 seconds)
 
 
 .. _sphx_glr_download_drive_examples_current_vector_plot_2kw_im_cvc_tq.py:

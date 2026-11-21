@@ -41,6 +41,7 @@ Classes
    motulator.grid.control.DualVoltageFormingControllerCfg
    motulator.grid.control.DualVoltageFormingOutputs
    motulator.grid.control.Feedbacks
+   motulator.grid.control.GridController
    motulator.grid.control.GridConverterControlSystem
    motulator.grid.control.InverterNonlinearity
    motulator.grid.control.Measurements
@@ -52,10 +53,12 @@ Classes
    motulator.grid.control.PWM
    motulator.grid.control.PowerSynchronizationController
    motulator.grid.control.PowerSynchronizationControllerCfg
+   motulator.grid.control.PowerSynchronizationFeedbacks
    motulator.grid.control.References
    motulator.grid.control.SequenceObserverBasedGridFormingController
    motulator.grid.control.SequenceObserverBasedGridFormingControllerCfg
    motulator.grid.control.SequenceObserverOutputs
+   motulator.grid.control.SequenceReferences
 
 
 Package Contents
@@ -69,9 +72,8 @@ Package Contents
    
    2DOF PI current controller for grid converters.
 
-   This class provides an interface for a current controller for grid converters. The
-   gains are initialized based on the desired closed-loop bandwidth and the filter
-   inductance.
+   The gains are selected such that the reference tracking has first-order dynamics
+   with the bandwidth `alpha_c` if the inductance `L` is accurate.
 
    :param L: Inductance (H).
    :type L: float
@@ -100,13 +102,10 @@ Package Contents
 .. py:class:: CurrentLimiter(i_max)
 
    
-   Limit the amplitude of the input signal.
+   Limit the magnitude of the current, keeping its direction.
 
-   :param i_max: Maximum current (A).
+   :param i_max: Maximum current (A), peak value.
    :type i_max: float
-
-   :returns: Limited signal.
-   :rtype: complex
 
 
 
@@ -225,7 +224,7 @@ Package Contents
    .. py:method:: post_process(ts)
 
       
-      Post-process controller signals.
+      Keep the time series in the controller coordinates.
 
 
 
@@ -320,7 +319,7 @@ Package Contents
    This controller regulates the energy stored in the DC-bus capacitor (scaled square
    of the DC-bus voltage) in order to have a linear closed-loop system [#Hur2001]_.
 
-   :param C_dc: DC-bus capacitance (F).
+   :param C_dc: DC-bus capacitance estimate (F).
    :type C_dc: float
    :param alpha_dc: Approximate closed-loop bandwidth (rad/s).
    :type alpha_dc: float
@@ -353,16 +352,16 @@ Package Contents
    .. py:method:: compute_output(y_ref, y, u_ff = 0.0)
 
       
-      Compute the controller output.
+      Compute the active-power reference.
 
-      :param y_ref: Reference signal.
+      :param y_ref: DC-bus voltage reference (V).
       :type y_ref: float
-      :param y: Feedback signal.
+      :param y: DC-bus voltage (V).
       :type y: float
-      :param u_ff: Feedforward signal, defaults to 0.
+      :param u_ff: Feedforward power (W), defaults to 0.
       :type u_ff: float, optional
 
-      :returns: **u** -- Controller output.
+      :returns: Active-power reference (W).
       :rtype: float
 
 
@@ -566,8 +565,7 @@ Package Contents
    :type C_dc: float
    :param R: Total series resistance estimate (Ω), defaults to 0.
    :type R: float, optional
-   :param k_d: DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`, i.e., 1 p.u. with the base
-               power `1.5*u_nom*i_max`.
+   :param k_d: DC-bus power gain (V/W), defaults to `1/(1.5*i_max)`.
    :type k_d: float | None, optional
    :param alpha_dc: Approximate closed-loop bandwidth of the DC-bus energy control (rad/s), defaults
                     to 2*pi*7.5.
@@ -579,7 +577,7 @@ Package Contents
    :type alpha_o_dc: float, optional
    :param k_v: Voltage control gain, defaults to `alpha_o/w_nom`.
    :type k_v: float | None, optional
-   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
+   :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*400.
    :type alpha_c: float, optional
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
                  `sqrt(2/3)*400`.
@@ -634,12 +632,14 @@ Package Contents
 
 .. py:class:: Feedbacks
 
-   Bases: :py:obj:`Protocol`
+   Bases: :py:obj:`motulator.common.control._base.ConverterFeedbacks`, :py:obj:`Protocol`
 
 
    
-   Protocol defining the required fields for feedback signals.
+   Protocol defining the feedback signals of the grid converter control system.
 
+   In addition to the signals of `ConverterFeedbacks`, the feedback signals include the
+   converter voltage `u_c` for the control laws, in the controller coordinates.
 
 
 
@@ -658,26 +658,129 @@ Package Contents
    ..
        !! processed by numpydoc !!
 
+.. py:class:: GridController
+
+   Bases: :py:obj:`motulator.common.control._base.InnerController`, :py:obj:`Protocol`
+
+
+   
+   Protocol defining the interface for the inner controllers of grid converters.
+
+   The attribute `grid_forming` is True if the controller takes the AC voltage
+   reference and False if it takes the reactive-power reference. The attribute
+   `dc_bus_forming` is True if the controller takes the DC-bus voltage reference and
+   False if it takes the active-power reference.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+   .. py:method:: compute_output(dc_ref, ac_ref, fbk, /)
+
+      
+      Compute control output.
+
+      The reference `dc_ref` is the active power or the DC-bus voltage, and `ac_ref`
+      is the AC voltage or the reactive power, depending on the controller.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: compute_standby_output(fbk)
+
+      
+      Compute control output while the gates are blocked.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
+   .. py:method:: get_feedback(u_c_ab, meas)
+
+      
+      Get feedback signals, `u_c_ab` being the voltage of the ongoing period.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ..
+          !! processed by numpydoc !!
+
+
 .. py:class:: GridConverterControlSystem(inner_ctrl, dc_bus_voltage_ctrl = None, pwm = None)
 
-   Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`
+   Bases: :py:obj:`motulator.common.control._base.ConverterControlSystem`\ [\ :py:obj:`GridController`\ ]
 
 
    
    Grid converter control system.
 
-   This class defines the interface for control systems of grid converters. It is a
-   generic class that can be used with different models, measurements, feedback
-   signals, and reference signals. The feedback voltages and the modulation are
-   described in `ConverterControlSystem`.
+   The inner controller (e.g., grid-following or grid-forming control) gets its
+   references externally or, for the active power, from the DC-bus voltage controller.
+   The feedback voltages and the modulation are described in `ConverterControlSystem`.
 
    :param inner_ctrl: Inner controller. A grid-forming controller takes the AC voltage reference and a
-                      grid-following controller the reactive power reference. A DC-bus-forming
+                      grid-following controller the reactive-power reference. A DC-bus-forming
                       controller takes the DC-bus voltage reference instead of the active power
                       reference.
-   :type inner_ctrl: InnerController
-   :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active power reference. If not given,
-                               the active power reference is set externally, unless the inner controller is
+   :type inner_ctrl: GridController
+   :param dc_bus_voltage_ctrl: DC-bus voltage controller, which gives the active-power reference. If not given,
+                               the active-power reference is set externally, unless the inner controller is
                                DC-bus forming.
    :type dc_bus_voltage_ctrl: DCBusVoltageController, optional
    :param pwm: Pulse-width modulator, defaults to `PWM()`.
@@ -796,36 +899,12 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: post_process()
-
-      
-      Extend the post-process method.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ..
-          !! processed by numpydoc !!
-
-
    .. py:method:: set_ac_voltage_ref(ref_fcn)
 
       
-      Set the external ac voltage reference.
+      Set the external AC voltage reference.
 
-      :param ref_fcn: AC-side converter voltage reference (V), constant or a function of time.
+      :param ref_fcn: Converter voltage magnitude reference (V), constant or a function of time.
       :type ref_fcn: float | Callable[[float], float]
 
 
@@ -875,9 +954,9 @@ Package Contents
    .. py:method:: set_power_ref(ref_fcn)
 
       
-      Set the external active power reference.
+      Set the external active-power reference.
 
-      :param ref_fcn: Active power reference (W), constant or a function of time.
+      :param ref_fcn: Active-power reference (W), constant or a function of time.
       :type ref_fcn: float | Callable[[float], float]
 
 
@@ -901,9 +980,9 @@ Package Contents
    .. py:method:: set_reactive_power_ref(ref_fcn)
 
       
-      Set the external reactive power reference.
+      Set the external reactive-power reference.
 
-      :param ref_fcn: Reactive power reference (VAr), constant or a function of time.
+      :param ref_fcn: Reactive-power reference (VAr), constant or a function of time.
       :type ref_fcn: float | Callable[[float], float]
 
 
@@ -957,15 +1036,15 @@ Package Contents
    direction determines the leg state during the blanking. Away from the duty-ratio
    limits, the resulting error is `sign(i)*t_d/(2*T_half)`, where `T_half` is the half
    carrier period. Pulses shorter than the dead time are suppressed, and clamped legs
-   have no dead-time error. The threshold voltage `u_th` of the power devices, assumed
-   equal for the switches and the diodes, causes the voltage drop `sign(i)*u_th` in
-   each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also in the clamped
-   legs. The realized duty ratios are `d_abc - d_err`. This model is consistent with
-   `motulator.common.model.VoltageSourceConverter`.
+   have no dead-time error. The threshold voltage `u_th` of the power semiconductor
+   devices, assumed equal for the switches and the diodes, causes the voltage drop
+   `sign(i)*u_th` in each phase, i.e., the duty-ratio error `sign(i)*u_th/u_dc`, also
+   in the clamped legs. The realized duty ratios are `d_abc - d_err`. This model is
+   consistent with `motulator.common.model.VoltageSourceConverter`.
 
    :param t_d: Dead time (s), defaults to 0.
    :type t_d: float, optional
-   :param u_th: Threshold voltage (V) of the power devices, defaults to 0.
+   :param u_th: Threshold voltage (V) of the power semiconductor devices, defaults to 0.
    :type u_th: float, optional
    :param sign: Current-direction function, defaults to `np.sign`. A smooth approximation may be
                 used, matching the converter model.
@@ -1022,21 +1101,22 @@ Package Contents
    
    Disturbance-observer-based grid-forming controller.
 
-   This implements the RFPSC-type grid-forming mode of the control method described in
-   [#Nur2024]_. Transparent current control is also implemented. Optionally, the
-   active-power reference is limited to a realizable level, prioritizing the reactive
-   current, as described in [#Maa2026]_ (here reduced to balanced conditions). This
-   limitation helps to maintain synchronism during grid-voltage sags in weak grids.
+   This implements the grid-forming mode of the control method described in
+   [#Nur2024]_, which is of the reference-feedforward power-synchronization type, see
+   `PowerSynchronizationController`. Transparent current control is also implemented.
+   Optionally, the active-power reference is limited to a realizable level,
+   prioritizing the reactive current, as described in [#Maa2026]_ (here reduced to
+   balanced conditions). This limitation helps to maintain synchronism during
+   grid-voltage sags in weak grids.
 
    :param cfg: Grid-forming control configuration.
    :type cfg: ObserverBasedGridFormingControllerCfg
 
    .. rubric:: Notes
 
-   In this implementation, the control system operates in synchronous coordinates
-   rotating at the nominal grid angular frequency, and the disturbance observer is
-   designed directly in discrete time. For other implementation options, see
-   [#Nur2024]_.
+   In this implementation, the controller operates in synchronous coordinates rotating
+   at the nominal grid angular frequency, and the disturbance observer is designed
+   directly in discrete time. For other implementation options, see [#Nur2024]_.
 
    .. rubric:: References
 
@@ -1202,7 +1282,7 @@ Package Contents
    :type k_v: float | None, optional
    :param alpha_o: Observer bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_o: float, optional
-   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*400.
+   :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*400.
    :type alpha_c: float, optional
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value, defaults to
                  `sqrt(2/3)*400`.
@@ -1214,7 +1294,7 @@ Package Contents
    :param i_d_max: Maximum active current (A), peak value, for the active-power reference
                    limitation. If not given, the active-power reference is not limited. A value
                    somewhat below `i_max` is recommended, e.g., `i_d_max = 0.85*i_max`.
-   :type i_d_max: float, optional
+   :type i_d_max: float | None, optional
    :param alpha_l: Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_l: float, optional
 
@@ -1261,10 +1341,11 @@ Package Contents
 .. py:class:: PLL(u_nom, w_nom, alpha_pll)
 
    
-   Phase-locked loop including the voltage-magnitude filtering.
+   Phase-locked loop including the PCC voltage filtering.
 
-   This class provides a simple frequency-tracking phase-locked loop. The magnitude of
-   the measured PCC voltage is also filtered.
+   The PLL operates in the estimated PCC voltage coordinates. It also low-pass filters
+   the d component of the measured PCC voltage, which equals the voltage magnitude when
+   the PLL is locked, with the bandwidth `2*alpha_pll`.
 
    :param u_nom: Nominal grid voltage (V), line-to-neutral peak value.
    :type u_nom: float
@@ -1293,7 +1374,7 @@ Package Contents
    .. py:method:: compute_output(i_c_ab, u_g_meas_ab)
 
       
-      Output estimates and coordinate transformed quantities.
+      Compute the estimates and the feedback signals in the PLL coordinates.
 
 
 
@@ -1382,11 +1463,11 @@ Package Contents
    current ripple than space-vector PWM only in the high modulation range [#Hav1998]_.
 
    Optionally, the duty-ratio error `d_err` caused by the inverter nonlinearities, such
-   as the dead time and the threshold voltages of the power devices, is taken into
-   account. The realized voltage is corrected for the error using the measured
-   currents. By default, the error is also compensated for by feedforward using the
-   predicted currents. In DPWM, the clamped leg stays at the rail, and its error is
-   compensated for by shifting the other legs.
+   as the dead time and the threshold voltages of the power semiconductor devices, is
+   taken into account. The realized voltage is corrected for the error using the
+   measured currents. By default, the error is also compensated for by feedforward
+   using the predicted currents. In DPWM, the clamped leg stays at the rail, and its
+   error is compensated for by shifting the other legs.
 
    Optionally, the duty ratio of a switching leg is limited to the range
    `[d_min, 1 - d_min]`, e.g., due to the gate drivers [#Wel2006]_. A duty ratio in the
@@ -1505,31 +1586,28 @@ Package Contents
           !! processed by numpydoc !!
 
 
-   .. py:method:: get_realized_voltage(i_c_ab, u_dc, *, average = True)
+   .. py:method:: get_realized_voltages(i_c_ab, u_dc)
 
       
-      Get the realized voltage.
+      Get the realized voltages.
 
       This method is to be called at the sampling instant before the next duty ratios
       are computed, and a computational delay of one sampling period is assumed. The
-      voltage is reconstructed from the duty ratios of the previous and the ongoing
+      voltages are reconstructed from the duty ratios of the previous and the ongoing
       sampling periods and the measured DC-bus voltage, i.e., the variations of the
       DC-bus voltage and of the currents within the periods are not known. The
       measured currents are also stored for the feedforward compensation of the next
-      duty ratios.
+      duty ratios, so this method is called also while the gates are blocked.
 
       :param i_c_ab: Measured converter current (A) in stationary coordinates.
       :type i_c_ab: complex
       :param u_dc: Measured DC-bus voltage (V).
       :type u_dc: float
-      :param average: If True, the average voltage of the previous and the ongoing sampling
-                      periods is returned. If False, the voltage of the ongoing sampling period is
-                      returned. Defaults to True.
-      :type average: bool, optional
 
-      :returns: Realized converter voltage (V) in stationary coordinates. If `d_err` is
-                given, the voltage is corrected for it using the measured currents.
-      :rtype: complex
+      :returns: * **u_c_ab_zoh** (*complex*) -- Realized converter voltage (V) of the ongoing sampling period in stationary
+                  coordinates.
+                * **u_c_ab** (*complex*) -- Realized converter voltage (V) averaged over the previous and the ongoing
+                  sampling periods in stationary coordinates.
 
 
 
@@ -1621,6 +1699,8 @@ Package Contents
    Reference-feedforward power-synchronization controller.
 
    This implements the reference-feedforward power-synchronization control [#Har2020]_.
+   Gate blocking is not supported, since the controller synchronizes with the grid
+   through the active power.
 
    :param cfg: Configuration object.
    :type cfg: PowerSynchronizationControllerCfg
@@ -1675,7 +1755,7 @@ Package Contents
    .. py:method:: compute_standby_output(fbk)
 
       
-      Compute references while the gates are blocked.
+      Raise TypeError, since the controller does not support gate blocking.
 
 
 
@@ -1723,7 +1803,7 @@ Package Contents
    .. py:method:: post_process(ts)
 
       
-      Post-process controller time series.
+      Keep the time series in the controller coordinates.
 
 
 
@@ -1779,14 +1859,38 @@ Package Contents
    :type u_nom: float, optional
    :param w_nom: Nominal grid angular frequency (rad/s), defaults to 2*pi*50.
    :type w_nom: float, optional
-   :param R: Total series resistance (Ω), defaults to 0.
+   :param R: Total series resistance estimate (Ω), defaults to 0.
    :type R: float, optional
    :param R_a: Active resistance (Ω), defaults to `0.25*u_nom/i_max`.
    :type R_a: float | None, optional
-   :param w_b: Low-pass filter bandwidth (rad/s), defaults to 2*pi*5.
+   :param w_b: Bandwidth (rad/s) of the low-pass filter of the converter current, defaults to
+               2*pi*5.
    :type w_b: float, optional
    :param T_s: Sampling period (s), defaults to 125e-6.
    :type T_s: float, optional
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: PowerSynchronizationFeedbacks
+
+   
+   Feedback signals for the control system.
+
 
 
 
@@ -1847,13 +1951,13 @@ Package Contents
 
    .. rubric:: Notes
 
-   The control system operates in synchronous coordinates rotating at the nominal grid
-   angular frequency. The controller compensates for the computational delay of one
-   sampling period and the zero-order-hold delay of half a sampling period itself: the
-   angle of the positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and
-   that of the negative sequence, which rotates in the opposite direction, is retarded
-   by the same angle. Therefore, the control system does not advance the angle of the
-   voltage reference (`k_comp = 0`).
+   The controller operates in synchronous coordinates rotating at the nominal grid
+   angular frequency. It compensates for the computational delay of one sampling period
+   and the zero-order-hold delay of half a sampling period itself: the angle of the
+   positive-sequence voltage reference is advanced by `1.5*w_nom*T_s`, and that of the
+   negative sequence, which rotates in the opposite direction, is retarded by the same
+   angle. Therefore, the control system does not advance the angle of the voltage
+   reference (`k_comp = 0`).
 
 
 
@@ -2013,7 +2117,7 @@ Package Contents
    :type k_v: float, optional
    :param k_n: Negative-sequence voltage gain, defaults to 2.
    :type k_n: float, optional
-   :param alpha_c: Current control bandwidth (rad/s), defaults to 2*pi*300.
+   :param alpha_c: Current-control bandwidth (rad/s), defaults to 2*pi*300.
    :type alpha_c: float, optional
    :param alpha_l: Power-limitation bandwidth (rad/s), defaults to 2*pi*50.
    :type alpha_l: float, optional
@@ -2050,6 +2154,32 @@ Package Contents
 
    
    Feedback signals for the control system.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   ..
+       !! processed by numpydoc !!
+
+.. py:class:: SequenceReferences
+
+   Bases: :py:obj:`motulator.grid.control._common.References`
+
+
+   
+   Reference signals, including the sequence components.
 
 
 

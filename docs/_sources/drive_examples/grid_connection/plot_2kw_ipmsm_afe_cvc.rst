@@ -278,10 +278,10 @@ switching periods differ, and the switching instants are not aligned.
 .. code-block:: Python
 
 
-    u_ga = complex2abc(res.mdl.grid.converter.u_c_ab)[0]
+    u_ca = complex2abc(res.mdl.grid.converter.u_c_ab)[0]
     u_sa = complex2abc(res.mdl.drive.converter.u_c_ab)[0]
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, sharey=True)
-    ax1.plot(res.mdl.t, u_ga, label=r"$u_\mathrm{ga}$")
+    ax1.plot(res.mdl.t, u_ca, label=r"$u_\mathrm{ca}$")
     ax1.set_ylabel("Voltage (V)")
     ax1.legend(loc="lower right")
     ax2.plot(res.mdl.t, u_sa, label=r"$u_\mathrm{sa}$")
@@ -306,7 +306,7 @@ switching periods differ, and the switching instants are not aligned.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 23.999 seconds)
+   **Total running time of the script:** (0 minutes 19.472 seconds)
 
 
 .. _sphx_glr_download_drive_examples_grid_connection_plot_2kw_ipmsm_afe_cvc.py:
