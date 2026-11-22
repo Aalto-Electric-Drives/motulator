@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>motulator.drive.control._common &#8212; motulator 0.26.0 documentation</title>
+    <title>motulator.drive.control._common &#8212; motulator 0.26.1 documentation</title>
   
   
   
@@ -45,7 +45,7 @@
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
 
-    <script src="../../../../_static/documentation_options.js?v=8cd87d29"></script>
+    <script src="../../../../_static/documentation_options.js?v=3724ff34"></script>
     <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -181,7 +181,7 @@
   
   
   
-    <p class="title logo__title">motulator 0.26.0 documentation</p>
+    <p class="title logo__title">motulator 0.26.1 documentation</p>
   
 </a></div>
         <div class="sidebar-primary-item">
@@ -564,15 +564,15 @@
 <span class="sd">        `i_a` (flux control only if zero), with the back-EMF term ``1j*w*psi_s``."""</span>
         <span class="n">par</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">par</span>
 
-        <span class="c1"># Torque-production factor and directions. If the torque cannot be controlled,</span>
-        <span class="c1"># the flux magnitude is controlled in the direction of the flux.</span>
+        <span class="c1"># Torque-production factor and directions. If the torque cannot be controlled</span>
+        <span class="c1"># (e.g., at zero flux), only the flux magnitude is controlled, along the real</span>
+        <span class="c1"># axis of the controller coordinates.</span>
         <span class="n">c_tau</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="p">(</span><span class="n">i_a</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="o">.</span><span class="n">conjugate</span><span class="p">())</span><span class="o">.</span><span class="n">real</span>
         <span class="k">if</span> <span class="n">c_tau</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">t_psi</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">par</span><span class="o">.</span><span class="n">n_p</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="o">*</span> <span class="n">i_a</span> <span class="o">/</span> <span class="n">c_tau</span>
             <span class="n">t_tau</span> <span class="o">=</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">/</span> <span class="n">c_tau</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">t_psi</span> <span class="o">=</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span> <span class="k">if</span> <span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">1.0</span>
-            <span class="n">t_tau</span> <span class="o">=</span> <span class="mi">0</span><span class="n">j</span>
+            <span class="n">t_psi</span><span class="p">,</span> <span class="n">t_tau</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">0</span><span class="n">j</span>
 
         <span class="c1"># Error signals</span>
         <span class="n">e_psi</span> <span class="o">=</span> <span class="n">psi_s_ref</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fbk</span><span class="o">.</span><span class="n">psi_s</span><span class="p">)</span>
