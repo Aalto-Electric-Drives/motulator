@@ -93,15 +93,15 @@ class FluxTorqueControllerBase:
         `i_a` (flux control only if zero), with the back-EMF term ``1j*w*psi_s``."""
         par = self.par
 
-        # Torque-production factor and directions. If the torque cannot be controlled,
-        # the flux magnitude is controlled in the direction of the flux.
+        # Torque-production factor and directions. If the torque cannot be controlled
+        # (e.g., at zero flux), only the flux magnitude is controlled, along the real
+        # axis of the controller coordinates.
         c_tau = 1.5 * par.n_p * (i_a * fbk.psi_s.conjugate()).real
         if c_tau > 0:
             t_psi = 1.5 * par.n_p * abs(fbk.psi_s) * i_a / c_tau
             t_tau = 1j * fbk.psi_s / c_tau
         else:
-            t_psi = fbk.psi_s / abs(fbk.psi_s) if fbk.psi_s != 0 else 1.0
-            t_tau = 0j
+            t_psi, t_tau = 1.0, 0j
 
         # Error signals
         e_psi = psi_s_ref - abs(fbk.psi_s)
