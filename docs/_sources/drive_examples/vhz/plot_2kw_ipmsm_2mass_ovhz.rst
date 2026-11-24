@@ -251,7 +251,7 @@ Plot the frequency response from the electromagnetic torque to the rotor speed.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.078 seconds)
+   **Total running time of the script:** (0 minutes 2.086 seconds)
 
 
 .. _sphx_glr_download_drive_examples_vhz_plot_2kw_ipmsm_2mass_ovhz.py:

@@ -212,7 +212,7 @@ grid, the current pulses shrinking as the voltage approaches it.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 1.172 seconds)
+   **Total running time of the script:** (0 minutes 1.181 seconds)
 
 
 .. _sphx_glr_download_grid_examples_grid_following_plot_10kva_startup_gfl.py:
