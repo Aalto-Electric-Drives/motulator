@@ -185,7 +185,7 @@ currents and the torque estimate are based on the measured currents.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 5.142 seconds)
+   **Total running time of the script:** (0 minutes 7.121 seconds)
 
 
 .. _sphx_glr_download_drive_examples_flux_vector_plot_2kw_ipmsm_sensor_errors_fvc.py:
