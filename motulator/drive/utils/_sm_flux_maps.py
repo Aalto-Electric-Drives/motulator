@@ -69,8 +69,8 @@ class _GridInterpolator:
             if self.fast:
                 return _interp_bilinear(self.d_grid, self.q_grid, self.values, x, y)
             return complex(self.interpolator(np.array([[x, y]]))[0])
-        # Handle array of complex inputs
-        points = np.column_stack((np.real(dq_input), np.imag(dq_input)))
+        # Handle arrays of complex inputs, the output having the shape of the input
+        points = np.stack((np.real(dq_input), np.imag(dq_input)), axis=-1)
         return np.array(self.interpolator(points))
 
 
