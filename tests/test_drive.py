@@ -576,15 +576,17 @@ def test_pm_flux_without_solution(psi_max: float) -> None:
     ],
     ids=["uniform", "nonuniform", "descending"],
 )
-def test_flux_map_scalar_lookup(d_range: np.ndarray) -> None:
-    """Scalar lookups equal the array lookups, also outside the grid."""
+def test_flux_map_lookup(d_range: np.ndarray) -> None:
+    """Scalar and 2-D lookups equal the 1-D lookups, also outside the grid."""
     d, q = np.meshgrid(np.linspace(-12, 12, 25), np.linspace(-6, 16, 23), indexing="ij")
     i_s_dq = d + 1j * q
     flux_map = MagneticModel(i_s_dq, 0.05 * i_s_dq / (1 + 0.01 * abs(i_s_dq) ** 2))
     flux_map = flux_map.create_interpolated_model(d_range, np.linspace(-5, 15, 11))
     rng = np.random.default_rng(0)
     i_s_dq = rng.uniform(-15, 15, 50) + 1j * rng.uniform(-10, 20, 50)
-    assert [flux_map(i) for i in i_s_dq] == pytest.approx(flux_map(i_s_dq))
+    psi_s_dq = np.asarray(flux_map(i_s_dq))
+    assert [flux_map(i) for i in i_s_dq] == pytest.approx(psi_s_dq)
+    assert flux_map(i_s_dq.reshape(5, 10)) == pytest.approx(psi_s_dq.reshape(5, 10))
 
 
 @pytest.mark.parametrize("w_M", [-500.0, 500.0])
